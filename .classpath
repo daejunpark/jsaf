@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="third_party/astgen/astgen.jar"/>
+	<classpathentry kind="lib" path="third_party/junit/junit.jar"/>
+	<classpathentry kind="lib" path="third_party/plt/plt.jar"/>
+	<classpathentry kind="lib" path="third_party/wala/wala.cast.jar"/>
+	<classpathentry kind="lib" path="third_party/wala/wala.cast.js.jar"/>
+	<classpathentry kind="lib" path="third_party/wala/wala.util.jar"/>
+	<classpathentry kind="lib" path="third_party/wala/wala.classloader.jar"/>
+	<classpathentry kind="lib" path="third_party/xtc/xtc.jar"/>
+	<classpathentry kind="lib" path="third_party/commons-io/commons-io-2.3.jar"/>
+	<classpathentry kind="lib" path="third_party/commons-lang/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="third_party/json/lift-json_2.9.1-2.4.jar"/>
+	<classpathentry kind="lib" path="third_party/jericho/jericho-html-3.3.jar"/>
+	<classpathentry kind="lib" path="third_party/nekohtml/nekohtml.jar"/>
+	<classpathentry kind="lib" path="third_party/z3/com.microsoft.z3.jar"/>
+	<classpathentry kind="lib" path="third_party/xerces2/xercesImpl.jar"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

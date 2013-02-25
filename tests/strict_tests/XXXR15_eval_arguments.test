@@ -1,0 +1,22 @@
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=R15_eval_arguments
+STRICT_TESTS_DIR=${JS_HOME}/tests/strict_tests
+strict
+strict_out_equals=\
+${STRICT_TESTS_DIR}/R15_eval_arguments.js:2:5-14:\n\
+\ "eval" cannot be used as an identifier of the variable declaration within strict mode code.\n\
+${STRICT_TESTS_DIR}/R15_eval_arguments.js:3:5-19:\n\
+\ "arguments" cannot be used as an identifier of the variable declaration within strict mode code.\n\
+${STRICT_TESTS_DIR}/R15_eval_arguments.js:5:9-17:\n\
+\ "eval" cannot be used as an identifier of the variable declaration within strict mode code.\n\
+${STRICT_TESTS_DIR}/R15_eval_arguments.js:6:9-22:\n\
+\ "arguments" cannot be used as an identifier of the variable declaration within strict mode code.\n\
+File ${STRICT_TESTS_DIR}/R15_eval_arguments.js has 4 errors.\n
+strict_err_equals=

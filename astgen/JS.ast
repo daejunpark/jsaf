@@ -1,0 +1,440 @@
+/*******************************************************************************
+    Copyright (c) 2012, KAIST.
+    All rights reserved.
+
+    Use is subject to license terms.
+
+    This distribution may include materials developed by third parties.
+ ******************************************************************************/
+
+/***************************
+    JavaScript AST
+    ECMAScript 5
+ ***************************/
+
+// REMINDER: If you modify this file, you probably ought to be
+// changing factory methods as well.
+
+generateEmptyConstructor yes;   // for reflective object creation
+visitMethod accept;
+visitorMethodPrefix for;
+addGetterPrefixes yes;
+usePLT yes;
+tabSize 4;
+allowNulls no;
+generateToString no;
+generateEquals yes;
+generateSerializers yes;
+generateRecursiveVisitors no;
+customClassPath ../build;
+
+/* order matters here */
+customGenerator kr.ac.kaist.jsaf.astgen.ScalaAstGenerator;
+customGenerator kr.ac.kaist.jsaf.astgen.DepthFirstVisitorGenerator;
+customGenerator kr.ac.kaist.jsaf.astgen.DepthFirstVoidVisitorGenerator;
+customGenerator kr.ac.kaist.jsaf.astgen.UpdateVisitorGenerator;
+
+package kr.ac.kaist.jsaf.nodes;
+import java.lang.Double;
+import java.lang.String;
+import java.math.BigInteger;
+import java.io.Writer;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import kr.ac.kaist.jsaf.nodes_util.*;
+import kr.ac.kaist.jsaf.useful.*;
+import edu.rice.cs.plt.tuple.Option;
+
+begin ast;
+
+interface Node() extends HasAt;
+    interface ASTNode(ASTNodeInfo info);
+        root abstract AbstractNode(ASTNodeInfo info) extends UIDObject;
+            /**
+             * Program ::= SourceElement*
+             */
+            Program(TopLevel body, List<Comment> comments);
+            abstract SourceElement();
+                /**
+                 * SourceElement ::= ModuleDeclaration
+                 */
+                abstract Module();
+                    /**
+                     * ModuleDeclaration ::= module w Id w { (w ModuleElements)? w }
+                     */
+                    ModDecl(Id name, TopLevel body);
+                    /**
+                     * ModuleElement ::= ExportDeclaration
+                     */
+                    abstract ModExport();
+                        /*
+                         * ModuleExport ::= export w var w VariableDeclarationList w ;
+                         */
+                        ModExpVarStmt(List<VarDecl> vds);
+                        /*
+                         * ModuleExport ::= export w FunctionDeclaration
+                         */
+                        ModExpFunDecl(FunDecl fd);
+                        /*
+                         * ModuleExport ::= export w get w Id w ( w ) w FunctionBody
+                         */
+                        ModExpGetter(GetProp fd);
+                        /*
+                         * ModuleExport ::= export w set w Id w ( w Id w ) w FunctionBody
+                         */
+                        ModExpSetter(SetProp fd);
+                        /*
+                         * ModuleExport ::= export w ExportSpecifierSetList w ;
+                         * ExportSpecifierSetList ::= ExportSpecifierSet (w , w ExportSpecifierSet)*
+                         */
+                        ModExpSpecifiers(List<ModExpSpecifier> names);
+                /**
+                 * SourceElement ::= ImportDeclaration
+                 * ImportDeclaration ::= import ImportClauseList w ;
+                 * ImportClauseList ::= ImportClause (w , w ImportClause)*
+                 */
+                ModImpDecl(List<ModImport> imports);
+                /**
+                 * SourceElement ::= Stmt
+                 */
+                abstract Stmt();
+                    /**
+                     * Internally generated NoOperation
+                     * currently to denote the end of a file by Shell
+                     * Do not appear in the JavaScript source text
+                     */
+                    NoOp(String desc);
+                    /**
+                     * Internally generated statement unit by Hoister
+                     * Do not appear in the JavaScript source text
+                     */
+                    StmtUnit(List<Stmt> stmts);
+                    /**
+                     * SourceElement ::= function Id ( (Id,)* ) { SourceElement* }
+                     */
+                    FunDecl(Functional ftn);
+                    /**
+                     * Stmt ::= { Stmt* }
+                     */
+                    Block(List<Stmt> stmts, boolean internal = false);
+                    /**
+                     * Stmt ::= var VarDecl(, VarDecl)* ;
+                     */
+                    VarStmt(List<VarDecl> vds);
+                    /**
+                     * Stmt ::= ;
+                     */
+                    EmptyStmt();
+                    /**
+                     * Stmt ::= Expr ;
+                     */
+                    ExprStmt(Expr expr, boolean internal = false);
+                    /**
+                     * Stmt ::= if ( Expr ) Stmt (else Stmt)?
+                     */
+                    If(Expr cond, Stmt trueBranch, Option<Stmt> falseBranch);
+                    /**
+                     * Stmt ::= do Stmt while ( Expr ) ;
+                     */
+                    DoWhile(Stmt body, Expr cond);
+                    /**
+                     * Stmt ::= while ( Expr ) Stmt
+                     */
+                    While(Expr cond, Stmt body);
+                    /**
+                     * Stmt ::= for ( Expr? ; Expr? ; Expr? ) Stmt
+                     */
+                    For(Option<Expr> init, Option<Expr> cond, Option<Expr> action, Stmt body);
+                    /**
+                     * Stmt ::= for ( lhs in Expr ) Stmt
+                     */
+                    ForIn(LHS lhs, Expr expr, Stmt body);
+                    /**
+                     * Stmt ::= for ( var VarDecl(, VarDecl)* ; Expr? ; Expr? ) Stmt
+                     */
+                    ForVar(List<VarDecl> vars, Option<Expr> cond, Option<Expr> action, Stmt body);
+                    /**
+                     * Stmt ::= for ( var VarDecl in Expr ) Stmt
+                     */
+                    ForVarIn(VarDecl var, Expr expr, Stmt body);
+                    /**
+                     * Stmt ::= continue Label? ;
+                     */
+                    Continue(Option<Label> target);
+                    /**
+                     * Stmt ::= break Label? ;
+                     */
+                    Break(Option<Label> target);
+                    /**
+                     * Stmt ::= return Expr? ;
+                     */
+                    Return(Option<Expr> expr);
+                    /**
+                     * Stmt ::= with ( Expr ) Stmt
+                     */
+                    With(Expr expr, Stmt stmt);
+                    /**
+                     * Stmt ::= switch ( Expr ) { CaseClause* (default : Stmt*)? CaseClause* }
+                     */
+                    Switch(Expr cond, List<Case> frontCases, Option<List<Stmt>> def, List<Case> backCases);
+                    /**
+                     * Stmt ::= Label : Stmt
+                     */
+                    LabelStmt(Label label, Stmt stmt);
+                    /**
+                     * Stmt ::= throw Expr ;
+                     */
+                    Throw(Expr expr);
+                    /**
+                     * Stmt ::= try { Stmt* } (catch ( Id ) { Stmt* })? (finally { Stmt* })?
+                     */
+                    Try(Block body, Option<Catch> catchBlock, Option<Block> fin);
+                    /**
+                     * Stmt ::= debugger ;
+                     */
+                    Debugger(); /* ES5 */
+            /**
+             * Stmt ::= Id (= Expr)?
+             */
+            VarDecl(Id name, Option<Expr> expr);
+            /**
+             * CaseClause ::= case Expr : Stmt*
+             */
+            Case(Expr cond, Block body);
+            /**
+             * Catch ::= catch ( Id ) { Stmt* }
+             */
+            Catch(Id id, Block body);
+            /**
+             * ImportClause
+             */
+            abstract ModImport();
+                /**
+                 * ImportClause ::= ImportSpecifierSet w from w Id
+                 */
+                ModImpSpecifierSet(List<ModImpSpecifier> imports, Path module);
+                /**
+                 * ImportClause ::= Path w as w Id
+                 */
+                ModImpAliasClause(Path name, Id alias);
+            abstract Expr();
+                /**
+                 * Expr ::= Expr, Expr
+                 */
+                ExprList(List<Expr> exprs);
+                /**
+                 * Expr ::= Expr ? Expr : Expr
+                 */
+                Cond(Expr cond, Expr trueBranch, Expr falseBranch);
+                /**
+                 * Expr ::= Expr Op Expr
+                 */
+                InfixOpApp(Expr left, Op op, Expr right);
+                /**
+                 * Expr ::= Op Expr
+                 */
+                PrefixOpApp(Op op, Expr right);
+                /**
+                 * Expr ::= Lhs Op
+                 */
+                UnaryAssignOpApp(LHS lhs, Op op);
+                /**
+                 * Expr ::= Lhs Op Expr
+                 */
+                AssignOpApp(LHS lhs, Op op, Expr right);
+                /**
+                 * Expr ::= Lhs
+                 */
+                abstract LHS();
+                    /**
+                     * Lhs ::= Literal
+                     */
+                    abstract Literal();
+                        /**
+                         * Literal ::= this
+                         */
+                        This();
+                        /**
+                         * Literal ::= null
+                         */
+                        Null();
+                        /**
+                         * Literal ::= true | false
+                         */
+                        Bool(boolean bool);
+                        /**
+                         * number literal
+                         */
+                        abstract NumberLiteral();
+                            /**
+                             * float literal
+                             * e.g.) 3.5
+                             */
+                            DoubleLiteral(ignoreForEquals String text, Double num);
+                            /**
+                             * int literal
+                             * e.g.) 7
+                             */
+                            IntLiteral(BigInteger intVal, int radix);
+                        /**
+                         * Literal ::= String
+                         */
+                        StringLiteral(String quote, String escaped);
+                        /**
+                         * Literal ::= RegularExpression
+                         */
+                        RegularExpression(String body, String flag);
+                    /**
+                     * PrimaryExpr ::= Id
+                     */
+                    VarRef(Id id);
+                    /**
+                     * PrimaryExpr ::= [ (Expr,)* ]
+                     */
+                    ArrayExpr(List<Option<Expr>> elements);
+                    /**
+                     * PrimaryExpr ::= [ (Number,)* ]
+                     */
+                    ArrayNumberExpr(List<Double> elements);
+                    /**
+                     * PrimaryExpr ::= { (Member,)* }
+                     */
+                    ObjectExpr(List<Member> members);
+                    /**
+                     * PrimaryExpr ::= ( Expr )
+                     */
+                    Parenthesized(Expr expr);
+                    /**
+                     * LHS ::= function Id? ( (Id,)* ) { SourceElement }
+                     */
+                    FunExpr(Functional ftn);
+                     /**
+                      * LHS ::= Lhs [ Expr ]
+                      */
+                    Bracket(LHS obj, Expr index);
+                    /**
+                     * LHS ::= Lhs . Id
+                     */
+                    Dot(LHS obj, Id member);
+                    /**
+                     * LHS ::= new Lhs
+                     */
+                    New(LHS lhs); // constructor??? args???
+                    /**
+                     * LHS ::= Lhs ( (Expr,)* )
+                     */
+                    FunApp(LHS fun, List<Expr> args);
+            abstract Property();
+                /**
+                 * Property ::= Id
+                 */
+                PropId(Id id);
+                /**
+                 * Property ::= String
+                 */
+                PropStr(String str);
+                /**
+                 * Property ::= Number
+                 */
+                PropNum(NumberLiteral num);
+            abstract Member(Property prop);
+                /**
+                 * Member ::= Property : Expr
+                 */
+                Field(Expr expr);
+                /**
+                 * Member ::= get Property () { FunctionBody }
+                 */
+                GetProp(Functional ftn); /* ES5 */
+                /**
+                 * Member ::= set Property ( Id ) { SourceElement* }
+                 */
+                SetProp(Functional ftn); /* ES5 */
+            abstract Name();
+                abstract IdOrOpOrAnonymousName();
+                    abstract IdOrOp(String text);
+                        /**
+                         * Named identifier
+                         */
+                        Id(Option<String> uniqueName = Option.<String>none(), boolean with);
+                        /**
+                         * Infix/prefix/postfix operator
+                         */
+                        Op();
+                    /**
+                     * Unnamed identifier
+                     */
+                    AnonymousFnName();
+                /**
+                 * Path ::= ( Id. )* Id
+                 */
+                Path(List<Id> names);
+                /**
+                 * ExportSpecifier
+                 */
+                abstract ModExpSpecifier();
+                    /**
+                     * ExportSpecifierSet ::= * w from w Path
+                     */
+                    ModExpStarFromPath(Path module);
+                    /**
+                     * ExportSpecifierSet ::= *
+                     */
+                    ModExpStar();
+                    /**
+                     * ExportSpecifier ::= Id w : w Path
+                     */
+                    ModExpAlias(Id name, Path alias);
+                    /**
+                     * ExportSpecifier ::= Id (w from w Path)?
+                     */
+                    ModExpName(Path name);
+                /**
+                 * ImportSpecifier
+                 */
+                abstract ModImpSpecifier();
+                    /**
+                     * ImportSpecifier ::= Id w : w Id
+                     */
+                    ModImpAlias(Id name, Id alias);
+                    /**
+                     * ImportSpecifier ::= Id
+                     */
+                    ModImpName(Id name);
+            /**
+             * label
+             */
+            Label(Id id);
+            /**
+             * comment
+             */
+            Comment(String comment);
+    /**
+     * top-level information interface
+     */
+    interface Info();
+        abstract InfoNode() extends UIDObject;
+            /**
+             * Common body for program and functions
+             */
+            abstract ScopeBody(List<FunDecl> fds, List<VarDecl> vds, List<SourceElement> stmts);
+                /**
+                 * Program top level
+                 */
+                TopLevel();
+                /**
+                 * Common shape for functions
+                 */
+                Functional(Id name, List<Id> params);
+            /**
+             * Information about an AST node
+             */
+            abstract ASTNodeInfo(ignoreForEquals Span span);
+                /**
+                 * Source location
+                 */
+                SpanInfo();
+end;

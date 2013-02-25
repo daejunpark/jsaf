@@ -1,0 +1,415 @@
+/*******************************************************************************
+    Copyright (c) 2012, KAIST.
+    All rights reserved.
+
+    Use is subject to license terms.
+
+    This distribution may include materials developed by third parties.
+ ******************************************************************************/
+
+/*
+ * A complete JavaScript IR grammar.
+ */
+module kr.ac.kaist.jsaf.parser.IR;
+
+header {
+import kr.ac.kaist.jsaf.exceptions.SyntaxError;
+import kr.ac.kaist.jsaf.nodes.*;
+import kr.ac.kaist.jsaf.nodes_util.*;
+import kr.ac.kaist.jsaf.useful.Useful;
+import edu.rice.cs.plt.tuple.Option;
+import edu.rice.cs.plt.iter.IterUtil;
+import edu.rice.cs.plt.collect.CollectUtil;
+import xtc.util.Action;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import static kr.ac.kaist.jsaf.exceptions.JSAFError.error;
+}
+
+body {
+    Span createSpan(int start, int end) {
+        int i = end-2;
+        while ( i >= 0 && yyData[i] == ' ' ) { i--; }
+        if ( i-1 >= start )
+            end = i-1;
+        else
+            end = start;
+        Column s = column(start);
+        Column e = column(end);
+        SourceLocRats slStart = new SourceLocRats(s.file, s.line, s.column, start);
+        SourceLocRats slEnd   = new SourceLocRats(e.file, e.line, e.column, end);
+        return new Span(slStart, slEnd);
+    }
+
+    private SpanInfo makeSpanInfo(int start, int end) {
+        return NodeFactory.makeSpanInfo(createSpan(start, end));
+    }
+
+  static {
+    add(JAVASCRIPT_RESERVED, new String[] {
+        "break",        "catch",        "else",         "finally",
+        "function",     "if",           "new",          "return",
+        "then",         "throw",        "try",          "var",
+        "while",        "with",
+
+        "eval",         "false",        "get",          "null",
+        "set",          "true",         "undefined"
+    });
+  }
+}
+
+option setOfString(JAVASCRIPT_RESERVED), flag(isNative), parser(kr.ac.kaist.jsaf.parser.IR);
+
+public IRRoot File =
+     a1:Stmt a2s:(EOS Stmt)*
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeRoot(span, Useful.cons(a1, a2s.list()));
+     };
+
+/*
+ * Statement ::=
+ *   y = function x (z, ...) {s}
+ * | y = eval(e)
+ * | y = new e
+ * | y = op e
+ * | y = { x:e, ... }
+ * | y = [ e, ... ]
+ * | y = e[e]
+ * | y = e(e, ...)
+ * | y = e op e
+ * | y = e
+ * | function x (z, ...) {s}
+ * | break label e?
+ * | return e?
+ * | with (e) s
+ * | var x
+ * | throw e
+ * | if (e) then s [else s]
+ * | while (e) s
+ * | try {s} catch (x) {s} finally {s}
+ * | e[e] = e3
+ * | s; s
+ */
+private IRStmt Stmt =
+    seed:StmtFront list:StmtTail*
+    { yyValue = (IRStmt)apply(list, seed); };
+
+IRStmt StmtFront =
+     a1:Id w equals w function w a2:Id w openparen a3:(w Params)? w closeparen w a4:Block
+     { Span span = createSpan(yyStart,yyCount);
+       if (a3 == null) a3 = Collections.<IRId>emptyList();
+       yyValue = IRFactory.makeFunExpr(span, a1, a2, a3, a4);
+     }
+   / a1:Id w equals w eval w openparen w a2:Expr w closeparen
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeEval(span, a1, a2);
+     }
+   / a1:Id w equals w new w a2:Expr
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeNew(span, a1, a2);
+     }
+   / a1:Id w equals w a2:Op w a3:Expr
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeUn(span, a1, a2, a3);
+     }
+   / a1:Id w equals w opencurly a2:(w Members)? w closecurly
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) a2 = Collections.<IRMember>emptyList();
+       yyValue = IRFactory.makeObject(span, a1, a2);
+     }
+   / a1:Id w equals w opensquare a2:(w ExprOptions)? w closesquare
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) a2 = Collections.<Option<IRExpr>>emptyList();
+       yyValue = IRFactory.makeArray(span, a1, a2);
+     }
+   / a1:Id w equals w a2:Expr w opensquare w a3:Expr w closesquare
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeLoad(span, a1, a2, a3);
+     }
+   / a1:Id w equals w a2:Expr w openparen a3:(w Exprs)? w closeparen
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeCall(span, a1, a2, a3);
+     }
+   / a1:Id w equals w a2:Expr w a3:Op w a4:Expr
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeBin(span, a1, a2, a3, a4);
+     }
+   / a1:Id w equals w a2:Expr
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeExprStmt(span, a1, a2);
+     }
+   / function w a1:Id w openparen a2:(w Params)? w closeparen w a3:Block
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) a2 = Collections.<IRId>emptyList();
+       yyValue = IRFactory.makeFunDecl(span, a1, a2, a3);
+     }
+   / break w a1:Id
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeBreak(span, a1);
+     }
+   / return a1:(w Expr)?
+     { Span span = createSpan(yyStart,yyCount);
+       Option<IRExpr> expr;
+       if (a1 == null) expr = Option.<IRExpr>none();
+       else            expr = Option.<IRExpr>some(a1);
+       yyValue = IRFactory.makeReturn(span, expr);
+     }
+   / with w openparen w a1:Expr w closeparen w a2:Stmt
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeWith(span, a1, a2);
+     }
+   / throw w a1:Expr
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeThrow(span, a1);
+     }
+   / var w a1:Id
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeVarStmt(span, a1);
+     }
+   / if w openparen w a1:Expr w closeparen w then w a2:Stmt a3:(w else w Stmt)?
+     { Span span = createSpan(yyStart,yyCount);
+       Option<IRStmt> falseB;
+       if (a3 == null) falseB = Option.<IRStmt>none();
+       else            falseB = Option.<IRStmt>some(a3);
+       yyValue = IRFactory.makeIf(span, a1, a2, falseB);
+     }
+   / while w openparen w a1:Expr w closeparen w a2:Stmt
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeWhile(span, a1, a2);
+     }
+
+   / try w a1:Block w a2:Catch w a3:Finally
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeTry(span, a1, Option.some(a2.getA()), Option.some(a2.getB()), Option.<IRStmt>some(a3));
+     }
+   / try w a1:Block w a2:Catch
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeTry(span, a1, Option.some(a2.getA()), Option.some(a2.getB()), Option.<IRStmt>none());
+     }
+   / try w a1:Block w a2:Finally
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeTry(span, a1, Option.<IRId>none(), Option.<IRStmt>none(), Option.<IRStmt>some(a2));
+     }
+
+
+   / a1:Expr w opensquare w a2:Expr w closesquare w equals w a3:Expr
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeStore(span, a1, a2, a3);
+     };
+
+constant transient Action<IRStmt> StmtTail =
+     Seq ;
+
+constant inline Action<IRStmt> Seq =
+     w semicolon w a1:Stmt
+     { yyValue = new Action<IRStmt>() {
+             public IRStmt run(IRStmt base) {
+                 return IRFactory.makeSeq(createSpan(yyStart,yyCount),
+                                          (IRStmt)base, a1);
+             }};
+     };
+
+private IRStmt Block =
+     opencurly w yyValue:Stmt w closecurly ;
+
+transient List<IRId> Params =
+     a1:Id a2s:(w comma w Id)+
+     { yyValue = Useful.cons(a1, a2s.list()); }
+   / a1:Id
+     { yyValue = Useful.list(a1); };
+
+private transient kr.ac.kaist.jsaf.useful.Pair<IRId, IRStmt> Catch =
+     catch w openparen w a1:Id w closeparen w a2:Block
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = new kr.ac.kaist.jsaf.useful.Pair<IRId, IRStmt>(a1, a2);
+     };
+
+private transient IRStmt Finally =
+     finally w yyValue:Block ;
+
+transient List<IRExpr> Exprs =
+     a1:Expr a2s:(w comma w Expr)+
+     { yyValue = Useful.cons(a1, a2s.list()); }
+   / a1:Expr
+     { yyValue = Useful.list(a1); };
+
+transient Option<IRExpr> ExprOption =
+     a1:Expr
+     { yyValue = Option.some(a1); };
+
+transient List<Option<IRExpr>> ExprOptions =
+     a1:ExprOption a2s:(w comma w ExprOption)+
+     { yyValue = Useful.cons(a1, a2s.list()); }
+   / a1:ExprOption
+     { yyValue = Useful.list(a1); };
+
+transient List<IRMember> Members =
+     a1:Member a2s:(w comma w Member)+
+     { yyValue = Useful.cons(a1, a2s.list()); }
+   / a1:Member
+     { yyValue = Useful.list(a1); };
+
+/*
+ * Member ::=
+ *   get x () {s}
+ * | set x (y) {s}
+ * | x : e
+ */
+transient IRMember Member =
+     get w a1:Id w openparen w closeparen w a2:Block
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeGetProp(span, a1, a2);
+     }
+   / set w a1:Id w openparen w a2:Id w closeparen w a3:Block
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeSetProp(span, a1, a2, a3);
+     }
+   / a1:Id w colon w a2:Expr
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeField(span, a1, a2);
+     };
+
+/*
+ * Expression ::=
+ *   undefined
+ * | null
+ * | true
+ * | false
+ * | x
+ * | number
+ * | loc | double
+ */
+private IRExpr Expr =
+     undefined
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeUndef(span);
+     }
+   / nullE
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeNull(span);
+     }
+   / true
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeBool(span, true);
+     }
+   / false
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeBool(span, false);
+     }
+   / a1:DecimalDigits !(idrest)
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeInt(span, a1);
+     }
+   / ["] a1s:DoubleStringCharacter* ["]
+     { String str = "";
+       for (String c : (List<String>)a1s.list()) str = str.concat(c);
+       yyValue = IRFactory.makeString(createSpan(yyStart,yyCount), str);
+     }
+   / a1:Id
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = IRFactory.makeVarRef(span, a1);
+     };
+
+transient String id      = s:(idstart idrest*) &{ !JAVASCRIPT_RESERVED.contains(s) };
+transient String idname  = s:(idstart idrest*);
+transient String idstart = [a-zA-Z] ;
+transient String idrest  = idstart / [0-9] / [_];
+
+private String IdText  = a1:id ;
+
+IRId Id =
+     a1:IdText
+     { yyValue = IRFactory.makeId(createSpan(yyStart,yyCount), a1); };
+
+IROp Op =
+     a1:("++" / "--") !("=")
+     { yyValue = IRFactory.makeOp(createSpan(yyStart, yyCount), a1); };
+
+transient void EndOfFile  = "\u001a"? w !_ ;
+
+transient void EOS =
+     w semicolon
+   / w LineTerminatorSequence
+   ;
+
+transient void w = Space*; // whitespace optional
+transient private void Space =
+     void:"\t"
+   / [\u000B]
+   / void:"\f"
+   / void:" "
+   / [\u00A0]
+   / [\uFEFF] ;
+
+transient String LineTerminatorSequence =
+     a1:([\u000a] / [\u000d] !([\u000a]) / [\u2028] / [\u2029])
+     { yyValue = ""+a1; }
+   / a1:[\u000d] a2:[\u000a]
+     { yyValue = ""+a1+a2; }
+   ;
+
+transient void break = "break" !(idrest);
+transient void catch = "catch" !(idrest);
+transient void else = "else" !(idrest);
+transient void finally = "finally" !(idrest);
+transient void function = "function" !(idrest);
+transient void if = "if" !(idrest);
+transient void new = "new" !(idrest);
+transient void return = "return" !(idrest);
+transient void then = "then" !(idrest);
+transient void throw = "throw" !(idrest);
+transient void try = "try" !(idrest);
+transient void var = "var" !(idrest);
+transient void while = "while" !(idrest);
+transient void with = "with" !(idrest);
+
+transient void eval = "eval" !(idrest);
+transient void false = "false" !(idrest);
+transient void get = "get" !(idrest);
+transient void nullE = "null" !(idrest);
+transient void set = "set" !(idrest);
+transient void true = "true" !(idrest);
+transient void undefined = "undefined" !(idrest);
+
+transient void equals = "=" !("=");
+transient void openparen = "(";
+transient void closeparen = ")";
+transient void opencurly = "{";
+transient void closecurly = "}";
+transient void opensquare = "[";
+transient void closesquare = "]";
+transient void comma = ",";
+transient void colon = ":";
+transient void semicolon = ";";
+
+private transient String DecimalDigits = [0-9]+ ;
+
+private String DoubleStringCharacter =
+     a1:'\\' a2:EscapeSequence { yyValue = a1+a2; }
+   / a1:(!NonDoubleStringChar _) { yyValue = String.valueOf(a1); }
+   ;
+
+private String EscapeSequence =
+     a1:[btnfrv"'\\]
+     { switch (a1) {
+           case 'b': { yyValue = "\b"; break; }
+           case 't': { yyValue = "\t"; break; }
+           case 'n': { yyValue = "\n"; break; }
+           case 'f': { yyValue = "\f"; break; }
+           case 'r': { yyValue = "\r"; break; }
+           case 'v': { yyValue = "\u000B"; break; }
+           case '"': { yyValue = "\""; break; }
+           case '\'': { yyValue = "\'"; break; }
+           case '\\': { yyValue = "\\"; break; }
+           default: { yyValue = "'"; }
+       }
+     };
+
+private String NonDoubleStringChar =
+     a1:["\\] { yyValue = a1+""; };

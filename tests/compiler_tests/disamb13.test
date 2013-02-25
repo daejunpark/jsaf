@@ -1,0 +1,17 @@
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=disamb13
+DISAMB_TESTS_DIR=${JS_HOME}/tests/compiler_tests
+disambiguate
+disambiguate_out_WCIequals=\
+  while(true)\n\
+  {\n\
+    continue;\n\
+  }\n
+disambiguate_err_equals=

@@ -1,0 +1,18 @@
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=R2_R3_octal
+STRICT_TESTS_DIR=${JS_HOME}/tests/strict_tests
+strict
+strict_out_equals=\
+${STRICT_TESTS_DIR}/R2_R3_octal.js:1:33-36:\n\
+\ Strict mode code may not include the syntax of OctalIntegerLiteral "030".\n\
+${STRICT_TESTS_DIR}/R2_R3_octal.js:2:11-32:\n\
+\ Strict mode code may not include the syntax of OctalEscapeSequence "Octal Integer: \\040".\n\
+File ${STRICT_TESTS_DIR}/R2_R3_octal.js has 2 errors.\n
+strict_err_equals=

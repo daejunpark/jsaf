@@ -1,0 +1,25 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=defaultValueTypeError1
+BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
+bug-detector
+bug-detector_out_WCIequals=\
+ \n\
+ \n\
+ \n\
+ \n\
+* Bug Detector * \n\
+${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:2:17~2:23: warning: Property 'p' is never used. \n\
+${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:3:9~3:18: warning: Unreachable code is found. \n\
+${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:4:3~4:4: error: TypeError when computing default value (toString, valueOf) for object 'y'. \n\
+${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:7:9~7:18: warning: Unreachable code is found. \n\
+# Errors(#)   : 1 \n\
+# Warnings(#) : 4 \n\
+\n
+bug-detector_err_equals=

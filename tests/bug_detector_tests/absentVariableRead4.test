@@ -1,0 +1,22 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=absentVariableRead4
+BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
+bug-detector
+bug-detector_out_WCIequals=\
+ \n\
+ \n\
+ \n\
+ \n\
+* Bug Detector * \n\
+${BUGDETECTOR_TESTS_DIR}/absentVariableRead4.js:16:15~16:16: error: Reading absent variable 'x'. \n\
+# Errors(#)   : 1 \n\
+# Warnings(#) : 0 \n\
+\n
+bug-detector_err_equals=

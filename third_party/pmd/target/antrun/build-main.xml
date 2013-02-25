@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <ant antfile="src/main/ant/alljavacc.xml">
+    <property name="src" value="/Users/ken/Downloads/pmd-src-5.0.0/src/main/java"/>
+    <property name="javacc.jar" value="${settings.localRepository}/net/java/dev/javacc/javacc/4.1/javacc-4.1.jar"/>
+  </ant>
+</target>
+</project>

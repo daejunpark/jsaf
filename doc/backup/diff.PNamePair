@@ -1,0 +1,2223 @@
+diff --git a/src/kr/ac/kaist/jsaf/analysis/cfg/CFGBuilder.scala b/src/kr/ac/kaist/jsaf/analysis/cfg/CFGBuilder.scala
+index 49680ef..805414c 100644
+--- a/src/kr/ac/kaist/jsaf/analysis/cfg/CFGBuilder.scala
++++ b/src/kr/ac/kaist/jsaf/analysis/cfg/CFGBuilder.scala
+@@ -423,7 +423,7 @@ class CFGBuilder (ir: IRRoot) {
+             text
+           } else {
+             // unique name syntax: simpler unique name
+-            val text1 = NU.getOriginalName(text)
++            val text1 = id.getOriginalName
+             uniqueNameCounter.get(text1) match {
+               case Some(n) =>
+                 uniqueNameCounter += (text1 -> (n + 1))
+diff --git a/src/kr/ac/kaist/jsaf/compiler/Translator.scala b/src/kr/ac/kaist/jsaf/compiler/Translator.scala
+index 2d83e89..160023c 100644
+--- a/src/kr/ac/kaist/jsaf/compiler/Translator.scala
++++ b/src/kr/ac/kaist/jsaf/compiler/Translator.scala
+@@ -71,7 +71,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
+     IF.makeStmtUnit(span, stmts)
+   }
+ 
+-  def freshId(n: String): IRTmpId = IF.makeTId(n, NU.freshName(n))
++  def freshId(n: String): IRTmpId = IF.makeTId(NU.freshName(n), NU.freshName(n))
+   def freshId(): IRTmpId = freshId("temp")
+ 
+   val globalName = NU.freshGlobalName("global")
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/Interpreter.scala b/src/kr/ac/kaist/jsaf/interpreter/Interpreter.scala
+index 0406654..2838368 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/Interpreter.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/Interpreter.scala
+@@ -46,7 +46,7 @@ class Interpreter(program: IRRoot, coverage: JOption[Coverage]) {
+   val initEnv: Env = EmptyEnv()
+   val initHeap: Heap = {
+     val ftnArrPropTable = new HashMap[PName, ObjectProp]
+-    ftnArrPropTable.put("length", IH.numProp(0))
++    ftnArrPropTable.put(IP.lengthPName, IH.numProp(0))
+     val heap = new HashMap[Loc, ObjectType]
+     // An empty arguments object
+     heap.put(IP.lNoArgs, new JSArray(IP.lNoArgs, IP.lObjectPrototype, "Arguments", true, ftnArrPropTable))
+@@ -321,7 +321,7 @@ object InterpreterWalker extends IRWalker {
+     def walkId(id: IRId): ValError = try {
+       if (debug > 0) System.out.println("\nIRId "+id.getUniqueName)
+       if (IH.isUndef(id)) IP.undefV
+-      else IH.getBindingValue(IS, IH.lookup(IS, id.getUniqueName), id.getUniqueName)
++        else IH.getBindingValue(IS, IH.lookup(IS, IP.getPName(id)), IP.getPName(id))
+     } catch {
+       case e:DefaultValueError => return e.err
+     }
+@@ -339,7 +339,7 @@ object InterpreterWalker extends IRWalker {
+             case EJSOp.BIN_COMP_REL_INSTANCEOF => v2 match {
+               case l2:Loc =>
+                 if(IH.isCallable(IS, v2)) {
+-                  val (l2prototype, _) = IS.heap.get(l2)._getProperty(IS.heap, "prototype");
++                  val (l2prototype, _) = IS.heap.get(l2)._getProperty(IS.heap, IP.prototypePName);
+                   val l2prototypeValue = l2prototype.getValueOrDefault
+                   v1 match {
+                     case l1:Loc if l2prototypeValue.isInstanceOf[Loc] =>
+@@ -355,7 +355,8 @@ object InterpreterWalker extends IRWalker {
+              * 11.8.7 The in operator
+              */
+             case EJSOp.BIN_COMP_REL_IN => v2 match {
+-              case l2:Loc => PVal(IH.getIRBool(IS.heap.get(l2)._hasProperty(IS, IH.toString(IS, v1))))
++              case l2:Loc =>
++                PVal(IH.getIRBool(IS.heap.get(l2)._hasProperty(IS, IP.mkPName(IH.toString(IS, v1)))))
+               case _ => typeError
+             }
+             // 11.5.1 Applying the * Operator
+@@ -469,7 +470,7 @@ object InterpreterWalker extends IRWalker {
+             IH.toObject(IS, v1) match {
+               case err:TypeError => err
+               case l:Loc =>
+-                IS.heap.get(l)._get(IS, IH.toString(IS, v2))
++                IS.heap.get(l)._get(IS, IP.mkPName(IH.toString(IS, v2)))
+               case _ =>
+                 throw new InterpreterError("The result of toObject should be a location.", IP.defSpan)
+             }
+@@ -486,17 +487,17 @@ object InterpreterWalker extends IRWalker {
+ 
+     def walkMember(m: IRMember): Any = try { m match {
+       case SIRField(_, id, expr) => walkExpr(expr) match {
+-        case v:Val => (id.getUniqueName, IH.mkDataProp(v, true, true, true))
++        case v:Val => (IP.getPName(id), IH.mkDataProp(v, true, true, true))
+         case err => err
+       }
+       case SIRGetProp(_, ftn@SIRFunctional(id, params, args, vds, fds, body)) =>
+         //val l = IH.newFtnObject(IS, ftn)
+         val l = IH.createFunctionObject(IS, ftn, IS.env, IS.strict).ownLoc
+-        (id.getUniqueName, IH.mkAccessorProp(l, IP.undefV, true, true))
++        (IP.getPName(id), IH.mkAccessorProp(l, IP.undefV, true, true))
+       case SIRSetProp(_, ftn@SIRFunctional(id, params, args, vds, fds, body)) =>
+         //val l = IH.newFtnObject(IS, ftn)
+         val l = IH.createFunctionObject(IS, ftn, IS.env, IS.strict).ownLoc
+-        (id.getUniqueName, IH.mkAccessorProp(IP.undefV, l, true, true))
++        (IP.getPName(id), IH.mkAccessorProp(IP.undefV, l, true, true))
+     }} catch {
+       case e:DefaultValueError => return e.err
+     }
+@@ -572,7 +573,7 @@ object InterpreterWalker extends IRWalker {
+        * 12.2 Variable Statement
+        */
+       case SIRVarStmt(info, id:IRId) =>
+-        val x = id.getUniqueName
++        val x = IP.getPName(id)
+         IH.createBinding(IS, x, IS.eval)
+         IH.setBinding(IS, x, IP.undefV, IS.strict) match {
+           case err:JSError => throwErr(err, info)
+@@ -589,13 +590,13 @@ object InterpreterWalker extends IRWalker {
+         walkExpr(right) match {
+           case v:Val =>
+             if (debug > 1)
+-              System.out.println("\nExprStmt: lhs="+lhs.getUniqueName+" right="+ID.prExpr(right)+" v="+v)
+-            IH.putValue(IS, lhs.getUniqueName, v, IS.strict)
++              System.out.println("\nExprStmt: lhs="+IP.getPName(lhs)+" right="+ID.prExpr(right)+" v="+v)
++            IH.putValue(IS, IP.getPName(lhs), v, IS.strict)
+           case e:ReferenceError =>
+             if (debug > 1)
+-              System.out.println("\nExprStmt: lhs="+lhs.getUniqueName+" right="+ID.prExpr(right)+" isRef="+isRef)
++              System.out.println("\nExprStmt: lhs="+IP.getPName(lhs)+" right="+ID.prExpr(right)+" isRef="+isRef)
+             if (isRef) throwErr(e, info)
+-            else IH.putValue(IS, lhs.getUniqueName, IP.undefV, IS.strict)
++            else IH.putValue(IS, IP.getPName(lhs), IP.undefV, IS.strict)
+           case e:JSError =>
+             throwErr(e, info)
+         }
+@@ -604,8 +605,8 @@ object InterpreterWalker extends IRWalker {
+        * 11.4.1 The delete Operator
+        */
+       case SIRDelete(info, lhs, id) => walkId(id) match {
+-        case v:Val => IH.delete(IS, id.getUniqueName, IS.strict) match {
+-            case res:Val => IH.putValue(IS, lhs.getUniqueName, res, IS.strict)
++        case v:Val => IH.delete(IS, IP.getPName(id), IS.strict) match {
++            case res:Val => IH.putValue(IS, IP.getPName(lhs), res, IS.strict)
+             case err:JSError => throwErr(err, info)
+         }
+         case e:JSError => throwErr(e, info)
+@@ -614,8 +615,8 @@ object InterpreterWalker extends IRWalker {
+       case SIRDeleteProp(info, lhs, obj, index) => walkId(obj) match {
+         case l:Loc => walkId(index) match {
+           case v2:Val =>
+-            IS.heap.get(l)._delete(IS, IH.toString(IS, v2), IS.strict) match {
+-                case res:Val => IH.putValue(IS, lhs.getUniqueName, res, IS.strict)
++            IS.heap.get(l)._delete(IS, IP.mkPName(IH.toString(IS, v2)), IS.strict) match {
++                case res:Val => IH.putValue(IS, IP.getPName(lhs), res, IS.strict)
+                 case err:JSError => throwErr(err, info)
+             }
+           case e2:JSError => throwErr(e2, info)
+@@ -656,7 +657,7 @@ object InterpreterWalker extends IRWalker {
+         // 2. Let base be the result of calling GetBase(V).
+         case v1:Val => walkId(index) match {
+           case v2:Val =>
+-            val v2str = IH.toString(IS, v2)
++            val v2pname = IP.mkPName(IH.toString(IS, v2))
+             IH.toObject(IS, v1) match {
+         // * IRStore 3
+               case _:TypeError => Throw(typeErrorWSpan(getSpan(info)), getSpan(info))
+@@ -676,14 +677,14 @@ object InterpreterWalker extends IRWalker {
+                   // 1. Let O be ToObject(base). => already finished
+                   // 2. If the result of calling the [[CanPut]] internal method of O with argument P is false, then
+         // * IRStore 5
+-                  case _:PVal if (IS.heap.get(l)._canPut(IS, v2str) == false) =>
++                  case _:PVal if (IS.heap.get(l)._canPut(IS, v2pname) == false) =>
+                     // a. If Throw is true, then throw a TypeError exception.
+                     if (IS.strict) { return Throw(typeErrorWSpan(getSpan(info)), getSpan(info)) }
+                     // b. Else return.
+                     else { return Normal(Some(v3)) }
+                   case _:PVal =>
+                   // 3. Let ownDesc be the result of calling the [[GetOwnProperty]] internal method of O with argument P.
+-                    val ownDesc = IS.heap.get(l)._getOwnProperty(v2str)
++                    val ownDesc = IS.heap.get(l)._getOwnProperty(v2pname)
+                   // 4. If IsDataDescriptor(ownDesc) is true, then
+                     if(ownDesc != null && IH.isDataDescriptor(ownDesc)) {
+         // * IRStore 6
+@@ -695,7 +696,7 @@ object InterpreterWalker extends IRWalker {
+                     // 5. Let desc be the result of calling the [[GetProperty]] internal method of O with argument P.
+                     //    This may be either an own or inherited accessor property descriptor
+                     //    or an inherited data property descriptor.
+-                    val desc = IS.heap.get(l)._getProperty(IS.heap, v2str)._1
++                    val desc = IS.heap.get(l)._getProperty(IS.heap, v2pname)._1
+                     // 6. If IsAccessorDescriptor(desc) is true, then
+                     if(desc != null && IH.isAccessorDescriptor(desc)) {
+         // * IRStore 7
+@@ -708,13 +709,13 @@ object InterpreterWalker extends IRWalker {
+                           //    providing base as the this value  and an argument list containing only W.
+                           val lArg: Loc = IS.newLoc
+                           IS.heap.put(lArg, IS.ArrayConstructor.apply(lArg, IS, IP.plusOneV, "Arguments"))
+-                          IS.heap.get(lArg)._defineOwnProperty(IS, "0", IH.mkDataProp(v3, true, true, true), false)
++                          IS.heap.get(lArg)._defineOwnProperty(IS, IP.zeroPName, IH.mkDataProp(v3, true, true, true), false)
+                           IH.call(IS, IH.dummyInfo, l, lArg, setterL) match {
+                             case Normal(v) if v.isDefined => return v.get
+                             case Return(v) if v.isDefined => return v.get
+-                            case _ => throw new InterpreterError(IS.heap.get(l).className + "._get("+v2str+") error.", IP.defSpan)
++                            case _ => throw new InterpreterError(IS.heap.get(l).className + "._get("+v2pname._2+") error.", IP.defSpan)
+                           }
+-                        case _ => throw new InterpreterError(IS.heap.get(l).className + "._set("+v2str+") error.", IP.defSpan)
++                        case _ => throw new InterpreterError(IS.heap.get(l).className + "._set("+v2pname._2+") error.", IP.defSpan)
+                       }
+                     }
+                   // 7. Else, this is a request to create an own property on the transient object O
+@@ -725,7 +726,7 @@ object InterpreterWalker extends IRWalker {
+             // a.-1 If HasPrimitiveBase(V) is false, then let put be the [[Put]] internal method of base
+             //      which an object is not an array
+                   case _ if (IS.heap.get(l).className != "Array") =>
+-                    IS.heap.get(l)._put(IS, v2str, v3, IS.strict) match {
++                    IS.heap.get(l)._put(IS, v2pname, v3, IS.strict) match {
+         // * IRStore 10
+                       case err:JSError => return throwErr(err, info)
+         // * IRStore 11
+@@ -736,7 +737,7 @@ object InterpreterWalker extends IRWalker {
+                   case _ =>
+                   // 8.12.5 [[Put]] ( P, V, Throw )
+                   // 1. If the result of calling the [[CanPut]] internal method of O with argument P is false, then
+-                    if (!IS.heap.get(l)._canPut(IS, v2str)) {
++                    if (!IS.heap.get(l)._canPut(IS, v2pname)) {
+         // * IRStore 12
+                       // a. If Throw is true, then throw a TypeError exception.
+                       if (IS.strict) { return Throw(typeErrorWSpan(getSpan(info)), getSpan(info)) }
+@@ -744,14 +745,14 @@ object InterpreterWalker extends IRWalker {
+                       else { return Normal(Some(v3)) }
+                     }
+                     // 2. Let ownDesc be the result of calling the [[GetOwnProperty]] internal method of O with argument P.
+-                    val ownDesc = IS.heap.get(l)._getOwnProperty(v2str)
++                    val ownDesc = IS.heap.get(l)._getOwnProperty(v2pname)
+                     // 3. If IsDataDescriptor(ownDesc) is true, then
+                     if(ownDesc != null && IH.isDataDescriptor(ownDesc)) {
+                       // a. Let valueDesc be the Property Descriptor {[[Value]]: V}.
+                       val valueDesc = new ObjectProp(Some(v3), None, None, None, None, None)
+                       // b. Call the [[DefineOwnProperty]] internal method of O passing P, valueDesc, and Throw as arguments.
+                       // c. Return.
+-                      IS.heap.get(l)._defineOwnProperty(IS, v2str, valueDesc, IS.strict) match {
++                      IS.heap.get(l)._defineOwnProperty(IS, v2pname, valueDesc, IS.strict) match {
+         // * IRStore 13
+                         case err: JSError => return throwErr(err, info)
+         // * IRStore 14
+@@ -761,7 +762,7 @@ object InterpreterWalker extends IRWalker {
+                     // 4. Let desc be the result of calling the [[GetProperty]] internal method of O with argument P.
+                     //    This may be either an own or inherited accessor property descriptor
+                     //    or an inherited data property descriptor.
+-                    val desc = IS.heap.get(l)._getProperty(IS.heap, v2str)._1
++                    val desc = IS.heap.get(l)._getProperty(IS.heap, v2pname)._1
+                     // 5. If IsAccessorDescriptor(desc) is true, then
+                     if(desc != null && IH.isAccessorDescriptor(desc)) {
+         // * IRStore 15
+@@ -774,20 +775,20 @@ object InterpreterWalker extends IRWalker {
+                           //    providing base as the this value  and an argument list containing only W.
+                           val lArg: Loc = IS.newLoc
+                           IS.heap.put(lArg, IS.ArrayConstructor.apply(lArg, IS, IP.plusOneV, "Arguments"))
+-                          IS.heap.get(lArg)._defineOwnProperty(IS, "0", IH.mkDataProp(v3, true, true, true), false)
++                          IS.heap.get(lArg)._defineOwnProperty(IS, IP.zeroPName, IH.mkDataProp(v3, true, true, true), false)
+                           IH.call(IS, IH.dummyInfo, l, lArg, setterL) match {
+                             case Normal(v) if v.isDefined => return v.get
+                             case Return(v) if v.isDefined => return v.get
+-                            case _ => throw new InterpreterError(IS.heap.get(l).className + "._get("+v2str+") error.", IP.defSpan)
++                            case _ => throw new InterpreterError(IS.heap.get(l).className + "._get("+v2pname._2+") error.", IP.defSpan)
+                           }
+-                        case _ => throw new InterpreterError(IS.heap.get(l).className + "._set("+v2str+") error.", IP.defSpan)
++                        case _ => throw new InterpreterError(IS.heap.get(l).className + "._set("+v2pname._2+") error.", IP.defSpan)
+                       }
+                     }
+                     // 6. Else, this is a request to create an own property on the transient object O
+                     // a. Let newDesc be the Property Descriptor
+                     //    {[[Value]]: V, [[Writable]]: true, [[Enumerable]]: true, [[Configurable]]: true}.
+                     val newDesc = IH.mkDataProp(v3, true, true, true)
+-                    IS.heap.get(l)._defineOwnProperty(IS, v2str, newDesc, IS.strict) match {
++                    IS.heap.get(l)._defineOwnProperty(IS, v2pname, newDesc, IS.strict) match {
+         // * IRStore 17
+                       case err:JSError => return throwErr(err, info)
+         // * IRStore 18
+@@ -950,7 +951,7 @@ object InterpreterWalker extends IRWalker {
+       case SIRTry(info, body, nameOpt, catchBOpt, finallyBOpt) => (nameOpt, catchBOpt, finallyBOpt) match {
+         case (Some(id:IRId), Some(catchB), None) => walk(body) match {
+           case Throw(err, _) =>
+-            val name = id.getUniqueName
++            val name = IP.getPName(id)
+             IH.newDeclEnv(IS)
+             IH.createBinding(IS, name, IS.eval)
+             IH.setBinding(IS, name, exnLoc(err), false) match {
+@@ -972,7 +973,7 @@ object InterpreterWalker extends IRWalker {
+           }
+         case (Some(id:IRId), Some(catchB), Some(finallyB)) => walk(body) match {
+           case Throw(err, _) =>
+-            val x = id.getUniqueName
++            val x = IP.getPName(id)
+             IH.newDeclEnv(IS)
+             IH.createBinding(IS, x, IS.eval)
+             IH.setBinding(IS, x, exnLoc(err), false) match {
+@@ -1001,7 +1002,7 @@ object InterpreterWalker extends IRWalker {
+        * 10.5 Declaration Binding Instantiation - Step 5
+        */
+       case SIRFunDecl(info, ftn@SIRFunctional(id:IRId, params, args, vds, fds, body)) =>
+-        val f = id.getUniqueName
++        val f = IP.getPName(id)
+         val oldHeap = IS.heap
+         //val l = IH.newFtnObject(IS, ftn)
+         val l = IH.createFunctionObject(IS, ftn, IS.env, IS.strict).ownLoc
+@@ -1053,8 +1054,8 @@ object InterpreterWalker extends IRWalker {
+        */
+       case SIRNew(info, lhs:IRId, fun:IRId, args) => walkId(fun) match {
+         case lf if IP.builtinConstructor.contains(lf) && args.size == 2 =>
+-          val x = lhs.getUniqueName
+-          val f = fun.getUniqueName
++          val x = IP.getPName(lhs)
++          val f = IP.getPName(fun)
+           val oldEnv = IS.env
+           val oldTb = IS.tb
+           val (thisP, argsP) = (args.head, args.last)
+@@ -1113,9 +1114,9 @@ object InterpreterWalker extends IRWalker {
+ 
+       // Internal Function Calls
+       case SIRInternalCall(info, lhs:IRId, fun:IRId, thisB, args) =>
+-        val x = lhs.getUniqueName
+-        val f = fun.getUniqueName
+-        f match {
++        val x = IP.getPName(lhs)
++        val f = IP.getPName(fun)
++        f._1 match {
+           case "<>Global<>toObject" => walkExpr(thisB) match {
+             case v:Val => IH.toObject(IS, v) match {
+               // (H', A, tb), x = l
+@@ -1147,7 +1148,7 @@ object InterpreterWalker extends IRWalker {
+             case err:JSError => throwErr(err, info)
+           }
+           case "<>Global<>getBase" =>
+-            val bs = IH.lookup(IS, thisB.asInstanceOf[IRId].getUniqueName)
++            val bs = IH.lookup(IS, IP.getPName(thisB.asInstanceOf[IRId]))
+             // (H, A, tb), x = bs
+             bs match {
+               case oer:ObjEnvRec => IH.putValue(IS, x, oer.l, IS.strict)
+@@ -1184,12 +1185,14 @@ object InterpreterWalker extends IRWalker {
+             val (e1, e2) = (thisB, args)
+             walkExpr(e1) match {
+               case v1:Loc => walkId(e2.get) match {
+-                case v2:Loc => IS.heap.get(v2).__isInDomO(IH.next(IS, IS.heap.get(v2), IH.toInt(IS.heap.get(v2).property.get("@i")), v1).toString) match {
+-                  // (H, A, tb), x = true
+-                  case true => IH.putValue(IS, x, PVal(IH.getIRBool(true)), IS.strict)
+-                  // (H, A, tb), x = true
+-                  case false => IH.putValue(IS, x, PVal(IH.getIRBool(false)), IS.strict)
+-                }
++                case v2:Loc =>
++                  val o2 = IS.heap.get(v2)
++                  o2.__isInDomO(IP.mkPName(IH.next(IS, o2, IH.toInt(o2.property.get(IP.mkPName("@i"))), v1).toString)) match {
++                    // (H, A, tb), x = true
++                    case true => IH.putValue(IS, x, PVal(IH.getIRBool(true)), IS.strict)
++                    // (H, A, tb), x = true
++                    case false => IH.putValue(IS, x, PVal(IH.getIRBool(false)), IS.strict)
++                  }
+                 case err:JSError => throwErr(err, info)
+                 case _ => Throw(typeErrorWSpan(getSpan(info)), getSpan(info))
+               }
+@@ -1201,10 +1204,11 @@ object InterpreterWalker extends IRWalker {
+             walkExpr(e1) match {
+               case v1:Loc => walkId(e2.get) match {
+                 case v2:Loc =>
+-                  val i = IH.next(IS, IS.heap.get(v2), IH.toInt(IS.heap.get(v2).property.get("@i")), v1)
+-                  IS.heap.get(v2).__updateProp("@i", IH.numProp(i + 1))
++                  val o2 = IS.heap.get(v2)
++                  val i = IH.next(IS, o2, IH.toInt(o2.property.get(IP.mkPName("@i"))), v1)
++                  IS.heap.get(v2).__updateProp(IP.mkPName("@i"), IH.numProp(i + 1))
+                   // (H', A, tb), x = H(v2).@property("i")
+-                  IH.putValue(IS, x, IH.toVal(IS.heap.get(v2).property.get(i.toString)), IS.strict)
++                  IH.putValue(IS, x, IH.toVal(IS.heap.get(v2).property.get(IP.mkPName(i.toString))), IS.strict)
+                 case err:JSError => throwErr(err, info)
+                 case _ => Throw(typeErrorWSpan(getSpan(info)), getSpan(info))
+               }
+@@ -1216,13 +1220,13 @@ object InterpreterWalker extends IRWalker {
+         }
+ 
+       case SIRCall(info, lhs:IRId, fun:IRId, thisB, args) =>
+-        val x = lhs.getUniqueName
+-        val f = fun.getUniqueName
++        val x = IP.getPName(lhs)
++        val f = IP.getPName(fun)
+         val oldEnv = IS.env
+         val oldTb = IS.tb
+         if (debug > 0)
+           System.out.println("\nIRCall:lhs="+ID.getE(x)+" fun="+ID.getE(f)+
+-                             " thisB="+ID.getE(thisB.getUniqueName)+" args="+ID.getE(args.getUniqueName))
++                             " thisB="+ID.getE(IP.getPName(thisB))+" args="+ID.getE(IP.getPName(args)))
+         val result: Completion = walkId(fun) match {
+             case err:JSError => throwErr(err, info)
+             case v:Val => walkExpr(thisB) match {
+@@ -1284,7 +1288,7 @@ object InterpreterWalker extends IRWalker {
+        * 13 Function Definition
+        */
+       case SIRFunExpr(_, lhs, ftn@SIRFunctional(id, params, args, vds, fds, body)) =>
+-        val f = id.getUniqueName
++        val f = IP.getPName(id)
+         IH.newDeclEnv(IS)
+         IH.createImmBinding(IS, f, IS.eval)
+         //val l = IH.newFtnObject(IS, ftn)
+@@ -1292,7 +1296,7 @@ object InterpreterWalker extends IRWalker {
+         IH.initImmBinding(IS, f, l, IS.strict)
+         // (Hf, A, tb), x = l
+         IH.pop(IS)
+-        IH.putValue(IS, lhs.getUniqueName, l, IS.strict)
++        IH.putValue(IS, IP.getPName(lhs), l, IS.strict)
+ 
+       /*
+        * 11.1.4 Array Initializer
+@@ -1301,7 +1305,7 @@ object InterpreterWalker extends IRWalker {
+       case SIRArrayNumber(info, lhs, elements) =>
+         val arr: JSArray = IS.ArrayConstructor.apply(IS, PVal(IH.mkIRNum(elements.size)))
+         IS.heap.put(arr.ownLoc, arr)
+-        //ID.timerStart()
++      ID.timerStart()
+         var i: Int = 0
+         val vs = new Array[PVal](elements.size)
+         elements.foreach(e => {
+@@ -1309,14 +1313,14 @@ object InterpreterWalker extends IRWalker {
+           i += 1
+         })
+         for (i <- 0 until vs.size) {
+-          arr._defineOwnProperty(IS, i.toString, IH.mkDataProp(vs(i), true, true, true), false)
++          arr._defineOwnProperty(IS, IP.mkPName(i.toString), IH.mkDataProp(vs(i), true, true, true), false)
+           //if(i % 1000 == 0) System.out.print(i + " ")
+         }
+         //System.out.println(i)
+-        //ID.timerStop()
+-        if (debug > 0) System.out.println("\nIRArrayNumber: lhs="+lhs.getUniqueName+" l="+arr.ownLoc)
++        ID.timerStop()
++        if (debug > 0) System.out.println("\nIRArrayNumber: lhs="+IP.getPName(lhs)+" l="+arr.ownLoc)
+         // (H'', A', tb), x = l
+-        IH.putValue(IS, lhs.getUniqueName, arr.ownLoc, IS.strict)
++        IH.putValue(IS, IP.getPName(lhs), arr.ownLoc, IS.strict)
+ 
+       /*
+        * 11.1.4 Array Initializer
+@@ -1335,11 +1339,11 @@ object InterpreterWalker extends IRWalker {
+         // Now, there is no error.
+         val vs: List[Option[Val]] = for (v <- ves) yield v.asInstanceOf[Option[Val]]
+         for ((Some(vi), i) <- vs.view.zipWithIndex) {
+-          IS.heap.get(arr.ownLoc)._defineOwnProperty(IS, i.toString, IH.mkDataProp(vi, true, true, true), false)
++          IS.heap.get(arr.ownLoc)._defineOwnProperty(IS, IP.mkPName(i.toString), IH.mkDataProp(vi, true, true, true), false)
+         }
+-        if (debug > 0) System.out.println("\nIRArray: lhs="+lhs.getUniqueName+" l="+arr.ownLoc)
++        if (debug > 0) System.out.println("\nIRArray: lhs="+IP.getPName(lhs)+" l="+arr.ownLoc)
+         // (H'', A', tb), x = l
+-        IH.putValue(IS, lhs.getUniqueName, arr.ownLoc, IS.strict)
++        IH.putValue(IS, IP.getPName(lhs), arr.ownLoc, IS.strict)
+ 
+       case SIRArgs(info, lhs, elements) =>
+         val l = IS.newLoc
+@@ -1355,11 +1359,11 @@ object InterpreterWalker extends IRWalker {
+         // Now, there is no error.
+         val vs: List[Option[Val]] = for (v <- ves) yield v.asInstanceOf[Option[Val]]
+         for ((Some(vi), i) <- vs.view.zipWithIndex) {
+-          IS.heap.get(l)._defineOwnProperty(IS, i.toString, IH.mkDataProp(vi, true, true, true), false)
++          IS.heap.get(l)._defineOwnProperty(IS, IP.mkPName(i.toString), IH.mkDataProp(vi, true, true, true), false)
+         }
+-        if (debug > 0) System.out.println("\nIRArgs: lhs="+lhs.getUniqueName+" l="+l)
++        if (debug > 0) System.out.println("\nIRArgs: lhs="+IP.getPName(lhs)+" l="+l)
+         // (H'', A', tb), x = l
+-        IH.putValue(IS, lhs.getUniqueName, l, IS.strict)
++        IH.putValue(IS, IP.getPName(lhs), l, IS.strict)
+ 
+       /*
+        * 11.1.5 Object Initializer
+@@ -1381,7 +1385,7 @@ object InterpreterWalker extends IRWalker {
+             o._defineOwnProperty(IS, x, op, false)
+         }
+         // (H', A, tb), x = l
+-        IH.putValue(IS, lhs.getUniqueName, l, IS.strict)
++        IH.putValue(IS, IP.getPName(lhs), l, IS.strict)
+ 
+       case n:IRAbstractNode =>
+         println(n.toString) // for debugging
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/InterpreterDebug.scala b/src/kr/ac/kaist/jsaf/interpreter/InterpreterDebug.scala
+index e4db236..599f66a 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/InterpreterDebug.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/InterpreterDebug.scala
+@@ -28,19 +28,22 @@ object InterpreterDebug {
+   type TmpIdEnv = List[(String, String)]
+   var tmpEnv = Nil.asInstanceOf[TmpIdEnv]
+   def addE(uniq: String, new_uniq: String) = tmpEnv = (uniq, new_uniq)::tmpEnv
+-  def getE(uniq: String): String = tmpEnv.find(p => p._1.equals(uniq)) match {
+-    case None =>
+-      val new_uniq = if (NU.isInternal(uniq) && !NU.isGlobalName(uniq)) fresh(uniq) else uniq
+-      addE(uniq, new_uniq)
+-      new_uniq
+-    case Some((_, new_uniq)) => new_uniq
++  def getE(p: (String, String)): String = {
++    val uniq = p._2
++    tmpEnv.find(p => p._1.equals(uniq)) match {
++      case None =>
++        val new_uniq = if (NU.isInternal(uniq) && !NU.isGlobalName(uniq)) fresh(uniq) else uniq
++        addE(uniq, new_uniq)
++        new_uniq
++      case Some((_, new_uniq)) => new_uniq
++    }
+   }
+ 
+   def prExpr(e: IRExpr): String = e match {
+     case SIRBin(f,o,s) => prExpr(f)+o.getText+prExpr(s)
+     case SIRUn(o,expr) => o.getText+prExpr(expr)
+-    case SIRUserId(originalName, uniqueName) => getE(uniqueName)
+-    case SIRTmpId(originalName, uniqueName) => getE(uniqueName)
++    case SIRUserId(originalName, uniqueName) => getE(originalName, uniqueName)
++    case SIRTmpId(originalName, uniqueName) => getE(originalName, uniqueName)
+     case _:IRThis => "this"
+     case _:IRUndef => "undefined"
+     case _:IRNull => "null"
+@@ -63,12 +66,13 @@ object InterpreterDebug {
+     while(i.hasNext()) {
+       val e = i.next()
+       if (e.getKey().n >= 0) {
++        val idx = IP.mkPName(e.getKey().n.toString)
+         if (e.getValue().className == "Function") {
+-          System.out.print(getE(e.getKey().n.toString())+" |-> "+e.getValue().className+" <<"+
++          System.out.print(getE(idx)+" |-> "+e.getValue().className+" <<"+
+                            toStringEnv(e.getValue().asInstanceOf[FunctionType].scope)+">>, ")
+         }
+         else {
+-          System.out.println(getE(e.getKey().n.toString())+" |-> "+e.getValue().className+" <<"+
++          System.out.println(getE(idx)+" |-> "+e.getValue().className+" <<"+
+                              toStringPropTable(e.getValue().property)+">>, ")
+         }
+       }
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/InterpreterHelper.scala b/src/kr/ac/kaist/jsaf/interpreter/InterpreterHelper.scala
+index 6b73600..4dd59f7 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/InterpreterHelper.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/InterpreterHelper.scala
+@@ -76,7 +76,7 @@ object InterpreterHelper {
+   def dummyFtnObj(ownLoc: Loc, length: Int): FunctionType = {
+     val fv: IRFunctional = dummyFtn(length)
+     val prop = propTable
+-    prop.put("length", numProp(fv.getArgs.size))
++    prop.put(IP.lengthPName, numProp(fv.getArgs.size))
+     new FunctionType_13_2(ownLoc, IP.lFunctionPrototype, "Function", true, prop, fv, EmptyEnv())
+   }
+   def mkIRStr(s: String) = IF.makeString(s)
+@@ -101,23 +101,35 @@ object InterpreterHelper {
+    * [[Configurable]]: true}
+    */
+   def locProp(l: Loc) = mkDataProp(l, true, false, true)
+-  def strPropTable(s: String) = {val prop = new HashMap[PName, ObjectProp]; prop.put(IP.varPrefix+"PrimitiveValue", strProp(s)); prop}
+-  def boolPropTable(b: Boolean) = {val prop = new HashMap[PName, ObjectProp]; prop.put(IP.varPrefix+"PrimitiveValue", boolProp(b)); prop}
+-  def numPropTable(d: Double): PropTable = {val prop = new HashMap[PName, ObjectProp]; prop.put(IP.varPrefix+"PrimitiveValue", numProp(d)); prop}
++  def strPropTable(s: String) = {
++    val prop = new HashMap[PName, ObjectProp]
++    prop.put(IP.primitiveValuePName, strProp(s))
++    prop
++  }
++  def boolPropTable(b: Boolean) = {
++    val prop = new HashMap[PName, ObjectProp]
++    prop.put(IP.primitiveValuePName, boolProp(b))
++    prop
++  }
++  def numPropTable(d: Double): PropTable = {
++    val prop = new HashMap[PName, ObjectProp]
++    prop.put(IP.primitiveValuePName, numProp(d))
++    prop
++  }
+   def inherit(IS:InterpreterState, l1:Loc, l2:Loc): Boolean = {
+     if(isNullLoc(l1)) false
+     else if(l1.equals(l2)) true
+     else inherit(IS, IS.heap.get(l1).proto, l2)
+   }
+   def arrayToList(IS: InterpreterState, array: ObjectType): List[Val] = {
+-    val length: Int = toNumber(IS, array._get(IS, "length")).getNum.toInt
+-    val l = for (i <- 0 until length) yield array._get(IS, i.toString)
++    val length: Int = toNumber(IS, array._get(IS, IP.lengthPName)).getNum.toInt
++    val l = for (i <- 0 until length) yield array._get(IS, IP.mkPName(i.toString))
+     l.toList
+   }
+   def argsObjectToArray(IS: InterpreterState, argsObj: ObjectType, maxLength: Int): Array[Val] = {
+-    val length: Int = toNumber(IS, argsObj._get(IS, "length")).getNum.toInt
++    val length: Int = toNumber(IS, argsObj._get(IS, IP.lengthPName)).getNum.toInt
+     // If length < maxLength, the args is padded with the undefined.
+-    (for(i <- 0 until maxLength) yield if(i < length) argsObj._get(IS, i.toString) else IP.undefV).toArray
++    (for(i <- 0 until maxLength) yield if(i < length) argsObj._get(IS, IP.mkPName(i.toString)) else IP.undefV).toArray
+   }
+ 
+   def getVal(op: ObjectProp): Val = {
+@@ -165,10 +177,11 @@ object InterpreterHelper {
+     val argsObj = newArgObj(l2, lf, fv.getArgs.size, IS.heap.get(l2), false)
+     IS.heap.put(l2, argsObj)
+     IS.env = e
+-    val args = fv.getParams.get(1).getUniqueName
++    val args = fv.getParams.get(1)
++    val argsPName = IP.getPName(args)
+     newDeclEnv(IS)
+-    createBinding(IS, args, IS.eval)
+-    setBinding(IS, args, l2, IS.strict) match {
++    createBinding(IS, argsPName, IS.eval)
++    setBinding(IS, argsPName, l2, IS.strict) match {
+       case vf:Val =>
+         IS.tb = getThis(IS, v1)
+ 
+@@ -353,9 +366,9 @@ object InterpreterHelper {
+       if (debug > 10)
+         System.out.println("      getBindingValue: l="+l+" x="+x+
+                            " h(l)._hasProperty(h,x)="+IS.heap.get(l)._hasProperty(IS, x))
+-      if (isNullLoc(l)) referenceError(x+" from getBindingValue")
++      if (isNullLoc(l)) referenceError(x._1+" from getBindingValue")
+       else if (IS.heap.get(l)._hasProperty(IS, x)) IS.heap.get(l)._get(IS, x)
+-           else { if (IS.strict) referenceError(x+" from getBindingValue") else IP.undefV }
++           else { if (IS.strict) referenceError(x._1+" from getBindingValue") else IP.undefV }
+   }
+ 
+   /*
+@@ -410,9 +423,9 @@ object InterpreterHelper {
+    */
+   def iteratorInit(ownLoc: Loc, pn: List[PName]): ObjectType = {
+     val prop = propTable
+-    prop.put("@i", numProp(0))
+-    prop.put("length", numProp(pn.size))
+-    for (i <- 0 until pn.size) prop.put(i.toString, strProp(pn(i)))
++    prop.put(IP.mkPName("@i"), numProp(0))
++    prop.put(IP.lengthPName, numProp(pn.size))
++    for (i <- 0 until pn.size) prop.put(IP.mkPName(i.toString), strProp(pn(i)._2))
+     newObj(ownLoc, prop)
+   }
+   def collectProps(IS: InterpreterState, l: Loc): List[PName] =
+@@ -424,11 +437,13 @@ object InterpreterHelper {
+       if (!isNullLoc(IS.heap.get(l).proto)) list = list ++ collectProps(IS, IS.heap.get(l).proto)
+       list
+     }
+-  def next(IS: InterpreterState, o: ObjectType, n: Int, l: Loc): Int =
+-    if (!o.__isInDomO(n.toString)) {
+-      if (n >= toInt(o.property.get("length"))) n else next(IS, o, n+1, l)
+-    } else if (isInDomH(IS, l) && IS.heap.get(l).__isEnumerable(IS, toStr(o.property.get(n.toString)))) n
++  def next(IS: InterpreterState, o: ObjectType, n: Int, l: Loc): Int = {
++    val nPName = IP.mkPName(n.toString)
++    if (!o.__isInDomO(nPName)) {
++      if (n >= toInt(o.property.get(IP.lengthPName))) n else next(IS, o, n+1, l)
++    } else if (isInDomH(IS, l) && IS.heap.get(l).__isEnumerable(IS, toPName(o.property.get(nPName)))) n
+     else next(IS, o, n+1, l)
++  }
+ 
+   ////////////////////////////////////////////////////////////////////////////////
+   // Internal type conversion
+@@ -444,8 +459,8 @@ object InterpreterHelper {
+     }
+     throw new InterpreterError("toStr", /*program.getInfo.getSpan*/ IP.defSpan)
+   }
+-  def toStr(op: ObjectProp): String = {
+-    if(op.value.isDefined) op.value.get.toString
++  def toPName(op: ObjectProp): (String, String) = {
++    if(op.value.isDefined) IP.mkPName(op.value.get.toString)
+     else throw new InterpreterError("toStr", /*program.getInfo.getSpan*/ IP.defSpan)
+   }
+   def toVal(op: ObjectProp): Val = {
+@@ -487,10 +502,10 @@ object InterpreterHelper {
+     val bs = lookup(IS, x)
+     if (debug > 0)
+       System.out.println("putValue:x="+x+" v="+v+" bs="+bs+
+-                         " isInternal(x)="+NU.isInternal(x))
++                         " isInternal(x._2)="+NU.isInternal(x._2))
+     bs match {
+       // If a generated name by Translator, create a binding.
+-      case oer:ObjEnvRec if isNullLoc(oer.l) && NU.isInternal(x) => setBinding(IS, x, v, b)
++      case oer:ObjEnvRec if isNullLoc(oer.l) && NU.isInternal(x._2) => setBinding(IS, x, v, b)
+       case oer:ObjEnvRec if isNullLoc(oer.l) && b => referenceError(x+" from putValue")
+       case oer:ObjEnvRec if isNullLoc(oer.l) && (!b) => IS.GlobalObject._put(IS, x, v, false)
+       case oer:ObjEnvRec => IS.heap.get(oer.l)._put(IS, x, v, b)
+@@ -522,20 +537,20 @@ object InterpreterHelper {
+     // 3. If IsDataDescriptor(Desc) is true, then
+     if(isDataDescriptor(op)) {
+       // NOTE: We don't make a property if the value does not exist.
+-      if(op.value.isDefined) obj._defineOwnProperty(IS, "value", mkDataProp(op.value.get, true, true, true), false)
+-      if(op.writable.isDefined) obj._defineOwnProperty(IS, "writable", mkDataProp(PVal(getIRBool(op.writable.get)), true, true, true), false)
++      if(op.value.isDefined) obj._defineOwnProperty(IS, IP.valuePName, mkDataProp(op.value.get, true, true, true), false)
++      if(op.writable.isDefined) obj._defineOwnProperty(IS, IP.writablePName, mkDataProp(PVal(getIRBool(op.writable.get)), true, true, true), false)
+     }
+     // 4. If IsAccessorDescriptor(Desc) must be true, so
+     else if(isAccessorDescriptor(op)) {
+       // NOTE: We don't make a property if the value does not exist.
+-      if(op.get.isDefined) obj._defineOwnProperty(IS, "get", mkDataProp(op.get.get, true, true, true), false)
+-      if(op.set.isDefined) obj._defineOwnProperty(IS, "set", mkDataProp(op.set.get, true, true, true), false)
++      if(op.get.isDefined) obj._defineOwnProperty(IS, IP.getPName, mkDataProp(op.get.get, true, true, true), false)
++      if(op.set.isDefined) obj._defineOwnProperty(IS, IP.setPName, mkDataProp(op.set.get, true, true, true), false)
+     }
+     // 5.
+-    obj._defineOwnProperty(IS, "enumerable", mkDataProp(PVal(getIRBool(op.isEnumerable)), true, true, true), false)
++    obj._defineOwnProperty(IS, IP.enumerablePName, mkDataProp(PVal(getIRBool(op.isEnumerable)), true, true, true), false)
+     // 6.
+       // NOTE: We don't make a property if the value does not exist.
+-    obj._defineOwnProperty(IS, "configurable", mkDataProp(PVal(getIRBool(op.isConfigurable)), true, true, true), false)
++    obj._defineOwnProperty(IS, IP.configurablePName, mkDataProp(PVal(getIRBool(op.isConfigurable)), true, true, true), false)
+     // 7. Return obj.
+     obj
+   }
+@@ -550,20 +565,20 @@ object InterpreterHelper {
+     // 2. Let desc be the result of creating a new Property Descriptor that initially has no fields.
+     var op: ObjectProp = mkEmptyObjectProp
+     // 3 ~ 6
+-    if(obj._hasProperty(IS, "enumerable")) op.enumerable = Some(toBoolean(obj._get(IS, "enumerable")))
+-    if(obj._hasProperty(IS, "configurable")) op.configurable = Some(toBoolean(obj._get(IS, "configurable")))
+-    if(obj._hasProperty(IS, "value")) op.value = Some(obj._get(IS, "value"))
+-    if(obj._hasProperty(IS, "writable")) op.writable = Some(toBoolean(obj._get(IS, "writable")))
++    if(obj._hasProperty(IS, IP.enumerablePName)) op.enumerable = Some(toBoolean(obj._get(IS, IP.enumerablePName)))
++    if(obj._hasProperty(IS, IP.configurablePName)) op.configurable = Some(toBoolean(obj._get(IS, IP.configurablePName)))
++    if(obj._hasProperty(IS, IP.valuePName)) op.value = Some(obj._get(IS, IP.valuePName))
++    if(obj._hasProperty(IS, IP.writablePName)) op.writable = Some(toBoolean(obj._get(IS, IP.writablePName)))
+     // 7 ~ 8
+-    if(obj._hasProperty(IS, "get")) {
+-      val getter = obj._get(IS, "get")
++    if(obj._hasProperty(IS, IP.getPName)) {
++      val getter = obj._get(IS, IP.getPName)
+       if(!isCallable(IS, getter) && !isUndef(getter)) return (None, Some(typeError))
+-      op.get = Some(obj._get(IS, "get"))
++      op.get = Some(obj._get(IS, IP.getPName))
+     }
+-    if(obj._hasProperty(IS, "set")) {
+-      val setter = obj._get(IS, "set")
++    if(obj._hasProperty(IS, IP.setPName)) {
++      val setter = obj._get(IS, IP.setPName)
+       if(!isCallable(IS, setter) && !isUndef(setter)) return (None, Some(typeError))
+-      op.set = Some(obj._get(IS, "set"))
++      op.set = Some(obj._get(IS, IP.setPName))
+     }
+     // 9. If either desc.[[Get]] or desc.[[Set]] are present, then
+     if(op.get.isDefined || op.set.isDefined) {
+@@ -573,7 +588,7 @@ object InterpreterHelper {
+     (Some(op), None)
+   }
+ 
+-  def delete(IS: InterpreterState, x: String, b: Boolean): ValError = {
++  def delete(IS: InterpreterState, x: (String, String), b: Boolean): ValError = {
+     def deleteHelper(env: Env): (Env, ValError) = env match {
+       case EmptyEnv() if IS.GlobalObject.__isInDomO(x) =>
+         (env, IS.GlobalObject._delete(IS, x, b))
+@@ -1005,17 +1020,17 @@ object InterpreterHelper {
+     val len = code.getArgs.size
+     // 15. Call the [[DefineOwnProperty]] internal method of F with arguments "length", Property Descriptor
+     //     {[[Value]]: len, [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false}, and false.
+-    F._defineOwnProperty(IS, "length", numProp(len), false)
++    F._defineOwnProperty(IS, IP.lengthPName, numProp(len), false)
+     // 16. Let proto be the result of creating a new object as would be constructed by the expression new Object()
+     //     where Object is the standard built-in constructor with that name.
+     val proto: ObjectType = new ObjectType(IS.newLoc, IP.lObjectPrototype, "Object", true, propTable) // JSObject::_construct()
+     IS.heap.put(proto.ownLoc, proto)
+     // 17. Call the [[DefineOwnProperty]] internal method of proto with arguments "constructor", Property Descriptor
+     //     {[[Value]]: F, [[Writable]]: true, [[Enumerable]]: false, [[Configurable]]: true}, and false.
+-    proto._defineOwnProperty(IS, "constructor", locProp(F.ownLoc), false)
++    proto._defineOwnProperty(IS, IP.constructorPName, locProp(F.ownLoc), false)
+     // 18. Call the [[DefineOwnProperty]] internal method of F with arguments "prototype", Property Descriptor
+     //     {[[Value]]: proto, [[Writable]]: true, [[Enumerable]]: false, [[Configurable]]: true}, and false.
+-    F._defineOwnProperty(IS, "prototype", locProp(proto.ownLoc), false)
++    F._defineOwnProperty(IS, IP.prototypePName, locProp(proto.ownLoc), false)
+     // 19. If Strict is true, then
+     if(strict == true) {
+       // TODO:
+@@ -1032,7 +1047,7 @@ object InterpreterHelper {
+   }
+   def newFtnObj(ownLoc: Loc, fv: IRFunctional, env: Env, propO: Loc, b: Boolean): FunctionType = {
+     val propT = propTable + ("prototype" -> locProp(propO),
+-                             "length" -> numProp(fv.getArgs.size))
++                             IP.lengthPName -> numProp(fv.getArgs.size))
+     new FunctionType_13_2(ownLoc, IP.lFunctionPrototype, "Function", true, propT, fv, env)
+   }*/
+   
+@@ -1046,7 +1061,7 @@ object InterpreterHelper {
+    */
+   def newArrObject(ownLoc: Loc, n: Int): ObjectType = {
+     val prop = propTable
+-    prop.put("length", numProp(n))
++    prop.put(IP.lengthPName, numProp(n))
+     new ObjectType(ownLoc, IP.lArrayPrototype, "Array", true, prop)
+   }
+ 
+@@ -1098,14 +1113,14 @@ object InterpreterHelper {
+    * 10.6 Arguments Object
+    */
+   def newArgObj(ownLoc: Loc, lf: Loc, np: Int, o: ObjectType, b: Boolean): ObjectType = {
+-    val na = toInt(o.property.get("length"))
++    val na = toInt(o.property.get(IP.lengthPName))
+     var prop = o.property
+     if (na < np)
+       for (i <- na until np) {
+-        o.property.put(i.toString, mkDataProp(IP.undefV, true, true, true))
++        o.property.put(IP.mkPName(i.toString), mkDataProp(IP.undefV, true, true, true))
+       }
+-    o.property.put("length", mkDataProp(PVal(mkIRNum(na)), true, false, true))
+-    if (b) o.property.put("callee", mkDataProp(lf, true, false, true))
++    o.property.put(IP.lengthPName, mkDataProp(PVal(mkIRNum(na)), true, false, true))
++    if (b) o.property.put(IP.calleePName, mkDataProp(lf, true, false, true))
+     o
+   }
+ }
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/InterpreterPredefine.scala b/src/kr/ac/kaist/jsaf/interpreter/InterpreterPredefine.scala
+index 5de3c5e..8cf5248 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/InterpreterPredefine.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/InterpreterPredefine.scala
+@@ -22,6 +22,37 @@ object InterpreterPredefine {
+   // Basic
+   ////////////////////////////////////////////////////////////////////////////////
+ 
++  def getPName(id: IRId) = (id.getOriginalName, id.getUniqueName)
++  def mkPName(s: String) = (s, s)
++  val callPName = mkPName("call")
++  val calleePName = mkPName("callee")
++  val concatPName = mkPName("concat")
++  val configurablePName = mkPName("configurable")
++  val constructorPName = mkPName("constructor")
++  val enumerablePName = mkPName("enumerable")
++  val getPName = mkPName("get")
++  val lengthPName = mkPName("length")
++  val isArrayPName = mkPName("isArray")
++  val joinPName = mkPName("join")
++  val onePName = mkPName("1")
++  val popPName = mkPName("pop")
++  val primitiveValuePName = mkPName(varPrefix+"PrimitiveValue")
++  val prototypePName = mkPName("prototype")
++  val pushPName = mkPName("push")
++  val pvpnPName= mkPName(varPrefix+"PrimitiveValue")
++  val reversePName = mkPName("reverse")
++  val setPName = mkPName("set")
++  val slicePName = mkPName("slice")
++  val sortPName = mkPName("sort")
++  val splicePName = mkPName("splice")
++  val toStringPName = mkPName("toString")
++  val valuePName = mkPName("value")
++  val valueOfPName = mkPName("valueOf")
++  val varOnePName = mkPName(varOne)
++  val varTruePName = mkPName(varTrue)
++  val writablePName = mkPName("writable")
++  val zeroPName = mkPName("0")
++
+   // Prefix
+   val varPrefix = "@"
+   val locPrefix = "#"
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSArray.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSArray.scala
+index 82bee65..7c6b6ff 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSArray.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSArray.scala
+@@ -30,8 +30,8 @@ class JSArray (_ownLoc: Loc,
+   override def _defineOwnProperty(IS: InterpreterState, P: Var, Desc: ObjectProp, Throw: Boolean): ValError = {
+     def isArrayIndex(IS: InterpreterState, P: Var) : Boolean = {
+       // ToString(ToUint32(P)) is equal to P and ToUint32(P) is not equal to (2^32)-1
+-      val intP = IH.toUint32(IS, PVal(IH.mkIRStr(P)))
+-      return IH.toString(intP.toDouble).equals(P) && intP != 0xFFFFFFFFL
++      val intP = IH.toUint32(IS, PVal(IH.mkIRStr(P._1)))
++      return IH.toString(intP.toDouble).equals(P._1) && intP != 0xFFFFFFFFL
+ 
+       // Previous code
+       /*val maxIndex:Long = 0xFFFFFFFFL
+@@ -42,17 +42,17 @@ class JSArray (_ownLoc: Loc,
+     // 1. Let oldLenDesc be the result of calling the [[GetOwnProperty]] internal method of A passing "length" as the argument.
+     //    The result will never be undefined or an accessor descriptor
+     //    because Array objects are created with a length data property that cannot be deleted or reconfigured.
+-    val oldLenDesc = _getOwnProperty("length")
++    val oldLenDesc = _getOwnProperty(IP.lengthPName)
+     if(oldLenDesc == null) throw new InterpreterError("_defineOwnPropertyArray", IP.defSpan)
+     // 2. Let oldLen be oldLenDesc.[[Value]].
+     var oldLen = oldLenDesc.value.get.asInstanceOf[PVal].v.asInstanceOf[IRNumber].getNum.toLong
+     // 3. If P is "length", then
+-    if (P.equals("length")) {
++    if (P._2.equals("length")) {
+       // a. If the [[Value]] field of Desc is absent, then
+       if (!Desc.value.isDefined) {
+         // i. Return the result of calling the default [[DefineOwnProperty]] internal method (8.12.9)
+         //    on A passing "length", Desc, and Throw as arguments.
+-        return super._defineOwnProperty(IS, "length", Desc, Throw)
++        return super._defineOwnProperty(IS, IP.lengthPName, Desc, Throw)
+       }
+       // b. Let newLenDesc be a copy of Desc.
+       val newLenDesc = Desc.copy
+@@ -66,7 +66,7 @@ class JSArray (_ownLoc: Loc,
+       if (newLen >= oldLen) {
+         // i. Return the result of calling the default [[DefineOwnProperty]] internal method
+         //    (8.12.9) on A passing "length", newLenDesc, and Throw as arguments.
+-        return super._defineOwnProperty(IS, "length", newLenDesc, Throw)
++        return super._defineOwnProperty(IS, IP.lengthPName, newLenDesc, Throw)
+       }
+       // g. Reject if oldLenDesc.[[Writable]] is false.
+       if (oldLenDesc.writable.isDefined && !oldLenDesc.writable.get)
+@@ -83,7 +83,7 @@ class JSArray (_ownLoc: Loc,
+       }
+       // j. Let succeeded be the result of calling the default [[DefineOwnProperty]] internal method (8.12.9)
+       //    on A passing "length", newLenDesc, and Throw as arguments.
+-      super._defineOwnProperty(IS, "length", newLenDesc, Throw) match {
++      super._defineOwnProperty(IS, IP.lengthPName, newLenDesc, Throw) match {
+       // k. If succeeded is false, return false.
+         case f@PVal(SIRBool(false)) => return f
+         case f@PVal(SIRBool(true)) =>
+@@ -93,7 +93,7 @@ class JSArray (_ownLoc: Loc,
+             oldLen = oldLen - 1
+             // ii. Let deleteSucceeded be the result of calling the [[Delete]] internal method of A passing
+             //     ToString(oldLen) and false as arguments.
+-            _delete(IS, oldLen.toString, false) match {
++            _delete(IS, IP.mkPName(oldLen.toString), false) match {
+             // iii. If deleteSucceeded is false, then
+               case f@PVal(SIRBool(false)) =>
+                 // 1. Set newLenDesc.[[Value] to oldLen+1.
+@@ -102,7 +102,7 @@ class JSArray (_ownLoc: Loc,
+                 if (newWritable == false) { newLenDesc.writable = Some(false) }
+                 // 3. Call the default [[DefineOwnProperty]] internal method (8.12.9) on A passing
+                 //    "length", newLenDesc, and false as arguments.
+-              super._defineOwnProperty(IS, "length", newLenDesc, false) match {
++              super._defineOwnProperty(IS, IP.lengthPName, newLenDesc, false) match {
+                 case err:JSError => return err
+                 case _ => if (Throw) return typeError else return IP.falsePV
+               }
+@@ -115,7 +115,7 @@ class JSArray (_ownLoc: Loc,
+             // i. Call the default [[DefineOwnProperty]] internal method (8.12.9) on A passing "length",
+             //    Property Descriptor{[[Writable]]: false}, and false as arguments. This call will always
+             //    return true.
+-            super._defineOwnProperty(IS, "length",
++            super._defineOwnProperty(IS, IP.lengthPName,
+                 new ObjectProp(None, None, None, Some(false), None, None), false)
+           }
+           // n. Return true.
+@@ -126,7 +126,7 @@ class JSArray (_ownLoc: Loc,
+     // 4. Else if P is an array index (15.4), then
+     else if (isArrayIndex(IS, P)) {
+       // a. Let index be ToUint32(P).
+-      val index = IH.toUint32(IS, PVal(IH.mkIRStr(P)))
++      val index = IH.toUint32(IS, PVal(IH.mkIRStr(P._1)))
+       // b. Reject if index >= oldLen and oldLenDesc.[[Writable]] is false.
+       if (index >= oldLen && oldLenDesc.writable.get == false)
+         { if (Throw) return typeError else return IP.falsePV }
+@@ -143,7 +143,7 @@ class JSArray (_ownLoc: Loc,
+             oldLenDesc.value = Some(PVal(IH.mkIRNum(index+1)))
+             // ii. Call the default [[DefineOwnProperty]] internal method (8.12.9) on A passing "length",
+             //     oldLenDesc, and false as arguments. This call will always return true.
+-            super._defineOwnProperty(IS, "length", oldLenDesc, false)
++            super._defineOwnProperty(IS, IP.lengthPName, oldLenDesc, false)
+           }
+           // f. Return true.
+           return IP.truePV
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSArrayConstructor.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSArrayConstructor.scala
+index ab4da08..69567fd 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSArrayConstructor.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSArrayConstructor.scala
+@@ -25,10 +25,10 @@ class JSArrayConstructor()
+    */
+   // The "length" property initially has the attributes
+   // { [[Writable]]:true, [[Enumerable]]:false, [[Configurable]]:false }
+-  property.put("length", IH.mkDataProp(PVal(IH.mkIRNum(1)), true, false, false))
++  property.put(IP.lengthPName, IH.mkDataProp(PVal(IH.mkIRNum(1)), true, false, false))
+     // [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false
+-  property.put("prototype", IH.locProp(IP.lArrayPrototype))
+-  property.put("isArray", IH.locProp(IP.lArrayIsArray))
++  property.put(IP.prototypePName, IH.locProp(IP.lArrayPrototype))
++  property.put(IP.isArrayPName, IH.locProp(IP.lArrayIsArray))
+ 
+   /*
+    * 15.4.2 The Array Constructor
+@@ -39,9 +39,9 @@ class JSArrayConstructor()
+     // The "length" property initially has the attributes
+     // { [[Writable]]:true, [[Enumerable]]:false, [[Configurable]]:false }
+     var prop: PropTable = propTable
+-    prop.put("length", IH.mkDataProp(PVal(IH.mkIRNum(args.length)), true, false, false))
++    prop.put(IP.lengthPName, IH.mkDataProp(PVal(IH.mkIRNum(args.length)), true, false, false))
+     for (i <- 0 until args.length) {
+-      prop.put(i.toString, IH.mkDataProp(args(i), true, true, true))
++      prop.put(IP.mkPName(i.toString), IH.mkDataProp(args(i), true, true, true))
+     }
+     new JSArray(IS.newLoc, IP.lArrayPrototype, "Array", true, prop)
+   }
+@@ -53,15 +53,15 @@ class JSArrayConstructor()
+       // The "length" property initially has the attributes
+       // { [[Writable]]:true, [[Enumerable]]:false, [[Configurable]]:false }
+       val prop = propTable
+-      prop.put("length", IH.mkDataProp(PVal(n), true, false, false))
++      prop.put(IP.lengthPName, IH.mkDataProp(PVal(n), true, false, false))
+       new JSArray(IS.newLoc, IP.lArrayPrototype, "Array", true, prop)
+     case PVal(n:IRNumber) => new JSArray(IS.newLoc, IP.lRangeError, "Array", true, propTable)
+     case _ =>
+       // The "length" property initially has the attributes
+       // { [[Writable]]:true, [[Enumerable]]:false, [[Configurable]]:false }
+       val prop = propTable
+-      prop.put("length", IH.mkDataProp(PVal(IH.mkIRNum(1)), true, false, false))
+-      prop.put("0", IH.mkDataProp(len, true, true, true))
++      prop.put(IP.lengthPName, IH.mkDataProp(PVal(IH.mkIRNum(1)), true, false, false))
++      prop.put(IP.zeroPName, IH.mkDataProp(len, true, true, true))
+       new JSArray(IS.newLoc, IP.lArrayPrototype, "Array", true, prop)
+   }
+ 
+@@ -73,27 +73,27 @@ class JSArrayConstructor()
+       // The "length" property initially has the attributes
+       // { [[Writable]]:true, [[Enumerable]]:false, [[Configurable]]:false }
+       val prop = propTable
+-      prop.put("length", IH.mkDataProp(PVal(n), true, false, false))
++      prop.put(IP.lengthPName, IH.mkDataProp(PVal(n), true, false, false))
+       new JSArray(ownLoc, IP.lObjectPrototype, name, true, prop)
+     case PVal(n:IRNumber) => new JSArray(ownLoc, IP.lRangeError, name, true, propTable)
+     case _ =>
+       // The "length" property initially has the attributes
+       // { [[Writable]]:true, [[Enumerable]]:false, [[Configurable]]:false }
+       val prop = propTable
+-      prop.put("length", IH.mkDataProp(PVal(IH.mkIRNum(1)), true, false, false))
+-      prop.put("0", IH.mkDataProp(len, true, true, true))
++      prop.put(IP.lengthPName, IH.mkDataProp(PVal(IH.mkIRNum(1)), true, false, false))
++      prop.put(IP.zeroPName, IH.mkDataProp(len, true, true, true))
+       new JSArray(ownLoc, IP.lObjectPrototype, name, true, prop)
+   }
+ 
+   def construct(IS: InterpreterState, argsObj: ObjectType): JSArray =
+-    argsObj._get(IS, "length") match {
++    argsObj._get(IS, IP.lengthPName) match {
+       case PVal(n:IRNumber) if n.getNum == 0 || n.getNum >= 2 => apply(IS, IH.arrayToList(IS, argsObj))
+-      case PVal(n:IRNumber) if n.getNum == 1 => apply(IS, argsObj._get(IS, "0"))
++      case PVal(n:IRNumber) if n.getNum == 1 => apply(IS, argsObj._get(IS, IP.zeroPName))
+     }
+ 
+   override def __callBuiltinFunction(IS: InterpreterState, method: Int, argsObj: ObjectType): Completion = {
+     method match {
+-      case IP.lArrayIsArray.n => _isArray(IS, argsObj._get(IS, "0"))
++      case IP.lArrayIsArray.n => _isArray(IS, argsObj._get(IS, IP.zeroPName))
+     }
+   }
+ 
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSArrayPrototype.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSArrayPrototype.scala
+index f35e145..9d16e32 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSArrayPrototype.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSArrayPrototype.scala
+@@ -23,19 +23,19 @@ class JSArrayPrototype()
+    * 15.4.4 Properties of the Array Prototype Object
+    */
+   // 15.4.5.2 length
+-  property.put("length", IH.mkDataProp(PVal(IH.mkIRNum(0)), true, false, false))
+-  property.put("constructor", IH.locProp(IP.lArray))
+-  property.put("toString", IH.locProp(IP.lArrayPrototypeToString))
++  property.put(IP.lengthPName, IH.mkDataProp(PVal(IH.mkIRNum(0)), true, false, false))
++  property.put(IP.constructorPName, IH.locProp(IP.lArray))
++  property.put(IP.toStringPName, IH.locProp(IP.lArrayPrototypeToString))
+   // 15.4.4.3
+-  property.put("concat", IH.locProp(IP.lArrayPrototypeConcat))
+-  property.put("join", IH.locProp(IP.lArrayPrototypeJoin))
+-  property.put("pop", IH.locProp(IP.lArrayPrototypePop))
+-  property.put("push", IH.locProp(IP.lArrayPrototypePush))
+-  property.put("reverse", IH.locProp(IP.lArrayPrototypeReverse))
++  property.put(IP.concatPName, IH.locProp(IP.lArrayPrototypeConcat))
++  property.put(IP.joinPName, IH.locProp(IP.lArrayPrototypeJoin))
++  property.put(IP.popPName, IH.locProp(IP.lArrayPrototypePop))
++  property.put(IP.pushPName, IH.locProp(IP.lArrayPrototypePush))
++  property.put(IP.reversePName, IH.locProp(IP.lArrayPrototypeReverse))
+   // 15.4.4.9
+-  property.put("slice", IH.locProp(IP.lArrayPrototypeSlice))
+-  property.put("sort", IH.locProp(IP.lArrayPrototypeSort))
+-  property.put("splice", IH.locProp(IP.lArrayPrototypeSplice))
++  property.put(IP.slicePName, IH.locProp(IP.lArrayPrototypeSlice))
++  property.put(IP.sortPName, IH.locProp(IP.lArrayPrototypeSort))
++  property.put(IP.splicePName, IH.locProp(IP.lArrayPrototypeSplice))
+   // 15.4.4.13 - 15.4.4.22
+ 
+   /*
+@@ -47,14 +47,14 @@ class JSArrayPrototype()
+       case IP.lArrayPrototypeToString.n => _toString(IS, argsObj)
+       // 15.4.4.3
+       case IP.lArrayPrototypeConcat.n => _concat(IS, IH.arrayToList(IS, argsObj))
+-      case IP.lArrayPrototypeJoin.n => _join(IS, argsObj._get(IS, "0"))
++      case IP.lArrayPrototypeJoin.n => _join(IS, argsObj._get(IS, IP.zeroPName))
+       case IP.lArrayPrototypePop.n => _pop(IS)
+       case IP.lArrayPrototypePush.n => _push(IS, IH.arrayToList(IS, argsObj))
+       case IP.lArrayPrototypeReverse.n => _reverse(IS)
+       // 15.4.4.9
+-      case IP.lArrayPrototypeSlice.n => _slice(IS, argsObj._get(IS, "0"), argsObj._get(IS, "1"))
+-      case IP.lArrayPrototypeSort.n => _sort(IS, argsObj._get(IS, "0"))
+-      case IP.lArrayPrototypeSplice.n => _splice(IS, argsObj._get(IS, "0"), argsObj._get(IS, "1"), IH.arrayToList(IS, argsObj).drop(2))
++      case IP.lArrayPrototypeSlice.n => _slice(IS, argsObj._get(IS, IP.zeroPName), argsObj._get(IS, IP.onePName))
++      case IP.lArrayPrototypeSort.n => _sort(IS, argsObj._get(IS, IP.zeroPName))
++      case IP.lArrayPrototypeSplice.n => _splice(IS, argsObj._get(IS, IP.zeroPName), argsObj._get(IS, IP.onePName), IH.arrayToList(IS, argsObj).drop(2))
+       // 15.4.4.13 - 15.4.4.22
+     }
+   }
+@@ -62,7 +62,7 @@ class JSArrayPrototype()
+   def _toString(IS: InterpreterState, argsObj: ObjectType): Completion = {
+     IH.toObject(IS, IS.tb) match {
+       case array:Loc =>
+-        val func = IS.heap.get(array)._get(IS, "join") match {
++        val func = IS.heap.get(array)._get(IS, IP.joinPName) match {
+           // func is callable only if it is an object.
+           case l:Loc if IH.isCallable(IS, l) => l
+           case _ => IP.lObjectPrototypeToString
+@@ -81,11 +81,11 @@ class JSArrayPrototype()
+         for (e <- args) {
+           e match {
+             case l1:Loc if IS.heap.get(l1).className == "Array" =>
+-              val len: Int = IH.toNumber(IS, IS.heap.get(l1)._get(IS, "length")).getNum.toInt
++              val len: Int = IH.toNumber(IS, IS.heap.get(l1)._get(IS, IP.lengthPName)).getNum.toInt
+               for (k <- 0L until len) {
+-                val p = k.toString
++                val p = IP.mkPName(k.toString)
+                 if (IS.heap.get(l1)._hasProperty(IS, p)) {
+-                  a._defineOwnProperty(IS, n.toString,
++                  a._defineOwnProperty(IS, IP.mkPName(n.toString),
+                                        IH.mkDataProp(IS.heap.get(l1)._get(IS, p),
+                                                      true, true, true),
+                                        false)
+@@ -93,7 +93,7 @@ class JSArrayPrototype()
+                 n += 1
+               }
+             case _ =>
+-              a._defineOwnProperty(IS, n.toString,
++              a._defineOwnProperty(IS, IP.mkPName(n.toString),
+                                    IH.mkDataProp(e, true, true, true), false)
+               n += 1
+           }
+@@ -106,7 +106,7 @@ class JSArrayPrototype()
+   def _join(IS: InterpreterState, separator: Val): Completion = {
+     IH.toObject(IS, IS.tb) match {
+       case o:Loc =>
+-        val len = IH.toUint32(IS, IS.heap.get(o)._get(IS, "length"))
++        val len = IH.toUint32(IS, IS.heap.get(o)._get(IS, IP.lengthPName))
+         val sep = separator match {
+           case IP.undefV => ","
+           case _ => IH.toString(IS, separator)
+@@ -133,16 +133,17 @@ class JSArrayPrototype()
+     IH.toObject(IS, IS.tb) match {
+       case l:Loc =>
+         val o = IS.heap.get(l)
+-        val len = IH.toUint32(IS, o._get(IS, "length"))
++        val len = IH.toUint32(IS, o._get(IS, IP.lengthPName))
+         len match {
+           case 0 =>
+-            o._put(IS, "length", PVal(IH.mkIRNum(0)), true)
++            o._put(IS, IP.lengthPName, PVal(IH.mkIRNum(0)), true)
+             CReturn(Some(IP.undefV))
+           case _ =>
+             val indx = (len - 1).toString
+-            val element = o._get(IS, indx)
+-            o._delete(IS, indx, true)
+-            o._put(IS, "length", PVal(IH.mkIRStr(indx)), true)
++            val indxPName = IP.mkPName(indx)
++            val element = o._get(IS, indxPName)
++            o._delete(IS, indxPName, true)
++            o._put(IS, IP.lengthPName, PVal(IH.mkIRStr(indx)), true)
+             CReturn(Some(element))
+         }
+       case err:JSError => CThrow(err, err.span)
+@@ -153,12 +154,12 @@ class JSArrayPrototype()
+     IH.toObject(IS, IS.tb) match {
+       case l:Loc =>
+         val o = IS.heap.get(l)
+-        var n = IH.toUint32(IS, o._get(IS, "length"))
++        var n = IH.toUint32(IS, o._get(IS, IP.lengthPName))
+         for (e <- args) {
+-          o._put(IS, n.toString, e, true)
++          o._put(IS, IP.mkPName(n.toString), e, true)
+           n += 1
+         }
+-        o._put(IS, "length", PVal(IH.mkIRNum(n)), true)
++        o._put(IS, IP.lengthPName, PVal(IH.mkIRNum(n)), true)
+         CReturn(Some(PVal(IH.mkIRNum(n))))
+       case err:JSError => CThrow(err, err.span)
+     }
+@@ -168,12 +169,12 @@ class JSArrayPrototype()
+     IH.toObject(IS, IS.tb) match {
+       case l:Loc =>
+         val o = IS.heap.get(l)
+-        val len: Long = IH.toUint32(IS, o._get(IS, "length"))
++        val len: Long = IH.toUint32(IS, o._get(IS, IP.lengthPName))
+         val middle: Long = scala.math.floor(len / 2).toLong
+         var lower: Long = 0
+         while (lower != middle) {
+           val upper: Long = len - lower - 1
+-          val (upperP, lowerP) = (upper.toString, lower.toString)
++          val (upperP, lowerP) = (IP.mkPName(upper.toString), IP.mkPName(lower.toString))
+           val (upperValue, lowerValue) = (o._get(IS, upperP), o._get(IS, lowerP))
+           val (upperExists, lowerExists) = (o._hasProperty(IS, upperP), o._hasProperty(IS, lowerP))
+           if (lowerExists && upperExists) {
+@@ -199,7 +200,7 @@ class JSArrayPrototype()
+         val o = IS.heap.get(l)
+         val a = IS.ArrayConstructor.apply(IS, Nil)
+         IS.heap.put(a.ownLoc, a)
+-        val len = IH.toUint32(IS, o._get(IS, "length"))
++        val len = IH.toUint32(IS, o._get(IS, IP.lengthPName))
+         var k: Long = IH.toInteger(IS, start).getNum.toLong match {
+           case relativeStart if relativeStart < 0 => (len + relativeStart) max 0
+           case relativeStart => relativeStart min len
+@@ -210,10 +211,10 @@ class JSArrayPrototype()
+         }
+         var n: Long = 0
+         while (k < fin) {
+-          val pk = k.toString
++          val pk = IP.mkPName(k.toString)
+           if (o._hasProperty(IS, pk)) {
+             val kValue = o._get(IS, pk)
+-            a._defineOwnProperty(IS, n.toString, IH.mkDataProp(kValue, true, true, true), false)
++            a._defineOwnProperty(IS, IP.mkPName(n.toString), IH.mkDataProp(kValue, true, true, true), false)
+           }
+           k += 1
+           n += 1
+@@ -228,31 +229,34 @@ class JSArrayPrototype()
+     IH.toObject(IS, IS.tb) match {
+       case l:Loc =>
+         val o = IS.heap.get(l)
+-        val len = IH.toUint32(IS, o._get(IS, "length"))
++        val len = IH.toUint32(IS, o._get(IS, IP.lengthPName))
+         for (i <- 0L until len) {
+-          if (o.__isAccessorProp(IS, i.toString) ||
+-              o.__isDataProp(IS, i.toString) && !o.__isWritable(IS, i.toString))
++          val iPName = IP.mkPName(i.toString)
++          if (o.__isAccessorProp(IS, iPName) ||
++              o.__isDataProp(IS, iPName) && !o.__isWritable(IS, iPName))
+             return CReturn(Some(l))
+         }
+         if (o.__isSparse(IS)) {
+           if (!o.extensible)
+             return CReturn(Some(l))
+           for (i <- 0L until len) {
+-            if (o.__isDataProp(IS, i.toString) && !o.__isConfigurable(IS, i.toString))
++            val iPName = IP.mkPName(i.toString)
++            if (o.__isDataProp(IS, iPName) && !o.__isConfigurable(IS, iPName))
+               return CReturn(Some(l))
+           }
+           if (o.proto != IP.lNull) {
+             val proto = IS.heap.get(o.proto)
+             for (i <- 0L until len) {
+-              if (proto._hasProperty(IS, i.toString))
+-                o._defineOwnProperty(IS, i.toString,
+-                                     IH.mkDataProp(o._get(IS, i.toString), true, true, true),
++              val iPName = IP.mkPName(i.toString)
++              if (proto._hasProperty(IS, iPName))
++                o._defineOwnProperty(IS, iPName,
++                                     IH.mkDataProp(o._get(IS, iPName), true, true, true),
+                                      false)
+             }
+           }
+         }
+         def sortCompare(j: Long, k: Long): Completion = {
+-          val (jString, kString) = (j.toString, k.toString)
++          val (jString, kString) = (IP.mkPName(j.toString), IP.mkPName(k.toString))
+           (o._hasProperty(IS, jString), o._hasProperty(IS, kString)) match {
+             case (false, false) => CReturn(Some(IP.plusZeroV))
+             case (false, true) => CReturn(Some(IP.plusOneV))
+@@ -268,9 +272,9 @@ class JSArrayPrototype()
+                     else {
+                       val l1 = IS.newLoc
+                       val prop = propTable
+-                      prop.put("0", IH.mkDataProp(x, true, true, true))
+-                      prop.put("1", IH.mkDataProp(y, true, true, true))
+-                      prop.put("length", IH.numProp(2))
++                      prop.put(IP.zeroPName, IH.mkDataProp(x, true, true, true))
++                      prop.put(IP.onePName, IH.mkDataProp(y, true, true, true))
++                      prop.put(IP.lengthPName, IH.numProp(2))
+                       val a = IH.newObj(l1, prop)
+                       IS.heap.put(l1, a)
+                       val l2 = IS.newLoc
+@@ -291,25 +295,27 @@ class JSArrayPrototype()
+         // Selection Sort
+         for (i <- 0L until len) {
+           for (j <- i + 1 until len) {
++            val iPName = IP.mkPName(i.toString)
++            val jPName = IP.mkPName(j.toString)
+             sortCompare(i, j) match {
+               // TODO: ToNumber?
+               case CReturn(Some(v)) =>
+                 if (IH.toNumber(IS, v).getNum > 0) {
+-	              val (iExists, jExists) = (o._hasProperty(IS, i.toString), o._hasProperty(IS, j.toString))
++	              val (iExists, jExists) = (o._hasProperty(IS, iPName), o._hasProperty(IS, jPName))
+ 	              if (iExists && jExists) {
+-	                val tmp = o._get(IS, i.toString)
+-	                o._put(IS, i.toString, o._get(IS, j.toString), false)
+-	                o._put(IS, j.toString, tmp, false)
++	                val tmp = o._get(IS, iPName)
++	                o._put(IS, iPName, o._get(IS, jPName), false)
++	                o._put(IS, jPName, tmp, false)
+ 	              } else if (iExists && !jExists) {
+-	                o._defineOwnProperty(IS, j.toString,
+-	                                     IH.mkDataProp(o._get(IS, i.toString), true, true, true),
++	                o._defineOwnProperty(IS, jPName,
++	                                     IH.mkDataProp(o._get(IS, iPName), true, true, true),
+ 	                                     false)
+-	                o._delete(IS, i.toString, false)
++	                o._delete(IS, iPName, false)
+ 	              } else if (!iExists && jExists) {
+-	                o._defineOwnProperty(IS, i.toString,
+-	                                     IH.mkDataProp(o._get(IS, j.toString), true, true, true),
++	                o._defineOwnProperty(IS, iPName,
++	                                     IH.mkDataProp(o._get(IS, jPName), true, true, true),
+ 	                                     false)
+-	                o._delete(IS, j.toString, false)
++	                o._delete(IS, jPName, false)
+ 	              }
+ 	            }
+               case ct@_ => return ct
+@@ -327,7 +333,7 @@ class JSArrayPrototype()
+         val o = IS.heap.get(l)
+         val a = IS.ArrayConstructor.apply(IS, Nil)
+         IS.heap.put(a.ownLoc, a)
+-        val len = IH.toUint32(IS, o._get(IS, "length"))
++        val len = IH.toUint32(IS, o._get(IS, IP.lengthPName))
+         val actualStart = IH.toInteger(IS, start).getNum.toLong match {
+           case relativeStart if relativeStart < 0 => (len + relativeStart) max 0
+           case relativeStart => relativeStart min len
+@@ -335,11 +341,11 @@ class JSArrayPrototype()
+         val actualDeleteCount = (IH.toInteger(IS, deleteCount).getNum.toLong max 0) min (len - actualStart)
+         var k: Long = 0
+         while (k < actualDeleteCount) {
+-          val from = (actualStart + k).toString
++          val from = IP.mkPName((actualStart + k).toString)
+           val fromPresent = o._hasProperty(IS, from)
+           if (fromPresent) {
+             val fromValue = o._get(IS, from)
+-            a._defineOwnProperty(IS, k.toString, IH.mkDataProp(fromValue, true, true, true), false)
++            a._defineOwnProperty(IS, IP.mkPName(k.toString), IH.mkDataProp(fromValue, true, true, true), false)
+           }
+           k += 1
+         }
+@@ -347,8 +353,8 @@ class JSArrayPrototype()
+         if (itemCount < actualDeleteCount) {
+           k = actualStart
+           while (k < len - actualDeleteCount) {
+-            val from = (k + actualDeleteCount).toString
+-            val to = (k + itemCount).toString
++            val from = IP.mkPName((k + actualDeleteCount).toString)
++            val to = IP.mkPName((k + itemCount).toString)
+             val fromPresent = o._hasProperty(IS, from)
+             if (fromPresent) {
+               val fromValue = o._get(IS, from)
+@@ -360,14 +366,14 @@ class JSArrayPrototype()
+           }
+           k = len
+           while (k > len - actualDeleteCount + itemCount) {
+-            o._delete(IS, (k - 1).toString, true)
++            o._delete(IS, IP.mkPName((k - 1).toString), true)
+             k -= 1
+           }
+         } else if (itemCount > actualDeleteCount) {
+           k = len - actualDeleteCount
+           while (k > actualStart) {
+-            val from = (k + actualDeleteCount - 1).toString
+-            val to = (k + itemCount - 1).toString
++            val from = IP.mkPName((k + actualDeleteCount - 1).toString)
++            val to = IP.mkPName((k + itemCount - 1).toString)
+             val fromPresent = o._hasProperty(IS, from)
+             if (fromPresent) {
+               val fromValue = o._get(IS, from)
+@@ -380,10 +386,10 @@ class JSArrayPrototype()
+         }
+         k = actualStart
+         for (e <- items) {
+-          o._put(IS, k.toString, e, true)
++          o._put(IS, IP.mkPName(k.toString), e, true)
+           k += 1
+         }
+-        o._put(IS, "length", PVal(IH.mkIRNum(len - actualDeleteCount + itemCount)), true)
++        o._put(IS, IP.lengthPName, PVal(IH.mkIRNum(len - actualDeleteCount + itemCount)), true)
+         CReturn(Some(a.ownLoc))
+       case err:JSError => CThrow(err, err.span)
+     }
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSDateConstructor.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSDateConstructor.scala
+index ab5392b..2af8ab6 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSDateConstructor.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSDateConstructor.scala
+@@ -23,10 +23,10 @@ class JSDateConstructor()
+    * 15.9.4 Properties of the Date Constructor
+    * [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false
+    */
+-  property.put("prototype", IH.locProp(IP.lDatePrototype))
+-  property.put("parse", IH.locProp(IP.lDateParse))
+-  property.put("UTC", IH.locProp(IP.lDateUTC))
+-  property.put("now", IH.locProp(IP.lDateNow))
++  property.put(IP.prototypePName, IH.locProp(IP.lDatePrototype))
++  property.put(IP.mkPName("parse"), IH.locProp(IP.lDateParse))
++  property.put(IP.mkPName("UTC"), IH.locProp(IP.lDateUTC))
++  property.put(IP.mkPName("now"), IH.locProp(IP.lDateNow))
+ 
+   /*
+    * 15.9.3 The Date Constructor
+@@ -62,28 +62,28 @@ class JSDateConstructor()
+                                                        IH.numPropTable(__now.getNum))
+ 
+   def construct(IS: InterpreterState, argsObj: ObjectType): JSDate =
+-    argsObj._get(IS, "length") match {
++    argsObj._get(IS, IP.lengthPName) match {
+       case PVal(n:IRNumber) if n.getNum == 0 => apply(IS)
+-      case PVal(n:IRNumber) if n.getNum == 1 => apply(IS, argsObj._get(IS, "0"))
+-      case PVal(n:IRNumber) if n.getNum >= 2 => apply(IS, argsObj._get(IS, "0"),
+-                                                          argsObj._get(IS, "1"),
+-                                                          argsObj._get(IS, "2"),
+-                                                          argsObj._get(IS, "3"),
+-                                                          argsObj._get(IS, "4"),
+-                                                          argsObj._get(IS, "5"),
+-                                                          argsObj._get(IS, "6"))
++      case PVal(n:IRNumber) if n.getNum == 1 => apply(IS, argsObj._get(IS, IP.zeroPName))
++      case PVal(n:IRNumber) if n.getNum >= 2 => apply(IS, argsObj._get(IS, IP.zeroPName),
++                                                          argsObj._get(IS, IP.onePName),
++                                                          argsObj._get(IS, IP.mkPName("2")),
++                                                          argsObj._get(IS, IP.mkPName("3")),
++                                                          argsObj._get(IS, IP.mkPName("4")),
++                                                          argsObj._get(IS, IP.mkPName("5")),
++                                                          argsObj._get(IS, IP.mkPName("6")))
+     }
+ 
+   override def __callBuiltinFunction(IS: InterpreterState, method: Int, argsObj: ObjectType): Completion = {
+     method match {
+-      case IP.lDateParse.n => _parse(IS, argsObj._get(IS, "0"))
+-      case IP.lDateUTC.n => _utc(IS, argsObj._get(IS, "0"),
+-                                     argsObj._get(IS, "1"),
+-                                     argsObj._get(IS, "2"),
+-                                     argsObj._get(IS, "3"),
+-                                     argsObj._get(IS, "4"),
+-                                     argsObj._get(IS, "5"),
+-                                     argsObj._get(IS, "6"))
++      case IP.lDateParse.n => _parse(IS, argsObj._get(IS, IP.zeroPName))
++      case IP.lDateUTC.n => _utc(IS, argsObj._get(IS, IP.zeroPName),
++                                     argsObj._get(IS, IP.onePName),
++                                     argsObj._get(IS, IP.mkPName("2")),
++                                     argsObj._get(IS, IP.mkPName("3")),
++                                     argsObj._get(IS, IP.mkPName("4")),
++                                     argsObj._get(IS, IP.mkPName("5")),
++                                     argsObj._get(IS, IP.mkPName("6")))
+       case IP.lDateNow.n => _now(IS)
+     }
+   }
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSDatePrototype.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSDatePrototype.scala
+index 4cf3913..e9936e8 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSDatePrototype.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSDatePrototype.scala
+@@ -23,30 +23,30 @@ class JSDatePrototype()
+    * 15.9.5 Properties of the Date Prototype Object
+    * [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false
+    */
+-  property.put(IP.pvpn, IH.mkDataProp(PVal(IP.NaN)))
+-  property.put("constructor", IH.locProp(IP.lDate))
+-  property.put("toString", IH.locProp(IP.lDatePrototypeToString))
++  property.put(IP.pvpnPName, IH.mkDataProp(PVal(IP.NaN)))
++  property.put(IP.constructorPName, IH.locProp(IP.lDate))
++  property.put(IP.toStringPName, IH.locProp(IP.lDatePrototypeToString))
+   // 15.9.5.3 - 15.9.5.7
+-  property.put("valueOf", IH.locProp(IP.lDatePrototypeValueOf))
+-  property.put("getTime", IH.locProp(IP.lDatePrototypeGetTime))
+-  property.put("getFullYear", IH.locProp(IP.lDatePrototypeGetFullYear))
+-  property.put("getUTCFullYear", IH.locProp(IP.lDatePrototypeGetUTCFullYear))
+-  property.put("getMonth", IH.locProp(IP.lDatePrototypeGetMonth))
+-  property.put("getUTCMonth", IH.locProp(IP.lDatePrototypeGetUTCMonth))
+-  property.put("getDate", IH.locProp(IP.lDatePrototypeGetDate))
+-  property.put("getUTCDate", IH.locProp(IP.lDatePrototypeGetUTCDate))
+-  property.put("getDay", IH.locProp(IP.lDatePrototypeGetDay))
+-  property.put("getUTCDay", IH.locProp(IP.lDatePrototypeGetUTCDay))
+-  property.put("getHours", IH.locProp(IP.lDatePrototypeGetHours))
+-  property.put("getUTCHours", IH.locProp(IP.lDatePrototypeGetUTCHours))
+-  property.put("getMinutes", IH.locProp(IP.lDatePrototypeGetMinutes))
+-  property.put("getUTCMinutes", IH.locProp(IP.lDatePrototypeGetUTCMinutes))
+-  property.put("getSeconds", IH.locProp(IP.lDatePrototypeGetSeconds))
+-  property.put("getUTCSeconds", IH.locProp(IP.lDatePrototypeGetUTCSeconds))
+-  property.put("getMilliseconds", IH.locProp(IP.lDatePrototypeGetMilliseconds))
+-  property.put("getUTCMilliseconds", IH.locProp(IP.lDatePrototypeGetUTCMilliseconds))
++  property.put(IP.valueOfPName, IH.locProp(IP.lDatePrototypeValueOf))
++  property.put(IP.mkPName("getTime"), IH.locProp(IP.lDatePrototypeGetTime))
++  property.put(IP.mkPName("getFullYear"), IH.locProp(IP.lDatePrototypeGetFullYear))
++  property.put(IP.mkPName("getUTCFullYear"), IH.locProp(IP.lDatePrototypeGetUTCFullYear))
++  property.put(IP.mkPName("getMonth"), IH.locProp(IP.lDatePrototypeGetMonth))
++  property.put(IP.mkPName("getUTCMonth"), IH.locProp(IP.lDatePrototypeGetUTCMonth))
++  property.put(IP.mkPName("getDate"), IH.locProp(IP.lDatePrototypeGetDate))
++  property.put(IP.mkPName("getUTCDate"), IH.locProp(IP.lDatePrototypeGetUTCDate))
++  property.put(IP.mkPName("getDay"), IH.locProp(IP.lDatePrototypeGetDay))
++  property.put(IP.mkPName("getUTCDay"), IH.locProp(IP.lDatePrototypeGetUTCDay))
++  property.put(IP.mkPName("getHours"), IH.locProp(IP.lDatePrototypeGetHours))
++  property.put(IP.mkPName("getUTCHours"), IH.locProp(IP.lDatePrototypeGetUTCHours))
++  property.put(IP.mkPName("getMinutes"), IH.locProp(IP.lDatePrototypeGetMinutes))
++  property.put(IP.mkPName("getUTCMinutes"), IH.locProp(IP.lDatePrototypeGetUTCMinutes))
++  property.put(IP.mkPName("getSeconds"), IH.locProp(IP.lDatePrototypeGetSeconds))
++  property.put(IP.mkPName("getUTCSeconds"), IH.locProp(IP.lDatePrototypeGetUTCSeconds))
++  property.put(IP.mkPName("getMilliseconds"), IH.locProp(IP.lDatePrototypeGetMilliseconds))
++  property.put(IP.mkPName("getUTCMilliseconds"), IH.locProp(IP.lDatePrototypeGetUTCMilliseconds))
+   // 15.9.5.26
+-  property.put("setTime", IH.locProp(IP.lDatePrototypeSetTime))
++  property.put(IP.mkPName("setTime"), IH.locProp(IP.lDatePrototypeSetTime))
+   // 15.9.5.28 - 15.9.5.44
+ 
+   override def __callBuiltinFunction(IS: InterpreterState, method: Int, argsObj: ObjectType): Completion = {
+@@ -73,7 +73,7 @@ class JSDatePrototype()
+         case IP.lDatePrototypeGetMilliseconds.n => _getMilliseconds(IS)
+         case IP.lDatePrototypeGetUTCMilliseconds.n => _getUTCMilliseconds(IS)
+         // 15.9.5.26
+-        case IP.lDatePrototypeSetTime.n => _setTime(IS, argsObj._get(IS, "0"))
++        case IP.lDatePrototypeSetTime.n => _setTime(IS, argsObj._get(IS, IP.zeroPName))
+         // 15.9.5.28 - 15.9.5.44
+       }
+       case _ => CThrow(TypeError(IP.defSpan), IP.defSpan)
+@@ -92,98 +92,98 @@ class JSDatePrototype()
+     CReturn(Some(PVal(IH.mkIRStr(date+time+timezone))))
+   }
+   def _toString(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => __toString(t)
+       case _ => CReturn(Some(PVal(IH.mkIRStr("NaN"))))
+     }
+   // 15.9.5.3 - 15.9.5.7
+   def _valueOf(IS: InterpreterState): Completion =
+-    CReturn(Some(IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn)))
++    CReturn(Some(IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName)))
+   def _getTime(IS: InterpreterState): Completion =
+-    CReturn(Some(IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn)))
++    CReturn(Some(IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName)))
+   def _getFullYear(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._yearFromTime(JSDateHelper._localTime(t)))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getUTCFullYear(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._yearFromTime(t))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getMonth(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._monthFromTime(JSDateHelper._localTime(t)))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getUTCMonth(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._monthFromTime(t))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getDate(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._dateFromTime(JSDateHelper._localTime(t)))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getUTCDate(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._dateFromTime(t))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getDay(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._weekDay(JSDateHelper._localTime(t)))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getUTCDay(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._weekDay(t))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getHours(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._hourFromTime(JSDateHelper._localTime(t)))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getUTCHours(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._hourFromTime(t))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getMinutes(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._minFromTime(JSDateHelper._localTime(t)))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getUTCMinutes(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._minFromTime(t))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getSeconds(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._secFromTime(JSDateHelper._localTime(t)))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getUTCSeconds(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._secFromTime(t))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getMilliseconds(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._msFromTime(JSDateHelper._localTime(t)))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _getUTCMilliseconds(IS: InterpreterState): Completion =
+-    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpn) match {
++    IS.heap.get(IS.tb.asInstanceOf[Loc])._get(IS, IP.pvpnPName) match {
+       case PVal(t:IRNumber) => CReturn(Some(PVal(JSDateHelper._msFromTime(t))))
+       case _ => CReturn(Some(PVal(IP.NaN)))
+     }
+   def _setTime(IS: InterpreterState, time: Val): Completion = {
+     val v = PVal(JSDateHelper._timeClip(IH.toNumber(IS, time)))
+-    IS.heap.get(IS.tb.asInstanceOf[Loc]).__updateProp(IP.pvpn, IH.mkDataProp(v))
++    IS.heap.get(IS.tb.asInstanceOf[Loc]).__updateProp(IP.pvpnPName, IH.mkDataProp(v))
+     CReturn(Some(v))
+   }
+ }
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSFunctionConstructor.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSFunctionConstructor.scala
+index 47b6de5..c65cad0 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSFunctionConstructor.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSFunctionConstructor.scala
+@@ -18,9 +18,9 @@ class JSFunctionConstructor()
+   extends FunctionType_13_2(IP.lFunction, IP.lFunctionPrototype, "Function", true, propTable, IP.undefFtn, EmptyEnv()) {
+   // Constructor
+   // 15.3.2 Properties of the Function Constructor
+-  property.put("length", IH.mkDataProp(PVal(IF.makeNumber("1", 1)), false, false, false))
++  property.put(IP.lengthPName, IH.mkDataProp(PVal(IF.makeNumber("1", 1)), false, false, false))
+   // 15.3.4 Properties of the Function Prototype Object
+-  property.put("prototype", IH.mkDataProp(IP.lFunctionPrototype, false, false, false))
++  property.put(IP.prototypePName, IH.mkDataProp(IP.lFunctionPrototype, false, false, false))
+ 
+   override def __callBuiltinFunction(IS: InterpreterState, method: Int, argsObj: ObjectType): Completion = {
+     // Call the prototype's method
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSFunctionPrototype.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSFunctionPrototype.scala
+index 410c9af..d1b115e 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSFunctionPrototype.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSFunctionPrototype.scala
+@@ -17,13 +17,13 @@ class JSFunctionPrototype()
+   extends FunctionType_13_2(IP.lFunctionPrototype, IP.lObjectPrototype, "Function", true, propTable, IP.undefFtn, EmptyEnv()) {
+   // Constructor
+   // 15.3.4 Properties of the Function Prototype Object
+-  property.put("length", IH.mkDataProp(PVal(IP.plusZero), false, false, false))
+-  property.put("constructor", IH.locProp(IP.lFunction))
++  property.put(IP.lengthPName, IH.mkDataProp(PVal(IP.plusZero), false, false, false))
++  property.put(IP.constructorPName, IH.locProp(IP.lFunction))
+   /*
+   property.put("toString", IH.locProp(IP.lFunctionPrototypeToString))
+   property.put("apply", IH.locProp(IP.lFunctionPrototypeApply))
+   */
+-  property.put("call", IH.locProp(IP.lFunctionPrototypeCall))
++  property.put(IP.callPName, IH.locProp(IP.lFunctionPrototypeCall))
+   /*
+   property.put("bind", IH.locProp(IP.lFunctionPrototypeBind))
+   */
+@@ -73,9 +73,9 @@ class JSFunctionPrototype()
+     //    in left to right order starting with arg l append each argument as the last element of argList.
+     var prop: PropTable = propTable
+     for ((v, i) <- args.zipWithIndex) {
+-      prop.put(i.toString, IH.mkDataProp(v,false,false,false))
++      prop.put(IP.mkPName(i.toString), IH.mkDataProp(v,false,false,false))
+     }
+-    prop.put("length", IH.numProp(args.size))
++    prop.put(IP.lengthPName, IH.numProp(args.size))
+     
+     val l1: Loc = IS.newLoc
+     val a: ObjectType = IH.newObj(l1, prop)
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSGlobalObject.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSGlobalObject.scala
+index a8c7d19..b6e4716 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSGlobalObject.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSGlobalObject.scala
+@@ -20,49 +20,49 @@ class JSGlobalObject()
+   extends ObjectType(IP.lGlobal, IP.lNull, "Global", true, propTable) {
+   // Constructor
+   // Internal identifiers created by Translator
+-  property.put(IP.varTrue, IH.mkDataProp(IP.truePV, false, false, false))
+-  property.put(IP.varOne, IH.mkDataProp(PVal(IF.makeNumber("1", 1)), false, false, false))
++  property.put(IP.varTruePName, IH.mkDataProp(IP.truePV, false, false, false))
++  property.put(IP.varOnePName, IH.mkDataProp(PVal(IF.makeNumber("1", 1)), false, false, false))
+ 
+   // 15.1.1 Value Properties of the Global Object
+-  property.put("NaN", IH.mkDataProp(PVal(IP.NaN), false, false, false))
+-  property.put("Infinity", IH.mkDataProp(PVal(IP.plusInfinity), false, false, false))
+-  property.put("undefined", IH.mkDataProp(PVal(IP.undefined), false, false, false))
++  property.put(IP.mkPName("NaN"), IH.mkDataProp(PVal(IP.NaN), false, false, false))
++  property.put(IP.mkPName("Infinity"), IH.mkDataProp(PVal(IP.plusInfinity), false, false, false))
++  property.put(IP.mkPName("undefined"), IH.mkDataProp(PVal(IP.undefined), false, false, false))
+ 
+   // 15.1.2 Function Properties of the Global Object
+-  //property.put("eval", IH.locProp(IP.lGlobalEval))
+-  property.put("parseInt", IH.locProp(IP.lGlobalParseInt))
+-  property.put("parseFloat", IH.locProp(IP.lGlobalParseFloat))
+-  property.put("isNaN", IH.locProp(IP.lGlobalIsNaN))
+-  property.put("isFinite", IH.locProp(IP.lGlobalIsFinite))
++  //property.put(IP.mkPName("eval"), IH.locProp(IP.lGlobalEval))
++  property.put(IP.mkPName("parseInt"), IH.locProp(IP.lGlobalParseInt))
++  property.put(IP.mkPName("parseFloat"), IH.locProp(IP.lGlobalParseFloat))
++  property.put(IP.mkPName("isNaN"), IH.locProp(IP.lGlobalIsNaN))
++  property.put(IP.mkPName("isFinite"), IH.locProp(IP.lGlobalIsFinite))
+ 
+   // 15.1.3 URI Handling Function properties
+   /*
+-  property.put("decodeURI", IH.locProp(IP.lGlobalDecodeURI))
+-  property.put("decodeURIComponent", IH.locProp(IP.lGlobalDecodeURIComponent))
+-  property.put("encodeURI", IH.locProp(IP.lGlobalEncodeURI))
+-  property.put("encodeURIComponent", IH.locProp(IP.lGlobalEncodeURIComponent))
++  property.put(IP.mkPName("decodeURI"), IH.locProp(IP.lGlobalDecodeURI))
++  property.put(IP.mkPName("decodeURIComponent"), IH.locProp(IP.lGlobalDecodeURIComponent))
++  property.put(IP.mkPName("encodeURI"), IH.locProp(IP.lGlobalEncodeURI))
++  property.put(IP.mkPName("encodeURIComponent"), IH.locProp(IP.lGlobalEncodeURIComponent))
+   */
+ 
+   // 15.1.4 Constructor Properties of the Global Object
+-  property.put(NU.freshGlobalName("global"), IH.locProp(IP.lGlobal))
+-  property.put("Object", IH.locProp(IP.lObject))
+-  property.put("Function", IH.locProp(IP.lFunction))
+-  property.put("Array", IH.locProp(IP.lArray))
+-  property.put("String", IH.locProp(IP.lString))
+-  property.put("Boolean", IH.locProp(IP.lBoolean))
+-  property.put("Number", IH.locProp(IP.lNumber))
+-  property.put("Math", IH.locProp(IP.lMath))
+-  property.put("Date", IH.locProp(IP.lDate))
+-  property.put("RegExp", IH.locProp(IP.lRegExp))
+-  property.put("Error", IH.locProp(IP.lError))
+-  property.put("EvalError", IH.locProp(IP.lEvalError))
+-  property.put("RangeError", IH.locProp(IP.lRangeError))
+-  property.put("ReferenceError", IH.locProp(IP.lReferenceError))
+-  property.put("SyntaxError", IH.locProp(IP.lSyntaxError))
+-  property.put("TypeError", IH.locProp(IP.lTypeError))
+-  property.put("URIError", IH.locProp(IP.lURIError))
+-  property.put("NYIError", IH.locProp(IP.lNYIError))
+-  property.put("JSON", IH.locProp(IP.lJSON))
++  property.put(IP.mkPName(NU.freshGlobalName("global")), IH.locProp(IP.lGlobal))
++  property.put(IP.mkPName("Object"), IH.locProp(IP.lObject))
++  property.put(IP.mkPName("Function"), IH.locProp(IP.lFunction))
++  property.put(IP.mkPName("Array"), IH.locProp(IP.lArray))
++  property.put(IP.mkPName("String"), IH.locProp(IP.lString))
++  property.put(IP.mkPName("Boolean"), IH.locProp(IP.lBoolean))
++  property.put(IP.mkPName("Number"), IH.locProp(IP.lNumber))
++  property.put(IP.mkPName("Math"), IH.locProp(IP.lMath))
++  property.put(IP.mkPName("Date"), IH.locProp(IP.lDate))
++  property.put(IP.mkPName("RegExp"), IH.locProp(IP.lRegExp))
++  property.put(IP.mkPName("Error"), IH.locProp(IP.lError))
++  property.put(IP.mkPName("EvalError"), IH.locProp(IP.lEvalError))
++  property.put(IP.mkPName("RangeError"), IH.locProp(IP.lRangeError))
++  property.put(IP.mkPName("ReferenceError"), IH.locProp(IP.lReferenceError))
++  property.put(IP.mkPName("SyntaxError"), IH.locProp(IP.lSyntaxError))
++  property.put(IP.mkPName("TypeError"), IH.locProp(IP.lTypeError))
++  property.put(IP.mkPName("URIError"), IH.locProp(IP.lURIError))
++  property.put(IP.mkPName("NYIError"), IH.locProp(IP.lNYIError))
++  property.put(IP.mkPName("JSON"), IH.locProp(IP.lJSON))
+ 
+   override def __callBuiltinFunction(IS: InterpreterState, method: Int, argsObj: ObjectType): Completion = {
+     val args: Array[Val] = IH.argsObjectToArray(IS, argsObj, 2)
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSMath.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSMath.scala
+index bfb8310..11917ad 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSMath.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSMath.scala
+@@ -26,35 +26,35 @@ class JSMathObject()
+    * 15.8.1 Value Properties of the Math Object
+    * [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false
+    */
+-  property.put("E", IH.numProp(2.7182818284590452354))
+-  property.put("LN10", IH.numProp(2.302585092994046))
+-  property.put("LN2", IH.numProp(0.6931471805599453))
+-  property.put("LOG2E", IH.numProp(1.4426950408889634))
+-  property.put("LOG10E", IH.numProp(0.4342944819032518))
+-  property.put("PI", IH.numProp(3.1415926535897932))
+-  property.put("SQRT1_2", IH.numProp(0.7071067811865476))
+-  property.put("SQRT2", IH.numProp(1.4142135623730951))
++  property.put(IP.mkPName("E"), IH.numProp(2.7182818284590452354))
++  property.put(IP.mkPName("LN10"), IH.numProp(2.302585092994046))
++  property.put(IP.mkPName("LN2"), IH.numProp(0.6931471805599453))
++  property.put(IP.mkPName("LOG2E"), IH.numProp(1.4426950408889634))
++  property.put(IP.mkPName("LOG10E"), IH.numProp(0.4342944819032518))
++  property.put(IP.mkPName("PI"), IH.numProp(3.1415926535897932))
++  property.put(IP.mkPName("SQRT1_2"), IH.numProp(0.7071067811865476))
++  property.put(IP.mkPName("SQRT2"), IH.numProp(1.4142135623730951))
+     /*
+      * 15.8.2 Function Properties of the Math Object
+      */
+-  property.put("abs", IH.locProp(IP.lMathAbs))
+-  property.put("acos", IH.locProp(IP.lMathAcos))
+-  property.put("asin", IH.locProp(IP.lMathAsin))
+-  property.put("atan", IH.locProp(IP.lMathAtan))
+-  property.put("atan2", IH.locProp(IP.lMathAtan2))
+-  property.put("ceil", IH.locProp(IP.lMathCeil))
+-  property.put("cos", IH.locProp(IP.lMathCos))
+-  property.put("exp", IH.locProp(IP.lMathExp))
+-  property.put("floor", IH.locProp(IP.lMathFloor))
+-  property.put("log", IH.locProp(IP.lMathLog))
+-  property.put("max", IH.locProp(IP.lMathMax))
+-  property.put("min", IH.locProp(IP.lMathMin))
+-  property.put("pow", IH.locProp(IP.lMathPow))
+-  property.put("random", IH.locProp(IP.lMathRandom))
+-  property.put("round", IH.locProp(IP.lMathRound))
+-  property.put("sin", IH.locProp(IP.lMathSin))
+-  property.put("sqrt", IH.locProp(IP.lMathSqrt))
+-  property.put("tan", IH.locProp(IP.lMathTan))
++  property.put(IP.mkPName("abs"), IH.locProp(IP.lMathAbs))
++  property.put(IP.mkPName("acos"), IH.locProp(IP.lMathAcos))
++  property.put(IP.mkPName("asin"), IH.locProp(IP.lMathAsin))
++  property.put(IP.mkPName("atan"), IH.locProp(IP.lMathAtan))
++  property.put(IP.mkPName("atan2"), IH.locProp(IP.lMathAtan2))
++  property.put(IP.mkPName("ceil"), IH.locProp(IP.lMathCeil))
++  property.put(IP.mkPName("cos"), IH.locProp(IP.lMathCos))
++  property.put(IP.mkPName("exp"), IH.locProp(IP.lMathExp))
++  property.put(IP.mkPName("floor"), IH.locProp(IP.lMathFloor))
++  property.put(IP.mkPName("log"), IH.locProp(IP.lMathLog))
++  property.put(IP.mkPName("max"), IH.locProp(IP.lMathMax))
++  property.put(IP.mkPName("min"), IH.locProp(IP.lMathMin))
++  property.put(IP.mkPName("pow"), IH.locProp(IP.lMathPow))
++  property.put(IP.mkPName("random"), IH.locProp(IP.lMathRandom))
++  property.put(IP.mkPName("round"), IH.locProp(IP.lMathRound))
++  property.put(IP.mkPName("sin"), IH.locProp(IP.lMathSin))
++  property.put(IP.mkPName("sqrt"), IH.locProp(IP.lMathSqrt))
++  property.put(IP.mkPName("tan"), IH.locProp(IP.lMathTan))
+ 
+   override def __callBuiltinFunction(IS: InterpreterState, method: Int, argsObj: ObjectType): Completion = {
+     val args: List[IRNumber] = IH.arrayToList(IS, argsObj).map(x => IH.toNumber(IS, x))
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSNumberConstructor.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSNumberConstructor.scala
+index 5999f5c..830c1fb 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSNumberConstructor.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSNumberConstructor.scala
+@@ -24,13 +24,13 @@ class JSNumberConstructor()
+    * 15.7.3 Properties of the Number Constructor
+    * { [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false }
+    */
+-  property.put("length", IH.numProp(1))
+-  property.put("prototype", IH.locProp(IP.lNumberPrototype))
+-  property.put("MAX_VALUE", IH.numProp(1.7976931348623157e+308))
+-  property.put("MIN_VALUE", IH.numProp(5e-324))
+-  property.put("NaN", IH.mkDataProp(PVal(IP.NaN)))
+-  property.put("NEGATIVE_INFINITY", IH.mkDataProp(PVal(IP.minusInfinity)))
+-  property.put("POSITIVE_INFINITY", IH.mkDataProp(PVal(IP.plusInfinity)))
++  property.put(IP.lengthPName, IH.numProp(1))
++  property.put(IP.prototypePName, IH.locProp(IP.lNumberPrototype))
++  property.put(IP.mkPName("MAX_VALUE"), IH.numProp(1.7976931348623157e+308))
++  property.put(IP.mkPName("MIN_VALUE"), IH.numProp(5e-324))
++  property.put(IP.mkPName("NaN"), IH.mkDataProp(PVal(IP.NaN)))
++  property.put(IP.mkPName("NEGATIVE_INFINITY"), IH.mkDataProp(PVal(IP.minusInfinity)))
++  property.put(IP.mkPName("POSITIVE_INFINITY"), IH.mkDataProp(PVal(IP.plusInfinity)))
+ 
+   /*
+    * 15.7.2 The Number Constructor
+@@ -45,16 +45,16 @@ class JSNumberConstructor()
+   }
+ 
+   def construct(IS: InterpreterState, argsObj: ObjectType): JSNumber = {
+-    argsObj._get(IS, "length") match {
++    argsObj._get(IS, IP.lengthPName) match {
+       case PVal(n:IRNumber) if n.getNum == 0 => apply(IS, None)
+-      case PVal(n:IRNumber) if n.getNum >= 1 => apply(IS, Some(argsObj._get(IS, "0")))
++      case PVal(n:IRNumber) if n.getNum >= 1 => apply(IS, Some(argsObj._get(IS, IP.zeroPName)))
+     }
+   }
+ 
+   override def _call(IS: InterpreterState, tb: Val, argsObj: ObjectType): Completion = {
+-    argsObj._get(IS, "length") match {
++    argsObj._get(IS, IP.lengthPName) match {
+       case PVal(n:IRNumber) if n.getNum == 0 => CReturn(Some(PVal(IH.mkIRNum(0))))
+-      case PVal(n:IRNumber) if n.getNum >= 1 => CReturn(Some(PVal(IH.toNumber(IS, argsObj._get(IS, "0")))))
++      case PVal(n:IRNumber) if n.getNum >= 1 => CReturn(Some(PVal(IH.toNumber(IS, argsObj._get(IS, IP.zeroPName)))))
+     }
+   }
+ }
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSNumberPrototype.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSNumberPrototype.scala
+index 70db374..c278296 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSNumberPrototype.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSNumberPrototype.scala
+@@ -22,20 +22,20 @@ class JSNumberPrototype()
+   /*
+    * 15.7.4 Properties of the Number Prototype Object
+    */
+-  property.put(IP.pvpn, IH.numProp(0))
+-  property.put("constructor", IH.locProp(IP.lNumber))
+-  property.put("toString", IH.locProp(IP.lNumberPrototypeToString))
++  property.put(IP.pvpnPName, IH.numProp(0))
++  property.put(IP.constructorPName, IH.locProp(IP.lNumber))
++  property.put(IP.toStringPName, IH.locProp(IP.lNumberPrototypeToString))
+   // 15.7.4.3
+-  property.put("valueOf", IH.locProp(IP.lNumberPrototypeValueOf))
++  property.put(IP.valueOfPName, IH.locProp(IP.lNumberPrototypeValueOf))
+   // 15.7.4.5
+   // 15.7.4.6
+   // 15.7.4.7
+ 
+   override def __callBuiltinFunction(IS: InterpreterState, method: Int, argsObj: ObjectType): Completion = {
+     method match {
+-      case IP.lNumberPrototypeToString.n => argsObj._get(IS, "length") match {
++      case IP.lNumberPrototypeToString.n => argsObj._get(IS, IP.lengthPName) match {
+         case PVal(n:IRNumber) if n.getNum == 0 => _toString(IS, None)
+-        case PVal(n:IRNumber) if n.getNum >= 1 => _toString(IS, Some(argsObj._get(IS, "0")))
++        case PVal(n:IRNumber) if n.getNum >= 1 => _toString(IS, Some(argsObj._get(IS, IP.zeroPName)))
+       }
+       // 15.7.4.3
+       case IP.lNumberPrototypeValueOf.n => _valueOf(IS)
+@@ -54,7 +54,7 @@ class JSNumberPrototype()
+         }
+         r match {
+           case r if r < 2 || r > 36 => CThrow(RangeError(IP.defSpan), IP.defSpan)
+-          case 10 => CReturn(Some(PVal(IH.mkIRStr(IH.toString(IS, IS.heap.get(l)._get(IS, IP.pvpn))))))
++          case 10 => CReturn(Some(PVal(IH.mkIRStr(IH.toString(IS, IS.heap.get(l)._get(IS, IP.pvpnPName))))))
+           // TODO: 2 - 36
+         }
+       case l:Loc if IS.heap.get(l).className != "Number" =>
+@@ -66,7 +66,7 @@ class JSNumberPrototype()
+   def _valueOf(IS: InterpreterState): Completion = {
+     IH.toObject(IS, IS.tb) match {
+       case l:Loc if IS.heap.get(l).className == "Number" =>
+-        CReturn(Some(IS.heap.get(l)._get(IS, IP.pvpn)))
++        CReturn(Some(IS.heap.get(l)._get(IS, IP.pvpnPName)))
+       case l:Loc if IS.heap.get(l).className != "Number" =>
+         CThrow(TypeError(IP.defSpan), IP.defSpan)
+       case err:JSError => CThrow(err, err.span)
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSObject.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSObject.scala
+index 8f08626..a48765b 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSObject.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSObject.scala
+@@ -20,7 +20,7 @@ class JSObjectConstructor()
+   extends FunctionType_13_2(IP.lObject, IP.lFunctionPrototype, "Object", true, propTable, IP.undefFtn, EmptyEnv()) {
+   // Constructor
+   // 15.2.3 Properties of the Object Constructor
+-  property.put("length", IH.mkDataProp(PVal(IF.makeNumber("1", 1)), false, false, false))
++  property.put(IP.lengthPName, IH.mkDataProp(PVal(IF.makeNumber("1", 1)), false, false, false))
+ 
+   /*
+   property.put("getPrototypeOf", IH.locProp(IP.lObjectGetPrototypeOf))
+@@ -39,7 +39,7 @@ class JSObjectConstructor()
+   */
+ 
+   // 15.2.4 Properties of the Object Prototype Object
+-  property.put("prototype", IH.mkDataProp(IP.lObjectPrototype, false, false, false))
++  property.put(IP.prototypePName, IH.mkDataProp(IP.lObjectPrototype, false, false, false))
+ 
+   // 15.2.5 Properties of Object Instances
+   // None.
+@@ -75,7 +75,7 @@ class JSObjectConstructor()
+ 
+   // 15.2.1.1 Object([value])
+   override def _call(IS: InterpreterState, tb: Val, argsObj: ObjectType): Completion = {
+-    val value: Val = argsObj._get(IS, "0")
++    val value: Val = argsObj._get(IS, IP.zeroPName)
+     if(IH.isNull(value) || IH.isUndef(value)) {
+       val obj: ObjectType = _construct(IS, argsObj)
+       IS.heap.put(obj.ownLoc, obj)
+@@ -86,8 +86,8 @@ class JSObjectConstructor()
+ 
+   // 15.2.2.1 new Object([value])
+   override def _construct(IS: InterpreterState, argsObj: ObjectType): ObjectType = {
+-    val length: Int = IH.toNumber(IS, argsObj._get(IS, "length")).getNum.toInt
+-    val value: Val = argsObj._get(IS, "0")
++    val length: Int = IH.toNumber(IS, argsObj._get(IS, IP.lengthPName)).getNum.toInt
++    val value: Val = argsObj._get(IS, IP.zeroPName)
+     if(length >= 1) {
+       val typeOfValue = IH.typeOf(value)
+       if(typeOfValue == EJSType.OBJECT) {
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSObjectPrototype.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSObjectPrototype.scala
+index 0e30156..bcefdf2 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSObjectPrototype.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSObjectPrototype.scala
+@@ -19,8 +19,8 @@ class JSObjectPrototype()
+   extends ObjectType(IP.lObjectPrototype, IP.lNull, "Object", true, propTable) {
+   // Constructor
+   // 15.2.4 Properties of the Object Prototype Object
+-  property.put("constructor", IH.locProp(IP.lObject))
+-  property.put("toString", IH.locProp(IP.lObjectPrototypeToString))
++  property.put(IP.constructorPName, IH.locProp(IP.lObject))
++  property.put(IP.toStringPName, IH.locProp(IP.lObjectPrototypeToString))
+   /*
+   property.put("toLocaleString", IH.locProp(IP.lObjectPrototypeToLocaleString))
+   property.put("valueOf", IH.locProp(IP.lObjectPrototypeValueOf))
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSStringConstructor.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSStringConstructor.scala
+index d5a6d19..7edc825 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSStringConstructor.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSStringConstructor.scala
+@@ -23,8 +23,8 @@ class JSStringConstructor()
+   /*
+    * 15.5.3 Properties of the String Constructor
+    */
+-  property.put("prototype", IH.locProp(IP.lStringPrototype))
+-  property.put("fromCharCode", IH.locProp(IP.lStringFromCharCode))
++  property.put(IP.prototypePName, IH.locProp(IP.lStringPrototype))
++    property.put(IP.mkPName("fromCharCode"), IH.locProp(IP.lStringFromCharCode))
+ 
+   override def __callBuiltinFunction(IS: InterpreterState, method: Int, argsObj: ObjectType): Completion = {
+     method match {
+@@ -34,18 +34,18 @@ class JSStringConstructor()
+ 
+   // 15.5.2 The String Constructor
+   override def _call(IS: InterpreterState, tb: Val, argsObj: ObjectType): Completion = {
+-    argsObj._get(IS, "length") match {
++    argsObj._get(IS, IP.lengthPName) match {
+       case PVal(n:IRNumber) if n.getNum == 0 => CReturn(Some(PVal(IH.mkIRStr(""))))
+-      case PVal(n:IRNumber) if n.getNum >= 1 => CReturn(Some(PVal(IH.mkIRStr(IH.toString(IS, argsObj._get(IS, "0"))))))
++      case PVal(n:IRNumber) if n.getNum >= 1 => CReturn(Some(PVal(IH.mkIRStr(IH.toString(IS, argsObj._get(IS, IP.zeroPName))))))
+     }
+   }
+ 
+   // 15.5.2.1 new String ( [ value ] )
+   override def _construct(IS: InterpreterState, argsObj: ObjectType): ObjectType = {
+     var str: String = null
+-    argsObj._get(IS, "length") match {
++    argsObj._get(IS, IP.lengthPName) match {
+       case PVal(n:IRNumber) if n.getNum == 0 => str = ""
+-      case PVal(n:IRNumber) if n.getNum >= 1 => str = IH.toString(IS, argsObj._get(IS, "0"))
++      case PVal(n:IRNumber) if n.getNum >= 1 => str = IH.toString(IS, argsObj._get(IS, IP.zeroPName))
+     }
+ 
+     __constructFromString(IS, str)
+@@ -53,7 +53,7 @@ class JSStringConstructor()
+ 
+   def __constructFromString(IS: InterpreterState, str: String): ObjectType = {
+     val prop = IH.strPropTable(str)
+-    prop.put("length", IH.mkDataProp(PVal(IH.mkIRNum(str.length)), false, false, false))
++    prop.put(IP.lengthPName, IH.mkDataProp(PVal(IH.mkIRNum(str.length)), false, false, false))
+     new JSString(IS.newLoc, IP.lStringPrototype, "String", true, prop)
+   }
+ 
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/JSStringPrototype.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/JSStringPrototype.scala
+index a816ab8..bff806b 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/JSStringPrototype.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/JSStringPrototype.scala
+@@ -22,23 +22,23 @@ class JSStringPrototype()
+   /*
+    * 15.5.4 Properties of the String Prototype Object
+    */
+-  property.put(IP.pvpn, IH.strProp(""))
+-  property.put("constructor", IH.locProp(IP.lString))
+-  property.put("toString", IH.locProp(IP.lStringPrototypeToString))
+-  property.put("valueOf", IH.locProp(IP.lStringPrototypeValueOf))
+-  property.put("charAt", IH.locProp(IP.lStringPrototypeCharAt))
+-  property.put("charCodeAt", IH.locProp(IP.lStringPrototypeCharCodeAt))
+-  property.put("concat", IH.locProp(IP.lStringPrototypeConcat))
++  property.put(IP.pvpnPName, IH.strProp(""))
++  property.put(IP.constructorPName, IH.locProp(IP.lString))
++  property.put(IP.toStringPName, IH.locProp(IP.lStringPrototypeToString))
++  property.put(IP.valueOfPName, IH.locProp(IP.lStringPrototypeValueOf))
++  property.put(IP.mkPName("charAt"), IH.locProp(IP.lStringPrototypeCharAt))
++  property.put(IP.mkPName("charCodeAt"), IH.locProp(IP.lStringPrototypeCharCodeAt))
++  property.put(IP.mkPName("concat"), IH.locProp(IP.lStringPrototypeConcat))
+   // 15.5.4.7
+   // 15.5.4.8
+   // 15.5.4.9
+-  property.put("match", IH.locProp(IP.lStringPrototypeMatch))
+-  property.put("replace", IH.locProp(IP.lStringPrototypeReplace))
++  property.put(IP.mkPName("match"), IH.locProp(IP.lStringPrototypeMatch))
++  property.put(IP.mkPName("replace"), IH.locProp(IP.lStringPrototypeReplace))
+   // 15.5.4.12
+-  property.put("slice", IH.locProp(IP.lStringPrototypeSlice))
+-  property.put("split", IH.locProp(IP.lStringPrototypeSplit))
+-  property.put("substring", IH.locProp(IP.lStringPrototypeSubstring))
+-  property.put("toLowerCase", IH.locProp(IP.lStringPrototypeToLowerCase))
++  property.put(IP.mkPName("slice"), IH.locProp(IP.lStringPrototypeSlice))
++  property.put(IP.mkPName("split"), IH.locProp(IP.lStringPrototypeSplit))
++  property.put(IP.mkPName("substring"), IH.locProp(IP.lStringPrototypeSubstring))
++  property.put(IP.mkPName("toLowerCase"), IH.locProp(IP.lStringPrototypeToLowerCase))
+   // 15.5.4.17
+   // 15.5.4.18
+   // 15.5.4.19
+@@ -48,8 +48,8 @@ class JSStringPrototype()
+     method match {
+       case IP.lStringPrototypeToString.n => _toString(IS)
+       case IP.lStringPrototypeValueOf.n => _valueOf(IS)
+-      case IP.lStringPrototypeCharAt.n => _charAt(IS, argsObj._get(IS, "0"))
+-      case IP.lStringPrototypeCharCodeAt.n => _charCodeAt(IS, argsObj._get(IS, "0"))
++      case IP.lStringPrototypeCharAt.n => _charAt(IS, argsObj._get(IS, IP.zeroPName))
++      case IP.lStringPrototypeCharCodeAt.n => _charCodeAt(IS, argsObj._get(IS, IP.zeroPName))
+       case IP.lStringPrototypeConcat.n => _concat(IS, IH.arrayToList(IS, argsObj))
+       // 15.5.4.7
+       // 15.5.4.8
+@@ -59,11 +59,11 @@ class JSStringPrototype()
+       case IP.lStringPrototypeReplace.n => _replace(IS)
+       */
+       // 15.5.4.12
+-      case IP.lStringPrototypeSlice.n => _slice(IS, argsObj._get(IS, "0"), argsObj._get(IS, "1"))
++      case IP.lStringPrototypeSlice.n => _slice(IS, argsObj._get(IS, IP.zeroPName), argsObj._get(IS, IP.onePName))
+       /*
+       case IP.lStringPrototypeSplit.n => _split(IS)
+       */
+-      case IP.lStringPrototypeSubstring.n => _substring(IS, argsObj._get(IS, "0"), argsObj._get(IS, "1"))
++      case IP.lStringPrototypeSubstring.n => _substring(IS, argsObj._get(IS, IP.zeroPName), argsObj._get(IS, IP.onePName))
+       case IP.lStringPrototypeToLowerCase.n => _toLowerCase(IS)
+       // 15.5.4.17
+       // 15.5.4.18
+@@ -76,7 +76,7 @@ class JSStringPrototype()
+     // Equivalent to valueOf
+     IH.toObject(IS, IS.tb) match {
+       case l:Loc if IS.heap.get(l).className == "String" =>
+-        CReturn(Some(IS.heap.get(l)._get(IS, IP.pvpn)))
++        CReturn(Some(IS.heap.get(l)._get(IS, IP.pvpnPName)))
+       case l:Loc if IS.heap.get(l).className != "String" =>
+         CThrow(TypeError(IP.defSpan), IP.defSpan)
+       case err:JSError => CThrow(err, err.span)
+@@ -87,7 +87,7 @@ class JSStringPrototype()
+     // Equivalent to toString
+     IH.toObject(IS, IS.tb) match {
+       case l:Loc if IS.heap.get(l).className == "String" =>
+-        CReturn(Some(IS.heap.get(l)._get(IS, IP.pvpn)))
++        CReturn(Some(IS.heap.get(l)._get(IS, IP.pvpnPName)))
+       case l:Loc if IS.heap.get(l).className != "String" =>
+         CThrow(TypeError(IP.defSpan), IP.defSpan)
+       case err:JSError => CThrow(err, err.span)
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/objects/ObjectType.scala b/src/kr/ac/kaist/jsaf/interpreter/objects/ObjectType.scala
+index 5d182a1..514da62 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/objects/ObjectType.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/objects/ObjectType.scala
+@@ -41,12 +41,14 @@ class ObjectType(var ownLoc: Loc,
+   def __isInDomO(p: PName): Boolean =
+     property.containsKey(p)
+ 
++        /*
+   def __getOriginalName(x: PName) =
+-    if (ownLoc != IP.lGlobal) NU.getOriginalName(x)
++    if (ownLoc != IP.lGlobal) x._1
+     else x
++        */
+ 
+   def __updateProp(x: PName, op: ObjectProp): Unit =
+-    property.put(__getOriginalName(x), op)
++    property.put(x, op)
+ 
+   def __isDataProp(IS: InterpreterState, x: PName): Boolean = {
+     val op = _getProperty(IS.heap, x)._1
+@@ -86,7 +88,7 @@ class ObjectType(var ownLoc: Loc,
+    *   Returns null, if the undefined should be returned.
+    */
+   def _getOwnProperty(x: PName): ObjectProp = {
+-    val v = property.get(__getOriginalName(x))
++    val v = property.get(x)
+     // 1. If O doesn't have an own property with name P, return undefined.
+     if(v == null) null // null means undefined.
+     // 2 ~ 8
+@@ -221,7 +223,7 @@ class ObjectType(var ownLoc: Loc,
+       case l: Loc =>
+         val lArg: Loc = IS.newLoc
+         IS.heap.put(lArg, IS.ArrayConstructor.apply(lArg, IS, IP.plusOneV, "Arguments"))
+-        IS.heap.get(lArg)._defineOwnProperty(IS, "0", IH.mkDataProp(v, true, true, true), false)
++        IS.heap.get(lArg)._defineOwnProperty(IS, IP.zeroPName, IH.mkDataProp(v, true, true, true), false)
+         IH.call(IS, IH.dummyInfo, ownLoc, lArg, l) match {
+           case Normal(v) if v.isDefined => return v.get
+           case Return(v) if v.isDefined => return v.get
+@@ -278,7 +280,7 @@ class ObjectType(var ownLoc: Loc,
+    */
+   def _defaultValue(IS: InterpreterState, hint: String): PVal = {
+     def getString(): Option[PVal] = {
+-      val toString: Val = _get(IS, "toString")
++      val toString: Val = _get(IS, IP.toStringPName)
+       if (IH.isCallable(IS, toString)) {
+         val l: Loc = IS.newLoc
+         IS.heap.put(l, IH.newArrObject(l, 0))
+@@ -291,7 +293,7 @@ class ObjectType(var ownLoc: Loc,
+       }
+     }
+     def getValue(): Option[PVal] = {
+-      val valueOf = _get(IS, "valueOf")
++      val valueOf = _get(IS, IP.valueOfPName)
+       if (IH.isCallable(IS, valueOf)) {
+         val l: Loc = IS.newLoc
+         IS.heap.put(l, IH.newArrObject(l, 0))
+@@ -428,9 +430,9 @@ class ObjectType(var ownLoc: Loc,
+ 
+   // 15.4
+   def __isSparse(IS: InterpreterState): Boolean = {
+-    val len = _get(IS, "length")
++    val len = _get(IS, IP.lengthPName)
+     for (i <- 0L until IH.toUint32(IS, len)) {
+-      val elem = _getOwnProperty(i.toString)
++      val elem = _getOwnProperty(IP.mkPName(i.toString))
+       if(elem == null || IH.isUndef(elem)) return true
+     }
+     false
+diff --git a/src/kr/ac/kaist/jsaf/interpreter/package.scala b/src/kr/ac/kaist/jsaf/interpreter/package.scala
+index f4a09da..cc33fd1 100644
+--- a/src/kr/ac/kaist/jsaf/interpreter/package.scala
++++ b/src/kr/ac/kaist/jsaf/interpreter/package.scala
+@@ -31,8 +31,8 @@ package object interpreter {
+   ////////////////////////////////////////////////////////////////////////////////
+   
+   // Type aliases
+-  type Var = String
+-  type PName = String
++  type Var = (String, String)
++  type PName = (String, String)
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Value & Error
+@@ -81,7 +81,7 @@ package object interpreter {
+   case class Error(var sp: Span) extends JSError(sp)
+   case class EvalError(var sp: Span) extends JSError(sp)
+   case class RangeError(var sp: Span) extends JSError(sp)
+-  case class ReferenceError(var sp: Span, var x: Var) extends JSError(sp)
++  case class ReferenceError(var sp: Span, var x: String) extends JSError(sp)
+   case class SyntaxError(var sp: Span) extends JSError(sp)
+   case class TypeError(var sp: Span) extends JSError(sp)
+   case class URIError(var sp: Span) extends JSError(sp)
+@@ -90,7 +90,7 @@ package object interpreter {
+   def error() = Error(IP.defSpan)
+   def evalError() = EvalError(IP.defSpan)
+   def rangeError() = RangeError(IP.defSpan)
+-  def referenceError(x: Var) = ReferenceError(IP.defSpan, x)
++  def referenceError(x: String) = ReferenceError(IP.defSpan, x)
+   def syntaxError() = SyntaxError(IP.defSpan)
+   def typeError() = TypeError(IP.defSpan)
+   def uriError() = URIError(IP.defSpan)
+diff --git a/src/kr/ac/kaist/jsaf/nodes_util/JSIRUnparser.scala b/src/kr/ac/kaist/jsaf/nodes_util/JSIRUnparser.scala
+index 9171187..1b3c7cc 100644
+--- a/src/kr/ac/kaist/jsaf/nodes_util/JSIRUnparser.scala
++++ b/src/kr/ac/kaist/jsaf/nodes_util/JSIRUnparser.scala
+@@ -103,7 +103,8 @@ class JSIRUnparser(program: IRRoot) extends Walker {
+     s.toString
+   }
+ 
+-  def id2str(n: String) = {
++  def id2str(id: IRId) = {
++    val n = id.getUniqueName
+     val size = NU.significantBits
+     if (!NU.isInternal(n)) n
+     else if (!NU.isGlobalName(n)) n.dropRight(size)+getE(n.takeRight(size))
+@@ -196,8 +197,7 @@ class JSIRUnparser(program: IRRoot) extends Walker {
+       val s: StringBuilder = new StringBuilder
+       printFun(s, "get ", name, params, args, fds, vds, body)
+       s.toString
+-    case SIRUserId(originalName, uniqueName) => id2str(uniqueName)
+-    case SIRTmpId(originalName, uniqueName) => id2str(uniqueName)
++    case id:IRId => id2str(id)
+     case SIRIf(_, expr, trueBranch, falseBranch) =>
+       val s: StringBuilder = new StringBuilder
+       var oneline: Boolean = isOneline(trueBranch)
+diff --git a/src/kr/ac/kaist/jsaf/nodes_util/NodeUtil.scala b/src/kr/ac/kaist/jsaf/nodes_util/NodeUtil.scala
+index c41b32f..46abb5c 100644
+--- a/src/kr/ac/kaist/jsaf/nodes_util/NodeUtil.scala
++++ b/src/kr/ac/kaist/jsaf/nodes_util/NodeUtil.scala
+@@ -171,7 +171,7 @@ object NodeUtil {
+         "yield"
+   )
+   val globalPrefix = internalSymbol + "Global" + internalSymbol
+-  def isInternal(s: String) = s.startsWith(internalSymbol)
++  def isInternal(s: String): Boolean = s.startsWith(internalSymbol)
+   def isGlobalName(s: String) = s.startsWith(globalPrefix)
+   // dummy file name for source location information
+   def freshFile(f: String) = internalSymbol + f
+@@ -181,12 +181,14 @@ object NodeUtil {
+   // unique name generation
+   def freshName(n: String) =
+     internalSymbol + n + internalSymbol + System.nanoTime.toString.takeRight(significantBits)
+-  def getOriginalName(n: String) =
++      /*
++  def getOriginalName(p: (String, String)) = p._1
+     if (isGlobalName(n)) n.drop(10)
+     else {
+       if (!isInternal(n)) n
+       else n.drop(2).dropRight(significantBits)
+     }
++      */
+   val toObjectName = freshGlobalName("toObject")
+   val ignoreName = freshGlobalName("ignore")

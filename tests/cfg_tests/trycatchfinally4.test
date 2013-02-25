@@ -1,0 +1,96 @@
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=trycatchfinally4
+CFG_TESTS_DIR=${JS_HOME}/tests/cfg_tests
+cfg
+cfg_out_WCIequals=\
+(0,LBlock(14))\n\
+    [EDGE] after-call(<>temp<>13)\n\
+    [28] <>temp<>13 := <>temp<>13\n\
+    [29] <>Global<>ignore4 := allocArray(3) @ #9\n\
+    [30] <>Global<>ignore4["0"] := <>temp<>8\n\
+    [31] <>Global<>ignore4["1"] := <>temp<>9\n\
+    [32] <>Global<>ignore4["2"] := <>temp<>13\n\
+    [33] arr := <>Global<>ignore4\n\
+    [34] <>Global<>ignore6 := undefined\n\
+    [35] noop(EndOfFile)\n\
+\n\
+\n\
+(1,LBlock(13))\n\
+    [19] return(<>e<>1)\n\
+\n\
+\n\
+(0,LBlock(12))\n\
+    [18] throw(x)\n\
+\n\
+\n\
+(0,LBlock(11))\n\
+    [17] assert(! <>new<>5)\n\
+\n\
+\n\
+(0,LBlock(10))\n\
+    [16] assert(<>new<>5)\n\
+\n\
+\n\
+(0,LBlock(9))\n\
+\n\
+\n\
+(0,LBlock(8))\n\
+    [12] assert(! true)\n\
+\n\
+\n\
+(0,LBlock(7))\n\
+    [11] assert(true)\n\
+    [13] <>old<>4 := x\n\
+    [14] <>new<>5 := <>Global<>toNumber(<>old<>4)\n\
+    [15] x := <>new<>5 - 1\n\
+\n\
+\n\
+(0,LBlock(6))\n\
+\n\
+\n\
+(0,LBlock(5))\n\
+\n\
+\n\
+(0,LBlock(4))\n\
+    [8] assert(<>obj<>2["a"] != x)\n\
+\n\
+\n\
+(0,LBlock(3))\n\
+    [7] assert(<>obj<>2["a"] == x)\n\
+    [9] <>obj<>3 := <>Global<>toObject(obj) @ #3\n\
+    [10] <>Global<>ignore7 := delete(<>obj<>3, "b")\n\
+\n\
+\n\
+(0,LBlock(2))\n\
+    [5] catch(<>e<>1)\n\
+    [20] <>Global<>ignore3 := function (1) @ #4, #5\n\
+    [21] value := <>Global<>ignore3\n\
+    [22] <>temp<>8 := 4\n\
+    [23] <>temp<>9 := 2\n\
+    [24] <>obj<>10 := <>Global<>toObject(test) @ #6\n\
+    [25] <>arguments<>11 := allocArg(0) @ #7\n\
+    [26] <>fun<>12 := <>Global<>getBase(test)\n\
+    [27] call(<>obj<>10, <>fun<>12, <>arguments<>11) @ #8\n\
+\n\
+\n\
+(0,LBlock(1))\n\
+    [6] <>obj<>2 := <>Global<>toObject(obj) @ #2\n\
+\n\
+\n\
+(0,LBlock(0))\n\
+    [0] x := 1\n\
+    [1] <>Global<>ignore2 := alloc() @ #1\n\
+    [2] <>Global<>ignore2["a"] := "A"\n\
+    [3] <>Global<>ignore2["b"] := "B"\n\
+    [4] obj := <>Global<>ignore2\n\
+\n\
+\n\
+\n
+cfg_err_equals=

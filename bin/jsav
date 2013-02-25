@@ -1,0 +1,218 @@
+#!/bin/bash
+
+################################################################################
+#    Copyright (c) 2012, S-Core.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+
+JSAF="${JS_HOME}/build/kr/ac/kaist/jsaf/Shell.class"
+SUCCESSFUL=1
+
+OUT_PATH1="$JS_HOME/$1/html"
+OUT_PATH2="$JS_HOME/$1/result"
+
+if (uname | egrep CYGWIN > /dev/null) ; then
+  JS_HOME=$JS_HOME
+  HIGHLIGHT=`which highlight`
+  HIGHLIGHT_PATH=`cygpath -am $HIGHLIGHT`
+  CHROME_CMD=chrome	# TODO: location of chrome
+  OUT_PATH1=`cygpath -am $JS_HOME/$1/html`
+  OUT_PATH2=`cygpath -am $JS_HOME/$1/result`
+else
+  HIGHLIGHT_PATH=`which highlight`
+  CHROME_CMD=google-chrome
+fi
+
+
+makeDir() {
+  if [ -d $OUT_PATH1 ];	then
+		echo "$OUT_PATH1 exsit. overwrite."
+		rm -rf $OUT_PATH1
+  fi
+  #mkdir -p $OUT_PATH1 >/dev/null 2>&1 && echo "Directory $OUT_PATH1 was created." || echo "Error: Failed to create $OUT_PATH1 directory."
+  mkdir -p $OUT_PATH1 >/dev/null 2>&1
+}
+
+
+convertSvg2Html() {
+	FILES=(`/usr/bin/find $OUT_PATH2 -name "*.svg"`)	# array variable
+	I=0
+	
+	if (( $SUCCESSFUL == 0 ))
+	then
+		exit
+	fi
+
+	while (( $I < ${#FILES[*]} ))
+	do
+		FILE_NAME=`basename ${FILES[$I]}`
+		NAME=`echo $FILE_NAME | cut -d '.' -f1`
+		NEW_FILE="$OUT_PATH1/$NAME.html"
+		
+		if [[ $NAME == "callgraph" ]]
+		then
+			touch $NEW_FILE
+			if [[ -a $NEW_FILE ]]
+			then
+				echo "write to callgraph.html"
+				echo "<!DOCTYPE html>" >> $NEW_FILE
+				echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">" >> $NEW_FILE
+				echo "<head>" >> $NEW_FILE
+				echo "	<link rel=\"stylesheet\" href=\"$JS_HOME/lib/analyzer_visualization/jquery-ui.css\" />" >> $NEW_FILE
+				echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/jquery-1.8.2.js\"></script>" >> $NEW_FILE
+				echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/jquery-ui.js\"></script>" >> $NEW_FILE
+				echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/jquery.bgiframe-2.1.2.js\"></script>" >> $NEW_FILE
+				echo "	<style type='text/css'>" >> $NEW_FILE
+				echo "		.ui-widget {font-family:Consolas; font-size: 1.2em}" >> $NEW_FILE
+				echo "		.ui-widget select, .ui-widget button {font-family:Consolas; font-size: 1.0em}" >> $NEW_FILE
+				echo "	</style>" >> $NEW_FILE
+				echo "</head>" >> $NEW_FILE
+				echo "" >> $NEW_FILE
+				echo "<body>" >> $NEW_FILE
+				echo "" >> $NEW_FILE
+				echo "<div id=\"cfg\">" >> $NEW_FILE
+				
+				DATA=$(cat ${FILES[$I]})
+				echo "${DATA}" >> $NEW_FILE
+				
+				echo "</div>" >> $NEW_FILE
+				echo "" >> $NEW_FILE
+				echo "<script src=\"../result/data.js\"></script>" >> $NEW_FILE
+				echo "<script src=\"$JS_HOME/lib/analyzer_visualization/parsing.js\"></script>" >> $NEW_FILE
+				echo "<script src=\"$JS_HOME/lib/analyzer_visualization/callgraph.js\"></script>" >> $NEW_FILE
+				echo "</body>" >> $NEW_FILE
+				echo "</html>" >> $NEW_FILE
+			else
+				SUCCESSFUL=0
+				exit
+			fi
+		
+		else
+			touch $NEW_FILE
+			if [[ -a $NEW_FILE ]]
+			then
+				echo "write to $NEW_FILE" 
+				echo "<!DOCTYPE html>" >> $NEW_FILE
+				echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">" >> $NEW_FILE
+				echo "<head>" >> $NEW_FILE
+				echo "	<link rel=\"stylesheet\" href=\"$JS_HOME/lib/analyzer_visualization/jquery-ui.css\" />" >> $NEW_FILE
+				echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/jquery-1.8.2.js\"></script>" >> $NEW_FILE
+				echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/jquery-ui.js\"></script>" >> $NEW_FILE
+				echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/jquery.tooltip.min.js\"></script>" >> $NEW_FILE
+				echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/diff.js\"></script>" >> $NEW_FILE
+				echo "	<style type='text/css'>" >> $NEW_FILE
+				echo "		.ui-widget {font-family:Consolas; font-size: 1.2em}" >> $NEW_FILE
+				echo "		.ui-widget select, .ui-widget button {font-family:Consolas; font-size: 1.0em}" >> $NEW_FILE
+				echo "		#tooltip {font-family:Consolas; font-size: 1.0em}" >> $NEW_FILE
+				echo "	</style>" >> $NEW_FILE
+				echo "</head>" >> $NEW_FILE
+				echo "" >> $NEW_FILE
+				echo "<body>" >> $NEW_FILE
+				echo "" >> $NEW_FILE
+				echo "<div id=\"cfg\">" >> $NEW_FILE
+
+				DATA=$(cat ${FILES[$I]})
+				echo "${DATA}" >> $NEW_FILE
+
+				echo "</div>" >> $NEW_FILE
+				echo "" >> $NEW_FILE
+				echo "<script src=\"../result/data.js\"></script>" >> $NEW_FILE
+				echo "<script src=\"../result/$NAME.js\"></script>" >> $NEW_FILE
+				echo "<script src=\"$JS_HOME/lib/analyzer_visualization/parsing.js\"></script>" >> $NEW_FILE
+				echo "<script src=\"$JS_HOME/lib/analyzer_visualization/src.js\"></script>" >> $NEW_FILE
+				echo "</body>" >> $NEW_FILE
+				echo "</html>" >> $NEW_FILE
+			else
+				SUCCESSFUL=0
+				exit
+			fi
+		fi
+		((I=$I+1))
+	done
+	
+	# create main.html
+	NEW_FILE="$OUT_PATH1/main.html"
+	touch $NEW_FILE
+	
+	if [[ -a $NEW_FILE ]]
+	then
+		echo "write to $NEW_FILE"
+		echo "<!DOCTYPE html>" >> $NEW_FILE
+		echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">" >> $NEW_FILE
+		echo "<head>" >> $NEW_FILE
+		echo "	<link rel=\"stylesheet\" href=\"$JS_HOME/lib/analyzer_visualization/jquery-ui.css\" />" >> $NEW_FILE
+		echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/jquery-1.8.2.js\"></script>" >> $NEW_FILE
+		echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/jquery-ui.js\"></script>" >> $NEW_FILE
+		echo "</head>" >> $NEW_FILE
+		echo "" >> $NEW_FILE
+		echo "<body>" >> $NEW_FILE
+		echo "	<button id=\"source\" onClick=\"hShowSource()\">source</button>" >> $NEW_FILE
+		echo "	<button id=\"statistics\" onClick=\"alert()\">statistics</button>" >> $NEW_FILE
+		echo "	<button id=\"inform\" onClick=\"alert()\">information</button>" >> $NEW_FILE
+		echo "	<button id=\"callgraph\" onClick=\"hShowCallGraph()\">call graph</button>" >> $NEW_FILE
+		echo "	<button id=\"fidName\" onClick=\"hShowFid()\">function Name</button>" >> $NEW_FILE
+		echo "	<select id=\"dropdown\" onChange=\"hSelectChange(this)\"></select>" >> $NEW_FILE
+		echo "" >> $NEW_FILE
+		echo "	<div id=\"cfg\">" >> $NEW_FILE
+		echo "		<iframe id=\"frm\" src=\"./callgraph.html\" width=\"1600px\" height=\"800px\" onload=\"hFrmLoad(this.src)\"></iframe>" >> $NEW_FILE
+		echo "	</div>" >> $NEW_FILE
+		echo "" >> $NEW_FILE
+		echo "	<script src=\"../result/data.js\"></script>" >> $NEW_FILE
+		echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/parsing.js\"></script>" >> $NEW_FILE
+		echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/main.js\"></script>" >> $NEW_FILE
+		echo "</body>" >> $NEW_FILE
+		echo "</html>" >> $NEW_FILE
+	else
+		SUCCESSFUL=0
+		exit
+	fi
+
+
+	# create source.html
+	NEW_FILE="$OUT_PATH1/source.html"
+	touch $NEW_FILE
+
+	if [[ -a $NEW_FILE ]]
+	then
+		echo "write to $NEW_FILE"
+		echo "<!DOCTYPE html>" >> $NEW_FILE
+		echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">" >> $NEW_FILE
+		echo "<head>" >> $NEW_FILE
+		echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">" >> $NEW_FILE
+		echo "	<style type=\"text/css\">" >> $NEW_FILE
+		echo "		html {    height: 100%;    width: 100%;    overflow: hidden;}" >> $NEW_FILE
+		echo "		body {    overflow: hidden;    margin: 0;    padding: 0;    height: 100%;    width: 100%;    font-size: 12px;    background: rgb(14, 98, 165);    color: white;}" >> $NEW_FILE
+		echo "		#editor {    position: absolute;    top:  0px;    left: 0px;    bottom: 0px;    right: 0px;    background: white;}" >> $NEW_FILE
+		echo "		div .ace_entity.ace_name.ace_function {}" >> $NEW_FILE
+		echo "	</style>" >> $NEW_FILE
+		echo "</head>" >> $NEW_FILE
+		echo "<body>" >> $NEW_FILE
+		echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/ace.js\" type=\"text/javascript\" charset=\"utf-8\"></script>" >> $NEW_FILE
+		echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/keybinding-emacs.js\"></script>" >> $NEW_FILE
+		echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/mode-javascript.js\"></script>" >> $NEW_FILE
+		echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/theme-eclipse.js\"></script>" >> $NEW_FILE
+		echo "	<script src="../result/data.js"></script>" >> $NEW_FILE
+		echo "	<div id=\"editor\">" >> $NEW_FILE
+		echo "	</div>" >> $NEW_FILE
+		echo "	<script src=\"$JS_HOME/lib/analyzer_visualization/source.js\"></script>" >> $NEW_FILE
+		echo "</body>" >> $NEW_FILE
+		echo "</html>" >> $NEW_FILE
+	else
+		SUCCESSFUL=0
+		exit
+	fi
+}
+
+makeDir
+convertSvg2Html
+
+if (( $SUCCESSFUL == 1 ))
+then
+	$CHROME_CMD $OUT_PATH1/main.html &
+fi
+
+

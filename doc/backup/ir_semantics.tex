@@ -1,0 +1,1861 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[a4paper, leqno]{amsart}
+\usepackage{amsmath,amssymb,stmaryrd}
+\usepackage{fullpage}
+\usepackage{kotex}
+\usepackage{graphicx, color}
+\usepackage{anysize}
+\usepackage{multicol}
+\usepackage{upquote}
+
+
+\marginsize{.5in}{.5in}{.5in}{.5in}
+
+%% comands %%
+\newcommand{\note}[1]{~~~~{\color{blue}{\emph{#1}}}}
+\newcommand{\cmt}[1]{\mbox{\footnotesize #1}}
+\newcommand{\dquote}[1]{\text{``}#1\text{''}}
+\newcommand{\squote}[1]{\text{`}#1\text{'}}
+
+\newcommand{\jsnull}{\textsf{null}}
+\newcommand{\jsundef}{\textsf{undefined}}
+\newcommand{\jstrue}{\textsf{true}}
+\newcommand{\jsfalse}{\textsf{false}}
+\newcommand{\jsthis}{\textsf{this}}
+\newcommand{\jstypeof}{\textsf{typeof}}
+\newcommand{\jsdel}{\textsf{delete}}
+\newcommand{\jsvoid}{\textsf{void}}
+\newcommand{\jsin}{\textsf{in}}
+\newcommand{\jsinstanceof}{\textsf{instanceOf}}
+
+\newcommand{\jsvar}[1]{\textsf{var} \ #1}
+\newcommand{\jsreturn}[1]{\textsf{return} \ #1}
+\newcommand{\jsthrow}[1]{\textsf{throw} \ #1}
+\newcommand{\jseval}[1]{\textsf{eval}(#1)}
+\newcommand{\jsif}[2]{\textsf{if} \ (#1) \ \textsf{then} \ #2}
+\newcommand{\jsifelse}[3]{\textsf{if} \ (#1) \ \textsf{then} \ #2 \ \textsf{else} \ #3}
+\newcommand{\jsifelseopt}[3]{\textsf{if} \ (#1) \ \textsf{then} \ #2 \ [\textsf{else} \ #3]}
+\newcommand{\jswhile}[2]{\textsf{while} \ (#1) \ #2}
+\newcommand{\jsnew}[2]{\textsf{new} \ #1(#2)}
+\newcommand{\jsfunc}[3]{\textsf{function} \ #1 \ (#2) \ \{ #3\}}
+\newcommand{\jsfuncno}[2]{\textsf{function} \ (#1) \ \{ #2\}}
+\newcommand{\jsfuncopt}[3]{\textsf{function} \ [#1] \ (#2) \ \{ #3\}}
+\newcommand{\jsforin}[3]{\textsf{for} \ (#1 \ \textsf{in} \ #2)\ #3}
+\newcommand{\jstry}[1]{\textsf{try} \ \{#1\}}
+\newcommand{\jstryfinally}[2]{\textsf{try} \ \{#1\} \ \textsf{finally} \{#2\}}
+\newcommand{\jstrycatch}[3]{\textsf{try} \ \{#1\} \ \textsf{catch} \ (#2) \ \{#3\}}
+\newcommand{\jstryfull}[4]{\textsf{try} \ \{#1\} \ \textsf{catch} \ (#2) \ \{#3\} \ \textsf{finally} \ \{#4\}}
+\newcommand{\jstryopt}[4]{\textsf{try} \ \{#1\} \ [\textsf{catch} \ (#2) \ \{#3\}] \ [\textsf{finally} \ \{#4\}]}
+\newcommand{\jswith}[2]{\textsf{with} \ (#1) \ \{#2\}}
+\newcommand{\jsbreak}[1]{\textsf{break} \ #1 }
+
+\def\inred{\color{red}}
+\def\inblue{\color{blue}}
+\newcommand{\nullK}{{\tt null}}
+\newcommand{\undef}{{\tt undefined}}
+\newcommand{\false}{{\tt false}}
+\newcommand{\true}{{\tt true}}
+\newcommand{\er}{\emph{ER}}
+\newcommand{\erg}{\emph{ERG}}
+\newcommand{\var}{\emph{Var}}
+\newcommand{\sv}{\emph{StoreValue}}
+\newcommand{\bool}{\emph{Bool}}
+\newcommand{\ve}{\emph{ValError}}
+\newcommand{\te}{{\tt TypeError}}
+\newcommand{\re}{{\tt RefError}}
+\newcommand{\pval}{\emph{PVal}}
+\newcommand{\pv}{\emph{pv}}
+\newcommand{\pname}{\emph{PName}}
+\newcommand{\pn}{\emph{p}}
+\newcommand{\val}{\emph{Val}}
+\newcommand{\loc}{\emph{Loc}}
+\newcommand{\obj}{\emph{Object}}
+\newcommand{\objv}{\emph{ObjectValue}}
+\newcommand{\str}{\emph{Str}}
+\newcommand{\num}{\emph{Num}}
+\newcommand{\dom}{\emph{Dom}}
+
+%\newcommand{\mkst}[2]{[#1,#2]}
+\newcommand{\mkst}[2]{#1::#2}
+\newcommand{\rulesep}{\quad\quad}
+\newcommand{\sem}[1]{\ensuremath{\llbracket #1 \rrbracket}}
+\newcommand{\semf}[2]{\ensuremath{\sem{#1}(#2)}}
+\newcommand{\semd}[1]{\ensuremath{\sem{#1}(H, A)}}
+\newcommand{\ir}[1]{\ensuremath{\underline{#1}}}
+
+\newcommand{\semanticrule}[2]{
+	\frac{\ensuremath{\begin{matrix}#1\end{matrix}}}
+		{\ensuremath{\begin{matrix}#2\end{matrix}}}
+}
+\newcommand{\configfromto}[6]{
+	\ensuremath{#1,#2,#3 \rightarrow #4,#5,#6}
+}
+\newcommand{\config}[3]{
+	\ensuremath{#1,#2,#3}
+}
+
+
+\begin{document}
+
+\title{Operational Semantics of JSAF IR}
+\author{Choi, Jaejun}
+
+\maketitle
+
+\note{This document describes a small-step operational semantics for JSAF IR.}
+
+
+\section{Syntax}
+\subsection{Values}
+\[
+\begin{array}{l@{}l@{}ll}
+\loc & \ ::= \ & {\tt \#global} \mid {\tt \#Object} \mid {\tt \#ObjProto} \mid {\tt \#1} \mid \ldots & \cmt{Location $l$}\\
+\num & \ ::= \ & {\tt NaN} \mid {\tt Inf} \mid {\tt 0} \mid {\tt 1} \mid \ldots & \cmt{Number $n$}\\
+\str & \ ::= \ & {\tt \dquote{foo}} \mid {\tt \dquote{bar}} \mid \ldots & \cmt{String $s$}\\
+\bool & \ ::= \ & {\tt true} \mid {\tt false} & \cmt{Boolean $b$}\\
+\pval & \ ::= \ & \num \mid \str \mid \bool \mid {\tt undefined} \mid {\tt null}
+& \cmt{primitive value \pv}\\
+%%\emph{FVal} & \ ::= \ & {\tt function [x] (\tilde{y}) \{s\} }& \cmt{function value $fv$}\\
+\val & \ ::= \ & \loc \mid \pval & \cmt{Value $v$}\\
+\ve & \ ::= \ & \loc \mid \pval \mid \te
+\mid \re & \cmt{value or error \emph{ve}}\\
+\emph{Var} & \ ::= \ & {\tt this} \mid {\tt foo} \mid {\tt bar} \mid \ldots & \cmt{variable}\\
+@Vars & \ ::= \ & {\tt @_1} \mid {\tt @_2} \mid  \ldots & \cmt{array index}\\
+\emph{PNames\textendash user} & \ ::= \ & \str \mid \emph{Var} & \cmt{user property name}\\
+\emph{PNames\textendash int} & \ ::= \ & {\tt @Proto} \mid {\tt @Function}
+\mid {\tt @Exensible} \mid {\tt @this} & \cmt{internal property name}\\
+   & \ \mid \ & {\tt @scope \mid @Class \mid @end} & \cmt{}\\
+\pname & \ ::= \ & \emph{PNames\textendash user} \mid \emph{PName\textendash int} & \cmt{property name p}\\
+\end{array}
+\]
+
+
+\subsection{Expressions and Statements}
+\begin{multicols}{2}
+\[
+\begin{array}{l@{}l@{}ll}
+\emph{P} & \ ::= \ & \emph{Vds} \ \emph{Fds} \ s & \cmt{}\\
+\emph{Vds} & \ ::= \ & \varepsilon \mid \ \jsvar{x}; \ \emph{Vds} & \cmt{}\\
+\emph{Fds} & \ ::= \ & \varepsilon \mid \ \emph{fd}; \ \emph{Fds} & \cmt{}\\
+\emph{fd} & \ ::= \ & \jsfunc{x}{\tilde{x}}{[P]} & \cmt{}\\
+s,t & \ ::= \ & y = e & \cmt{}\\
+ & \ \mid \ & y = e_1\ \emph{binop}\ e_2  & \cmt{}\\
+ & \ \mid \ & y = \emph{unop}\ e & \cmt{}\\
+ & \ \mid \ & y = \jsdel\ e & \cmt{}\\
+ & \ \mid \ & y = \jsdel\ e_1[e_2] & \cmt{}\\
+ & \ \mid \ & y = e_1[e_2] & \cmt{load}\\
+ & \ \mid \ & e_1[e_2] = e_3 & \cmt{store}\\
+ & \ \mid \ & y = \{ \widetilde{p:e} \} & \cmt{\inred getters/setters missing}\\
+ & \ \mid \ & y = [\tilde{e}] & \cmt{array}\\
+ & \ \mid \ & y = e(e_1, ..., e_n) & \cmt{call}\\
+%%%%%%  & \ \mid \ & y = e[e'](e_1, ..., e_n) & \cmt{invoke}\\
+ & \ \mid \ &  y = \jsnew{e}{e_1, ..., e_n} & \cmt{new obj}\\
+ & \ \mid \ & y = \jsfunc{[x]}{y}{s} & \cmt{fun expr}\\ 
+ & \ \mid \ & y = \jseval{e} & \cmt{}\\
+ & \ \mid \ & \jsreturn{[e]} & \cmt{}\\
+ & \ \mid \ & s; \ t & \cmt{}\\
+ & \ \mid \ & \jsifelseopt{e}{s_1}{s_2} & \cmt{}\\
+ & \ \mid \ & \jswhile{e}{s} & \cmt{}\\
+ & \ \mid \ & \jstryopt{s_1}{x}{s_2}{s_3} & \cmt{}\\
+ & \ \mid \ & \jsthrow{e} & \cmt{}\\
+ & \ \mid \ & \jswith{e}{s} & \cmt{}\\
+ & \ \mid \ & \emph{label} : \{s\} & \cmt{}\\
+ & \ \mid \ & \jsbreak{x} & \cmt{}\\
+ & \ \mid \ & \emph{label} & \cmt{}\\
+e & \ ::= \ & \jsthis \mid x \mid y \mid \pval & \cmt{}\\
+\emph{unop} & \ ::= \ & {\tt \{ \verb!+!, \verb+-+,\tilde{} ,\verb+!+,\jstypeof,\jsvoid \} } & \cmt{}\\
+\emph{binop} & \ ::= \ & {\tt \{ \verb!<!,\verb!>!,\verb!<=!,\verb!>=!, } & \cmt{}\\
+ & \  \ & {\tt \verb!*!,\verb!+!,\verb+\+,\verb!%!,\verb!-!,\verb!<<!,\verb!>>!,\verb!<<<!,\verb!>>>!, } & \cmt{}\\
+ & \  \ & {\tt \verb!&!,\wedge , \verb!|!, \verb!&&!,\verb!||!,  \verb!==!,\verb!===!,\verb+!=+,\verb+!==+, } & \cmt{}\\
+ & \  \ & {\tt \jsin,\jsinstanceof \} } & \cmt{}\\
+\end{array}
+\]
+\
+\[
+\begin{array}{l@{}l@{}ll}
+\emph{ct} & \ ::= \ & {\tt Normal(}v{\tt)} \mid {\tt Throw(}\emph{ve}{\tt) } & \cmt{completion}\\
+ & \ \mid \ & {\tt Return(}\emph{ve}{\tt)} \mid {\tt Break(}\emph{label}{\tt)} &\\
+V\textendash Int & \ ::= \ & ct & \cmt{}\\
+ & \ \mid \ & {\tt TS(x,v)} & \cmt{to string}\\
+ & \ \mid \ & {\tt TS\textendash Help(x)} & \cmt{}\\
+ & \ \mid \ & {\tt TN(x,v)} & \cmt{to number}\\
+ & \ \mid \ & {\tt TN\textendash Help(x)} & \cmt{}\\
+ & \ \mid \ & {\tt TB(x,v)} & \cmt{to boolean}\\
+ & \ \mid \ & {\tt TO(x,v)} & \cmt{to object}\\
+ & \ \mid \ & {\tt TP(x,v,pne)} & \cmt{to ???}\\
+ & \ \mid \ & {\tt TP\textendash Help(s,x,v,pn)} & \cmt{}\\ 
+ & \ \mid \ & {\tt Fun1(tag,A,x,v,e_{this},\tilde{e_1})} & \cmt{where {\tt tag} is either}\\
+ & \ \mid \ & {\tt Fun2(tag,A,y,v,fv)} & \cmt{{\tt 'new'} or {\tt 'call'}}\\
+ & \ \mid \ & {\tt Fun3(tag,A,y,v,s)} & \cmt{}\\ 
+ & \ \mid \ & {\tt Catch1(x,ve,s)} & \cmt{}\\ 
+ & \ \mid \ & {\tt ScopeChange(A)} & \cmt{}\\
+ & \ \mid \ & {\tt Forin(x,e,s,i)} & \cmt{}\\
+ & \ \mid \ & {\tt FPapply\textendash help(y,l,v,l,e)} & \cmt{}\\
+ & \ \mid \ & {\tt APtoSring\textendash help(y,e_1,e_2)} & \cmt{}\\
+ & \ \mid \ & {\tt APjoin\textendash help(y,e_1,e_2,e_3)} & \cmt{}\\
+\end{array}
+\]
+\end{multicols}
+
+
+
+\newpage
+{\inblue
+\subsection{Heaps and Stores}
+\[
+\begin{array}{l@{}l@{}ll}
+\emph{Heap} & \ : \ & \loc  \mapsto \obj& \cmt{Heap $H$, $K$}\\
+\emph{Store} & \ ::= \ & \mkst{\er}A \mid \erg & \cmt{Store $A$, $B$. \erg\ denotes global environment record}\\
+\obj & \ ::= \ & {\tt \{extensible:} \bool,& \cmt{Object $o$}\\
+ & \  \ & \phantom{\{}{\tt class:} \str,& \\
+ & \  \ & \phantom{\{}{\tt proto:} \loc,& \\
+ & \  \ & \phantom{\{}{\tt property: \pname\mapsto\objv,}& \\
+ & \  \ & \phantom{\{}[{\tt function:functon [x] ( \tilde{y} ) \{ \tilde{s} \} ,}& \\
+ & \  \ & \phantom{\{[}{\tt scope: \loc}]\} & \\
+\objv & \ ::= \ & \{{\tt value:} \val ,& \cmt{}\\
+ & \  \ & \phantom{\{}{\tt writable:} \bool,& \\
+ & \  \ & \phantom{\{}{\tt enumerable:} \bool,& \\
+ & \  \ & \phantom{\{}{\tt configurable:} \bool\}& \\
+\emph{EnvRec} & \ : \ & \var \mapsto \sv& \cmt{Environment Record \er.  Could be renamed to Activation Record.}\\
+\sv & \ ::= \ & \{{\tt value:}\ve\
+{\cup\ \{\bot\}},\
+{\tt mutable:}\bool\}& \cmt{$\bot$ is for uninitialized values}\\
+\end{array}
+\]
+
+\subsection{Internal Functions}
+
+\hspace*{1em}
+\\[1em]
+{\inred NOTE: We do not handle accessors for now.}\\
+{\inred NOTE: We do not distinguish between {\tt +0} and {\tt -0} for now.}
+
+\[
+\begin{array}{l@{}l@{}ll}
+
+\dom & \ : \ & \fbox{$\dom(H) = \{\tilde{l}\}$} & \cmt{}\\[.5em]
+ & \  \ & \dom(H) = \{ l \mid H(l)\ \mbox{is defined} \}  & \\[1em]
+ & \ \ & \fbox{$\dom(o) = \{\tilde{p}\}$}& \\[.5em]
+% {\tt Objects \mapsto 2^{\pname} }& \\
+ & \  \ & \dom(o) = \{ p \mid o(p)\ \mbox{is defined} \} & \\[1em]
+
+\emph{HasOwnProperty} & \ : \ & \fbox{$\emph{HasOwnProperty}(H,l,p)=b$}
+\quad{\inred 15.2.4.5\ {\tt Object.prototype.hasOwnProperty(V)}}
+%{\tt Heaps \times \loc \times PNames \rightarrow \bool }
+& \\[.5em]
+ & \ \ & \frac{
+    \begin{matrix}
+       l \notin \dom(H)
+    \end{matrix}}{
+    \begin{matrix}
+       \emph{HasOwnProperty}(H,l,p)=\false
+    \end{matrix}} & \\[1.5em]
+ & \ \ & \frac{
+\begin{matrix}
+   {l \in \dom(H)} & {p \in \dom(H(l))}
+\end{matrix}}{\begin{matrix}{\emph{HasOwnProperty}(H,l,p)=\true} \end{matrix}} & \\[1.5em]
+ & \ \ & \frac{
+\begin{matrix}
+   {l \in \dom(H)} & {p \notin \dom(H(l))}
+\end{matrix}}{\begin{matrix}{\emph{HasOwnProperty}(H,l,p)=\false} \end{matrix}} & \\[1.5em]
+
+\emph{HasProperty} & \ : \ & \fbox{$\emph{HasProperty}(H,l,p)=b$}
+\quad{\inred 8.12.6\ {\tt[[HasProperty]](P)}}\\[.5em]
+%{\tt Heaps \times \loc \times PNames \rightarrow \bool }&
+ & \ \ & \frac{
+    \begin{matrix}
+       {l \notin \dom(H)}
+    \end{matrix}}{
+    \begin{matrix}
+       {\emph{HasProperty}(H,l,p)=\false}
+    \end{matrix}} & \\[1.5em]
+ & \ \ & \frac{
+    \begin{matrix}
+       {\emph{HasOwnProperty}(H,l,p)}
+    \end{matrix}}{
+    \begin{matrix}
+       {\emph{HasProperty}(H,l,p)=\true}
+    \end{matrix}} & \\[1.5em]
+ & \ \ & \frac{
+    \begin{matrix}
+       {\neg \emph{HasOwnProperty}(H,l,p)}
+    \end{matrix}}{
+    \begin{matrix}
+       {\emph{HasProperty}(H,l,p)=\emph{HasProperty}(H,H(l).{\tt proto},p)}
+    \end{matrix}} & \\[1.5em]
+
+
+\emph{Proto} & \ : \ & \fbox{$\emph{Proto}(H,l,p)=\emph{ve}$}
+\quad{\inred 8.12.3\ {\tt[[Get]](P)}}\\[.5em]
+%{\tt Heaps \times \loc \times PNames\textendash user \rightarrow ValError }& \\
+&&\mbox{In terms of the spec,}\ \emph{Proto}(H,l,p)=H(l).{\tt[[Get]]}(p)\\[1em]
+ & \ \ & \frac{
+    \begin{matrix}
+       {l \notin \dom(H)}
+    \end{matrix}}{
+    \begin{matrix}
+       {\emph{Proto}(H,l,p)={\tt undefined}}
+    \end{matrix}} & \\[1.5em]
+ & \ \ & \frac{
+    \begin{matrix}
+       {l \in \dom(H)} & {p \in \dom(H(l))}
+    \end{matrix}}{
+    \begin{matrix}
+       {\emph{Proto}(H,l,p)=H(l).{\tt property}(p).{\tt value}}
+    \end{matrix}} & \\[1.5em]
+ & \ \ & \frac{
+    \begin{matrix}
+      {l \in \dom(H)} & {p \notin \dom(H(l))}
+    \end{matrix}}{
+    \begin{matrix}
+       {\emph{Proto}(H,l,p)=\emph{Proto}(H,H(l).{\tt proto},p)}
+    \end{matrix}} & \\[1.5em]
+ \end{array}
+\]
+
+\[
+\begin{array}{l@{}l@{}ll}
+
+\emph{Inherit} & \ : \ & \fbox{$\emph{Inherit}(H,l,l) = b$}\\[.5em]
+%{\tt Heaps \times \loc \times \loc \rightarrow \bool }& \\
+ & \  \ & \emph{Inherit}(H,{\tt null},l_2) = \false & \\[.5em]
+ & \ \ & \frac{
+    \begin{matrix}
+       l_1 = l_2
+    \end{matrix}}{
+    \begin{matrix}
+       \emph{Inherit}(H,l_1,l_2)=\true
+    \end{matrix}} & \\[1em]
+ & \ \ & \frac{
+    \begin{matrix}
+       l_1 \neq l_2
+    \end{matrix}}{
+    \begin{matrix}
+       \emph{Inherit}(H,l_1,l_2)=\emph{Inherit}(H,H(l_1).{\tt proto},l_2)
+    \end{matrix}} & \\
+ & & \\
+
+\emph{Lookup} & \ : \ & \fbox{$\emph{Lookup}(H,S,x)=\emph{ve}$}\\[.5em]
+% {\tt Heaps \times Stores \times Identifiers \rightarrow ValError }& \\
+&&
+\mbox{\inred Identifier resolution: Used in 2. Expression Semantics}\\[.5em]
+ & \ \ & \frac{
+    \begin{matrix}
+       \neg \emph{HasProperty}(H,l_g,x)
+    \end{matrix}}{
+    \begin{matrix}
+       \emph{Lookup}(H,\erg,x) = \re
+    \end{matrix}} & \\
+ & & \\
+ & \ \ & \frac{
+    \begin{matrix}
+       \emph{HasProperty}(H,l_g,x)
+    \end{matrix}}{
+    \begin{matrix}
+       \emph{Lookup}(H,\erg,x) = \emph{Proto}(H,l_g,x)
+    \end{matrix}} & \\
+ & & \\
+ & \ \ & \frac{
+    \begin{matrix}
+       \er(x).{\tt value} = \bot
+    \end{matrix}}{
+    \begin{matrix}
+      \emph{Lookup}(H,\mkst{\er}A,x)=\re
+    \end{matrix}} & \\
+ & & \\
+ & \ \ & \frac{
+    \begin{matrix}
+       \er(x).{\tt value} \neq \bot
+    \end{matrix}}{
+    \begin{matrix}
+       \emph{Lookup}(H,\mkst{\er}A,x)=\er(x).{\tt value}
+    \end{matrix}} & \\
+ & & \\
+ & \ \ & \frac{
+    \begin{matrix}
+       \er(x).{\tt value}\ \mbox{is not defined}
+    \end{matrix}}{
+    \begin{matrix}
+       \emph{Lookup}(H,\mkst{\er}A,x)=\emph{Lookup}(H,A,x)
+    \end{matrix}} & \\
+ & & \\
+
+\emph{CanPut} & \ : \ & \fbox{$\emph{CanPut}(H,l,p)=b$}
+\quad{\inred 8.12.4\ {\tt[[CanPut]](P)}}\\[.5em]
+%{\tt Heaps \times \loc \times PNames\textendash user \rightarrow \bool }& \\
+ & \ \ & \frac{
+    \begin{matrix}
+       l \notin Dom(H)
+    \end{matrix}}{
+    \begin{matrix}
+       \emph{CanPut}(H,l,p)=\false
+    \end{matrix}} & \\[1.5em]
+ & \ \ & \frac{
+    \begin{matrix}
+       l \in Dom(H)
+    \end{matrix}}{
+    \begin{matrix}
+       \emph{CanPut}(H,l,p)=\emph{CanPutHelp}(H,l,p,l)
+    \end{matrix}} & \\[1.5em]
+
+\emph{CanPutHelp} & \ : \ & \fbox{$\emph{CanPutHelp}(H,l,p,l) = b$}\\[.5em]
+% {\tt Heaps \times \loc \times PNames\textendash user \times \loc \rightarrow \bool }& \\
+ & \  \ & \emph{CanPutHelp}(H,\nullK,p,l) = H(l).{\tt extensible} & \\[1em]
+ & \ \ & \frac{
+    \begin{matrix}
+       p \notin Dom(H(l_1))
+    \end{matrix}}{
+    \begin{matrix}
+       \emph{CanPutHelp}(H,l,p)=\emph{CanPutHelp}(H,H(l_1).{\tt proto},p,l_2)
+    \end{matrix}} & \\[1.5em]
+ & \ \ & \frac{
+    \begin{matrix}
+      p \in Dom(H(l_1))
+    \end{matrix}}{
+    \begin{matrix}
+      \emph{CanPutHelp}(H,l_1,p,l_2)=H(l_1).{\tt property}(p).{\tt writable}
+    \end{matrix}} & \\[1.5em]
+
+\emph{CanPutVar} & \ : \ & \fbox{$\emph{CanPutVar}(H,A,x) = b$}\\[.5em]
+%&& {\tt Heap \times Store \times Var \rightarrow \bool }& \\
+ & \  \ & \emph{CanPutVar}(H,\erg,x) = \emph{CanPut}(H,l_g,x) & \\[.5em]
+ & \ \ & \frac{
+    \begin{matrix}
+       x \in \er
+    \end{matrix}}{
+    \begin{matrix}
+       \emph{CanPutVar}(H,\mkst{\er}{A},x)=\er(x).{\tt mutable}
+    \end{matrix}} & \\[1.5em]
+ & \ \ & \frac{
+    \begin{matrix}
+       x \notin \er
+    \end{matrix}}{
+    \begin{matrix}
+       \emph{CanPutVar}(H,\mkst{\er}{A},x)=\emph{CanPutVar}(H,A,x)
+    \end{matrix}} & \\[1.5em]
+
+%% update %%
+\emph{Update} & \ : \ & \fbox{$\emph{Update}(H,A,x,v,b)=H,A$}
+\quad{\inred 8.12.5\ {\tt[[Put]](P, V, Throw)}}\\[.5em]
+%&& {\tt Heap \times Store \times Var \times ValError \times \bool \rightarrow \bool }& \\
+ & &
+\semanticrule
+  {\emph{CanPut}(H,\#global,x) \rulesep
+   K=H(\#global).{\tt prototype}(x)[{\tt value}\mapsto v]}
+  {\emph{Update}(H,\erg,x,v,b)=K,\erg} &
+\\[1.5em]
+ & &
+\semanticrule
+   {x \in \er \rulesep
+    \er' = \er[x \mapsto \{{\tt value:}v,\ {\tt mutable:}b\}]}
+  {\emph{Update}(H,\mkst{\er}{A},x,v,b)=H,\mkst{\er'}{A}} &
+\\[1.5em]
+
+ & &
+\semanticrule
+  {x \notin \er \rulesep
+   K,B = \emph{Update}(H,A,x,v,b)}
+  {\emph{Update}(H,\mkst{\er}{A},x,v,b)=K,\mkst\er{B}} &
+\\[1.5em]
+
+\emph{IsCallable} & \ : \ & \fbox{$\emph{IsCallable}(H,\emph{ve}) = b$}
+\quad{\inred 9.11\ {\tt IsCallable}}\\[.5em]
+%{\tt Heaps \times ValError \rightarrow \bool }& \\
+ & \  \ & \emph{IsCallable}(H,\emph{ve}) =\true \Leftrightarrow \emph{ve}\in Dom(H) \wedge
+{\tt function} \in Dom(H(l)) & \\
+ & & \\
+  \end{array}
+\]
+
+{\inred
+\[
+\begin{array}{l@{}l@{}ll}   
+
+ArgAssignStmt & \ : \ & 
+    \begin{matrix}
+       {\tt ArgAssignStmt((y_1,...y_m),(v_1,...,v_n)) =}\\
+         \left\{\begin{matrix}
+           {\tt y_1=v_1;...;y_m=v_m} & m < n\\ 
+           {\tt y_1=v_1;...;y_m=v_m;y_{m+1}=udf;...;y_n=udf} & otherwise
+         \end{matrix}\right.
+    \end{matrix} & \\
+ & & \\
+
+ArgumentsStmt & \ : \ &
+    \begin{matrix}
+       {\tt ArgumentsStmt(v_1,...,v_n) =}\\
+       {\tt arguments[1] = v_1;...;arguments[n] = v_n}
+    \end{matrix} & \\
+ & & \\
+    
+ArgumentsList & \ : \ & \frac{
+    \begin{matrix}
+       {\tt \forall i \in \{1,...,n\}.\ v_i =\emph{Proto}(H,l,i)}
+    \end{matrix}}{
+    \begin{matrix}
+       {\tt ArgumentsList(H,l,n) = v_1, ..., v_n}
+    \end{matrix}}& \\
+ & & \\
+
+\end{array}
+\]
+}
+
+\subsection{Types and conversion functions}
+\[
+\begin{array}{l@{}l@{}ll}
+\emph{TypeTag} & \ : \ & \fbox{$\emph{TypeTag}(H,v)=\{{\tt number,string,boolean,object,function,null,undefined}\}$}\\[.5em]
+% Heaps \times \val \rightarrow \{number,string,boolean,object,function,null,undefined\} & \\
+&&
+\emph{TypeTag}(H,v) = \left\{ \begin{array}{ll}
+{\tt number} &\mbox{if $v\in\num$}\\
+{\tt string} &\mbox{if $v\in\str$}\\
+{\tt boolean} &\mbox{if $v\in\bool$}\\
+{\tt object} &\mbox{if $v \in \loc \wedge \neg \emph{IsCallable}(H,v)$}\\
+{\tt function} &\mbox{if $v \in \loc \wedge \emph{IsCallable}(H,v)$}\\
+{\tt null}& \mbox{if $v=$ \nullK}\\
+{\tt undefined}& \mbox{if $v=$ \undef}
+\end{array}
+\right.
+\\\\
+
+ % & \  \ & \emph{TypeTag}(H,v) = {\tt number} \Leftrightarrow v\in \num & \\
+ % & \  \ & \emph{TypeTag}(H,v) = {\tt string} \Leftrightarrow v\in \str & \\
+ % & \  \ & \emph{TypeTag}(H,v) = {\tt boolean} \Leftrightarrow v\in \bool& \\
+ % & \  \ & \emph{TypeTag}(H,v) = {\tt object} \Leftrightarrow v\in \loc \wedge \neg \emph{IsCallable}(H,v)& \\
+ % & \  \ & \emph{TypeTag}(H,v) = {\tt function} \Leftrightarrow v\in \loc \wedge \emph{IsCallable}(H,v)& \\
+ % & \  \ & \emph{TypeTag}(H,\nullK) = {\tt null}& \\
+ % & \  \ & \emph{TypeTag}(H,\undef) = {\tt undefined}& \\[1em]
+
+\emph{TypeTag} & \ : \ & \fbox{$\emph{TypeTag}(\emph{ct}) = \{{\tt Throw, Return, Normal}\}$}\\[.5em]
+%{\tt CompletionType \rightarrow \{Throw,Return,Normal\} }& \\
+&&
+\emph{TypeTag}(\emph{ct}) = \left\{ \begin{array}{ll}
+{\tt Throw}  &\mbox{if $\emph{ct}\ =$ {\tt Throw}$(\emph{ve})$}\\
+{\tt Return} &\mbox{if $\emph{ct}\ =$ {\tt Return}$(\emph{ve})$}\\
+{\tt Normal} &\mbox{if $\emph{ct}\ =$ {\tt Normal}$(v)$}\\
+\end{array}
+\right.
+\\\\
+
+ % & \  \ & \emph{TypeTag}(\emph{ct}) = {\tt Throw} \Leftrightarrow \exists v. \emph{ct} = {\tt Throw}(v)& \\
+ % & \  \ & \emph{TypeTag}(H,v) = {\tt Return} \Leftrightarrow \exists v. \emph{ct} = {\tt Return}(v)& \\
+ % & \  \ & \emph{TypeTag}(H,\nullK) = {\tt Normal} \Leftrightarrow \emph{ct} = {\tt Normal}& \\[1em]
+
+\emph{TN} & \ : \ & \fbox{$\emph{TN}(\pv) = n$}
+\quad{\inred 9.3\ {\tt ToNumber}}\\[.5em]
+%\pval \rightarrow \num& \\
+&&
+\emph{TN}(\pv) = \left\{ \begin{array}{ll}
+\pv &\mbox{if $\pv\in\num$}\\
+\emph{Str2Num}(\pv) &\mbox{if $\pv\in\str$}\\
+{\tt 1} &\mbox{if $\pv\ = \true$}\\
+{\tt 0} &\mbox{if $\pv\ = \false$}\\
+{\tt NaN} &\mbox{if $\pv\ = \undef$}\\
+{\tt 0} &\mbox{if $\pv\ = \nullK$}\\
+\end{array}
+\right.
+\\\\
+
+ % & \  \ & {\tt TN(pv) = pv \ if\ pv \in Num}& \\
+ % & \  \ & {\tt TN(pv) = NaN \ if\ pv = undefined}& \\
+ % & \  \ & {\tt TN(pv) = 1 \ if\ pv = true}& \\
+ % & \  \ & {\tt TN(pv) = 0 \ if\ pv = false}& \\
+ % & \  \ & {\tt TN(pv) = Str2Num(pv) \ if\ pv \in Str}& \\
+
+\emph{TS} & \ : \ & \fbox{$\emph{TS}(\pv) = s$}
+\quad{\inred 9.8\ {\tt ToString}}\\[.5em]
+%{\tt \pval \rightarrow \str }& \\
+&&
+\emph{TS}(\pv) = \left\{ \begin{array}{ll}
+\verb+"+\pv\verb+"+ &\mbox{if $\pv\in\num$}\\
+\pv &\mbox{if $\pv\in\str$}\\
+\verb+"+\pv\verb+"+&\mbox{if $\pv\ \in \bool$}\\
+\verb+"undefined"+ &\mbox{if $\pv\ = \undef$}\\
+\verb+"null"+ &\mbox{if $\pv\ = \nullK$}\\
+\end{array}
+\right.
+\\\\
+
+\emph{TB} & \ : \ & \fbox{$\emph{TB}(\pv) = b$}
+\quad{\inred 9.2\ {\tt ToBoolean}}\\[.5em]
+&&
+\emph{TB}(\pv) = \left\{ \begin{array}{ll}
+\false&\mbox{if $\pv\in\{{\tt 0, NaN}\}$}\\
+\true&\mbox{if $\pv\not\in\{{\tt 0, NaN}\}\ \wedge\ \pv\in\num$}\\
+\false &\mbox{if $\pv = $}\verb+""+\\
+\true &\mbox{if $\pv \neq $}\verb+""+\ \mbox{$\wedge\ \pv\in\str$}\\
+\pv&\mbox{if $\pv\ \in \bool$}\\
+\false &\mbox{if $\pv\ = \undef$}\\
+\false &\mbox{if $\pv\ = \nullK$}\\
+\end{array}
+\right.
+\\\\
+
+\emph{IsError} & \ : \ & \fbox{$\emph{IsError}(\emph{ve}) = b$}\\[.5em]
+%{\tt \val \rightarrow \bool }& \\
+ & \  \ & \emph{IsError}(\emph{ve}) = \true\rulesep \mbox{if }\emph{ve} = \te \vee \emph{ve} = \re& \\[.5em]
+
+\emph{IsArray} & \ : \ & \fbox{$\emph{IsArray}(H,l) = b$}\\[.5em]
+%{\tt Heap \times \loc \rightarrow \bool }& \\
+ & \  \ & \emph{IsArray}(H,l) = \true\rulesep \mbox{if }H(l).{\tt class} = \verb+"Array"+& \\[.5em]
+
+\emph{IsNative} & \ : \ & \fbox{$\emph{IsNative}(v) = b$}\\[.5em]
+%{\tt \val \rightarrow \bool }& \\
+ & \  \ & \emph{IsNative}(v) = \true\rulesep \mbox{if } v \in \{ {\tt \#Object, \#Function, ...} \}&
+\end{array}
+\]
+}
+
+
+
+\subsection{Function Call}
+
+\[
+\begin{array}{l@{}l@{}ll}
+
+SetFD & \ : \ & {\tt Heaps \times Store \times evalFlag \rightarrow Heap \times Store }& \\
+SetFD(H,A,s) & \ : \ & \cmt{For each function declaration 'function x (y~)\{t\}' in s, considered in source code order:}& \\
+ & \  \ & \cmt{1) Let $l_1,l_2$ be fresh heap locations. }& \\
+ & \  \ & \cmt{2) Allocate the object \emph{NewObject}(\#ObjProto) at location l2 on the heap H. } & \\
+ & \  \ & \cmt{3) Set the constructor property of object l2 to \{value:$l_1$, writable:true, enumerable:true, configurable:true\} } & \\
+ & \  \ & \cmt{4) Create a new function object using \emph{NewFunctionObject}(function x(y~)\{s\},A,$l_2$) } & \\
+ & \  \ & \cmt{5) Allocate the object from (4) at location $l_1$ on the heap H. }& \\
+ & \  \ & \cmt{6) Bind the variable x to \{value:l1,mutable:evalFlag\} on store A. }& \\
+ & \  \ & \cmt{Return the final heap and store.}& \\
+
+SetVD & \ : \ & {\tt Store \times Stmt \rightarrow Store }& \\
+SetVD(A,s) & \ : \ & \cmt{For each variable declaration var x, in source code order, in s:}& \\
+ & \  \ & \cmt{1) Add a binding x to \{value:Bot, mutable:true\} to the store A. }& \\
+ & \  \ & \cmt{Return the final store.}& \\
+\end{array}
+\]
+
+
+{\inblue
+\subsection{New Object Creation}
+\[
+\begin{array}{l@{}l@{}ll}
+\emph{NewER} & \ : \ & \fbox{$\emph{NewER}(A, x_1\ldots x_n) = A$}\\[1em]
+&&
+{\inred  10.2.1.1.2\ {\tt CreateMutableBinding(N, D)}??\  \mbox{initialized to the value undefined?}}\\[.5em]
+ & \  \ & \emph{NewER}(A, x_1 \ldots x_n)
+ = \begin{matrix}
+     \{x_1\mapsto\{{\tt value:}\bot,\ {\tt mutable:}\true\}, \ldots,\\
+     \quad x_n\mapsto\{{\tt value:}\bot,\ {\tt mutable:}\true\}\}:: A
+     \end{matrix} & \\
+
+\emph{NewObject} & \ : \ & \fbox{$\emph{NewObject}(l) = o$}\\[.5em]
+%{\tt \loc  \rightarrow Object }& \\
+&&
+\mbox{\inred 15.2.2.1\ {\tt new Object([value])}}\\
+&&
+\mbox{\inred Note the difference: Set the {\tt [[Prototype]]} internal property of obj to
+the standard}\\
+&&
+\mbox{\inred built-in {\tt Object} prototype object (15.2.4).}
+\\[.5em]
+ & \  \ & \emph{NewObject}(l)
+= {\tt \{extensible:} \true,
+{\tt class:} \verb+"Object"+,
+{\tt proto:} l,
+{\tt property:\{\}} \}
+\\[1em]
+
+\emph{NewFunctionObject} & \ : \ & \fbox{$\emph{NewFunctionObject}(\emph{fv}, A, l) = o$}\\[.5em]
+%{\tt F\val \times Store \times \loc  \rightarrow Object }& \\
+&&
+\mbox{\inred 15.3 {\tt Function Objects}}\\
+ & \  \ & \emph{NewFunctionObject}({\tt function}[x](\tilde{y})\{s\},A,l) = \\
+&& \quad{\tt \{extensible:} \true,\
+   {\tt class:} \verb+"Function"+,\
+   {\tt proto: \#FunctionProto},\\
+&&\phantom{\quad\{}
+   {\tt prototype: \{value:}l,\
+          {\tt writable:}\false,\
+          {\tt enumarable:}\false,\
+          {\tt configurable:}\false \},\\
+&&\phantom{\quad\{}
+   {\tt function: function}[x](\tilde{y})\{s\},\
+   {\tt scope:} A \}
+\\[.5em]
+\emph{NewArrayObject} & \ : \ & \fbox{$\emph{NewArrayObject}(l) = o$}\\[.5em]
+%{\tt \loc \rightarrow Object }& \\
+&&
+\mbox{\inred 15.4 {\tt Array Objects}}\\
+ & \  \ & \emph{NewArrayObject}(l) = &\\
+&& \quad{\tt \{extensible:} \true,\
+   {\tt class:} \verb+"Array"+,\
+   {\tt proto:} l,\\
+&& \phantom{\quad\{}
+   {\tt length: \{value:0},\
+          {\tt writable:}\true,\
+          {\tt enumarable:}\false,\
+          {\tt configurable:}\false \}\}\\[.5em]
+
+\emph{NewArgumentsObject} & \ : \ & \fbox{$\emph{NewArgumentsObject}(v_1 \ldots v_n) = o$}\\[.5em]
+% {\tt Val_list \rightarrow Object }& \\
+&&
+\mbox{\inred 10.6 {\tt Arguments Object}}\\
+ & \  \ & \emph{NewArgumentsObject}(v_1 \ldots v_n) =&\\
+&& \quad{\tt \{extensible:} \true,\
+   {\tt class:} \verb+"Arguments"+,\
+   {\tt proto: \#ObjProto},\\
+&& \phantom{\quad\{}
+   {\tt 1: \{value:}v_1,\
+          {\tt writable:}\true,\
+          {\tt enumarable:}\true,\
+          {\tt configurable:}\true \},\ \ldots\\
+&& \phantom{\quad\{}
+   {\tt n: \{value:}v_n,\
+          {\tt writable:}\true,\
+          {\tt enumarable:}\true,\
+          {\tt configurable:}\true \},\\
+&& \phantom{\quad\{}
+   {\tt length: \{value:}n,\
+          {\tt writable:}\true,\
+          {\tt enumarable:}\false,\
+          {\tt configurable:}\true \}\}\\
+\end{array}
+\]
+}
+
+
+{\inred
+\subsection{Parsing}
+Skip
+}
+
+\subsection{Other Helper Functions}
+\[
+\begin{array}{l@{}l@{}ll}
+\emph{getEnumPName} & \ : \ &
+%{\tt Heap \times \loc \times Int \rightarrow PName }& \\
+\emph{getEnumPName}(H,l,i) =
+\left \{ \begin{matrix}
+     {\tt [[implementation\ dependent]] } & {\tt i < num\ of\ enum\ prop\ in\ H(l)}\\ 
+     {\tt @end } & {\tt otherwise}
+     \end{matrix}\right. & \\   
+
+
+t{\tt(``valueOf")} & \ = \ & {\tt ``toString" } & \\  
+t{\tt(``toString")} & \ = \ & {\tt ``valueOf" } & \\  
+
+\emph{constructor}(\pv) & \ = \ &
+\left \{ \begin{matrix}
+     {\tt ``String"}  \rulesep\mbox{if }\emph{TypeTag}(\pv) = {\tt ``string"} \\
+     {\tt ``Boolean"} \rulesep\mbox{if }\emph{TypeTag}(\pv) = {\tt ``boolean"} \\
+     {\tt ``Number"}  \rulesep\mbox{if }\emph{TypeTag}(\pv) = {\tt ``number"}
+     \end{matrix}\right. & \\
+\end{array}
+\]
+
+\newpage
+
+\section{Expression Semantics}
+\[
+\begin{array}{l@{}l@{}ll}
+\multicolumn{4}{c}{\fbox{$\semf{e}{H, A} = \emph{ve}$}} \\[.5em]
+ & \  \ & \semf{x}{H, A} = \emph{Lookup}(H,A,x)& \\
+ & \  \ & \semf{v}{H, A} = v& \\
+\end{array}
+\]
+
+\section{Program Semantics}
+\[
+\begin{array}{l@{}l@{}ll}
+\multicolumn{4}{c}{\fbox{$H,A,\ir{s} \rightarrow H,A,\ir{s}$}} \\[.5em]
+& \ \ & H,A,\emph{fd}; P \rightarrow H,A,P & \\[.5em]
+ & \ \ & \frac{
+    \begin{matrix}
+       \emph{TypeTag}(\emph{ct}) = {\tt Normal}
+    \end{matrix}}{
+    \begin{matrix}
+       H,A,\emph{ct}; P \rightarrow H,A,P
+    \end{matrix}} & \\[1em]
+ & \ \ & \frac{
+    \begin{matrix}
+       \emph{TypeTag}(\emph{ct}) \neq {\tt Normal}
+    \end{matrix}}{
+    \begin{matrix}
+       H,A,\emph{ct}; P \rightarrow H,A,\emph{ct}
+    \end{matrix}} & \\
+\end{array}
+\]
+
+{\inblue
+
+\section{Statement Semantics}
+\[
+\begin{array}{c}
+\fbox{$H,A,\ir{s} \rightarrow H,A,\ir{s}$}
+ \end{array}
+\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+}
+
+\subsection{Internal Syntax}
+
+\[
+\begin{array}{l@{}l@{}ll}
+%% toString
+ & \ \ &\inblue
+       H,A,{\tt TS}(y,\pv) \rightarrow H,A,y = \emph{TS}(\pv)
+& \\[1em]
+ & \ \ & \frac{
+    \begin{matrix}\inblue
+       %{\tt @ = \emph{fresh}(@Vars)}
+      \mbox{fresh variable }x
+    \end{matrix}}{
+    \begin{matrix}\inblue
+       H,A,{\tt TS}(y,l) \rightarrow H,A,{\tt TP1}(x,l,{\tt``toString"}); {\tt TS\textendash Help}(y,x)
+    \end{matrix}} & \\[1.5em]
+ & \ \ &\inblue
+       H,A,{\tt TS\textendash Help}(y,\pv) \rightarrow H,A,y=\emph{TS}(\pv)
+& \\[1em]
+
+%% toNumber
+& \ \ &\inblue
+       H,A,{\tt TN}(y,\pv) \rightarrow H,A,y=\emph{TN}(\pv)
+& \\[1em]
+ & \ \ & \frac{
+    \begin{matrix}\inblue
+      %{\tt @ = \emph{fresh}(@Vars)}
+      \mbox{fresh variable }x
+    \end{matrix}}{
+    \begin{matrix}\inblue
+       H,A,{\tt TN}(y,l) \rightarrow H,A,{\tt TP1}(x,l,{\tt ``valueOf"}); {\tt TN\textendash Help}(y,x)
+    \end{matrix}} & \\[1.5em]
+ & \ \ &\inblue
+        H,A,{\tt TN\textendash Help}(y,\pv) \rightarrow H,A,y=\emph{TN}(\pv)
+& \\[1em]
+
+ & \ \ & \inblue H,A,{\tt TB}(y,l) \rightarrow H,A,y=\true& \\[1em]
+
+ & \ \ & \inblue
+       H,A,{\tt TB}(y,\pv) \rightarrow H,A,y=\emph{TB}(\pv)
+& \\[1em]
+
+
+ & \ \ & \inblue H,A,{\tt TP}(y,\pv,\pn) \rightarrow H,A,y=\pv& \\[1em]
+
+ & \ \ & \frac{
+    \begin{matrix}
+       \emph{IsCallable}(H,\emph{Proto}(H,l,\pn)) & \mbox{fresh variable }x
+    \end{matrix}}{
+    \begin{matrix}
+       H,A,{\tt TP1}(y,l,p) \rightarrow H,A,x=l[p];{\tt Fun1}(y,\squote{call},x,l);{\tt TP2}(y,l,t(p))
+    \end{matrix}} & \\[1.5em]
+
+ & \ \ & \frac{
+    \begin{matrix}\inblue
+       \neg \emph{IsCallable}(H,\emph{Proto}(H,l,p))
+    \end{matrix}}{
+    \begin{matrix}\inblue
+       H,A,{\tt TP1}(y,l,p) \rightarrow H,A,{\tt TP2}(y,l,t(p))
+    \end{matrix}} & \\[1.5em]
+
+ & \ \ & \frac{
+    \begin{matrix}\inblue
+       \semd{y} = \pv &
+    \end{matrix}}{
+    \begin{matrix}\inblue
+       H,A,{\tt TP2}(y,l,p) \rightarrow H,A,{\tt Normal}(\pv)
+    \end{matrix}} & \\[1.5em]
+
+ & \ \ & \frac{
+    \begin{matrix}
+       \semd{y} \not\in \pval &
+       \emph{IsCallable}(H,\emph{Proto}(H,l,\pn)) &
+       \mbox{fresh variable }x
+    \end{matrix}}{
+    \begin{matrix}
+       H,A,{\tt TP2}(y,l,p) \rightarrow H,A,x=l[\pn]; {\tt Fun1}(y,\squote{call},x,l); {\tt TP2}(y,l,t(\pn))
+    \end{matrix}} & \\[1.5em]
+
+ & \ \ & \frac{\inblue
+    \begin{matrix}
+       \semd{y} \not\in \pval &
+       \neg \emph{IsCallable}(H,\emph{Proto}(H,l,\pn))
+    \end{matrix}}{
+    \begin{matrix}\inblue
+       H,A,{\tt TP2}(y,l,p) \rightarrow H,A,{\tt Throw(\te)}
+    \end{matrix}} & \\
+ \end{array}
+\]
+
+\[
+\begin{array}{l@{}l@{}ll}
+ & \ \ &\inblue H,A,{\tt TO}(y,\undef) \rightarrow H,A,{\tt Throw}(\te)& \\[1em]
+
+ & \ \ &\inblue H,A,{\tt TO}(y,\nullK) \rightarrow H,A,{\tt Throw}(\te)& \\[1em]
+
+ & \ \ & \frac{
+    \begin{matrix}
+      c = \emph{constructor}(\pv) &
+      \mbox{fresh location }l &
+      K = H[l \mapsto \emph{NewObject}\textendash c(\#c\textendash proto)]
+    \end{matrix}}{
+    \begin{matrix}
+       H,A,{\tt TO}(y,\pv) \rightarrow K,A,y=l
+    \end{matrix}} & \\[1.5em]
+
+ & \ \ &\inblue H,A,{\tt TO}(y,l) \rightarrow H,A,y=l& \\[1em]
+
+ & \ \ & \frac{
+    \begin{matrix}
+       {\tt \neg \emph{IsCallable}(H,v)}
+    \end{matrix}}{
+    \begin{matrix}
+       {\tt H,A,Fun1(tag,y,v,v_{this},v_1,...v_n) \rightarrow H,A,Throw(TypeError)}
+    \end{matrix}} & \\ 
+ & & \\
+ 
+ & \ \ & \frac{
+    \begin{matrix}
+       {\tt \neg \emph{IsNative}(v)} & {\tt \emph{IsCallable}(H,v)} \\
+       {\tt H(v).@Function=function[x](y_1,...,y_m)\{s\}} & {\tt A_1 = H(v).@scope} \\
+       {\tt A_2 = \emph{NewER}(A_1,(arguments,@this,y_1,...,y_m))} & {\tt l = \emph{fresh}(\loc)} \\
+       {\tt H_1 = H[l\mapsto \emph{NewArgumentsObject}()]} & \\
+       {\tt K,B = \emph{Update}(H_1,A_2,arguments,l,false) } & (Assert \ K= H_1)\\
+       {\tt s_1 = ArgumentsStmt(v_1, ...,v_n)} & \\
+       {\tt s_2 = ActualArgAssignStmt((@this,y_1,...,y_m),(v_{this},v_1,...v_m))} \\
+    \end{matrix}}{
+    \begin{matrix}
+       {\tt H,A,Fun1(tag,y,v,v_{this},v_1,...v_n) \rightarrow K,B,s_1;s_2;Fun2(tag,A,y,v_{this},function[x](y_1,...,y_m)\{s\}}
+    \end{matrix}} & \\ 
+
+ & \ \ & \frac{
+    \begin{matrix}
+       {\tt A_1 = SetVD(A,s)} & {\tt K,B = SetFD(H,A_1,s,false)}
+    \end{matrix}}{
+    \begin{matrix}
+       {\tt H,A,Fun2(tag,B,y,v_{this},function[x](y_1,...,y_m)\{s\}\rightarrow K,B,Fun3[tag,B,y,v_{this},s]}
+    \end{matrix}} & \\ 
+    
+ & \ \ & {\tt H,A,Fun3['call',B,y,v_{this},Return(v)] \rightarrow H,A,y=v }& \\ 
+ & & \\
+ 
+ & \ \ & {\tt H,A,Fun3['call',B,y,v_{this},Normal(v)] \rightarrow H,A,y=undefined }& \\ 
+ & & \\
+ 
+ & \ \ & \frac{
+    \begin{matrix}
+       {\tt v \in \loc} &
+    \end{matrix}}{
+    \begin{matrix}
+       {\tt H,A,Fun3['new',B,y,v_{this},Return(v)] \rightarrow K,A,y=v}
+    \end{matrix}} & \\  
+ & & \\
+ 
+ & \ \ & \frac{
+    \begin{matrix}
+       {\tt v \notin \loc} &
+    \end{matrix}}{
+    \begin{matrix}
+       {\tt H,A,Fun3['new',B,y,v_{this},Return(v)] \rightarrow K,A,y=v_{this}}
+    \end{matrix}} & \\  
+ & & \\
+ 
+ & \ \ & {\tt H,A,Fun3['new',B,y,v_{this},Normal(v)] \rightarrow H,A,y=v_{this} }& \\ 
+ & & \\
+ 
+ & \ \ & {\tt H,A,Fun3[tag,B,y,Throw(v)] \rightarrow H,A,Throw(v) }& \\    
+ & & \\
+ 
+ 
+ & \ \ & \frac{
+    \begin{matrix}
+       {\tt B = \emph{NewER}(A,x)}
+    \end{matrix}}{
+    \begin{matrix}
+       {\tt H,A,Catch1(x,ve,s) \rightarrow K,A,x=ve;s;ScopeChange(A)}
+    \end{matrix}} & \\  
+ & & \\
+ 
+    
+ & \ \ & {\tt H,A,ScopeChange(B) \rightarrow H,B,Normal(undefined) }& \\    
+ & & \\
+  
+ 
+ & \ \ & \frac{
+    \begin{matrix}
+       {\tt pn = \emph{getEnumPName}(H,v,i)} & {\tt pn \neq @end}
+    \end{matrix}}{
+    \begin{matrix}
+       {\tt H,A,Forin(y,l,s,i) \rightarrow K,A,y=pn; s; Forin(x,l,s,i+1)}
+    \end{matrix}} & \\  
+ & & \\
+ 
+ 
+ & \ \ & \frac{
+    \begin{matrix}
+       {\tt pn = \emph{getEnumPName}(H,v,i)} & {\tt pn = @end}
+    \end{matrix}}{
+    \begin{matrix}
+       {\tt H,A,Forin(y,l,s,i) \rightarrow K,A,Normal(undefined)}
+    \end{matrix}} & \\  
+ & & \\
+ 
+\end{array}
+\]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{User Syntax}
+
+\[
+\begin{array}{l@{}l@{}ll}
+
+%% Value %%
+\inblue
+\mbox{[Value]} & & \inblue
+\semanticrule
+	{\neg \emph{CanPutVar}(A,y)}
+	{\configfromto
+		{H}{A}{y=v}
+		{H}{A}{{\tt Throw}(\te)}} &
+\\[1.5em]
+
+ & & \inblue
+\semanticrule
+	{\emph{CanPutVar}(A,y) \rulesep
+	 K,B = \emph{Update}(H,A,y,v,\true)}
+	{\configfromto
+		{H}{A}{y=v}
+		{K}{B}{{\tt Normal}(v)}} &
+\\ & & \\
+
+
+%% BinaryOp %%
+[BinaryOp] & & 
+\semanticrule
+	{v_1 \notin \pval \vee v_2 \notin \pval \\
+	 binop \notin \{\jsin, \jsinstanceof,==,===,!=,!==,\&\&,||\} \\
+	 @_1 = freshVar(@Vars)\\
+	 @_2 = freshVar(@Vars)}
+	{\configfromto
+		{H}{A}{y = v_1 \ binop\ v_2}
+		{H}{A}{TP(@_1,v_1,\dquote{valueOf});TP(@_2,v_2,\dquote{valueOf});y=@_1\ binop\ @_2}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{binop \in \{==,===,!=,!==\} \\
+	 (v_1 \in Pval \wedge v_2 \in \loc)\vee (v_2 \in \pval \wedge v_1 \in \loc) \\
+	 @_1 = freshVar(@Vars) \\
+	 @_2 = freshVar(@Vars)}
+	{\configfromto
+		{H}{A}{y = v_1 \ binop\ v_2}
+		{H}{A}{TP(@_1,v_1,\dquote{valueOf});TP(@_2,v_2,\dquote{valueOf});y=@_1\ binop\ @_2}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{binop \in \{==,===\} \\
+	 l_1 = l_2}
+	{\configfromto
+		{H}{A}{y = l_1 \ binop\ l_2}
+		{H}{A}{y = true}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{binop \in \{==,===\} \\
+	 l_1 \neq l_2}
+	{\configfromto
+		{H}{A}{y = l_1 \ binop\ l_2}
+		{H}{A}{y = false}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{binop \in \{!=,!==\} \\
+	 l_1 \neq l_2}
+	{\configfromto
+		{H}{A}{y = l_1 \ binop\ l_2}
+		{H}{A}{y = true}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{binop \in \{!=,!==\} \\
+	 l_1 = l_2}
+	{\configfromto
+		{H}{A}{y = l_1 \ binop\ l_2}
+		{H}{A}{y = false}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{@_1 = freshVar(@Vars)}
+	{\configfromto
+		{H}{A}{y= v_1 \ \&\& \ v_2}
+		{H}{A}{TB(@_1,v_1);\jsifelse{@}{y=v_2}{y=v_1}}}
+\\ & & \\
+
+ & & 
+\semanticrule
+	{@_1 = freshVar(@Vars)}
+	{\configfromto
+		{H}{A}{y= v_1 \ || \ v_2}
+		{H}{A}{TB(@_1,v_1);\jsifelse{@}{y=v_1}{y=v_2}}}
+\\ & & \\
+
+
+ & & 
+\semanticrule
+	{binop \notin \{\jsin,\jsinstanceof\} \\
+	 pu = delta(\squote{binop},pv_1,pv_2)}
+	{\configfromto
+		{H}{A}{y = pv_1 \ binop\ pv_2}
+		{H}{A}{y = pu}} &
+\\ & & \\
+ 
+%% In %%
+[In] & &
+\semanticrule
+ 	{v_2 \notin \loc}
+ 	{\configfromto
+ 		{H}{A}{y = v_1 \ \jsin \ v_2}
+		{H}{A}{Throw(TypeError)}} & 
+\\ & & \\
+ 
+ & &
+\semanticrule
+ 	{@ = freshVar(@Vars)\\
+ 	 v \notin PName}
+ 	{\configfromto
+ 		{H}{A}{y = v \ \jsin \ l}
+		{H}{A}{TS(@,v);y=@ \ \jsin \ l}} & 
+\\ & & \\
+
+ & &
+\semanticrule
+ 	{b = \emph{HasProperty}(H,l,pn)}
+ 	{\configfromto
+ 		{H}{A}{y = pn \ \jsin \ l}
+		{H}{A}{y = b}} & 
+\\ & & \\
+
+
+%% InstanceOf %%
+[InstanceOf] & & 
+\semanticrule
+	{\neg \emph{IsCallable}(H,v_2)}
+	{\configfromto
+		{H}{A}{y = v_1 \ \jsinstanceof \ v_2}
+		{H}{A}{Throw(TypeError)}} &
+\\ & & \\
+\end{array}
+\]
+
+
+\[
+\begin{array}{l@{}l@{}ll}
+
+ & & 
+\semanticrule
+	{\emph{IsCallable}(H,v_2) \\
+	 v_1 \notin \loc}
+	{\configfromto
+		{H}{A}{y = v_1 \ \jsinstanceof \ v_2}
+		{H}{A}{Throw(TypeError)}} &
+\\ & & \\
+
+
+
+ & & 
+\semanticrule
+	{\emph{IsCallable}(H,v_2) \\
+	 v_1 \in \loc \\
+	 v_3 proto(H,v_2,\dquote{prototype}) \\
+	 v_3 \notin \loc}
+	{\configfromto
+		{H}{A}{y = v_1 \ \jsinstanceof \ v_2}
+		{H}{A}{Throw(TypeError)}} &
+\\ & & \\
+ 
+ & & 
+\semanticrule
+	{\emph{IsCallable}(H,v_2) \\
+	 v_1 \in \loc \\
+     v_3 proto(H,v_2,\dquote{prototype}) \\
+     v_3 \in \loc \\
+     b = \emph{Inherit}(H,v_1,v_3)}
+	{\configfromto
+		{H}{A}{y = v_1 \ \jsinstanceof \ v_2}
+		{H}{A}{y=b}} &
+\\ & & \\
+
+ 
+%% UnOp %%
+[UnaryOp] & & 
+\semanticrule
+	{unop \in \{+,-\} \\
+	 @ = \emph{fresh}(@Vars) \\
+	 v \notin \pval}
+	{\configfromto
+		{H}{A}{y = unop \ v}
+		{H}{A}{TP(@,v,\dquote{valueOf}); y=unop \ @}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{unop \in \{+,-\} \\
+	 pu = delta(unop,pv)}
+	{\configfromto
+		{H}{A}{y = unop \ pv}
+		{H}{A}{y = pu}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{unop \in \{!,\tilde{}\} \\
+	 @ = \emph{fresh}(@Vars) \\
+	 v \notin \pval}
+	{\configfromto
+		{H}{A}{y = unop \ v}
+		{H}{A}{TB(@,v); y=unop \ @}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{unop \in \{!,\tilde{}\} \\
+	 pu = delta(unop,pv)}
+	{\configfromto
+		{H}{A}{y = unop \ pv}
+		{H}{A}{y = pu}} &
+\\ & & \\
+ 
+ 
+%% Void %%
+[Void]& & 
+\configfromto
+	{H}{A}{y = \jsvoid \ v}
+	{H}{A}{y= \jsundef} &
+\\ & & \\
+
+ 
+%% TypeOf %%
+[TypeOf] & & 
+\semanticrule
+	{u = \emph{TypeTag}(H,A,v)}
+	{\configfromto
+		{H}{A}{y = \jstypeof \ v}
+		{H}{A}{y = u}} &
+\\ & & \\
+
+
+%% Delete %%
+[Delete] & & 
+\semanticrule
+	{@_1 = \emph{fresh}(@Vars) \\
+	 @_2 = \emph{fresh}(@Vars) \\
+	 v_1 \notin \loc \vee v_2 \notin PName}
+	{\configfromto
+		{H}{A}{y = \jsdel \ v_1[v_2]}
+		{H}{A}{TS(@_2,v_2);TO(@_1,v_1)y=\jsdel\ @_1[@_2]}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{\neg \emph{HasOwnProperty}(H,l,pn)}
+	{\configfromto
+		{H}{A}{y = \jsdel \ l[pn]}
+		{H}{A}{y = true}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{H(l).pn.configurable=true \\
+     K = H[l\mapsto H(l)-pn])}
+	{\configfromto
+		{H}{A}{y = \jsdel \ l[pn]}
+		{K}{A}{y = true}} &
+\\ & & \\
+
+& & 
+\semanticrule
+	{H(l).pn.configurable=false}
+	{\configfromto
+		{H}{A}{y = \jsdel \ l[pn]}
+		{H}{A}{Throw(TypeError)}} &
+\\ & & \\
+
+
+%% Load %%
+[Load] & & 
+\semanticrule
+	{@_1 = \emph{fresh}(@Vars) \\
+	 @_2 = \emph{fresh}(@Vars) \\
+	 v_1 \notin \loc \vee v_2 \notin PName}
+	{\configfromto
+		{H}{A}{y = v_1[v_2]}
+		{H}{A}{TS(@_2,v_2);\ TO(@_1,v_1);\ y=@_1[@_2]}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{v = \emph{Proto}(H,l,pn)}
+	{\configfromto
+		{H}{A}{y = l[pn]}
+		{H}{A}{y=v}} &
+\\ & & \\
+
+\end{array}
+\]
+
+
+\[
+\begin{array}{l@{}l@{}ll}
+
+
+%% Store %%
+[Store] & & 
+\semanticrule
+	{@ = \emph{fresh}(@Vars) \\
+	 v_2 \notin PName}
+	{\configfromto
+		{H}{A}{v_1[v_2] = v_3}
+		{H}{A}{TS(@,v2);\ v1[@]=v_3}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{v \notin \loc}
+	{\configfromto
+		{H}{A}{v[pn] = v_3}
+		{H}{A}{Throw(TypeError)}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{\neg \emph{CanPut}(H,l,pn)}
+	{\configfromto
+		{H}{A}{l[pn] = v}
+		{H}{A}{Throw(TypeError)}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{\neg \emph{IsArray}(l) \\
+	 \emph{CanPut}(H,l,pn) \\
+	 \emph{HasOwnProperty}(H,l,pn) \\
+	 K = H[l][pn][value \mapsto v]}
+	{\configfromto
+		{H}{A}{l[pn] = v}
+		{K}{A}{Normal(v)}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{\neg \emph{IsArray}(l) \\
+	 \emph{CanPut}(H,l,pn) \\
+	 \neg \emph{HasOwnProperty}(H,l,pn) \\
+	 K = H[l][pn \mapsto \{value :v,wriable:true,enumerable:true,configurable:true\}]}
+	{\configfromto
+		{H}{A}{l[pn] = v}
+		{K}{A}{Normal(v)}} &
+\\ & & \\
+
+[Store\textendash Array] & & 
+\semanticrule
+	{\emph{IsArray}(l) \\
+	 \emph{CanPut}(H,l,pn) \\
+	 \emph{fresh}(@Vars)}
+	{\configfromto
+		{H}{A}{l[\dquote{length}] = v}
+		{K}{A}{TN(@,v);\ l[pn]=@}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{\emph{IsArray}(l) \\
+	 oldLen = \emph{Proto}(H,l,\dquote{length}) \\
+	 n \geq oldLen \\
+	  K = H[l][\dquote{length}]][value\mapsto n]}
+	{\configfromto
+		{H}{A}{l[\dquote{length}] = v}
+		{K}{A}{Normal(n)}} &
+\\ & & \\
+
+
+ & & 
+\semanticrule
+	{\emph{IsArray}(l) \\
+	 oldLen = \emph{Proto}(H,l,\dquote{length}) \\
+	 n < oldLen \\
+	 K = H[l][\dquote{length}]][value\mapsto n] \\
+	 @_1,@_2,@3 = \emph{fresh}(@Vars)}
+	{H,A,l[\dquote{length}] = n \rightarrow \\
+	 K,A,@_1 = oldLen;\ @_2 = delete \ l[@_1];\ @3 = (n\geq@_1);\ @3 = @3 || @_2; \\
+	 while(@3)\{@_1=(@_1-1);\ @_2=delete \ l[oldLen];\ @3=(n\geq@_1);\ @3=(@3||@_2)\}; \\
+	 @_1 = (@_1 + 1);\ l[\dquote{length}"] = @_1} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{\emph{IsArray}(l) \\
+	 oldLen = \emph{Proto}(H,l,\dquote{length}) \\
+	 n \geq oldLen \\
+	 K = H[l][n \mapsto \{value:v,writable:true,enumerable:true,configurable:true\}}
+	{\configfromto
+		{H}{A}{l[n] = v}
+		{K}{A}{l[\dquote{length}]=n+1}} &
+\\ & & \\
+
+ & & 
+\semanticrule
+	{\emph{IsArray}(l) \\
+	 oldLen = \emph{Proto}(H,l,\dquote{length}) \\
+	 n < oldLen \\
+	 K = H[l][n \mapsto \{value:v,writable:true,enumerable:true,configurable:true\}}
+	{\configfromto
+		{H}{A}{l[n] = v}
+		{K}{A}{Normal(v)}} &
+\\ & & \\
+
+\end{array}
+\]
+
+
+\[
+\begin{array}{l@{}l@{}ll}
+
+ & &
+\semanticrule
+	{\neg \emph{IsArray}(l) \\
+	 pn \notin \num \\
+	 \emph{CanPut}(H,l,pn) \\
+	 \emph{HasOwnProperty}(H,l,pn) \\
+	 K = H[l][pn][value \mapsto v]}
+	{\configfromto
+		{H}{A}{l[pn] = v}
+		{K}{A}{Normal(v)}} &
+\\ & & \\
+
+ & &
+\semanticrule
+	{\neg \emph{IsArray}(l) \\
+	 pn \notin \num \\
+	 \emph{CanPut}(H,l,pn) \\
+	 \emph{HasOwnProperty}(H,l,pn) \\
+	 K = H[l][pn \mapsto \{value:v,writable:true,enumerable:true,configurable:true\}]}
+	{\configfromto
+		{H}{A}{l[pn] = v}
+		{K}{A}{Normal(v)}} &
+\\ & & \\
+ 
+%% object literal %%
+[ObjectLiteral]
+ & & 
+\semanticrule
+	{@ = \emph{fresh}(@Vars)}
+	{\configfromto
+ 		{H}{A}{y = \{pun_1:e_1,...,pnu_k:e_k\}}
+		{H}{A}{@=\{\},@[\dquote{pnu_1}]=e1;...;@[\dquote{pnu_k}]=e_k}} & \\
+ & & \\
+ 
+ & & 
+\semanticrule
+	{l = \emph{fresh}(\loc) \\
+     K = H[l\mapsto \emph{NewObject}(\#ObjProto)]} 
+	{\configfromto
+ 		{H}{A}{y = \{\}}
+		{K}{A}{y=l}} & \\
+ & & \\
+ 
+%% array literal %%
+[ArrayLiteral] & & 
+\semanticrule
+	{@ = \emph{fresh}(@Vars)}
+	{\configfromto
+ 		{H}{A}{y = [e_1,...,e_k]}
+		{H}{A}{@=[];,@[\dquote{0}]=e1;...;@[\dquote{k-1}]=e_k}} & \\
+ & & \\
+ 
+ & & 
+\semanticrule
+	{l = \emph{fresh}(\loc) \\
+     K = H[l\mapsto \emph{NewArrayObject}(\#ArrayProto)]} 
+	{\configfromto
+ 		{H}{A}{y = []}
+		{K}{A}{y=l}} & \\
+ & & \\
+ 
+%% function call %% 
+FunctionCall& & 
+\configfromto
+ 	{H}{A}{y = v(v_1,...v_n)}
+	{H}{A}{Fun1(\squote{call},y,v,undefined,v_1,...,v_n)} & \\
+ & & \\
+ 
+%% method call %%
+[MethodCall] & & 
+\semanticrule
+	{@ = \emph{fresh}(@Vars)}
+	{\configfromto
+ 		{H}{A}{y = u[v](v_1,...v_n)}
+		{H}{A}{@=u[v],Fun1(\squote{call},y,@,undefined,v_1,...,v_n)}} & \\
+ & & \\
+ 
+%% new %%
+[New] & & 
+\semanticrule
+ 	{l = \emph{fresh}(\loc) \\
+     l_p = \emph{Proto}(H,v,``prototype") \\
+     l_p \in \loc \\
+     K = H[l \mapsto \emph{NewObject}(l_p)]}
+ 	{\configfromto
+ 		{H}{A}{y = new \ v(v_1,...v_n)}
+		{K}{A}{Fun1(\squote{new},y,v,v_1,...,v_n)}} & 
+\\ & & \\
+
+ & & 
+\semanticrule
+ 	{l = \emph{fresh}(\loc) \\
+     l_p = \emph{Proto}(H,v,``prototype") \\
+     l_p \notin \loc \\
+     K = H[l \mapsto \emph{NewObject}(\#ObjProto)]}
+ 	{\configfromto
+ 		{H}{A}{y = new \ v(v_1,...v_n)}
+		{K}{A}{Fun1(\squote{new},y,v,v_1,...,v_n)}} & 
+\\ & & \\
+ 
+%% fun expr %%
+[Fun\textendash Expr] & & 
+\semanticrule
+ 	{l_1 = \emph{fresh}(\loc) \\
+     l_2 = \emph{fresh}(\loc) \\
+     H_1 = H[l_2 \mapsto \emph{NewObject}(\#ObjProto)] \\
+     K = H_1[l_1 \mapsto \emph{NewFunctionObject}(function(\tilde{y})\{s\},A,l_2)]}
+ 	{\configfromto
+ 		{H}{A}{y = \jsfuncno{\tilde{y}}{s}}
+		{K}{A}{l_2.constuctor=l_1;\ y=l_1}} & 
+\\ & & \\
+
+\mbox{[Fun\textendash Decl]} & & 
+\semanticrule
+  {A_1 = \emph{NewER}(A,x) \rulesep
+   l_1 = \emph{fresh}(\loc) \rulesep
+     l_2 = \emph{fresh}(\loc) \\
+     H_1,A_2 = \emph{Update}(H,A_1,x,l_1,\false) \\
+     H_2 = H_1[l_2 \mapsto \emph{NewObject}(\#ObjProto)] \\
+     K = H_2[l_1 \mapsto \emph{NewFunctionObject}({\tt function}\ (\tilde{y})\{s\},A_2,l_2)]}
+ 	{\configfromto
+ 		{H}{A}{y = \jsfunc{x}{\tilde{y}}{s}}
+		{K}{A}{l_2.constuctor=l_1;\ y=l_1}} & 
+\\ & & \\
+      
+\end{array}
+\]
+
+
+\[
+\begin{array}{l@{}l@{}ll}
+[Return] & & 
+\configfromto
+ 		{H}{A}{\jsreturn v}
+		{K}{A}{Return(v)} & \\
+ & & \\
+
+\inblue\mbox{[Var]} & &
+\inblue\configfromto
+  {H}{A}{\jsvar{x}}
+  {H}{A}{\tt Normal(\jsundef)} & \\
+ & & \\
+ 
+ & \ \ & \frac{
+    \begin{matrix}
+       {\tt v \in Str} \\
+       {\tt Parse(v,\tilde{x}) = s \ \{\tilde{x}\} \ \subseteq free(s)} \\
+       {\tt A_1 = \emph{NewER}(A)} \\
+       {\tt A_2 = SetVD(A_1,s)} \\
+       {\tt K,B = SetFD(H,A_2,s,true)} \\
+    \end{matrix}}{
+    \begin{matrix}
+       {\tt H,A,eval(v,\tilde{x}) \rightarrow K,B,s;\ ScopeChange(A)}
+    \end{matrix}} & \\    
+ & & \\
+ 
+ & \ \ & \frac{
+    \begin{matrix}
+       {\tt v \in Str} \\
+       {\tt Parse(v,\tilde{x}) = Throw(ve)} \\
+       {\tt free(s) \nLeftarrow \{\widetilde{str}\}}\
+    \end{matrix}}{
+    \begin{matrix}
+       {\tt H,A,eval(v,\tilde{x}) \rightarrow H,A,Throw(ve)}
+    \end{matrix}} & \\    
+ & & \\
+ 
+ & \ \ & \frac{
+    \begin{matrix}
+       {\tt v \notin Str} \\
+       {\tt @ = freshVar(@Vars)} 
+    \end{matrix}}{
+    \begin{matrix}
+       {\tt H,A,eval(v,\tilde{x}) \rightarrow H,A,TS(@,v);\ eval(@,\tilde{x})}
+    \end{matrix}} & \\    
+ & & \\
+
+\inblue\mbox{[NormalCT]} & &
+\inblue\configfromto
+  {H}{A}{{\tt Normal}(v);\ s}
+  {H}{A}{s} & \\
+ & & \\
+ 
+[ReturnCT] & & 
+\configfromto
+	{H}{A}{Return(v);\ s}
+	{H}{A}{s} & \\
+ & & \\
+ 
+[ThrowCT] & & 
+\configfromto
+	{H}{A}{Throw(ve); \ s}
+	{}{}{Throw(ve)} & \\
+ & & \\
+
+[Block] & & 
+\configfromto
+	{H}{A}{\{s\}}
+	{H}{A}{s} & \\
+ & & \\ 
+ 
+[Throw] & & 
+\configfromto
+	{H}{A}{\jsthrow{v}}
+	{H}{A}{Throw(v)} & \\
+ & & \\
+
+%% try %%
+[Try] & & 
+\semanticrule
+	{TypeTag(ct) \neq \squote{Throw}}
+	{\configfromto
+ 		{H}{A}{\jstrycatch{ct}{x}{s}}
+		{H}{A}{ct}} & \\
+ & & \\
+ 
+ & & 
+\configfromto
+	{H}{A}{\jstrycatch{Throw(ve)}{x}{s}}
+	{H}{A}{Catch1(x,ve,s)} & \\
+ & & \\
+ 
+ & & 
+\semanticrule
+	{TypeTag(ct_2) = \squote{Normal}}
+	{\configfromto
+ 		{H}{A}{\jstryfinally{ct_1}{ct_2}}
+		{H}{A}{ct_1}} & \\
+ & & \\
+ 
+ & & 
+\semanticrule
+	{TypeTag(ct_2) \neq \squote{Normal}}
+	{\configfromto
+ 		{H}{A}{\jstryfinally{ct_1}{ct_2}}
+		{H}{A}{ct_2}} & \\
+ & & \\
+ 
+ & & 
+\semanticrule
+	{TypeTag(ct) \neq \squote{Throw}}
+	{\configfromto
+ 		{H}{A}{\jstryfull{ct}{x}{s_1}{s_2}}
+		{H}{A}{\jstryfinally{ct}{s_2}}} & \\
+ & & \\
+ 
+ & & 
+\configfromto
+	{H}{A}{\jstryfull{Throw(ve)}{x}{s_1}{s_2}}
+	{H}{A}{\jstryfinally{Catch1(x,ve,s_1)}{s_2}} & \\
+ & & \\
+
+[If] & & 
+\configfromto
+	{H}{A}{\jsifelseopt{\jstrue}{s_1}{s_2}}
+	{H}{A}{s_1} & \\
+ & & \\
+ 
+ & & 
+\configfromto
+	{H}{A}{\jsif{\jsfalse}{s_1}}
+	{H}{A}{Normal(\jsundef)} & \\
+ & & \\
+ 
+ & & 
+\configfromto
+	{H}{A}{\jsifelse{\jsfalse}{s_1}{s_2}}
+	{H}{A}{s_2} & \\
+ & & \\
+ 
+[While] & & 
+\configfromto
+	{H}{A}{\jswhile{e}{s}}
+	{H}{A}{\jsif{e}{s};\ \jswhile{e}{s}} & \\
+ & & \\
+ 
+[ForIn] & &
+\semanticrule
+ 	{v \in \{\jsnull, \jsundef\}}
+ 	{\configfromto
+ 		{H}{A}{\jsforin{x}{e}{s}}
+		{H}{A}{Normal(\jsundef)}} & 
+\\ & & \\
+
+ & &
+\semanticrule
+ 	{v \notin \{\jsnull, \jsundef\} \\
+     @_1 = \emph{fresh}(@Vars) }
+ 	{\configfromto
+ 		{H}{A}{\jsforin{x}{e}{s}}
+		{H}{A}{TO(@_1,v);\ Forin(x,@_1,s,1)}} & 
+\\ & & \\
+\end{array}
+\]
+\[
+\begin{array}{l@{}l@{}ll}
+
+%% with %%
+[With] & &
+\semanticrule
+ 	{@ = \emph{fresh}(@Vars) \\
+     v \notin \loc}
+ 	{\configfromto
+ 		{H}{A}{\jswith{v}{s}}
+		{H}{A}{TO(@,v);\ \jswith{@}{s}}} & 
+\\ & & \\
+
+ & &
+\semanticrule
+ 	{s' = WithRewrite(s,l)}
+ 	{\configfromto
+ 		{H}{A}{\jswith{l}{s}}
+		{H}{A}{s'}} & 
+\cmt{\note{need with rewriting.}}\\ & & \\
+
+%% break %%
+[Break] & &
+\configfromto
+	{H}{A}{\jsbreak label}
+	{H}{A}{Break(label)} & 
+\\ & & \\
+
+& &
+\semanticrule
+ 	{label \neq label'}
+ 	{\configfromto
+ 		{H}{A}{label:\{Break(label')\}}
+		{H}{A}{Break(label')}} & 
+\\ & & \\
+& &
+\semanticrule
+ 	{label = label'}
+ 	{\configfromto
+ 		{H}{A}{label:\{Break(label')\}}
+		{H}{A}{Normal(\jsundef)}} & 
+\\ & & \\
+%%%% aplas 2008 %%%%
+% H,l,[ls>]id:s -> H,l,([ls U] {id})>s [S-Label]
+% s !< {id:s1,while,...}  
+% ---------------------- [S-Label-ignore]
+% H,l,ls>s -> H,l,s
+
+\end{array}
+\]
+
+
+\section{Native Objects}
+\note{skip}
+
+\[
+\begin{array}{l@{}l@{}ll}
+
+\end{array}
+\]
+
+
+\section{Context Rules}
+\[
+\begin{array}{l@{}l@{}ll}
+ & &
+\semanticrule
+	{v = \llbracket e \rrbracket HA}
+	{\configfromto
+		{H}{A}{sCe[e]}
+		{H}{A}{sCe[v]}} &
+\\ && \\ 
+ 
+ & &
+\semanticrule
+	{\emph{IsError}(v)}
+	{\configfromto
+		{H}{A}{sCe[e]}
+		{H}{A}{Throw(v)}} &
+\\ && \\ 
+ 
+sCe & \ ::= \ & {\tt \_ \ } & \\
+ & \ \mid \ & {\tt y = \_ \ binop\ e} & \\
+ & \ \mid \ & {\tt y = v\ binop\ \_} & \\
+ & \ \mid \ & {\tt y = unop\ \_} & \\
+ & \ \mid \ & {\tt y = delete\ \_[e]} & \\
+ & \ \mid \ & {\tt y = delete\ v[\_]} & \\
+ & \ \mid \ & {\tt y = \_[e]} & \\
+ & \ \mid \ & {\tt y = v[\_]} & \\
+ & \ \mid \ & {\tt \_[e_1] = e_2} & \\
+ & \ \mid \ & {\tt v[\_] = e} & \\
+ & \ \mid \ & {\tt v_1[v_2] = \_} & \\
+ & \ \mid \ & {\tt y = \{\widetilde{(pnu:v)},\ pnu: \_,\ \widetilde{(pnu:e)}\} } & \\
+ & \ \mid \ & {\tt y = [\tilde{v},\ \_, \ \tilde{e}]} & \\
+ & \ \mid \ & {\tt y = \_(\tilde{e})} & \\
+ & \ \mid \ & {\tt y = v(\tilde{v},\ \_, \ \tilde{e})} & \\
+ & \ \mid \ & {\tt y = \_[e'](\tilde{e})} & \\
+ & \ \mid \ & {\tt y = v[\_](\tilde{e})} & \\
+ & \ \mid \ & {\tt y = v_1[v_2](\tilde{v},\ \_, \ \tilde{e})} & \\
+ & \ \mid \ & {\tt y = new\ \_(\tilde{e})} & \\
+ & \ \mid \ & {\tt y = new\ v(\tilde{v},\ \_, \ \tilde{e})} & \\
+ & \ \mid \ & {\tt return\ \_} & \\
+ & \ \mid \ & {\tt throw\ \_} & \\
+ & \ \mid \ & {\tt if(\_)then\ s_1\ [else\ s_2]} & \\
+ & \ \mid \ & {\tt for\ x \ in\ \_\ s} & \\
+ & \ \mid \ & {\tt TS\textendash Help(x,\_)} & \\
+ & \ \mid \ & {\tt TN\textendash Help(x,\_)} & \\
+ & \ \mid \ & {\tt Forin(x,\_,s,i)} & \\
+ & \ \mid \ & {\tt Fun(tag,y,\_,e,e_1,...,e_n} & \\
+ & \ \mid \ & {\tt Fun(tag,y,v,\_,e_1,...,e_n} & \\
+ & \ \mid \ & {\tt eval(\_,\tilde{x})} & \\
+ & \ \mid \ & {\tt FPApply\textendash help(y,v_f,v_this,v_arg,\_)} & \\
+ & \ \mid \ & {\tt APtoString\textendash help(y,\_,x)} & \\
+ & \ \mid \ & {\tt APtoString\textendash help(y,v,\_)} & \\
+ & \ \mid \ & {\tt APjoin\textendash help(y,\_,e_1,e_2)} & \\
+ & \ \mid \ & {\tt APjoin\textendash help(y,v,\_,e)} & \\
+ & \ \mid \ & {\tt APjoin\textendash help(y,v_1,v_2,\_)} & \\
+ & \ \mid \ & {\tt APconcat\textendash help(y,\_,x)} & \\
+ & & \\ 
+ 
+ & &
+\semanticrule
+	{\configfromto
+		{H}{A}{s}
+		{K}{B}{t}}
+	{\configfromto
+		{H}{A}{sCs[s]}
+		{K}{B}{sCs[t]}} &
+\\ && \\ 
+ 
+sCs & \ ::= \ & {\tt \_ ;\ s } & \\
+ & \ \mid \ & {\tt \_ \ P} & \\
+ & \ \mid \ & {\tt label :\{\_\}} & \\
+ & \ \mid \ & {\tt try\ \_ \ finally \_ \ s} & \\
+ & \ \mid \ & {\tt try \_ \ catch\ s_1\ finally\ s_2} & \\
+ & \ \mid \ & {\tt try\ ct\ finally\ \_ } & \\
+ & \ \mid \ & {\tt Fun3(tag,B,y,\_)} & \\
+\end{array}
+\]
+
+\end{document}

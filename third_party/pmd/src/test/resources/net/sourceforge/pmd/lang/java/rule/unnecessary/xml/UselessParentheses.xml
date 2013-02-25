@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data>
+    <test-code>
+        <description><![CDATA[
+failure case, return statement
+     ]]></description>
+        <expected-problems>1</expected-problems>
+        <code><![CDATA[
+public class Foo {
+   public int bar() {
+      return (0);
+   }
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description><![CDATA[
+failure case, assignement
+     ]]></description>
+        <expected-problems>1</expected-problems>
+        <code><![CDATA[
+public class Foo {
+   public int bar(int x) {
+      int y = (x + 5);
+      return y;
+   }
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description><![CDATA[
+failure case, condition 1
+     ]]></description>
+        <expected-problems>1</expected-problems>
+        <code><![CDATA[
+public class Foo {
+   public int bar(int x) {
+      if ((x % 2 == 0)) {
+         return x;
+      }
+      return 0;
+   }
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description><![CDATA[
+failure case, condition 2
+     ]]></description>
+        <expected-problems>1</expected-problems>
+        <code><![CDATA[
+public class Foo {
+   public int bar(int x) {
+      if ((x % 2) == 0) {
+         return x;
+      }
+      return 0;
+   }
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description><![CDATA[
+useful parentheses, arithmetic
+     ]]></description>
+        <expected-problems>0</expected-problems>
+        <code><![CDATA[
+public class Foo {
+   public int bar(int x) {
+      return (x + 2) * 5;
+   }
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description><![CDATA[
+useful parentheses, logic
+     ]]></description>
+        <expected-problems>0</expected-problems>
+        <code><![CDATA[
+public class Foo {
+   public int bar(int x) {
+   // actually, the inner parentheses wouldn't be necessary,
+   // as the "||" operator has the lowest priority, followed by "=="
+   // and by "%" with the highest priority here...
+   // But for readability, it is better to have the parentheses as in
+   // this example.
+      if ((x % 2 == 0) || (x % 2 == 1)) {
+         return x;
+      } else {
+         // it's the same with this extra parentheses
+         return (x %2 == 0) ? x : -x;
+      }
+      return -x;
+   }
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description><![CDATA[
+typecast, ok
+     ]]></description>
+        <expected-problems>0</expected-problems>
+        <code><![CDATA[
+public class Foo {
+   public String bar(Object o) {
+	    return ((Exception) o).getMessage();
+   }
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description><![CDATA[
+typecast with extra, bad
+     ]]></description>
+        <expected-problems>1</expected-problems>
+        <code><![CDATA[
+public class Foo {
+   public String bar(Object o) {
+	    return (((Exception) o)).getMessage();
+   }
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description><![CDATA[
+false negatives
+     ]]></description>
+        <expected-problems>4</expected-problems>
+        <code><![CDATA[
+public class Foo {
+   private boolean isSimpleReturn(Node node) {
+      return 
+         ( node instanceof ASTReturnStatement ) // rule triggeres here
+         &&
+         ( node.jjtGetNumChildren() == 0 );     // and here
+    }
+    public String getLocalName() {
+        int colonIndex = name.indexOf(':');
+        return (colonIndex >= 0)                // and here
+                ? name.substring(colonIndex + 1)
+                : name;
+    }
+    public void viewerModelChanged(ViewerModelEvent e) {
+        int startOffset =
+          // and here for the following parentheses once
+          (sourceCodeArea.getLineStartOffset(node.getBeginLine() - 1) +
+          node.getBeginColumn()) - 1;
+        }
+
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description><![CDATA[
+Parentheses around binary expressions are really necessary
+     ]]></description>
+        <expected-problems>0</expected-problems>
+        <code><![CDATA[
+public class Foo {
+    private final boolean isModifier(int mask) {
+        return (modifiers & mask) == mask;
+    }
+}
+     ]]></code>
+    </test-code>
+</test-data>

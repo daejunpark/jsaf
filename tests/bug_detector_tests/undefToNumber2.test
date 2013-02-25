@@ -1,0 +1,23 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=undefToNumber2
+BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
+bug-detector
+bug-detector_out_WCIequals=\
+ \n\
+ \n\
+ \n\
+ \n\
+* Bug Detector * \n\
+${BUGDETECTOR_TESTS_DIR}/undefToNumber2.js:14:1~14:2: warning: Converting undefined to number. \n\
+${BUGDETECTOR_TESTS_DIR}/undefToNumber2.js:14:1~14:2: warning: Variable 'x' is never used. \n\
+# Errors(#)   : 0 \n\
+# Warnings(#) : 2 \n\
+\n
+bug-detector_err_equals=

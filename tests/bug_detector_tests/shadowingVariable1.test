@@ -1,0 +1,22 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=shadowingVariable1
+BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
+bug-detector
+bug-detector_out_WCIequals=\
+ \n\
+ \n\
+ \n\
+ \n\
+* Bug Detector * \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable1.js:1:18~1:19: warning: Variable 'c' is shadowed by a parameter at 2:7-12. \n\
+# Errors(#)   : 0 \n\
+# Warnings(#) : 1 \n\
+\n
+bug-detector_err_equals=

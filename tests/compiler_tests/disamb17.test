@@ -1,0 +1,23 @@
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=disamb17
+DISAMB_TESTS_DIR=${JS_HOME}/tests/compiler_tests
+compile
+disambiguate_out_WCIequals=\
+<>_lab1_1 : <>_lab2_2 : <>_break_3 : {\n\
+  <>_temp_4 = true\n\
+  <>_temp_5 = <>toBoolean(<>_temp_4)\n\
+  while(<>_temp_5)\n\
+    {\n\
+      <>_temp_6 : break <>_temp_6\n\
+      <>_temp_4 = true\n\
+      <>_temp_5 = <>toBoolean(<>_temp_4)\n\
+    }\n\
+}\n
+disambiguate_err_equals=

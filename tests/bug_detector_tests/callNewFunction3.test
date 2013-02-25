@@ -1,0 +1,23 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=callNewFunction3
+BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
+bug-detector
+bug-detector_out_WCIequals=\
+ \n\
+ \n\
+ \n\
+ \n\
+* Bug Detector * \n\
+${BUGDETECTOR_TESTS_DIR}/callNewFunction3.js:14:4~15:7: warning: The conditional expression is always false. \n\
+${BUGDETECTOR_TESTS_DIR}/callNewFunction3.js:15:8~15:17: warning: Unreachable code is found. \n\
+# Errors(#)   : 0 \n\
+# Warnings(#) : 2 \n\
+\n
+bug-detector_err_equals=

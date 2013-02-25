@@ -1,0 +1,571 @@
+\iftr
+The full definition of the rewriting rules is as follows:
+\fi
+
+\[
+\iftr
+\else
+\hspace*{-5cm}
+\fi
+\begin{array}{l}
+% rewriting the program
+\rewritePf{\topl_1 \ \ldots \ \topl_n} \\
+\spOne = \ \rewriteTfo{\topl_1} \ \ldots \ \rewriteTfo{\topl_n}\\\\
+
+\iftr
+\end{array}
+\]
+
+\[
+\begin{array}{l}
+\fi
+% rewriting the statement
+\rewriteTf{\stmt}{\env} \\
+\spOne = \ \rewriteSf{\stmt}{\env}\\ 
+\iftr
+\\
+\fi
+
+% rewriting the function declaration
+\rewriteT\lbr{\tt function} \ \myfn  \ \verb+(+\myid_1\verb+,+ \ \ldots \ \myid_n\verb+)+ \ \verb+{+\topl_1 \ \ldots \ \topl_m\verb+}+
+\mid \env\rbr \\
+\spOne = \ \myif \ \env \equiv \emptyenv \\
+\spTwo \mythen \ {\tt function} \ \myfn  \ \verb+(+\myid_1\verb+,+ \ \ldots \ \myid_n\verb+)+ \ \verb+{+ \\
+\spFour\spOne \rewriteTf{\topl_1}\env \ \ldots \ \rewriteTf{\topl_m}\env \\
+\spFour \verb+}+\\
+\spTwo \myelse \ \mylet\ \Gamma = \langle\namelist, \toplocdecls\listcons\listscope, \flag\rangle \\
+\spThree {\tt function} \ \myfn  \ \verb+(+\myid_1\verb+,+ \ \ldots \ \myid_n\verb+)+ \ \verb+{+ \\
+\spThree\spOne \rewriteTf{\topl_1}{\argmk\namelist{\;([\myfn\;\myid_1\;\ldots\;\myid_n]\listapp \getlocaldecls(\topl_1 \ \ldots \ \topl_m)\listapp \toplocdecls)\listcons \listscope}{\;\flag}}\\
+\spThree\spOne \ldots \\
+\spThree\spOne \rewriteTf{\topl_m}{\argmk\namelist{\;([\myfn\;\myid_1\;\ldots\;\myid_n]\listapp \getlocaldecls(\topl_1 \ \ldots \ \topl_m)\listapp \toplocdecls)\listcons \listscope}{\;\flag}}\\
+\spThree\verb+}+\\
+\\
+
+% rewriting the block
+\rewriteS\lbr\verb+{+\stmt_1 \ \ldots \ \stmt_n\verb+}+\mid \env\rbr \\
+\spOne = \ \verb+{+ \rewriteSf{\stmt_1}{\env} \ \ldots \ \rewriteSf{\stmt_n}{\env} \verb+}+ \\ 
+\iftr
+\\
+\fi
+
+% rewriting the var decl
+\rewriteS\lbr{\tt var} \ \myid_1\ (\verb+=+ \ \expr_1)^?\verb+,+ \ \ldots \ \myid_n\ (\verb+=+ \ \expr_n)^? \verb+;+\mid\env\rbr \\
+\spOne = \ \myif \ \env \equiv \emptyenv \\
+\spTwo \mythen \ {\tt var} \ \myid_1\ (\verb+=+ \ \rewriteEf{\expr_1}\env)^?\verb+,+ \ \ldots \ \myid_n\ (\verb+=+ \ \rewriteEf{\expr_n}\env)^? \verb+;+ \\
+\spTwo \myelse \ \verb+{+ {\tt var} \ \myid_1 (\verb+;+ \ \rewriteE\lbr\myid_1\ \verb+=+ \ \expr_1\mid\env\rbr)^?\verb+;+ \ \ldots\\
+\spThree\;\; {\tt var} \ \myid_n (\verb+;+ \ \rewriteE\lbr\myid_n\ \verb+=+ \ \expr_n\mid\env\rbr)^? \verb+;+ \verb+}+ \\
+
+% rewriting the empty statement
+\rewriteS\lbr\verb+;+\mid \env\rbr \\
+\spOne = \ \verb+;+ \\ 
+\iftr
+\\
+\fi
+
+% rewriting the expression statement
+\rewriteS\lbr\expr \verb+;+\mid \env\rbr \\
+\spOne = \ \rewriteEf{\expr}{\env} \verb+;+ \\ 
+\iftr
+\\
+\fi
+
+% rewriting the if statement
+\rewriteS\lbr{\tt if} \ \verb+(+\expr\verb+)+ \ \stmt \ ({\tt else} \ \stmt)^?\mid \env\rbr \\
+\spOne = \ {\tt if} \ \verb+(+\rewriteEf{\expr}{\env}\verb+)+ \ \rewriteSf{\stmt}{\env} \ ({\tt else} \ \rewriteSf{\stmt}{\env})^? \\ 
+\iftr
+\\
+\fi
+
+% rewriting the switch statement
+\rewriteS\lbr{\tt switch} \ \verb+(+\expr\verb+)+ \ \verb+{+\cc_1 \ \ldots \
+  ({\tt default} \verb+:+ \stmt_1 \ldots \stmt_m)^? \ \ldots \ \cc_n \verb+}+\mid \env\rbr \\
+\spOne = \ {\tt switch} \ \verb+(+\rewriteEf{\expr}{\env}\verb+)+ \ \verb+{+\\
+\spTwo\spOne\rewriteCCf{\cc_1}{\env} \ \ldots \\
+\spTwo\spOne({\tt default} \verb+:+ \rewriteSf{\stmt_1}{\env} \ldots \rewriteSf{\stmt_m}{\env})^? \ldots \\
+\spTwo\spOne\rewriteCCf{\cc_n}{\env} \\
+\spTwo \verb+}+\\ 
+\iftr
+\\
+\else
+\end{array}
+\]
+
+\[
+\begin{array}{l}
+\fi
+
+% rewriting the do statement
+\rewriteS\lbr{\tt do} \ \stmt \ {\tt while} \ \verb+(+\expr\verb+)+ \verb+;+\mid \env\rbr \\
+\spOne = \ {\tt do} \ \rewriteSf{\stmt}{\env} \ {\tt while} \ \verb+(+\rewriteEf{\expr}{\env}\verb+)+ \verb+;+\\ 
+\iftr
+\\
+\fi
+% rewriting the while statement
+\rewriteS\lbr{\tt while} \ \verb+(+\expr\verb+)+ \ \stmt\mid \env\rbr \\
+\spOne = \ {\tt while} \ \verb+(+\rewriteEf{\expr}{\env}\verb+)+ \ \rewriteSf{\stmt}{\env}
+\iftr
+\end{array}
+\]
+
+\[
+\begin{array}{l}
+\else
+\\
+\fi
+
+% rewriting the for statement(no var)
+\rewriteS\lbr{\tt for} \ \verb+(+\expr_1^?\verb+;+ \expr_2^?\verb+;+ \expr_3^? \verb+)+ \ \stmt\mid \env \rbr\\
+\spOne = \ {\tt for} \ \verb+(+\rewriteEf{\expr_1}{\env}^? \verb+;+\ \rewriteEf{\expr_2}{\env}^? \verb+;+ \ \rewriteEf{\expr_3}{\env}^?\verb+)+ \\
+\spTwo\spTen\rewriteS\lbr\stmt\mid\env\rbr\\ 
+\iftr
+\\
+% rewriting for-in statement(no var)
+\rewriteS\lbr{\tt for} \ \verb+(+ \lhs \ {\tt in} \ \expr \verb+)+ \ \stmt\mid \env\rbr \\
+\spOne = \ \myif \ \env \equiv \emptyenv \\
+\spTwo \mythen \ {\tt for} \ \verb+(+ \rewriteLf{\lhs}\env \ {\tt in} \ \rewriteEf{\expr}\env \verb+)+ \ \rewriteSf{\stmt}\env \\
+\spTwo \myelse \\
+\spFive \mylet\ \Gamma = \rewritearg \\
+\spFive \myif \ \namecheck\lhs\myid \\
+\spFive \mythen \ \myif \ \isshadowed\lhs\toplocdecls \\
+\spFive\spSix \mythen \ {\tt for} \ \verb+(+ \lhs \ {\tt in} \ \rewriteEf\expr\env \verb+)+ \ \rewriteSf\stmt\env \\
+\spFive\spSix \myelse\\
+\spFive\spSix\spSeven\myif \ \namelist \ \equiv \emptyenv \\
+%
+%
+\spFive\spSix\spSeven\mythen\\
+\spFive\spSix\spSeven\spSeven\myif \ \flag \ \equiv \ \trueflag \\
+\spFive\spSix\spSeven\spSeven\mythen \
+{\tt if}\ (\verb+"+\lhs\verb+"+ \ {\tt in} \ \alpha) \  {\tt for} \ \verb+(+ \alpha\verb+.+\lhs \ {\tt in} \ \expr \verb+)+ \ \stmt \\
+\spFive\spSix\spSeven\spSeven\spSix
+{\tt else} \ {\tt for} \ \verb+(+ \lhs \ {\tt in} \ \expr \verb+)+ \ \stmt \\
+\spFive\spSix\spSeven\spSeven\myelse \
+{\tt if}\ (\verb+"+\lhs\verb+"+ \ {\tt in} \ \alpha) \\
+\spFive\spSix\spSeven\spSeven\spEi\spNine
+{\tt for} \ \verb+(+ \alpha\verb+.+\lhs \ {\tt in} \ \rewriteEf\expr\env \verb+)+ \ \rewriteSf\stmt\env \\
+\spFive\spSix\spSeven\spSeven\spEi
+{\tt else}\\
+\spFive\spSix\spSeven\spSeven\spEi\spNine
+{\tt for} \ \verb+(+ \lhs \ {\tt in} \
+\rewriteEf\expr\env \verb+)+ \ \rewriteSf\stmt\env \\
+%
+%
+\spFive\spSix\spSeven\myelse\\
+\spFive\spSix\spSeven\spSeven\myif \ \flag \ \equiv \ \trueflag \\
+\spFive\spSix\spSeven\spSeven\mythen \
+{\tt if}\ (\verb+"+\lhs\verb+"+ \ {\tt in} \ \alpha) \  {\tt for} \ \verb+(+ \alpha\verb+.+\lhs \ {\tt in} \ \expr \verb+)+ \ \stmt \\
+\spFive\spSix\spSeven\spSeven\spSix
+{\tt else} \ \rewriteS\lbr{\tt for} \ \verb+(+ \lhs \ {\tt in} \ \expr \verb+)+ \ \stmt \mid{\argmk{\namelist}\listscope\flag}\rbr\\
+\spFive\spSix\spSeven\spSeven\myelse \
+{\tt if}\ (\verb+"+\lhs\verb+"+ \ {\tt in} \ \alpha)\\
+\spFive\spSix\spSeven\spSeven\spEi\spNine
+{\tt for} \ \verb+(+ \alpha\verb+.+\lhs \ {\tt in} \ \rewriteEf\expr\env \verb+)+ \\
+\spFive\spSix\spSeven\spSeven\spEi\spNine\spTen
+ \rewriteSf\stmt\env \\
+\spFive\spSix\spSeven\spSeven\spEi
+{\tt else}\\
+\spFive\spSix\spSeven\spSeven\spEi\spNine
+\rewriteS\lbr{\tt for} \ \verb+(+ \lhs \ {\tt in} \
+\rewriteEf\expr\env \verb+)+ \\
+%
+\spFive\spSix\spSeven\spSeven\spEi\spNine\spFive\spSeven
+\rewriteSf\stmt\env \mid\argmk\namelist\listscope\trueflag\rbr\\
+\spFive \myelse\ {\tt for} \ \verb+(+ \rewriteLf\lhs\env \ {\tt in} \
+\rewriteEf\expr\env \verb+)+ \ \rewriteSf\stmt\env \\ \\
+\fi
+
+% rewriting for-in statement(no var)
+\rewriteS\lbr{\tt for} \ \verb+(+ \lhs \ {\tt in} \ \expr \verb+)+ \ \stmt\mid \env\rbr \\
+\spOne = \ \myif \ \env \equiv \emptyenv \\
+\spTwo \mythen \ {\tt for} \ \verb+(+ \rewriteLf{\lhs}\env \ {\tt in} \ \rewriteEf{\expr}\env \verb+)+ \ \rewriteSf{\stmt}\env \\
+\spTwo \myelse \ \mylet\ \Gamma = \rewritearg \\
+\spThree \myif \ \namecheck\lhs\myid \\
+\spThree \mythen \ \myif \ \isshadowed\lhs\toplocdecls \\
+\spThree\spOne\quad \mythen \ {\tt for} \ \verb+(+ \lhs \ {\tt in} \ \rewriteEf\expr\env \verb+)+ \ \rewriteSf\stmt\env \\
+\spThree\spOne\quad \myelse \quad \ \myif \  \namelist \ \equiv \emptyenv \\
+\spThree\spThree\mythen \ \myif \ \flag \ \equiv \ \trueflag \\
+\spThree\spThree\spOne\quad \mythen \ \
+{\tt if}\ (\verb+"+\lhs\verb+"+ \ {\tt in} \ \alpha) \  {\tt for} \ \verb+(+ \alpha\verb+.+\lhs \ {\tt in} \ \expr \verb+)+ \ \stmt \\
+\spThree\spThree\spThree
+{\tt else} \ {\tt for} \ \verb+(+ \lhs \ {\tt in} \ \expr \verb+)+ \ \stmt \\
+\spThree\spThree\spOne\quad \myelse \quad
+{\tt if}\ (\verb+"+\lhs\verb+"+ \ {\tt in} \ \alpha) \ \
+{\tt for} \ \verb+(+ \alpha\verb+.+\lhs \ {\tt in} \ \rewriteEf\expr\env \verb+)+ \ \rewriteSf\stmt\env \\
+\spThree\spThree\spThree
+{\tt else} \ {\tt for} \ \verb+(+ \lhs \ {\tt in} \
+\rewriteEf\expr\env \verb+)+ \ \rewriteSf\stmt\env \\
+\spThree\spThree\myelse \quad \myif \ \flag \ \equiv \ \trueflag \\
+\spThree\spThree\spOne\quad \mythen \ \
+{\tt if}\ (\verb+"+\lhs\verb+"+ \ {\tt in} \ \alpha) \  {\tt for} \ \verb+(+ \alpha\verb+.+\lhs \ {\tt in} \ \expr \verb+)+ \ \stmt \\
+\spThree\spThree\spThree
+{\tt else} \ \rewriteS\lbr{\tt for} \ \verb+(+ \lhs \ {\tt in} \ \expr \verb+)+ \ \stmt \mid{\argmk{\namelist}\listscope\flag}\rbr\\
+\spThree\spThree\spOne\quad \myelse \quad
+{\tt if}\ (\verb+"+\lhs\verb+"+ \ {\tt in} \ \alpha) \  {\tt for} \ \verb+(+ \alpha\verb+.+\lhs \ {\tt in} \ \rewriteEf\expr\env \verb+)+ \ \rewriteSf\stmt\env \\
+\spThree\spThree\spThree
+{\tt else} \ \rewriteS\lbr{\tt for} \ \verb+(+ \lhs \ {\tt in} \
+\rewriteEf\expr\env \verb+)+ \ \rewriteSf\stmt\env \mid\argmk\namelist\listscope\trueflag\rbr\\
+\spThree \myelse\quad {\tt for} \ \verb+(+ \rewriteLf\lhs\env \ {\tt in} \
+\rewriteEf\expr\env \verb+)+ \ \rewriteSf\stmt\env \\
+
+% rewriting the for statement with var decls
+\rewriteS\lbr{\tt for} \ \verb+(+{\tt var} \ \myid_1\ (\verb+=+ \ \expr_1)^?\verb+,+ \ \ldots \
+  \myid_n\ (\verb+=+ \ \expr_n)^?\verb+;+ \expr_m^?\verb+;+ \expr_l^?\verb+)+ \ \stmt\mid \env\rbr \\
+\spOne = \ \verb+{+ \ \rewriteS\lbr{\tt var} \ \myid_1\ (\verb+=+ \ \expr_1)^?\verb+,+ \ \ldots \ \myid_n\ (\verb+=+ \ \expr_n)^?\verb+;+\mid\env\rbr\verb+;+ \\
+\spTwo\;\;\;\;
+\rewriteS\lbr{\tt for} \ \verb+(+\verb+;+ \expr_m^?\verb+;+ \expr_l^?\verb+)+ \ \stmt\mid \env \rbr \\
+\spTwo\verb+}+ \\ 
+\iftr
+\\
+\fi
+
+% rewriting the for-in statement with var declaration
+\rewriteS\lbr{\tt for} \ \verb+(+{\tt var} \ \myid\ (\verb+=+ \ \expr_1)^? \ {\tt in} \ \expr_2 \verb+)+ \ \stmt\mid \env\rbr \\
+\spOne = \ \verb+{+ \ \rewriteS\lbr{\tt var} \ \myid\ (\verb+=+ \ \expr_1)^? \mid\env\rbr\verb+;+ \
+\rewriteS\lbr{\tt for} \ \verb+(+\myid \ {\tt in} \ \expr_2 \verb+)+ \ \stmt\mid \env\rbr \ \verb+}+ \\ 
+\iftr
+\\
+\fi
+
+% rewriting the continue statement
+\rewriteS\lbr{\tt continue} \  \myid^{?} \verb+;+\mid \env\rbr \\
+\spOne = \ {\tt continue} \  \myid^{?} \verb+;+ \\ 
+\iftr
+\\
+\end{array}
+\]
+
+\[
+\begin{array}{l}
+\fi
+% rewriting the break statement
+\rewriteS\lbr{\tt break} \  \myid^{?} \verb+;+\mid \env\rbr \\
+\spOne = \ {\tt break} \  \myid^{?} \verb+;+\\ 
+\iftr
+\\
+\fi
+
+% rewriting the return statement
+\rewriteS\lbr{\tt return} \ \expr^? \verb+;+\mid \env\rbr \\
+\spOne = \ {\tt return} \ \rewriteEf{\expr}{\env}^? \verb+;+ \\ 
+\iftr
+\\
+\fi
+
+% rewriting the with statement
+\rewriteS\lbr{\tt with} \ \verb+(+\expr\verb+)+ \ \stmt\mid \env\rbr \\
+\spOne = \ \myif \ \env \equiv \emptyenv \\
+\spTwo \mythen \ \verb+{+ {\tt var} \ \name \ \verb+= toObject(+\rewriteEf{\expr}\env\verb+);+ \
+\rewriteSf{\stmt}{\argmk{\name}{[\emptydecls]}{\falseflag}} \verb+}+ \\
+% rewriting the nested with statement
+\spTwo \myelse \ \mylet\ \Gamma = \argmk{\phi}{\listscope}{\flag} \quad\mbox{where $\alpha \not\in \phi$}\\
+\spThree
+\verb+{+{\tt var}\ \name \ \verb+= toObject(+ \rewriteEf\expr\env \verb+);+ \
+\rewriteSf{\stmt}{\argmk{\phi \; \name} {\emptydecls \listcons \listscope} \flag} \verb+}+\\ 
+\iftr
+\\
+\fi
+
+% rewriting the label statement
+\rewriteS\lbr\myid \; \verb+:+ \; \stmt\mid \env\rbr \\
+\spOne = \ \myid \; \verb+:+ \; \rewriteSf{\stmt}{\env} \\ 
+\iftr
+\\
+\fi
+
+% rewriting the throw statement
+\rewriteS\lbr{\tt throw} \ \expr \verb+;+\mid \env\rbr \\
+\spOne = \ {\tt throw} \ \rewriteEf{\expr}{\env} \verb+;+ \\ 
+\iftr
+\\
+\else
+\end{array}
+\]
+
+\[
+\hspace*{-4cm}
+\vspace*{5em}
+\begin{array}{l}
+\fi
+
+% rewriting the try statement
+\rewriteS\lbr{\tt try} \ \verb+{+\stmt_1\ldots\stmt_n\verb+}+ \
+({\tt catch} \ \verb+(+\myid\verb+)+ \ \verb+{+\stmt_1\ldots\stmt_m\verb+}+)^? \
+({\tt finally} \ \verb+{+\stmt_1\ldots\stmt_l\verb+}+)^?\mid \env\rbr \\
+\spOne = \ {\tt try} \ \verb+{+\rewriteSf{\stmt_1}\env\ldots\rewriteSf{\stmt_n}\env\verb+}+ \\
+\spTwo (\rewriteCT\lbr{{\tt catch} \ \verb+(+\myid\verb+)+ \ \verb+{+\stmt_1\ldots\stmt_m\verb+}+}\mid\env\rbr)^? \\
+\spTwo ({\tt finally} \ \verb+{+\rewriteSf{\stmt_1}\env\ldots\rewriteSf{\stmt_l}\env\verb+}+)^?\\
+\iftr
+\\
+\fi
+
+% rewriting the catch statement
+\rewriteCT\lbr{{\tt catch} \ \verb+(+\myid\verb+)+ \ \verb+{+\stmt_1\ldots\stmt_n\verb+}+}\mid\env\rbr \\
+\spOne = \ \myif \ \env \equiv \emptyenv \\
+\spTwo \mythen \ {\tt catch} \ \verb+(+\myid\verb+)+ \ \verb+{+\rewriteSf{\stmt_1}\env\ldots\rewriteSf{\stmt_n}\env\verb+}+ \\
+\spTwo \myelse \ \mylet\ \Gamma = \langle\namelist, \toplocdecls\listcons\listscope, \flag\rangle \\
+\spThree {\tt catch} \ \verb+(+\myid\verb+)+ \ \verb+{+\\
+\spThree\spOne
+\rewriteSf{\stmt_1}{\argmk\phi{(\myid\listcons\toplocdecls)\listcons\listscope}\flag}
+\ldots\\
+\spThree\spOne
+\rewriteSf{\stmt_n}{\argmk\phi{(\myid\listcons\toplocdecls)\listcons\listscope}\flag}\\
+\spThree
+\verb+}+\\
+\iftr
+\\
+\fi
+
+% rewriting the case statement
+\rewriteCC\lbr{\tt case} \ \expr \; \verb+:+ \; \stmt_1 \ \ldots \ \stmt_n\mid \env\rbr \\
+\spOne = \ {\tt case} \ \rewriteEf{\expr}{\env} \; \verb+:+ \; \rewriteSf{\stmt_1}{\env} \ \ldots \ \rewriteSf{\stmt_n}{\env}
+\\ 
+\iftr
+\\
+\fi
+% rewriting the sequence expression
+\rewriteE\lbr\expr_1\verb+,+ \ \expr_2\mid \env\rbr \\
+\spOne = \ \rewriteEf{\expr_1}{\env}\verb+,+ \ \rewriteEf{\expr_2}{\env} \\ 
+\iftr
+\\
+\fi
+
+% rewriting the ternary conditional expression
+\rewriteE\lbr\expr_1 \ \verb+?+ \ \expr_2 \ \verb+:+ \ \expr_3\mid \env\rbr \\
+\spOne = \ \rewriteEf{\expr_1}{\env} \ \verb+?+ \ \rewriteEf{\expr_2}{\env} \ \verb+:+ \ \rewriteEf{\expr_3}{\env}\\ 
+\iftr
+\\
+\fi
+% rewriting the infix expression
+\rewriteE\lbr\expr_1 \ \inop \ \expr_2\mid \env\rbr \\
+\spOne = \ \rewriteEf{\expr_1}{\env} \ \inop \ \rewriteEf{\expr_2}{\env}
+\iftr
+\end{array}
+\]
+
+\[
+\begin{array}{l}
+\else
+\\
+\fi
+
+% rewriting the prefix expression
+\rewriteE\lbr \preop \ \expr\mid \env\rbr \\
+\spOne = \ \myif \ \env \equiv \emptyenv \\
+\spTwo \mythen \preop \ \rewriteEf{\expr}\env \\
+\spTwo \myelse \ \mylet\ \Gamma = \rewritearg \\
+\spThree \myif \ \namecheck\expr\myid \\
+\spThree \mythen \ \myif \ \isshadowed\expr\toplocdecls \\
+\spThree\spSix \mythen \preop \ \expr \\
+\spThree\spSix \myelse \ \myif \ \namelist \equiv \emptyenv \\
+\spThree\spSix\spEi \mythen
+\verb+(+\verb+"+\expr\verb+"+ \ {\tt in}  \ \name \ \verb+?+ \ \preop \ \name\verb+.+\expr \ \verb+:+ \ \preop \ \expr \verb+)+\\
+\spThree\spSix\spEi \myelse \
+\verb+(+\verb+"+\expr\verb+"+ \ {\tt in}  \ \name \ \verb+?+ \ \preop \ \name\verb+.+\expr \ \verb+:+ \
+\rewriteEf{\preop \ \expr }{\argmk\phi\listscope\flag}\verb+)+\\
+\spThree\myelse \ \preop \ \rewriteEf\expr\env \\ 
+\iftr
+\\
+\fi
+
+% rewriting the postfix operator
+\rewriteEf{\lhs \ \postop^?}\env \\
+\spOne = \ \myif \ \env \equiv \emptyenv \\
+\spTwo \mythen \ \rewriteLf{\lhs}\env \ \postop^?\\
+\spTwo \myelse \ \mylet\ \Gamma = \rewritearg \\
+\spThree \myif \ \namecheck\lhs\myid \\
+\spThree \mythen \ \myif \ \isshadowed\lhs\toplocdecls \\
+\spThree\spSix \mythen \ \lhs \ \postop^? \\
+\spThree\spSix \myelse \ \ \myif \ \namelist \equiv \emptyenv \\
+\spThree\spSix\spEi \mythen \
+\verb+(+\verb+"+\lhs\verb+"+ \ {\tt in}  \ \name \ \verb+?+ \ \name\verb+.+\lhs \ \postop^? \ \verb+:+ \ \lhs \ \postop^?  \verb+)+\\
+\spThree\spSix\spEi \myelse \
+\verb+(+\verb+"+\lhs\verb+"+ \ {\tt in}  \ \name \ \verb+?+ \ \name\verb+.+\lhs \ \postop^? \\
+\spThree\spFour\spFour\spSeven
+\verb+:+ \ \rewriteEf{\lhs \ \postop^?}{\argmk\phi\listscope\flag}\verb+)+\\
+\spThree \myelse \ \rewriteLf\lhs\env \ \postop^? \\ 
+\iftr
+\\
+\else
+\end{array}
+\]
+
+\[
+\hspace*{-4cm}
+\begin{array}{l}
+\fi
+% rewriting the assignment expression
+\rewriteEf{\lhs \aop \expr}{\env} \\
+\spOne = \ \myif \ \env \equiv \emptyenv \\
+\spTwo \mythen \ \rewriteLf{\lhs}\env \aop \rewriteEf{\expr}\env\\
+\spTwo \myelse \\
+\spFive \mylet\ \Gamma = \rewritearg \\
+\spFive \myif \ \namecheck\lhs\myid \ or \ \namecheck \lhs (\myid) \\
+\spFive \mythen \ \myif \ \isshadowed\myid\toplocdecls \\
+\spFive\spSix \mythen \ \lhs \aop \rewriteEf\expr\env \\
+\spFive\spSix \myelse \ \myif \ \namelist \ \equiv \emptyenv \\
+\spFive\spSix\spEi
+\mythen \ \myif \ \flag \ \equiv \ \trueflag \\
+\spFive\spSix\spEi\spSix
+\mythen \ \verb+(+\verb+"+\myid\verb+"+ \ {\tt in} \ \name \ \verb+?+ \ \name\verb+.+\lhs \aop \expr \ \verb+:+ \ \lhs \aop \expr \verb+)+\\
+\spFive\spSix\spEi\spSix
+\myelse \ \verb+(+\verb+"+\myid\verb+"+ \ {\tt in} \ \name \ \verb+?+ \ \name\verb+.+\lhs \aop \rewriteEf\expr\env \\
+\spFour\spFour\spThree\spEi\;
+\verb+:+ \ \lhs \aop \rewriteEf\expr\env\verb+)+ \\
+\spFive\spSix\spEi
+\myelse \ \myif \ \flag \ \equiv \ \trueflag \\
+\spFive\spSix\spEi\spEi
+\mythen \ \verb+(+\verb+"+\myid\verb+"+ \ {\tt in} \ \name \ \verb+?+ \ \name\verb+.+\lhs \aop \expr \\
+\spFour\spFour\spThree\spEi\;
+\verb+:+ \rewriteEf{\lhs \aop \expr}{\argmk\phi\listscope\flag}\verb+)+\\
+\spFive\spSix\spEi\spEi
+\myelse \ \verb+(+\verb+"+\myid\verb+"+ \ {\tt in} \ \name \ \verb+?+ \ \name\verb+.+\lhs \aop \rewriteEf\expr\env \\
+\spFour\spFour\spThree\spOne\;
+\verb+:+ \ \rewriteE\lbr\lhs\aop\rewriteEf\expr\env\\
+\spFour\spFour\spFour\spFour\;
+\mid {\argmk\phi\listscope\trueflag}\rbr\verb+)+\\
+
+\spFive
+\myelse \ \rewriteLf\lhs\env \aop \rewriteEf\expr\env \\
+\iftr
+\end{array}
+\]
+
+\[
+\begin{array}{l}
+\fi
+% rewriting the literal
+\rewriteL\lbr\lit\mid \env\rbr \\
+\spOne = \ \lit\\ 
+\iftr
+\\
+\fi
+
+% rewriting the identifier
+\rewriteL\lbr\myid\mid \env\rbr \\
+\spOne = \ \myif \ \env \equiv \emptyenv \ \ \
+\mythen \ \myid\\
+\spTwo \myelse \ \mylet\ \Gamma = \rewritearg \\
+\spThree \myif \ \isshadowed\myid\toplocdecls \ \ \
+\mythen \ \myid \\
+\spThree \myelse \ \myif \ \namelist \ \equiv \ \emptyenv \ \ \
+ \mythen \;\; \verb+(+\verb+"+\myid\verb+"+ \ {\tt in}  \ \name \ \verb+?+ \ \name\verb+.+\myid \ \verb+:+ \ \myid \verb+)+ \\
+\spThree\spEi \myelse \ \verb+(+\verb+"+\myid\verb+"+ \ {\tt in}  \ \name \ \verb+?+ \ \name\verb+.+\myid \ \verb+:+ \
+\rewriteLf\myid{\argmk\namelist\listscope\flag}\verb+)+ \\ 
+\iftr
+\\
+\fi
+
+% rewriting the array literal
+\rewriteL\lbr\verb+[+ \expr_1\verb+,+\ \ldots \ \expr_n \ \verb+]+\mid \env\rbr \\
+\spOne = \ \verb+[+ \rewriteEf{\expr_1}{\env}\verb+,+\ \ldots \ \rewriteEf{\expr_n}{\env} \verb+]+\\
+\iftr
+\\
+\fi
+
+% rewriting the object literal
+\rewriteL\lbr\verb+{+ \prop_1 \verb+:+ \expr_1\verb+,+\ \ldots \ \prop_n \verb+:+ \expr_n\verb+}+\mid \env\rbr \\
+\spOne = \ \verb+{+ \prop_1 \verb+:+ \rewriteEf{\expr_1}{\env}\verb+,+\ \ldots \ \prop_n \verb+:+ \rewriteEf{\expr_n}{\env}\verb+}+\\ 
+\iftr
+\\
+\fi
+
+% rewriting the parenthesized expression
+\rewriteL\lbr\verb+(+ \expr \verb+)+\mid \env\rbr \\
+\spOne = \ \verb+(+ \rewriteEf{\expr}{\env} \verb+)+\\ 
+\iftr
+\\
+\fi
+
+% rewriting the function expression
+\rewriteL\lbr{\tt function} \ \myfn^?  \ \verb+(+\myid_1\verb+,+\ \ldots \ \myid_n\verb+)+ \
+\verb+{+\topl_1 \ \ldots \ \topl_m\verb+}+\mid \env\rbr \\
+\spOne = \ \myif \ \env \equiv \emptyenv \\
+\spTwo \mythen \ {\tt function} \ \myfn^?  \ \verb+(+\myid_1\verb+,+\ \ldots \ \myid_n\verb+)+ \ \verb+{+ \\
+\spTwo\spSix\spOne \rewriteTf{\topl_1}\env \ \ldots \ \rewriteTf{\topl_m}\env\\
+\spTwo\spSix \verb+}+\\
+\spTwo \myelse \ \mylet\ \Gamma = \langle\namelist, \toplocdecls\listcons\listscope, \flag\rangle \\
+\spThree {\tt function} \ \myfn^?  \ \verb+(+\myid_1\verb+,+\ \ldots \ \myid_n\verb+)+ \ \verb+{+ \\
+\spThree\spOne \rewriteTf{\topl_1}{\argmk\namelist{\;([\myfn^?\;\myid_1\;\ldots\;\myid_n]\listapp \getlocaldecls(\topl_1 \ \ldots \ \topl_m)\listapp \toplocdecls)\listcons \listscope}{\;\flag}}\\
+\spThree\spOne \ldots \\
+\spThree\spOne \rewriteTf{\topl_m}{\argmk\namelist{\;([\myfn^?\;\myid_1\;\ldots\;\myid_n]\listapp \getlocaldecls(\topl_1 \ \ldots \ \topl_m)\listapp \toplocdecls)\listcons \listscope}{\;\flag}}\\
+\spThree \verb+}+\\ 
+\iftr
+\\
+\fi
+
+% rewriting the element-get expression
+\rewriteL\lbr\lhs \verb+[+ \expr \verb+]+\mid \env\rbr \\
+\spOne = \rewriteL\lbr\lhs\mid\env\rbr \verb+[+ \rewriteEf{\expr}{\env} \verb+]+ \\ 
+\iftr
+\\
+\fi
+
+% rewriting the property-get expression
+\rewriteL\lbr\lhs \verb+.+ \myid\mid \env\rbr \\
+\spOne = \rewriteL\lbr\lhs\mid\env\rbr \verb+.+ \myid \\ 
+\iftr
+\\
+\fi
+
+% rewriting the new expression
+\rewriteL\lbr{\tt new} \ \lhs\mid \env\rbr \\
+\spOne = {\tt new} \ \rewriteL\lbr\lhs\mid\env\rbr
+\end{array}
+\]
+
+\[
+\iftr
+\else
+\hspace*{-4cm}
+\vspace*{-5em}
+\fi
+\begin{array}{l}
+% rewriting the call expression
+\rewriteL\lbr\lhs \verb+(+ \expr_1\verb+,+ \ \ldots \ \expr_n \verb+)+\mid\env\rbr \\
+\spOne = \ \myif \ \env \equiv \emptyenv \\
+\spTwo \mythen \
+\rewriteLf{\lhs}\env \verb+(+ \rewriteEf{\expr_1}\env\verb+,+ \ \ldots \ \rewriteEf{\expr_n}\env \verb+)+ \\
+\spTwo \myelse \ \ 
+\mylet\ \Gamma = \rewritearg \\
+\spFive \myif \ \namecheck\lhs\myid \\
+\spFive \mythen \\
+\spFive\spSeven \myif \ \isshadowed\lhs\toplocdecls \\
+\spFive\spSeven \mythen \ \lhs \verb+(+ \rewriteE\lbr\expr_1\mid\env\rbr \verb+,+ \ \ldots \ \rewriteE\lbr\expr_n\mid\env\rbr \verb+)+ \\
+\spFive\spSeven \myelse \\
+\spFive\spSeven\spSeven \myif \ \namelist \ \equiv \emptyenv \\
+\spFive\spSeven\spSeven \mythen \\
+\spFive\spSeven\spSeven\spSeven \myif \ \flag \ \equiv \ \trueflag \\
+\spFive\spSeven\spSeven\spSeven \mythen \
+\verb+(+\verb+"+\lhs\verb+"+ \ {\tt in}  \ \name \ \verb+?+ \ \name\verb+.+\lhs\verb+(+ \expr_1\verb+,+ \ \ldots \ \expr_n \verb+)+
+\verb+:+ \ \lhs\verb+(+ \expr_1\verb+,+ \ \ldots \ \expr_n \verb+)+ \verb+)+\\
+
+\spFive\spSeven\spSeven\spSeven \myelse \
+\verb+(+\verb+"+\lhs\verb+"+ \ {\tt in}  \ \name \ \verb+?+ \ \name\verb+.+\lhs \verb+(+ \rewriteE\lbr\expr_1\mid\env\rbr \verb+,+ \ \ldots \\
+\spFour\spFour\spFive\spEi
+ \rewriteE\lbr\expr_n\mid\env\rbr \verb+)+ \\
+\spFour\spFour\spTwo\;
+\verb+:+ \ \lhs \verb+(+ \rewriteE\lbr\expr_1\mid\env\rbr \verb+,+ \ \ldots \\
+\spFour\spFour\spFive\spNine
+\rewriteE\lbr\expr_n\mid\env\rbr \verb+)+\verb+)+ \\
+\spFive\spSeven\spSeven \myelse \\
+\spFive\spSeven\spSeven\spSeven \myif \ \flag \ \equiv \ \trueflag \\
+\spFive\spSeven\spSeven\spSeven \mythen \
+\verb+(+\verb+"+\lhs\verb+"+ \ {\tt in}  \ \name \ \verb+?+ \ \name\verb+.+\lhs\verb+(+ \expr_1\verb+,+ \ \ldots \ \expr_n \verb+)+ \ \\
+\spFour\spFour\spEi\spSeven
+\verb+:+ \ \rewriteL\lbr\lhs\verb+(+ \expr_1\verb+,+ \ \ldots \ \expr_n \verb+)+ \mid
+\argmk\phi\listscope\flag\rbr\verb+)+\\
+
+\spFive\spSeven\spSeven\spSeven \myelse \
+\verb+(+\verb+"+\lhs\verb+"+ \ {\tt in}  \ \name \ \verb+?+ \ \name\verb+.+\lhs \verb+(+ \rewriteE\lbr\expr_1\mid\env\rbr \verb+,+ \ \ldots \\
+\spFour\spFour\spFive\spEi
+ \rewriteE\lbr\expr_n\mid\env\rbr \verb+)+ \\
+\spFour\spFour\spOne\spSeven
+\verb+:+ \
+\rewriteL\lbr\lhs \verb+(+ \rewriteEf{\expr_1}\env\verb+,+ \ \ldots \\
+\spFour\spFour\spFour\spSix
+ \rewriteEf{\expr_n}\env \verb+)+ \\
+\spFour\spFour\spFour\spNine\;
+\mid {\argmk\phi\listscope\trueflag}\rbr\verb+)+\\
+
+\spFive \myelse \ \rewriteLf\lhs\env \verb+(+ \rewriteEf{\expr_1}\env \verb+,+ \ \ldots \ \rewriteEf{\expr_n}\env\verb+)+
+\end{array}
+\]

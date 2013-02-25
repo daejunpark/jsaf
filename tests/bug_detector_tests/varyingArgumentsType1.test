@@ -1,0 +1,23 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=varyingArgumentsType1
+BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
+bug-detector
+bug-detector_out_WCIequals=\
+ \n\
+ \n\
+ \n\
+ \n\
+* Bug Detector * \n\
+${BUGDETECTOR_TESTS_DIR}/varyingArgumentsType1.js:12:1~12:7: warning: calling a function 'foo' with varying type arguments. \n\
+${BUGDETECTOR_TESTS_DIR}/varyingArgumentsType1.js:13:1~13:9: warning: calling a function 'foo' with varying type arguments. \n\
+# Errors(#)   : 0 \n\
+# Warnings(#) : 2 \n\
+\n
+bug-detector_err_equals=

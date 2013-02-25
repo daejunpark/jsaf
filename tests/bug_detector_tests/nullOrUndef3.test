@@ -1,0 +1,25 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=nullOrUndef3
+BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
+bug-detector
+bug-detector_out_WCIequals=\
+ \n\
+ \n\
+ \n\
+ \n\
+* Bug Detector * \n\
+${BUGDETECTOR_TESTS_DIR}/nullOrUndef3.js:15:9~15:12: warning: Reading absent property 'p' of an object. \n\
+${BUGDETECTOR_TESTS_DIR}/nullOrUndef3.js:17:1~17:2: error: Object 'y' is undefined. \n\
+${BUGDETECTOR_TESTS_DIR}/nullOrUndef3.js:17:1~17:2: warning: Converting primitive value(number) to object. \n\
+${BUGDETECTOR_TESTS_DIR}/nullOrUndef3.js:17:1~17:4: warning: Reading absent property 'p' of an object. \n\
+# Errors(#)   : 1 \n\
+# Warnings(#) : 3 \n\
+\n
+bug-detector_err_equals=

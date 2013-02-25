@@ -1,0 +1,95 @@
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=if2
+CFG_TESTS_DIR=${JS_HOME}/tests/cfg_tests
+cfg
+cfg_out_WCIequals=\
+(0,LBlock(11))\n\
+    [EDGE] after-call(<>Global<>ignore4)\n\
+    [42] noop(EndOfFile)\n\
+\n\
+\n\
+(0,LBlock(10))\n\
+    [EDGE] after-call(<>z<>17)\n\
+    [37] <>temp<>18 := <>y<>11 + <>z<>17 + " won."\n\
+    [38] <>arguments<>19 := allocArg(1) @ #11\n\
+    [39] <>arguments<>19["0"] := <>temp<>18\n\
+    [40] <>fun<>20 := <>Global<>getBase(print)\n\
+    [41] call(<>obj<>10, <>fun<>20, <>arguments<>19) @ #12\n\
+\n\
+\n\
+(1,LBlock(9))\n\
+    [14] assert(<>product<>2 != "melon")\n\
+    [18] return(<>budget<>1)\n\
+\n\
+\n\
+(1,LBlock(8))\n\
+    [13] assert(<>product<>2 == "melon")\n\
+    [15] <>y<>8 := <>budget<>1\n\
+    [16] <>obj<>9 := <>Global<>toObject(productlist) @ #3\n\
+    [17] return(<>y<>8 - <>obj<>9["melon"])\n\
+\n\
+\n\
+(1,LBlock(7))\n\
+    [9] assert(<>product<>2 != "banana")\n\
+\n\
+\n\
+(1,LBlock(6))\n\
+    [8] assert(<>product<>2 == "banana")\n\
+    [10] <>y<>6 := <>budget<>1\n\
+    [11] <>obj<>7 := <>Global<>toObject(productlist) @ #2\n\
+    [12] return(<>y<>6 - <>obj<>7["banana"])\n\
+\n\
+\n\
+(1,LBlock(5))\n\
+    [4] assert(<>product<>2 != "apple")\n\
+\n\
+\n\
+(1,LBlock(4))\n\
+    [3] assert(<>product<>2 == "apple")\n\
+    [5] <>y<>4 := <>budget<>1\n\
+    [6] <>obj<>5 := <>Global<>toObject(productlist) @ #1\n\
+    [7] return(<>y<>4 - <>obj<>5["apple"])\n\
+\n\
+\n\
+(1,LBlock(3))\n\
+    [1] assert(! <>budget<>1 <= 0)\n\
+\n\
+\n\
+(1,LBlock(2))\n\
+    [0] assert(<>budget<>1 <= 0)\n\
+    [2] return(<>budget<>1)\n\
+\n\
+\n\
+(1,LBlock(1))\n\
+\n\
+\n\
+(0,LBlock(0))\n\
+    [19] pay := function (1) @ #4, #5\n\
+    [20] <>Global<>ignore1 := alloc() @ #6\n\
+    [21] <>Global<>ignore1["apple"] := 100\n\
+    [22] <>Global<>ignore1["banana"] := 200\n\
+    [23] <>Global<>ignore1["melon"] := 300\n\
+    [24] productlist := <>Global<>ignore1\n\
+    [25] money := 1000\n\
+    [26] fruit := "melon"\n\
+    [27] <>obj<>10 := <>Global<>toObject(print) @ #7\n\
+    [28] <>y<>11 := "I had " + money + " won. I bought " + fruit + ", and now I have "\n\
+    [29] <>obj<>12 := <>Global<>toObject(pay) @ #8\n\
+    [30] <>temp<>13 := money\n\
+    [31] <>temp<>14 := fruit\n\
+    [32] <>arguments<>15 := allocArg(2) @ #9\n\
+    [33] <>arguments<>15["0"] := <>temp<>13\n\
+    [34] <>arguments<>15["1"] := <>temp<>14\n\
+    [35] <>fun<>16 := <>Global<>getBase(pay)\n\
+    [36] call(<>obj<>12, <>fun<>16, <>arguments<>15) @ #10\n\
+\n\
+\n\
+\n
+cfg_err_equals=

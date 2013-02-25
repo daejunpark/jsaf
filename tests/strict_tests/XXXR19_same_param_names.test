@@ -1,0 +1,18 @@
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=R19_same_param_names
+STRICT_TESTS_DIR=${JS_HOME}/tests/strict_tests
+strict
+strict_out_equals=\
+${STRICT_TESTS_DIR}/R19_same_param_names.js:1:1-3:1:\n\
+\ A strict mode function may not have two or more formal parameters that have the same name. "p3"\n\
+${STRICT_TESTS_DIR}/R19_same_param_names.js:5:13-7:1:\n\
+\ A strict mode function may not have two or more formal parameters that have the same name. "p4"\n\
+File ${STRICT_TESTS_DIR}/R19_same_param_names.js has 2 errors.\n
+strict_err_equals=

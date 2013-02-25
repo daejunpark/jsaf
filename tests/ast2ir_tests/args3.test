@@ -1,0 +1,27 @@
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=args3
+AST2IR_TESTS_DIR=${JS_HOME}/tests/ast2ir_tests
+compile
+compile_out_WCIequals=\
+function f010(this, <>arguments<>1) \n\
+{\n\
+  function <>arguments<>1(this, <>arguments<>2) \n\
+  {\n\
+    var <>z<>3\n\
+    <>z<>3 = <>arguments<>2["0"]\n\
+  }\n\
+  var <>y<>4\n\
+  <>y<>4 = <>arguments<>1["0"]\n\
+  <>arguments<>1 = 42\n\
+}\n\
+\n\
+\n\
+\n
+compile_err_equals=

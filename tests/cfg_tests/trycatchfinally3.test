@@ -1,0 +1,217 @@
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=trycatchfinally3
+CFG_TESTS_DIR=${JS_HOME}/tests/cfg_tests
+cfg
+cfg_out_WCIequals=\
+(0,LBlock(43))\n\
+    [69] noop(EndOfFile)\n\
+\n\
+\n\
+(0,LBlock(42))\n\
+    [67] catch(<>e<>18)\n\
+    [68] <>Global<>ignore10 := <>e<>18\n\
+\n\
+\n\
+(0,LBlock(41))\n\
+\n\
+\n\
+(0,LBlock(40))\n\
+    [66] assert(<>new<>17 != 0)\n\
+\n\
+\n\
+(0,LBlock(39))\n\
+    [65] assert(<>new<>17 == 0)\n\
+\n\
+\n\
+(0,LBlock(38))\n\
+\n\
+\n\
+(0,LBlock(37))\n\
+    [61] assert(! true)\n\
+\n\
+\n\
+(0,LBlock(36))\n\
+    [60] assert(true)\n\
+    [62] <>old<>16 := x\n\
+    [63] <>new<>17 := <>Global<>toNumber(<>old<>16)\n\
+    [64] x := <>new<>17 - 1\n\
+\n\
+\n\
+(0,LBlock(35))\n\
+\n\
+\n\
+(0,LBlock(34))\n\
+\n\
+\n\
+(0,LBlock(33))\n\
+\n\
+\n\
+(0,LBlock(32))\n\
+    [58] catch(<>e<>18)\n\
+    [59] <>Global<>ignore10 := <>e<>18\n\
+\n\
+\n\
+(0,LBlock(31))\n\
+\n\
+\n\
+(0,LBlock(30))\n\
+    [57] assert(<>new<>17 != 0)\n\
+\n\
+\n\
+(0,LBlock(29))\n\
+    [56] assert(<>new<>17 == 0)\n\
+\n\
+\n\
+(0,LBlock(28))\n\
+\n\
+\n\
+(0,LBlock(27))\n\
+    [52] assert(! true)\n\
+\n\
+\n\
+(0,LBlock(26))\n\
+    [51] assert(true)\n\
+    [53] <>old<>16 := x\n\
+    [54] <>new<>17 := <>Global<>toNumber(<>old<>16)\n\
+    [55] x := <>new<>17 - 1\n\
+\n\
+\n\
+(0,LBlock(25))\n\
+\n\
+\n\
+(0,LBlock(24))\n\
+\n\
+\n\
+(0,LBlock(23))\n\
+\n\
+\n\
+(0,LBlock(22))\n\
+    [49] catch(<>e<>18)\n\
+    [50] <>Global<>ignore10 := <>e<>18\n\
+\n\
+\n\
+(0,LBlock(21))\n\
+\n\
+\n\
+(0,LBlock(20))\n\
+    [48] assert(<>new<>17 != 0)\n\
+\n\
+\n\
+(0,LBlock(19))\n\
+    [47] assert(<>new<>17 == 0)\n\
+\n\
+\n\
+(0,LBlock(18))\n\
+\n\
+\n\
+(0,LBlock(17))\n\
+    [43] assert(! true)\n\
+\n\
+\n\
+(0,LBlock(16))\n\
+    [42] assert(true)\n\
+    [44] <>old<>16 := x\n\
+    [45] <>new<>17 := <>Global<>toNumber(<>old<>16)\n\
+    [46] x := <>new<>17 - 1\n\
+\n\
+\n\
+(0,LBlock(15))\n\
+\n\
+\n\
+(0,LBlock(14))\n\
+\n\
+\n\
+(0,LBlock(13))\n\
+    [38] <>obj<>15 := <>Global<>toObject(y) @ #12\n\
+    [39] <>Global<>ignore6 := alloc() @ #13\n\
+    [40] <>Global<>ignore6["test"] := - 23.8\n\
+    [41] <>obj<>15["d"] := <>Global<>ignore6\n\
+\n\
+\n\
+(0,LBlock(12))\n\
+    [EDGE] after-call(<>Global<>ignore5)\n\
+\n\
+\n\
+(1,LBlock(11))\n\
+    [15] <>obj<>5 := <>Global<>toObject(<>arg<>3) @ #3\n\
+    [16] return(<>obj<>5[0])\n\
+\n\
+\n\
+(0,LBlock(10))\n\
+    [34] <>obj<>15 := <>Global<>toObject(y) @ #10\n\
+    [35] <>Global<>ignore6 := alloc() @ #11\n\
+    [36] <>Global<>ignore6["test"] := - 23.8\n\
+    [37] <>obj<>15["d"] := <>Global<>ignore6\n\
+\n\
+\n\
+(0,LBlock(9))\n\
+    [17] <>Global<>ignore4 := function (1) @ #4, #5\n\
+    [18] x := <>Global<>ignore4\n\
+    [19] <>obj<>7 := <>Global<>toObject(x) @ #6\n\
+    [20] <>temp<>8 := 9\n\
+    [21] <>temp<>9 := 6\n\
+    [22] <>temp<>10 := 4\n\
+    [23] <>temp<>11 := 2\n\
+    [24] <>temp<>12 := allocArray(4) @ #7\n\
+    [25] <>temp<>12["0"] := <>temp<>8\n\
+    [26] <>temp<>12["1"] := <>temp<>9\n\
+    [27] <>temp<>12["2"] := <>temp<>10\n\
+    [28] <>temp<>12["3"] := <>temp<>11\n\
+    [29] <>temp<>12 := <>temp<>12\n\
+    [30] <>arguments<>13 := allocArg(1) @ #8\n\
+    [31] <>arguments<>13["0"] := <>temp<>12\n\
+    [32] <>fun<>14 := <>Global<>getBase(x)\n\
+    [33] call(<>obj<>7, <>fun<>14, <>arguments<>13) @ #9\n\
+\n\
+\n\
+(0,LBlock(8))\n\
+    [13] assert(<>e<>1 != "A")\n\
+\n\
+\n\
+(0,LBlock(7))\n\
+    [12] assert(<>e<>1 == "A")\n\
+    [14] <>Global<>ignore3 := undefined\n\
+\n\
+\n\
+(0,LBlock(6))\n\
+    [5] <>Global<>ignore8 := alloc() @ #1\n\
+    [6] <>Global<>ignore8["a"] := "A"\n\
+    [7] <>Global<>ignore8["b"] := "B"\n\
+    [8] <>Global<>ignore8["c"] := "C"\n\
+    [9] y := <>Global<>ignore8\n\
+    [10] <>obj<>2 := <>Global<>toObject(y) @ #2\n\
+    [11] throw(<>obj<>2["a"])\n\
+\n\
+\n\
+(0,LBlock(5))\n\
+    [3] assert(! true)\n\
+\n\
+\n\
+(0,LBlock(4))\n\
+    [2] assert(true)\n\
+    [4] x := 2\n\
+\n\
+\n\
+(0,LBlock(3))\n\
+\n\
+\n\
+(0,LBlock(2))\n\
+    [1] catch(<>e<>1)\n\
+\n\
+\n\
+(0,LBlock(1))\n\
+\n\
+\n\
+(0,LBlock(0))\n\
+    [0] z := 1\n\
+\n\
+\n\
+\n
+cfg_err_equals=

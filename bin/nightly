@@ -1,0 +1,29 @@
+#!/bin/sh
+
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+
+export WKSPACE=$JS_HOME
+
+cd $WKSPACE
+echo "== GIT REPOSITORY UPDATE =="
+git pull
+echo "==========================="
+echo ""
+echo "===== COPYRIGHT CHECK ====="
+echo "The following files do not have copyright notices."
+source bin/copyrightcheck.sh
+echo "==========================="
+echo ""
+echo "====== NIGHTLY TESTS ======"
+./ant clean testNightly
+echo "==========================="
+echo ""
+export NO_ANSI=true
+benchmarks/bin/benchmark_start -s -r

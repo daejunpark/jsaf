@@ -1,0 +1,623 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   Copyright 2012, KAIST.
+%   All rights reserved.
+%
+%   Use is subject to license terms.
+%
+%   This distribution may include materials developed by third parties.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper]{article}
+
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{stmaryrd}
+\usepackage{color}
+
+\newcommand{\TODO}{\textcolor{red}{\emph{TODO:}}}
+
+\newcommand{\Program}{\emph{Program}}
+\newcommand{\SourceElement}{\emph{SourceElement}}
+\newcommand{\Statement}{\emph{Statement}}
+\newcommand{\VariableDeclaration}{\emph{VariableDeclaration}}
+\newcommand{\FunctionDeclaration}{\emph{FunctionDeclaration}}
+\newcommand{\ModuleDeclaration}{\emph{ModuleDeclaration}}
+\newcommand{\ModuleBody}{\emph{ModuleBody}}
+\newcommand{\ModuleElement}{\emph{ModuleElement}}
+\newcommand{\ExportDeclaration}{\emph{ExportDeclaration}}
+\newcommand{\ExportSpecifierSet}{\emph{ExportSpecifierSet}}
+\newcommand{\ExportSpecifier}{\emph{ExportSpecifier}}
+\newcommand{\Path}{\emph{Path}}
+\newcommand{\ImportDeclaration}{\emph{ImportDeclaration}}
+\newcommand{\ImportClause}{\emph{ImportClause}}
+\newcommand{\ImportSpecifierSet}{\emph{ImportSpecifierSet}}
+\newcommand{\ImportSpecifier}{\emph{ImportSpecifier}}
+\newcommand{\FunctionBody}{\emph{FunctionBody}}
+\newcommand{\Expression}{\emph{Expression}}
+\newcommand{\Identifier}{\emph{Identifier}}
+\newcommand{\NoNewLine}{\emph{\textcolor{red}{\footnotesize [NoNewLine]}}}
+
+\newcommand{\code}[1]{\textcolor{blue}{\tt #1}}
+
+\newcommand{\mydot}{.\,}
+
+\newcommand{\cmodule}{\code{module}}
+\newcommand{\cimport}{\code{import}}
+\newcommand{\cexport}{\code{export}}
+\newcommand{\cget}{\code{get}}
+\newcommand{\cset}{\code{set}}
+\newcommand{\cfrom}{\code{from}}
+\newcommand{\cas}{\code{as}}
+\newcommand{\clparen}{\code{(}}
+\newcommand{\crparen}{\code{)}}
+\newcommand{\clbracket}{\code{\{}}
+\newcommand{\crbracket}{\code{\}}}
+
+\newcommand{\comment}[1]{\mbox{\textcolor{green}{#1}}}
+
+\newcommand{\var}{{\tt{var}}}
+\newcommand{\function}{{\tt{function}}}
+\newcommand{\module}{{\tt{module}}}
+\newcommand{\local}{{\tt{local}}}
+\newcommand{\export}{{\tt{export}}}
+
+\newcommand{\dom}{\mathop{\mathrm{Dom}}}
+\newcommand{\Env}{\emph{Env}}
+\newcommand{\lookup}{\emph{lookup}}
+
+\newcommand{\Unprefix}{\emph{Unprefix}}
+\newcommand{\NewModInstObj}{\emph{NewModInstObj}}
+
+\newcommand{\If}{\mbox{if}}
+\newcommand{\Otherwise}{\mbox{otherwise}}
+\newcommand{\Where}{\mbox{where}}
+
+\newcommand{\tb}{\emph{tb}}
+\newcommand{\ct}{\emph{ct}}
+\newcommand{\ap}{\emph{ap}}
+
+\newcommand{\Normal}{{\tt{Normal}}}
+\newcommand{\Empty}{{\tt{empty}}}
+
+\newtheorem{Def}{Definition}
+
+\title{JavaScript Module Semantics \\
+       \fbox{\small\it Working Draft}}
+\author{Junhee Cho, Sukyoung Ryu}
+
+\begin{document}
+
+\maketitle
+
+\section{Preliminaries}
+
+\begin{Def}
+Given $x_0 \in X$ and $y_0 \in Y$, let $f = [x_0 \mapsto y_0]$ denote a partial function $f: X \rightarrow Y$ from $X$ to $Y$ defined as:
+\begin{equation*}
+f(x) = y_0 \quad \If\ x = x_0
+\end{equation*}
+\end{Def}
+
+\begin{Def}
+Let $f: X \rightarrow Y$ be a partial function from $X$ to $Y$. Then, let $g = f[x_0 \mapsto y_0]$ denote a partial function $g: X \rightarrow Y$ from $X$ to $Y$ defined as:
+\begin{equation*}
+\begin{split}
+g(x) = \left\{\begin{array}{ll}
+y_0 & \If\ x = x_0 \\
+f(x) & \If\ x \ne x_0 \wedge x \in \dom(f)
+\end{array}\right.
+\end{split}
+\end{equation*}
+\end{Def}
+
+\begin{Def}
+Let $f: X \rightarrow Y$ be a partial function from $X$ to $Y$. Then, let $g = f \setminus x_0$ denote a partial function $g: X \rightarrow Y$ from $X$ to $Y$ defined as:
+\begin{equation*}
+\begin{split}
+g(x) = f(x) \quad \mbox{if}\ x \ne x_0 \wedge x \in \dom(f)
+\end{split}
+\end{equation*}
+\end{Def}
+
+\section{Syntax}
+
+\begin{eqnarray*}
+\Program & ::=  & \SourceElement* \\
+\SourceElement & ::=  & \Statement \\
+               & \mid & \VariableDeclaration \\
+               & \mid & \FunctionDeclaration \\
+               & \mid & \ImportDeclaration \\
+               & \mid & \ModuleDeclaration \\
+\ModuleDeclaration & ::= & \cmodule\ \NoNewLine\ \Identifier\ \clbracket\ \ModuleBody\ \crbracket \\
+\ModuleBody & ::= & \ModuleElement* \\
+\ModuleElement & ::=  & \SourceElement \\
+               & \mid & \ExportDeclaration \\
+\ExportDeclaration & ::=  & \cexport\ \ExportSpecifierSet(\code{,}\ \ExportSpecifierSet)*\code{;} \\
+                   & \mid & \cexport\ \VariableDeclaration \\
+                   & \mid & \cexport\ \FunctionDeclaration \\
+                   & \mid & \cexport\ \cget\ \Identifier\clparen\crparen\ \clbracket\ \FunctionBody\ \crbracket \\
+                   & \mid & \cexport\ \cset\ \Identifier\clparen\Identifier\crparen\ \clbracket\ \FunctionBody\ \crbracket \\
+\ExportSpecifierSet & ::=  & \clbracket\ \ExportSpecifier(\code{,}\ \ExportSpecifier)*\ \crbracket\ (\cfrom\ \Path)? \\
+                    & \mid & \Identifier\ (\cfrom\ \Path)? \\
+                    & \mid & \code{*}\ (\cfrom\ \Path)? \\
+\ExportSpecifier & ::= & \Identifier\ (\code{:}\ \Path)? \\
+\Path & ::= & \Identifier(\code{.}\Identifier)* \\
+\ImportDeclaration & ::=  & \cimport\ \ImportClause(\code{,}\ \ImportClause)*\code{;} \\
+\ImportClause & ::=  & \Path\ \cas\ \Identifier \qquad \comment{module renaming as $\Identifier$} \\
+              & \mid & \ImportSpecifierSet\ \cfrom\ \Path \qquad \comment{import from a module $\Path$} \\
+\ImportSpecifierSet & ::=  & \clbracket\ \ImportSpecifier(\code{,}\ \ImportSpecifier)*\ \crbracket \\
+                    & \mid & \Identifier \\
+\ImportSpecifier & ::= & \Identifier\ (\code{:}\ \Identifier)?
+\end{eqnarray*}
+
+\section{Environment}
+
+\subsection{Definition of module environment}
+
+\begin{eqnarray*}
+\mbox{Identifier}\ x & \in & \Identifier \\
+\mbox{Path}\ \phi & ::= & \epsilon \mid x(\code{\mydot}x)* \\
+\mbox{Internal qualified name}\ \varphi_i & ::= & x(\code{\mydot}x)*\code{\mydot}\clparen x \crparen \\
+\mbox{External qualified name}\ \varphi_e & ::= & x(\code{\mydot}x)* \\
+\mbox{Qualified name}\ \varphi & ::= & \varphi_i \mid \varphi_e \\
+\mbox{Expanded qualified name}\ \overline{\varphi} & ::= & \varphi\code{\mydot*}
+\end{eqnarray*}
+
+An internal qualified name is visible only in the module scope and the nested module scopes.
+An external qualified name is visible everywhere.
+A path is either an empty path $\epsilon$ or a sequence of identifiers separated by dot.
+
+\begin{eqnarray*}
+\mbox{Type}\ \tau & ::= & \function \mid \var \mid \module \\
+\mbox{Environment}\ \Sigma & ::= & \varphi \rightarrow (\tau, \varphi) \\
+\mbox{Environment chain}\ \Sigma^* & ::= & \Sigma \mid \Sigma^* \Sigma
+\end{eqnarray*}
+
+An environment is a partial function from qualified names to pairs of a type and a qualified name.
+Given $\Sigma(\varphi_1) = (\tau, \varphi_2)$, $\varphi_1$ is an alias of $\varphi_2$.
+$\tau$ represents whether the name is of a funtion, a variable, or a module declared in the scope.
+
+\subsection{Static resolution of module environment}
+
+\subsubsection{Module environment constructor}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{function}\ f\code{(}x_1, \cdots,\ x_n\code{)}\ \code{\{} s_1 \cdots s_m \code{\}} \rrbracket (\Sigma; \phi) = \\
+&\qquad \Env \llbracket \code{var}\ f \rrbracket (\Sigma; \phi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{var}\ x_1 (\code{=}\ e_1) \code{,} \cdots \code{,}\ x_n (\code{=}\ e_n) \code{;} \rrbracket (\Sigma; \phi) = \\
+&\qquad \left\{\begin{array}{ll}
+[x \mapsto (\var, x) \mid x \in \{x_1, \cdots, x_n\}] & \If\ \phi = \epsilon \\ {}
+[\phi.(x) \mapsto (\var, \phi.(x)) \mid x \in \{x_1, \cdots, x_n\}] & \Otherwise
+\end{array}\right.
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{module}\ M\ \code{\{} s_1 \cdots s_n \code{\}} \rrbracket (\Sigma; \phi) = \\
+&\qquad \left\{\begin{array}{ll}
+[M \mapsto (\module, M)] \cup \Env \llbracket s_1 \cdots s_n \rrbracket (\Sigma; M) & \If\ \phi = \epsilon \\ {}
+[\phi.(M) \mapsto (\module, \phi.(M))] \cup \Env \llbracket s_1 \cdots s_n \rrbracket (\Sigma; \phi.M) & \Otherwise
+\end{array}\right.
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{export}\ \emph{ess}_1\code{,}\ \cdots\code{,}\ \emph{ess}_n \code{;} \rrbracket (\Sigma; \phi) = \\
+&\qquad\bigcup_{1 \le i \le n} \Env \llbracket \code{export}\ \emph{ess}_i \rrbracket (\Sigma; \phi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{export}\ \code{\{}\emph{es}_1\code{,}\ \cdots\code{,}\ \emph{es}_n\code{\}}\ (\code{from}\ p) \rrbracket (\Sigma; \phi) = \\
+&\qquad\bigcup_{1 \le i \le n} \Env \llbracket \code{export}\ \code{\{}es_i\code{\}}\ (\code{from}\ p) \rrbracket (\Sigma; \phi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{export}\ \code{\{}x\code{\}}\ (\code{from}\ p) \rrbracket (\Sigma; \phi) = \\
+&\qquad\Env \llbracket \code{export}\ \code{\{}x\code{:}\ x\code{\}}\ (\code{from}\ p) \rrbracket (\Sigma; \phi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{export}\ \code{\{}x\code{:}\ p\code{\}}\ \code{from}\ p_0 \rrbracket (\Sigma; \phi) = \\
+&\qquad\Env \llbracket \code{export}\ \code{\{}x\code{:}\ p_0\code{.}p\code{\}} \rrbracket (\Sigma; \phi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{export}\ \code{\{}x\code{:}\ x_0\code{\}} \rrbracket (\Sigma; \phi) = \\
+&\qquad \left\{\begin{array}{ll}
+[\phi.x \mapsto (\tau, \phi.(x_0))] & \If\ \Sigma(\phi.(x_0)) = (\tau, \phi.(x_0)) \quad\comment{unimported} \\ {}
+[\phi.x \mapsto (\tau, \phi'.x')] & \If\ \Sigma(\phi.(x_0)) = (\tau, \phi'.x') \quad\comment{imported}
+\end{array}\right.
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{export}\ \code{\{}x\code{:}\ x_0\code{\}} \rrbracket (\Sigma; \phi) = \\
+&\qquad [\phi.x \mapsto \Sigma(\phi.(x_0))] \quad \If\ \phi.(x_0) \in \dom(\Sigma)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{export}\ \code{\{}x\code{:}\ p.x_0\code{\}} \rrbracket (\Sigma; \phi) = \\
+&\qquad [\phi.x \mapsto (\tau, \varphi)] \quad \If\ \lookup \llbracket p.x_0 \rrbracket (\Sigma; \phi) = (\tau, \varphi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{export}\ x\ (\code{from}\ p) \rrbracket (\Sigma; \phi) = \\
+&\qquad \Env \llbracket \code{export}\ \code{\{}x\code{\}}\ (\code{from}\ p) \rrbracket (\Sigma; \phi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{export}\ \code{var}\ x_1(\code{=}\ e_1)\code{,} \cdots \code{,}\ x_n(\code{=}\ e_n)\code{;} \rrbracket (\Sigma; \phi) = \\
+&\qquad [\phi.(x) \mapsto (\var, \phi.(x)), \phi.x \mapsto (\var, \phi.(x)) \mid x \in \{ x_1, \cdots, x_n \}]
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{export}\ \code{function}\ f\code{(}x_1, \cdots,\ x_n\code{)}\ \code{\{} s_1 \cdots s_m \code{\}} \rrbracket (\Sigma; \phi) = \\
+&\qquad \Env \llbracket \code{export}\ \code{var}\ f \rrbracket (\Sigma; \phi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{export}\ \code{get}\ f\code{()}\ \code{\{} s_1 \cdots s_m \code{\}} \rrbracket (\Sigma; \phi) = \\
+&\qquad [\phi.f \mapsto \phi.f]
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{export}\ \code{set}\ f\code{(}x\code{)}\ \code{\{} s_1 \cdots s_m \code{\}} \rrbracket (\Sigma; \phi) = \\
+&\qquad [\phi.f \mapsto \phi.f]
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{import}\ \emph{ic}_1\code{,} \cdots\code{,}\ \emph{ic}_n \rrbracket (\Sigma; \phi) = \\
+&\qquad\bigcup_{1 \le i \le n} \Env \llbracket \code{import}\ \emph{ic}_i \rrbracket (\Sigma; \phi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{import}\ p\ \code{as}\ M \rrbracket (\Sigma; \phi) = \\
+&\qquad [\phi.(M) \mapsto (\module, \varphi)] \quad \If\ \lookup \llbracket p \rrbracket (\Sigma; \phi) = (\module, \varphi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{import}\ \code{\{} \emph{is}_1\code{,} \cdots\code{,}\ \emph{is}_n \code{\}}\ \code{from}\ p \rrbracket (\Sigma; \phi) = \\
+&\qquad \bigcup_{1 \le i \le n} \Env \llbracket \code{import}\ \code{\{} \emph{is}_i \code{\}}\ \code{from}\ p \rrbracket (\Sigma; \phi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{import}\ \code{\{} x \code{\}}\ \code{from}\ p \rrbracket (\Sigma; \phi) = \\
+&\qquad \Env \llbracket \code{import}\ \code{\{} x\code{:}\ x \code{\}}\ \code{from}\ p \rrbracket (\Sigma; \phi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{import}\ \code{\{} x\code{:}\ x' \code{\}}\ \code{from}\ p \rrbracket (\Sigma; \phi) = \\
+&\qquad [\phi.(x') \mapsto (\tau, \varphi)] \quad \If\ \lookup \llbracket p.x \rrbracket (\Sigma; \phi) = (\tau, \varphi)
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Env \llbracket \code{import}\ x\ \code{from}\ p \rrbracket (\Sigma; \phi) = \\
+&\qquad \Env \llbracket \code{import}\ \code{\{} x \code{\}}\ \code{from}\ p \rrbracket (\Sigma; \phi)
+\end{split}
+\end{equation*}
+
+\subsubsection{Lookup function}
+
+\begin{eqnarray*}
+&\lookup \llbracket M.\phi \rrbracket (\Sigma; \phi_0) & = \left\{\begin{array}{ll}
+\lookup' \llbracket \phi \rrbracket (\Sigma; \phi'.M') & \If\ \Sigma(\phi_0.(M)) = (\module, \phi'.(M')) \\
+\lookup_\bot \llbracket M.\phi \rrbracket (\Sigma; \phi_0) & \Otherwise
+\end{array}\right. \\
+&\lookup \llbracket x \rrbracket (\Sigma; \phi_0) & = \left\{\begin{array}{ll}
+(\tau, \varphi) & \If\ \Sigma(\phi_0.(x)) = (\tau, \varphi) \\
+\lookup_\bot \llbracket x \rrbracket (\Sigma; \phi_0) & \Otherwise
+\end{array}\right. \\
+&\lookup_\bot \llbracket \phi \rrbracket & = \left\{\begin{array}{ll}
+\lookup \llbracket \phi \rrbracket (\Sigma; \phi'_0) & \If\ \phi_0 = \phi'_0.M \\
+\bot & \Otherwise
+\end{array}\right. \\
+&\lookup' \llbracket M.\phi \rrbracket (\Sigma; \phi_0) & = \left\{\begin{array}{ll}
+\lookup' \llbracket \phi \rrbracket (\Sigma; \phi'.M') & \If\ \Sigma(\phi_0.M) = (\module, \phi'.(M')) \\
+\bot & \Otherwise
+\end{array}\right. \\
+&\lookup' \llbracket x \rrbracket (\Sigma; \phi_0) & = \left\{\begin{array}{ll}
+(\tau, \varsigma) & \If\ \Sigma(\phi_0.x) = (\tau, \varphi) \\
+\bot & \Otherwise
+\end{array}\right. \\
+\end{eqnarray*}
+
+\subsubsection{Fixed point of module environment}
+
+\begin{equation*}
+\begin{split}
+& \Env^* \llbracket p \rrbracket = \bigcup_{i \ge 0} \Env^i \llbracket p \rrbracket (\emptyset; \epsilon) \\
+\Where\ & \Env^0 \llbracket p \rrbracket (\Sigma; \phi) = \Sigma \\
+& \Env^i \llbracket p \rrbracket (\Sigma; \phi) = \Env \llbracket p \rrbracket (\Env^{i-1} \llbracket p \rrbracket (\Sigma; \phi); \phi)\ \mbox{for}\ i > 0 \\
+\end{split}
+\end{equation*}
+
+\section{Semantics}
+
+\subsection{Program}
+
+\begin{equation*}
+\frac{
+    \begin{array}{c}
+    (H_0, A_0, \tb, \Sigma, \phi) = (\emph{InitHeap}, \#\emph{Global}, \#\emph{Global}, \Env^* \llbracket p \rrbracket) \\
+    (H_0, A_0, \tb, \Sigma, \phi), p \rightarrow_f (H_1, A_1), \ct_1 \qquad \comment{function declaration} \\
+    (H_1, A_1, \tb, \Sigma, \phi), p \rightarrow_v (H_2, A_2), \ct_2 \qquad \comment{variable declaration} \\
+    (H_2, A_2, \tb, \Sigma, \phi), p \rightarrow_m (H_3, A_3), \ct_3 \qquad \comment{module declaration} \\
+    (H_3, A_3, \tb, \Sigma, \phi), p \rightarrow_i (H_4, A_4), \ct_4 \qquad \comment{import declaration} \\
+    (H_4, A_4, \tb, \Sigma, \phi), p \rightarrow_s (H_5, A_5), \ct_5 \qquad \comment{statement} \\
+    \end{array}
+}{
+    p \rightarrow_p (H_5, A_5), \ct_5
+}
+\end{equation*}
+
+\subsection{Function declaration}
+
+\subsection{Variable declaration}
+\begin{equation*}
+\frac{
+    (H, A, \tb, \Sigma, \phi), \code{var}\ M\code{;} \rightarrow_v (H', A'), \ct
+}{
+    (H, A, \tb, \Sigma, \phi), (\code{export})\ \code{module}\ M\ \code{\{} s_1 \cdots s_n \code{\}} \rightarrow_v (H', A'), \ct
+}
+\end{equation*}
+
+\subsection{Module declaration}
+
+\begin{equation*}
+\frac{
+    \begin{array}{c}
+    p = s_1 \cdots s_n \qquad \{ i_1, \cdots, i_k \} = \{ i | 1 \le i \le n \wedge s_i = \code{module}\ M_i\ \code{\{} \cdots \code{\}} \} \\
+    (H_0, A_0, \ct_0) = (H, A, \Normal(\Empty)) \\
+    (H_{j-1}, A_{j-1}, \tb, \Sigma, \phi), s_{i_j} \rightarrow_\emph{inst} (H_j, A_j), \ct_j \quad \forall 1 \le j \le k \\
+    (H'_0, A'_0, \ct'_0) = (H_k, A_k, \ct_k) \\
+    (H'_{j-1}, A'_{j-1}, \tb, \Sigma, \phi), s_{i_j} \rightarrow_\emph{seal} (H'_j, A'_j), \ct'_j \quad \forall 1 \le j \le k \\
+    (H''_0, A''_0, \ct''_0) = (H'_k, A'_k, \ct'_k) \\
+    (H''_{j-1}, A''_{j-1}, \tb, \Sigma, \phi), s_{i_j} \rightarrow_\emph{init} (H''_j, A''_j), \ct''_j \quad \forall 1 \le j \le k \\
+    \end{array}
+}{
+    (H, A, \tb, \Sigma, \phi), p \rightarrow_m (H''_k, A''_k), \ct''_k
+}
+\end{equation*}
+
+\subsection{Module instantiation}
+
+\begin{equation*}
+\begin{split}
+& \Unprefix (p_1, p_2) = \\
+&\qquad \left\{\begin{array}{ll}
+\Unprefix (p'_1, p'_2) & \If\ p_1 = M\code{\mydot}p'_1 \wedge p_2 = M\code{\mydot}p'_2 \\
+p_2 & \Otherwise
+\end{array}\right.
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\NewModInstObj(A) = \begin{array}{l}
+\{ \texttt{[[Class]]}: \texttt{"Module"}, \\
+\quad \texttt{[[Extensible]]}: \texttt{true}, \\
+\quad \texttt{[[Prototype]]}: \#\emph{Null}, \\
+\quad \texttt{[[Scope]]}: \{\}, \\
+\quad \texttt{@property}: \{\} \}
+\end{array}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    \begin{array}{c}
+    \phi' = \left\{\begin{array}{ll}
+        M & \If\ \phi = \epsilon \\
+        \phi\code{\mydot}M & \Otherwise
+    \end{array}\right. \\
+    l = NewLoc() \qquad H_0 = H [l \mapsto \NewModInstObj()] \\
+    A_0 = \{\} :: A \\
+    (H_0, A_0, \tb, \Sigma, \phi'), s_1 \cdots s_n \rightarrow_f (H_1, A_1), \ct_1 \\
+    %\{ x_1, \cdots, x_m \} = \{ x \mid \phi'.(x) \in \dom(\Sigma) \} \\
+    %(H_1, A_1, \tb, \Sigma, \phi'), \code{var}\ x_1\code{,} \cdots\code{,}\ x_m\code{;} \rightarrow_v (H_2, A_2), \ct_2 \\
+    (H_1, A_1, \tb, \Sigma, \phi'), s_1 \cdots s_n \rightarrow_v (H_2, A_2), \ct_2 \\
+    (H_2, A_2, l, \Sigma, \phi'), s_1 \cdots s_n \rightarrow_\emph{inst} (H_3, A_3), \ct_3 \\
+    H_4 = H_3[l \mapsto H_3(l)[\texttt{[[Scope]]} \mapsto A_3]] \\
+    \emph{PutValue}(H_4, A, M, H_4(l), \code{strict}) = (H', A', v)
+
+    %\{ (x_1, p_1), \cdots, (x_m, p_m) \} = \{ (x, \Unprefix(\phi', \varphi_e)) \mid \Sigma(\phi'.x) = (\tau, \varphi_e) \} \\
+    %(H'_{i-1}, A_3, \tb, \Sigma, \phi'), \code{get}\ x_i\code{()}\ \code{\{}\ \code{return}\ p_i\ \code{\}} \rightarrow_m (H'_i, x_i, \ap_i) \quad \forall 1 \le i \le m \\
+    \end{array}
+}{
+    (H, A, \tb, \Sigma), \code{module}\ M\ \code{\{} s_1 \cdots s_n \code{\}} \rightarrow_\emph{inst} (H', A'), v
+}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    \begin{array}{c}
+    (H_0, A_0) = (H, A) \\
+    (H_{i-1}, A_{i-1}, \tb, \Sigma, \phi), \code{export}\ e_i\code{;} \rightarrow_{inst} (H_i, A_i), \ct_i \\
+    \end{array}
+}{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ e_1\code{,} \cdots\code{,} e_n\code{;} \rightarrow_{inst} (H_n, A_n), \ct_n
+}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    \begin{array}{c}
+    (H_0, A_0) = (H, A) \\
+    (H_{i-1}, A_{i-1}, \tb, \Sigma, \phi), \code{export}\ \code{\{}e_i\code{\}}\ (\code{from}\ p)\code{;} \rightarrow_{inst} (H_i, A_i), \ct_i \\
+    \end{array}
+}{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ \code{\{}e_1\code{,} \cdots\code{,} e_n\code{\}}\ (\code{from}\ p)\code{;} \rightarrow_{inst} (H_n, A_n), \ct_n
+}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ \code{\{}x\code{:}\ x\code{\}}\ (\code{from}\ p)\code{;} \rightarrow_{inst} (H', A'), \ct
+}{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ \code{\{}x\code{\}}\ (\code{from}\ p)\code{;} \rightarrow_{inst} (H', A'), \ct
+}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ \code{\{}x\code{:}\ p\code{\mydot}p'\code{\}}\code{;} \rightarrow_{inst} (H', A'), \ct
+}{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ \code{\{}x\code{:}\ p'\code{\}}\ (\code{from}\ p)\code{;} \rightarrow_{inst} (H', A'), \ct
+}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    \begin{array}{c}
+    (H, A, \tb, \Sigma, \phi), \code{get}\ x\code{()}\ \code{\{}\ \code{return}\ p\code{;}\ \code{\}} \rightarrow_m (H', y, \ap) \\
+    \emph{DefineOwnProperty}(H', A, \tb, \emph{ToString}(H', y), \ap, \code{false}) = (H'', A'', v)
+    \end{array}
+}{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ \code{\{}x\code{:}\ p\code{\}}\code{;} \rightarrow_{inst} (H'', A''), \texttt{Normal}(v)
+}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ \code{\{}x\code{\}}\ (\code{from}\ p)\code{;} \rightarrow_{inst} (H', A'), \ct
+}{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ x\ (\code{from}\ p)\code{;} \rightarrow_{inst} (H', A'), \ct
+}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    \begin{array}{c}
+    \{ x_1, \cdots, x_n \} = \{ x \mid \phi.x \in \Sigma \} \\
+    (H_0, A_0) = (H, A) \\
+    (H_{i-1}, A_{i-1}, \tb, \Sigma, \phi), \code{get}\ x_i\code{()}\ \code{\{}\ \code{return}\ x_i\code{;}\ \code{\}} \rightarrow_m (H'_i, y_i, \ap_i) \\
+    \emph{DefineOwnProperty}(H'_i, A_{i-1}, \tb, \emph{ToString}(H'_i, y_i), \ap_i, \code{false}) = (H_i, A_i, v_i)
+    \end{array}
+}{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ *\code{;} \rightarrow_{inst} (H_n, A_n), \texttt{Normal}(v_n)
+}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    \begin{array}{c}
+    \lookup \llbracket p \rrbracket (\Sigma; \phi) = (\module, \varphi) \\
+    \phi' = \left\{\begin{array}{ll}
+    M & \If\ \varphi = M \\
+    \phi''.M & \If\ \varphi = \phi''.(M)
+    \end{array}\right. \\
+    \{ x_1, \cdots, x_n \} = \{ x \mid \phi'.x \in \Sigma \} \\
+    (H_0, A_0) = (H, A) \\
+    (H_{i-1}, A_{i-1}, \tb, \Sigma, \phi), \code{get}\ x_i\code{()}\ \code{\{}\ \code{return}\ p\code{.}x_i\code{;}\ \code{\}} \rightarrow_m (H'_i, y_i, \ap_i) \\
+    \emph{DefineOwnProperty}(H'_i, A_{i-1}, \tb, \emph{ToString}(H'_i, y_i), \ap_i, \code{false}) = (H_i, A_i, v_i)
+    \end{array}
+}{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ *\ \code{from}\ p\code{;} \rightarrow_{inst} (H_n, A_n), \texttt{Normal}(v_n)
+}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ f\code{;} \rightarrow_{inst} (H', A'), \ct
+}{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ \code{function}\ f\code{(}x_1\code{,} \cdots\code{,}x_n\code{)}\ \code{\{} s_1 \cdots s_m \code{\}} \rightarrow_{inst} (H', A'), \ct
+}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ \code{\{}x_1\code{,} \cdots\code{,} x_n\code{\}}\code{;} \rightarrow_{inst} (H', A'), \ct
+}{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ \code{var}\ x_1(\code{=}\ e_1)\code{,} \cdots\code{,}x_n(\code{=}\ e_n) \rightarrow_{inst} (H', A'), \ct
+}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    \begin{array}{c}
+    (H, A, \tb, \Sigma, \phi), \code{get}\ f\code{(}\code{)}\ \code{\{} s_1 \cdots s_n \code{\}} \rightarrow_m (H', y,\ap) \\
+    \emph{DefineOwnProperty}(H', A, \tb, \emph{ToString}(H', y), \ap, \code{false}) = (H'', A'', v)
+    \end{array}
+}{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ \code{get}\ f\code{(}\code{)}\ \code{\{} s_1 \cdots s_n \code{\}} \rightarrow_{inst} (H'', A''), \texttt{Normal}(v)
+}
+\end{equation*}
+
+\begin{equation*}
+\frac{
+    \begin{array}{c}
+    (H, A, \tb, \Sigma, \phi), \code{set}\ f\code{(}x\code{)}\ \code{\{} s_1 \cdots s_n \code{\}} \rightarrow_m (H', y,\ap) \\
+    \emph{DefineOwnProperty}(H', A, \tb, \emph{ToString}(H', y), \ap, \code{false}) = (H'', A'', v)
+    \end{array}
+}{
+    (H, A, \tb, \Sigma, \phi), \code{export}\ \code{set}\ f\code{(}x\code{)}\ \code{\{} s_1 \cdots s_n \code{\}} \rightarrow_{inst} (H'', A''), \texttt{Normal}(v)
+}
+\end{equation*}
+
+\subsection{Sealing}
+
+\begin{equation*}
+\frac{
+    \begin{array}{c}
+    (H, A, \tb, \Sigma, \phi), \code{Object.seal(}M\code{);} \rightarrow_s (H_0, A_0), \ct_0 \\
+    (H, A, \tb, \Sigma, \phi), M \rightarrow_e l \\
+    (H_{i-1}, H(l).\texttt{[[Scope]]}, \tb, \Sigma, \phi), s_i \rightarrow_{seal} (H_i, A_i), \ct_i \\
+    \end{array}
+}{
+    (H, A, \tb, \Sigma, \phi), \code{module}\ M\ \code{\{} s_1 \cdots s_n \code{\}} \rightarrow_{seal} (H_n, A_0), \ct_n
+}
+\end{equation*}
+
+\subsection{Module initialization}
+
+\begin{equation*}
+\frac{
+    \begin{array}{c}
+    (H, A, \tb, \Sigma, \phi), M \rightarrow_e l \\
+    (H, H(l).\texttt{[[Scope]]}, \tb, \Sigma, \phi), s_1 \cdots s_n \rightarrow_s (H_0, A_0), \ct_0 \\
+    (H_{i-1}, H(l).\texttt{[[Scope]]}, \tb, \Sigma, \phi), s_i \rightarrow_{init} (H_i, A_i), \ct_i \\
+    \end{array}
+}{
+    (H, A, \tb, \Sigma, \phi), \code{module}\ M\ \code{\{} s_1 \cdots s_n \code{\}} \rightarrow_{init} (H_n, A_0), \ct_n
+}
+\end{equation*}
+
+\end{document}

@@ -1,0 +1,27 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=shadowingVariable5
+BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
+bug-detector
+bug-detector_out_WCIequals=\
+ \n\
+ \n\
+ \n\
+ \n\
+* Bug Detector * \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable5.js:2:12~2:13: warning: Parameter 'g' is shadowed by a function at 3:3-8:3. \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable5.js:3:14~3:15: warning: Parameter 'h' is shadowed by a function at 5:5-7:5. \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable5.js:4:9~4:14: warning: Variable 'h' is shadowed by a function at 5:5-7:5. \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable5.js:5:5~7:5: warning: Function 'h' is not reachable. \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable5.js:7:15~7:16: warning: Converting primitive value(number) to object. \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable5.js:7:15~7:18: error: Non-function is called as a function. \n\
+# Errors(#)   : 1 \n\
+# Warnings(#) : 5 \n\
+\n
+bug-detector_err_equals=

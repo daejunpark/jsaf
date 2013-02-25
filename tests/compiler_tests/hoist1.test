@@ -1,0 +1,46 @@
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=hoist1
+DISAMB_TESTS_DIR=${JS_HOME}/tests/compiler_tests
+disambiguate
+disambiguate_out_WCIequals=\
+  function f() \n\
+  {\n\
+    \n\
+  }\n\
+  function g(x) \n\
+  {\n\
+    function h() \n\
+    {\n\
+      return false;\n\
+    }\n\
+      var v;\n\
+    \n\
+      true;\n\
+    {\n\
+      v = 7;\n\
+    }\n\
+    return x;\n\
+  }\n\
+  var x;\n\
+  var b;\n\
+  \n\
+  3;\n\
+  true;\n\
+  {\n\
+    \n\
+  }\n\
+  z = 4;\n\
+  {\n\
+    x = 5;\n\
+  }\n\
+  {\n\
+    b = 3;\n\
+  }\n
+disambiguate_err_equals=

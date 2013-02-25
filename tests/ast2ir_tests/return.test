@@ -1,0 +1,29 @@
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=return
+AST2IR_TESTS_DIR=${JS_HOME}/tests/ast2ir_tests
+compile
+compile_out_WCIequals=\
+function f(this, <>arguments<>1) \n\
+{\n\
+  return\n\
+  return 0\n\
+  return 1.0\n\
+  return "jsaf"\n\
+}\n\
+\n\
+{\n\
+  <>obj<>2 = <>Global<>toObject(f)\n\
+  <>arguments<>3 = []\n\
+  <>fun<>4 = <>Global<>getBase(f)\n\
+  <>Global<>ignore1 = <>obj<>2(<>fun<>4, <>arguments<>3)\n\
+}\n\
+\n\
+\n
+compile_err_equals=

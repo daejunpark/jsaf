@@ -1,0 +1,20 @@
+<script>
+  var aa = document.firstChild; // HTMLElement
+  var aaname = aa.nodeName;   // HTML
+  var bb = aa.childNodes[0]; // HeadElement
+  var bbname = bb.nodeName;  // HEAD
+  var cc = bb.lastChild;    // Text
+  var ccname = cc.nodeName; // #text
+  var dd = bb.firstChild;   // ScriptElement
+  var ddname = dd.nodeName; // SCRIPT
+  var ee = dd.nextSibling; // Text
+  var eename = ee.nodeName; // #text
+  var ff = ee.nextSibling; // null
+  var gg = ee.parentNode; // HTMLHeadElement
+  var ggname = gg.nodeName; // HEAD
+  var hhlength = dd.childNodes.length; // 1
+  var hh = dd.childNodes[0]; // Text
+  var hhname = hh.nodeName; // #text
+  var ii = hh.previousSibling; // null
+  var jj = hh.lastChild;   // null
+</script>

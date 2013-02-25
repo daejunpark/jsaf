@@ -1,0 +1,29 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=unreachableCode1
+BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
+bug-detector
+bug-detector_out_WCIequals=\
+ \n\
+ \n\
+ \n\
+ \n\
+* Bug Detector * \n\
+${BUGDETECTOR_TESTS_DIR}/unreachableCode1.js:3:5~3:18: warning: Variable 'z' is never used. \n\
+${BUGDETECTOR_TESTS_DIR}/unreachableCode1.js:4:4~4:7: warning: The conditional expression is always false. \n\
+${BUGDETECTOR_TESTS_DIR}/unreachableCode1.js:5:7~8:6: warning: Unreachable code is found. \n\
+${BUGDETECTOR_TESTS_DIR}/unreachableCode1.js:5:11~7:3: warning: Function 'anonymous_function' is not reachable. \n\
+${BUGDETECTOR_TESTS_DIR}/unreachableCode1.js:9:11~9:18: warning: The conditional expression is always false. \n\
+${BUGDETECTOR_TESTS_DIR}/unreachableCode1.js:10:7~10:14: warning: Unreachable code is found. \n\
+${BUGDETECTOR_TESTS_DIR}/unreachableCode1.js:11:3~13:3: warning: Unreachable code is found. \n\
+${BUGDETECTOR_TESTS_DIR}/unreachableCode1.js:16:7~16:16: warning: Variable 'test' is never used. \n\
+# Errors(#)   : 0 \n\
+# Warnings(#) : 8 \n\
+\n
+bug-detector_err_equals=

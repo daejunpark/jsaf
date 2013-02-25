@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data>
+  <test-code>
+    <description>
+      <![CDATA[
+basic test
+      ]]></description>
+    <expected-problems>0</expected-problems>
+    <code>
+      <![CDATA[
+public class HelloWorldBean {
+  private String _thing;
+
+  public String getMessage() {
+    return "Hello World!";
+  }
+}
+      ]]>
+    </code>
+  </test-code>
+  <test-code>
+    <description>
+      <![CDATA[
+basic test, not OK
+      ]]></description>
+    <expected-problems>1</expected-problems>
+    <code>
+      <![CDATA[
+public class HelloWorldBean {
+
+  public String getMessage() {
+    return "Hello World!";
+  }
+  private String _fieldInWrongLocation;
+}
+      ]]>
+    </code>
+  </test-code>
+  <test-code>
+    <description>
+      <![CDATA[
+inner class, OK
+      ]]></description>
+    <expected-problems>0</expected-problems>
+    <code>
+      <![CDATA[
+public class HelloWorldBean {
+
+  public String getMessage() {
+    return "Hello World!";
+  }
+
+  public class Foo {
+    private String _fieldInWrongLocation;
+  }
+}
+      ]]>
+    </code>
+  </test-code>
+  <test-code>
+    <description>
+      <![CDATA[
+Initial report where rule was introduced, [ 2487971 ] False positive with field-level annotations
+      ]]></description>
+    <expected-problems>0</expected-problems>
+    <code>
+      <![CDATA[
+public class MyTest extends AbstractJUnit4SpringContextTests {
+@Autowired
+protected String _first;
+@Autowired
+protected String _second;
+}
+      ]]>
+    </code>
+  </test-code>
+</test-data>

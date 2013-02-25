@@ -1,0 +1,269 @@
+\documentclass[a4paper, leqno]{amsart}
+\usepackage{amsmath,amssymb,graphicx,fullpage,color,stmaryrd,url}
+\usepackage{anysize}
+\RequirePackage[nonfrench]{kotex}
+\marginsize{.5in}{.5in}{.5in}{.5in}
+
+\newcommand{\newvar}[1]{\ensuremath{\underline{\sf \diamond{#1}}}}
+\newcommand{\newva}{\newvar{new_1}}
+\newcommand{\newvb}{\newvar{new_2}}
+\newcommand{\newvc}{\newvar{new_3}}
+
+\newcommand{\myid}{\emph{id}}
+\newcommand{\myfn}{f}
+\newcommand{\name}{\alpha}
+\newcommand{\env}{\Sigma}
+\newcommand{\wenv}{\Gamma}
+\newcommand{\open}{{\ingreen\langle}}
+\newcommand{\close}{{\ingreen\rangle}}
+\newcommand{\emptyenv}{\langle\rangle, \langle\rangle}
+% added commands by changhee
+\newcommand{\nestedname}{\beta}
+\newcommand{\listname}{\phi\;\alpha}
+\newcommand{\namelist}{\phi}
+\newcommand{\emptylist}{\epsilon}
+\newcommand{\emptyval}{{\ingreen\mbox{\tt empty}}}
+\newcommand{\listscope}{\varphi}
+\newcommand{\flag}{{\emph{IsNested}}}
+\newcommand{\trueflag}{{\bold{True}}}
+\newcommand{\falseflag}{{\bold{False}}}
+\newcommand{\argmk}[3]{\langle#1, #2, #3\rangle}
+\newcommand{\rewritearg}{\langle\listname, \listscope, \flag\rangle}
+%\newcommand{\isshadowed}[2]{\ensuremath{\emph{IsShadowed}\lbr#1\mid#2\rbr}}
+\newcommand{\isshadowed}[2]{\ensuremath{#1\in#2}}
+\newcommand{\mylet}{\bold{Let}\ }
+\newcommand{\myif}{\bold{If}\ }
+\newcommand{\mythen}{\bold{Then}\ }
+\newcommand{\myelse}{\bold{Else}\ }
+\newcommand{\myifend}{\bold{EndIf}}
+\newcommand{\myelseend}{\bold{EndElse}}
+\newcommand{\namecheck}[2]{\ensuremath{#1 \equiv #2}}
+\newcommand{\getlocaldecls}{\ensuremath{\emph{LocalDecls}}}
+
+\newcommand{\pgm}{p}
+\newcommand{\stmt}{s}
+\newcommand{\expr}{e}
+\newcommand{\exprs}{e^+}
+%\newcommand{\topl}{t}
+\newcommand{\fd}{\emph{fd}}
+\newcommand{\vd}{\emph{vd}}
+\newcommand{\cc}{\emph{cc}}
+\newcommand{\me}{\emph{me}}
+\newcommand{\ce}{\emph{ce}}
+\newcommand{\lhs}{\emph{lhs}}
+\newcommand{\lval}{\emph{lval}}
+\newcommand{\prop}{\emph{pr}}
+\newcommand{\lit}{\emph{lit}}
+\newcommand{\num}{\emph{num}}
+\newcommand{\str}{\emph{str}}
+\newcommand{\reg}{\emph{reg}}
+\newcommand{\member}{\emph{m}}
+\newcommand{\aop}{\ensuremath{\odot}}
+\newcommand{\inop}{\ensuremath{\otimes}}
+\newcommand{\preop}{\ensuremath{\ominus}}
+\newcommand{\postop}{\ensuremath{\oslash}}
+
+\newcommand{\atoi}{\ensuremath{\emph{ast2ir}}}
+% p::=t*
+\newcommand{\atoiP}{\ensuremath{\atoi_p}}
+\newcommand{\atoiPf}[1]{\ensuremath{\atoiP\lbr#1\rbr}}
+% t::= s | ...
+% \newcommand{\atoiT}{\ensuremath{\atoi_t}}
+% \newcommand{\atoiTf}[2]{\ensuremath{\atoiT\lbr{#1}\rbr(#2)}}
+% \newcommand{\atoiTfd}[1]{\ensuremath\atoiTf{#1}{\env}}
+% s::= {s*} | ...
+\newcommand{\atoiS}{\ensuremath{\atoi_s}}
+\newcommand{\atoiSf}[2]{\ensuremath{\atoiS\lbr#1\rbr(#2)}}
+\newcommand{\atoiSfd}[1]{\atoiSf{#1}{\env,\wenv}}
+
+\newcommand{\atoiN}{\ensuremath{\atoi_n}}
+\newcommand{\atoiNf}[2]{\ensuremath{\atoiN\lbr#1\rbr(#2)}}
+\newcommand{\atoiNfd}[1]{\atoiNf{#1}{\env,\wenv}}
+% vd::= id(=e)?
+\newcommand{\atoiVD}{\ensuremath{\atoi_{\emph{vd}}}}
+\newcommand{\atoiVDf}[1]{\ensuremath{\atoiVD\lbr#1\rbr}}
+% fd
+\newcommand{\atoiFD}{\ensuremath{\atoi_{\emph{fd}}}}
+\newcommand{\atoiFDf}[2]{\ensuremath{\atoiFD\lbr#1\rbr(#2)}}
+\newcommand{\atoiFDfd}[1]{\atoiFDf{#1}{\env,\wenv}}
+% cc::= case e:s*
+\newcommand{\atoiCC}{\ensuremath{\atoi_{\emph{cc}}}}
+\newcommand{\atoiCCf}[2]{\ensuremath{\atoiCC\lbr#1\rbr(#2)}}
+\newcommand{\atoiCCfd}[1]{\atoiCCf{#1}{\env,\wenv}}
+% e::= e,e | ...
+\newcommand{\atoiE}{\ensuremath{\atoi_e}}
+\newcommand{\atoiEf}[2]{\ensuremath{\atoiE\lbr#1\rbr(#2)}}
+\newcommand{\atoiEfd}[1]{\atoiEf{#1}{\env,\wenv}}
+% lhs ::= lit | id | ...
+\newcommand{\atoiLHS}{\ensuremath{\atoi_{\emph{lhs}}}}
+\newcommand{\atoiLHSf}[2]{\ensuremath{\atoiLHS\lbr#1\rbr(#2)}}
+\newcommand{\atoiLHSfd}[1]{\atoiLHSf{#1}{\env,\wenv}}
+% lval
+\newcommand{\atoiLVAL}{\ensuremath{\atoi_{\emph{lval}}}}
+\newcommand{\atoiLVALf}[2]{\ensuremath{\atoiLVAL\lbr#1\rbr(#2)}}
+\newcommand{\atoiLVALfd}[1]{\atoiLVALf{#1}{\env,\wenv}}
+% lit ::= this|null|...
+\newcommand{\atoiLIT}{\ensuremath{\atoi_{\emph{lit}}}}
+\newcommand{\atoiLITf}[2]{\ensuremath{\atoiLIT\lbr#1\rbr(#2)}}
+\newcommand{\atoiLITfd}[1]{\atoiLITf{#1}{\env,\wenv}}
+% m ::= pr:e | get/set
+\newcommand{\atoiM}{\ensuremath{\atoi_m}}
+\newcommand{\atoiMf}[2]{\ensuremath{\atoiM\lbr#1\rbr(#2)}}
+\newcommand{\atoiMfd}[1]{\atoiMf{#1}{\env,\wenv}}
+% pr ::= id | str | num
+\newcommand{\atoiPR}{\ensuremath{\atoi_{\emph{pr}}}}
+\newcommand{\atoiPRf}[2]{\ensuremath{\atoiPR\lbr#1\rbr(#2)}}
+\newcommand{\atoiPRfd}[1]{\atoiPRf{#1}{\env,\wenv}}
+
+\newcommand{\atoiL}{\ensuremath{\atoi_l}}
+\newcommand{\atoiLf}[1]{\ensuremath{\atoiL\lbr#1\rbr}}
+\newcommand{\collectLV}[1]{\ensuremath{\emph{collectLV}(#1)}}
+
+% Add Ast2IR Lit???
+\newcommand{\Field}{\emph{Field}}
+
+
+\newcommand{\atoiLit}{\ensuremath{\atoi_{\emph{lit}}}}
+% \newcommand{\atoiM}{\ensuremath{\atoi_m}}
+\newcommand{\atoiPr}{\ensuremath{\atoi_{\emph{pr}}}}
+
+\newcommand{\atoiC}{\ensuremath{\atoi_}\emph{case}}
+\newcommand{\atoiSC}{\ensuremath{\atoi_}\emph{scond}}
+
+
+\newcommand{\lbr}{\ensuremath{\llbracket}}
+\newcommand{\rbr}{\ensuremath{\rrbracket}}
+
+\newcommand{\note}[1]{~~~~{\color{blue}{\emph{#1}}}}
+
+\def\inred{\color{red}}
+\def\inblue{\color{blue}}
+\def\ingreen{\color{green}}
+\def\inblack{\color{black}}
+
+
+\definecolor{orange}{rgb}{0.9,0.45,0}
+\definecolor{purple}{rgb}{0.5,0,0.5}
+
+\newif\iftr
+\ifx\tr\undefined
+  \trfalse
+\else
+ \trtrue
+\fi
+%\trtrue
+
+\newcommand{\mtt}[1]{\mbox{\tt\footnotesize #1}}
+
+\begin{document}
+\vspace*{-.5em}
+\title{AST}
+\maketitle
+
+\section{AST}
+\small
+\[
+\begin{array}{l@{}l@{}ll}
+\pgm & ::=  & \vd^*\ \fd^*\ \stmt^* & \mtt{Program(TopLevel body)}\\
+&&&\mtt{TopLevel(List<VarDecl> vds, List<FunDecl> fds, List<SourceElement> program)}\\
+
+\vd &::=& {\tt var} \ x & \mtt{VarDecl(Id name, Option<Expr> expr)}\\
+
+\fd &::=& {\tt function} \ f  \ \verb+(+(x\verb+,+)^*\verb+)+ \ \verb+{+\vd^*\ \fd^*\ \stmt^*\verb+}+
+  & \mtt{FunDecl(Id name, Functional ftn)}\\
+&&&\mtt{Functional(List<VarDecl> vds, List<FunDecl> fds, List<SourceElement> program,}\\
+&&&\mtt{\phantom{Functional(}List<Id> params)}\\
+
+% &&&\mtt{\phantom{FunDecl(}List<SourceElement> body)} \\
+\stmt &::=& \verb+{+\stmt^*\verb+}+ & \mtt{Block(List<Stmt> stmts)}\\
+& \mid & \inred{\tt var} \ \vd(\verb+,+ \vd)^* \verb+;+ & \inred\mtt{VarStmt(List<VarDecl> vds)}\\
+& \mid & \verb+;+ & \mtt{EmptyStmt()}\\
+& \mid & \expr \verb+;+ & \mtt{ExprStmt(Expr expr)}\\
+& \mid & {\tt if} \ \verb+(+\expr\verb+)+ \ \stmt \ ({\tt else} \ \stmt)^? & \mtt{If(Expr cond, Stmt trueBranch, Option<Stmt> falseBranch)}\\
+& \mid &
+
+ {\tt switch} \ \verb+(+\expr\verb+)+ \ \verb+{+\cc^* \ ({\tt default} \verb+:+ \stmt^{*})^? \ \cc^* \verb+}+
+& \mtt{Switch(Expr cond, List<Case> frontCases,}\\
+&&&\mtt{\phantom{Switch(}Option<List<Stmt>> def, List<Case> backCases)}\\
+& \mid & {\tt do} \ \stmt \ {\tt while} \ \verb+(+\expr\verb+)+ \verb+;+ & \mtt{DoWhile(Stmt body, Expr cond)}\\
+  &\mid& {\tt while} \ \verb+(+\expr\verb+)+ \ \stmt & \mtt{While(Expr cond, Stmt body)}\\
+  &\mid& {\tt for} \ \verb+(+\expr^?\verb+;+ \expr^?\verb+;+ \expr^? \verb+)+ \ \stmt
+  & \mtt{For(Option<Expr> init, Option<Expr> cond, Option<Expr> action, Stmt body)}\\
+  &\mid& {\tt for} \ \verb+(+ \lhs \ {\tt in} \ \expr \verb+)+ \ \stmt & 
+\mtt{ForIn(LHS lhs, Expr expr, Stmt body)}\\
+  &\mid& \inred{\tt for} \ \verb+(+{\tt var} \ \vd(\verb+,+ \vd)^*\verb+;+ \expr^?\verb+;+ \expr^?\verb+)+ \ \stmt
+  & \inred\mtt{ForVar(List<VarDecl> vars, Option<Expr> cond, Option<Expr> action, Stmt body)}\\
+  &\mid& \inred{\tt for} \ \verb+(+{\tt var} \ \vd \ {\tt in} \ \expr \verb+)+ \ \stmt & \inred\mtt{ForVarIn(VarDecl var, Expr expr, Stmt body)}\\
+& \mid & {\tt continue} \  \myid^{?} \verb+;+ & \mtt{Continue(Option<Label> target)}\\
+& \mid & {\tt break} \  \myid^{?} \verb+;+ & \mtt{Break(Option<Label> target)}\\
+& \mid & {\tt return} \ \expr^? \verb+;+ & \mtt{Return(Option<Expr> expr)}\\
+& \mid & {\tt with} \ \verb+(+\expr\verb+)+ \ \stmt & \mtt{With(Expr expr, Stmt stmt)}\\
+& \mid & 
+l \; \verb+:+ \; \stmt & \mtt{LabelStmt(Label label, Stmt stmt)}\\
+& \mid & {\tt throw} \ \expr \verb+;+ & \mtt{Throw(Expr expr)}\\
+& \mid &
+{\tt try} \verb+{+\stmt^*\verb+}+ ({\tt catch} \verb+(+\myid\verb+)+ \verb+{+\stmt^*\verb+}+)^? ({\tt finally} \verb+{+\stmt^*\verb+}+)^?
+& \mtt{Try(Block body, Option<Catch> catchBlock, Option<Block> fin)}\\
+&& & \mtt{Catch(Id id, Block body)}\\
+& \mid & {\tt debugger} \ \verb+;+ & \mtt{Debugger()}\\
+
+\cc &::=& {\tt case} \ \expr \; \verb+:+ \; \stmt^{*} & \mtt{Case(Expr cond, Block body)}\\
+
+\expr &::=& \expr\verb+,+ \ \expr & \mtt{ExprList(List<Expr> exprs)}\\
+  &\mid& \expr \ \verb+?+ \ \expr \ \verb+:+ \ \expr & \mtt{Cond(Expr cond, Expr trueBranch, Expr falseBranch)}\\
+  &\mid& \expr \ \inop \ \expr & \mtt{InfixOpApp(Expr left, Op op, Expr right)}\\
+  &\mid& \preop \ \expr & \mtt{PrefixOpApp(Op op, Expr right)}\\
+  &\mid& \lhs \ \postop & \mtt{UnaryAssignOpApp(LHS lhs, Op op)}\\
+  &\mid& \lhs & \mtt{LHS()}\\
+  &\mid& \lhs \ \aop \ \expr & \mtt{AssignOpApp(LHS lhs, Op op, Expr right)}\\
+
+\lhs &::=& \lit & \mtt{Literal()}\\
+ &\mid& \myid & \mtt{VarRef(Id id)}\\
+ &\mid& \verb+[+ (\expr\verb+,+)^* \ \verb+]+ & \mtt{ArrayExpr(List<Expr> elements)}\\
+ &\mid& \verb+{+ (\member\verb+,+)^* \verb+}+ & \mtt{ObjectExpr(List<Member> members)}\\
+ &\mid& \verb+(+ \expr \verb+)+ & \mtt{Parenthesized(Expr expr)}\\
+ & \mid & {\tt function} \ \myid^?  \ \verb+(+(\myid\verb+,+)^*\verb+)+ \ \verb+{+\vd^*\ \fd^*\ \stmt^*\verb+}+ &
+\mtt{FunExpr(Option<Id> name, Functional ftn)}\\
+ %  \mtt{FunExpr(Option<Id> name, List<Id> params, List<VarDecl> vds, List<FunDecl> fds,}\\
+ % &&&\mtt{\phantom{FunExpr(}List<SourceElement> body)} \\
+
+
+ &\mid& \lhs \verb+[+ \expr \verb+]+ & \mtt{Bracket(LHS obj, Expr index)}\\
+ &\mid& \lhs \verb+.+ \myid & \mtt{Dot(LHS obj, Id member)}\\
+ &\mid& {\tt new} \ \lhs & \mtt{New(LHS lhs)}\\
+ &\mid& \lhs \verb+(+ (\expr\verb+,+)^* \verb+)+ & \mtt{FunApp(LHS fun, List<Expr> args)} \\
+
+\lit &::=& {\tt this} & \mtt{This()}\\
+ &\mid& {\tt null} & \mtt{Null()}\\
+ &\mid& {\tt true} & \mtt{Bool(boolean bool)}\\
+ &\mid& {\tt false} & \mtt{Bool(boolean bool)}\\
+ &\mid& \num & \mtt{DoubleLiteral(ignoreForEquals String text, Double num)},\\
+&&&\mtt{IntLiteral(BigInteger intVal, int radix)}\\
+ &\mid& \str & \mtt{StringLiteral(String str, String quote)}\\
+ &\mid& \inred\reg & \inred\mtt{RegularExpression(String reg)}\\
+
+\member &::=& \myid \ \verb+:+ \ \expr & \mtt{Field(Id prop, Expr expr)}\\
+ &\mid& {\tt get}\ \myid\ \verb+() {+ \vd^*\ \fd^*\ \stmt^* \verb+}+ 
+ & \mtt{GetProp(Id name, Functional ftn)}\\
+ &\mid& {\tt set}\ \myid\ \verb+(+ \myid \verb+) {+ \vd^*\ \fd^*\ \stmt^* \verb+}+
+ & \mtt{SetProp(Id name, Functional ftn)}\\
+\end{array}
+\]
+
+            % abstract SourceElement();
+            % abstract Expr();
+            % abstract Property();
+            % abstract Name();
+            %     abstract IdOrOpOrAnonymousName();
+            %         abstract IdOrOp(String text);
+            %             Id();
+            %             Op();
+            %         AnonymousFnName();
+            % Label(Id id);
+
+\begin{itemize}
+\item {\tt VarDecl}: The {\tt expr} field is {\tt None}.
+\item {\tt VarStmt}, {\tt ForVar}, {\tt ForVarIn}: Removed by the disambiguation phase.
+\item {\tt RegularExpression}: Not yet.
+\end{itemize}
+\end{document}

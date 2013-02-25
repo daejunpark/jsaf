@@ -1,0 +1,18 @@
+################################################################################
+#    Copyright (c) 2012, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=assign2
+CONCOLIC_TESTS_DIR=${JS_HOME}/tests/concolic_tests
+concolic
+concolic_out_WCIequals=\
+Initialize()\n\
+GET_INPUT()\n\
+EXECUTE_ASSIGNMENT()\n\
+EXECUTE_ASSIGNMENT()\n\
+Normal(3)\n
+concolic_err_equals=

@@ -1,0 +1,97 @@
+SAFE: Scalable Analysis Framework for ECMAScript Git Repository
+---------------------------------------------------
+
+This README exists in the top-level directory of the SAFE project.
+
+If you have Git installed, you can clone the SAFE
+repository by going to the directory in which you want to clone it
+and issuing the following command:
+
+    git clone ssh://yourid@plrg.kaist.ac.kr/var/git/jsaf SAFE
+
+(The name "SAFE" merely specifies the name of the directory you want
+to clone the code into.  Feel free to substitute another directory
+name if you prefer.)
+
+You'll now have a subdirectory named 'SAFE'.
+
+Note that you need an account at the plrg.kaist.ac.kr server.
+
+SETTING UP YOUR ENVIRONMENT
+---------------------------
+
+We assume you are using an operating system with a Unix-style shell
+(for example, Solaris, Linux, Mac OS X, or Cygwin on Windows).  You
+will need to have access to the following:
+
+* J2SDK 1.6 or later.  See http://java.sun.com/javase/downloads/index.jsp
+* Ant 1.6.5 or later.  See http://ant.apache.org/bindownload.cgi
+* Bash version 2.5 or later, installed at /bin/bash.
+  See http://www.gnu.org/software/bash/
+
+Assume JS_HOME points to the SAFE directory you checked out.  On
+Unix-like systems this should be a matter of using export or setenv.  If
+you are using Cygwin, one user reports success with the following
+command line for setting JS_HOME:
+  export JS_HOME=`cygpath -am cygwin/path/to/safe/install/directory`
+e.g.:
+  export JS_HOME=`cygpath -am ${HOME}/tools/safe`
+
+In your shell startup script, add $JS_HOME/bin to your path.
+The shell scripts in this directory are Bash scripts.  To run them,
+you must have Bash accessible in /bin/bash.
+
+Make sure the following environment variables are set in your startup
+script:
+
+    JAVA_HOME
+    ANT_HOME
+
+(Although our scripts are sometimes able to guess the locations of
+JAVA_HOME and ANT_HOME, it is preferred that you set them manually.)
+
+Once all of these environment variables are set, build the framework
+by going to the directory JS_HOME and typing the command:
+
+    ./ant clean compile
+
+Once you have built the framework, you can call it from any directory,
+on any JavaScript file, simply by typing one of the following commands
+at a command line:
+
+    bin/jsaf parse somefile.js
+    bin/jsaf help
+
+TEST PROGRAMS
+-------------
+
+The directory tests/parser_tests/ contains some JavaScript programs
+to test the parser.  Test programs that are supposed to fail to be
+parsed have names that are prefixed with XXX.
+
+The directory tests/not_passing_yet/ contains some JavaScript
+programs that should pass, but do not.  For example, if we had a test
+file containing an error that should be detected, but it isn't, that
+would be contained in ProjectFortress/not_passing_yet with a name
+prefixed with XXX.  Test programs in this directory should pass
+the parser.
+
+You can run parser tests by:
+
+    ant testParser
+
+and test one parser test by:
+
+    bin/jsaf parse [-out dumped] tests/parser_tests/fundecl1.js
+
+CLONE DETECTOR
+--------------
+
+To build the clone detector, type the following command:
+    ant buildJSCD
+
+To run the clone detector, type the following command:
+    bin/jscd.sh
+
+The clone configuration is located in the file
+    bin/jscd_config

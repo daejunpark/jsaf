@@ -1,0 +1,1361 @@
+/*******************************************************************************
+    Copyright (c) 2012, KAIST.
+    All rights reserved.
+
+    Use is subject to license terms.
+
+    This distribution may include materials developed by third parties.
+ ******************************************************************************/
+
+********************************
+Operational Semantics of JSAF IR
+********************************
+
+This document presents a small-step style operational semantics for JSAF IR.
+It is based on the operational semantics of SES_light, a subset SES_light of
+the ES5-strict language.
+
+
+*******
+SYNTAX
+*******
+
+Values:
+-------
+
+Loc l: #global | #Object | #ObjProto | ...
+       #1 | ...
+Num n: NaN | 0 | 1 |...
+Str s: 'foo' | 'bar'|...
+Bool b: true | false
+PVal pv: Num | Str | Bool | 'undefined' | Null
+FVal fv: function [x] (y~) {s}
+Val v: Loc | PVal
+
+ValError ve: Loc | PVal | TypeError | RefError
+
+Vars x: this | foo | bar | ...
+PNames-user pnu:  Str | Var
+
+PNames-int pni: '@Proto' | '@Function' | '@Extensible' | '@this'|
+	   	'@scope' | '@Class' | @end
+
+PNames pn: PNames-user | PNames-int
+
+--------------------------
+Expressions and Statements:
+--------------------------
+P ::=
+      fd [P]
+      s	 [P]
+
+fd ::=
+      function x "("[x~]"){"[P]"}"
+
+e := this
+     x
+     v
+
+unop  = {+,-,~,!,typeof,void}
+binop = {<,>,<=,>=,
+         *,+,\,%,-, <<,>>,<<<,>>>,
+	 &,^,|,
+	 &&,||
+	  ==, ===, !=, !==
+	 in, instanceOf
+	 }  // 11.13 assignment operators convert to assignment expressions.
+
+s,t :=	y = e
+  	y = e1 'binop' e2
+        y = unop e1
+	y = delete e1[e2]  //delete x will give you a syntax error in strict mode
+	y = e1[e2]
+	e1[e2] = e3
+	y = {pnu:e~}
+	y = [e~]
+	y = e(e1,...,en)
+	y = e[e'](e1,...,en)
+	y = new e(e1,...,en)
+	y = function [x](y~){s}
+	eval(x)
+        return [e]
+	var x
+	s;t
+	if "(e)" then s1 [else s2]
+        while "(e)" s
+	try "{"s1"}" [catch "("x"){"s2"}"] [finally "{"s3"}"]
+	throw e
+        with(e) {s}
+        l: {s}
+	break x
+	"{"s"}"
+
+ct := Normal(v) | Throw(ve) | Return(ve)
+
+s-Int := ct |
+       TS(x,v) |
+       TS-Help(x) |
+       TN(x,v) |
+       TN-Help(x) |
+       TB(x,v) |
+       TO(x,v) |
+       TP(x,v,pne) |
+       TP-Help(s,x,v,pn) |
+       Fun1(tag, A,x,v,e-this,e1~) |
+       Fun2(tag, A,y,v,fv) |
+       Fun3(tag, A,y,v,s) |
+       Catch1(x,ve,s) |
+       ScopeChange(A) |
+       Forin(x,e,s,i) |
+       FPapply-help(y,l,v,l,e) |
+       APtoString-help(y,e1,e2) |
+       APjoin-help(y,e1,e2,e3) |
+
+       where tag := 'new' | 'call'
+
+----------------
+Heaps and Stores
+----------------
+
+ObjectValues: {value:Val, writable: Bool, enmerable: Bool, configurable: Bool}
+Objects: {@Extensible: Bool,
+	  @Class: Str,
+	  @Proto: Loc,
+	  PNames-user: ObjectValues~,
+	  [@Function:functon [x] (y~){s~},
+	  @Scope: Loc]}
+
+Heap  H: Loc  --p Objects
+
+StoreValues: {value:ValError U {Bot}, mutable:Bool}   // Bot is for uninitialized values.
+
+Environment Record ER: Var --p StoreValues // Could be renamed to Activation Record.
+
+Store A: [ER,A] | ERG   // ERG denotes global environment record
+
+------------------
+Internal Functions
+------------------
+
+In the following definitions, Bool refers to the semantic boolean datatype.
+
+Dom: Heaps -> 2^(Loc)
+       Dom(H) = { l | H(l) is defined}
+
+   : Objects -> 2^{PNames}
+       Dom(o) = { p | o(p) is defined} 
+
+HasOwnProperty: Heaps * Loc * PNames -> Bool
+	l notin dom(H) 	
+     --------------------------------------		
+       HasOwnProperty(H,l,p) = false 
+		
+       l in dom(H)  p in dom(H(l))	
+     --------------------------------------		
+       HasOwnProperty(H,l,p) = true 	
+
+       l in dom(H)   p notin dom(H(l))  	
+     --------------------------------------		
+       HasOwnProperty(H,l,p) = false 		
+		
+HasProperty: Heaps * Loc * PNames -> Bool
+
+	      l notin dom(H)
+      -----------------------------------
+        HasProperty(H,l,p) = false     
+
+            HasOwnProperty(H,l,p) 
+     --------------------------------------		
+        HasProperty(H,l,p) = true 	
+
+     	    !HasOwnProperty(H,l,p)  	
+     --------------------------------------------------------------    
+        HasProperty(H,l,p) = HasProperty(H,H(l)(@proto).value,p)	
+ 
+Proto: Heaps * Loc * PNames-user -> ValError
+ 
+           l notin dom(H)
+     -----------------------------------
+	 Proto(H,l,p) = undefined
+
+           l in dom(H)   p in dom(H(l))
+     --------------------------------------
+         Proto(H,l,p) = H(l).p.value
+  
+           l in dom(H)   p notin dom(H(l))
+     --------------------------------------------------------                   
+       	 Proto(H,l,p) =  Proto(H,H(l)(@proto).value,p)
+	    
+
+ // In terms of the spec Proto(H,l,p)  = H,l.[[Get]](p)
+     
+Inherit: Heaps * Loc * Loc -> Bool
+
+     Inherit(H,null,l2) = false 
+
+	 l1 = l2
+    -------------------------------
+     Inherit(H,l1,l2) = true
+
+    	 l1 != l2
+    ----------------------------------------------
+     Inherit(H,l1,l2) = Inherit(H,H(l1).@proto,l2)
+  
+Lookup: Heaps * Stores * Identifiers -> ValError
+
+	     	 !HasProperty(H,lg,x)
+     -----------------------------------------------	
+	 Lookup(H, ERG, x)  =  RefError
+	
+         	 HasProperty(H,lg,x)
+     -----------------------------------------------	
+	 Lookup(H, ERG, x)  =  Proto(H, lg, x))
+
+	 	ER(x).value = Bot		   
+     --------------------------------------
+	 Lookup(H,[ER,A],x) = RefError   
+
+	   ER(x).value != Bot	
+     --------------------------------------
+         Lookup(H,[ER,A],x) =  ER(x).value           	     
+     	   
+	       ER(x).value is not defined
+     --------------------------------------
+	 Lookup(H,[ER,A],x) = Lookup(H,A,x) 
+
+CanPut: Heaps * Loc * PName-user -> Bool 
+// For Heaps
+
+	      l notin dom(H) 
+      ----------------------------------------
+	  CanPut(H,l,p) = False 
+
+ 	      l in dom(H) 
+      ----------------------------------------
+	  CanPut(H,l,p) = CanPutHelp(H,l,p,l) 
+
+CanPutHelp: Heap * Loc * PName-user * Loc -> Bool
+	  CanPutHelp(H,null,p,l) = H(l).@Extensible
+
+	  p notin dom(H(l1))
+     ----------------------------------------------------------
+         CanPutHelp(H,l1,p,l2) = CanPutHelp(H,H(l1).@proto,p,l2)
+
+	  p in dom(H(l1))
+     -----------------------------------------------
+         CanPutHelp(H,l1,p,l2) = H(l1).p.@Writable
+	
+CanPutVar: Heap * Store * Var  -> Bool 
+// For Stores
+	 CanPutVar(H, ERG, x)  =  CanPut(H,lg,x)
+    
+	   	x in ER		   
+     ------------------------------------------
+	 CanPutVar(H,[ER,A],x) = ER(x).mutable       
+			   
+	       x notin ER
+     ------------------------------------------
+	 CanPutVar(H,[ER,A],x) = CanPutVar(H,A,x) 
+
+Update: Heap * Store * Var * ValError*Bool --p Bool
+// Only defined on stores and values for which CanPut holds.
+
+                 CanPut(H,#global,x)
+	     K = H[#global.x][value -> v]
+     ---------------------------------------------	
+	 Update(H,ERG,x,v,b)  = K,ERG
+	
+	 	x in ER	
+		ER' = ER[x -> {value:v,mutable:b}]			   
+     ---------------------------------------------
+	 Update(H,[ER,A],x,v,b) = H,[ER',A]
+
+	        x notin ER	
+     -------------------------------------------
+         Update(H,[ER,A],x,v,b) =  Update(H,A,x,v,b)           	     
+     	   
+	  		   
+// In terms of the spec Lookup === GetValue . Eval
+
+IsCallable: Heaps * ValError -> Bool
+	    
+	    IsCallable(H,v) = true iff v in dom(H) AND  @Function in dom(H(l))
+
+ArgAssignStmt((y1,...,ym),(v1,...,vn) = 
+				      
+		y1=v1;...;ym = vm                                      if m < n
+		y1=v1;...;ym = vm;ym+1=undefined;...;yn=undefined      otherwise
+
+
+ArgumentsStmt(v1,..,vn) =  arguments[1] = v1;...;arguments[n] = vn
+
+For i = 1 to n
+vi = Proto(H,l,'i')
+--------------------------------
+ArgumentsList(H,l,n) = v1,...,vn 
+
+Types and conversion functions
+------------------------------
+
+TypeTag : Heaps * Val -> {'number','string',boolean','object','function','null','undefined'}
+	  TypeTag(H,v)  = "number" iff v in Num
+	  TypeTag(H,v)  = "boolean" iff v in Bool
+	  TypeTag(H,v)  = "string" iff v in Str
+	  TypeTag(H,v)  = "object" iff v in Loc AND !IsCallable(H,v)
+	  TypeTag(H,v)  = "function" iff v in Loc AND IsCallable(H,v)
+	  TypeTag(H,null) = 'null'
+	  TypeTag(H,undefined) = 'undefined'
+
+
+
+TypeTag: CompletionType -> {'Throw','Return','Normal'}
+          TypeTag(ct) = 'Throw' iff Exists v: ct = Throw(v)
+		      'Return' iff Exists v: ct = Return(v)
+		      'Normal' iff ct = Normal  
+
+Prim2Str : PVal -> Str
+     	  TS(pv) = pv            pv in Str
+     	 	  "pv"           pv in Num
+	          "un    defined     pv = undefined
+	          "pv"           pv in Bool
+
+Prim2Num : PVal -> Num
+          TN(pv) = pv            pv in Num
+     	          NaN           pv = undefined
+	          1		    pv = true
+	          0		    pv = false
+	          Str2Num(pv)   pv in Str
+
+IsError: Val -> Bool
+IsError(v) = true iff v = TypeError OR v = RefError
+
+IsArray(H,l) = true iff H(l).@class = "Array"
+
+IsError: Val -> Bool
+IsNative(v) = true iff v in {#Object, #Function ...}
+
+-------------
+Function Call
+-------------
+
+setFD: Heaps * Store * Stmt * evalFlag -> Heap*Store
+
+       setFD(H,A,s): For each function declaration 'function x (y~){t}' in s, considered in source code order:
+       		     	 1) Let l1,l2 be fresh heap locations.
+			 2) Allocate the object NewObject(#ObjProto) at location l2 on the heap H.
+			 3) Set the constructor property of object l2 to {value:l1, writable:true, enumerable:true, configurable:true}
+			 4) Create a new function object using NewFunctionObject(function x(y~){s},A,l2) 
+			 5) Allocate the object from (4) at location l1 on the heap H.
+			 6) Bind the variable x to {value:l1,mutable:evalFlag} on store A.
+
+		     Return the final heap and store.
+
+setVD: Store * Stmt -> Store
+
+       setVD(A,s): For each variable declaration var x, in source code order, in s:
+       		       	 1) Add a binding x to {value:Bot, mutable:true} to the store A.
+			 
+		   Return the final store.
+
+-------------------
+New Object Creation
+-------------------
+NewEr: ER, Var-list -> ER
+       
+       NewER(A,(x1,...,xn)) = [[x1:{value:Bot,mutable:true}
+				...
+				xn:{value:Bot,mutable:true}],A]
+
+NewObject: Loc -> Object
+
+	   NewObject(l) = {@Class: "Object", @Extensible:true, @Proto:l}
+
+NewFunctionObject: FVal*Store*Loc
+		   
+           NewFunctionObject(function [x] (y~){s},A,l) =
+	   			     {@Class: "Function",
+				      @Extensible:true,
+				      @Proto: #FunctionProto,
+				      @Function: function [x] (y~){s},
+				      @Scope: A,
+				      "prototype": {value:l,writable:true,enumerable:false,configurable:false}}
+
+NewArrayObject: Loc -> Object
+		
+	NewArrayObject(l) = {@Class: "Object", @Extensible:true, @Proto:l,
+	    		     length: {value:0,writable:true,enumerable:false,configurable:false}
+			     }
+
+
+NewArgumentsObject: Val-list -> Object
+           NewArgumentsObject(v1,...,vn) =
+	   		  {@Class: "Arguments",
+			   @Extensible:true,
+			   @Proto: #ObjProto,
+			   "1" : {value:v1, writable:true, enmerable:true, configurable:true},
+			   ...
+			   "n" :  {value:v1, writable:true, enmerable:true,configurable:true},
+			   "length": {value:n, writable:true, enmerable:true,configurable:true}
+			   }
+
+----------------------
+Parsing
+---------------------
+
+Parse: Str* Str~ -> Stmt
+
+Parse(str,str1,...,strn) returns a statement AST if 
+ 		1) str parses as an ES5-strict stmt s according to the grammar given above
+		2) free(s) <= {str1,...,strn}
+
+
+
+Locals: stmt -> P(Var)
+
+	Locals(s) = {x | s = LocalVarCon[x]}
+	
+	where DeclCon = VD | FD |
+			function [z] (y1~,_,y2~){s} |
+			function [z] (y~){DeclHelp} |
+			try {DeclHelp} [catch(x){s_1}] [finally{s_3}] |
+			try {s_1} catch(x){DeclHelp
+			
+		       	    function [z] (y~){ s;function _(y~){s};t} |
+	      DeclHelp := s;var _;t | s;function _(y~){s};t   		    			        		 
+
+Free: stmt -> P(Var)
+      
+      Free(s) = FreeHelp(s,Locals(s))
+
+FreeHelp: stmt * P(Var) -> P(Var)
+	  
+     FreeHelp(s,S) is recursively defined over s as:
+      	y = e							-> {e}/ S  
+  	y = e1 'binop' e2 					-> ({e_1,e_2,y} cap Var) / S
+        y = unop e1    		  				-> ({e,y} cap Var) / S
+	y = delete e1[e2]  	   				-> ({e,y} cap Var) / S
+	y = e1[e2,a] 		   				-> ({e_1,e_2,y} cap Var) / S
+	e1[e2,a] = e3 		   				-> ({e_1,e_2,e_3} cap Var) / S
+	y = {pnu:e~} 		   				-> ({y,e_i~} cap Var) / S
+	y = [e~] 		   				-> ({y,e_i~} cap Var) / S
+	y = e(e1,...,en) 	   				-> ({y,e,e_i~} cap Var) / S
+	y = e[e'](e1,...,en) 	   				-> ({y,e,e',e_i~} cap Var) / S
+	y = new e(e1,...,en) 	   				-> ({y,e,e_i~} cap Var) / S	
+	function x "("[z~]"){"s"}" 				-> Free(function x "("[z~]"){"s"}") / (S) 
+	y = function (z~){s}	   				-> Free(function "("[z~]"){"s"}") / (S) 
+	y = function x (z~){s}	   				-> Free(function x "("[z~]"){"s"}") / (S U {x})
+	eval(e,x~)     		   				-> {e,x~} / S
+        return [e]  		   				-> {e}/S
+	var x  			   				->  {}
+	s;t   			   				->  (free(s) U free(t)) / S                                                  	
+	if "(e)" then s [else t]   				-> 	({e} U free(s) U free(t)) / S   			     
+        while "(e)" s         	   				-> ({e} U free(s)) / S		     		     
+        for "("x in e")" s 	  				-> ({x,e} U free(s))/S
+	try "{"s1"}" [catch "("x"){"s2"}"] [finally "{"s3"}"] 	-> (free(s1) U free(s3))/S U free(s2)/(S U {x}) 
+	throw e      	    		   	    	      	-> {e}/S
+	"{"s"}"						      	 -> free(s)/S     
+
+
+-----------------------
+Other Helpers Functions
+-----------------------
+
+t("valueOf") = "toString"
+t("toString") = "valueOf"
+
+contructor(pv) = "String" iff TypeTag(pv) = "string"
+	         "Boolean" iff TypeTag(pv) = "boolean"
+	         "Number" iff TypeTag(pv) = "number"
+	
+getEnumPName: Heap * Loc * Int -> PName
+	      getEnumPName(H,l,i) = <implementation dependent>  i < total number of enumerable properties in H(l) 
+	      			  = @end                        otherwise
+	      			    		
+
+
+***************************************
+EXPRESSION SEMANTICS [[e]HA -> ValError
+***************************************
+
+[[x]]HA = Lookup(H,A,x)
+[[v]]HA = v
+
+
+********************************
+PROGRAM SEMANTICS H,A,t -> K,B,s
+********************************
+
+H,A,fd P -> H,A,P
+
+TypeTag(ct) = Normal
+---------------------
+H,A,ct P -> H,A,P
+
+TypeTag(ct) != Normal
+---------------------
+H,A,ct P -> H,A,ct
+
+
+
+**********************************
+STATEMENT SEMANTICS H,A,t -> K,B,s
+**********************************
+
+----------------
+INTERNAL SYNTAX:
+----------------
+
+u = Prim2Str(pv)
+-------------------------
+H,A,TS(y,pv) -> H,A,y = u
+
+@ = fresh(@Vars)
+--------------------------------------------------
+H,A,TS(y,l) -> H,A,TP1(@,l,"toString");TS-Help(y,@)
+
+str = Prim2Str(pv)
+---------------------------------
+H,A,TS-Help(y,pv) -> H,A,y = str
+
+
+
+u = Prim2Str(pv)
+-------------------------
+H,A,TN(y,pv) -> H,A,x = u
+
+@ = fresh(@Vars)
+--------------------------------------------------
+H,A,TN(y,l) -> H,B,TP1(y,v,"valueOf");TN-Help(y,@)
+
+n = Prim2Num(pv)
+------------------------------
+H,A,TN-Help(y,pv) -> H,A,y = n
+
+H,A,TB(y,l) -> H,A,y=true
+
+b = Prim2Bool(pv)
+--------------------------
+H,A,TB(y,pv) -> H,A,y=b
+
+
+H,A,TP(y,pv,pn) -> H,A,y = pv
+
+IsCallable(H,Proto(H,l,pn))
+@ = freshVar(@Vars)
+---------------------------------------------------------------------
+H,A,TP1(y,l,pn) -> H,A,@ = l[pn];Fun1(y,'call',@,l);TP2(y,l,t(pn))
+
+!IsCallable(H,Proto(H,l,pn))
+-------------------------------------
+H,A,TP1(y,l,pn) -> H,A,TP2(y,l,t(pn))
+	       
+pv = [[y]]HA
+[[y]]HA in PVal 
+-----------------------------
+H,A,TP2(y,l,pn) -> H,A,Normal(pv)
+
+[[y]]HA notin PVal 
+IsCallable(H,Proto(H,v,pn))
+@ = freshVar(@Vars)
+------------------------------------------------------------------
+H,A,TP2(y,l,pn) -> H,A,@ = l[pn];Fun1(y,'call',@,l);TP2(y,l,t(pn))
+
+[[y]]HA notin PVal 
+!IsCallable(H,Proto(H,v,pn))
+-------------------------------------------
+H,A,TP2(y,l,pn) -> H,A,Throw(TypeError)
+
+
+H,A,TO(y,undefined) -> H,A,Throw(TypeError)
+
+H,A,TO(y,null) -> H,A,Throw(TypeError)
+
+c = constructor(pv)
+l = fresh(Loc)
+K = H[l -> NewObject-c(#c-proto)]
+--------------------------------
+H,A,TO(y,pv) -> K,A,y = l 
+
+H,A,TO(y,l) -> H,A,y = l
+
+
+!IsCallable(H,v)
+----------------------------------------------------------
+H,A,Fun1(tag, y,v,vthis,v1,...,vn) -> H,A,Throw(TypeError)
+
+!IsNative(v)
+IsCallable(H,v)
+H(v).@Function = function [x] (y1,...,ym) {s}
+A1 = H(v).@scope
+A2 = NewER(A1,(arguments,@this,y1,...,ym))
+l = fresh(Loc)
+H1 = H[l->NewArgumentsObject()]
+K,B = Update(H1,A2,arguments,l,false) (Assert K = H1)
+s1 = ArgumentsStmt(v1,...,vn) // arguments[1] = v1,...
+s2 = ActualArgAssignStmt((@this,y1,...,ym),(vthis,v1,...,vm))
+-------------------------------------------------------------------------------------------------
+H,A,Fun1(tag, y,v,vthis,v1,...,vn) -> K,B, s1;s2;Fun2(tag, A,y,vthis,function [x] (y1,...,ym) {s})
+
+A1 = setVD(A,s)
+K,B = setFD(H,A1,s,false)
+------------------------------------------------------------------------------------
+H,A,Fun2(tag, B,y,vthis,function [x] (y1,...,ym) {s})-> K,B, Fun3[tag, B,y,vthis,s]
+
+
+H,A,Fun3['call',B,y,vthis,Return(v)] -> H,B,y = v
+
+H,A,Fun3['call',B,y,vthis,Normal(v)] -> H,B,y = undefined
+
+v in Loc
+------------------------------------------------
+H,A,Fun3['new',B,y,vthis,Return(v)] -> H,B,y = v
+
+v notin Loc
+----------------------------------------------------
+H,A,Fun3['new',B,y,vthis,Return(v)] -> H,B,y = vthis
+
+H,A,Fun3['new',B,y,vthis,Normal(v)] -> H,B,y = vthis
+
+H,A,Fun3[tag,B,y,Throw(v)] -> H,B,Throw(v)
+
+
+B = NewER(A,x)
+---------------------------------------------
+H,A,Catch1(x,ve,s) -> H,B,x = ve; s;ScopeChange(A)
+
+H,A,ScopeChange(B) -> H,B,Normal(undefined)
+
+
+pn = getEnumPName(H,v,i)
+pn != @end
+-----------------------------------------------------
+H,A,Forin(y,l,s,i) -> H,A,y = pn; s; Forin(x,l,s,i+1)
+
+pn = getEnumPName(H,v,i)
+pn = @end
+-------------------------------------------
+H,A,Forin(y,l,s,i) -> H,A,Normal(undefined)
+
+
+------------
+USER SYNTAX:
+------------
+
+!CanPutVar(A,y)
+------------------------------
+H,A,y = v -> H,A,Throw(TypeError)
+
+CanPutVar(A,y)
+K,B = Update(H,A,y,v,true)
+------------------------------
+H,A,y = v -> K,B,Normal(v)
+
+v1 notin PVal OR v2 notin PVal
+binop notin {'in','instanceof',==, ===, !=, !==, &&, ||}
+@1 = freshVar(@Vars), @2 = freshVar(@Vars)
+-------------------------------------------------------------------------------------
+H,A,y = v1 binop v2 -> H,A, TP(@1,v1,"valueOf"); TP(@2,v2,"valueOf"); y = @1 binop @2
+
+binop in {==,===,!=,!==}
+(v1 in PVal AND v2 in Loc) OR (v2 in PVal AND v1 in Loc)
+@1 = freshVar(@Vars) @1 = freshVar(@Vars)
+------------------------------------------------------------------------------------
+H,A,y = v1 binop v2 -> H,A, TP(@1,v1,"valueOf"); TP(@2,v2,"valueOf"); y = @1 binop @2
+
+binop in {==,===}
+l1 = l2
+------------------------------------
+H,A,y = l1 binop l2 -> H,A,y = true
+
+binop in {==,===}
+l1 != l2
+------------------------------------
+H,A,y = l1 binop l2 -> H,A,y = false
+
+binop in {!=,!==}
+l1 != l2
+------------------------------------
+H,A,y = l1 === l2 -> H,A,y = true
+
+binop in {!=,!==}
+l1 = l2
+------------------------------------
+H,A,y = l1 === l2 -> H,A,y = false
+
+
+@1 = freshVar(@Vars)
+---------------------------------------------------------------
+H,A,y = v1 && v2 -> H,A,TB(@1,v1);if(@){y = v2}else{y = v1}
+
+@1 = freshVar(@Vars)
+---------------------------------------------------------------
+H,A,y = v1 || v2 -> H,A,TB(@1,v1);if(@){y = v1}else{y = v2}
+
+binop notin {'in','instanceof'}
+pu = delta('binop',pv1,pv2)
+-----------------------------------
+H,A,y = pv1 binop pv2 -> H,A,y = pu
+
+v2 notin Loc
+------------------------------------------
+H,A,y = v1 'in' v2 -> H,A,Throw(TypeError)
+
+@ = freshVar(@Vars)
+v notin PName
+----------------------------------------------
+H,A,y = v 'in' l -> H,A,TS(@,v); y = @ 'in' l
+
+b = HasProperty(H,l,pn)
+------------------------------
+H,A,y = pn 'in' l -> H,A,y = b
+
+!IsCallable(H,v2) 
+-------------------------------------------------
+H,A,y = v1 'instanceOf' v2 -> H,A,Throw(TypeError)
+
+IsCallable(H,v2) 
+v1 notin Loc
+--------------------------------------------------
+H,A,y = v1 'instanceOf' v2 -> H,A,Throw(TypeError)
+
+IsCallable(H,v2) 
+v1 in Loc
+v3 = Proto(H,v2,"prototype")
+v3 notin Loc
+-----------------------------------------------
+H,A,y = v1 'instanceOf' v2 -> H,A,Throw(TypeError)
+
+IsCallable(H,v2) 
+v1 in Loc
+v3 = Proto(H,v2,"prototype")
+v3 in Loc
+b = Inherit(H,v1,v3)
+-----------------------------------------------
+H,A,y = v1 'instanceOf' v2 -> H,A,y = b
+
+
+unop in {+,-}
+@ = fresh(@Vars)
+v notin PVal
+--------------------------------------------------
+H,A,y = unop v -> H,A,TP(@,v,"valueOf"); y = unop @
+
+unop in {+,-}
+pu = delta(unop,pv)
+----------------------------
+H,A,y = unop pv -> H,A,y = pu
+
+unop in {!,~}
+@ = fresh(@Vars)
+v notin PVal
+------------------------------------------
+H,A,y = unop v -> H,B, TB(@,v); y = unop @ 
+
+unop in {!,~}
+pu = delta(unop,pv)
+----------------------------
+H,A,y = unop pv -> H,A,y = pu
+
+H,A,y = void v -> H,A,y = undefined
+
+u = TypeTag(H,A,v)
+------------------------------
+H,A,y = typeof v -> H,B,y = u
+
+@1 = fresh(@Vars)
+@2 = fresh(@Vars)
+v1 notin Loc OR v2 notin PName
+-------------------------------------------------------------------
+H,A,y = delete v1[v2] -> H,A,TS(@2,v2); TO(@1,v1); y = delete @1[@2]
+
+!HasOwnProperty(H,l,pn)
+-------------------------------------
+H,A,y = delete l[pn] -> H,A,y = true
+
+H(l).pn.configurable = true
+K = H[l -> H(l) - pn]
+-------------------------------------
+H,A,y = delete l[pn] -> K,A,y = true
+
+H(l).pn.configurable = false
+--------------------------------------------
+H,A,y = delete l[pn] -> H,A,Throw(TypeError)
+
+
+@1 = fresh(@Vars)
+@2 = fresh(@Vars)
+v1 notin Loc OR v2 notin PName
+-----------------------------------------------------
+H,A,y = v1[v2] -> H,A,TS(@2,v2); TO(@1,v1); y = @1[@2]
+
+v = Proto(H,l,pn)
+---------------------------------
+H,A,y = l[pn] -> H,A,y = v
+
+
+@1 = fresh(@Vars)
+@2 = fresh(@Vars)
+v1 notin Loc OR v2 notin PName
+---------------------------------------------------------
+H,A,y = v1[v2,a] -> H,A,TS(@2,v2); TO(@1,v1); y = @1[@2,a]
+
+v = Proto(H,l,pn)
+A(pn) = a
+---------------------------------
+H,A,y = l[pn,a] -> H,A,y = v
+
+v = Proto(H,l,pn)
+A(pn) != a
+---------------------------------
+H,A,y = l[pn,a] -> H,A,TypeError
+
+
+
+@ = fresh(@Vars)
+v2 notin PName
+------------------------------------------
+H,A,v1[v2[,a]] = v3 -> H,A,TS(@,v2);v1[@[,a]] = v3
+
+
+v notin Loc
+-----------------------------------------
+H,A,v[pn[,a]] = v3 -> H,A,Throw(TypeError)
+
+!CanPut(H,l,pn)
+-------------------------------
+H,A,l[pn[,a]] = v -> H,A,Throw(TypeError)
+
+A(pn) != a
+-------------------------------------
+H,A,l[pn,a] = v-> H,A,Throw(TypeError)
+
+[A(pn) = a]
+!IsArray(l)
+CanPut(H,l,pn)
+HasOwnProperty(H,l,pn)
+K = H[l][pn][value -> v]
+-----------------------------
+H,A,l[pn[,a]] = v -> K,A,Normal(v)
+
+[A(pn) = a]
+!IsArray(l)
+CanPut(H,l,pn)
+!HasOwnProperty(H,l,pn)
+K = H[l][pn -> {value:v,writable:true,enumerable:true,configurable:true}]
+-------------------------------------------------------------------------
+H,A,l[pn[,a]] = v -> K,A,Normal(v)
+
+[A("length") = a]
+IsArray(l)
+CanPut(H,l,"length")
+@ = fresh(@vars)
+--------------------------------------------
+H,A,l["length"[a,]] = v -> H,A,TN(@,v);l[pn] = @
+
+[A("length") = a]
+IsArray(l)
+oldLen = Proto(H,l,"length")
+!(n < oldLen)
+K = H[l]["length"][value -> n]
+--------------------------------------
+H,A,l["length"] = n -> K,A,Normal(n)
+
+[A("length") = a]
+IsArray(l)
+oldLen = Proto(H,l,"length")
+n < oldLen
+K = H[l]["length"][value -> n]
+@1,@2,@3 = fresh(@Vars)
+------------------------------------------------------------------------------------------------------------------------------------------------
+H,A,l["length"[,a]] = n -> K,A,@1 = oldLen; @2= delete l[@1];@3 = n >= @1; @3 = @3 || @2
+		       	   while(@3){@1 = @1 - 1; @2 = delete l[oldLen];;@3 = n >= @1; @3 = @3 || @2};
+			   @1 = @1 + 1; l["length"] = @1  
+
+[A(n) = a]
+IsArray(l)
+oldLen = Proto(H,l,"length")
+n >= oldLen
+K = H[l][n -> {value:v,writable:true,enumerable:true,configurable:true}]
+------------------------------------------------------------------------
+H,A,l[n[,a]] = v -> K,A,l['length'] = n  + 1
+
+[A(n) = a]
+IsArray(l)
+oldLen = Proto(H,l,"length")
+n < oldLen
+K = H[l][n -> {value:v,writable:true,enumerable:true,configurable:true}]
+------------------------------------------------------------------------
+H,A,l[n[,a]] = v -> K,A,Normal(v)
+
+[A(pn) = a]
+!IsArray(l)
+pn notin Num
+CanPut(H,l,pn)
+HasOwnProperty(H,l,pn)
+K = H[l][pn][value -> v]
+------------------------------
+H,A,l[pn[,a]] = v -> K,A,Normal(v)
+
+[A(pn) = a]
+!IsArray(l)
+pn notin Num
+CanPut(H,l,pn)
+HasOwnProperty(H,l,pn)
+K = H[l][pn -> {value:v,writable:true,enumerable:true,configurable:true]
+------------------------------------------------------------------------
+H,A,l[pn[,a]] = v -> K,A,Normal(v)
+
+@ = fresh(@Vars)
+-------------------------------------------------------------------------------
+H,A,y = {pnu1:e1,...,pnuk:ek} -> H,A,@ = {}, @['pnu1'] = e1;...;@['pnuk']=ek
+
+l = fresh(Loc)
+K = H[l->NewObject(#ObjProto)]
+------------------------------
+H,A,y = {} -> K,A,y = l 
+
+l = fresh(Loc)
+K = H[l->NewArrayObject(#ArrayProto)]
+-------------------------------------
+H,A,y = [] -> K,A,y = l 
+
+
+@ = fresh(@Vars)
+------------------------------------------------------------
+H,A,y = [e1,...,ek] -> H,A,@ = []; @['1'] = e1;...;@['k']=ek
+
+
+H,A,y = v(v1,...,vn) -> H,A,Fun1('call',y,v,undefined,v1,...,vn)
+
+@ = fresh(@Vars)
+-----------------------------------------------------------------------
+H,A,y = u[v](v1,...,vn) -> H,A,@ = u[v]; Fun1('call',y,@,u,v1,...,vn)
+
+
+l = fresh(Loc)
+lp = Proto(H,v,"prototype")
+lp in Loc
+K = H[l -> NewObject(lp)]
+-----------------------------------------------------------
+H,A,y = new v(v1,...,vn) -> K,A,Fun1('new',y,v,l,v1,...,vn)
+
+l = fresh(Loc)
+lp = Proto(H,l,"prototype")
+lp notin Loc
+K = H[l -> NewObject(#ObjProto)]
+-----------------------------------------------------------
+H,A,y = new v(v1,...,vn) -> K,A,Fun1('new',y,v,l,v1,...,vn)
+
+
+l1 = fresh(Loc)
+l2 = fresh(Loc)
+H1 =  H[l2 -> NewObject(#ObjProto)]
+K = H2[l1 -> NewFunctionObject(function (y~){s},A,l2)]
+-----------------------------------------------------------------
+H,A,y = function (y~){s} -> K,A,l2.constructor = l1; y=l1
+
+A1  = NewER(A,x)
+l1 = fresh(Loc)
+l2 = fresh(Loc)
+H1,A2 = Update(H,A1,x,l1,false)
+H2 =  H1[l2 -> NewObject(#ObjProto)]
+H3 = H2[l1 -> NewFunctionObject(function (y~){s},B2,l2)]
+--------------------------------------------------------------------
+H,A,y = function x (y~){s} -> K,B,l2.constructor = l1; y = l1
+
+H,A,return v -> H,A,Return(v)
+
+H,A,var x -> H,A,Normal(undefined)
+
+v in Str
+Parse(v,x~) = s  {x~} subseteq free(s)
+A1 = NewER(A)
+A2 = setVD(A1,s)
+K,B = setFD(H,A2,s,true)
+---------------------------------------
+H,A,eval(v,x~) -> K,B,s;ScopeChange(A)
+
+
+v in Str
+Parse(v,str~) = Throw(ve)
+free(s) <=/= {str~}     
+---------------------------------
+H,A,eval(v,x~) -> H,A,Throw(ve)
+
+
+v notin Str 
+@ = freshVar(@Vars)
+---------------------------------
+H,A,eval(v,x~) -> H,A,TS(@,v),eval(@,x~)
+
+
+
+H,A,Normal(v);s -> H,A,s
+
+H,A,Return(v);s -> H,A,s
+
+H,A,Throw(ve);s-> Throw(ve)
+
+H,A."{"s"}" -> H,A,s
+
+
+H,A,throw v -> H,A,Throw(v)
+
+TypeTag(ct) != 'Throw' 
+---------------------------------------
+H,A,try ct catch "("x"){"s"}" -> H,A,ct
+
+H,A,try Throw(ve) catch "("x"){"s"}" -> H,A,Catch1(x,ve,s)
+
+TypeTag(ct2) = 'Normal'
+---------------------------------------
+H,A,try ct1 finally ct2 -> H,A,ct1
+
+TypeTag(ct2) != 'Normal'
+---------------------------------------
+H,A,try ct1 finally ct2 -> H,A,ct2
+
+TypeTag(ct) != 'Throw'
+-----------------------------------------------------------
+H,A,try ct catch "("x"){"s1"}" finally s2 -> try ct finally s1
+
+H,A,try Throw(ve) catch "("x"){"s1"}" finally s2 -> try Catch1(x,ve,s1) finally s2
+
+
+H,A,if (true) then s1 [else s2] -> H,A,s1
+
+H,A,if (false) then s1 -> H,A,Normal(undefined)
+
+H,A,if (false) then s1 else s2 -> H,A,s2
+
+H,A,while (e) s -> H,A,if(e) then s; while(e) s
+
+v in {null,undefined}
+---------------------------------
+H,A,for x in e s -> H,A,Normal(undefined)
+
+v notin {null,undefined}
+@1 = fresh(@Vars)
+-----------------------------------------------
+H,A,for x in v s -> H,A,TO(@1,v);Forin(x,@1,s,1)
+
+
+
+--------------
+Native Objects
+--------------
+
+Initial Heap H0:
+
+[#Global: {@Extensible: true,
+	   @Proto:  #ObjProto,
+	   Object: {value: #Object, writable:false, enumerable:true, configurable:false}
+	   Array:{value: #Array, writable:false, enumerable:true, configurable:false}			
+          }
+ #Object: {@Extensible: false,
+ 	   @Proto: @FunctionProto,
+	   prototype: {value: #ObjProto, writable:false,  enumerable:false, configurable:false}
+	   }
+ #Array: {@Extensible: false,
+ 	   @Proto: @FunctionProto,
+	   prototype: {value: #ObjProto, writable:false, enumerable:false, configurable:false}
+	   }
+
+ #ObjProto: {@Extensible: false,
+	    @Proto: null
+	    toString: {value: #OPtoString,writable:false, enumerable:false, configurable:false}
+	    valueOf: {value: #OPvalueOf,writable:false, enumerable:false, configurable:false}
+	    hasOwnProperty: {value: #OPhasOwnProperty,writable:false, enumerable:false, configurable:false}
+	    isPrototypeOf: {value: #OPisPrototypeOf,writable:false, enumerable:false, configurable:false}
+	    propertyIsEnumerable: {value: #OPpropertyIsEnumerable,writable:false, enumerable:false, configurable:false}
+	    }
+ #FunctionProto: {@Extensible: false,
+	    @Proto: #ObjProto
+	    toString: {value: #FPtoString,writable:false, enumerable:true, configurable:false}
+	    call: {value: #FPcall,writable:false, enumerable:true, configurable:false}
+	    apply: {value: #FPapply,writable:false, enumerable:true, configurable:false}
+
+	    }
+ #ArrayProto: {@Extensible: false,
+	    @Proto: #ObjProto
+	    toString: {value: #APtoString,writable:false, enumerable:true, configurable:false}
+	    join: {value: #APjoin,writable:false, enumerable:true, configurable:false}
+	    push: {value: #APpush,writable:false, enumerable:true, configurable:false}
+	    }
+ #OPtoString: {@Extensible:false,
+	      @Proto: #FunctionProto
+	      }
+ #OPvalueOf: {@Extensible:false,
+	      @Proto: #FunctionProto
+	      }
+ #OPhasOwnProperty: {@Extensible:false,
+	      @Proto: #FunctionProto
+	      }
+ #OPisPrototypeOf: {@Extensible:false,
+	      @Proto: #FunctionProto
+	      }
+ #OPpropertyIsEnumerable: {@Extensible:false,
+	      @Proto: #FunctionProto
+	      }
+
+]
+
+////////////////////////Object constructor////////////////////
+
+n >= 1
+TypeTag(H,v1) in {'null','undefined'} 
+-----------------------------------------------------------
+H,A,Fun1(tag,y,#Object,vthis,v1,...,vn) -> H,A,Fun1(tag,y,#Object,vthis)
+
+n >= 1
+TypeTag(H,v1) notin {'null','undefined'} 
+-----------------------------------------------------------
+H,A,Fun1(tag,y,#Object,vthis,v1,...,vn) -> H,A,TO(y,v1)
+
+
+l = fresh(Loc) 
+K = H[l -> NewObject(#ObjProto)]
+----------------------------------------------------
+H,A,Fun1(tag,y,#Object,vthis) -> K,A,y = l
+
+
+////////////////////////Array constructor////////////////////
+
+
+H,A,Fun1(tag,y,#Array,vthis) -> H,A,y = [];
+
+n >= 2
+----------------------------------------------------------------
+H,A,Fun1(tag,y,#Array,vthis,v1,v2,...,vn) -> H,A,y = [v1,...,vn]
+
+TypeTag(v1) != "number"
+----------------------------------------------------------------
+H,A,Fun1(tag,y,#Array,vthis,v1) -> H,A,y = [v1]
+
+TypeTag(n) = "number"
+n1  = ToUInt32(n)
+---------------------------------------------------------------
+H,A,Fun1(tag,y,#Array,vthis,n) -> H,A,y = []; y["length"] = n1;
+
+
+////////////////////Object.prototype///////////////////////
+
+//OPtoString
+
+@ = fresh(@Vars)
+vthis notin Loc
+-------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,#OPtoString,vthis,v1,...,vn) -> H,A,TO(@,vthis);Fun1(call,y,#OPtoString,@,v1,...,vn)
+
+@ = fresh(@Vars)
+vthis in Loc
+pu = "[object " + H(vthis).@Class + "]"
+-------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,#OPtoString,vthis,v1,...,vn) -> H,A,y = pu
+
+//OPValueOf
+
+@ = fresh(@Vars)
+-------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,#OPvalueOf,vthis,v1,...,vn) -> H,A,TO(@,vthis);y=@
+
+// OPHasOwnProperty (n >=1 )
+
+@1,@2 = fresh(@Vars)
+vthis notin Loc
+v1 notin Str
+------------------------------------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,#OPhasOwnProperty,vthis,v1,...,vn) -> H,A,TS(@1,v1);TO(@2,vthis);Fun1(call,y,#OPhasOwnProperty,@2,@1,...,vn)
+
+b = HasOwnProperty(H,l,pn)
+-----------------------------------------------------------------------
+H,A,Fun1(call,y,@OPhasOwnProperty,l,pn,v2,..,vn) -> H,A,y=b
+
+// OPIsPrototypeOf (n >=1 )
+
+v1 notin Loc
+-----------------------------------------------------------------------
+H,A,Fun1(call,y,@OPisPrototypeOf,vthis,v1,..,vn) -> H,A,y=false
+
+v1 in Loc
+vthis notin Loc
+@ = fresh(@Vars)
+----------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,@OPisPrototypeOf,vthis,l1,..,vn) -> H,A,Fun1(call,y,@OPisPrototypeOf,@,l1,..,vn)
+
+b = Inherit(H,l1,lthis)
+----------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,@OPisPrototypeOf,lthis,l1,..,vn) -> H,A,y=b
+
+// OPPropertyIsEnumerable (n >= 1)
+
+@1,@2 = fresh(@Vars)
+vthis notin Loc
+v1 notin Str
+-----------------------------------------------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,#OPpropertyIsEnumberable,vthis,v1,...,vn) -> H,A,TS(@1,v1);TO(@2,vthis);Fun1(call,y,#OPpropertyIsEnumerable,@2,@1,...,vn)
+
+false = HasOwnProperty(H,l,pn)
+-----------------------------------------------------------------------
+H,A,Fun1(call,y,@OPpropertyIsEnumerable,l,pn,v2,..,vn) -> H,A,y=false
+
+true = HasOwnProperty(H,l,pn)
+b = H(l).pn.enumerable
+-----------------------------------------------------------------------
+H,A,Fun1(call,y,@OPpropertyIsEnumerable,l,pn,v2,..,vn) -> H,A,y=b
+
+
+////////////////////Function.prototype///////////////////////
+//FPtoString
+
+
+TypeTag(vthis) != "function"
+-------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,#FPtoString,vthis,v1,...,vn) -> H,A,y = TypeError
+
+TypeTag(vthis) = "function"
+str = H(vthis).@Function
+-------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,#FPtoString,vthis,v1,...,vn) -> H,A,y = str
+
+
+//FPcall (n >=1 )
+
+TypeTag(vthis) != "function
+-----------------------------------------------------------
+H,A,Fun1(call,y,#FPcall,vthis,v1,...,vn) -> H,A,y=TypeError
+
+TypeTag(lthis) = "function"
+----------------------------------------------------------------------------
+H,A,Fun1(call,y,#FPcall,lthis,v1,...,vn) -> H,A,Fun1(call,y,lthis,v1,...,vn)
+
+
+//FPapply (n >= 1)
+// Notes: Review points 6,7 in the spec
+
+H,A,Fun1(call,y,#FPapply,vthis,v1,v2,...vn) -> H,A,Fun1(call,y,#FPapply,vthis,v1,v2)
+
+TypeTag(vthis) != "function
+-----------------------------------------------------------
+H,A,Fun1(call,y,#FPapply,vthis,v1,...,vn) -> H,A,y=TypeError
+
+TypeTag(lthis) = "function
+---------------------------------------------------------------
+H,A,Fun1(call,y,#FPapply,lthis,v1) -> H,A,Fun1(call,y,lthis,v1)
+
+TypeTag(lthis) = "function"
+v2 notin Loc
+-------------------------------------------------------------------------
+H,A,Fun1(call,y,#FPapply,lthis,v1,v2) -> H,A,y = TypeError
+
+TypeTag(lthis) = "function"
+@ = fresh(@Vars)
+-------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,#FPapply,lthis,v1,l2) -> H,A,@ = l2["length"];FPapply-help(y,lthis,v1,l2,@)
+
+v notin Num 
+-----------------------------------------------------
+H,A,FPapply-help(y,lf,v1,larg,v) -> H,A,y = TypeError
+
+v1,..vn = ArgumentsList(H,larg,n)
+------------------------------------------------------------------------
+H,A,FPapply-help(y,lf,vthis,larg,n) -> H,A,Fun1(call,lf,vthis,v1,...,vn)
+
+
+////////////////////Array.prototype///////////////////////
+
+// APtoString
+@1,@2 = fresh(@vars)
+---------------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,#APtoString,vthis,v1,...,vn) -> H,A,TO(@1,vthis);@2 = @1["join"];APtoString-help(y,@1,@2)
+
+TypeTag(vf) = "function"
+------------------------------------------------------------
+H,A,APtoString-help(y,vthis,vf) -> H,A,Fun1(call,y,vf,vthis)
+
+TypeTag(vf) != "function"
+---------------------------------------------------------------------
+H,A,APtoString-help(y,vthis,vf) -> H,A,Fun1(call,y,#OPtoString,vthis)
+
+
+// APjoin
+@1..@4 in fresh(@vars), n >= 1
+--------------------------------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,#APjoin,vthis,v1,...,vn) -> H,A,TO(@1,vthis);@2 = @1["length"];TN(@3,@2);TS(@4,v1);APjoin-help(y,@1,@3,@4)
+
+@1..@3 in fresh(@vars)
+----------------------------------------------------------------------------------------------------
+H,A,Fun1(call,#APjoin,vthis) -> H,A,TO(@1,vthis);@2 = @1["length"];TN(@3,@2);APjoin-help(y,@1,@3,",")
+
+@1,...@2n = fresh(@vars)
+@res = fresh(@vars)
+s = APjoin-helpStmt(l,n,@1,...,@2n)
+------------------------------------------------------
+H,A,APjoin-help(y,l,n,pn) -> H,A,s;y = @res
+
+where APjoin-helpStmt(l,n,@1,...,@2n) = @res ="";@1 = l["1"];TS(@2,@1);@res = @res+@2...;@2n-1 = l["n"];TS(@2n,@2n-1);@res = @res + @2n; 
+
+// APconcat
+
+@this,@1,...,@n,@count,@res in fresh(@vars), n>= 0
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,#APconcat,vthis,v1,...,vn) -> H,A,TO(@this,vthis);@res = []; @count = 0; AP-help(@res,@this,@count); APconcat-help(@res,v1,@count);...; APconcat-help(@res,v1,@count); y = @res
+
+IsArray(l)
+@len, @count, @temp = fresh(@vars)
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+H,A,APconcat-help(y,l,x) -> H,A,@count = 0; @len = l["length"]; while(@count < @length){ if(@count in l) {@temp = l[@count]; y[@count] = @temp }; @count = @count + 1; x = x + 1 } 
+
+!IsArray(v)
+------------------------------------------------------
+H,A,APconcat-help(y,v,x) -> H,A, y[x] = v; x = x + 1;
+
+// APpush
+
+@0,@lengthOrig,@count in fresh(@vars)
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+H,A,Fun1(call,y,#APpush,vthis,v1,...,vn) -> H,A,TO(@this,vthis); @lengthOrig = @this["length"]; @TN(@count,@lengthOrig); @this[@count] = v1;@count = @count + 1...; @this[@count] = vn;@count = @count + 1; @this["length"]= @count; y = @count;
+
+
+
+*************
+CONTEXT RULES
+*************
+
+v = [[e]]HA
+------------------------
+H,A,sCe[e] -> H,A,sCe[v]
+
+IsError(v)
+------------------------
+H,A,sCe[v] -> H,A,Throw(v)
+
+	   
+sCe := y = _ | y = _ binop e | y = v binop _ |
+       y = unop _ | y = delete _[e] | y = delete y = v[_] |
+       y = _[e] | y = v[_] | _[e1] = e2 | v[_] = e | v1[v2] = _ |
+       y = {(pnu:v)~,pnu:_,(pnu:e)~} | y = [v~,_,e~] |  y =  _(e~) |
+       y = v(v~,_e~) | y = _[e'](e~) | y = v[_](e~) | y = v1[v2](v~,_,e~) |
+       y = new _(e~) | y = new v(v~,_e~) |
+       return _ | throw _ |
+       if (_) then s1 [else s2] | for x in _ s |  
+       TS-Help(x,_) | TN-Help(x,_) | Forin(x,_,s,i)
+       Fun(tag,y,_,e,e1,...,en)  | Fun(tag,y,v,_,e1,...,en) |
+       eval(_,x~) | 
+       FPApply-help(y,vf,vthis,varg,_) |
+       APtoString-help(y,_,x) |
+       APtoString-help(y,v,_) |
+       APjoin-help(y,_,e,e)|
+       APjoin-help(y,v,_,e)|
+       APjoin-help(y,v,v,_) |
+       APconcat-help(y,_,x) 
+
+H,A,s -> K,B,t
+------------------------
+H,A,sCs[s] -> K,B,sCs[t]
+
+sCs := _;s | _ P |
+       try _ finally s | try _ catch s1 finally s2 | try ct finally _ |
+       Fun3(tag,B,y,_) |
+       
+

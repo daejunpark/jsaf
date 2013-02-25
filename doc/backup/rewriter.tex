@@ -1,0 +1,178 @@
+\documentclass[a4, leqno]{amsart}
+\usepackage{amsmath,amssymb,graphicx,fullpage,color,stmaryrd}
+
+\begin{document}
+\title{Rewriting {\tt with} Statements}
+\maketitle
+
+\newcommand{\myid}{\emph{id}}
+\newcommand{\myfn}{f}
+\newcommand{\name}{\alpha}
+\newcommand{\env}{\Gamma}
+\newcommand{\emptyenv}{\bullet}
+% added commands by changhee
+\newcommand{\emptydecls}{[]}
+\newcommand{\listcons}{::}
+\newcommand{\listapp}{\parallel}
+\newcommand{\toplocdecls}{\psi}
+\newcommand{\nestedname}{\beta}
+\newcommand{\listname}{\phi\;\alpha}
+\newcommand{\namelist}{\phi}
+\newcommand{\emptylist}{\epsilon}
+\newcommand{\listscope}{\varphi}
+\newcommand{\flag}{\ensuremath{\beta}}
+\newcommand{\trueflag}{{\bold{True}}}
+\newcommand{\falseflag}{{\bold{False}}}
+\newcommand{\argmk}[3]{\langle#1, #2, #3\rangle}
+\newcommand{\rewritearg}{\langle\listname, \toplocdecls\listcons\listscope, \flag\rangle}
+%\newcommand{\isshadowed}[2]{\ensuremath{\emph{IsShadowed}\lbr#1\mid#2\rbr}}
+\newcommand{\isshadowed}[2]{\ensuremath{#1\in#2}}
+\newcommand{\mylet}{\bold{Let}\ }
+\newcommand{\myif}{\bold{If}\ }
+\newcommand{\mythen}{\bold{Then}\ }
+\newcommand{\myelse}{\bold{Else}\ }
+\newcommand{\myifend}{\bold{EndIf}}
+\newcommand{\myelseend}{\bold{EndElse}}
+\newcommand{\namecheck}[2]{\ensuremath{#1 \equiv #2}}
+\newcommand{\getlocaldecls}{\ensuremath{\emph{LocalDecls}}}
+
+\newcommand{\pgm}{\emph{p}}
+\newcommand{\stmt}{\emph{s}}
+\newcommand{\expr}{\emph{e}}
+\newcommand{\exprs}{\emph{e^+}}
+\newcommand{\topl}{\emph{t}}
+\newcommand{\vd}{\emph{vd}}
+\newcommand{\cc}{\emph{cc}}
+\newcommand{\me}{\emph{me}}
+\newcommand{\ce}{\emph{ce}}
+\newcommand{\lhs}{\emph{lhs}}
+\newcommand{\prop}{\emph{pr}}
+\newcommand{\lit}{\emph{lit}}
+\newcommand{\num}{\emph{num}}
+\newcommand{\str}{\emph{str}}
+\newcommand{\reg}{\emph{reg}}
+\newcommand{\aop}{\ensuremath{\odot}}
+\newcommand{\inop}{\ensuremath{\otimes}}
+\newcommand{\preop}{\ensuremath{\otimes}}
+\newcommand{\postop}{\ensuremath{\otimes}}
+
+\newcommand{\desugar}{\ensuremath{\emph{desugar}}}
+\newcommand{\desugarP}{\ensuremath{\emph{desugar}_p}}
+\newcommand{\desugarPf}[1]{\ensuremath{\desugarP\lbr#1\rbr}}
+\newcommand{\desugarT}{\ensuremath{\emph{desugar}_t}}
+\newcommand{\desugarTf}[1]{\ensuremath{\desugarT\lbr#1\rbr}}
+\newcommand{\desugarS}{\ensuremath{\emph{desugar}_s}}
+\newcommand{\desugarSf}[1]{\ensuremath{\desugarS\lbr#1\rbr}}
+\newcommand{\desugarVD}{\ensuremath{\emph{desugar}_{vd}}}
+\newcommand{\desugarVDf}[1]{\ensuremath{\desugarVD\lbr#1\rbr}}
+\newcommand{\desugarCC}{\ensuremath{\emph{desugar}_{cc}}}
+\newcommand{\desugarCCf}[1]{\ensuremath{\desugarCC\lbr#1\rbr}}
+\newcommand{\desugarE}{\ensuremath{\emph{desugar}_e}}
+\newcommand{\desugarEf}[1]{\ensuremath{\desugarE\lbr#1\rbr}}
+\newcommand{\desugarL}{\ensuremath{\emph{desugar}_l}}
+\newcommand{\desugarLf}[1]{\ensuremath{\desugarL\lbr#1\rbr}}
+
+\newcommand{\rewrite}{\ensuremath{\emph{rewrite}}}
+\newcommand{\rewriteP}{\ensuremath{\emph{rewrite}_p}}
+\newcommand{\rewritePf}[1]{\ensuremath{\rewriteP\lbr#1\rbr}}
+\newcommand{\rewriteT}{\ensuremath{\emph{rewrite}_t}}
+\newcommand{\rewriteTf}[2]{\ensuremath{\rewriteT\lbr#1\mid#2\rbr}}
+\newcommand{\rewriteTfo}[1]{\ensuremath{\rewriteT\lbr#1\mid\emptyenv\rbr}}
+\newcommand{\rewriteS}{\ensuremath{\emph{rewrite}_s}}
+\newcommand{\rewriteSf}[2]{\ensuremath{\rewriteS\lbr#1\mid#2\rbr}}
+\newcommand{\rewriteVD}{\ensuremath{\emph{rewrite}_{vd}}}
+\newcommand{\rewriteVDf}[2]{\ensuremath{\rewriteVD\lbr#1\mid#2\rbr}}
+\newcommand{\rewriteCC}{\ensuremath{\emph{rewrite}_{cc}}}
+\newcommand{\rewriteCCf}[2]{\ensuremath{\rewriteCC\lbr#1\mid#2\rbr}}
+\newcommand{\rewriteCT}{\ensuremath{\emph{rewrite}_{ct}}}
+\newcommand{\rewriteCTf}[2]{\ensuremath{\rewriteCT\lbr#1\mid#2\rbr}}
+\newcommand{\rewriteE}{\ensuremath{\emph{rewrite}_e}}
+\newcommand{\rewriteEf}[2]{\ensuremath{\rewriteE\lbr#1\mid#2\rbr}}
+\newcommand{\rewriteL}{\ensuremath{\emph{rewrite}_l}}
+\newcommand{\rewriteLf}[2]{\ensuremath{\rewriteL\lbr#1\mid#2\rbr}}
+
+\newcommand{\lbr}{\ensuremath{\llbracket}}
+\newcommand{\rbr}{\ensuremath{\rrbracket}}
+\newcommand{\ospTwo}{\quad\quad\quad\;\;}
+\newcommand{\ospThree}{\ospTwo \spOne \quad}
+
+\newcommand{\spSeven}{\quad\;}
+\newcommand{\spNine}{\quad\;\;}
+\newcommand{\spTen}{\quad\quad}
+\newcommand{\spOne}{\quad\quad\;}
+ \newcommand{\spEi}{\quad\quad\;\;\;}
+\newcommand{\spSix}{\quad\quad\;\;\;\;\;}
+\newcommand{\spTwo}{\quad\quad\quad\;}
+\newcommand{\spFive}{\quad\quad\quad\quad\;\;}
+\newcommand{\spThree}{\quad\quad\quad\quad\quad\;\;\;\;}
+ \newcommand{\spFour}{\quad\quad\quad\quad\quad\;\;\;\;\;\;}
+
+\newcommand{\todo}{{\color{blue}{\emph{TODO}}}}
+
+\definecolor{orange}{rgb}{0.9,0.45,0}
+\definecolor{purple}{rgb}{0.5,0,0.5}
+
+\newif\iftr
+\ifx\tr\undefined
+  \trfalse
+\else
+ \trtrue
+\fi
+%\trtrue
+
+\[
+\begin{array}{lll}
+\lit &::=& {\tt this}
+  \quad \mid \ {\tt null}
+  \quad \mid \ {\tt true}
+  \quad \mid \ {\tt false}
+  \quad \mid \ \num
+  \quad \mid \ \str
+  \quad \mid \ \reg
+\spThree\spTwo\spOne
+\\
+
+\prop &::=& \myid
+  \quad \mid \ \str
+  \quad \mid  \num
+\end{array}
+\]
+
+
+\[
+\begin{array}{l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l@{\;}l}
+\aop &::=&
+\verb+=+ & \mid &
+\verb+*=+ & \mid &
+\verb+/=+ & \mid &
+\verb+%=+ & \mid &
+\verb!+=! & \mid &
+\verb+-=+ & \mid &
+\verb+<<=+ & \mid &
+\verb+>>=+ & \mid &
+\verb+>>>=+ & \mid &
+\verb+&=+ & \mid &
+\verb+^=+ & \mid &
+\verb+|=+
+\\
+
+\inop &::=& \verb+||+ & \mid & \verb+&&+ & \mid &
+\verb+|+ & \mid & \verb+&+ & \mid & \verb+^+ & \mid & \verb+<<+ & \mid & \verb+>>+ & \mid & \verb+>>>+ 
+ & \mid & \verb!+! & \mid & \verb+-+ & \mid & \verb+*+ & \mid & \verb+/+ & \mid & \verb+%+
+ &\mid& \verb+==+ & \mid & \verb+!=+ & \mid & \verb+===+ & \mid & \verb+!==+ & \mid & \verb+<+ & \mid & \verb+>+ & \mid & \verb+<=+
+ & \mid & \verb+>=+ \\
+ & \mid &
+\lefteqn{
+ {\tt instanceof} \ \mid \ {\tt in} }\\
+
+\preop &::=& \verb!++! & \mid & \verb+--+ & \mid & \verb+~+ & \mid & \verb+!+ & \mid & \verb!+! & \mid & \verb+-+ & \mid &
+\lefteqn{
+ {\tt delete} \ \mid \ {\tt void} \ \mid \ {\tt typeof} }\\
+
+\postop &::=& \verb!++! & \mid & \verb+--+ 
+
+\end{array}
+\]
+
+\input{rewriter-tr}
+\end{document}

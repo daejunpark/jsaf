@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="PMD">
+	<bannerLeft>
+		<name>SourceForge</name>
+		<src>images/sflogo.png</src>
+		<href>http://sourceforge.net/</href>
+	</bannerLeft>
+	<bannerRight>
+		<name>pmd-logo</name>
+		<src>images/pmd_logo_small.jpg</src>
+		<href>http://pmd.sourceforge.net/</href>
+        </bannerRight>
+  <body>
+    <breadcrumbs>
+      <item href="http://www.sourceforge.net/" name="SourceForge"/>
+      <item href="http://pmd.sourceforge.net/" name="PMD"/>
+    </breadcrumbs>
+
+    <links>
+      <item href="http://sourceforge.net/projects/pmd" name="SourceForge.net Project Page"/>
+      <item href="http://sourceforge.net" name="Hosted by SourceForge"/>
+    </links>
+    <menu name="Overview">
+      <item href="http://sourceforge.net/projects/pmd/files/pmd/5.0.0/pmd-bin-5.0.0.zip/download" name="Download PMD 5.0.0"/>
+      <item href="https://sourceforge.net/projects/pmd/files/pmd/5.0.0/" name="What's new in PMD 5.0.0"/>
+      <item href="/news.html" name="PMD in the news"/>
+      <item href="/products.html" name="PMD-related products and books"/>
+      <item href="/bestpractices.html" name="Best practices"/>
+      <item href="/future.html" name="Future directions"/>
+      <item href="/similar-projects.html" name="Similar projects"/>
+      <item href="/credits.html" name="Credits"/>
+      <item href="/license.html" name="License"/>
+      <item href="/meaning.html" name="What does 'PMD' mean?"/>
+    </menu>
+    <menu name="Usage">
+      <item href="/installing.html" name="Installation"/>
+      <item href="/running.html" name="Command line usage"/>
+      <item href="/ant-task.html" name="Ant task usage"/>
+      <item href="/maven-plugin.html" name="Maven plugin usage"/>
+      <item href="/mvn-plugin.html" name="Mvn plugin usage"/>
+      <item href="/integrations.html" name="IDE plugin usage"/>
+      <item href="/suppressing.html" name="Suppressing warnings"/>
+      <item href="/cpd.html" name="Finding duplicated code"/>
+      <item href="/jspsupport.html" name="JSP support"/>
+    </menu>
+    <menu name="Customizing PMD">
+        <item href="/compiling.html" name="Compiling PMD"/>
+        <item href="/howtowritearule.html" name="How to write a rule"/>
+        <item href="/xpathruletutorial.html" name="Writing XPath rules"/>
+        <item href="/howtomakearuleset.html" name="How to make a rule set"/>
+        <item href="/howitworks.html" name="How it works"/>
+        <item href="/rule-guidelines.html" name="Rule guidelines"/>
+        <item href="/pmd-developer.html" name="PMD developers information"/>
+        <item href="/pmd-release-process.html" name="PMD Release Process"/>
+    </menu>
+    <menu name="For example">
+      <item href="http://pmd.sourceforge.net/scoreboard.html" name="Run PMD on a Sourceforge project"/>
+    </menu>
+    <!-- The rulesets part of navigation will be added during pre-site and the
+         list is build dynamically based on rulesets folder directory layout -->
+
+
+    <!--THIS FILE HAS BEEN AUTOMATICLY GENERATED.--><menu name="Rule Sets">
+<item name="jsp" collapse="false" href="/rules/index.html">
+<item name="Basic JSF" href="/rules/jsp/basic-jsf.html"/>
+<item name="Basic JSP" href="/rules/jsp/basic.html"/>
+</item>
+<item name="xsl" collapse="false" href="/rules/index.html">
+<item name="XPath in XSL" href="/rules/xsl/xpath.html"/>
+</item>
+<item name="java" collapse="false" href="/rules/index.html">
+<item name="Design" href="/rules/java/design.html"/>
+<item name="Coupling" href="/rules/java/coupling.html"/>
+<item name="Jakarta Commons Logging" href="/rules/java/logging-jakarta-commons.html"/>
+<item name="Basic" href="/rules/java/basic.html"/>
+<item name="Strict Exceptions" href="/rules/java/strictexception.html"/>
+<item name="Security Code Guidelines" href="/rules/java/sunsecure.html"/>
+<item name="Java Logging" href="/rules/java/logging-java.html"/>
+<item name="Android" href="/rules/java/android.html"/>
+<item name="Controversial" href="/rules/java/controversial.html"/>
+<item name="Comments" href="/rules/java/comments.html"/>
+<item name="Type Resolution" href="/rules/java/typeresolution.html"/>
+<item name="Empty Code" href="/rules/java/empty.html"/>
+<item name="String and StringBuffer" href="/rules/java/strings.html"/>
+<item name="Code Size" href="/rules/java/codesize.html"/>
+<item name="Braces" href="/rules/java/braces.html"/>
+<item name="Unused Code" href="/rules/java/unusedcode.html"/>
+<item name="Unnecessary" href="/rules/java/unnecessary.html"/>
+<item name="J2EE" href="/rules/java/j2ee.html"/>
+<item name="JavaBeans" href="/rules/java/javabeans.html"/>
+<item name="Migration" href="/rules/java/migrating.html"/>
+<item name="Import Statements" href="/rules/java/imports.html"/>
+<item name="JUnit" href="/rules/java/junit.html"/>
+<item name="Naming" href="/rules/java/naming.html"/>
+<item name="Finalizer" href="/rules/java/finalizers.html"/>
+<item name="Optimization" href="/rules/java/optimizations.html"/>
+<item name="Clone Implementation" href="/rules/java/clone.html"/>
+</item>
+<item name="ecmascript" collapse="false" href="/rules/index.html">
+<item name="Basic Ecmascript" href="/rules/ecmascript/basic.html"/>
+<item name="Unnecessary" href="/rules/ecmascript/unnecessary.html"/>
+<item name="Braces" href="/rules/ecmascript/braces.html"/>
+</item>
+<item name="xml" collapse="false" href="/rules/index.html">
+<item name="Basic XML" href="/rules/xml/basic.html"/>
+</item>
+</menu>
+
+
+    <!-- *********** -->
+
+    <menu ref="reports"/>
+  </body>
+</project>
