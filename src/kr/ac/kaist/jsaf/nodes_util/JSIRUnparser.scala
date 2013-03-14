@@ -313,7 +313,7 @@ class JSIRUnparser(program: IRRoot) extends Walker {
       s.toString
     case _:IRUndef => "undefined"
     case _:IRThis => "this"
-    case SIRVarStmt(_, lhs) =>
+    case SIRVarStmt(_, lhs, _) =>
       val s: StringBuilder = new StringBuilder
       s.append("var ").append(walk(lhs))
       s.toString

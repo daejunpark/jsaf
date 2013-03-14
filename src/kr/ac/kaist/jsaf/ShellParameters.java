@@ -62,6 +62,7 @@ public class ShellParameters
     public boolean                                 opt_Context1Callsite;
     public boolean                                 opt_Context1Object;
     public boolean                                 opt_ContextTAJS;
+    public boolean                                 opt_PreContextSensitive;
     public boolean                                 opt_Unsound;
     public boolean                                 opt_Dom;
     public boolean                                 opt_MultiThread;
@@ -101,6 +102,7 @@ public class ShellParameters
         opt_Context1Callsite = false;
         opt_Context1Object = false;
         opt_ContextTAJS = false;
+        opt_PreContextSensitive = false;
         opt_Unsound = false;
         opt_Dom = false;
         opt_MultiThread = false;
@@ -236,7 +238,7 @@ public class ShellParameters
             else if(cmd.compareTo("sparse-ddg") == 0) command = CMD_NEW_SPARSE;
             else if(cmd.compareTo("sparse-global") == 0) command = CMD_GLOBAL_SPARSE;
             else if(cmd.compareTo("html") == 0) command = CMD_HTML;
-            feasibleOptions.add("-vervose");
+            feasibleOptions.add("-verbose");
             feasibleOptions.add("-test");
             feasibleOptions.add("-library");
             feasibleOptions.add("-memdump");
@@ -249,6 +251,7 @@ public class ShellParameters
             feasibleOptions.add("-context-1-callsite");
             feasibleOptions.add("-context-1-object");
             feasibleOptions.add("-context-tajs");
+            feasibleOptions.add("-pre-context-sensitive");
             feasibleOptions.add("-unsound");
             feasibleOptions.add("-dom");
             feasibleOptions.add("-multi-thread");
@@ -331,6 +334,7 @@ public class ShellParameters
         else if(opt.compareTo("-context-1-callsite") == 0) opt_Context1Callsite = true;
         else if(opt.compareTo("-context-1-object") == 0) opt_Context1Object = true;
         else if(opt.compareTo("-context-tajs") == 0) opt_ContextTAJS = true;
+        else if(opt.compareTo("-pre-context-sensitive") == 0) opt_PreContextSensitive = true;
         else if(opt.compareTo("-unsound") == 0) opt_Unsound = true;
         else if(opt.compareTo("-dom") == 0) opt_Dom = true;
         else if(opt.compareTo("-multi-thread") == 0) opt_MultiThread = true;

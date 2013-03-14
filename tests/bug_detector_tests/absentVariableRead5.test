@@ -15,9 +15,12 @@ bug-detector_out_WCIequals=\
  \n\
  \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/absentVariableRead5.js:1:1~12:3: warning: Unreachable code is found. \n\
-${BUGDETECTOR_TESTS_DIR}/absentVariableRead5.js:12:1~12:2: error: Reading absent variable 'x'. \n\
-# Errors(#)   : 1 \n\
-# Warnings(#) : 1 \n\
+${BUGDETECTOR_TESTS_DIR}/absentVariableRead5.js:1:1~12:3: [Warning] Unreachable code is found. \n\
+${BUGDETECTOR_TESTS_DIR}/absentVariableRead5.js:12:1~12:2: [ReferenceError] Reading absent variable 'x'. \n\
+# ReferenceErrors(#) : 1 \n\
+# TypeErrors(#)      : 0 \n\
+# Warnings(#)        : 1 \n\
+ \n\
+ \n\
 \n
 bug-detector_err_equals=

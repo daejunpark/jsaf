@@ -15,9 +15,12 @@ bug-detector_out_WCIequals=\
  \n\
  \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/unusedVarProp1.js:2:17~2:23: warning: Property 'p' is never used. \n\
-${BUGDETECTOR_TESTS_DIR}/unusedVarProp1.js:5:9~5:18: warning: Unreachable code is found. \n\
-# Errors(#)   : 0 \n\
-# Warnings(#) : 2 \n\
+${BUGDETECTOR_TESTS_DIR}/unusedVarProp1.js:2:17~2:23: [Warning] Property 'p' is never used. \n\
+${BUGDETECTOR_TESTS_DIR}/unusedVarProp1.js:5:9~5:18: [Warning] Unreachable code is found. \n\
+# ReferenceErrors(#) : 0 \n\
+# TypeErrors(#)      : 0 \n\
+# Warnings(#)        : 2 \n\
+ \n\
+ \n\
 \n
 bug-detector_err_equals=

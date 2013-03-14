@@ -15,8 +15,11 @@ bug-detector_out_WCIequals=\
  \n\
  \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/globalThis1.js:11:24~11:28: warning: 'this' refers global object. \n\
-# Errors(#)   : 0 \n\
-# Warnings(#) : 1 \n\
+${BUGDETECTOR_TESTS_DIR}/globalThis1.js:11:24~11:28: [Warning] 'this' refers the global object. \n\
+# ReferenceErrors(#) : 0 \n\
+# TypeErrors(#)      : 0 \n\
+# Warnings(#)        : 1 \n\
+ \n\
+ \n\
 \n
 bug-detector_err_equals=

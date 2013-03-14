@@ -198,8 +198,8 @@ object IRFactory {
   def makeThrow(fromSource: Boolean, span: Span, expr: IRExpr) =
     new IRThrow(makeSpanInfo(fromSource, span), expr)
 
-  def makeVarStmt(fromSource: Boolean, span: Span, lhs: IRId): IRVarStmt =
-    new IRVarStmt(makeSpanInfo(fromSource, span), lhs)
+  def makeVarStmt(fromSource: Boolean, span: Span, lhs: IRId, fromParam: Boolean): IRVarStmt =
+    new IRVarStmt(makeSpanInfo(fromSource, span), lhs, fromParam)
 
   def makeIf(fromSource: Boolean, span: Span, cond: IRExpr, trueB: IRStmt, falseB: JOption[IRStmt]) =
     new IRIf(makeSpanInfo(fromSource, span), cond, trueB, falseB)

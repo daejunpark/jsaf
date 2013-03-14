@@ -359,9 +359,10 @@ class Interpreter extends IRWalker {
        * 12.2 Variable Statement
        * 
        */
-      case SIRVarStmt(info, id: IRId) =>
+      case SIRVarStmt(info, id: IRId, fromParam) =>
         IS.span = info.getSpan
-        IH.createBinding(id, true, IS.eval)
+        if(fromParam) IH.createBinding(id, true, false)
+        else IH.createBinding(id, true, IS.eval)
         IS.comp.setNormal()
 
       /*
@@ -676,7 +677,7 @@ class Interpreter extends IRWalker {
             walk(body)
             if(IS.comp.Type == CT.THROW) {
               val newDeclEnv = IH.newDeclEnv()
-              IH.createBindingToDeclarative(newDeclEnv, id, true, IS.eval)
+              IH.createBindingToDeclarative(newDeclEnv, id, true, false)
               IH.setBindingToDeclarative(newDeclEnv, id, exnLoc(this, IS.comp.error), false, false) match {
                 case v: Val =>
                   walk(catchB)
@@ -695,7 +696,7 @@ class Interpreter extends IRWalker {
             walk(body)
             if(IS.comp.Type == CT.THROW) {
               val newDeclEnv = IH.newDeclEnv()
-              IH.createBindingToDeclarative(newDeclEnv, id, true, IS.eval)
+              IH.createBindingToDeclarative(newDeclEnv, id, true, false)
               IH.setBindingToDeclarative(newDeclEnv, id, exnLoc(this, IS.comp.error), false, false) match {
                 case v: Val =>
                   walk(catchB)

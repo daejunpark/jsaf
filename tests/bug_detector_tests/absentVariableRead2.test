@@ -15,8 +15,11 @@ bug-detector_out_WCIequals=\
  \n\
  \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/absentVariableRead2.js:11:15~11:16: error: Reading absent variable 'x'. \n\
-# Errors(#)   : 1 \n\
-# Warnings(#) : 0 \n\
+${BUGDETECTOR_TESTS_DIR}/absentVariableRead2.js:11:15~11:16: [ReferenceError] Reading absent variable 'x'. \n\
+# ReferenceErrors(#) : 1 \n\
+# TypeErrors(#)      : 0 \n\
+# Warnings(#)        : 0 \n\
+ \n\
+ \n\
 \n
 bug-detector_err_equals=

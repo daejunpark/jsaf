@@ -130,7 +130,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
     case None =>
       signal("Identifiers should have a unique name after the disambiguation phase:"+id.getText, id)
       IF.dummyIRId(id)
-    case Some(n) if id.getText.equals(argName) =>
+    case Some(n) if id.getText.equals(argName) && isLocal =>
       if (debug) System.out.println("before getE:id2ir-"+id.getText+" "+id.getUniqueName)
       getE(env, argName)
     case Some(n) if id.isWith =>
@@ -172,7 +172,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       new_arg = freshId(paramsspan, argName)
       if (debug) System.out.println(" arg="+new_arg.getUniqueName)
     }
-    val params_vds = params.map(p => IF.makeVarStmt(false, getSpan(p), id2ir(new_env, p)))
+    val params_vds = params.map(p => IF.makeVarStmt(false, getSpan(p), id2ir(new_env, p), true))
     // x_i = arguments["i"]
     val new_params = params.zipWithIndex.map(p => IF.makeLoadStmt(false, getSpan(p._1),
                                                                   id2ir(new_env, p._1),
@@ -326,7 +326,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
         case _ =>
           signal("Variable declarations should not have any initialization expressions after the disambiguation phase.", vd)
       }
-      IF.makeVarStmt(true, getSpan(info), id2ir(env, name))
+      IF.makeVarStmt(true, getSpan(info), id2ir(env, name), false)
   }
 
   /*

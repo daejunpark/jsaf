@@ -15,11 +15,14 @@ bug-detector_out_WCIequals=\
  \n\
  \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:2:17~2:23: warning: Property 'p' is never used. \n\
-${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:3:9~3:18: warning: Unreachable code is found. \n\
-${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:4:3~4:4: error: TypeError when computing default value (toString, valueOf) for object 'y'. \n\
-${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:7:9~7:18: warning: Unreachable code is found. \n\
-# Errors(#)   : 1 \n\
-# Warnings(#) : 4 \n\
+${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:2:17~2:23: [Warning] Property 'p' is never used. \n\
+${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:3:9~3:18: [Warning] Unreachable code is found. \n\
+${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:4:3~4:4: [TypeError] Computing default value (toString, valueOf) of the object 'y' yields TypeError. \n\
+${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:7:9~7:18: [Warning] Unreachable code is found. \n\
+# ReferenceErrors(#) : 0 \n\
+# TypeErrors(#)      : 1 \n\
+# Warnings(#)        : 4 \n\
+ \n\
+ \n\
 \n
 bug-detector_err_equals=

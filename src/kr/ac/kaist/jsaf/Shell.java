@@ -22,6 +22,7 @@ import kr.ac.kaist.jsaf.analysis.cfg.CFGBuilder;
 import kr.ac.kaist.jsaf.analysis.cfg.CFG;
 import kr.ac.kaist.jsaf.analysis.cfg.DotWriter;
 import kr.ac.kaist.jsaf.bug_detector.BugDetector;
+import kr.ac.kaist.jsaf.bug_detector.BugInfo;
 import kr.ac.kaist.jsaf.clone_detector.CloneDetector;
 import kr.ac.kaist.jsaf.compiler.Disambiguator;
 import kr.ac.kaist.jsaf.compiler.Hoister;
@@ -96,7 +97,7 @@ public final class Shell {
         tokens.add("interpret");
         tokens.add("tests/interpreter_tests/arith.js");
 
-        return tokens.toArray(new String[0]);
+        return tokens.toArray(new String[tokens.size()]);
     }
 
     /**
@@ -107,7 +108,7 @@ public final class Shell {
      * *** Tests will silently fail.
      * *** Instead, add code to its helper method.
      */
-    public static void main(String[] tokens) throws InterruptedException, Throwable {
+    public static void main(String[] tokens) throws Throwable {
         tokens = createDebugParameter(tokens);
 
         // Call the internal main function
@@ -118,7 +119,7 @@ public final class Shell {
      * Helper method that allows main to be called from tests
      * (without having to worry about System.exit).
      */
-    public static void main(boolean runFromTests, String[] tokens) throws InterruptedException, Throwable {
+    public static void main(boolean runFromTests, String[] tokens) throws Throwable {
         int return_code = -1;
 
         // If there is no parameter then just print a usage message.
@@ -130,7 +131,7 @@ public final class Shell {
         if(return_code != 0 && !runFromTests) System.exit(return_code);
     }
 
-    public static int subMain(String[] tokens) throws InterruptedException, Throwable {
+    public static int subMain(String[] tokens) throws Throwable {
         // Now match the assembled string.
         int return_code = 0;
         try {
@@ -917,7 +918,7 @@ public final class Shell {
             pair = Parser.fileToAST(fileNames);
         Program program = pair.first();
         HashMap<String,String> fileMap = pair.second();
-        Pair<Option<IRRoot>, List<StaticError>> irErrors = ASTtoIR(fileName, program, Option.<String>none(), Option.<Coverage>none());
+        Pair<Option<IRRoot>, List<BugInfo>> irErrors = ASTtoIR(fileName, program, Option.<String>none(), Option.<Coverage>none());
         Option<IRRoot> irOpt = irErrors.first();
 
         double irTranslationTime = (System.nanoTime() - start) / 1000000000.0;
@@ -1049,7 +1050,6 @@ public final class Shell {
 
             // Analyze
             typingInterface.analyze(model, duanalysis.result());
-            // styping.checkTable(typing.getTable());
         }
 
         // Report a result
@@ -1060,7 +1060,7 @@ public final class Shell {
         if (params.opt_MemDump) {
             System.out.println("\n* Dump *");
             typingInterface.dump();
-            if(params.command == ShellParameters.CMD_PREANALYZE) ((PreTyping)typingInterface).dump_callgraph();
+            if(params.command == ShellParameters.CMD_PREANALYZE) typingInterface.dump_callgraph();
         }
         if (params.opt_Visual && typingInterface instanceof Typing) {
             System.out.println("\n* Visualization *");
@@ -1068,9 +1068,8 @@ public final class Shell {
             vs.run();
         }
         if(Config.compare() && params.command == ShellParameters.CMD_GLOBAL_SPARSE) {
-            // test routine for heap states
-            CFG dense_cfg = builder.build();
             // Initialize bulit-in models
+            CFG dense_cfg = builder.build();
             BuiltinModel dense_model = new BuiltinModel(dense_cfg);
             dense_model.initialize();
             cfg.computeReachableNodes(quiet);
@@ -1092,7 +1091,7 @@ public final class Shell {
             typingInterface.statistics(params.opt_StatDump);
         }
         if (params.opt_CheckResult && typingInterface instanceof Typing) {
-            TypingSemanticsJUTest.checkResult((Typing)typingInterface);
+            TypingSemanticsJUTest.checkResult(typingInterface);
             System.out.println("Test pass");
         }
 
@@ -1179,7 +1178,7 @@ public final class Shell {
         return new Pair<Option<IRRoot>, HashMap<String, String>>(ASTtoIR(files.get(0), program, out, coverage).first(), fileMap);
     }
 
-    private static Pair<Option<IRRoot>, List<StaticError>> ASTtoIR(String file, Program pgm, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {
+    private static Pair<Option<IRRoot>, List<BugInfo>> ASTtoIR(String file, Program pgm, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {
         try {
             Program program = pgm;
 
@@ -1192,7 +1191,7 @@ public final class Shell {
             // Hoister
             Hoister hoister = new Hoister(program);
             program = (Program)hoister.doit();
-            List<StaticError> shadowingErrors = hoister.getErrors();
+            List<BugInfo> shadowingErrors = hoister.getErrors();
             /* Testing Hoister...
             if (out.isSome()){
                 String outfile = out.unwrap();
@@ -1230,10 +1229,10 @@ public final class Shell {
                              flattenErrors(errors),
                              Option.<BufferedWriter>none());
                 if (opt_DisambiguateOnly && errors.isEmpty())
-                  return new Pair<Option<IRRoot>, List<StaticError>>(Option.some(IRFactory.makeRoot()),
-                                                                     Useful.<StaticError>list());
-                return new Pair<Option<IRRoot>, List<StaticError>>(Option.<IRRoot>none(),
-                                                                   Useful.<StaticError>list());
+                  return new Pair<Option<IRRoot>, List<BugInfo>>(Option.some(IRFactory.makeRoot()),
+                                                                 Useful.<BugInfo>list());
+                return new Pair<Option<IRRoot>, List<BugInfo>>(Option.<IRRoot>none(),
+                                                               Useful.<BugInfo>list());
             } else {
                 WithRewriter withRewriter = new WithRewriter(program, false);
                 program = (Program)withRewriter.doit();
@@ -1242,14 +1241,14 @@ public final class Shell {
                 IRRoot ir = (IRRoot)translator.doit();
                 errors.addAll(translator.getErrors());
                 if (errors.isEmpty()) {
-                    return new Pair<Option<IRRoot>, List<StaticError>>(Option.some(ir),
-                                                                       shadowingErrors);
+                    return new Pair<Option<IRRoot>, List<BugInfo>>(Option.some(ir),
+                                                                   shadowingErrors);
                 } else {
                     reportErrors(NodeUtil.getFileName(program),
                                  flattenErrors(errors),
                                  Option.<BufferedWriter>none());
-                    return new Pair<Option<IRRoot>, List<StaticError>>(Option.<IRRoot>none(),
-                                                                       Useful.<StaticError>list());
+                    return new Pair<Option<IRRoot>, List<BugInfo>>(Option.<IRRoot>none(),
+                                                                   Useful.<BugInfo>list());
                 }
             }
         } catch (FileNotFoundException f) {

@@ -15,9 +15,12 @@ bug-detector_out_WCIequals=\
  \n\
  \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/callNonFunction3.js:14:1~14:2: warning: Converting primitive value(number) to object. \n\
-${BUGDETECTOR_TESTS_DIR}/callNonFunction3.js:14:1~14:4: error: Non-function is called as a function. \n\
-# Errors(#)   : 1 \n\
-# Warnings(#) : 1 \n\
+${BUGDETECTOR_TESTS_DIR}/callNonFunction3.js:14:1~14:2: [Warning] Trying to convert primitive value(number) to object. \n\
+${BUGDETECTOR_TESTS_DIR}/callNonFunction3.js:14:1~14:4: [TypeError] Calling a non-function as a function. \n\
+# ReferenceErrors(#) : 0 \n\
+# TypeErrors(#)      : 1 \n\
+# Warnings(#)        : 1 \n\
+ \n\
+ \n\
 \n
 bug-detector_err_equals=

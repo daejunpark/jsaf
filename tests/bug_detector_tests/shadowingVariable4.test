@@ -15,15 +15,18 @@ bug-detector_out_WCIequals=\
  \n\
  \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:1:5~1:10: warning: Variable 'f' is shadowed by a function at 2:1-9:1. \n\
-${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:2:1~9:1: warning: Function 'f' is not reachable. \n\
-${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:2:12~2:13: warning: Parameter 'g' is shadowed by a function at 3:3-8:3. \n\
-${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:3:3~8:3: warning: Function 'g' is not reachable. \n\
-${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:3:14~3:15: warning: Parameter 'h' is shadowed by a function at 5:5-7:5. \n\
-${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:5:5~7:5: warning: Function 'h' is not reachable. \n\
-${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:9:3~9:4: warning: Converting primitive value(number) to object. \n\
-${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:9:3~9:10: error: Non-function is called as a function. \n\
-# Errors(#)   : 1 \n\
-# Warnings(#) : 7 \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:1:5~1:10: [Warning] Variable 'f' is shadowed by a function at '2:1-9:1'. \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:2:1~9:1: [Warning] Function 'f' is never used. \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:2:12~2:13: [Warning] Parameter 'g' is shadowed by a function at '3:3-8:3'. \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:3:3~8:3: [Warning] Function 'g' is never used. \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:3:14~3:15: [Warning] Parameter 'h' is shadowed by a function at '5:5-7:5'. \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:5:5~7:5: [Warning] Function 'h' is never used. \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:9:3~9:4: [Warning] Trying to convert primitive value(number) to object. \n\
+${BUGDETECTOR_TESTS_DIR}/shadowingVariable4.js:9:3~9:10: [TypeError] Calling a non-function as a function. \n\
+# ReferenceErrors(#) : 0 \n\
+# TypeErrors(#)      : 1 \n\
+# Warnings(#)        : 7 \n\
+ \n\
+ \n\
 \n
 bug-detector_err_equals=

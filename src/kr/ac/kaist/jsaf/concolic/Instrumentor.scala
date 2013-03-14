@@ -80,7 +80,7 @@ class Instrumentor(program: IRRoot) extends IRWalker {
      * SIRInternalCall(info, "<>Concolic<>Instrumentor", "<>Concolic<>GetInput", v, None)
      */
   def walkVarStmt(node: IRVarStmt): IRStmt = node match {
-    case SIRVarStmt(info, lhs) => getInput(info, lhs)
+    case SIRVarStmt(info, lhs, fromparam) => getInput(info, lhs)
   }
 
   override def walk(node:Any): Any = node match {

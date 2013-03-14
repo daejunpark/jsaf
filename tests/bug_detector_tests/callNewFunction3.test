@@ -15,9 +15,12 @@ bug-detector_out_WCIequals=\
  \n\
  \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/callNewFunction3.js:14:4~15:7: warning: The conditional expression is always false. \n\
-${BUGDETECTOR_TESTS_DIR}/callNewFunction3.js:15:8~15:17: warning: Unreachable code is found. \n\
-# Errors(#)   : 0 \n\
-# Warnings(#) : 2 \n\
+${BUGDETECTOR_TESTS_DIR}/callNewFunction3.js:14:4~15:7: [Warning] The conditional expression is always false. \n\
+${BUGDETECTOR_TESTS_DIR}/callNewFunction3.js:15:8~15:17: [Warning] Unreachable code is found. \n\
+# ReferenceErrors(#) : 0 \n\
+# TypeErrors(#)      : 0 \n\
+# Warnings(#)        : 2 \n\
+ \n\
+ \n\
 \n
 bug-detector_err_equals=

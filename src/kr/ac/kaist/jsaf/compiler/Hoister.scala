@@ -10,24 +10,27 @@
 package kr.ac.kaist.jsaf.compiler
 
 import _root_.java.util.{List => JList}
+import kr.ac.kaist.jsaf.bug_detector.BugInfo
 import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.nodes._
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
+import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.scala_src.nodes._
-import kr.ac.kaist.jsaf.scala_src.useful.ErrorLog
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
 import kr.ac.kaist.jsaf.useful.HasAt
 
 class Hoister(program: Program) extends Walker {
   /* Error handling
-   * The signal function collects errors during the disambiguation phase.
+   * The signal function collects errors during the Hoister phase.
    * To collect multiple errors,
    * we should return a dummy value after signaling an error.
    */
-  val errors: ErrorLog = new ErrorLog
-  def signal(msg:String, hasAt:HasAt) = errors.signal(msg, hasAt)
-  def getErrors(): JList[StaticError] = toJavaList(errors.errors)
+  var errors = List[BugInfo]()
+  def signal(span: Span, bugKind: Int, arg1: String, arg2: String): Unit =
+    errors ++= List(new BugInfo(span, bugKind, arg1, arg2))
+
+  def getErrors(): JList[BugInfo] = toJavaList(errors)
 
   // Utility functions
   def assignOp(info: ASTNodeInfo) = SOp(info, "=")
@@ -79,46 +82,33 @@ class Hoister(program: Program) extends Walker {
   def isInVd(vd: VarDecl, ds: List[VarDecl]) = {
     val name = vd.getName.getText
     ds.exists(d => if (d.getName.getText.equals(name)) {
-                     val s: StringBuilder = new StringBuilder
-                     s.append("Variable '").append(name).append("' is shadowed by a variable at ")
-                     s.append(vd.getInfo.getSpan.toStringWithoutFiles).append(".")
-                     signal(s.toString, d)
+                     signal(d.getInfo.getSpan, 29, name, vd.getInfo.getSpan.toStringWithoutFiles)
                      true
                    } else false)
   }
   def isInFd(fd: FunDecl, ds: List[FunDecl]) = {
     val name = fd.getFtn.getName.getText
     ds.exists(d => if (d.getFtn.getName.getText.equals(name)) {
-                     val s: StringBuilder = new StringBuilder
-                     s.append("Function '").append(name).append("' is shadowed by a function at ")
-                     s.append(fd.getInfo.getSpan.toStringWithoutFiles).append(".")
-                     signal(s.toString, d)
+                     signal(d.getInfo.getSpan, 25, name, fd.getInfo.getSpan.toStringWithoutFiles)
                      true
                    } else false)
   }
   def isVdInFd(vd: VarDecl, ds: List[FunDecl]) = {
     val name = vd.getName.getText
     ds.exists(d => if (d.getFtn.getName.getText.equals(name)) {
-                     val s: StringBuilder = new StringBuilder
-                     s.append("Variable '").append(name).append("' is shadowed by a function at ")
-                     s.append(d.getInfo.getSpan.toStringWithoutFiles).append(".")
-                     signal(s.toString, vd)
+                     signal(vd.getInfo.getSpan, 27, name, d.getInfo.getSpan.toStringWithoutFiles)
                      true
                    } else false)
   }
   def fdShadowParam(fd: FunDecl, params: List[Id]) = {
-    val s: StringBuilder = new StringBuilder
     val name = fd.getFtn.getName.getText
-    s.append("Parameter '").append(name).append("' is shadowed by a function at ")
-    s.append(fd.getInfo.getSpan.toStringWithoutFiles).append(".")
-    signal(s.toString, params.find(p => p.getText.equals(name)).get)
+    signal(params.find(p => p.getText.equals(name)).get.getInfo.getSpan, 26, name,
+           fd.getInfo.getSpan.toStringWithoutFiles)
   }
   def vdShadowParam(vd: VarDecl, params: List[Id]) = {
-    val s: StringBuilder = new StringBuilder
     val name = vd.getName.getText
-    s.append("Variable '").append(name).append("' is shadowed by a parameter at ")
-    s.append(vd.getInfo.getSpan.toStringWithoutFiles).append(".")
-    signal(s.toString, params.find(p => p.getText.equals(name)).get)
+    signal(params.find(p => p.getText.equals(name)).get.getInfo.getSpan, 28, name,
+           vd.getInfo.getSpan.toStringWithoutFiles)
   }
   def hoist(body: List[SourceElement], params: List[Id]) = {
     val param_names = params.map(_.getText)

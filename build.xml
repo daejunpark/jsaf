@@ -99,7 +99,6 @@ This is the main Ant build file.
     </and>
   </condition>
 
-
   <!--
        Paths
   -->

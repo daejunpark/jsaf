@@ -238,18 +238,18 @@ class InterpreterHelper(I: Interpreter) {
    * 10.2.1.1.2 CreateMutableBinding(N,D)
    * A binding must not already exist in this Environment Record for N
    */
-  def createBinding(x: IRId, mutable: Boolean, eval: Boolean): Env = {
+  def createBinding(x: IRId, mutable: Boolean, deletable: Boolean): Env = {
     var env = I.IS.env
     while (true) {
       env match {
         case EmptyEnv() =>
-          if(x.isInstanceOf[IRUserId]) I.IS.GlobalObject.__putProp(x.getOriginalName, mkDataProp(IP.undefV, true, true, true))
+          if(x.isInstanceOf[IRUserId]) I.IS.GlobalObject.__putProp(x.getOriginalName, mkDataProp(IP.undefV, true, true, mutable && deletable))
           else I.IS.GlobalObject.declEnvRec.s.put(x.getOriginalName, new StoreValue(IP.undefV, false, true, true))
           return env
         case ConsEnv(envRec, rest) => envRec match {
           case DeclEnvRec(s) =>
             // createBindingToDeclarative()
-            s.put(x.getOriginalName, new StoreValue(IP.undefV, false, mutable, mutable && !eval))
+            s.put(x.getOriginalName, new StoreValue(IP.undefV, false, mutable, mutable && deletable))
             return env
           case ObjEnvRec(_) =>
             env = rest
@@ -259,35 +259,35 @@ class InterpreterHelper(I: Interpreter) {
     throw new InterpreterError("createBinding: x="+x, I.IS.span)
   }
   // Target environment is specified.
-  def createBinding(env: Env, x: IRId, mutable: Boolean, eval: Boolean): Unit = {
+  def createBinding(env: Env, x: IRId, mutable: Boolean, deletable: Boolean): Unit = {
     env match {
       case EmptyEnv() =>
-        if(x.isInstanceOf[IRUserId]) I.IS.GlobalObject.__putProp(x.getOriginalName, mkDataProp(IP.undefV, true, true, true))
+        if(x.isInstanceOf[IRUserId]) I.IS.GlobalObject.__putProp(x.getOriginalName, mkDataProp(IP.undefV, true, true, mutable && deletable))
         else I.IS.GlobalObject.declEnvRec.s.put(x.getOriginalName, new StoreValue(IP.undefV, false, true, true))
       case ConsEnv(envRec, rest) => envRec match {
         case DeclEnvRec(s) =>
           // createBindingToDeclarative()
-          s.put(x.getOriginalName, new StoreValue(IP.undefV, false, mutable, mutable && !eval))
+          s.put(x.getOriginalName, new StoreValue(IP.undefV, false, mutable, mutable && deletable))
       }
     }
   }
   // Create a variable to declarative environment
-  def createBindingToDeclarative(declEnvRec: DeclEnvRec, x: IRId, mutable: Boolean, eval:Boolean): Unit = {
-    declEnvRec.s.put(x.getOriginalName, new StoreValue(IP.undefV, false, mutable, mutable && !eval))
+  def createBindingToDeclarative(declEnvRec: DeclEnvRec, x: IRId, mutable: Boolean, deletable: Boolean): Unit = {
+    declEnvRec.s.put(x.getOriginalName, new StoreValue(IP.undefV, false, mutable, mutable && deletable))
   }
 
   // Create and set at once
-  def createAndSetBinding(x: IRId, v: Val, mutable: Boolean, eval: Boolean): ValError = {
+  def createAndSetBinding(x: IRId, v: Val, mutable: Boolean, deletable: Boolean): ValError = {
     var env = I.IS.env
     while(true) {
       env match {
         case EmptyEnv() =>
-          if(x.isInstanceOf[IRUserId]) I.IS.GlobalObject.__putProp(x.getOriginalName, mkDataProp(v, true, true, true))
+          if(x.isInstanceOf[IRUserId]) I.IS.GlobalObject.__putProp(x.getOriginalName, mkDataProp(v, true, true, mutable && deletable))
           else I.IS.GlobalObject.declEnvRec.s.put(x.getOriginalName, new StoreValue(v, true, true, true))
           return v
         case ConsEnv(envRec, rest) => envRec match {
           case DeclEnvRec(s) =>
-            s.put(x.getOriginalName, new StoreValue(v, true, mutable, mutable && !eval))
+            s.put(x.getOriginalName, new StoreValue(v, true, mutable, mutable && deletable))
             return v
           case ObjEnvRec(_) =>
             env = rest

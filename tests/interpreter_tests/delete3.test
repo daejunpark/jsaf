@@ -11,6 +11,7 @@ INTERPRETER_TESTS_DIR=${JS_HOME}/tests/interpreter_tests
 interpret
 interpret_out_WCIequals=\
 [object Object]\n\
-true\n\
-Throw(ReferenceError:y from getBindingValue) @ ${JS_HOME}/tests/interpreter_tests/delete3.js:4:1-13\n
+false\n\
+[object Object]\n\
+Normal(empty)
 interpret_err_equals=

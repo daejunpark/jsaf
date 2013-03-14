@@ -15,8 +15,11 @@ bug-detector_out_WCIequals=\
  \n\
  \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/builtinArgumentSize2.js:10:1~10:14: warning: Too few arguments to function(fid: 51). \n\
-# Errors(#)   : 0 \n\
-# Warnings(#) : 1 \n\
+${BUGDETECTOR_TESTS_DIR}/builtinArgumentSize2.js:10:1~10:14: [Warning] Too few arguments to function 'Array.prototype.splice'. \n\
+# ReferenceErrors(#) : 0 \n\
+# TypeErrors(#)      : 0 \n\
+# Warnings(#)        : 1 \n\
+ \n\
+ \n\
 \n
 bug-detector_err_equals=

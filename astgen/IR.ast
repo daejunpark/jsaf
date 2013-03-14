@@ -158,7 +158,7 @@ interface IRNode() extends HasAt;
              * Var
              * Stmt ::= var x
              */
-            IRVarStmt(IRId lhs);
+            IRVarStmt(IRId lhs, boolean fromParam);
             /**
              * Throw
              * Stmt ::= throw e
