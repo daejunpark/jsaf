@@ -682,6 +682,13 @@ public class Useful {
         return l;
     }
 
+    public static <U, T extends U> List<U> list(U first, List<T> rest) {
+        List<U> l = new ArrayList<U>();
+        l.add(first);
+        l.addAll(rest);
+        return l;
+    }
+
     public static <T> List<T> immutableTrimmedList(List<T> x) {
         int l = x.size();
         if (l == 0) return Collections.<T>emptyList();

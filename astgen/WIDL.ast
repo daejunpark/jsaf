@@ -47,6 +47,86 @@ import edu.rice.cs.plt.tuple.Option;
 
 begin ast;
 
-interface WIDLNode();
-    root WIDL();
+/**
+ * top-level interface
+ */
+interface WNode() extends HasAt;
+    /**
+     * top-level node interface
+     */
+    interface WIDLNode(WIDLNodeInfo info);
+        root abstract WIDL() extends UIDObject;
+            abstract WDefinition(List<WEAttribute> attrs = Collections.<WEAttribute>emptyList());
+                WInterface(String name, Option<WId> parent, List<WInterfaceMember> members);
+                WCallback(String name, WType returnType, List<WArgument> args);
+                WDictionary(String name, Option<WId> parent, List<WDictionaryMember> members);
+                WException(String name, Option<WId> parent, List<WExceptionMember> members);
+                WEnum(String name, List<WString> enumValueList);
+                WTypedef(WType typ, String name);
+                WImplementsStatement(String name, String parent);
+            abstract WMember(List<WEAttribute> attrs = Collections.<WEAttribute>emptyList());
+                WConst(WType typ, String name, WLiteral value)
+                    implements WInterfaceMember, WExceptionMember;
+                WAttribute(WType typ, String name) implements WInterfaceMember;
+                WOperation(List<WQualifier> qualifiers, WType typ, Option<String> name,
+                           List<WArgument> args) implements WInterfaceMember;
+                WDictionaryMember(WType typ, String name, Option<WLiteral> default);
+                WExceptionField(WType typ, String name) implements WExceptionMember;
+            abstract WLiteral();
+                WBoolean(boolean value);
+                WFloat(String value);
+                WInteger(String value);
+                WString(String str);
+                WNull();
+            abstract WType(List<WTypeSuffix> suffix = Collections.<WTypeSuffix>emptyList());
+                WAnyType();
+                WNamedType(String name);
+                WArrayType(WType typ);
+                WSequenceType(WType typ);
+                WUnionType(List<WType> types);
+            WArgument(List<WEAttribute> attributes = Collections.<WEAttribute>emptyList(),
+                      WType typ, String name, Option<WLiteral> default);
+            WId(String name);
+        interface WInterfaceMember();
+        interface WExceptionMember();
+    /**
+     * top-level information interface
+     */
+    abstract WIDLNodeInfo() extends UIDObject;
+        WSpanInfo(ignoreForEquals Span span);
+        abstract WTypeSuffix();
+            WTSArray();
+            WTSQuestion();
+        abstract WEAttribute();
+            WEAString(String str);
+            WEAQuestion();
+            WEAEllipsis();
+            WEAOptional();
+            WEAAttribute();
+            WEACallback();
+            WEAConst();
+            WEACreator();
+            WEADeleter();
+            WEADictionary();
+            WEAEnum();
+            WEAException();
+            WEAGetter();
+            WEAImplements();
+            WEAInherit();
+            WEAInterface();
+            WEAReadonly();
+            WEALegacycaller();
+            WEAPartial();
+            WEASetter();
+            WEAStatic();
+            WEAStringifier();
+            WEATypedef();
+            WEAUnrestricted();
+        abstract WQualifier();
+            WQStatic();
+            WQGetter();
+            WQSetter();
+            WQCreator();
+            WQDeleter();
+            WQLegacycaller();
 end;

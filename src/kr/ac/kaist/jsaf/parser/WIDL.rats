@@ -50,6 +50,24 @@ body {
         "prototype",    "constructor",  "toString"
     });
   }
+
+  Span createSpan(int start, int end) {
+      int i = end;
+      while ( i >= 0 && yyData.length > i && yyData[i] == ' ' ) { i--; }
+      if ( i-1 >= start )
+          end = i-1;
+      else
+          end = start;
+      Column s = column(start);
+      Column e = column(end);
+      SourceLocRats slStart = new SourceLocRats(s.file, s.line, s.column, start);
+      SourceLocRats slEnd   = new SourceLocRats(e.file, e.line, e.column, end);
+      return new Span(slStart, slEnd);
+  }
+
+  private SpanInfo makeSpanInfo(int start, int end) {
+      return NodeFactory.makeSpanInfo(createSpan(start, end));
+  }
 }
 
 option setOfString(JAVASCRIPT_RESERVED), parser(kr.ac.kaist.jsaf.parser.WIDL);
@@ -58,10 +76,13 @@ option setOfString(JAVASCRIPT_RESERVED), parser(kr.ac.kaist.jsaf.parser.WIDL);
  * Definitions ::= ExtendedAttributeList w Definition w Definitions
  *               | \epsilon
  */
-public void WIDL =
+public List<WDefinition> WIDL =
      w EndOfFile
-   / w ExtendedAttributeList? w Definition w WIDL w EndOfFile
-   ;
+     { yyValue = Collections.<WDefinition>emptyList(); }
+   / a1:(w a1:ExtendedAttributeList)? w a2:Definition w a3:WIDL w EndOfFile
+     { if (a1 == null) yyValue = Useful.list(a2, a3);
+       else yyValue = Useful.list(WIDLFactory.addAttrs(a1, a2), a3);
+     };
 
 /*
  * Definition ::= CallbackOrInterface
@@ -72,7 +93,7 @@ public void WIDL =
  *              | Typedef 
  *              | ImplementsStatement
  */
-private void Definition =
+private WDefinition Definition =
      CallbackOrInterface
    / Partial 
    / Dictionary 
@@ -86,8 +107,9 @@ private void Definition =
  * CallbackOrInterface ::= "callback" w CallbackRestOrInterface
  *                       | Interface
  */
-private void CallbackOrInterface =
-     callback w CallbackRestOrInterface 
+private WDefinition CallbackOrInterface =
+     callback w a1:CallbackRestOrInterface 
+     { yyValue = WIDLFactory.addCallback(a1); }
    / Interface
    ;
 
@@ -95,28 +117,35 @@ private void CallbackOrInterface =
  * CallbackRestOrInterface ::= CallbackRest 
  *                           | Interface
  */
-private void CallbackRestOrInterface =
-     CallbackRest 
+private WDefinition CallbackRestOrInterface =
+     CallbackRest
    / Interface
    ;
 
 /*
  * Interface ::= "interface" w identifier w Inheritance w "{" w InterfaceMembers w "}" w ";"
  */
-private void Interface =
-   interface w IdText w Inheritance? w opencurly w InterfaceMembers? w closecurly w semicolon ;
+private WInterface Interface =
+     interface w a1:IdText a2:(w Inheritance)? w opencurly a3:(w InterfaceMembers)? w closecurly w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null && a3 == null) yyValue = WIDLFactory.mkInterface(span, a1);
+       else if (a2 == null) yyValue = WIDLFactory.mkInterface(span, a1, a3);
+       else if (a3 == null) yyValue = WIDLFactory.mkInterface(span, a1, a2);
+       else yyValue = WIDLFactory.mkInterface(span, a1, a2, a3);
+     };
 
 /*
  * Partial ::= "partial" w PartialDefinition
  */
-private void Partial =
-   partial w PartialDefinition ;
+private WDefinition Partial =
+     partial w a1:PartialDefinition
+     { yyValue = WIDLFactory.addPartial(a1); };
 
 /*
  * PartialDefinition ::= PartialInterface 
  *                     | PartialDictionary
  */
-private void PartialDefinition =
+private WDefinition PartialDefinition =
      PartialInterface 
    / PartialDictionary
    ;
@@ -124,21 +153,30 @@ private void PartialDefinition =
 /*
  * PartialInterface ::= "interface" w identifier w "{" w InterfaceMembers w "}" w ";"
  */
-private void PartialInterface =
-   interface w IdText w opencurly w InterfaceMembers? w closecurly w semicolon ;
+private WInterface PartialInterface =
+     interface w a1:IdText w opencurly a2:(w InterfaceMembers)? w closecurly w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) yyValue = WIDLFactory.mkInterface(span, a1);
+       else yyValue = WIDLFactory.mkInterface(span, a1, a2);
+     };
 
 /*
  * InterfaceMembers ::= ExtendedAttributeList w InterfaceMember w InterfaceMembers 
  *                    | \epsilon
  */
-private void InterfaceMembers =
-   ExtendedAttributeList? w InterfaceMember w InterfaceMembers? ;
+private List<WInterfaceMember> InterfaceMembers =
+     a1:ExtendedAttributeList? w a2:InterfaceMember a3:(w InterfaceMembers)?
+     { if (a1 == null && a3 == null) yyValue = Useful.list(a2);
+       else if (a1 == null) yyValue = Useful.list(a2, a3);
+       else if (a3 == null) yyValue = Useful.list(WIDLFactory.addAttrs(a1, a2));
+       else yyValue = Useful.list(WIDLFactory.addAttrs(a1, a2), a3);
+     };
 
 /*
  * InterfaceMember ::= Const 
  *                   | AttributeOrOperation
  */
-private void InterfaceMember =
+private WInterfaceMember InterfaceMember =
      Const 
    / AttributeOrOperation
    ;
@@ -146,35 +184,52 @@ private void InterfaceMember =
 /*
  * Dictionary ::= "dictionary" w identifier w Inheritance w "{" w DictionaryMembers w "}" w ";"
  */
-private void Dictionary =
-   dictionary w IdText w Inheritance? w opencurly w DictionaryMembers? w closecurly w semicolon ;
+private WDictionary Dictionary =
+     dictionary w a1:IdText a2:(w Inheritance)? w opencurly a3:(w DictionaryMembers)? w closecurly w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null && a3 == null) yyValue = WIDLFactory.mkDictionary(span, a1);
+       else if (a2 == null) yyValue = WIDLFactory.mkDictionary(span, a1, a3);
+       else if (a3 == null) yyValue = WIDLFactory.mkDictionary(span, a1, a2);
+       else yyValue = WIDLFactory.mkDictionary(span, a1, a2, a3);
+     };
 
 /*
  * DictionaryMembers ::= ExtendedAttributeList w DictionaryMember w DictionaryMembers 
  *                     | \epsilon
  */
-private void DictionaryMembers =
-   ExtendedAttributeList? w DictionaryMember w DictionaryMembers?
-   ;
+private List<WDictionaryMember> DictionaryMembers =
+     a1:ExtendedAttributeList? w a2:DictionaryMember a3:(w DictionaryMembers)?
+     { if (a1 == null && a3 == null) yyValue = Useful.list(a2);
+       else if (a1 == null) yyValue = Useful.list(a2, a3);
+       else if (a3 == null) yyValue = Useful.list(WIDLFactory.addAttrs(a1, a2));
+       else yyValue = Useful.list(WIDLFactory.addAttrs(a1, a2), a3);
+     };
 
 /*
  * DictionaryMember ::= Type w identifier w Default w ";"
  */
-private void DictionaryMember =
-   Type w IdText w Default? w semicolon ;
+private WDictionaryMember DictionaryMember =
+     a1:Type w a2:IdText a3:(w Default)? w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       if (a3 == null) yyValue = WIDLFactory.mkDictionaryMember(span, a1, a2);
+       else yyValue = WIDLFactory.mkDictionaryMember(span, a1, a2, a3);
+     };
 
 /*
  * PartialDictionary ::= "dictionary" w identifier w "{" w DictionaryMembers w "}" w ";"
  */
-private void PartialDictionary =
-   dictionary w IdText w opencurly w DictionaryMembers? w closecurly w semicolon ;
+private WDictionary PartialDictionary =
+     dictionary w a1:IdText w opencurly a2:(w DictionaryMembers)? w closecurly w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) yyValue = WIDLFactory.mkDictionary(span, a1);
+       else yyValue = WIDLFactory.mkDictionary(span, a1, a2);
+     };
 
 /*
  * Default ::= "=" w DefaultValue | \epsilon
  */
-private void Default =
-   equals w DefaultValue
-   ;
+private WLiteral Default =
+     equals w yyValue:DefaultValue ;
 
 /*
  * DefaultValue ::= ConstValue | string
@@ -186,7 +241,7 @@ private void Default =
  *      code units (hereafter referred to just as code units) corresponding to
  *      the UTF-16 encoding of S.
  */
-private void DefaultValue =
+private WLiteral DefaultValue =
      ConstValue 
    / string
    ;
@@ -194,66 +249,96 @@ private void DefaultValue =
 /*
  * Exception ::= "exception" w identifier w Inheritance w "{" w ExceptionMembers w "}" w ";"
  */
-private void Exception =
-   exception w IdText w Inheritance? w opencurly w ExceptionMembers? w closecurly w semicolon ;
+private WException Exception =
+     exception w a1:IdText a2:(w Inheritance)? w opencurly a3:(w ExceptionMembers)? w closecurly w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null && a3 == null) yyValue = WIDLFactory.mkException(span, a1);
+       else if (a2 == null) yyValue = WIDLFactory.mkException(span, a1, a3);
+       else if (a3 == null) yyValue = WIDLFactory.mkException(span, a1, a2);
+       else yyValue = WIDLFactory.mkException(span, a1, a2, a3);
+     };
 
 /*
  * ExceptionMembers ::= ExtendedAttributeList w ExceptionMember w ExceptionMembers 
  *                    | \epsilon
  */
-private void ExceptionMembers =
-   ExtendedAttributeList? w ExceptionMember w ExceptionMembers?
-   ;
+private List<WExceptionMember> ExceptionMembers =
+     a1:ExtendedAttributeList? w a2:ExceptionMember a3:(w ExceptionMembers)?
+     { if (a1 == null && a3 == null) yyValue = Useful.list(a2);
+       else if (a1 == null) yyValue = Useful.list(a2, a3);
+       else if (a3 == null) yyValue = Useful.list(WIDLFactory.addAttrs(a1, a2));
+       else yyValue = Useful.list(WIDLFactory.addAttrs(a1, a2), a3);
+     };
 
 /*
  * Inheritance ::= ":" w identifier | \epsilon
  */
-private void Inheritance =
-   colon w id
-   ;
+private WId Inheritance = colon w yyValue:Id ;
 
 /*
  * Enum ::= "enum" w identifier w "{" w EnumValueList w "}" w ";"
  */
-private void Enum =
-   enum w IdText w opencurly w EnumValueList w closecurly w semicolon ;
+private WEnum Enum =
+     enum w a1:IdText w opencurly w a2:EnumValueList w closecurly w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = WIDLFactory.mkEnum(span, a1, a2);
+     };
 
 /*
  * EnumValueList ::= string w EnumValues
  */
-private void EnumValueList =
-   string w EnumValues? ;
+private List<WString> EnumValueList =
+     a1:string a2:(w EnumValues)?
+     { if (a2 == null) yyValue = Useful.list(a1);
+       else yyValue = Useful.list(a1, a2);
+     };
 
 /*
  * EnumValues ::= "," w string w EnumValues | \epsilon
  */
-private void EnumValues =
-   comma w string w EnumValues?
-   ;
+private List<WString> EnumValues =
+     comma w a1:string a2:(w EnumValues)?
+     { if (a2 == null) yyValue = Useful.list(a1);
+       else yyValue = Useful.list(a1, a2);
+     };
 
 /*
  * CallbackRest ::= identifier w "=" ReturnType w "(" w ArgumentList w ")" w ";"
  */
-private void CallbackRest =
-   IdText w equals w ReturnType w openparen w ArgumentList? w closeparen w semicolon ;
+private WCallback CallbackRest =
+     a1:IdText w equals w a2:ReturnType w openparen a3:(w ArgumentList)? w closeparen w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       if (a3 == null) yyValue = WIDLFactory.mkCallback(span, a1, a2);
+       else yyValue = WIDLFactory.mkCallback(span, a1, a2, a3);
+     };
 
 /*
  * Typedef ::= "typedef" w ExtendedAttributeList w Type w identifier w ";"
  */
-private void Typedef =
-   typedef w ExtendedAttributeList? w Type w IdText w semicolon ;
+private WTypedef Typedef =
+     typedef a1:(w ExtendedAttributeList)? w a2:Type w a3:IdText w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       if (a1 == null) yyValue = WIDLFactory.mkTypedef(span, a2, a3);
+       else yyValue = WIDLFactory.mkTypedef(span, a1, a2, a3);
+     };
 
 /*
  * ImplementsStatement ::= identifier w "implements" w identifier w ";"
  */
-private void ImplementsStatement =
-   IdText w implements w IdText w semicolon ;
+private WImplementsStatement ImplementsStatement =
+     a1:IdText w implements w a2:IdText w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = WIDLFactory.mkImplementsStatement(span, a1, a2);
+     };
 
 /*
  * Const ::= "const" w ConstType w identifier w "=" w ConstValue w ";"
  */
-private void Const =
-   const w ConstType w IdText w equals w ConstValue w semicolon ;
+private WConst Const =
+     const w a1:ConstType w a2:IdText w equals w a3:ConstValue w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = WIDLFactory.mkConst(span, a1, a2, a3);
+     };
 
 /*
  * ConstValue ::= BooleanLiteral 
@@ -261,20 +346,21 @@ private void Const =
  *              | integer 
  *              | "null"
  */
-private void ConstValue =
+private WLiteral ConstValue =
      BooleanLiteral 
    / FloatLiteral 
-   / integer 
-   / nullK
-   ;
+   / a1:integer
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = WIDLFactory.mkInteger(span, a1);
+     }
+   / nullK { yyValue = WIDLFactory.nullL(); };
 
 /*
  * BooleanLiteral ::= "true" | "false"
  */
-private void BooleanLiteral =
-     true
-   / false
-   ;
+private WBoolean BooleanLiteral =
+     true  { yyValue = WIDLFactory.trueL(); }
+   / false { yyValue = WIDLFactory.falseL(); };
 
 /*
  * FloatLiteral ::= float 
@@ -296,25 +382,22 @@ private void BooleanLiteral =
  * Type unrestricted double, constant value NaN:
  *   The value is the IEEE 754 double-precision NaN value with the bit pattern 0x7ff8000000000000.
  */
-private void FloatLiteral =
-     float
-   / minus w Infinity
-   / Infinity
-   / NaN
-   ;
+private WFloat FloatLiteral =
+     a1:floatL
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = WIDLFactory.mkFloat(span, a1);
+     }
+   / minus w Infinity { yyValue = WIDLFactory.minusInfinity(); }
+   / Infinity { yyValue = WIDLFactory.infinity(); }
+   / NaN { yyValue = WIDLFactory.nan(); };
 
 /*
  * AttributeOrOperation ::= "stringifier" w StringifierAttributeOrOperation 
  *                        | Attribute 
  *                        | Operation
- */
-private void AttributeOrOperation =
-     stringifier w StringifierAttributeOrOperation 
-   / Attribute 
-   / Operation
-   ;
-
-/*
+ * Operation ::= Qualifiers w OperationRest
+ * OperationRest ::= ReturnType w OptionalIdentifier w "(" w ArgumentList w ")" w ";"
+ * OptionalIdentifier ::= identifier | \epsilon
  * StringifierAttributeOrOperation ::= Attribute 
  *                                   | OperationRest 
  *                                   | ";"
@@ -328,100 +411,146 @@ private void AttributeOrOperation =
  * and return a DOMString.
  *
  * As a shorthand, if the stringifier keyword is declared using an operation with
- * no identifier, then the operation’s return type and argument list can be omitted.
+ * no identifier, then the operation's return type and argument list can be omitted.
  *
  * The stringifier keyword must not be placed on an attribute unless it is declared
  * to be of type DOMString.
+ *
+ * OperationRest ::= ReturnType w OptionalIdentifier w "(" w ArgumentList w ")" w ";"
+ * OptionalIdentifier ::= identifier | \epsilon
+ *
+ * If an operation has no identifier, then it must be declared to be
+ * a special operation using one of the special keywords.
  */
-private void StringifierAttributeOrOperation =
-     Attribute 
-   / OperationRest 
-   / semicolon
-   ;
+private WInterfaceMember AttributeOrOperation =
+     stringifier w a1:Attribute
+     { yyValue = WIDLFactory.addStringifier(a1); }
+   / stringifier w a1:ReturnType a2:(w id)? w openparen a3:(w ArgumentList)? w closeparen w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       List<WEAttribute> attrs = new ArrayList<WEAttribute>();
+       attrs.add(WIDLFactory.eaStringifier());
+       List<WQualifier> quals = new ArrayList();
+       if (a3 == null) a3 = Collections.<WArgument>emptyList();
+       if (a2 == null) yyValue = WIDLFactory.mkOperation(span, attrs, quals, a1, a3);
+       else yyValue = WIDLFactory.mkOperation(span, attrs, quals, a1, a2, a3);
+     }
+   / stringifier w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       List<WEAttribute> attrs = new ArrayList<WEAttribute>();
+       attrs.add(WIDLFactory.eaStringifier());
+       List<WQualifier> quals = new ArrayList();
+       yyValue = WIDLFactory.mkOperation(span, attrs, quals, WIDLFactory.domstringType(),
+                                         Collections.<WArgument>emptyList());
+     }
+   / Attribute 
+   / a1:Qualifiers w a2:ReturnType a3:(w id)? w openparen a4:(w ArgumentList)? w closeparen w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       List<WEAttribute> attrs = new ArrayList<WEAttribute>();
+       if (a4 == null) a4 = Collections.<WArgument>emptyList();
+       if (a3 == null) yyValue = WIDLFactory.mkOperation(span, attrs, a1, a2, a4);
+       else yyValue = WIDLFactory.mkOperation(span, attrs, a1, a2, a3, a4);
+     };
 
 /*
  * Attribute ::= Inherit w ReadOnly w "attribute" w Type w identifier w ";"
  * Inherit ::= "inherit" | \epsilon
  * ReadOnly ::=	"readonly" | \epsilon
  */
-private void Attribute =
-   inherit? w readonly? w attribute w Type a4:id w semicolon ;
-
-/*
- * Operation ::= Qualifiers w OperationRest
- */
-private void Operation =
-   Qualifiers w OperationRest ;
+private WAttribute Attribute =
+     a1:inherit? a2:(w readonly)? w attribute w a3:Type a4:id w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       List<WEAttribute> attrs = new ArrayList<WEAttribute>();
+       if (a1 != null && a2 != null) {
+           attrs.add(WIDLFactory.eaInherit());
+           attrs.add(WIDLFactory.eaReadonly());
+       } else if (a1 != null) attrs.add(WIDLFactory.eaInherit());
+       else if (a2 != null) attrs.add(WIDLFactory.eaReadonly());
+       yyValue = WIDLFactory.mkAttribute(span, attrs, a3, a4);
+     };
 
 /*
  * Qualifiers ::= "static" | Specials
  */
-private void Qualifiers =
+private List<WQualifier> Qualifiers =
      static
-   / Specials?
-   ;
+     { yyValue = Useful.list(WIDLFactory.qStatic()); }
+   / a1:Specials?
+     { if (a1 == null) yyValue = Collections.<WQualifier>emptyList();
+       else yyValue = a1;
+     };
 
 /*
  * Specials ::=	Special w Specials | \epsilon
  * A given special keyword must not appear twice on an operation.
  */
-private void Specials =
-   Special w Specials?
-   ;
+private List<WQualifier> Specials =
+     a1:Special a2:(w Specials)?
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) yyValue = Useful.list(a1);
+       else yyValue = Useful.list(a1, a2);
+     };
 
 /*
  * Special ::= "getter" | "setter" | "creator" | "deleter" | "legacycaller"
  */
-private void Special =
-     getter
-   / setter
-   / creator
-   / deleter
-   / legacycaller
+private WQualifier Special =
+     getter  { yyValue = WIDLFactory.qGetter(); }
+   / setter  { yyValue = WIDLFactory.qSetter(); }
+   / creator { yyValue = WIDLFactory.qCreator(); }
+   / deleter { yyValue = WIDLFactory.qDeleter(); }
+   / legacycaller { yyValue = WIDLFactory.qLegacycaller(); }
    ;
-
-/*
- * OperationRest ::= ReturnType w OptionalIdentifier w "(" w ArgumentList w ")" w ";"
- * OptionalIdentifier ::= identifier | \epsilon
- * If an operation has no identifier, then it must be declared to be
- * a special operation using one of the special keywords.
- */
-private void OperationRest =
-   ReturnType w id? w openparen w ArgumentList? w closeparen w semicolon ;
 
 /*
  * ArgumentList ::= Argument w Arguments 
  *                | \epsilon
  * An argument must not be declared with the ... token unless it is the final
- * argument in the operation’s argument list.
+ * argument in the operation?�s argument list.
  */
-private void ArgumentList =
-   Argument w Arguments?
-   ;
+private List<WArgument> ArgumentList =
+     a1:Argument a2:(w Arguments)?
+     { if (a2 == null) yyValue = Useful.list(a1);
+       else yyValue = Useful.list(a1, a2);
+     };
 
 /*
  * Arguments ::= "," w Argument w Arguments 
  *             | \epsilon
  */
-private void Arguments =
-   comma w Argument w Arguments? 
-   ;
+private List<WArgument> Arguments =
+     comma w a1:Argument a2:(w Arguments)?
+     { if (a2 == null) yyValue = Useful.list(a1);
+       else yyValue = Useful.list(a1, a2);
+     };
 
 /*
  * Argument ::=	ExtendedAttributeList w OptionalOrRequiredArgument
  */
-private void Argument =
-   ExtendedAttributeList? w OptionalOrRequiredArgument ;
+private WArgument Argument =
+     a1:ExtendedAttributeList? w a2:OptionalOrRequiredArgument
+     { if (a1 == null) yyValue = a2;
+       else yyValue = WIDLFactory.addAttrs(a1, a2);
+     };
 
 /*
  * OptionalOrRequiredArgument ::= "optional" w Type w ArgumentName w Default
  *                              | Type w Ellipsis w ArgumentName
  * Ellipsis ::= "..." | \epsilon
  */
-private void OptionalOrRequiredArgument =
-     optional w Type w ArgumentName w Default? 
-   / Type w ellipsis? w ArgumentName
-   ;
+private WArgument OptionalOrRequiredArgument =
+     optional w a1:Type w a2:ArgumentName a3:(w Default)?
+     { Span span = createSpan(yyStart,yyCount);
+       List<WEAttribute> attrs = Useful.list(WIDLFactory.eaOptional());
+       if (a3 == null) yyValue = WIDLFactory.mkArgument(span, attrs, a1, a2);
+       else yyValue = WIDLFactory.mkArgument(span, attrs, a1, a2, a3);
+     }
+   / a1:Type a2:(w ellipsis)? w a3:ArgumentName
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null)
+         yyValue = WIDLFactory.mkArgument(span, Collections.<WEAttribute>emptyList(), a1, a3);
+       else
+         yyValue = WIDLFactory.mkArgument(span, Useful.list(WIDLFactory.eaEllipsis()), a1, a3);
+     };
 
 /*
  * ArgumentName ::= ArgumentNameKeyword 
@@ -435,32 +564,41 @@ private String ArgumentName =
 /*
  * ExceptionMember ::= Const | ExceptionField
  */
-private void ExceptionMember =
-     Const 
+private WExceptionMember ExceptionMember =
+     Const
    / ExceptionField
    ;
 
 /*
  * ExceptionField ::= Type w identifier w ";"
  */
-private void ExceptionField =
-   Type w IdText w semicolon ;
+private WExceptionField ExceptionField =
+     a1:Type w a2:IdText w semicolon
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = WIDLFactory.mkExceptionField(span, a1, a2);
+     };
 
 /*
  * ExtendedAttributeList ::= "[" w ExtendedAttribute w ExtendedAttributes w "]"
  *                         | \epsilon
  */
-private void ExtendedAttributeList =
-   opensquare w ExtendedAttribute w ExtendedAttributes? w closesquare
-   ;
+private List<WEAttribute> ExtendedAttributeList =
+     opensquare w a1:ExtendedAttribute a2:(w ExtendedAttributes)? w closesquare
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) yyValue = Useful.list(a1);
+       else yyValue = Useful.concat(a1, a2);
+     };
 
 /*
  * ExtendedAttributes ::= "," w ExtendedAttribute w ExtendedAttributes
  *                      | \epsilon
  */
-private void ExtendedAttributes =
-   comma w ExtendedAttribute w ExtendedAttributes?
-   ;
+private List<WEAttribute> ExtendedAttributes =
+     comma w a1:ExtendedAttribute a2:(w ExtendedAttributes)?
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) yyValue = a1;
+       else yyValue = Useful.concat(a1, a2);
+     };
 
 /*
  * ExtendedAttribute ::= "(" w ExtendedAttributeInner w ")" w ExtendedAttributeRest
@@ -468,19 +606,35 @@ private void ExtendedAttributes =
  *                     | "{" w ExtendedAttributeInner w "}" w ExtendedAttributeRest
  *                     | Other w ExtendedAttributeRest
  */
-private void ExtendedAttribute =
-     openparen w ExtendedAttributeInner? w closeparen w ExtendedAttributeRest? 
-   / opensquare w ExtendedAttributeInner? w closesquare w ExtendedAttributeRest? 
-   / opencurly w ExtendedAttributeInner? w closecurly w ExtendedAttributeRest? 
-   / Other w ExtendedAttributeRest?
-   ;
+private List<WEAttribute> ExtendedAttribute =
+     openparen a1:(w ExtendedAttributeInner)? w closeparen a2:(w ExtendedAttributeRest)?
+     { if (a1 == null && a2 == null) yyValue = Collections.<WEAttribute>emptyList();
+       else if (a1 == null) yyValue = a1;
+       else if (a2 == null) yyValue = a2;
+       else yyValue = Useful.concat(a1, a2);
+     }
+   / opensquare a1:(w ExtendedAttributeInner)? w closesquare a2:(w ExtendedAttributeRest)?
+     { if (a1 == null && a2 == null) yyValue = Collections.<WEAttribute>emptyList();
+       else if (a1 == null) yyValue = a1;
+       else if (a2 == null) yyValue = a2;
+       else yyValue = Useful.concat(a1, a2);
+     }
+   / opencurly a1:(w ExtendedAttributeInner)? w closecurly a2:(w ExtendedAttributeRest)?
+     { if (a1 == null && a2 == null) yyValue = Collections.<WEAttribute>emptyList();
+       else if (a1 == null) yyValue = a1;
+       else if (a2 == null) yyValue = a2;
+       else yyValue = Useful.concat(a1, a2);
+     }
+   / a1:Other a2:(w ExtendedAttributeRest)?
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) yyValue = Useful.list(a1);
+       else yyValue = Useful.list(a1, a2);
+     };
 
 /*
  * ExtendedAttributeRest ::= ExtendedAttribute | \epsilon
  */
-private void ExtendedAttributeRest =
-   ExtendedAttribute 
-   ;
+private List<WEAttribute> ExtendedAttributeRest = ExtendedAttribute;
 
 /*
  * ExtendedAttributeInner ::= "(" w ExtendedAttributeInner w ")" w ExtendedAttributeInner
@@ -488,13 +642,37 @@ private void ExtendedAttributeRest =
  *                          | "{" w ExtendedAttributeInner w "}" w ExtendedAttributeInner
  *                          | OtherOrComma w ExtendedAttributeInner 
  *                          | \epsilon
+ * OtherOrComma = Other | ","
  */
-private void ExtendedAttributeInner =
-     openparen w ExtendedAttributeInner? w closeparen w ExtendedAttributeInner?
-   / opensquare w ExtendedAttributeInner? w closesquare w ExtendedAttributeInner?
-   / opencurly w ExtendedAttributeInner? w closecurly w ExtendedAttributeInner?
-   / OtherOrComma w ExtendedAttributeInner?
-   ;
+private List<WEAttribute> ExtendedAttributeInner =
+     openparen a1:(w ExtendedAttributeInner)? w closeparen a2:(w ExtendedAttributeInner)?
+     { if (a1 == null && a2 == null) yyValue = Collections.<WEAttribute>emptyList();
+       else if (a1 == null) yyValue = a1;
+       else if (a2 == null) yyValue = a2;
+       else yyValue = Useful.concat(a1, a2);
+     }
+   / opensquare a1:(w ExtendedAttributeInner)? w closesquare a2:(w ExtendedAttributeInner)?
+     { if (a1 == null && a2 == null) yyValue = Collections.<WEAttribute>emptyList();
+       else if (a1 == null) yyValue = a1;
+       else if (a2 == null) yyValue = a2;
+       else yyValue = Useful.concat(a1, a2);
+     }
+   / opencurly a1:(w ExtendedAttributeInner)? w closecurly a2:(w ExtendedAttributeInner)?
+     { if (a1 == null && a2 == null) yyValue = Collections.<WEAttribute>emptyList();
+       else if (a1 == null) yyValue = a1;
+       else if (a2 == null) yyValue = a2;
+       else yyValue = Useful.concat(a1, a2);
+     }
+   / a1:Other a2:(w ExtendedAttributeInner)?
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) yyValue = Useful.list(a1);
+       else yyValue = Useful.list(a1, a2);
+     }
+   / comma a1:(w ExtendedAttributeInner)?
+     { Span span = createSpan(yyStart,yyCount);
+       if (a1 == null) yyValue = Useful.list(a1);
+       else yyValue = Collections.<WEAttribute>emptyList();
+     };
 
 /*
  * Other ::= integer | float | identifier | string | other
@@ -505,44 +683,26 @@ private void ExtendedAttributeInner =
  *         | "sequence" | "short" | "true" | "unsigned" | "void" 
  *         | ArgumentNameKeyword
  */
-private void Other =
-     integer 
-   / float
-   / string 
-   / other 
-   / minus
-   / dot
-   / ellipsis
-   / colon
-   / semicolon
-   / "<"
-   / equals
-   / ">"
+private WEAttribute Other =
+     a1:(integer / floatL / other / minus / dot /
+         colon / semicolon / "<" / equals / ">" /
+         Date / DOMString / Infinity / NaN / any /
+         boolean / byte / double / false / floatK /
+         long / nullK / object / octet / or /
+         sequence / short / true / unsigned / voidK)
+     { yyValue = WIDLFactory.mkEAString(a1); }
+   / a1:string
+     { yyValue = WIDLFactory.mkEAString(a1.getStr()); }
    / question
-   / Date
-   / DOMString
-   / Infinity
-   / NaN
-   / any
-   / boolean
-   / byte
-   / double
-   / false
-   / floatK
-   / long
-   / nullK
-   / object
-   / octet
-   / or
+     { yyValue = WIDLFactory.eaQuestion(); }
+   / ellipsis
+     { yyValue = WIDLFactory.eaEllipsis(); }
    / optional
-   / sequence
-   / short
-   / true
-   / unsigned
-   / voidK
-   / ArgumentNameKeyword
-   / id
-   ;
+     { yyValue = WIDLFactory.eaOptional(); }
+   / a1:ArgumentNameKeyword
+     { yyValue = WIDLFactory.mkEAArgumentNameKeyword(a1); }
+   / a1:id
+     { yyValue = WIDLFactory.mkEAString(a1); };
 
 /*
  * ArgumentNameKeyword ::= "attribute" | "callback" | "const" | "creator"
@@ -574,55 +734,65 @@ private String ArgumentNameKeyword =
    ;
 
 /*
- * OtherOrComma = Other | ","
- */
-private void OtherOrComma =
-     comma
-   / Other
-   ;
-
-/*
  * Type ::= SingleType
  *        | UnionType w TypeSuffix
  */
-private void Type =
-     SingleType 
-   / UnionType w TypeSuffix?
+private WType Type =
+     SingleType
+   / UnionType
    ;
 
 /*
  * SingleType ::= NonAnyType
  *              | "any" w TypeSuffixStartingWithArray
+ * TypeSuffixStartingWithArray ::= "[" w "]" w TypeSuffix | \epsilon
  */
-private void SingleType =
+private WType SingleType =
      NonAnyType
-   / any w TypeSuffixStartingWithArray?
-   ;
+   / any w opensquare w closesquare a1:(w TypeSuffix)?
+     { Span span = createSpan(yyStart,yyCount);
+       if (a1 == null) yyValue = WIDLFactory.anyArrayType();
+       else yyValue = WIDLFactory.mkAnyArrayType(span, a1);
+     }
+   / any { yyValue = WIDLFactory.anyType(); };
 
 /*
  * UnionType ::= "(" w UnionMemberType w "or" w UnionMemberType w UnionMemberTypes w ")"
  */
-private void UnionType =
-   openparen w UnionMemberType w or w UnionMemberType w UnionMemberTypes? w closeparen ;
+private WUnionType UnionType =
+     openparen w a1:UnionMemberType w or w a2:UnionMemberType a3:(w UnionMemberTypes)? w closeparen a4:(w TypeSuffix)?
+     { Span span = createSpan(yyStart,yyCount);
+       List<WType> types = new ArrayList<WType>();
+       if (a3 == null) types = Useful.list(a1, a2);
+       else types = Useful.concat(Useful.list(a1, a2), a3);
+       if (a4 == null) yyValue = WIDLFactory.mkUnionType(span, types);
+       else yyValue = WIDLFactory.mkUnionType(span, types, a4);
+     };
 
 /*
  * UnionMemberType ::= NonAnyType
  *                   | UnionType w TypeSuffix
  *                   | "any" w "[" w "]" w TypeSuffix
  */
-private void UnionMemberType =
-     NonAnyType 
-   / UnionType w TypeSuffix?
-   / any w opensquare w closesquare w TypeSuffix?
-   ;
+private WType UnionMemberType =
+     NonAnyType
+   / UnionType
+   / any w opensquare w closesquare a1:(w TypeSuffix)?
+     { Span span = createSpan(yyStart,yyCount);
+       if (a1 == null) yyValue = WIDLFactory.anyArrayType();
+       else yyValue = WIDLFactory.mkAnyArrayType(span, a1);
+     };
 
 /*
  * UnionMemberTypes ::= "or" w UnionMemberType w UnionMemberTypes
  *                    | \epsilon
  */
-private void UnionMemberTypes =
-   or w UnionMemberType w UnionMemberTypes? 
-   ;
+private List<WType> UnionMemberTypes =
+     or w a1:UnionMemberType a2:(w UnionMemberTypes)?
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) yyValue = Useful.list(a1);
+       else yyValue = Useful.list(a1, a2);
+     };
 
 /*
  * NonAnyType ::= PrimitiveType w TypeSuffix
@@ -631,24 +801,57 @@ private void UnionMemberTypes =
  *              | sequence w "<" w Type w ">" w Null
  *              | "object" w TypeSuffix
  *              | "Date" w TypeSuffix
+ * Null ::= "?" | \epsilon
  */
-private void NonAnyType =
-     PrimitiveType w TypeSuffix? 
-   / DOMString w TypeSuffix?
-   / IdText w TypeSuffix?
-   / sequence w "<" w Type w ">" w Null 
-   / object w TypeSuffix?
-   / Date w TypeSuffix?
-   ;
+private WType NonAnyType =
+     a1:PrimitiveType a2:(w TypeSuffix)?
+     { if (a2 == null) yyValue = a1;
+       else yyValue = WIDLFactory.addTypeSuffix(a1, a2);
+     }
+   / DOMString a1:(w TypeSuffix)?
+     { if (a1 == null) yyValue = WIDLFactory.domstringType();
+       else yyValue = WIDLFactory.addTypeSuffix(WIDLFactory.domstringType(), a1);
+     }
+   / a1:IdText a2:(w TypeSuffix)?
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) yyValue = WIDLFactory.mkNamedType(span, a1);
+       else yyValue = WIDLFactory.mkNamedType(span, a1, a2);
+     }
+   / sequence w "<" w a1:Type w ">" a2:(w question)?
+     { Span span = createSpan(yyStart,yyCount);
+       List<WTypeSuffix> suffix = new ArrayList<WTypeSuffix>();
+       if (a2 == null) yyValue = WIDLFactory.mkSequenceType(span, a1, suffix);
+       else {
+         suffix.add(WIDLFactory.tsQuestion());
+         yyValue = WIDLFactory.mkSequenceType(span, a1, suffix);
+       }
+     }
+   / object a1:(w TypeSuffix)?
+     { if (a1 == null) yyValue = WIDLFactory.objectType();
+       else yyValue = WIDLFactory.addTypeSuffix(WIDLFactory.objectType(), a1);
+     }
+   / Date a1:(w TypeSuffix)?
+     { if (a1 == null) yyValue = WIDLFactory.dateType();
+       else yyValue = WIDLFactory.addTypeSuffix(WIDLFactory.dateType(), a1);
+     };
 
 /*
  * ConstType ::= PrimitiveType w Null
  *             | identifier w Null
+ * Null ::= "?" | \epsilon
  */
-private void ConstType =
-     PrimitiveType w Null 
-   / IdText w Null
-   ;
+private WType ConstType =
+     a1:PrimitiveType w question
+     { yyValue = WIDLFactory.questionType(a1); }
+   / PrimitiveType
+   / a1:IdText w question
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = WIDLFactory.mkNamedType(span, a1, WIDLFactory.tsQuestion());
+     }
+   / a1:IdText
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = WIDLFactory.mkNamedType(span, a1);
+     };
 
 /*
  * PrimitiveType ::= UnsignedIntegerType 
@@ -657,34 +860,42 @@ private void ConstType =
  *                 | "byte" 
  *                 | "octet"
  */
-private void PrimitiveType =
+private WType PrimitiveType =
      UnsignedIntegerType
    / UnrestrictedFloatType
    / boolean
+     { yyValue = WIDLFactory.booleanType(); }
    / byte
+     { yyValue = WIDLFactory.byteType(); }
    / octet
-   ;
+     { yyValue = WIDLFactory.octetType(); };
 
 /*
  * UnrestrictedFloatType ::= "unrestricted" w FloatType
  *                         | FloatType
  */
-private void UnrestrictedFloatType =
-     unrestricted w FloatType
+private WType UnrestrictedFloatType =
+     unrestricted w a1:FloatType
+     { yyValue = WIDLFactory.unrestricted(a1); }
    / FloatType
    ;
 
 /*
  * FloatType ::= "float" | "double"
  */
-private void FloatType = floatK / double ;
+private WType FloatType =
+     floatK
+     { yyValue = WIDLFactory.floatType(); }
+   / double
+     { yyValue = WIDLFactory.doubleType(); };
 
 /*
  * UnsignedIntegerType ::= "unsigned" w IntegerType 
  *                       | IntegerType
  */
-private void UnsignedIntegerType =
-     unsigned w IntegerType 
+private WType UnsignedIntegerType =
+     unsigned w a1:IntegerType 
+     { yyValue = WIDLFactory.unsinged(a1); }
    / IntegerType
    ;
 
@@ -693,70 +904,74 @@ private void UnsignedIntegerType =
  *               | "long" w OptionalLong
  * OptionalLong ::= "long" | \epsilon
  */
-private void IntegerType =
+private WType IntegerType =
      short
-   / long w long?
-   ;
+     { yyValue = WIDLFactory.shortType(); }
+   / long w long
+     { yyValue = WIDLFactory.longLongType(); }
+   / long
+     { yyValue = WIDLFactory.longType(); };
 
 /*
  * TypeSuffix ::= "[" w "]" w TypeSuffix
  *              | "?" w TypeSuffixStartingWithArray?
  *              | \epsilon
- */
-private void TypeSuffix =
-     opensquare w closesquare w TypeSuffix?
-   / question w TypeSuffixStartingWithArray?
-   ;
-
-/*
  * TypeSuffixStartingWithArray ::= "[" w "]" w TypeSuffix | \epsilon
  */
-private void TypeSuffixStartingWithArray =
-   opensquare w closesquare w TypeSuffix?
+private List<WTypeSuffix> TypeSuffix =
+     opensquare w closesquare w a1:TypeSuffix
+     { yyValue = Useful.list(WIDLFactory.tsArray(), a1); }
+   / opensquare w closesquare
+     { yyValue = Useful.list(WIDLFactory.tsArray()); }
+   / question w opensquare w closesquare w a1:TypeSuffix
+     { yyValue = Useful.concat(Useful.list(WIDLFactory.tsQuestion(), WIDLFactory.tsArray()),
+                              a1);
+     }
+   / question w opensquare w closesquare
+     { yyValue = Useful.list(WIDLFactory.tsQuestion(), WIDLFactory.tsArray()); }
+   / question
    ;
-
-/*
- * Null ::= "?" | \epsilon
- */
-private void Null = question? ;
 
 /*
  * ReturnType ::= Type | "void"
  */
-private void ReturnType =
+private WType ReturnType =
      Type
-   / voidK
-   ;
+   / voidK { yyValue = WIDLFactory.voidType(); };
 
 /*
  * ExtendedAttributeNoArgs ::= identifier
+ * Never used in the WIDL grammar.
+private String ExtendedAttributeNoArgs = IdText ;
  */
-private void ExtendedAttributeNoArgs = IdText ;
 
 /*
  * ExtendedAttributeArgList ::= identifier w "(" w ArgumentList w ")"
+ * Never used in the WIDL grammar.
+private List<ExtendedAttributeArg> ExtendedAttributeArgList =
+a1:IdText w openparen w a2:ArgumentList? w closeparen ;
  */
-private void ExtendedAttributeArgList =
-   IdText w openparen w ArgumentList? w closeparen ;
 
 /*
  * ExtendedAttributeIdent ::= identifier w "=" w identifier
+ * Never used in the WIDL grammar.
+private ExtendedAttributeIdent ExtendedAttributeIdent =
+a1:IdText w equals w a2:IdText ;
  */
-private void ExtendedAttributeIdent =
-   IdText w equals w IdText ;
 
 /*
  * ExtendedAttributeNamedArgList ::= identifier w "=" w identifier w "(" w ArgumentList w ")"
+ * Never used in the WIDL grammar.
+private List<ExtendedAttributeArg> ExtendedAttributeNamedArgList =
+a1:IdText w equals w a2:IdText w openparen w a3:ArgumentList? w closeparen ;
  */
-private void ExtendedAttributeNamedArgList =
-   IdText w equals w IdText w openparen w ArgumentList? w closeparen ;
 
 /*
  * identifier = [A-Z_a-z][0-9A-Z_a-z]*
  *
  * Any single leading U+005F LOW LINE ("_") character (underscore) is removed.
  * A leading "_" is used to escape an identifier from looking like a reserved word
- * so that, for example, an interface named “interface” can be defined. The leading
+ * so that, for example, an interface named ?�interface??can be defined. The leading
  * "_" is dropped to unescape the identifier.
  */
 transient String id      = s:(idstart idrest*) &{ !JAVASCRIPT_RESERVED.contains(s) &&
@@ -765,47 +980,81 @@ transient String idname  = s:(idstart idrest*);
 transient String idstart = [a-zA-Z] ;
 transient String idrest  = idstart / [0-9] / [_];
 private String IdText =
-   a1:id
-   { yyValue = NodeUtil.dropAnySingleLeadingUnderscore(a1); };
+     a1:id
+     { yyValue = NodeUtil.dropAnySingleLeadingUnderscore(a1); };
+private WId Id = a1:id
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = WIDLFactory.mkId(span, a1);
+     };
 
 /*
  * integer ::= -?(0([0-7]*|[Xx][0-9A-Fa-f]+)|[1-9][0-9]*)
  */
-transient void integer =
-     minus? "0" [Xx] [0-9A-Fa-f]+
-   / minus? "0" [0-7]*
-   / minus? [1-9] [0-9]*
-   ;
+transient String integer =
+     a1:minus? "0" [Xx] a2:[0-9A-Fa-f]+
+     { String sign = "";
+       if (a1 != null) sign = "-";
+       yyValue = sign+"0x"+a2;
+     }
+   / a1:minus? "0" a2:[0-7]*
+     { String sign = "";
+       if (a1 != null) sign = "-";
+       yyValue = sign+"0"+a2;
+     }
+   / a1:minus? a2:[1-9] a3:[0-9]*
+     { String sign = "";
+       if (a1 != null) sign = "-";
+       yyValue = sign+a2+a3;
+     };
 
 /*
  * float ::= -?(([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([Ee][+-]?[0-9]+)?|[0-9]+[Ee][+-]?[0-9]+)
  */
-transient void float =
-     minus? floatfront floatback
-   / minus? floatfront
-   / minus? [0-9]+ floatback
-   ;
-transient void floatfront =
-     [0-9]+ dot [0-9]*
-   / [0-9]* dot [0-9]+
-   ;
-transient void floatback =
-     [Ee] ("+"/"-")? [0-9]+ ;
+transient String floatL =
+     a1:minus? a2:floatfront a3:floatback
+     { String sign = "";
+       if (a1 != null) sign = "-";
+       yyValue = sign+a2+a3;
+     }
+   / a1:minus? a2:floatfront
+     { String sign = "";
+       if (a1 != null) sign = "-";
+       yyValue = sign+a2;
+     }
+   / a1:minus? a2:[0-9]+ a3:floatback
+     { String sign = "";
+       if (a1 != null) sign = "-";
+       yyValue = sign+a2+a3;
+     };
+transient String floatfront =
+     a1:[0-9]+ dot a2:[0-9]*
+     { yyValue = a1+"."+a2; }
+   / a1:[0-9]* dot a2:[0-9]+
+     { yyValue = a1+"."+a2; };
+transient String floatback =
+     [Ee] a1:("+"/"-")? a2:[0-9]+
+     { if (a1 == null) yyValue = "e"+a2;
+       else            yyValue = "e"+a1+a2;
+     };
 
 /*
  * string = "[^"]*"
  */
-transient void string =
-     ["] StringChar* ["] ;
-transient void StringChar =
+transient WString string =
+     ["] a1s:StringChar* ["]
+     { String str = "";
+       for (String c : (List<String>)a1s.list()) str = str.concat(c);
+       yyValue = WIDLFactory.mkString(createSpan(yyStart,yyCount+1), str);
+     };
+transient String StringChar =
      (!["] _) ; // " ;
 
 /*
  * other = [^\t\n\r 0-9A-Z_a-z]
  */
-transient void other =
+transient String other =
      (!NotOther _) ;
-transient void NotOther =
+transient String NotOther =
      [\t\n\r0-9A-Z_a-z] ;
 
 /* If a MultiLineComment contains one or more line terminators,
@@ -815,6 +1064,23 @@ transient String LineTerminator =
      ([\u000a] / [\u000d] / [\u2028] / [\u2029])
      { yyValue = ""+a1; }
    / MultiLineCommentWLB ;
+
+transient String LineTerminatorNoMC =
+     a1:([\u000a] / [\u000d] / [\u2028] / [\u2029])
+     { yyValue = ""+a1; };
+
+/* LineTerminatorSequence ::=
+     <LF> | <CR>[lookahead \not\in <LF>] | <LS> | <PS> | <CR><LF>
+ */
+transient String LineTerminatorSequence =
+     a1:([\u000a] / [\u2028] / [\u2029])
+     { yyValue = ""+a1; }
+   / a1:[\u000d] a2:[\u000a]
+     { yyValue = ""+a1+a2; }
+   / a1:[\u000d] !([\u000a])
+     { yyValue = ""+a1; }
+   / MultiLineCommentWLB
+   ;
 
 transient String MultiLineCommentWLB =
      "/*" a1s:MultiLineCommentCharNoLB* a2:LineTerminator a3s:MultiLineCommentCharWLB* "*/"
@@ -850,37 +1116,37 @@ transient void opencurly = "{";
 transient void closecurly = "}";
 transient void opensquare = "[";
 transient void closesquare = "]";
-transient void semicolon = ";";
-transient void colon = ":";
-transient void equals = "=" !("=");
+transient String semicolon = ";";
+transient String colon = ":";
+transient String equals = "=" !("=");
 transient String comma = ",";
 transient String minus = "-" !("-" / "=");
 transient String ellipsis = "...";
 transient String dot   = "." !(".");
-transient void question = "?";
+transient String question = "?";
 
-transient void DOMString = "DOMString" !(idrest);
-transient void Date = "Date" !(idrest);
-transient void Infinity = "Infinity" !(idrest);
-transient void NaN= "NaN" !(idrest);
-transient void any = "any" !(idrest);
-transient void boolean = "boolean" !(idrest);
-transient void byte = "byte" !(idrest);
-transient void double = "double" !(idrest);
-transient void false = "false" !(idrest);
-transient void floatK = "float" !(idrest);
-transient void long = "long" !(idrest);
-transient void nullK = "null" !(idrest);
-transient void object = "object" !(idrest);
-transient void octet = "octet" !(idrest);
-transient void optional = "optional" !(idrest);
-transient void or = "or" !(idrest);
-transient void readonly = "readonly" !(idrest);
-transient void sequence = "sequence" !(idrest);
-transient void short = "short" !(idrest);
-transient void true = "true" !(idrest);
-transient void unsigned = "unsigned" !(idrest);
-transient void voidK = "void" !(idrest);
+transient String DOMString = "DOMString" !(idrest);
+transient String Date = "Date" !(idrest);
+transient String Infinity = "Infinity" !(idrest);
+transient String NaN= "NaN" !(idrest);
+transient String any = "any" !(idrest);
+transient String boolean = "boolean" !(idrest);
+transient String byte = "byte" !(idrest);
+transient String double = "double" !(idrest);
+transient String false = "false" !(idrest);
+transient String floatK = "float" !(idrest);
+transient String long = "long" !(idrest);
+transient String nullK = "null" !(idrest);
+transient String object = "object" !(idrest);
+transient String octet = "octet" !(idrest);
+transient String optional = "optional" !(idrest);
+transient String or = "or" !(idrest);
+transient String readonly = "readonly" !(idrest);
+transient String sequence = "sequence" !(idrest);
+transient String short = "short" !(idrest);
+transient String true = "true" !(idrest);
+transient String unsigned = "unsigned" !(idrest);
+transient String voidK = "void" !(idrest);
 
 transient String attribute = "attribute" !(idrest);
 transient String callback = "callback" !(idrest);
@@ -903,65 +1169,3 @@ transient String typedef = "typedef" !(idrest);
 transient String unrestricted = "unrestricted" !(idrest);
 
 transient void epsilon = "epsilon";
-
-        /*
-Static checks
-1. Within the set of IDL fragments that a given implementation supports, the identifier of every interface, dictionary, exception, enumeration, callback function and typedef must not be the same as the identifier of any other interface, dictionary, exception, enumeration, callback function or typedef
-2. The inheritance hierarchy should be acyclic.
-3. Callback interfaces must not inherit from any non-callback interfaces, and all of a callback interface’s inherited interfaces must not have any consequential interfaces.
-4. Also, Infinity, -Infinity and NaN must not be used as the value of a float or double.
-5. If VT is the type of the value assigned to a constant, and DT is the type of the constant, dictionary member or optional argument itself, then these types must be compatible, which is the case if DT and VT are identical, or DT is a nullable type whose inner type is VT.
-6. The identifier of an attribute must not be the same as the identifier of another interface member defined on the same interface.
-7. If the Type is an identifier or an identifier followed by ?, then the identifier must identify an interface, enumeration, callback function or typedef.
-8. The type of the attribute must not be a sequence type or nullable sequence type, and it must not be a union type if one of its member types (or one of its member types’s member types, and so on) is a sequence type or nullable sequence type.
-9. The attribute whose getter is being inherited must be of the same type as the inheriting attribute, and inherit must not appear on a read only attribute.
-10. The identifier of a regular operation or static operation must not be the same as the identifier of a constant or attribute defined on the same interface.
-The identifier can be the same as that of another operation on the interface, however.
-The identifier of a static operation also must not be the same as the identifier of a regular operation defined on the same interface.
-11. If the return type is an identifier or an identifier followed by ?, then the identifier must identify an interface, dictionary, enumeration, callback function or typedef.
-12. If the Type of an operation argument is an identifier or an identifier followed by ?, then the identifier must identify an interface, dictionary, enumeration, callback function or typedef.
-13. The identifier of each argument must not be the same as the identifier of another argument in the same operation declaration.
-14. Extended attributes that take an argument list ([Constructor] and [NamedConstructor], of those defined in this specification) and callback functions are also considered to be variadic when the ... token is used in their argument lists.
-15. An argument must not be declared to be optional unless all subsequent arguments to the operation are also optional. Also, the final argument in an operation must not be declared to be optional if the operation is variadic.
-16. The implicitly optional final argument of a variadic operation must not have a default value specified.
-17. If an optional argument has a default value, then all following arguments (except for the final argument if the operation is variadic) must also have a default value.
-18. If the type of the optional argument is an enumeration, then its default value if specified must be one of the enumeration’s values.
-19. The following extended attributes are applicable to operations: [TreatNullAs], [TreatUndefinedAs].
-20. The following extended attributes are applicable to operation arguments: [Clamp], [EnforceRange], [TreatNullAs], [TreatUndefinedAs].
-21. Getters, setters, creators and deleters come in two varieties: ones that take a DOMString as a property name, known as named property getters, named property setters, named property creators and named property deleters, and ones that take an unsigned long as a property index, known as indexed property getters, indexed property setters, indexed property creators and indexed property deleters.
-22. On a given interface, there must exist at most one stringifier and at most one of each variety of getter, setter, creator and deleter. Multiple legacy callers can exist on an interface to specify overloaded calling behavior.
-Indexed property getters and deleters must be declared to take a single unsigned long argument. Indexed property setters and creators must be declared to take two arguments, where the first is an unsigned long.
-Named property getters and deleters must be declared to take a single DOMString argument. Named property setters and creators must be declared to take two arguments, where the first is a DOMString.
-23. Special operations declared using operations must not be variadic nor have any optional arguments.
-24. Special operations must not be declared on callback interfaces.
-25. If an object implements more than one interface that defines a given special operation, then it is undefined which (if any) special operation is invoked for that operation.
-26. Static operations must not be declared on callback interfaces.
-         */
-
-        /*
-Identifier scopes
-1. Within an IDL fragment, a reference to a definition need not appear after the declaration of the referenced definition. References can also be made across IDL fragments.
-         */
-
-        /*
-Constants
-1. The identifier of a constant must not be the same as the identifier of another interface member defined on the same interface or another exception member defined on the same exception.
-2. If an identifier is used for the type of a constant (matching ConstType), it must reference a typedef whose type is a primitive type or a nullable primitive type.
-         */
-
-        /*
-Extended attributes
-1. The following extended attributes must not be specified on partial interface definitions: [ArrayClass], [Constructor], [ImplicitThis], [NamedConstructor], [NoInterfaceObject].
-2. The following extended attributes are applicable to interfaces: [ArrayClass], [Constructor], [ImplicitThis], [NamedConstructor], [NamedPropertiesObject], [NoInterfaceObject], [OverrideBuiltins].
-3. The following extended attributes are applicable to attributes: [Clamp], [EnforceRange], [LenientThis], [PutForwards], [Replaceable], [TreatNullAs], [TreatUndefinedAs], [Unforgeable].
-        */
-
-        /*
-Web API static restrictions
-1. If an interface supports indexed properties, then the interface definition must be accompanied by a description of what indices the object can be indexed with at any given time.
-         */
-
-        /*
-3.2.6 Overloading Checks (To Include from the specification)
-1. Operations and legacy callers must not be overloaded across interface and partial interface definitions.
-        */
