@@ -54,7 +54,7 @@ interface WNode() extends HasAt;
     /**
      * top-level node interface
      */
-    interface WIDLNode(WIDLNodeInfo info);
+    interface WIDLNode(WSpanInfo info);
         root abstract WIDL() extends UIDObject;
             abstract WDefinition(List<WEAttribute> attrs = Collections.<WEAttribute>emptyList());
                 WInterface(String name, Option<WId> parent, List<WInterfaceMember> members);

@@ -34,8 +34,11 @@ object NodeUtil {
   // Assumes that the filename remains the same.
   object addLinesWalker extends Walker {
     var line = 0
-    def addLines(program: Program, l: Int) = { line = l; walk(program) }
-    val map = new HashMap[String, Span]
+    def addLines(program: Program, l: Int) = {
+      line = l; map = new HashMap[String, Span]
+      walk(program)
+    }
+    var map = new HashMap[String, Span]
     override def walk(node:Any):Any = node match {
       case SSpanInfo(span) =>
         val key = span.at
@@ -368,6 +371,8 @@ object NodeUtil {
   def getSpan(n: ASTNode): Span = n.getInfo.getSpan
 
   def getSpan(n: IRAbstractNode): Span = n.getInfo.getSpan
+
+  def getSpan(n: WSpanInfo): Span = n.getSpan
 
   def getFileName(n: ASTNode): String = getSpan(n).getFileName
   def getBegin(n: ASTNode) = getSpan(n).getBegin

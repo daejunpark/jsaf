@@ -15,8 +15,9 @@ import java.util.*;
 import edu.rice.cs.plt.tuple.Option;
 import edu.rice.cs.plt.iter.IterUtil;
 
-//import xtc.parser.SemanticValue;
-//import xtc.parser.ParseError;
+import xtc.parser.SemanticValue;
+import xtc.parser.ParseError;
+import xtc.parser.Result;
 
 import kr.ac.kaist.jsaf.analysis.cfg.CFGBuilder;
 import kr.ac.kaist.jsaf.analysis.cfg.CFG;
@@ -42,6 +43,7 @@ import kr.ac.kaist.jsaf.interpreter.Interpreter;
 
 import kr.ac.kaist.jsaf.nodes.Program;
 import kr.ac.kaist.jsaf.nodes.IRRoot;
+import kr.ac.kaist.jsaf.nodes.WDefinition;
 import kr.ac.kaist.jsaf.nodes_util.ASTIO;
 import kr.ac.kaist.jsaf.nodes_util.Coverage;
 import kr.ac.kaist.jsaf.nodes_util.IRFactory;
@@ -50,6 +52,7 @@ import kr.ac.kaist.jsaf.nodes_util.JSFromHTML;
 import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete;
 import kr.ac.kaist.jsaf.nodes_util.JSIRUnparser;
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil;
+import kr.ac.kaist.jsaf.nodes_util.WIDLToString;
 import kr.ac.kaist.jsaf.parser.WIDL;
 import kr.ac.kaist.jsaf.tests.FileTests;
 import kr.ac.kaist.jsaf.tests.TypingSemanticsJUTest;
@@ -1133,8 +1136,12 @@ public final class Shell {
             //
             WIDL parser = new WIDL(Useful.utf8BufferedFileReader(new File(fileName)),
                                    fileName);
-            parser.pWIDL(0);
-            System.out.println("Ok");
+            xtc.parser.Result parseResult = parser.pWIDL(0);
+            if (parseResult.hasValue()) {
+                List<WDefinition> widl = (List<WDefinition>)(((SemanticValue)parseResult).value);
+                String code = new WIDLToString(widl).doit();
+                System.out.println(code);
+            } else throw new ParserError((ParseError)parseResult, parser);
             //
         } catch (FileNotFoundException f) {
             throw new UserError(fileName + " not found");
