@@ -1133,14 +1133,24 @@ public final class Shell {
         if (params.FileNames.length == 0) throw new UserError("The widlparse command needs a file to parse.");
         String fileName = params.FileNames[0];
         try {
-            //
             WIDL parser = new WIDL(Useful.utf8BufferedFileReader(new File(fileName)),
                                    fileName);
             xtc.parser.Result parseResult = parser.pWIDL(0);
             if (parseResult.hasValue()) {
                 List<WDefinition> widl = (List<WDefinition>)(((SemanticValue)parseResult).value);
                 String code = new WIDLToString(widl).doit();
-                System.out.println(code);
+                if (params.opt_OutFileName != null){
+                    try{
+                        BufferedWriter writer = Useful.filenameToBufferedWriter(params.opt_OutFileName);
+                        writer.write(code);
+                        writer.close();
+                    } catch (IOException e){
+                        throw new IOException("IOException " + e +
+                                              "while writing " + params.opt_OutFileName);
+                    }
+                } else {
+                    System.out.println(code);
+                }
             } else throw new ParserError((ParseError)parseResult, parser);
             //
         } catch (FileNotFoundException f) {
