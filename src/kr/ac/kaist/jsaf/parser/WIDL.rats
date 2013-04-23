@@ -1057,11 +1057,63 @@ transient String other =
 transient String NotOther =
      [\t\n\r0-9A-Z_a-z] ;
 
+transient void Comment =
+     MultiLineComment
+   / SingleLineComment ;
+
+transient void MultiLineComment =
+     "/*" a1s:MultiLineCommentChar* "*/"
+     { StringBuilder buf = new StringBuilder();
+       buf.append("/*");
+       for (String s : a1s.list()) buf.append(s);
+       buf.append("*/");
+     };
+
+transient private String MultiLineCommentChar =
+     !("*/") a1:_ { yyValue = a1+""; } ;
+
+transient String MultiLineCommentWLB =
+     "/*" a1s:MultiLineCommentCharNoLB* a2:LineTerminator a3s:MultiLineCommentCharWLB* "*/"
+     { StringBuilder buf = new StringBuilder();
+       buf.append("/*");
+       for (String s : a1s.list()) buf.append(s);
+       buf.append(a2);
+       for (String s : a3s.list()) buf.append(s);
+       buf.append("*/");
+       yyValue = buf.toString();
+     };
+
+transient private String MultiLineCommentCharWLB =
+     !("*/") _ ;
+
+transient String MultiLineCommentNoLB =
+     "/*" a1s:MultiLineCommentCharNoLB* "*/"
+     { StringBuilder buf = new StringBuilder();
+       buf.append("/*");
+       for (String s : a1s.list()) buf.append(s);
+       buf.append("*/");
+       yyValue = buf.toString();
+     };
+
+transient private String MultiLineCommentCharNoLB =
+     !("*/" / LineTerminator) a1:_ { yyValue = a1+""; } ;
+
+transient void SingleLineComment =
+     "//" a1s:SingleLineCommentChar*
+     { StringBuilder buf = new StringBuilder();
+       buf.append("/*");
+       for (String s : a1s.list()) buf.append(s);
+       buf.append("*/");
+     };
+
+transient private String SingleLineCommentChar =
+     !(LineTerminator) a1:_ { yyValue = a1+""; } ;
+
 /* If a MultiLineComment contains one or more line terminators,
  * then it is replaced by a single line terminator */
 /* LineTerminator ::= <LF> | <CR> | <LS> | <PS> */
 transient String LineTerminator =
-     ([\u000a] / [\u000d] / [\u2028] / [\u2029])
+     a1:([\u000a] / [\u000d] / [\u2028] / [\u2029])
      { yyValue = ""+a1; }
    / MultiLineCommentWLB ;
 
@@ -1082,31 +1134,27 @@ transient String LineTerminatorSequence =
    / MultiLineCommentWLB
    ;
 
-transient String MultiLineCommentWLB =
-     "/*" a1s:MultiLineCommentCharNoLB* a2:LineTerminator a3s:MultiLineCommentCharWLB* "*/"
-     { StringBuilder buf = new StringBuilder();
-       buf.append("/*");
-       for (String s : a1s.list()) buf.append(s);
-       buf.append(a2);
-       for (String s : a3s.list()) buf.append(s);
-       buf.append("*/");
-       yyValue = buf.toString();
-     };
-
-transient private String MultiLineCommentCharNoLB =
-     !("*/" / LineTerminator) _ { yyValue = a1+""; } ;
-
-transient private String MultiLineCommentCharWLB =
-     !("*/") _ ;
-
-transient void w = Space*; // whitespace optional
+/* WhiteSpace ::= <TAB> | <VT> | <FF> | <SP> | <NBSP> | <BOM> | <USP> */
 transient private void Space =
      void:"\t"
    / [\u000B]
    / void:"\f"
    / void:" "
    / [\u00A0]
-   / [\uFEFF] ;
+   / [\uFEFF]
+   / SingleLineComment
+   / MultiLineCommentNoLB ;
+
+transient private void Whitespace =
+     Space
+   / void:LineTerminatorSequence
+   / MultiLineComment ;
+
+transient void w  = Whitespace*; // whitespace optional
+transient void wr = Whitespace+; // whitespace required
+
+transient void s  = Space*;      // space optional
+transient void sr = Space+;      // space required
 
 transient void EndOfFile  = "\u001a"? w !_ ;
 
