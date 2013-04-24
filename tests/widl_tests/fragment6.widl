@@ -12,6 +12,8 @@ interface A {
   void doTask(DOMString type, Options options);
 };
 
+/* In JavaScript
 var a = getA();  // Get an instance of A.
 
 a.doTask("something", { option1: "banana", option3: 100 });
+*/

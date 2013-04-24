@@ -2,7 +2,3 @@
 interface A {
   const short rambaldi = 47;
 };
-
-interface B {
-  const short newvalue = A.rambaldi;
-};

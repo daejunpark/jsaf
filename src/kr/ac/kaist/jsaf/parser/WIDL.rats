@@ -457,7 +457,7 @@ private WInterfaceMember AttributeOrOperation =
  * ReadOnly ::=	"readonly" | \epsilon
  */
 private WAttribute Attribute =
-     a1:inherit? a2:(w readonly)? w attribute w a3:Type a4:id w semicolon
+     a1:inherit? a2:(w readonly)? w attribute w a3:Type w a4:id w semicolon
      { Span span = createSpan(yyStart,yyCount);
        List<WEAttribute> attrs = new ArrayList<WEAttribute>();
        if (a1 != null && a2 != null) {
@@ -605,36 +605,29 @@ private List<WEAttribute> ExtendedAttributes =
  *                     | "[" w ExtendedAttributeInner w "]" w ExtendedAttributeRest
  *                     | "{" w ExtendedAttributeInner w "}" w ExtendedAttributeRest
  *                     | Other w ExtendedAttributeRest
- */
-private List<WEAttribute> ExtendedAttribute =
-     openparen a1:(w ExtendedAttributeInner)? w closeparen a2:(w ExtendedAttributeRest)?
-     { if (a1 == null && a2 == null) yyValue = Collections.<WEAttribute>emptyList();
-       else if (a1 == null) yyValue = a1;
-       else if (a2 == null) yyValue = a2;
-       else yyValue = Useful.concat(a1, a2);
-     }
-   / opensquare a1:(w ExtendedAttributeInner)? w closesquare a2:(w ExtendedAttributeRest)?
-     { if (a1 == null && a2 == null) yyValue = Collections.<WEAttribute>emptyList();
-       else if (a1 == null) yyValue = a1;
-       else if (a2 == null) yyValue = a2;
-       else yyValue = Useful.concat(a1, a2);
-     }
-   / opencurly a1:(w ExtendedAttributeInner)? w closecurly a2:(w ExtendedAttributeRest)?
-     { if (a1 == null && a2 == null) yyValue = Collections.<WEAttribute>emptyList();
-       else if (a1 == null) yyValue = a1;
-       else if (a2 == null) yyValue = a2;
-       else yyValue = Useful.concat(a1, a2);
-     }
-   / a1:Other a2:(w ExtendedAttributeRest)?
-     { Span span = createSpan(yyStart,yyCount);
-       if (a2 == null) yyValue = Useful.list(a1);
-       else yyValue = Useful.list(a1, a2);
-     };
-
-/*
  * ExtendedAttributeRest ::= ExtendedAttribute | \epsilon
  */
-private List<WEAttribute> ExtendedAttributeRest = ExtendedAttribute;
+private List<WEAttribute> ExtendedAttribute =
+     a1:ExtendedAttributeFront w a2:ExtendedAttribute
+     { yyValue = Useful.concat(a1, a2); }
+   / ExtendedAttributeFront
+   ;
+
+private List<WEAttribute> ExtendedAttributeFront =
+     openparen a1:(w ExtendedAttributeInner)? w closeparen
+     { if (a1 == null) yyValue = Collections.<WEAttribute>emptyList();
+       else yyValue = a1;
+     }
+   / opensquare a1:(w ExtendedAttributeInner)? w closesquare
+     { if (a1 == null) yyValue = Collections.<WEAttribute>emptyList();
+       else yyValue = a1;
+     }
+   / opencurly a1:(w ExtendedAttributeInner)? w closecurly
+     { if (a1 == null) yyValue = Collections.<WEAttribute>emptyList();
+       else yyValue = a1;
+     }
+   / a1:Other
+     { yyValue = Useful.list(a1); };
 
 /*
  * ExtendedAttributeInner ::= "(" w ExtendedAttributeInner w ")" w ExtendedAttributeInner
@@ -647,20 +640,20 @@ private List<WEAttribute> ExtendedAttributeRest = ExtendedAttribute;
 private List<WEAttribute> ExtendedAttributeInner =
      openparen a1:(w ExtendedAttributeInner)? w closeparen a2:(w ExtendedAttributeInner)?
      { if (a1 == null && a2 == null) yyValue = Collections.<WEAttribute>emptyList();
-       else if (a1 == null) yyValue = a1;
-       else if (a2 == null) yyValue = a2;
+       else if (a1 == null) yyValue = a2;
+       else if (a2 == null) yyValue = a1;
        else yyValue = Useful.concat(a1, a2);
      }
    / opensquare a1:(w ExtendedAttributeInner)? w closesquare a2:(w ExtendedAttributeInner)?
      { if (a1 == null && a2 == null) yyValue = Collections.<WEAttribute>emptyList();
-       else if (a1 == null) yyValue = a1;
-       else if (a2 == null) yyValue = a2;
+       else if (a1 == null) yyValue = a2;
+       else if (a2 == null) yyValue = a1;
        else yyValue = Useful.concat(a1, a2);
      }
    / opencurly a1:(w ExtendedAttributeInner)? w closecurly a2:(w ExtendedAttributeInner)?
      { if (a1 == null && a2 == null) yyValue = Collections.<WEAttribute>emptyList();
-       else if (a1 == null) yyValue = a1;
-       else if (a2 == null) yyValue = a2;
+       else if (a1 == null) yyValue = a2;
+       else if (a2 == null) yyValue = a1;
        else yyValue = Useful.concat(a1, a2);
      }
    / a1:Other a2:(w ExtendedAttributeInner)?
@@ -670,7 +663,7 @@ private List<WEAttribute> ExtendedAttributeInner =
      }
    / comma a1:(w ExtendedAttributeInner)?
      { Span span = createSpan(yyStart,yyCount);
-       if (a1 == null) yyValue = Useful.list(a1);
+       if (a1 != null) yyValue = Useful.list(a1);
        else yyValue = Collections.<WEAttribute>emptyList();
      };
 
@@ -684,12 +677,10 @@ private List<WEAttribute> ExtendedAttributeInner =
  *         | ArgumentNameKeyword
  */
 private WEAttribute Other =
-     a1:(integer / floatL / other / minus / dot /
-         colon / semicolon / "<" / equals / ">" /
-         Date / DOMString / Infinity / NaN / any /
-         boolean / byte / double / false / floatK /
-         long / nullK / object / octet / or /
-         sequence / short / true / unsigned / voidK)
+     a1:(integer / floatL / minus / dot / colon / semicolon / "<" / equals / ">" /
+         Date / DOMString / Infinity / NaN / any / boolean / byte / double / false /
+         floatK / long / nullK / object / octet / or / sequence / short / true /
+         unsigned / voidK)
      { yyValue = WIDLFactory.mkEAString(a1); }
    / a1:string
      { yyValue = WIDLFactory.mkEAString(a1.getStr()); }
@@ -702,6 +693,8 @@ private WEAttribute Other =
    / a1:ArgumentNameKeyword
      { yyValue = WIDLFactory.mkEAArgumentNameKeyword(a1); }
    / a1:id
+     { yyValue = WIDLFactory.mkEAString(a1); }
+   / a1:other
      { yyValue = WIDLFactory.mkEAString(a1); };
 
 /*
@@ -930,6 +923,7 @@ private List<WTypeSuffix> TypeSuffix =
    / question w opensquare w closesquare
      { yyValue = Useful.list(WIDLFactory.tsQuestion(), WIDLFactory.tsArray()); }
    / question
+     { yyValue = Useful.list(WIDLFactory.tsQuestion()); }
    ;
 
 /*
@@ -977,8 +971,8 @@ a1:IdText w equals w a2:IdText w openparen w a3:ArgumentList? w closeparen ;
 transient String id      = s:(idstart idrest*) &{ !JAVASCRIPT_RESERVED.contains(s) &&
                                                   !s.startsWith("__") };
 transient String idname  = s:(idstart idrest*);
-transient String idstart = [a-zA-Z] ;
-transient String idrest  = idstart / [0-9] / [_];
+transient String idstart = [a-z_A-Z] ;
+transient String idrest  = idstart / [0-9];
 private String IdText =
      a1:id
      { yyValue = NodeUtil.dropAnySingleLeadingUnderscore(a1); };
@@ -1055,7 +1049,7 @@ transient String StringChar =
 transient String other =
      (!NotOther _) ;
 transient String NotOther =
-     [\t\n\r0-9A-Z_a-z] ;
+        [\t\n\r0-9A-Z_a-z] / ")" / "]" / "}" ;
 
 transient void Comment =
      MultiLineComment

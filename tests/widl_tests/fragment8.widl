@@ -10,6 +10,7 @@ callback interface EventListener {
   void handleEvent(Event event);
 };
 
+/* In JavaScript
 // Since the EventListener interface is annotated callback interface,
 // user objects can implement it:
 var node = getNode();                                // Obtain an instance of Node.
@@ -30,3 +31,4 @@ var newNode = {
   }
 };
 node.appendChild(newNode);  // This will throw a TypeError exception.
+*/

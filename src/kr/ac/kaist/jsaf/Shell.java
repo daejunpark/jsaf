@@ -157,7 +157,7 @@ public final class Shell {
                 unparse();
                 break;
             case ShellParameters.CMD_WIDLPARSE :
-                widlparse();
+                return_code = widlparse();
                 break;
             case ShellParameters.CMD_STRICT :
                 return_code = strict();
@@ -1129,9 +1129,11 @@ public final class Shell {
      * Parse a Web IDL file.
      * If you want a dump then give -out somefile.
      */
-    private static void widlparse() throws UserError, InterruptedException, IOException {
+    private static int widlparse() throws UserError, InterruptedException, IOException {
         if (params.FileNames.length == 0) throw new UserError("The widlparse command needs a file to parse.");
         String fileName = params.FileNames[0];
+
+        int return_code = 0;
         try {
             WIDL parser = new WIDL(Useful.utf8BufferedFileReader(new File(fileName)),
                                    fileName);
@@ -1156,14 +1158,15 @@ public final class Shell {
         } catch (FileNotFoundException f) {
             throw new UserError(fileName + " not found");
         }
+        return return_code;
     }
 
-    public static void widlparse(String fileName, String outFileName) throws UserError, InterruptedException, IOException {
+    public static int widlparse(String fileName, String outFileName) throws UserError, InterruptedException, IOException {
         params.Clear();
         params.opt_OutFileName = outFileName;
         params.FileNames = new String[1];
         params.FileNames[0] = fileName;
-        widlparse();
+        return widlparse();
     }
 
     ////////////////////////////////////////////////////////////////////////////////

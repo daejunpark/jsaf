@@ -32,7 +32,7 @@ import kr.ac.kaist.jsaf.useful.WireTappedPrintStream
 object FileTests {
 
   def makeTestFileName(name: String) =
-    if (name.endsWith(".js")) name else name + ".js"
+    if (name.endsWith(".js") || name.endsWith(".widl")) name else name + ".js"
 
   def join(dir: String, file: String) =
     if (dir.length == 0) file else dir + "/" + file
@@ -99,7 +99,7 @@ object FileTests {
       }
       var decrement = true
       val shouldFail = s.startsWith("XXX")
-      if (s.endsWith(".js")) {
+      if (s.endsWith(".js") || s.endsWith(".widl")) {
         // do nothing
         decrement = false
       } else if (!s.startsWith(".")) {
@@ -154,7 +154,7 @@ object FileTests {
                             failsOnly: Boolean): List[Test] = {
     var cTests = List[Test]()
     val commands = List("strict","compile","disambiguate","interpret","interpret_mozilla","cfg",
-                        "concolic","bug-detector")
+                        "concolic","bug-detector","widlparse")
     var found = false
     for (c <- commands)
       if (props.get(c) != null) {

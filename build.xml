@@ -652,13 +652,15 @@ This is the main Ant build file.
 
   <target name="test" depends="compileAll, testParser, testUnparser, testStrict,
                                testDisambiguator, testTranslator, testInterpreter,
-                               testWith, testCFG, testTyping, testAssert, testBugDetector"
+                               testWith, testCFG, testTyping, testAssert, testBugDetector,
+                               testWIDLParser"
           description="Clean, compile everything, and run all unit and system tests.">
   </target>
 
   <target name="testWOcompile" depends="testParser, testUnparser, testStrict,
                                testDisambiguator, testTranslator, testInterpreter,
-                               testWith, testCFG, testTyping, testAssert, testBugDetector"
+                               testWith, testCFG, testTyping, testAssert, testBugDetector,
+                               testWIDLParser"
           description="Clean, compile everything, and run all unit and system tests.">
   </target>
 

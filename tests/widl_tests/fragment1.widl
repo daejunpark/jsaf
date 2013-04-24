@@ -14,8 +14,7 @@ interface Pattern : Paint {
   attribute DOMString imageURL;
 };
 
-[Constructor]
-interface GraphicalWindow {
+[Constructor] interface GraphicalWindow {
   readonly attribute unsigned long width;
   readonly attribute unsigned long height;
 
