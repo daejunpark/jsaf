@@ -10,5 +10,13 @@ tests=fragment8.widl
 WIDLPARSER_TESTS_DIR=${JS_HOME}/tests/widl_tests
 widlparse
 widlparse_out_WCIequals=\
-#@#class java.util.ArrayList\n
+interface Node {\n\
+  [readonly] attribute DOMString nodeName;\n\
+  [readonly] attribute Node? parentNode;\n\
+  Node appendChild(Node newChild);\n\
+  void addEventListener(DOMString type, EventListener listener);\n\
+};\n\
+[callback] interface EventListener {\n\
+  void handleEvent(Event event);\n\
+};\n
 widlparse_err_equals=

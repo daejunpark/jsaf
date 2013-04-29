@@ -10,5 +10,13 @@ tests=fragment7.widl
 WIDLPARSER_TESTS_DIR=${JS_HOME}/tests/widl_tests
 widlparse
 widlparse_out_WCIequals=\
-#@#class java.util.ArrayList\n
+interface Animal {\n\
+  attribute DOMString name;\n\
+};\n\
+interface Human : Animal {\n\
+  attribute Dog? pet;\n\
+};\n\
+interface Dog : Animal {\n\
+  attribute Human? owner;\n\
+};\n
 widlparse_err_equals=

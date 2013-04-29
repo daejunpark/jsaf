@@ -10,5 +10,13 @@ tests=fragment26.widl
 WIDLPARSER_TESTS_DIR=${JS_HOME}/tests/widl_tests
 widlparse
 widlparse_out_WCIequals=\
-#@#class java.util.ArrayList\n
+interface Point {\n\
+  \n\
+};\n\
+interface Circle {\n\
+  attribute float cx;\n\
+  attribute float cy;\n\
+  attribute float radius;\n\
+  static Point triangulate(Circle c1, Circle c2, Circle c3);\n\
+};\n
 widlparse_err_equals=

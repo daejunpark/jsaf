@@ -10,5 +10,11 @@ tests=fragment2.widl
 WIDLPARSER_TESTS_DIR=${JS_HOME}/tests/widl_tests
 widlparse
 widlparse_out_WCIequals=\
-#@#class java.util.ArrayList\n
+interface B : A {\n\
+  void f(ArrayOfLongs x);\n\
+};\n\
+interface A {\n\
+  \n\
+};\n\
+typedef long[] ArrayOfLongs;\n
 widlparse_err_equals=

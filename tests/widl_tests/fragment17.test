@@ -10,5 +10,9 @@ tests=fragment17.widl
 WIDLPARSER_TESTS_DIR=${JS_HOME}/tests/widl_tests
 widlparse
 widlparse_out_WCIequals=\
-#@#class java.util.ArrayList\n
+interface Dictionary {\n\
+  [readonly] attribute unsigned long propertyCount;\n\
+  getter float getProperty(DOMString propertyName);\n\
+  setter void setProperty(DOMString propertyName, float propertyValue);\n\
+};\n
 widlparse_err_equals=

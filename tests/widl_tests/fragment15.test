@@ -10,5 +10,8 @@ tests=fragment15.widl
 WIDLPARSER_TESTS_DIR=${JS_HOME}/tests/widl_tests
 widlparse
 widlparse_out_WCIequals=\
-#@#class java.util.ArrayList\n
+interface ColorCreator {\n\
+  object createColor(float v1, float v2, float v3);\n\
+  object createColor(float v1, float v2, float v3, float alpha);\n\
+};\n
 widlparse_err_equals=

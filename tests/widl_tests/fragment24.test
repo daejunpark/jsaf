@@ -10,5 +10,7 @@ tests=fragment24.widl
 WIDLPARSER_TESTS_DIR=${JS_HOME}/tests/widl_tests
 widlparse
 widlparse_out_WCIequals=\
-#@#class java.util.ArrayList\n
+interface A {\n\
+  getter DOMString toWord(unsigned long index);\n\
+};\n
 widlparse_err_equals=

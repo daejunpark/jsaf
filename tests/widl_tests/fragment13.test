@@ -10,5 +10,9 @@ tests=fragment13.widl
 WIDLPARSER_TESTS_DIR=${JS_HOME}/tests/widl_tests
 widlparse
 widlparse_out_WCIequals=\
-#@#class java.util.ArrayList\n
+interface IntegerSet {\n\
+  [readonly] attribute unsigned long cardinality;\n\
+  void union([...] long ints);\n\
+  void intersection([...] long ints);\n\
+};\n
 widlparse_err_equals=

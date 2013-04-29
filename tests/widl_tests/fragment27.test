@@ -10,5 +10,14 @@ tests=fragment27.widl
 WIDLPARSER_TESTS_DIR=${JS_HOME}/tests/widl_tests
 widlparse
 widlparse_out_WCIequals=\
-#@#class java.util.ArrayList\n
+interface A {\n\
+  void f();\n\
+};\n\
+[partial] interface A {\n\
+  void f(float x);\n\
+  void g();\n\
+};\n\
+[partial] interface A {\n\
+  void g(DOMString x);\n\
+};\n
 widlparse_err_equals=

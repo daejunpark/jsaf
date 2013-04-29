@@ -25,6 +25,9 @@ import edu.rice.cs.plt.tuple.Option
  *
  * Caveats:
  * 1. Comments are not preserved.
+ * 2. We do not distinguish between ExtendedAttribute and modifiers for now.
+ *    For example, "readonly attribute DOMString name;" is parsed and then unparsed
+ *    to "[readonly] attribute DOMString name;".
  *
  * Possible improvements:
  * 1. We may want to keep comments.
@@ -59,6 +62,14 @@ class WIDLToString(program: JList[WDefinition]) extends Walker {
     if (str.startsWith("(") && str.endsWith(")")) str
     else new StringBuilder("(").append(str).append(")").toString
 
+  def join(kind: String, all: List[Any],
+           sep: String, result: StringBuilder): StringBuilder = all match {
+    case Nil => result
+    case _ =>
+      result.append(kind)
+      join(all, sep, result)
+  }
+
   def join(all: List[Any], sep: String, result: StringBuilder): StringBuilder = all match {
     case Nil => result
     case _ => result.length match {
@@ -71,60 +82,6 @@ class WIDLToString(program: JList[WDefinition]) extends Walker {
         else
           join(all.tail, sep, result.append(sep).append(walk(all.head)))
     }
-  }
-
-  var uniq_id = 0
-  def fresh() = { uniq_id += 1; uniq_id.toString }
-  type Env = List[(String, String)]
-  var env = Nil.asInstanceOf[Env]
-  def addE(uniq: String, new_uniq: String) = env = (uniq, new_uniq)::env
-  def getE(uniq: String): String = env.find(p => p._1.equals(uniq)) match {
-    case None =>
-      val new_uniq = fresh
-      addE(uniq, new_uniq)
-      new_uniq
-    case Some((_, new_uniq)) => new_uniq
-  }
-
-  def pp(s: StringBuilder, str: String) = {
-    for (c <- str) c match {
-      case '\u0008' => s.append("\\b")
-      case '\t' => s.append("\\t")
-      case '\n' => s.append("\\n")
-      case '\f' => s.append("\\f")
-      case '\r' => s.append("\\r")
-      case '\u000b' => s.append("\\v")
-      case '"'  => s.append("\\\"")
-      case '\'' => s.append("'")
-      case '\\' => s.append("\\")
-      case c => s.append(c+"")
-    }
-  }
-
-  def prFtn(s: StringBuilder, fds: List[FunDecl], vds: List[VarDecl],
-            body: List[SourceElement]) = {
-    fds match {
-      case Nil =>
-      case _ =>
-        increaseIndent
-        s.append(getIndent).append(join(fds, "\n"+getIndent, new StringBuilder("")))
-        decreaseIndent
-        s.append("\n").append(getIndent)
-    }
-    vds match {
-      case Nil =>
-      case _ =>
-        increaseIndent
-        s.append(getIndent)
-        vds.foreach(vd => vd match {
-                    case SVarDecl(_,n,_) =>
-                      s.append("var "+n.getText+";\n"+getIndent)})
-        decreaseIndent
-        s.append("\n").append(getIndent)
-      }
-    increaseIndent
-    s.append(getIndent).append(join(body, "\n"+getIndent, new StringBuilder("")))
-    decreaseIndent
   }
 
   /* The rule of separators(indentation, semicolon and newline) in unparsing pattern matchings.
@@ -147,262 +104,250 @@ class WIDLToString(program: JList[WDefinition]) extends Walker {
    *
    */
   override def walk(node:Any):String = node match {
-    case SWAnyType(info, suffix) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("AnyType[")
-      suffix.foreach(e => s.append(walk(e)).append(", "))
-      s.append("]")
-      s.toString
-    case SWArgument(info, attributes, typ, name, default) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("Argument[{Attributes:")
-      attributes.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {Type:")
-      s.append(walk(typ))
-      s.append("} {ArgName:")
-      s.append(name)
-      s.append("} {Default:")
-      s.append(walk(default))
-      s.append("}]")
-      s.toString
-    case SWArrayType(info, suffix, typ) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("Array[")
-      suffix.foreach(e => s.append(walk(e)).append(", "))
-      s.append("] {Type:")
-      s.append(walk(typ))
-      s.append("}")
-      s.toString
-    case SWAttribute(info, attrs, typ, name) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("Attribute[{Attributes:")
-      attrs.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} attribute {Type:")
-      s.append(walk(typ))
-      s.append("} {id:")
-      s.append(name)
-      s.append("}]")
-      s.toString
-    case SWBoolean(info, value) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("Boolean[")
-      s.append(value)
-      s.append("]")
-      s.toString
     case SWCallback(info, attrs, name, returnType, args) =>
       val s: StringBuilder = new StringBuilder
-      s.append("Callback[{Attributes:")
-      attrs.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {Identifier:")
-      s.append(name)
-      s.append("} = {ReturnType:")
-      s.append(walk(returnType))
-      s.append("} {ArgumentList:")
-      args.foreach(e => s.append(walk(e)).append(", "))
-      s.append("}]")
-      s.toString
-    case SWConst(info, attrs, typ, name, value) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("Const[{Attributes:")
-      attrs.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {ConstType:")
-      s.append(walk(typ))
-      s.append("} {Identifier:")
-      s.append(name)
-      s.append("} {ConstValue:")
-      s.append(walk(value))
-      s.append("}]")
-      s.toString
-    case SWDictionary(info, attrs, name, parent, members) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("Dictionary[{Attributes:")
-      attrs.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {Identifier:")
-      s.append(name)
-      s.append("} {Inheritance:")
-      s.append(walk(parent))
-      s.append("} {DictionaryMembers:")
-      members.foreach(e => s.append(walk(e)).append(", "))
-      s.append("}]")
-      s.toString
-    case SWDictionaryMember(info, attrs, typ, name, default) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("DictionaryMember[{Attributes:")
-      attrs.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {Type:")
-      s.append(walk(typ))
-      s.append("} {Identifier:")
-      s.append(name)
-      s.append("} {Default:")
-      s.append(walk(default))
-      s.append("}]")
-      s.toString
-    case SWEAAttribute => "attribute"
-    case SWEACallback => "callback"
-    case SWEAConst => "const"
-    case SWEACreator => "creator"
-    case SWEADeleter => "deleter"
-    case SWEADictionary => "dictionary"
-    case SWEAEllipsis => "..."
-    case SWEAEnum => "enum"
-    case SWEAException => "exception"
-    case SWEAGetter => "getter"
-    case SWEAImplements => "implements"
-    case SWEAInherit => "inherit"
-    case SWEAInterface => "interface"
-    case SWEALegacycaller => "legacycaller"
-    case SWEAOptional => "optional"
-    case SWEAPartial => "partial"
-    case SWEAQuestion => "?"
-    case SWEAReadonly => "readonly"
-    case SWEASetter => "setter"
-    case SWEAStatic => "static"
-    case SWEAString(str) =>
-      val s: StringBuilder = new StringBuilder
-      s.append(walk(str))
-      s.toString
-    case SWEAStringifier => "stringifier"
-    case SWEATypedef => "typedef"
-    case SWEAUnrestricted => "unrestricted"
-    case SWEnum(info, attrs, name, enumValueList) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("Enum[{Attributes:")
-      attrs.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {Identifier:")
-      s.append(name)
-      s.append("} {EnumValueList:")
-      enumValueList.foreach(e => s.append(walk(e)).append(", "))
-      s.append("}]")
-      s.toString
-    case SWException(info, attrs, name, parent, members) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("Exception[{Attributes:")
-      attrs.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {Identifier:")
-      s.append(name)
-      s.append("} {Inheritance:")
-      s.append(walk(parent))
-      s.append("} { ")
-      members.foreach(e => s.append(walk(e)).append(", "))
-      s.append("}]")
-      s.toString
-    case SWExceptionField(info, attrs, typ, name) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("ExceptionField[{Attributes:")
-      attrs.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {Type:")
-      s.append(walk(typ))
-      s.append("} {Identifier:")
-      s.append(name)
-      s.append("}]")
-      s.toString
-    case SWFloat(info, value) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("Float[")
-      s.append(value)
-      s.append("]")
-      s.toString
-    case SWId(info, name) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("Id[")
-      s.append(name)
-      s.append("]")
-      s.toString
-    case SWImplementsStatement(info, attrs, name, parent) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("ImplementsStatement[{Attributes:")
-      attrs.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} ")
-      s.append(name)
-      s.append(" implements ")
-      s.append(parent)
-      s.append("]")
-      s.toString
-    case SWInteger(info, value) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("Integer[")
-      s.append(value)
-      s.append("]")
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+      s.append("callback ").append(name).append(" = ")
+      s.append(walk(returnType)).append("(")
+      s.append(join(args, ", ", new StringBuilder("")))
+      s.append(");")
       s.toString
     case SWInterface(info, attrs, name, parent, members) =>
       val s: StringBuilder = new StringBuilder
-      s.append("Interface[{Attributes:")
-      attrs.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {Identifier:")
-      s.append(name)
-      s.append("} {Inheritance:")
-      s.append(walk(parent))
-      s.append("} {InterfaceMembers:")
-      members.foreach(e => s.append(walk(e)).append(", "))
-      s.append("}]")
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+    /*
+      if (isPartial(attrs)) s.append("partial ")
+    */
+      s.append("interface ").append(name)
+      if (parent.isSome) s.append(" : ").append(walk(parent))
+      s.append(" {\n")
+      increaseIndent
+      s.append(getIndent).append(join(members, "\n"+getIndent, new StringBuilder("")))
+      decreaseIndent
+      s.append("\n};")
       s.toString
-    case SWNamedType(info, suffix, name) =>
+    case SWDictionary(info, attrs, name, parent, members) =>
       val s: StringBuilder = new StringBuilder
-      s.append("NamedType[{TypeSuffix:")
-      suffix.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {Id:")
-      s.append(name)
-      s.append("}]")
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+    /*
+      if (isPartial(attrs)) s.append("partial ")
+    */
+      s.append("dictionary ").append(name)
+      if (parent.isSome) s.append(" : ").append(walk(parent))
+      s.append(" {\n")
+      increaseIndent
+      s.append(getIndent).append(join(members, "\n"+getIndent, new StringBuilder("")))
+      decreaseIndent
+      s.append("\n};")
       s.toString
-    case SWNull(info) => ""
-    case SWOperation(info, attrs, qualifiers, typ, name, args) =>
+    case SWDictionaryMember(info, attrs, typ, name, default) =>
       val s: StringBuilder = new StringBuilder
-      s.append("Operation[{Attributes:")
-      attrs.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {Qualifiers:")
-      qualifiers.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {ReturnType:")
-      s.append(walk(typ))
-      s.append("} {OptIdentifier:")
-      s.append(name)
-      s.append("} {ArgumentList:")
-      args.foreach(e => s.append(walk(e)).append(", "))
-      s.append("}]")
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+      s.append(walk(typ)).append(" ").append(name)
+      if (default.isSome) s.append(" = ").append(walk(default))
+      s.append(";")
       s.toString
-    case SWQCreator => "creator"
-    case SWQDeleter => "deleter"
-    case SWQGetter => "getter"
-    case SWQLegacycaller => "legacycaller"
-    case SWQSetter => "setter"
-    case SWQStatic => "static"
-    case SWSequenceType(info, suffix, typ) =>
+    case SWException(info, attrs, name, parent, members) =>
       val s: StringBuilder = new StringBuilder
-      s.append("Sequence[")
-      suffix.foreach(e => s.append(walk(e)).append(", "))
-      s.append("] {Type:")
-      s.append(walk(typ))
-      s.append("}")
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+      s.append("exception ").append(name)
+      if (parent.isSome) s.append(" : ").append(walk(parent))
+      s.append(" {\n")
+      increaseIndent
+      s.append(getIndent).append(join(members, "\n"+getIndent, new StringBuilder("")))
+      decreaseIndent
+      s.append("\n};")
       s.toString
-    case SWSpanInfo(span) => ""
-    case SWString(info, str) =>
+    case SWEnum(info, attrs, name, members) =>
       val s: StringBuilder = new StringBuilder
-      s.append("String[")
-      s.append(str)
-      s.append("]")
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+      s.append("enum ").append(name).append(" {")
+      s.append(join(members, ", ", new StringBuilder("")))
+      s.append("};")
       s.toString
-    case SWTSArray => "" 
-    case SWTSQuestion => "?"
     case SWTypedef(info, attrs, typ, name) =>
       val s: StringBuilder = new StringBuilder
-      s.append("Typedef[{Attributes:")
-      attrs.foreach(e => s.append(walk(e)).append(", "))
-      s.append("} {Type:")
-      s.append(walk(typ))
-      s.append("} {Identifier:")
-      s.append(name)
-      s.append("}]")
+      s.append("typedef ")
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+      s.append(walk(typ)).append(" ").append(name).append(";")
+      s.toString
+    case SWImplementsStatement(info, attrs, name, parent) =>
+      val s: StringBuilder = new StringBuilder
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+      s.append(name).append(" implements ").append(parent).append(";")
+      s.toString
+    case SWConst(info, attrs, typ, name, value) =>
+      val s: StringBuilder = new StringBuilder
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+      s.append("const ").append(walk(typ)).append(" ").append(name).append(" = ")
+      s.append(walk(value)).append(";")
+      s.toString
+    case SWBoolean(info, value) => if(value) "true" else "false"
+    case SWFloat(info, value) => value
+    case SWInteger(info, value) => value
+    case SWString(info, str) => str
+    case SWNull(info) => "null"
+    case SWAttribute(info, attrs, typ, name) =>
+      val s: StringBuilder = new StringBuilder
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+    /*
+      if (isStringifier(attrs)) s.append("stringifier ")
+    */
+      s.append("attribute ").append(walk(typ)).append(" ").append(name).append(";")
+      s.toString
+    case SWExceptionField(info, attrs, typ, name) =>
+      val s: StringBuilder = new StringBuilder
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+      s.append(walk(typ)).append(" ").append(name).append(";")
+      s.toString
+    case SWOperation(info, attrs, qualifiers, returnType, name, args) =>
+      val s: StringBuilder = new StringBuilder
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+      /*
+        if (isStringifier(attrs)) s.append("stringifier ")
+      */
+      if (!qualifiers.isEmpty) {
+        s.append(join(qualifiers, " ", new StringBuilder("")))
+        s.append(" ")
+     }
+      s.append(walk(returnType)).append(" ")
+      if (name.isSome) s.append(name.get)
+      s.append("(")
+      s.append(join(args, ", ", new StringBuilder("")))
+      s.append(");")
+      s.toString
+    case SWArgument(info, attrs, typ, name, default) =>
+      val s: StringBuilder = new StringBuilder
+      if (!attrs.isEmpty) {
+        s.append("[")
+        s.append(join(attrs, " ", new StringBuilder("")))
+        s.append("] ")
+      }
+      s.append(walk(typ)).append(" ").append(name)
+      if (default.isSome) s.append(" = ").append(walk(default))
+      s.toString
+    case SWAnyType(info, suffix) =>
+      val s: StringBuilder = new StringBuilder
+      s.append("any")
+      if (!suffix.isEmpty) {
+        s.append("[]")
+        s.append(join(suffix, " ", new StringBuilder("")))
+      }
       s.toString
     case SWUnionType(info, suffix, types) =>
       val s: StringBuilder = new StringBuilder
-      s.append("Union[")
-      suffix.foreach(e => s.append(walk(e)).append(", "))
-      s.append("](")
-      types.foreach(e => s.append(walk(e)).append(", "))
+      s.append("(")
+      s.append(join(types, " or ", new StringBuilder("")))
       s.append(")")
+      join(suffix, " ", s)
       s.toString
-    case _:NoOp => ""
+    case SWArrayType(info, suffix, typ) =>
+      val s: StringBuilder = new StringBuilder
+      s.append(walk(typ))
+      s.append("[]")
+      s.append(join(suffix, " ", new StringBuilder("")))
+      s.toString
+    case SWNamedType(info, suffix, name) =>
+      val s: StringBuilder = new StringBuilder
+      s.append(name)
+      s.append(join(suffix, " ", new StringBuilder("")))
+      s.toString
+    case SWSequenceType(info, suffix, typ) =>
+      val s: StringBuilder = new StringBuilder
+      s.append("sequence <").append(walk(typ)).append(">")
+      s.append(join(suffix, " ", new StringBuilder("")))
+      s.toString
+    case SWId(info, name) => name
+    case SWSpanInfo(span) => ""
+    case xs:JList[_] =>
+      val s: StringBuilder = new StringBuilder
+      s.append(join(toList(xs), "\n"+getIndent, new StringBuilder("")))
+      s.toString
     case Some(in) => walk(in)
     case None => ""
-    //case _ => "#@#"+node.getClass.toString
+    case _ => walkJavaNode(node)
   }
+
+  def walkJavaNode(node:Any):String =
+    if (node.isInstanceOf[WTSArray]) "[]"
+    else if (node.isInstanceOf[WTSQuestion]) "?"
+    else if (node.isInstanceOf[WEAString]) node.asInstanceOf[WEAString].getStr
+    else if (node.isInstanceOf[WEAQuestion]) "?"
+    else if (node.isInstanceOf[WEAEllipsis]) "..."
+    else if (node.isInstanceOf[WEAOptional]) "optional"
+    else if (node.isInstanceOf[WEAAttribute]) "attribute"
+    else if (node.isInstanceOf[WEACallback]) "callback"
+    else if (node.isInstanceOf[WEAConst]) "const"
+    else if (node.isInstanceOf[WEACreator]) "creator"
+    else if (node.isInstanceOf[WEADeleter]) "deleter"
+    else if (node.isInstanceOf[WEADictionary]) "dictionary"
+    else if (node.isInstanceOf[WEAEnum]) "enum"
+    else if (node.isInstanceOf[WEAException]) "exception"
+    else if (node.isInstanceOf[WEAGetter]) "getter"
+    else if (node.isInstanceOf[WEAImplements]) "implements"
+    else if (node.isInstanceOf[WEAInherit]) "inherit"
+    else if (node.isInstanceOf[WEAInterface]) "interface"
+    else if (node.isInstanceOf[WEAReadonly]) "readonly"
+    else if (node.isInstanceOf[WEALegacycaller]) "legacycaller"
+    else if (node.isInstanceOf[WEAPartial]) "partial"
+    else if (node.isInstanceOf[WEASetter]) "setter"
+    else if (node.isInstanceOf[WEAStatic]) "static"
+    else if (node.isInstanceOf[WEAStringifier]) "stringifier"
+    else if (node.isInstanceOf[WEATypedef]) "typedef"
+    else if (node.isInstanceOf[WEAUnrestricted]) "unrestricted"
+    else if (node.isInstanceOf[WQStatic]) "static"
+    else if (node.isInstanceOf[WQGetter]) "getter"
+    else if (node.isInstanceOf[WQSetter]) "setter"
+    else if (node.isInstanceOf[WQCreator]) "creator"
+    else if (node.isInstanceOf[WQDeleter]) "deleter"
+    else if (node.isInstanceOf[WQLegacycaller]) "legacycaller"
+    else "#@#"+node.getClass.toString
 }

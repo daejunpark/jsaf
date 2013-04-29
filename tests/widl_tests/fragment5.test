@@ -10,5 +10,12 @@ tests=fragment5.widl
 WIDLPARSER_TESTS_DIR=${JS_HOME}/tests/widl_tests
 widlparse
 widlparse_out_WCIequals=\
-#@#class java.util.ArrayList\n
+[callback] interface Options {\n\
+  attribute DOMString? option1;\n\
+  attribute DOMString? option2;\n\
+  attribute long? option3;\n\
+};\n\
+interface A {\n\
+  void doTask(DOMString type, Options options);\n\
+};\n
 widlparse_err_equals=

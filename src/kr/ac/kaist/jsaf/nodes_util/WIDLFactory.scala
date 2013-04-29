@@ -229,7 +229,7 @@ object WIDLFactory {
     mkNamedType(span, name, toJavaList(List(suffix)))
   def mkNamedType(name: String): WNamedType =
     mkNamedType(makeSpan(name), name)
-  val anyTyp = mkNamedType("AnyType")
+  val anyTyp = mkNamedType("any")
   def anyType(): WType = anyTyp
   def mkAnyType(span: Span, suffix: List[WTypeSuffix]): WType =
     new WAnyType(makeSpanInfo(span), suffix)

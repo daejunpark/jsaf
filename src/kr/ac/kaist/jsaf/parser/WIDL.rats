@@ -985,20 +985,22 @@ private WId Id = a1:id
  * integer ::= -?(0([0-7]*|[Xx][0-9A-Fa-f]+)|[1-9][0-9]*)
  */
 transient String integer =
-     a1:minus? "0" [Xx] a2:[0-9A-Fa-f]+
+     a1:minus? "0" [Xx] a2:HexaDigits
      { String sign = "";
        if (a1 != null) sign = "-";
        yyValue = sign+"0x"+a2;
      }
-   / a1:minus? "0" a2:[0-7]*
+   / a1:minus? "0" a2:OctalDigits?
      { String sign = "";
        if (a1 != null) sign = "-";
-       yyValue = sign+"0"+a2;
+       if (a2 == null) yyValue = sign+"0";
+       else yyValue = sign+"0"+a2;
      }
-   / a1:minus? a2:[1-9] a3:[0-9]*
+   / a1:minus? a2:[1-9] a3:DecimalDigits?
      { String sign = "";
        if (a1 != null) sign = "-";
-       yyValue = sign+a2+a3;
+       if (a3 == null) yyValue = sign+a2;
+       else yyValue = sign+a2+a3;
      };
 
 /*
@@ -1015,21 +1017,28 @@ transient String floatL =
        if (a1 != null) sign = "-";
        yyValue = sign+a2;
      }
-   / a1:minus? a2:[0-9]+ a3:floatback
+   / a1:minus? a2:DecimalDigits a3:floatback
      { String sign = "";
        if (a1 != null) sign = "-";
        yyValue = sign+a2+a3;
      };
 transient String floatfront =
-     a1:[0-9]+ dot a2:[0-9]*
-     { yyValue = a1+"."+a2; }
-   / a1:[0-9]* dot a2:[0-9]+
-     { yyValue = a1+"."+a2; };
+     a1:DecimalDigits dot a2:DecimalDigits?
+     { if (a2 == null) yyValue = a1;
+       else yyValue = a1+"."+a2;
+     }
+   / a1:DecimalDigits? dot a2:DecimalDigits
+     { if (a1 == null) yyValue = "0."+a2;
+       else yyValue = a1+"."+a2;
+     };
 transient String floatback =
-     [Ee] a1:("+"/"-")? a2:[0-9]+
+     [Ee] a1:("+"/"-")? a2:DecimalDigits
      { if (a1 == null) yyValue = "e"+a2;
        else            yyValue = "e"+a1+a2;
      };
+private transient String DecimalDigits = [0-9]+ ;
+private transient String HexaDigits = [0-9A-Fa-f]+ ;
+private transient String OctalDigits = [0-7]+ ;
 
 /*
  * string = "[^"]*"

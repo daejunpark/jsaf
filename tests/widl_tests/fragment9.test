@@ -10,5 +10,7 @@ tests=fragment9.widl
 WIDLPARSER_TESTS_DIR=${JS_HOME}/tests/widl_tests
 widlparse
 widlparse_out_WCIequals=\
-#@#class java.util.ArrayList\n
+interface A {\n\
+  const short rambaldi = 47;\n\
+};\n
 widlparse_err_equals=

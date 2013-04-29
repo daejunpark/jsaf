@@ -10,5 +10,8 @@ tests=fragment22.widl
 WIDLPARSER_TESTS_DIR=${JS_HOME}/tests/widl_tests
 widlparse
 widlparse_out_WCIequals=\
-#@#class java.util.ArrayList\n
+[Constructor] interface Student {\n\
+  attribute unsigned long id;\n\
+  [stringifier] attribute DOMString name;\n\
+};\n
 widlparse_err_equals=
