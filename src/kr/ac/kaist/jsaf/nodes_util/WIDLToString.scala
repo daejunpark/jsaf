@@ -71,16 +71,19 @@ class WIDLToString(program: JList[WDefinition]) extends Walker {
   }
 
   def join(all: List[Any], sep: String, result: StringBuilder): StringBuilder = all match {
-    case Nil => result
+    case Nil =>
+      result
     case _ => result.length match {
       case 0 => {
         join(all.tail, sep, result.append(walk(all.head)))
       }
       case _ =>
-        if (result.length > width && sep.equals(", "))
+        if (result.length > width && sep.equals(", ")) {
           join(all.tail, sep, result.append(", \n"+getIndent).append(walk(all.head)))
-        else
+        }
+        else {
           join(all.tail, sep, result.append(sep).append(walk(all.head)))
+        }
     }
   }
 
@@ -222,7 +225,7 @@ class WIDLToString(program: JList[WDefinition]) extends Walker {
     case SWFloat(info, value) => value
     case SWInteger(info, value) => value
     case SWString(info, str) => str
-    case SWNull(info) => "null"
+    case SWNull(info) => "null" 
     case SWAttribute(info, attrs, typ, name) =>
       val s: StringBuilder = new StringBuilder
       if (!attrs.isEmpty) {
@@ -319,7 +322,9 @@ class WIDLToString(program: JList[WDefinition]) extends Walker {
   def walkJavaNode(node:Any):String =
     if (node.isInstanceOf[WTSArray]) "[]"
     else if (node.isInstanceOf[WTSQuestion]) "?"
-    else if (node.isInstanceOf[WEAString]) node.asInstanceOf[WEAString].getStr
+    else if (node.isInstanceOf[WEAString]) {
+      node.asInstanceOf[WEAString].getStr
+    }
     else if (node.isInstanceOf[WEAQuestion]) "?"
     else if (node.isInstanceOf[WEAEllipsis]) "..."
     else if (node.isInstanceOf[WEAOptional]) "optional"
