@@ -1,0 +1,1 @@
+enum MealType { "rice", "noodles", "other" };
