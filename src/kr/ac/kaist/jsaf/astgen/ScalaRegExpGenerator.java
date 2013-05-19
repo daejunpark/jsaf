@@ -502,8 +502,8 @@ public class ScalaRegExpGenerator extends CodeGenerator {
      * the wrapper function in turn. Calls are separated by commas and enclosed in
      * parentheses.
      */
-    private String wrappedFieldCalls(String wrapper, NodeType box) {
-        return wrappedFieldCalls("", wrapper, box);
+    private String wrappedFieldCalls(String wrapper, NodeType box, boolean isUnit) {
+        return wrappedFieldCalls("", wrapper, box, isUnit);
     }
 
 
@@ -513,7 +513,7 @@ public class ScalaRegExpGenerator extends CodeGenerator {
      * field of the given type to the wrapper function in turn. Calls are separated by commas
      * and wrapped in parentheses.
      */
-    private String wrappedFieldCalls(String receiver, String wrapper, NodeType box) {
+    private String wrappedFieldCalls(String receiver, String wrapper, NodeType box, boolean isUnit) {
         if (mkList(box.allFields(ast)).isEmpty()) {
             return "";
         } else {
@@ -522,19 +522,33 @@ public class ScalaRegExpGenerator extends CodeGenerator {
                 receiver = receiver + ".";
             }
 
-            StringBuilder buffer = new StringBuilder("(");
+            String open, close, middle;
+            if (isUnit) {
+                open = "";
+                close = "";
+                middle = "; ";
+            } else {
+                open = "(";
+                close = ")";
+                middle = ", ";
+            }
+
+            StringBuilder buffer = new StringBuilder(open);
             boolean first = true;
 
             for (Field field : box.allFields(ast)) {
                 if (first) {
                     first = false;
                 } else {
-                    buffer.append(", ");
+                    buffer.append(middle);
                 }
 
-                buffer.append(sub("@wrapper(@receiver@name).asInstanceOf[@type]", "@wrapper", wrapper, "@receiver", receiver, "@name", field.getGetterName(), "@type", fieldType(field.type())));
+                if (isUnit)
+                    buffer.append(sub("@wrapper(@receiver@name)", "@wrapper", wrapper, "@receiver", receiver, "@name", field.getGetterName()));
+                else
+                    buffer.append(sub("@wrapper(@receiver@name).asInstanceOf[@type]", "@wrapper", wrapper, "@receiver", receiver, "@name", field.getGetterName(), "@type", fieldType(field.type())));
             }
-            buffer.append(")");
+            buffer.append(close);
             return buffer.toString();
         }
     }
@@ -635,11 +649,32 @@ public class ScalaRegExpGenerator extends CodeGenerator {
             }
 
             writer.println(sub("         case S@name@fieldsNoTypes =>", "@name", c.name(), "@fieldsNoTypes", fieldsNames(c)));
-            writer.println(sub("             S@name@fieldsNoTypes", "@name", c.name(), "@fieldsNoTypes", wrappedFieldCalls("walk", c)));
+            writer.println(sub("             S@name@fieldsNoTypes", "@name", c.name(), "@fieldsNoTypes", wrappedFieldCalls("walk", c, false)));
         }
         writer.println("         case xs:List[_] => xs.map(walk _)");
         writer.println("         case xs:Option[_] => xs.map(walk _)");
         writer.println("         case _ => node");
+        writer.println("      }");
+        writer.println("   }");
+
+        // Generate walker producing Unit.
+        writer.println("   def walkUnit(node:Any):Unit = {");
+        writer.println("       node match {");
+        for (NodeClass c : sort(ast.classes())) {
+            if (ignoreClass(c.name())) {
+                continue;
+            }
+            if (c.isAbstract()) {
+                continue;
+            }
+
+            writer.println(sub("         case S@name@fieldsNoTypes =>", "@name", c.name(), "@fieldsNoTypes", fieldsNames(c)));
+            writer.println(sub("             @fieldsNoTypes", "@fieldsNoTypes", wrappedFieldCalls("walkUnit", c, true)));
+        }
+        writer.println("         case xs:List[_] => xs.foreach(walkUnit _)");
+        writer.println("         case xs:Option[_] => xs.foreach(walkUnit _)");
+        writer.println("         case _:Span => ");
+        writer.println("         case _ => ");
         writer.println("      }");
         writer.println("   }");
         writer.println("}");

@@ -1050,7 +1050,7 @@ transient WString string =
        yyValue = WIDLFactory.mkString(createSpan(yyStart,yyCount+1), str);
      };
 transient String StringChar =
-     (!["] _) ; // " ;
+     a1:(!["] _) { yyValue = a1+""; }; // " ;
 
 /*
  * other = [^\t\n\r 0-9A-Z_a-z]

@@ -52,6 +52,7 @@ import kr.ac.kaist.jsaf.nodes_util.JSFromHTML;
 import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete;
 import kr.ac.kaist.jsaf.nodes_util.JSIRUnparser;
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil;
+import kr.ac.kaist.jsaf.nodes_util.WIDLToDB;
 import kr.ac.kaist.jsaf.nodes_util.WIDLToString;
 import kr.ac.kaist.jsaf.parser.WIDL;
 import kr.ac.kaist.jsaf.tests.FileTests;
@@ -1122,160 +1123,6 @@ public final class Shell {
         return return_code;
     }
 
-
-
-    //////////////////////////////////////////////////////////
-    // Handling dictionary member
-    //////////////////////////////////////////////////////////
-    /**
-     * Handle each dictionary member (extAttr, type, id, default).
-     */
-    private static List<String> ConductValue(String val) {
-	List<String> res = new ArrayList<String>();
-	String extAttr = "", type = "", id = "", defVal = "";
-
-	String[] str = val.split(" ");
-	switch(str.length) {
-	case 5:
-	
-//	if (str.length == 5) {
-	    extAttr = str[0].replaceAll("[\\[\\]]", "");
-	    type = str[1];
-	    id = str[2];
-	    defVal = str[4];
-	    break;
-//	}
-	case 4:
-//	else if (str.length == 4) {
-	    type = str[0];
-	    id = str[1];
-	    defVal = str[3];
-	    break;
-//	}
-//	else {
-	default:
-	    type = str[0];
-	    id = str[1];
-	    break;
-	}
-	
-	res.add(extAttr);
-	res.add(type);
-	res.add(id);
-	res.add(defVal);
-	return res;
-    }
-
-    //////////////////////////////////////////////////////////
-    // store String(from WIDL) to DB
-    //////////////////////////////////////////////////////////
-    /**
-     * Store the String to db.
-     */
-    private static void StoreToDB(String code) throws InterruptedException, IOException {
-	FileWriter fw = new FileWriter("db.txt");
-	BufferedWriter bw = new BufferedWriter(fw);
-	
-	// Enumeration
-	if (code.contains("enum")) {
-	    String[] enums = code.split("enum");
-	    for (int i = 1; i < enums.length; i++) {
-		String id = enums[i].split("\\{")[0].trim();
-		String values = enums[i].split("\\{")[1].split("\\}")[0];
-		String[] val = values.split(",");
-
-		bw.write("enum\n");
-		bw.write(id + "\n");
-		bw.write(val.length + "\n");
-		for (int j = 0; j < val.length; j++)
-		    bw.write(val[j].trim() + "\n");
-	    }
-	}
-
-	// Dictionary
-	if (code.contains("dictionary")) {
-	    String[] dicts = code.split("dictionary");
-	    for (int i = 1; i < dicts.length; i++) {
-		String id = "", parent = "";
-		String idAndParent = dicts[i].split("\\{")[0].trim();
-		if (idAndParent.contains(":")) {
-		    String[] temp = idAndParent.split(":");
-		    id = temp[0].trim();
-		    parent = temp[1].trim();
-		}
-		else
-		    id = idAndParent;
-
-		bw.write("dictionary\n");
-		bw.write(id + "\n");
-		bw.write(parent + "\n");
-
-		String values = dicts[i].split("\\{")[1].split("\\}")[0];
-		String[] val = values.split(";");
-		bw.write(Integer.toString(val.length-1) + "\n");
-		for (int j = 0; j < val.length - 1; j++) {
-		    List<String> res = ConductValue(val[j].trim());
-		    for (String item : res)
-			bw.write(item + "\n");
-		}
-	    }
-	}
-
-	bw.close();
-	fw.close();
-    }
-
-    /*////////////////////////////////////////////////////////
-    * dump the DB
-    */////////////////////////////////////////////////////////
-    /**
-     * Dump the context in db.
-     */
-    private static void DumpDB() throws InterruptedException, IOException {
-	FileReader fr = new FileReader("db.txt");
-	BufferedReader br = new BufferedReader(fr);
-	String str, extAttr, defVal, dump = "";
-	int howmany;
-
-	while ((str = br.readLine()) != null) {
-	    // Enumeration
-	    if (str.equals("enum")) {
-		dump += "<enum>\n";
-		dump += "id = " + br.readLine() + "\n";
-		howmany = Integer.parseInt(br.readLine());
-		for (int i = 0; i < howmany; i++)
-		    dump += "  value " + Integer.toString(i+1) + " : " + br.readLine() + "\n";
-	    }
-
-	    // Dictionary
-	    else if (str.equals("dictionary")) {
-		dump += "<dictionary>\n";
-		dump += "id = " + br.readLine() + "\n";
-		str = br.readLine();
-		if (str.length() > 0)
-		    dump += "inheritance = " + str + "\n";
-		howmany = Integer.parseInt(br.readLine());
-		for (int i = 0; i < howmany; i++) {
-		    dump += "  value " + Integer.toString(i+1) + "\n";
-		    extAttr = br.readLine();
-		    if (extAttr.length() > 0)
-			dump += "    extAttr : [" + extAttr + "]\n";
-		    dump += "    type : " + br.readLine() + "\n";
-		    dump += "    id : " + br.readLine() + "\n";
-		    defVal = br.readLine();
-		    if (defVal.length() > 0)
-			dump += "    default : " + defVal + "\n";
-		}
-	    }
-	    dump += "\n";
-	}
-	System.out.println("----------------------------------------------");
-	System.out.println(dump);
-	System.out.println("----------------------------------------------");
-	br.close();
-	fr.close();
-    }
-
     ////////////////////////////////////////////////////////////////////////////////
     // 16. Web IDL Parse
     ////////////////////////////////////////////////////////////////////////////////
@@ -1294,7 +1141,7 @@ public final class Shell {
             xtc.parser.Result parseResult = parser.pWIDL(0);
             if (parseResult.hasValue()) {
                 List<WDefinition> widl = (List<WDefinition>)(((SemanticValue)parseResult).value);
-                String code = new WIDLToString(widl).doit();
+                String code = WIDLToString.doit(widl);
                 if (params.opt_OutFileName != null){
                     try{
                         BufferedWriter writer = Useful.filenameToBufferedWriter(params.opt_OutFileName);
@@ -1308,9 +1155,8 @@ public final class Shell {
                     System.out.println(code);
                 }
 		// store WIDL information into a DB
-		StoreToDB(code);
-		DumpDB();
-
+		WIDLToDB.storeToDB(fileName, widl);
+		WIDLToDB.readDB(fileName);
             } else throw new ParserError((ParseError)parseResult, parser);
         } catch (FileNotFoundException f) {
             throw new UserError(fileName + " not found");

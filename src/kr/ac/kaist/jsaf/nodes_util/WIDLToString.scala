@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Copyright (c) 2012-2013, KAIST, S-Core.
+    Copyright (c) 2013, KAIST.
     All rights reserved.
 
     Use is subject to license terms.
@@ -32,12 +32,11 @@ import edu.rice.cs.plt.tuple.Option
  * Possible improvements:
  * 1. We may want to keep comments.
  */
-class WIDLToString(program: JList[WDefinition]) extends Walker {
+object WIDLToString extends Walker {
 
   val width = 50
-  val significantBits = NU.significantBits
 
-  def doit() = walk(program)
+  def doit(program: JList[WDefinition]) = walk(program)
 
   /* indentation utilities *************************************************/
   var indent = 0
@@ -49,18 +48,8 @@ class WIDLToString(program: JList[WDefinition]) extends Walker {
     for (i <- 0 to indent-1) s.append(tab)
     s.toString
   }
-  def isOneline(node: Any):Boolean = node match {
-    case SBlock => false
-    case Some(in) => isOneline(in)
-    case _ => !(node.isInstanceOf[Block])
-  }
 
   /* utility methods ********************************************************/
-
-  /*  make sure it is parenthesized */
-  def inParentheses(str: String) =
-    if (str.startsWith("(") && str.endsWith(")")) str
-    else new StringBuilder("(").append(str).append(")").toString
 
   def join(kind: String, all: List[Any],
            sep: String, result: StringBuilder): StringBuilder = all match {

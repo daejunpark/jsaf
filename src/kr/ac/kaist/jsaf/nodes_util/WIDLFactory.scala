@@ -201,12 +201,18 @@ object WIDLFactory {
     new WExceptionField(makeSpanInfo(span), typ, name)
 
   /* Literals **********************************************************/
-  def nullL(): WNull = new WNull(makeSpanInfo(makeSpan("null")))
-  def infinity(): WFloat = new WFloat(makeSpanInfo(makeSpan("Infinity")), "Infinity")
-  def minusInfinity(): WFloat = new WFloat(makeSpanInfo(makeSpan("-Infinity")), "-Infinity")
-  def nan(): WFloat = new WFloat(makeSpanInfo(makeSpan("NaN")), "NaN")
-  def trueL(): WBoolean = new WBoolean(makeSpanInfo(makeSpan("true")), true)
-  def falseL(): WBoolean = new WBoolean(makeSpanInfo(makeSpan("false")), false)
+  val nullLt = new WNull(makeSpanInfo(makeSpan("null")))
+  def nullL(): WNull = nullLt
+  val infinityLt = new WFloat(makeSpanInfo(makeSpan("Infinity")), "Infinity")
+  def infinity(): WFloat = infinityLt
+  val minusInfinityLt = new WFloat(makeSpanInfo(makeSpan("-Infinity")), "-Infinity")
+  def minusInfinity(): WFloat = minusInfinityLt
+  val nanLt = new WFloat(makeSpanInfo(makeSpan("NaN")), "NaN")
+  def nan(): WFloat = nanLt
+  val trueLt = new WBoolean(makeSpanInfo(makeSpan("true")), true)
+  def trueL(): WBoolean = trueLt
+  val falseLt = new WBoolean(makeSpanInfo(makeSpan("false")), false)
+  def falseL(): WBoolean = falseLt
 
   def mkString(span: Span, str: String) =
     new WString(makeSpanInfo(span), str)
@@ -231,7 +237,7 @@ object WIDLFactory {
     mkNamedType(makeSpan(name), name)
   val anyTyp = mkNamedType("any")
   def anyType(): WType = anyTyp
-  def mkAnyType(span: Span, suffix: List[WTypeSuffix]): WType =
+  def mkAnyType(span: Span, suffix: JList[WTypeSuffix]): WType =
     new WAnyType(makeSpanInfo(span), suffix)
   val domstringTyp = mkNamedType("DOMString")
   def domstringType(): WType = domstringTyp
@@ -269,7 +275,9 @@ object WIDLFactory {
   def anyArrayType(): WType = 
     mkAnyArrayType(makeSpan("any array"), toJavaList(List[WTypeSuffix]()))
   def mkAnyArrayType(span: Span, suffix: JList[WTypeSuffix]): WType = 
-    new WArrayType(makeSpanInfo(span), suffix, anyTyp)
+    mkArrayType(span, anyTyp, suffix)
+  def mkArrayType(span: Span, typ: WType, suffix: JList[WTypeSuffix]): WType = 
+    new WArrayType(makeSpanInfo(span), suffix, typ)
 
   def addSuffix(suffix: List[WTypeSuffix], suf: WTypeSuffix): List[WTypeSuffix] =
     suffix++List(suf)
