@@ -57,13 +57,18 @@ object WIDLFactory {
       SWImplementsStatement(info, toList(attrs)++as, name, parent)
   }
 
+  def addAttrs(attrs: JList[WEAttribute], m: WConst): WConst = m match {
+    case SWConst(info, as, typ, name, value) =>
+      SWConst(info, toList(attrs)++as, typ, name, value)
+  }
+
   def addAttrs(attrs: JList[WEAttribute], m: WInterfaceMember): WInterfaceMember = m match {
     case SWConst(info, as, typ, name, value) =>
       SWConst(info, toList(attrs)++as, typ, name, value)
     case SWAttribute(info, as, typ, name) =>
       SWAttribute(info, toList(attrs)++as, typ, name)
-    case SWOperation(info, as, quals, typ, name, args) =>
-      SWOperation(info, toList(attrs)++as, quals, typ, name, args)
+    case SWOperation(info, as, quals, typ, name, args, exns) =>
+      SWOperation(info, toList(attrs)++as, quals, typ, name, args, exns)
   }
 
   def addAttrs(attrs: JList[WEAttribute], m: WExceptionMember): WExceptionMember = m match {
@@ -103,6 +108,9 @@ object WIDLFactory {
       SWDictionary(info, attrs++List(eaPartial), name, parent, members)
     case _ => dfn
   }
+
+  def mkModule(span: Span, name: String, defs: JList[WDefinition]): WModule =
+    new WModule(makeSpanInfo(span), name, defs)
 
   def mkInterface(span: Span, name: String, parent: Option[WId],
                   members: JList[WInterfaceMember]): WInterface =
@@ -175,14 +183,20 @@ object WIDLFactory {
     new WConst(makeSpanInfo(span), typ, name, value)
 
   def mkOperation(span: Span, attrs: JList[WEAttribute], qualifiers: JList[WQualifier],
-                  typ: WType, name: Option[String], args: JList[WArgument]): WOperation =
-    new WOperation(makeSpanInfo(span), attrs, qualifiers, typ, toJavaOption(name), args)
+                  typ: WType, name: Option[String], args: JList[WArgument], exns: JList[WQId]): WOperation =
+    new WOperation(makeSpanInfo(span), attrs, qualifiers, typ, toJavaOption(name), args, exns)
   def mkOperation(span: Span, attrs: JList[WEAttribute], qualifiers: JList[WQualifier],
                   typ: WType, args: JList[WArgument]): WOperation =
-    mkOperation(span, attrs, qualifiers, typ, none, args)
+    mkOperation(span, attrs, qualifiers, typ, None, args, toJavaList(List[WQId]()))
   def mkOperation(span: Span, attrs: JList[WEAttribute], qualifiers: JList[WQualifier],
                   typ: WType, name: String, args: JList[WArgument]): WOperation =
-    mkOperation(span, attrs, qualifiers, typ, some(name), args)
+    mkOperation(span, attrs, qualifiers, typ, some(name), args, toJavaList(List[WQId]()))
+  def mkOperationExn(span: Span, attrs: JList[WEAttribute], qualifiers: JList[WQualifier],
+                     typ: WType, args: JList[WArgument], exns: JList[WQId]): WOperation =
+    mkOperation(span, attrs, qualifiers, typ, None, args, exns)
+  def mkOperationExn(span: Span, attrs: JList[WEAttribute], qualifiers: JList[WQualifier],
+                     typ: WType, name: String, args: JList[WArgument], exns: JList[WQId]): WOperation =
+    mkOperation(span, attrs, qualifiers, typ, some(name), args, exns)
 
   def mkAttribute(span: Span, attrs: JList[WEAttribute], typ: WType, name: String): WAttribute =
     new WAttribute(makeSpanInfo(span), attrs, typ, name)
@@ -219,6 +233,9 @@ object WIDLFactory {
 
   def mkId(span: Span, name: String) =
     new WId(makeSpanInfo(span), name)
+
+  def mkQId(span: Span, names: JList[String]) =
+    new WQId(makeSpanInfo(span), names)
 
   def mkFloat(span: Span, value: String): WFloat =
     new WFloat(makeSpanInfo(span), value)
@@ -340,6 +357,8 @@ object WIDLFactory {
    def tsQuestion(): WTypeSuffix = tQuestion
 
   /* Extended attributes ***************************************************/
+   val eArray = new WEAArray()
+   def eaArray(): WEAttribute = eArray
    def mkEAString(str: String): WEAttribute = new WEAString(str)
    val eQuestion = new WEAQuestion()
    def eaQuestion(): WEAttribute = eQuestion

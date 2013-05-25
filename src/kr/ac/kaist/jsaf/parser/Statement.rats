@@ -54,7 +54,10 @@ private transient void NumericLiterals =
      NumericLiteral w (void:comma w NumericLiteral w)+ ;
 
 public Stmt Statement =
-     Block
+     a1:Block
+     { Span span = createSpan(yyStart,yyCount+1);
+       yyValue = NodeFactory.makeBlock(span, a1);
+     }
    / ExtendedFunctionDeclaration
    / var w a1:Id w equals w opensquare w NumericLiterals closesquare EOS
      { Span span = createSpan(yyStart,yyCount);
@@ -202,14 +205,12 @@ private transient Stmt ExtendedFunctionDeclaration =
 /*
  * Block ::= { (w Statement)* w }
  */
-private transient Block Block =
+private transient List<Stmt> Block =
      opencurly w closecurly
-     { Span span = createSpan(yyStart,yyCount+1);
-       yyValue = NodeFactory.makeBlock(span, Useful.<Stmt>list());
-     }
+     { yyValue = Useful.<Stmt>list(); }
    / opencurly w a1:Statement a2s:(w Statement)* w closecurly
      { Span span = createSpan(yyStart,yyCount+1);
-       yyValue = NodeFactory.makeBlock(span, Useful.cons(a1, a2s.list()));
+       yyValue = Useful.cons(a1, a2s.list());
      };
 
 /*
@@ -268,8 +269,7 @@ private List<Case> CaseClauses =
 private transient Case CaseClause =
      case w a1:Expression w colon a2s:(w Statement)*
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makeCase(span, a1,
-                                      NodeFactory.makeBlock(span, a2s.list()));
+       yyValue = NodeFactory.makeCase(span, a1, a2s.list());
      };
 
 /*
@@ -284,5 +284,5 @@ private transient Catch Catch =
 /*
  * Finally ::= finally w Block
  */
-private transient Block Finally =
+private transient List<Stmt> Finally =
      finally w yyValue:Block ;

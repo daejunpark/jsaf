@@ -95,7 +95,7 @@ class CFGBuilder (ir: IRRoot) {
   /* fd rule : IRFunDecl x CFG x Node list x FunctionId -> Node list */
   private def translateFunDecl(fd: IRFunDecl, cfg: CFG, nodes: List[Node], fid: FunctionId): List[Node] = {
     fd match {
-      case SIRFunDecl(irinfo, SIRFunctional(_,name,params,args,fds,vds,body)) =>
+      case SIRFunDecl(irinfo, SIRFunctional(_,_,name,params,args,fds,vds,body)) =>
         val arg_vars = namesOfArgs(args)
         val local_vars = (namesOfFunDecls(fds) ++ namesOfVars(vds)).filterNot(arg_vars.contains)
         val fid_new = cfg.newFunction(id2cfgId(params(1)).toString, arg_vars, local_vars, name.getOriginalName, irinfo)
@@ -141,7 +141,7 @@ class CFGBuilder (ir: IRRoot) {
       case fd:IRFunDecl =>
         signal("IRFunDecl should have been hoisted.", fd)
         (nodes, lmap)
-      case SIRFunExpr(irinfo, lhs, SIRFunctional(_,name,params,args,fds,vds,body)) =>
+      case SIRFunExpr(irinfo, lhs, SIRFunctional(_,_,name,params,args,fds,vds,body)) =>
         val arg_vars = namesOfArgs(args)
         val local_vars = (namesOfFunDecls(fds) ++ namesOfVars(vds)).filterNot(arg_vars.contains)
         val fid_new = cfg.newFunction(id2cfgId(params(1)).toString, arg_vars, local_vars, name.getOriginalName, irinfo)

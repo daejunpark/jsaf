@@ -18,7 +18,6 @@ import kr.ac.kaist.jsaf.nodes.IRAbstractNode;
 import kr.ac.kaist.jsaf.nodes.IRId;
 import kr.ac.kaist.jsaf.nodes.IRNode;
 import kr.ac.kaist.jsaf.useful.HasAt;
-//import kr.ac.kaist.jsaf.tools.JSAstToConcrete;
 
 public class UIDObject implements HasAt {
 

@@ -67,6 +67,11 @@ class JSIRUnparser(program: IRRoot) extends Walker {
   def fresh() = { uniq_id += 1; uniq_id.toString }
   type Env = List[(String, String)]
   var env = Nil.asInstanceOf[Env]
+  /*
+   * The following line is to get unsimplified name.
+   * Check interpret method in Shell.java to print IR program before Interpreter.
+   */
+  // def getE(uniq: String): String = uniq
   def getE(uniq: String): String = env.find(p => p._1.equals(uniq)) match {
     case None =>
       val new_uniq = fresh
@@ -183,16 +188,16 @@ class JSIRUnparser(program: IRRoot) extends Walker {
       s.append(walk(prop)).append(" : ").append(walk(expr))
       s.toString
     case SIRNumber(_, text, num) => text
-    case SIRFunDecl(_, SIRFunctional(_, name, params, args, fds, vds, body)) =>
+    case SIRFunDecl(_, SIRFunctional(_, _, name, params, args, fds, vds, body)) =>
       val s: StringBuilder = new StringBuilder
       printFun(s, "function ", name, params, args, fds, vds, body)
       s.toString
-    case SIRFunExpr(_, lhs, SIRFunctional(_, name, params, args, fds, vds, body)) =>
+    case SIRFunExpr(_, lhs, SIRFunctional(_, _, name, params, args, fds, vds, body)) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(lhs)).append(" = ")
       printFun(s, "function ", name, params, args, fds, vds, body)
       s.toString
-    case SIRGetProp(_, SIRFunctional(_, name, params, args, fds, vds, body)) =>
+    case SIRGetProp(_, SIRFunctional(_, _, name, params, args, fds, vds, body)) =>
       val s: StringBuilder = new StringBuilder
       printFun(s, "get ", name, params, args, fds, vds, body)
       s.toString
@@ -254,7 +259,7 @@ class JSIRUnparser(program: IRRoot) extends Walker {
       decreaseIndent
       s.append("\n").append(getIndent).append("}")
       s.toString
-    case SIRSetProp(_, SIRFunctional(_, name, params, args, fds, vds, body)) =>
+    case SIRSetProp(_, SIRFunctional(_, _, name, params, args, fds, vds, body)) =>
       val s: StringBuilder = new StringBuilder
       printFun(s, "set ", name, params, args, fds, vds, body)
       s.toString

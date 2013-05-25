@@ -11,6 +11,7 @@ package kr.ac.kaist.jsaf.nodes_util
 
 import kr.ac.kaist.jsaf.nodes._
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
+import kr.ac.kaist.jsaf.nodes_util.{NodeFactory => NF}
 import kr.ac.kaist.jsaf.nodes_util._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
@@ -31,262 +32,265 @@ import _root_.java.util.Set
 import _root_.java.util.StringTokenizer
 
 object IRFactory {
+  val dummyAst = NF.makeNoOp(NF.makeSpanInfo(NF.makeSpan("dummyAST")), "dummyAST")
   // For use only when there is no hope of attaching a true span.
   def dummySpan(villain: String): Span = {
     val name = if (villain.length != 0) villain else "dummySpan"
     val sl = new SourceLocRats(name,0,0,0)
     new Span(sl,sl)
   }
-  def dummyIRId(name: String): IRId = makeTId(dummySpan(name), name)
+  def dummyIRId(name: String): IRId = makeTId(dummyAst, dummySpan(name), name)
   def dummyIRId(id: Id): IRId = {
     val name = id.getText
-    makeTId(dummySpan(name), name)
+    makeTId(dummyAst, dummySpan(name), name)
   }
   def dummyIRId(label: Label): IRId = {
     val name = label.getId.getText
-    makeTId(dummySpan(name), name)
+    makeTId(dummyAst, dummySpan(name), name)
   }
-  def dummyIRStmt(span: Span): IRSeq =
-    makeSeq(span, Nil.asInstanceOf[List[IRStmt]])
-  def dummyIRExpr(): IRExpr = makeTId(dummySpan("_"), "_")
-  def dummyIRStmt(span: Span, msg: String): IRSeq =
-    makeSeq(span, List(makeExprStmt(span, dummyIRId(msg), dummyIRExpr)))
+  def dummyIRStmt(ast: ASTNode, span: Span): IRSeq =
+    makeSeq(ast, span, Nil.asInstanceOf[List[IRStmt]])
+  def dummyIRExpr(): IRExpr = makeTId(dummyAst, dummySpan("_"), "_")
+  def dummyIRStmt(ast: ASTNode, span: Span, msg: String): IRSeq =
+    makeSeq(dummyAst, span, List(makeExprStmt(dummyAst, span, dummyIRId(msg), dummyIRExpr)))
   def dummySpanInfo(villain: String): IRSpanInfo =
-    makeSpanInfo(false, dummySpan(villain))
+    makeSpanInfo(false, dummyAst, dummySpan(villain))
 
-  def makeSpanInfo(fromSource: Boolean, span: Span): IRSpanInfo =
-    new IRSpanInfo(fromSource, span)
-  def makeFunctional(fromSource: Boolean,
+  def makeSpanInfo(fromSource: Boolean, ast: ASTNode, span: Span): IRSpanInfo =
+    new IRSpanInfo(fromSource, ast, span)
+  def makeFunctional(fromSource: Boolean, ast: ASTNode,
                      name: IRId, params: JList[IRId], args: JList[IRStmt],
                      fds: JList[IRFunDecl], vds: JList[IRVarStmt],
                      body: JList[IRStmt]): IRFunctional =
-    new IRFunctional(fromSource, name, params, args, fds, vds, body)
+    new IRFunctional(fromSource, ast, name, params, args, fds, vds, body)
 
-  def makeFunctional(fromSource: Boolean,
+  def makeFunctional(fromSource: Boolean, ast: ASTNode,
                      name: IRId, params: JList[IRId], body: IRStmt): IRFunctional =
-    makeFunctional(fromSource, name, params, toJavaList(Nil), toJavaList(Nil),
+    makeFunctional(fromSource, ast, name, params, toJavaList(Nil), toJavaList(Nil),
                    toJavaList(Nil), toJavaList(List(body)))
 
-  def makeFunctional(fromSource: Boolean, name: IRId, params: JList[IRId],
+  def makeFunctional(fromSource: Boolean, ast: ASTNode, name: IRId, params: JList[IRId],
                      body: JList[IRStmt]): IRFunctional =
-    makeFunctional(fromSource, name, params, toJavaList(Nil), toJavaList(Nil),
+    makeFunctional(fromSource, ast, name, params, toJavaList(Nil), toJavaList(Nil),
                    toJavaList(Nil), body)
 
   def makeRoot(): IRRoot =
-    makeRoot(false, dummySpan("disambiguatorOnly"), toJavaList(Nil),
+    makeRoot(false, dummyAst, dummySpan("disambiguatorOnly"), toJavaList(Nil),
              toJavaList(Nil), toJavaList(Nil))
 
-  def makeRoot(fromSource: Boolean, span: Span, irs: JList[IRStmt]): IRRoot =
-    makeRoot(fromSource, span, toJavaList(Nil), toJavaList(Nil), irs)
+  def makeRoot(fromSource: Boolean, ast: ASTNode, span: Span, irs: JList[IRStmt]): IRRoot =
+    makeRoot(fromSource, ast, span, toJavaList(Nil), toJavaList(Nil), irs)
 
-  def makeRoot(fromSource: Boolean, span: Span, fds: JList[IRFunDecl], vds: JList[IRVarStmt],
+  def makeRoot(fromSource: Boolean, ast: ASTNode, span: Span, fds: JList[IRFunDecl], vds: JList[IRVarStmt],
                irs: JList[IRStmt]): IRRoot =
-    new IRRoot(makeSpanInfo(fromSource, span), fds, vds, irs)
+    new IRRoot(makeSpanInfo(fromSource, ast, span), fds, vds, irs)
 
-  def makeFunExpr(fromSource: Boolean, span: Span, lhs: IRId, name: IRId,
+  def makeFunExpr(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, name: IRId,
                   params: JList[IRId], body: IRStmt): IRFunExpr =
-    makeFunExpr(fromSource, span, lhs, name, params, toJavaList(Nil), toJavaList(Nil),
+    makeFunExpr(fromSource, ast, span, lhs, name, params, toJavaList(Nil), toJavaList(Nil),
                 toJavaList(Nil), toJavaList(List(body)))
 
-  def makeFunExpr(fromSource: Boolean,
+  def makeFunExpr(fromSource: Boolean, ast: ASTNode,
                   span: Span, lhs: IRId, name: IRId, params: JList[IRId], args: JList[IRStmt],
                   fds: JList[IRFunDecl], vds: JList[IRVarStmt], body: JList[IRStmt]): IRFunExpr =
-    new IRFunExpr(makeSpanInfo(fromSource, span), lhs,
-                  makeFunctional(fromSource, name, params, args, fds, vds, body))
+    new IRFunExpr(makeSpanInfo(fromSource, ast, span), lhs,
+                  makeFunctional(fromSource, ast, name, params, args, fds, vds, body))
 
-  def makeEval(fromSource: Boolean, span: Span, lhs: IRId, arg: IRExpr) =
-    new IREval(makeSpanInfo(fromSource, span), lhs, arg)
+  def makeEval(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, arg: IRExpr) =
+    new IREval(makeSpanInfo(fromSource, ast, span), lhs, arg)
 
-  def makeUn(fromSource: Boolean, span: Span, op: IROp, expr: IRExpr) =
-    new IRUn(makeSpanInfo(fromSource, span), op, expr)
+  def makeUn(fromSource: Boolean, ast: ASTNode, span: Span, op: IROp, expr: IRExpr) =
+    new IRUn(makeSpanInfo(fromSource, ast, span), op, expr)
 
-  def makeDelete(fromSource: Boolean, span: Span, lhs: IRId, expr: IRId) =
-    new IRDelete(makeSpanInfo(fromSource, span), lhs, expr)
+  def makeDelete(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, expr: IRId) =
+    new IRDelete(makeSpanInfo(fromSource, ast, span), lhs, expr)
 
-  def makeDeleteProp(fromSource: Boolean, span: Span, lhs: IRId, obj: IRId, index: IRExpr) =
-    new IRDeleteProp(makeSpanInfo(fromSource, span), lhs, obj, index)
+  def makeDeleteProp(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, obj: IRId, index: IRExpr) =
+    new IRDeleteProp(makeSpanInfo(fromSource, ast, span), lhs, obj, index)
 
-  def makeObject(fromSource: Boolean, span: Span,
+  def makeObject(fromSource: Boolean, ast: ASTNode, span: Span,
                  lhs: IRId, members: List[IRMember], proto: IRId): IRObject =
-    makeObject(fromSource, span, lhs, toJavaList(members), Some(proto))
+    makeObject(fromSource, ast, span, lhs, toJavaList(members), Some(proto))
 
-  def makeObject(fromSource: Boolean, span: Span, lhs: IRId, members: List[IRMember]): IRObject =
-    makeObject(fromSource, span, lhs, toJavaList(members), None)
+  def makeObject(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, members: List[IRMember]): IRObject =
+    makeObject(fromSource, ast, span, lhs, toJavaList(members), None)
 
-  def makeObject(fromSource: Boolean, span: Span,
+  def makeObject(fromSource: Boolean, ast: ASTNode, span: Span,
                  lhs: IRId, members: JList[IRMember], proto: Option[IRId]): IRObject =
-    new IRObject(makeSpanInfo(fromSource, span), lhs, members, proto)
+    new IRObject(makeSpanInfo(fromSource, ast, span), lhs, members, proto)
 
-  def makeArray(fromSource: Boolean, span: Span, lhs: IRId, elements: List[Option[IRExpr]]) : IRArray = {
+  def makeArray(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, elements: List[Option[IRExpr]]) : IRArray = {
     val new_elements = toJavaList(elements.map(toJavaOption(_)))
-    makeArray(fromSource, span, lhs, new_elements)
+    makeArray(fromSource, ast, span, lhs, new_elements)
   }
 
-  def makeArray(fromSource: Boolean, span: Span, lhs: IRId, elements: JList[JOption[IRExpr]]) : IRArray =
-    new IRArray(makeSpanInfo(fromSource, span), lhs, elements)
+  def makeArray(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, elements: JList[JOption[IRExpr]]) : IRArray =
+    new IRArray(makeSpanInfo(fromSource, ast, span), lhs, elements)
 
-  def makeArrayNumber(fromSource: Boolean, span: Span, lhs: IRId, elements: JList[JDouble]) : IRStmt =
-    new IRArrayNumber(makeSpanInfo(fromSource, span), lhs, elements)
+  def makeArrayNumber(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, elements: JList[JDouble]) : IRStmt =
+    new IRArrayNumber(makeSpanInfo(fromSource, ast, span), lhs, elements)
 
-  def makeArgs(span: Span, lhs: IRId, elements: List[Option[IRExpr]]) : IRArgs = {
+  def makeArgs(ast: ASTNode, span: Span, lhs: IRId, elements: List[Option[IRExpr]]) : IRArgs = {
     val new_elements = toJavaList(elements.map(toJavaOption(_)))
-    makeArgs(span, lhs, new_elements)
+    makeArgs(ast, span, lhs, new_elements)
   }
 
-  def makeArgs(span: Span, lhs: IRId, elements: JList[JOption[IRExpr]]) : IRArgs =
-    new IRArgs(makeSpanInfo(false, span), lhs, elements)
+  def makeArgs(ast: ASTNode, span: Span, lhs: IRId, elements: JList[JOption[IRExpr]]) : IRArgs =
+    new IRArgs(makeSpanInfo(false, ast, span), lhs, elements)
 
-  def makeLoad(fromSource: Boolean, span: Span, obj: IRId, index: IRExpr) =
-    new IRLoad(makeSpanInfo(fromSource, span), obj, index)
+  def makeLoad(fromSource: Boolean, ast: ASTNode, span: Span, obj: IRId, index: IRExpr) =
+    new IRLoad(makeSpanInfo(fromSource, ast, span), obj, index)
 
-  def makeInternalCall(span: Span, lhs: IRId, fun: IRId, arg: IRExpr) : IRInternalCall =
-    makeInternalCall(span, lhs, fun, arg, None)
+  def makeInternalCall(ast: ASTNode, span: Span, lhs: IRId, fun: IRId, arg: IRExpr) : IRInternalCall =
+    makeInternalCall(ast, span, lhs, fun, arg, None)
 
-  def makeInternalCall(span: Span, lhs: IRId, fun: IRId, arg1: IRId, arg2: IRId) : IRInternalCall =
-    makeInternalCall(span, lhs, fun, arg1, Some(arg2))
+  def makeInternalCall(ast: ASTNode, span: Span, lhs: IRId, fun: IRId, arg1: IRId, arg2: IRId) : IRInternalCall =
+    makeInternalCall(ast, span, lhs, fun, arg1, Some(arg2))
 
-  def makeInternalCall(span: Span, lhs: IRId, fun: IRId, arg1: IRExpr, arg2: Option[IRId]) : IRInternalCall =
-    new IRInternalCall(makeSpanInfo(false, span), lhs, fun, arg1, toJavaOption(arg2))
+  def makeInternalCall(ast: ASTNode, span: Span, lhs: IRId, fun: IRId, arg1: IRExpr, arg2: Option[IRId]) : IRInternalCall =
+    new IRInternalCall(makeSpanInfo(false, ast, span), lhs, fun, arg1, toJavaOption(arg2))
 
-  def makeCall(fromSource: Boolean, span: Span, lhs: IRId, fun: IRId, thisB: IRId, args: IRId) : IRCall =
-    new IRCall(makeSpanInfo(fromSource, span), lhs, fun, thisB, args)
+  def makeCall(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, fun: IRId, thisB: IRId, args: IRId) : IRCall =
+    new IRCall(makeSpanInfo(fromSource, ast, span), lhs, fun, thisB, args)
 
-  def makeNew(fromSource: Boolean, span: Span, lhs: IRId, fun: IRId, args: List[IRId]) : IRNew =
-    makeNew(fromSource, span, lhs, fun, toJavaList(args))
+  def makeNew(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, fun: IRId, args: List[IRId]) : IRNew =
+    makeNew(fromSource, ast, span, lhs, fun, toJavaList(args))
 
-  def makeNew(fromSource: Boolean, span: Span, lhs: IRId, fun: IRId, args: JList[IRId]) : IRNew =
-    new IRNew(makeSpanInfo(fromSource, span), lhs, fun, args)
+  def makeNew(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, fun: IRId, args: JList[IRId]) : IRNew =
+    new IRNew(makeSpanInfo(fromSource, ast, span), lhs, fun, args)
 
-  def makeBin(fromSource: Boolean, span: Span, first: IRExpr, op: IROp, second: IRExpr) =
-    new IRBin(makeSpanInfo(fromSource, span), first, op, second)
+  def makeBin(fromSource: Boolean, ast: ASTNode, span: Span, first: IRExpr, op: IROp, second: IRExpr) =
+    new IRBin(makeSpanInfo(fromSource, ast, span), first, op, second)
 
-  def makeLoadStmt(fromSource: Boolean, span: Span, lhs: IRId, obj: IRId, index: IRExpr) =
-    makeExprStmt(span, lhs, makeLoad(fromSource, span, obj, index))
+  def makeLoadStmt(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, obj: IRId, index: IRExpr) =
+    makeExprStmt(ast, span, lhs, makeLoad(fromSource, ast, span, obj, index))
 
-  def makeExprStmt(span: Span, lhs: IRId, right: IRExpr): IRExprStmt =
-    makeExprStmt(span, lhs, right, false)
+  def makeExprStmt(ast: ASTNode, span: Span, lhs: IRId, right: IRExpr): IRExprStmt =
+    makeExprStmt(ast, span, lhs, right, false)
 
-  def makeExprStmtIgnore(span: Span, lhs: IRId, right: IRExpr): IRExprStmt =
-    makeExprStmt(span, lhs, right, true)
+  def makeExprStmtIgnore(ast: ASTNode, span: Span, lhs: IRId, right: IRExpr): IRExprStmt =
+    makeExprStmt(ast, span, lhs, right, true)
 
-  def makeExprStmt(span: Span, lhs: IRId, right: IRExpr, isRef: Boolean): IRExprStmt =
-    new IRExprStmt(makeSpanInfo(false, span), lhs, right, isRef)
+  def makeExprStmt(ast: ASTNode, span: Span, lhs: IRId, right: IRExpr, isRef: Boolean): IRExprStmt =
+    new IRExprStmt(makeSpanInfo(false, ast, span), lhs, right, isRef)
 
-  def makeFunDecl(fromSource: Boolean, span: Span,
+  def makeFunDecl(fromSource: Boolean, ast: ASTNode, span: Span,
                   name: IRId, params: JList[IRId], body: IRStmt): IRFunDecl =
-    makeFunDecl(fromSource, span, name, params, toJavaList(Nil), toJavaList(Nil),
+    makeFunDecl(fromSource, ast, span, name, params, toJavaList(Nil), toJavaList(Nil),
                 toJavaList(Nil), toJavaList(List(body)))
 
-  def makeFunDecl(fromSource: Boolean,
+  def makeFunDecl(fromSource: Boolean, ast: ASTNode,
                   span: Span, name: IRId, params: JList[IRId], args: JList[IRStmt],
                   fds: JList[IRFunDecl], vds: JList[IRVarStmt], body: JList[IRStmt]): IRFunDecl =
-    new IRFunDecl(makeSpanInfo(fromSource, span),
-                  makeFunctional(fromSource, name, params, args, fds, vds, body))
+    new IRFunDecl(makeSpanInfo(fromSource, ast, span),
+                  makeFunctional(fromSource, ast, name, params, args, fds, vds, body))
 
-  def makeBreak(fromSource: Boolean, span: Span, label: IRId): IRBreak =
-    new IRBreak(makeSpanInfo(fromSource, span), label)
+  def makeBreak(fromSource: Boolean, ast: ASTNode, span: Span, label: IRId): IRBreak =
+    new IRBreak(makeSpanInfo(fromSource, ast, span), label)
 
-  def makeReturn(fromSource: Boolean, span: Span, expr: JOption[IRExpr]) =
-    new IRReturn(makeSpanInfo(fromSource, span), expr)
+  def makeReturn(fromSource: Boolean, ast: ASTNode, span: Span, expr: JOption[IRExpr]) =
+    new IRReturn(makeSpanInfo(fromSource, ast, span), expr)
 
-  def makeLabelStmt(fromSource: Boolean, span: Span, label: IRId, stmt: IRStmt): IRLabelStmt =
-    new IRLabelStmt(makeSpanInfo(fromSource, span), label, stmt)
+  def makeLabelStmt(fromSource: Boolean, ast: ASTNode, span: Span, label: IRId, stmt: IRStmt): IRLabelStmt =
+    new IRLabelStmt(makeSpanInfo(fromSource, ast, span), label, stmt)
 
-  def makeWith(fromSource: Boolean, span: Span, id: IRId, stmt: IRStmt) =
-    new IRWith(makeSpanInfo(fromSource, span), id, stmt)
+  def makeWith(fromSource: Boolean, ast: ASTNode, span: Span, id: IRId, stmt: IRStmt) =
+    new IRWith(makeSpanInfo(fromSource, ast, span), id, stmt)
 
-  def makeThrow(fromSource: Boolean, span: Span, expr: IRExpr) =
-    new IRThrow(makeSpanInfo(fromSource, span), expr)
+  def makeThrow(fromSource: Boolean, ast: ASTNode, span: Span, expr: IRExpr) =
+    new IRThrow(makeSpanInfo(fromSource, ast, span), expr)
 
-  def makeVarStmt(fromSource: Boolean, span: Span, lhs: IRId, fromParam: Boolean): IRVarStmt =
-    new IRVarStmt(makeSpanInfo(fromSource, span), lhs, fromParam)
+  def makeVarStmt(fromSource: Boolean, ast: ASTNode, span: Span, lhs: IRId, fromParam: Boolean): IRVarStmt =
+    new IRVarStmt(makeSpanInfo(fromSource, ast, span), lhs, fromParam)
 
-  def makeIf(fromSource: Boolean, span: Span, cond: IRExpr, trueB: IRStmt, falseB: JOption[IRStmt]) =
-    new IRIf(makeSpanInfo(fromSource, span), cond, trueB, falseB)
+  def makeIf(fromSource: Boolean, ast: ASTNode, span: Span, cond: IRExpr, trueB: IRStmt, falseB: JOption[IRStmt]) =
+    new IRIf(makeSpanInfo(fromSource, ast, span), cond, trueB, falseB)
 
-  def makeWhile(fromSource: Boolean, span: Span, cond: IRExpr, body: IRStmt) =
-    new IRWhile(makeSpanInfo(fromSource, span), cond, body)
+  def makeWhile(fromSource: Boolean, ast: ASTNode, span: Span, cond: IRExpr, body: IRStmt) =
+    new IRWhile(makeSpanInfo(fromSource, ast, span), cond, body)
 
-  def makeTry(fromSource: Boolean, span: Span,
+  def makeTry(fromSource: Boolean, ast: ASTNode, span: Span,
               body: IRStmt, name: JOption[IRId], catchB: JOption[IRStmt], finallyB: JOption[IRStmt]) =
-    new IRTry(makeSpanInfo(fromSource, span), body, name, catchB, finallyB)
+    new IRTry(makeSpanInfo(fromSource, ast, span), body, name, catchB, finallyB)
 
-  def makeStore(fromSource: Boolean, span: Span, obj: IRId, index: IRExpr, rhs: IRExpr) =
-    new IRStore(makeSpanInfo(fromSource, span), obj, index, rhs)
+  def makeStore(fromSource: Boolean, ast: ASTNode, span: Span, obj: IRId, index: IRExpr, rhs: IRExpr) =
+    new IRStore(makeSpanInfo(fromSource, ast, span), obj, index, rhs)
 
-  def makeSeq(span: Span, first: IRStmt, second: IRStmt): IRSeq =
-    makeSeq(span, List(first, second))
+  def makeSeq(ast: ASTNode, span: Span, first: IRStmt, second: IRStmt): IRSeq =
+    makeSeq(ast, span, List(first, second))
 
-  def makeSeq(span: Span): IRSeq =
-    makeSeq(span, Nil)
+  def makeSeq(ast: ASTNode, span: Span): IRSeq =
+    makeSeq(ast, span, Nil)
 
-  def makeSeq(span: Span, stmt: IRStmt): IRSeq =
-    makeSeq(span, List(stmt))
+  def makeSeq(ast: ASTNode, span: Span, stmt: IRStmt): IRSeq =
+    makeSeq(ast, span, List(stmt))
 
-  def makeSeq(span: Span, stmts: List[IRStmt]): IRSeq =
-    new IRSeq(makeSpanInfo(false, span), toJavaList(stmts))
+  def makeSeq(ast: ASTNode, span: Span, stmts: List[IRStmt]): IRSeq =
+    new IRSeq(makeSpanInfo(false, ast, span), toJavaList(stmts))
 
-  def makeStmtUnit(span: Span): IRStmtUnit =
-    makeStmtUnit(span, Useful.list().asInstanceOf[JList[IRStmt]])
+  def makeStmtUnit(ast: ASTNode, span: Span): IRStmtUnit =
+    makeStmtUnit(ast, span, Useful.list().asInstanceOf[JList[IRStmt]])
 
-  def makeStmtUnit(span: Span, stmt: IRStmt): IRStmtUnit =
-    makeStmtUnit(span, Useful.list(stmt))
+  def makeStmtUnit(ast: ASTNode, span: Span, stmt: IRStmt): IRStmtUnit =
+    makeStmtUnit(ast, span, Useful.list(stmt))
 
-  def makeStmtUnit(span: Span, first: IRStmt, second: IRStmt): IRStmtUnit =
-    makeStmtUnit(span, Useful.list(first, second))
+  def makeStmtUnit(ast: ASTNode, span: Span, first: IRStmt, second: IRStmt): IRStmtUnit =
+    makeStmtUnit(ast, span, Useful.list(first, second))
 
-  def makeStmtUnit(span: Span, stmts: List[IRStmt]): IRStmtUnit =
-    makeStmtUnit(span, toJavaList(stmts))
+  def makeStmtUnit(ast: ASTNode, span: Span, stmts: List[IRStmt]): IRStmtUnit =
+    makeStmtUnit(ast, span, toJavaList(stmts))
 
-  def makeStmtUnit(span: Span, stmts: JList[IRStmt]): IRStmtUnit =
-    new IRStmtUnit(makeSpanInfo(true, span), stmts)
+  def makeStmtUnit(ast: ASTNode, span: Span, stmts: JList[IRStmt]): IRStmtUnit =
+    new IRStmtUnit(makeSpanInfo(true, ast, span), stmts)
 
-  def makeGetProp(fromSource: Boolean, span: Span, prop: IRId, body: IRStmt): IRGetProp =
-    makeGetProp(fromSource, span,
-                makeFunctional(fromSource, prop, toJavaList(Nil).asInstanceOf[JList[IRId]], body))
+  def makeGetProp(fromSource: Boolean, ast: ASTNode, span: Span, prop: IRId, body: IRStmt): IRGetProp =
+    makeGetProp(fromSource, ast, span,
+                makeFunctional(fromSource, ast, prop, toJavaList(Nil).asInstanceOf[JList[IRId]], body))
 
-  def makeGetProp(fromSource: Boolean,
+  def makeGetProp(fromSource: Boolean, ast: ASTNode,
                   span: Span, name: IRId, params: JList[IRId], args: JList[IRStmt],
                   fds: JList[IRFunDecl], vds: JList[IRVarStmt],
                   body: JList[IRStmt]): IRGetProp =
-    makeGetProp(fromSource, span, makeFunctional(true, name, params, args, fds, vds, body))
+    makeGetProp(fromSource, ast, span, makeFunctional(true, ast, name, params, args, fds, vds, body))
 
-  def makeGetProp(fromSource: Boolean, span: Span, functional: IRFunctional): IRGetProp =
-    new IRGetProp(makeSpanInfo(fromSource, span), functional)
+  def makeGetProp(fromSource: Boolean, ast: ASTNode, span: Span, functional: IRFunctional): IRGetProp =
+    new IRGetProp(makeSpanInfo(fromSource, ast, span), functional)
 
-  def makeSetProp(fromSource: Boolean,
+  def makeSetProp(fromSource: Boolean, ast: ASTNode,
                   span: Span, name: IRId, params: JList[IRId], args: JList[IRStmt],
                   fds: JList[IRFunDecl], vds: JList[IRVarStmt],
                   body: JList[IRStmt]): IRSetProp =
-    makeSetProp(fromSource, span, makeFunctional(true, name, params, args, fds, vds, body))
+    makeSetProp(fromSource, ast, span, makeFunctional(true, ast, name, params, args, fds, vds, body))
 
-  def makeSetProp(fromSource: Boolean, span: Span, prop: IRId, id: IRId, body: IRStmt): IRSetProp =
-    makeSetProp(fromSource, span, makeFunctional(true, prop, toJavaList(List(id)), body))
+  def makeSetProp(fromSource: Boolean, ast: ASTNode, span: Span, prop: IRId, id: IRId, body: IRStmt): IRSetProp =
+    makeSetProp(fromSource, ast, span, makeFunctional(true, ast, prop, toJavaList(List(id)), body))
 
-  def makeSetProp(fromSource: Boolean, span: Span, functional: IRFunctional) =
-    new IRSetProp(makeSpanInfo(fromSource, span), functional)
+  def makeSetProp(fromSource: Boolean, ast: ASTNode, span: Span, functional: IRFunctional) =
+    new IRSetProp(makeSpanInfo(fromSource, ast, span), functional)
 
-  def makeField(fromSource: Boolean, span: Span, prop: IRId, expr: IRExpr) =
-    new IRField(makeSpanInfo(fromSource, span), prop, expr)
+  def makeField(fromSource: Boolean, ast: ASTNode, span: Span, prop: IRId, expr: IRExpr) =
+    new IRField(makeSpanInfo(fromSource, ast, span), prop, expr)
 
-  val defaultInfo = new IRSourceInfo(false)
-  val trueInfo = new IRSourceInfo(true)
-  def makeSourceInfo(fromSource: Boolean) =
-    if (fromSource) trueInfo else defaultInfo
+  val defaultInfo = new IRSourceInfo(false, dummyAst)
+  def trueInfo(ast: ASTNode) = new IRSourceInfo(true, dummyAst)
+  def makeSourceInfo(fromSource: Boolean, ast: ASTNode) =
+    if (fromSource) trueInfo(ast) else defaultInfo
 
   val makeUndef = new IRUndef(defaultInfo)
   val makeNull = new IRNull(defaultInfo)
-  val makeNullFromSource = new IRNull(trueInfo)
+  def makeNullFromSource(ast: ASTNode) = new IRNull(trueInfo(ast))
 
-  def makeBool(fromSource: Boolean, bool: Boolean) =
-    new IRBool(makeSourceInfo(fromSource), bool)
-  val trueV = makeBool(false, true)
-  val falseV = makeBool(false, false)
-  val trueVFromSource = makeBool(true, true)
-  val falseVFromSource = makeBool(true, false)
+  def makeBool(fromSource: Boolean, ast: ASTNode, bool: Boolean) =
+    new IRBool(makeSourceInfo(fromSource, ast), bool)
+  val trueV = makeBool(false, dummyAst, true)
+  val falseV = makeBool(false, dummyAst, false)
+  val trueVFromSource = makeBool(true, dummyAst, true)
+  val falseVFromSource = makeBool(true, dummyAst, false)
 
-  def makeNumber(fromSource: Boolean, text: String, num: Double) =
-    new IRNumber(makeSourceInfo(fromSource), text, num)
+  def makeNumber(fromSource: Boolean, text: String, num: Double): IRNumber =
+    makeNumber(fromSource, dummyAst, text, num)
+  def makeNumber(fromSource: Boolean, ast: ASTNode, text: String, num: Double): IRNumber =
+    new IRNumber(makeSourceInfo(fromSource, ast), text, num)
 
   val zero  = new IRString(defaultInfo, "0", None)
   val one   = new IRString(defaultInfo, "1", None)
@@ -298,8 +302,8 @@ object IRFactory {
   val seven = new IRString(defaultInfo, "7", None)
   val eight = new IRString(defaultInfo, "8", None)
   val nine  = new IRString(defaultInfo, "9", None)
-  def makeString(str: String): IRString = makeString(false, str, None)
-  def makeString(fromSource: Boolean, str1: String, str2: Option[String]): IRString = str2 match {
+  def makeString(str: String): IRString = makeString(false, dummyAst, str, None)
+  def makeString(fromSource: Boolean, ast: ASTNode, str1: String, str2: Option[String]): IRString = str2 match {
     case None =>
       if(str1.equals("0")) zero
       else if(str1.equals("1")) one
@@ -313,65 +317,67 @@ object IRFactory {
       else if(str1.equals("9")) nine
       else new IRString(defaultInfo, str1, str2)
     case Some(escaped) =>
-      if (str1.equals(escaped)) new IRString(makeSourceInfo(fromSource), str1, None)
-      else new IRString(makeSourceInfo(fromSource), str1, str2)
+      if (str1.equals(escaped)) new IRString(makeSourceInfo(fromSource, ast), str1, None)
+      else new IRString(makeSourceInfo(fromSource, ast), str1, str2)
   }
 
-  def makeThis(span: Span) =
-    new IRThis(makeSpanInfo(true, span))
+  def makeThis(ast: ASTNode, span: Span) =
+    new IRThis(makeSpanInfo(true, ast, span))
 
   // make a user id
   def makeUId(originalName: String, uniqueName: String, isGlobal: Boolean,
-              span: Span, isWith: Boolean): IRUserId =
-    new IRUserId(makeSpanInfo(true, span), originalName, uniqueName, isGlobal, isWith)
+              ast: ASTNode, span: Span, isWith: Boolean): IRUserId =
+    new IRUserId(makeSpanInfo(true, ast, span), originalName, uniqueName, isGlobal, isWith)
 
   // make a withRewriter-generated id
   def makeWId(originalName: String, uniqueName: String, isGlobal: Boolean,
-              span: Span): IRUserId =
-    makeUId(originalName, uniqueName, isGlobal, span, true)
+              ast: ASTNode, span: Span): IRUserId =
+    makeUId(originalName, uniqueName, isGlobal, ast, span, true)
 
   // make a non-global user id
-  def makeNGId(uniqueName: String, span: Span): IRUserId =
-    makeUId(uniqueName, uniqueName, false, span, false)
+  def makeNGId(uniqueName: String, ast: ASTNode, span: Span): IRUserId =
+    makeUId(uniqueName, uniqueName, false, ast, span, false)
 
-  def makeNGId(originalName: String, uniqueName: String, span: Span): IRUserId =
-    makeUId(originalName, uniqueName, false, span, false)
-
-  // make a global user id
-  def makeGId(uniqueName: String): IRUserId =
-    makeUId(uniqueName, uniqueName, true, dummySpan(uniqueName), false)
+  def makeNGId(originalName: String, uniqueName: String, ast: ASTNode, span: Span): IRUserId =
+    makeUId(originalName, uniqueName, false, ast, span, false)
 
   // make a global user id
-  def makeGId(originalName: String, uniqueName: String, span: Span): IRUserId =
-    makeUId(originalName, uniqueName, true, span, false)
+  def makeGId(ast: ASTNode, uniqueName: String): IRUserId =
+    makeUId(uniqueName, uniqueName, true, ast, dummySpan(uniqueName), false)
+
+  // make a global user id
+  def makeGId(ast: ASTNode, originalName: String, uniqueName: String, span: Span): IRUserId =
+    makeUId(originalName, uniqueName, true, ast, span, false)
 
   // make a non-global temporary id
-  def makeTId(span: Span, uniqueName: String): IRTmpId =
-    makeTId(false, span, uniqueName, uniqueName, false)
+  def makeTId(ast: ASTNode, span: Span, uniqueName: String): IRTmpId =
+    makeTId(false, ast, span, uniqueName, uniqueName, false)
 
-  def makeTId(fromSource: Boolean, span: Span, uniqueName: String): IRTmpId =
-    makeTId(fromSource, span, uniqueName, uniqueName, false)
+  def makeTId(fromSource: Boolean, ast: ASTNode, span: Span, uniqueName: String): IRTmpId =
+    makeTId(fromSource, ast, span, uniqueName, uniqueName, false)
 
   // make a temporary id
-  def makeTId(span: Span, uniqueName: String, isGlobal: Boolean): IRTmpId =
-    makeTId(false, span, uniqueName, uniqueName, isGlobal)
+  def makeTId(ast: ASTNode, span: Span, uniqueName: String, isGlobal: Boolean): IRTmpId =
+    makeTId(false, ast, span, uniqueName, uniqueName, isGlobal)
 
-  def makeTId(span: Span, originalName: String, uniqueName: String, isGlobal: Boolean): IRTmpId =
-    makeTId(false, span, originalName, uniqueName, isGlobal)
+  def makeTId(ast: ASTNode, span: Span, originalName: String, uniqueName: String, isGlobal: Boolean): IRTmpId =
+    makeTId(false, ast, span, originalName, uniqueName, isGlobal)
 
-  def makeTId(fromSource: Boolean, span: Span, originalName: String, uniqueName: String,
+  def makeTId(fromSource: Boolean, ast: ASTNode, span: Span, originalName: String, uniqueName: String,
               isGlobal: Boolean): IRTmpId =
-    new IRTmpId(makeSpanInfo(fromSource, span), originalName, uniqueName, isGlobal)
+    new IRTmpId(makeSpanInfo(fromSource, ast, span), originalName, uniqueName, isGlobal)
 
   def makeOp(name: String, kind: Int = 0) = {
     new IROp(name, if(kind == 0) EJSOp.strToEJSOp(name) else kind)
   }
 
-  def makeInfo(span: Span) =
-    new IRSpanInfo(false, span)
+  def makeInfo(span: Span): IRSpanInfo =
+    makeInfo(dummyAst, span)
+  def makeInfo(ast: ASTNode, span: Span): IRSpanInfo =
+    new IRSpanInfo(false, ast, span)
 
-  def makeNoOp(span: Span, desc: String) =
-    new IRNoOp(makeSpanInfo(false, span), desc)
+  def makeNoOp(ast: ASTNode, span: Span, desc: String) =
+    new IRNoOp(makeSpanInfo(false, ast, span), desc)
 
-  val oneV = makeNumber(false, "1", 1)
+  val oneV = makeNumber(false, dummyAst, "1", 1)
 }

@@ -34,6 +34,7 @@ object WIDLToDB extends Walker {
   // WIDL nodes enumeration
   //////////////////////////////////////////////////////////
   // WDefinition
+  private val MODULE = 56
   private val INTERFACE = 0
   private val CALLBACK = 1
   private val DICTIONARY = 2
@@ -45,6 +46,7 @@ object WIDLToDB extends Walker {
   private val TSARRAY = 7
   private val TSQUESTION = 8
   // WEAttribute
+  private val EAARRAY = 55
   private val EASTRING = 9
   private val EAQUESTION = 10
   private val EAELLIPSIS = 11
@@ -96,7 +98,10 @@ object WIDLToDB extends Walker {
   private val ATTRIBUTE = 52
   private val OPERATION = 53
   private val EXCEPTIONFIELD = 54
+  private val QID = 57
   
+  // maximum number = 57
+
   var bw : BufferedWriter = null
   val span = WF.makeSpan("from WIDL DB")
 
@@ -117,6 +122,9 @@ object WIDLToDB extends Walker {
   }
 
   override def walkUnit(node:Any): Unit = node match {
+    case SWModule(info, _, name, defs) =>
+      bw.write(MODULE+"\n"+name+"\n")
+      bw.write(defs.length+"\n"); join(defs)
     case SWCallback(info, attrs, name, returnType, args) =>
       bw.write(CALLBACK+"\n"+name+"\n"+attrs.length+"\n")
       join(attrs); walkUnit(returnType)
@@ -175,13 +183,14 @@ object WIDLToDB extends Walker {
     case SWExceptionField(info, attrs, typ, name) =>
       bw.write(EXCEPTIONFIELD+"\n"+name+"\n"+attrs.length+"\n")
       join(attrs); walkUnit(typ)
-    case SWOperation(info, attrs, qualifiers, returnType, name, args) =>
+    case SWOperation(info, attrs, qualifiers, returnType, name, args, exns) =>
       bw.write(OPERATION+"\n")
       if (name.isSome) bw.write(name.get)
       bw.write("\n"+attrs.length+"\n"); join(attrs)
       bw.write(qualifiers.length+"\n"); join(qualifiers)
       walkUnit(returnType)
       bw.write(args.length+"\n"); join(args)
+      bw.write(exns.length+"\n"); join(exns)
     case SWArgument(info, attrs, typ, name, default) =>
       bw.write(attrs.length+"\n"); join(attrs)
       walkUnit(typ); bw.write(name+"\n")
@@ -206,6 +215,9 @@ object WIDLToDB extends Walker {
       bw.write(SEQUENCETYPE+"\n"+suffix.length+"\n")
       join(suffix)
       walkUnit(typ)
+    case SWQId(info, exns) =>
+      bw.write(QID+"\n"+exns.length+"\n")
+      join(exns)
     case SWSpanInfo(span) =>
     case _ => walkUnitJavaNode(node)
   }
@@ -213,6 +225,7 @@ object WIDLToDB extends Walker {
   def walkUnitJavaNode(node:Any): Unit =
     if (node.isInstanceOf[WTSArray]) bw.write(TSARRAY+"\n")
     else if (node.isInstanceOf[WTSQuestion]) bw.write(TSQUESTION+"\n")
+    else if (node.isInstanceOf[WEAArray]) bw.write(EAARRAY+"\n")
     else if (node.isInstanceOf[WEAString]) {
       bw.write(EASTRING+"\n")
       bw.write(node.asInstanceOf[WEAString].getStr+"\n")
@@ -254,25 +267,31 @@ object WIDLToDB extends Walker {
    * Read the DB to reconstruct WIDL
    */
   def readDB(fileName: String): Unit = {
-    val br = Source.fromFile(fileName+".db").getLines
+    val bs = Source.fromFile(fileName+".db")
+    val br = bs.getLines
     val tfw = new FileWriter(fileName+".test")
     val tbw = new BufferedWriter(tfw)
+    var result = List[WDefinition]()
     def readLine() = if (br.hasNext) br.next else throw Done
     def readInt() = Integer.parseInt(readLine)
-    def readDefinition(): Unit = {
-      readInt match {
-        case INTERFACE => readInterface
-        case CALLBACK => readCallback
-        case DICTIONARY => readDictionary
-        case EXCEPTION => readException
-        case ENUM => readEnum
-        case TYPEDEF => readTypedef
-        case IMPLEMENTS => readImplements
-        case n =>
-      }
-      readDefinition
+    def readDefinition(): WDefinition = readInt match {
+      case MODULE => readModule
+      case INTERFACE => readInterface
+      case CALLBACK => readCallback
+      case DICTIONARY => readDictionary
+      case EXCEPTION => readException
+      case ENUM => readEnum
+      case TYPEDEF => readTypedef
+      case IMPLEMENTS => readImplements
     }
-    def readInterface(): Unit = {
+    def readModule(): WModule = {
+      val name = readLine
+      val defsNum = readInt
+      var defs = new ArrayList[WDefinition](defsNum)
+      for (i <- 0 until defsNum) defs.add(readDefinition)
+      WF.mkModule(span, name, defs)
+    }
+    def readInterface(): WInterface = {
       val name = readLine
       val attrsNum = readInt
       var attrs = new ArrayList[WEAttribute](attrsNum)
@@ -282,9 +301,8 @@ object WIDLToDB extends Walker {
       val memsNum = readInt
       var mems = new ArrayList[WInterfaceMember](memsNum)
       for (i <- 0 until memsNum) mems.add(readInterfaceMember)
-      var dict = WF.mkInterface(span, name, parent, mems)
-      dict = WF.addAttrs(attrs, dict).asInstanceOf[WInterface]
-      tbw.write(WS.walk(dict)+"\n")
+      val dict = WF.mkInterface(span, name, parent, mems)
+      WF.addAttrs(attrs, dict).asInstanceOf[WInterface]
     }
     def readInterfaceMember(): WInterfaceMember = readInt match {
       case CONST => readConst(INTERFACE)
@@ -292,7 +310,7 @@ object WIDLToDB extends Walker {
       case OPERATION => readOperation
       case _ => throw new IllegalArgumentException("wrong InterfaceMember")
     }
-    def readCallback(): Unit = {
+    def readCallback(): WCallback = {
       val name = readLine
       val attrsNum = readInt
       var attrs = new ArrayList[WEAttribute](attrsNum)
@@ -301,11 +319,10 @@ object WIDLToDB extends Walker {
       val argsNum = readInt
       var args = new ArrayList[WArgument](argsNum)
       for (i <- 0 until argsNum) args.add(readArgument)
-      var call = WF.mkCallback(span, name, typ, args)
-      call = WF.addAttrs(attrs, call).asInstanceOf[WCallback]
-      tbw.write(WS.walk(call)+"\n")
+      val call = WF.mkCallback(span, name, typ, args)
+      WF.addAttrs(attrs, call).asInstanceOf[WCallback]
     }
-    def readDictionary(): Unit = {
+    def readDictionary(): WDictionary = {
       val name = readLine
       val attrsNum = readInt
       var attrs = new ArrayList[WEAttribute](attrsNum)
@@ -315,9 +332,8 @@ object WIDLToDB extends Walker {
       val memsNum = readInt
       var mems = new ArrayList[WDictionaryMember](memsNum)
       for (i <- 0 until memsNum) mems.add(readDictionaryMember)
-      var dict = WF.mkDictionary(span, name, parent, mems)
-      dict = WF.addAttrs(attrs, dict).asInstanceOf[WDictionary]
-      tbw.write(WS.walk(dict)+"\n")
+      val dict = WF.mkDictionary(span, name, parent, mems)
+      WF.addAttrs(attrs, dict).asInstanceOf[WDictionary]
     }
     def readDictionaryMember(): WDictionaryMember = {
       val attrsNum = readInt
@@ -329,7 +345,7 @@ object WIDLToDB extends Walker {
       val default = if (defaultOpt.isEmpty) none else some(readLiteral(defaultOpt))
       WF.addAttrs(attrs, WF.mkDictionaryMember(span, typ, name, default))
     }
-    def readException(): Unit = {
+    def readException(): WException = {
       val name = readLine
       val attrsNum = readInt
       var attrs = new ArrayList[WEAttribute](attrsNum)
@@ -339,9 +355,8 @@ object WIDLToDB extends Walker {
       val memsNum = readInt
       var mems = new ArrayList[WExceptionMember](memsNum)
       for (i <- 0 until memsNum) mems.add(readExceptionMember)
-      var dict = WF.mkException(span, name, parent, mems)
-      dict = WF.addAttrs(attrs, dict).asInstanceOf[WException]
-      tbw.write(WS.walk(dict)+"\n")
+      val dict = WF.mkException(span, name, parent, mems)
+      WF.addAttrs(attrs, dict).asInstanceOf[WException]
     }
     def readExceptionMember(): WExceptionMember = readInt match {
       case CONST => readConst(EXCEPTION)
@@ -384,7 +399,10 @@ object WIDLToDB extends Walker {
       val argsNum = readInt
       var args = new ArrayList[WArgument](argsNum)
       for (i <- 0 until argsNum) args.add(readArgument)
-      WF.mkOperation(span, attrs, quals, typ, name, args)
+      val exnsNum = readInt
+      var exns = new ArrayList[WQId](exnsNum)
+      for (i <- 0 until exnsNum) exns.add(readExn)
+      WF.mkOperation(span, attrs, quals, typ, name, args, exns)
     }
     def readArgument(): WArgument = {
       val attrsNum = readInt
@@ -404,7 +422,7 @@ object WIDLToDB extends Walker {
       val typ = readType
       WF.addAttrs(attrs, WF.mkExceptionField(span, typ, name)).asInstanceOf[WExceptionField]
     }
-    def readEnum(): Unit = {
+    def readEnum(): WEnum = {
       val name = readLine
       val attrsNum = readInt
       var attrs = new ArrayList[WEAttribute](attrsNum)
@@ -412,31 +430,36 @@ object WIDLToDB extends Walker {
       val memsNum = readInt
       var mems = new ArrayList[WString](memsNum)
       for (i <- 0 until memsNum) mems.add(readString)
-      var enum = WF.mkEnum(span, name, mems)
-      enum = WF.addAttrs(attrs, enum).asInstanceOf[WEnum]
-      tbw.write(WS.walk(enum)+"\n")
+      val enum = WF.mkEnum(span, name, mems)
+      WF.addAttrs(attrs, enum).asInstanceOf[WEnum]
     }
-    def readTypedef(): Unit = {
+    def readTypedef(): WTypedef = {
       val name = readLine
       val attrsNum = readInt
       var attrs = new ArrayList[WEAttribute](attrsNum)
       for (i <- 0 until attrsNum) attrs.add(readAttribute)
       val typ = readType
-      val typed = WF.mkTypedef(span, attrs, typ, name)
-      tbw.write(WS.walk(typed)+"\n")
+      WF.mkTypedef(span, attrs, typ, name)
     }
-    def readImplements(): Unit = {
+    def readImplements(): WImplementsStatement = {
       val name = readLine
       val attrsNum = readInt
       var attrs = new ArrayList[WEAttribute](attrsNum)
       for (i <- 0 until attrsNum) attrs.add(readAttribute)
       val parent = readLine
-      var imp = WF.mkImplementsStatement(span, name, parent)
-      imp = WF.addAttrs(attrs, imp).asInstanceOf[WImplementsStatement]
-      tbw.write(WS.walk(imp)+"\n")
+      val imp = WF.mkImplementsStatement(span, name, parent)
+      WF.addAttrs(attrs, imp).asInstanceOf[WImplementsStatement]
+    }
+    def readExn(): WQId = {
+      readLine;
+      val namesNum = readInt
+      var names = new ArrayList[String](namesNum)
+      for (i <- 0 until namesNum) names.add(readLine)
+      WF.mkQId(span, names)
     }
     def readString(): WString = { readLine; WF.mkString(span, readLine) }
     def readAttribute(): WEAttribute = readInt match {
+      case EAARRAY => WF.eaArray
       case EASTRING => WF.mkEAString(readLine)
       case EAQUESTION => WF.eaQuestion
       case EAELLIPSIS => WF.eaEllipsis
@@ -522,13 +545,15 @@ object WIDLToDB extends Walker {
       case _ => throw new IllegalArgumentException("wrong Literal")
     }
     try {
-      readDefinition
+      while (true) result ++= List(readDefinition)
     } catch {
       case Done =>
       case e => throw e
     } finally {
+      result.foreach(d => tbw.write(WS.walk(d)+"\n"))
       tbw.close
       tfw.close
+      bs.close
     }
   }
 }

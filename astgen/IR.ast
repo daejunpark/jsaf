@@ -280,7 +280,7 @@ interface IRNode() extends HasAt;
     /**
      * top-level information interface
      */
-    abstract IRInfoNode(boolean fromSource) extends UIDObject;
+    abstract IRInfoNode(boolean fromSource, ASTNode ast) extends UIDObject;
         /**
          * Common shape for functions
          */

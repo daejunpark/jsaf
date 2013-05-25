@@ -10,6 +10,7 @@
 package kr.ac.kaist.jsaf.compiler
 
 import _root_.java.util.{List => JList}
+import kr.ac.kaist.jsaf.ShellParameters
 import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.nodes._
 import kr.ac.kaist.jsaf.nodes_util.{ NodeFactory => NF }
@@ -20,6 +21,7 @@ import kr.ac.kaist.jsaf.scala_src.useful.ErrorLog
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
 import kr.ac.kaist.jsaf.useful.HasAt
+import kr.ac.kaist.jsaf.Shell
 
 /**
  * Eliminates ambiguities in an AST that can be resolved solely by knowing what
@@ -47,27 +49,11 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
   /* Environment for renaming identifiers. */
   type Env = List[(String, String)]
   val emptyLabel = ("empty", "empty")
-  var varEnv: Env = List(("NaN", "NaN"), ("Infinity", "Infinity"),
-                         ("undefined", "undefined"),
-                         ("Object", "Object"),
-                         ("Function", "Function"),
-                         ("Array", "Array"),
-                         ("String", "String"),
-                         ("Boolean", "Boolean"),
-                         ("Number", "Number"),
-                         ("Math", "Math"),
-                         ("Date", "Date"),
-                         ("RegExp", "RegExp"),
-                         ("Error", "Error"), ("EvalError", "EvalError"),
-                         ("RangeError", "RangeError"),
-                         ("ReferenceError", "ReferenceError"),
-                         ("SyntaxError", "SyntaxError"),
-                         ("TypeError", "TypeError"),
-                         ("URIError", "URIError"))
-  var funEnv: Env = List(("eval", "eval"), ("parseInt", "parseInt"),
-                         ("parseFloat", "parseFloat"), ("isNaN", "isNaN"),
-                         ("isFinite", "isFinite"), ("alert", "alert"), // alert???
-                         (NU.internalPrint, NU.internalPrint))
+  val pred = if (Shell.pred == null) new Predefined(new ShellParameters())
+             else Shell.pred
+  var env: Env = pred.vars.map(v => (v,v)) ++
+                 pred.funs.map(f => (f,f)) ++ List(("alert", "alert"), // alert???
+                                                   (NU.internalPrint, NU.internalPrint))
   // The first Env is the label set of an enclosing IterationStatement
   // The second Env is the label set of an enclosing SwitchStatement
   // The third Env is the label set of an enclosing statement
@@ -81,21 +67,17 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
    * Object, Function, Array, String, Boolean, Number, Date, RegExp, Error,
    * EvalError, RangeError, ReferenceError, SyntaxError, TypeError, URIError
    */
-  def addVEnv(name: String, newid: Id): Unit = toOption(newid.getUniqueName) match {
+  def addEnv(name: String, newid: Id): Unit = toOption(newid.getUniqueName) match {
     case None => signal("Identifier " + name + " is not bound.", newid)
-    case Some(uniq) => varEnv = (name, uniq)::varEnv
+    case Some(uniq) => env = (name, uniq)::env
   }
-  def addVEnv(id: Id, newid: Id): Unit = toOption(newid.getUniqueName) match {
+  def addEnv(id: Id, newid: Id): Unit = toOption(newid.getUniqueName) match {
     case None => signal("Identifier " + id.getText + " is not bound.", id)
-    case Some(uniq) => varEnv = (id.getText, uniq)::varEnv
+    case Some(uniq) => env = (id.getText, uniq)::env
   }
-  def addFEnv(id: Id, newid: Id): Unit = toOption(newid.getUniqueName) match {
-    case None => signal("Identifier " + id.getText + " is not bound.", id)
-    case Some(uniq) => funEnv = (id.getText, uniq)::funEnv
-  }
-  def addFEnv(newid: Id): Unit = toOption(newid.getUniqueName) match {
+  def addEnv(newid: Id): Unit = toOption(newid.getUniqueName) match {
     case None => signal("Identifier " + newid.getText + " is not bound.", newid)
-    case Some(uniq) => funEnv = (newid.getText, uniq)::funEnv
+    case Some(uniq) => env = (newid.getText, uniq)::env
   }
   def addLEnv(id: Id, newid: Id): Unit = toOption(newid.getUniqueName) match {
     case None => signal("Identifier " + id.getText + " is not bound.", id)
@@ -113,44 +95,35 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
 
   def getEnvNoCheck(id: Id): String = {
     val name = id.getText
-    varEnv.find(p => p._1.equals(name)) match {
+    env.find(p => p._1.equals(name)) match {
       case Some((_, uniq)) => uniq
-      case None => funEnv.find(p => p._1.equals(name)) match {
-        case Some((_, uniq)) => uniq
-        case None =>
-          val new_name = newId(id).getUniqueName.get
-          varEnv = (name, new_name)::varEnv
-          new_name
-      }
+      case None =>
+        val new_name = newId(id).getUniqueName.get
+        env = (name, new_name)::env
+        new_name
     }
   }
 
   def getEnvCheck(id: Id): String = {
     val name = id.getText
-    varEnv.find(p => p._1.equals(name)) match {
+    env.find(p => p._1.equals(name)) match {
       case Some((_, uniq)) => uniq
-      case None => funEnv.find(p => p._1.equals(name)) match {
-        case Some((_, uniq)) => uniq
-        case None =>
-          if (!inWith && disambiguateOnly)
-            assignSignal("Identifier " + id.getText + " is not bound.", id)
-          name
-      }
+      case None =>
+        if (!inWith && disambiguateOnly)
+          assignSignal("Identifier " + id.getText + " is not bound.", id)
+        name
     }
   }
 
   def inEnv(id: Id): Boolean = {
     val name = id.getText
-    varEnv.find(p => p._1.equals(name)) match {
+    env.find(p => p._1.equals(name)) match {
       case Some(_) => true
-      case None => funEnv.find(p => p._1.equals(name)) match {
-        case Some(_) => true
-        case None => false
-      }
+      case None => false
     }
   }
-  def setEnv(envs: (Env, Env, (Env,Env,Env,Env))) =
-    { varEnv = envs._1; funEnv = envs._2; labEnv = envs._3 }
+  def setEnv(envs: (Env, (Env,Env,Env,Env))) =
+    { env = envs._1; labEnv = envs._2 }
 
   def newId(span: Span, n: String) =
     SId(NF.makeSpanInfo(span), n, Some(n), false)
@@ -236,18 +209,18 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
     val old_toplevel = toplevel
     toplevel = false
     labEnv = emptyLabEnv
-    addVEnv(argName, newId(newId(span, argName)))
+    addEnv(argName, newId(newId(span, argName)))
     val pairs_params = params.map(p => (p, newId(p)))
-    pairs_params.foreach(p => addVEnv(p._1, p._2))
+    pairs_params.foreach(p => addEnv(p._1, p._2))
+    fds.foreach(fd => addEnv(fd.getFtn.getName, newId(fd.getFtn.getName)))
     val new_vds = vds.foldLeft(List[VarDecl]())((vds, vd) => vd match {
         case SVarDecl(info, id, _) => params.find(p => p.getText.equals(id.getText)) match {
           case None =>
             val new_id = newId(id)
-            addVEnv(id, new_id)
+            addEnv(id, new_id)
             vds:+SVarDecl(info, new_id, None)
           case _ => vds
         }})
-    fds.foreach(fd => addFEnv(fd.getFtn.getName, newId(fd.getFtn.getName)))
     val new_fds = fds.map(walk).asInstanceOf[List[FunDecl]]
     val oldInFunctionBody = inFunctionBody
     inFunctionBody = true
@@ -259,12 +232,12 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
 
   override def walk(node: Any): Any = node match {
     case SProgram(info, STopLevel(fds, vds, body), comments) =>
+      fds.foreach(fd => addEnv(fd.getFtn.getName, newId(fd.getInfo.getSpan, fd.getFtn.getName.getText)))
       val new_vds = vds.map(p => p match {
           case SVarDecl(i, id, _) =>
             val new_id = newId(i.getSpan, id.getText)
-            addVEnv(id, new_id)
+            addEnv(id, new_id)
             SVarDecl(info, new_id, None)})
-      fds.foreach(fd => addFEnv(fd.getFtn.getName, newId(fd.getInfo.getSpan, fd.getFtn.getName.getText)))
       val new_fds = fds.map(walk).asInstanceOf[List[FunDecl]]
       toplevel = true
       SProgram(info,
@@ -274,38 +247,36 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
                comments)
 
     case SFunDecl(info, SFunctional(fds, vds, body, name, params)) =>
-      val old_env = (varEnv, funEnv, labEnv)
+      val old_env = (env, labEnv)
       val new_name = newId(name, getEnvNoCheck(name))
       val result = SFunDecl(info,
                             functional(info.getSpan, new_name, params, fds, vds, body))
-      setEnv(old_env._1, funEnv, old_env._3)
+      setEnv(old_env._1, old_env._2)
       result
 
     case SFunExpr(info, SFunctional(fds, vds, body, name, params)) =>
-      val old_env = (varEnv, funEnv, labEnv)
+      val old_env = (env, labEnv)
       val old_toplevel = toplevel
       toplevel = false
       val new_name = newId(name)
-      addFEnv(name, new_name)
+      addEnv(name, new_name)
       val result = SFunExpr(info,
                             functional(info.getSpan, new_name, params, fds, vds, body))
       setEnv(old_env)
       toplevel = old_toplevel
       result
     case SGetProp(info, prop, SFunctional(fds, vds, body, name, params)) =>
-      val old_env = (varEnv, funEnv, labEnv)
+      val old_env = (env, labEnv)
       val new_prop = newPropId(name)
       val new_name = new_prop.getId
-      addFEnv(name, new_name)
       val result = SGetProp(info, new_prop,
                             functional(info.getSpan, new_name, params, fds, vds, body))
       setEnv(old_env)
       result
     case SSetProp(info, prop, SFunctional(fds, vds, body, name, params)) =>
-      val old_env = (varEnv, funEnv, labEnv)
+      val old_env = (env, labEnv)
       val new_prop = newPropId(name)
       val new_name = new_prop.getId
-      addFEnv(name, new_name)
       val result = SSetProp(info, new_prop,
                             functional(info.getSpan, new_name, params, fds, vds, body))
       setEnv(old_env)
@@ -342,11 +313,11 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
     case SCatch(info, id, body) =>
       val old_toplevel = toplevel
       toplevel = false
-      val old_env = (varEnv, funEnv, labEnv)
+      val old_env = (env, labEnv)
       val new_id = newId(id)
-      addVEnv(id, new_id)
+      addEnv(id, new_id)
       setLEnv(node.asInstanceOf[AbstractNode])
-      val result = SCatch(info, new_id, walk(body).asInstanceOf[Block])
+      val result = SCatch(info, new_id, walk(body).asInstanceOf[List[Stmt]])
       setEnv(old_env)
       toplevel = old_toplevel
       result
@@ -373,7 +344,7 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
         SContinue(info, new_target)
       }
     case _:DoWhile =>
-      val old_env = (varEnv, funEnv, labEnv)
+      val old_env = (env, labEnv)
       val oldInIterator = inIterator
       mkInIterator
       val result = super.walk(node)
@@ -381,25 +352,25 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
       setEnv(old_env)
       result
     case _:For =>
-      val old_env = (varEnv, funEnv, labEnv)
+      val old_env = (env, labEnv)
       val oldInIterator = inIterator
       mkInIterator
       val result = super.walk(node)
       inIterator = oldInIterator
-      val newVarEnv = varEnv
+      val newEnv = env
       setEnv(old_env)
-      varEnv = newVarEnv
+      env = newEnv
       result
     case _:ForIn =>
-      val old_env = (varEnv, funEnv, labEnv)
+      val old_env = (env, labEnv)
       hasAssign = true
       val oldInIterator = inIterator
       mkInIterator
       val result = super.walk(node)
       inIterator = oldInIterator
-      val newVarEnv = varEnv
+      val newEnv = env
       setEnv(old_env)
-      varEnv = newVarEnv
+      env = newEnv
       result
     case fv:ForVar =>
       signal("ForVar should be replaced by the hoister.", fv)
@@ -411,7 +382,7 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
           signal("Multiple declarations of the label: " + name + ".", ls)
           ls
         case None =>
-          val old_env = (varEnv, funEnv, labEnv)
+          val old_env = (env, labEnv)
           val new_label = newLabel(label)
           addLEnv(label.getId, new_label.getId)
           val result = SLabelStmt(info, new_label, walk(stmt).asInstanceOf[Stmt])
@@ -432,7 +403,7 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
       result
 
     case _:Switch =>
-      val old_env = (varEnv, funEnv, labEnv)
+      val old_env = (env, labEnv)
       val oldInSwitch = inSwitch
       mkInSwitch
       val result = super.walk(node)
@@ -442,7 +413,7 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
     case SVarRef(info, id) => SVarRef(info, newId(id, getEnvCheck(id)))
     case vs:VarStmt => signal("VarStmt should be replaced by the hoister.", vs)
     case _:While =>
-      val old_env = (varEnv, funEnv, labEnv)
+      val old_env = (env, labEnv)
       val oldInIterator = inIterator
       mkInIterator
       val result = super.walk(node)
@@ -456,7 +427,7 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
       resetLEnv(oldLEnv)
       result
     case _:With =>
-      val old_env = (varEnv, funEnv, labEnv)
+      val old_env = (env, labEnv)
       val oldInWith = inWith
       inWith = true
       setLEnv(node.asInstanceOf[AbstractNode])
@@ -483,7 +454,7 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
       resetLEnv(oldLEnv)
       if (!inEnv(id)) {
         toplevel = true
-        addVEnv(id, newId(id))
+        addEnv(id, newId(id))
         toplevel = old_toplevel
       }
       result

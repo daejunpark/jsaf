@@ -10,7 +10,8 @@
 package kr.ac.kaist.jsaf.compiler
 
 import _root_.java.util.{List => JList}
-import kr.ac.kaist.jsaf.bug_detector.BugInfo
+import kr.ac.kaist.jsaf.ShellParameters
+import kr.ac.kaist.jsaf.bug_detector._
 import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.nodes._
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
@@ -19,6 +20,7 @@ import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
 import kr.ac.kaist.jsaf.useful.HasAt
+import kr.ac.kaist.jsaf.Shell
 
 class Hoister(program: Program) extends Walker {
   /* Error handling
@@ -41,17 +43,25 @@ class Hoister(program: Program) extends Walker {
                                 case SVarDecl(_,_,None) => res
                                 case SVarDecl(i,n,Some(e)) => List(assignS(i,n,e))++res
                                })
-  // Get the declared variable and function names in the current lexical scope
-  class hoistWalker(node: Any) extends Walker {
+  // Get the declared variable and function names and the names on lhs of assignments
+  // in the current lexical scope
+  class hoistWalker(node: Any, isTopLevel: Boolean) extends Walker {
     var varDecls = List[VarDecl]()
     var funDecls = List[FunDecl]()
-    def doit() = { walk(node); (varDecls, funDecls) }
+    var varNames = List[(Span, String)]()
+    def doit() = { walk(node); (varDecls, funDecls, varNames) }
     override def walk(node: Any) = node match {
       case fd:FunDecl => funDecls ++= List(fd); fd
-      case vd@SVarDecl(i, n, _) => varDecls ++= List(SVarDecl(i, n, None)); vd
+      case vd@SVarDecl(i, n, _) =>
+        if (isTopLevel && Shell.pred != null && Shell.pred.contains(n.getText)) vd
+        else if (isTopLevel && Shell.pred == null && (new Predefined(new ShellParameters())).contains(n.getText)) vd
+        else { varDecls ++= List(SVarDecl(i, n, None)); vd }
       case fe:FunExpr => fe
       case gp:GetProp => gp
       case sp:SetProp => sp
+      case ae@SAssignOpApp(_, SVarRef(i, name), _, _) =>
+        varNames ++= List((i.getSpan, name.getText))
+        ae
       case _ => super.walk(node)
     }
   }
@@ -79,48 +89,52 @@ class Hoister(program: Program) extends Walker {
     case _ =>
   }
 
-  def isInVd(vd: VarDecl, ds: List[VarDecl]) = {
+  def isInVd(vd: VarDecl, ds: List[VarDecl], vars: List[(Span, String)]) = {
     val name = vd.getName.getText
-    ds.exists(d => if (d.getName.getText.equals(name)) {
-                     signal(d.getInfo.getSpan, 29, name, vd.getInfo.getSpan.toStringWithoutFiles)
-                     true
-                   } else false)
+    vars.find(p => name.equals(p._2) &&
+                   p._1.getBegin.at <= vd.getInfo.getSpan.getBegin.at) match {
+         case Some((span, n)) =>
+                signal(span, ShadowedVarByVar, name, vd.getInfo.getSpan.toStringWithoutFiles)
+         case _ =>
+    }
+    ds.exists(d => d.getName.getText.equals(name))
   }
   def isInFd(fd: FunDecl, ds: List[FunDecl]) = {
     val name = fd.getFtn.getName.getText
     ds.exists(d => if (d.getFtn.getName.getText.equals(name)) {
-                     signal(d.getInfo.getSpan, 25, name, fd.getInfo.getSpan.toStringWithoutFiles)
+                     signal(d.getInfo.getSpan, ShadowedFuncByFunc, name, fd.getInfo.getSpan.toStringWithoutFiles)
                      true
                    } else false)
   }
   def isVdInFd(vd: VarDecl, ds: List[FunDecl]) = {
     val name = vd.getName.getText
     ds.exists(d => if (d.getFtn.getName.getText.equals(name)) {
-                     signal(vd.getInfo.getSpan, 27, name, d.getInfo.getSpan.toStringWithoutFiles)
+                     signal(vd.getInfo.getSpan, ShadowedVarByFunc, name, d.getInfo.getSpan.toStringWithoutFiles)
                      true
                    } else false)
   }
   def fdShadowParam(fd: FunDecl, params: List[Id]) = {
     val name = fd.getFtn.getName.getText
-    signal(params.find(p => p.getText.equals(name)).get.getInfo.getSpan, 26, name,
+    signal(params.find(p => p.getText.equals(name)).get.getInfo.getSpan, ShadowedParamByFunc, name,
            fd.getInfo.getSpan.toStringWithoutFiles)
   }
   def vdShadowParam(vd: VarDecl, params: List[Id]) = {
     val name = vd.getName.getText
-    signal(params.find(p => p.getText.equals(name)).get.getInfo.getSpan, 28, name,
+    signal(params.find(p => p.getText.equals(name)).get.getInfo.getSpan, ShadowedVarByParam, name,
            vd.getInfo.getSpan.toStringWithoutFiles)
   }
-  def hoist(body: List[SourceElement], params: List[Id]) = {
+  def hoist(body: List[SourceElement], isTopLevel: Boolean, params: List[Id]) = {
     val param_names = params.map(_.getText)
-    val (vdss, fdss) = body.map(s => new hoistWalker(s).doit).unzip
+    val (vdss, fdss, varss) = body.map(s => new hoistWalker(s, isTopLevel).doit).unzip3
     // hoisted variable declarations
     val vds = vdss.flatten.asInstanceOf[List[VarDecl]]
     // hoisted function declarations
     val fds = fdss.flatten.map(walk).asInstanceOf[List[FunDecl]]
+    val vars = varss.flatten.asInstanceOf[List[(Span, String)]]
     // duplicated variable declarations removed
     // first-come wins
     val vdsUniq = vds.foldLeft(List[VarDecl]())((res, vd) =>
-                               if (isInVd(vd, res)) res
+                               if (isInVd(vd, res, vars)) res
                                else res++List(vd))
     // duplicated function declarations removed
     // last-come wins
@@ -144,7 +158,7 @@ class Hoister(program: Program) extends Walker {
   override def walk(node: Any): Any = node match {
     case SProgram(info, STopLevel(Nil, Nil, program), comments) =>
       checkUseStrictDirective(program)
-      val (fds, vds, new_program) = hoist(program, Nil)
+      val (fds, vds, new_program) = hoist(program, true, Nil)
       SProgram(info, STopLevel(fds, vds, new_program), comments)
     case pgm:Program =>
       throw new StaticError("Program before the hoisting phase should not have hoisted declarations.",
@@ -152,7 +166,7 @@ class Hoister(program: Program) extends Walker {
       pgm
     case SFunDecl(info, SFunctional(Nil, Nil, body, name, params)) =>
       checkUseStrictDirective(body)
-      val (fds, vds, new_body) = hoist(body, params)
+      val (fds, vds, new_body) = hoist(body, false, params)
       SFunDecl(info, SFunctional(fds, vds, new_body, name, params))
     case fd:FunDecl =>
       throw new StaticError("Function declarations before the hoisting phase should not have hoisted declarations.",
@@ -160,7 +174,7 @@ class Hoister(program: Program) extends Walker {
       fd
     case SFunExpr(info, SFunctional(Nil, Nil, body, name, params)) =>
       checkUseStrictDirective(body)
-      val (fds, vds, new_body) = hoist(body, params)
+      val (fds, vds, new_body) = hoist(body, false, params)
       SFunExpr(info, SFunctional(fds, vds, new_body, name, params))
     case fe:FunExpr =>
       throw new StaticError("Function expressions before the hoisting phase should not have hoisted declarations.",
@@ -168,7 +182,7 @@ class Hoister(program: Program) extends Walker {
       fe
     case SGetProp(info, prop, SFunctional(Nil, Nil, body, name, params)) =>
       checkUseStrictDirective(body)
-      val (fds, vds, new_body) = hoist(body, params)
+      val (fds, vds, new_body) = hoist(body, false, params)
       SGetProp(info, prop, SFunctional(fds, vds, new_body, name, params))
     case gp:GetProp =>
       throw new StaticError("Function expressions before the hoisting phase should not have hoisted declarations.",
@@ -176,7 +190,7 @@ class Hoister(program: Program) extends Walker {
       gp
     case SSetProp(info, prop, SFunctional(Nil, Nil, body, name, params)) =>
       checkUseStrictDirective(body)
-      val (fds, vds, new_body) = hoist(body, params)
+      val (fds, vds, new_body) = hoist(body, false, params)
       SSetProp(info, prop, SFunctional(fds, vds, new_body, name, params))
     case sp:SetProp =>
       throw new StaticError("Function expressions before the hoisting phase should not have hoisted declarations.",

@@ -40,7 +40,7 @@ disambiguate_out_WCIequals=\
   {\n\
     \n\
   }\n\
-  h = function () \n\
+  h = (function () \n\
   {\n\
     var t;\n\
     \n\
@@ -48,5 +48,5 @@ disambiguate_out_WCIequals=\
     {\n\
       t = false;\n\
     }\n\
-  };\n
+  });\n
 disambiguate_err_equals=

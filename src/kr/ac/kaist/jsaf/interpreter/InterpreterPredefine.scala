@@ -40,7 +40,7 @@ object InterpreterPredefine {
   // Use only when we cannot get any meaningful source locations
   val sourceLoc = new SourceLocRats(NU.freshFile("interpreter"), 0, 0, 0)
   val defSpan = new Span(sourceLoc, sourceLoc)
-  val defInfo = IF.makeSpanInfo(false, defSpan)
+  val defInfo = IF.makeSpanInfo(false, IF.dummyAst, defSpan)
   val defId = IF.dummyIRId("interpreter")
 
   // Constant values
@@ -52,7 +52,7 @@ object InterpreterPredefine {
   val minusOne = IF.makeNumber(false, "-1.0", -1.0)
   val plusInfinity = IF.makeNumber(false, "Infinity", Double.PositiveInfinity)
   val minusInfinity = IF.makeNumber(false, "-Infinity", Double.NegativeInfinity)
-  val undefVar = IF.makeTId(IF.dummySpan("undefVar"), NU.freshGlobalName("undefVar"))
+  val undefVar = IF.makeTId(IF.dummyAst, IF.dummySpan("undefVar"), NU.freshGlobalName("undefVar"))
   val falseV = IF.falseV
   val trueV = IF.trueV
   val falsePV = PVal(falseV)
@@ -71,9 +71,9 @@ object InterpreterPredefine {
   val argumentsTId = SIRTmpId(IF.dummySpanInfo("arguments"), argumentsName, argumentsName, false)
   //val resUndef = Normal(Some(undefV))
   val undefFtn =
-    IF.makeFunctional(false, defId,
+    IF.makeFunctional(false, IF.dummyAst, defId,
                       toJavaList(List(thisTId, argumentsTId).asInstanceOf[List[IRId]]),
-                      IF.makeReturn(false, defSpan, toJavaOption(Some(undefVar))))
+                      IF.makeReturn(false, IF.dummyAst, defSpan, toJavaOption(Some(undefVar))))
   val undefDP = new ObjectProp(Some(undefV), None, None, Some(false), Some(false), Some(false)) // IH.mkDataProp()
   val pvpn= varPrefix+"PrimitiveValue"
   val nullObj: JSObject = new JSObject(null, null, "Null", false, new PropTable)

@@ -96,6 +96,13 @@ object WIDLToString extends Walker {
    *
    */
   override def walk(node:Any):String = node match {
+    case SWModule(info, _, name, defs) =>
+      val s: StringBuilder = new StringBuilder
+      s.append("module ").append(name).append(" {")
+      s.append(join(defs, ", ", new StringBuilder("")))
+      s.append("}")
+      s.toString
+
     case SWCallback(info, attrs, name, returnType, args) =>
       val s: StringBuilder = new StringBuilder
       if (!attrs.isEmpty) {
@@ -236,7 +243,7 @@ object WIDLToString extends Walker {
       }
       s.append(walk(typ)).append(" ").append(name).append(";")
       s.toString
-    case SWOperation(info, attrs, qualifiers, returnType, name, args) =>
+    case SWOperation(info, attrs, qualifiers, returnType, name, args, exns) =>
       val s: StringBuilder = new StringBuilder
       if (!attrs.isEmpty) {
         s.append("[")
@@ -254,7 +261,13 @@ object WIDLToString extends Walker {
       if (name.isSome) s.append(name.get)
       s.append("(")
       s.append(join(args, ", ", new StringBuilder("")))
-      s.append(");")
+      s.append(")")
+      if (!exns.isEmpty) {
+        s.append(" raises (")
+        s.append(join(exns, ", ", new StringBuilder("")))
+        s.append(")")
+      }
+      s.append(";")
       s.toString
     case SWArgument(info, attrs, typ, name, default) =>
       val s: StringBuilder = new StringBuilder
@@ -298,6 +311,10 @@ object WIDLToString extends Walker {
       s.append(join(suffix, " ", new StringBuilder("")))
       s.toString
     case SWId(info, name) => name
+    case SWQId(info, names) =>
+      val s: StringBuilder = new StringBuilder
+      s.append(join(names, "::", new StringBuilder("")))
+      s.toString
     case SWSpanInfo(span) => ""
     case xs:JList[_] =>
       val s: StringBuilder = new StringBuilder
@@ -311,6 +328,7 @@ object WIDLToString extends Walker {
   def walkJavaNode(node:Any):String =
     if (node.isInstanceOf[WTSArray]) "[]"
     else if (node.isInstanceOf[WTSQuestion]) "?"
+    else if (node.isInstanceOf[WEAArray]) "[]"
     else if (node.isInstanceOf[WEAString]) {
       node.asInstanceOf[WEAString].getStr
     }
@@ -343,5 +361,6 @@ object WIDLToString extends Walker {
     else if (node.isInstanceOf[WQCreator]) "creator"
     else if (node.isInstanceOf[WQDeleter]) "deleter"
     else if (node.isInstanceOf[WQLegacycaller]) "legacycaller"
+    else if (node.isInstanceOf[String]) node.asInstanceOf[String]
     else "#@#"+node.getClass.toString
 }

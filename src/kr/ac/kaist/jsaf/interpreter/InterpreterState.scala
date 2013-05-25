@@ -61,7 +61,7 @@ class InterpreterState(val I: Interpreter) {
     URIErrorPrototype.init()
   }
 
-  def info(): IRSpanInfo = IF.makeSpanInfo(false, span)
+  def info(): IRSpanInfo = IF.makeSpanInfo(false, IF.dummyAst, span)
 
   def dummyFtnObj(length: Int, builtin: JSObject): JSFunction = {
     val fv: IRFunctional = I.IH.dummyFtn(length)

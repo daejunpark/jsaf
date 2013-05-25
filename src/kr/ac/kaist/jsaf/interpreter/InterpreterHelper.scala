@@ -83,14 +83,14 @@ class InterpreterHelper(I: Interpreter) {
          else "-"+s
   def negate(n: IRNumber): IRNumber = mkIRNum(n.getNum.unary_-)
 
-  def dummyInfo() = IF.makeSpanInfo(false, IF.dummySpan("forDummyInfo"))
+  def dummyInfo() = IF.makeSpanInfo(false, IF.dummyAst, IF.dummySpan("forDummyInfo"))
   def getIRBool(b: Boolean) = if (b) IP.trueV else IP.falseV
   def dummyFtn(length: Int): IRFunctional =
-    IF.makeFunctional(false, IP.defId,
+    IF.makeFunctional(false, IF.dummyAst, IP.defId,
                       toJavaList(List(IP.thisTId, IP.argumentsTId).asInstanceOf[List[IRId]]),
-                      toJavaList(for (i <- 1 to length) yield IF.dummyIRStmt(IP.defSpan).asInstanceOf[IRStmt]))
+                      toJavaList(for (i <- 1 to length) yield IF.dummyIRStmt(IF.dummyAst, IP.defSpan).asInstanceOf[IRStmt]))
   def mkIRStr(s: String) = IF.makeString(s)
-  def mkIRBool(b: Boolean): IRBool = IF.makeBool(false, b)
+  def mkIRBool(b: Boolean): IRBool = IF.makeBool(false, IF.dummyAst, b)
   def mkIRNum(d: Double): IRNumber = {
     val name = d.toString
     IF.makeNumber(false, name, d)
