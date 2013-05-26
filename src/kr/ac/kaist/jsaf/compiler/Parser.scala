@@ -192,7 +192,7 @@ object Parser {
     try {
       val parser = new JS(in, filename)
       NU.setCloneDetector(isCloneDetector)
-      val parseResult = parser.pJS$File(0)
+      val parseResult = parser.JSmain(0)
       if (parseResult.hasValue) {
         parseResult.asInstanceOf[SemanticValue].value.asInstanceOf[Program]
       } else throw new ParserError(parseResult.asInstanceOf[ParseError], parser, start)
