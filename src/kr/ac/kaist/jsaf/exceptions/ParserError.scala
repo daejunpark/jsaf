@@ -9,11 +9,14 @@
 
 package kr.ac.kaist.jsaf.exceptions
 
+import _root_.java.lang.{Integer => JInteger}
 import xtc.parser.ParseError
 import xtc.parser.ParserBase
+import xtc.tree.Location
 
-class ParserError(parseError: ParseError, parser: ParserBase)
+class ParserError(parseError: ParseError, parser: ParserBase, start: JInteger)
       extends StaticError(parseError.msg, None) {
+
   def typeDescription() = "Parse Error"
 
   override def description() = {
@@ -29,7 +32,11 @@ class ParserError(parseError: ParseError, parser: ParserBase)
     result
   }
 
-  override def at = if (parseError.index == -1) "Unspecified location"
-                    else parser.location(parseError.index).toString
+  override def at =
+    if (parseError.index == -1) "Unspecified location"
+    else {
+      val loc = parser.location(parseError.index)
+      new Location(loc.file, loc.line + start, loc.column).toString
+    }
   override def toString = String.format("%s:\n    %s", at, description)
 }

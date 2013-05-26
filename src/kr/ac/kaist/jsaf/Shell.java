@@ -29,6 +29,7 @@ import kr.ac.kaist.jsaf.compiler.Disambiguator;
 import kr.ac.kaist.jsaf.compiler.Hoister;
 //import kr.ac.kaist.jsaf.compiler.ModuleRewriter;
 import kr.ac.kaist.jsaf.compiler.Parser;
+import kr.ac.kaist.jsaf.compiler.Predefined;
 import kr.ac.kaist.jsaf.compiler.StrictModeChecker;
 import kr.ac.kaist.jsaf.compiler.Translator;
 import kr.ac.kaist.jsaf.compiler.WithRewriter;
@@ -85,6 +86,7 @@ public final class Shell {
     private static boolean                      opt_DisambiguateOnly = false;
     private static String                       printTimeTitle = null;
     private static long                         startTime;
+    public static Predefined                    pred;
 
     public static WorkManager                   workManager = new WorkManager();
 
@@ -141,6 +143,7 @@ public final class Shell {
         try {
             // Parse parameters
             String errorMessage = params.Set(tokens);
+            pred = new Predefined(params);
             if(errorMessage != null) throw new UserError(errorMessage);
 
             // Set the start time.
@@ -433,7 +436,7 @@ public final class Shell {
 
         Option<Program> result = ASTIO.readJavaAst(fileName);
         if (result.isSome()) {
-            String code = new JSAstToConcrete(result.unwrap()).doit();
+            String code = JSAstToConcrete.doit(result.unwrap());
             if (params.opt_OutFileName != null){
                 try{
                     BufferedWriter writer = Useful.filenameToBufferedWriter(params.opt_OutFileName);
@@ -597,7 +600,7 @@ public final class Shell {
         program = (Program)new Hoister(program).doit();
         program = (Program)new Disambiguator(program, opt_DisambiguateOnly).doit();
         program = (Program)new WithRewriter(program, false).doit();
-        String rewritten = new JSAstToConcrete(program).doit();
+        String rewritten = JSAstToConcrete.doit(program);
         if (params.opt_OutFileName != null){
             try{
                 BufferedWriter writer = Useful.filenameToBufferedWriter(params.opt_OutFileName);
@@ -630,7 +633,7 @@ public final class Shell {
         Pair<Program, HashMap<String, String>> pair = Parser.fileToAST(fileNames);
         Program program = pair.first();
         //program = (Program)new ModuleRewriter(program).doit();
-        String rewritten = new JSAstToConcrete(program).doit();
+        String rewritten = JSAstToConcrete.doit(program);
         if (params.opt_OutFileName != null){
             try{
                 BufferedWriter writer = Useful.filenameToBufferedWriter(params.opt_OutFileName);
@@ -1157,7 +1160,7 @@ public final class Shell {
 		// store WIDL information into a DB
 		WIDLToDB.storeToDB(fileName, widl);
 		WIDLToDB.readDB(fileName);
-            } else throw new ParserError((ParseError)parseResult, parser);
+            } else throw new ParserError((ParseError)parseResult, parser, 0);
         } catch (FileNotFoundException f) {
             throw new UserError(fileName + " not found");
         }
@@ -1234,19 +1237,18 @@ public final class Shell {
             List<StaticError> errors = disambiguator.getErrors();
             // Testing Disambiguator...
             if (opt_DisambiguateOnly) {
-                JSAstToConcrete unparser = new JSAstToConcrete(program);
                 if (out.isSome()) {
                     String outfile = out.unwrap();
                     try {
                         BufferedWriter writer = Useful.filenameToBufferedWriter(outfile);
-                        writer.write(unparser.doitInternal());
+                        writer.write(JSAstToConcrete.doitInternal(program));
                         writer.close();
                     } catch (IOException e){
                         throw new IOException("IOException " + e +
                                               "while writing " + outfile);
                     }
                 } else if (errors.isEmpty()) {
-                    System.out.println(unparser.doit());
+                    System.out.println(JSAstToConcrete.doit(program));
                 }
                 reportErrors(NodeUtil.getFileName(program),
                              flattenErrors(errors),

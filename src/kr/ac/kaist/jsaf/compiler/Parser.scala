@@ -9,11 +9,9 @@
 
 package kr.ac.kaist.jsaf.compiler
 
-import _root_.java.io.File
-import _root_.java.io.FileNotFoundException
+import _root_.java.io._
 import _root_.java.lang.{Integer => JInteger}
-import _root_.java.io.IOException
-import _root_.java.io.BufferedReader
+import _root_.java.nio.charset.Charset
 import _root_.java.util.{List => JList}
 
 import xtc.parser.SemanticValue
@@ -83,7 +81,12 @@ object Parser {
 
   def fileToStmts(f: String) = {
     val file = new File(f)
-    fileMap.put(file.getCanonicalPath, "%s::%d".format(f, fileindex))
+    var path = file.getCanonicalPath
+    if(File.separatorChar == '\\') {
+      // convert path string to linux style for windows
+      path = path.charAt(0).toLower + path.replace('\\', '/').substring(1)
+    }
+    fileMap.put(path, "%s::%d".format(f, fileindex))
     fileindex += 1
     getInfoStmtsComments(parseFileConvertExn(file))
   }
@@ -127,8 +130,12 @@ object Parser {
   def parseScriptConvertExn(filename: String, start: JInteger, script: String,
                             isCloneDetector: Boolean): Program =
     try {
-      val program = parsePgm(Useful.utf8BufferedStringReader(script), filename, isCloneDetector)
-      NU.addLinesWalker.addLines(program, start).asInstanceOf[Program]
+      val is = new ByteArrayInputStream(script.getBytes("UTF-8"))
+      val ir = new InputStreamReader(is)
+      val in = new BufferedReader(ir)
+      val program = parsePgm(in, filename, start-1, isCloneDetector)
+      in.close; ir.close; is.close
+      NU.addLinesWalker.addLines(program, start-1).asInstanceOf[Program]
     } catch {
       case fnfe:FileNotFoundException =>
         throw convertExn(fnfe, filename)
@@ -151,7 +158,7 @@ object Parser {
       val filename = file.getCanonicalPath
       if (!filename.endsWith(".js"))
         throw new UserError("Need a JavaScript file instead of " + filename + ".")
-      parsePgm(Useful.utf8BufferedFileReader(file), filename, isCloneDetector)
+        parsePgm(file, filename, new JInteger(0), isCloneDetector)
     } catch {
       case fnfe:FileNotFoundException =>
         throw convertExn(fnfe, file)
@@ -159,19 +166,36 @@ object Parser {
         throw convertExn(ioe)
     }
 
-  def parsePgm(in: BufferedReader, filename: String): Program =
-    parsePgm(in, filename, false)
+  def parsePgm(str: String, filename: String): Program = {
+    val sr = new StringReader(str)
+    val in = new BufferedReader(sr)
+    val pgm = parsePgm(in, filename, new JInteger(0), false)
+    in.close; sr.close
+    pgm
+  }
 
-  def parsePgm(in: BufferedReader, filename: String, isCloneDetector: Boolean): Program = {
+  def parsePgm(in: BufferedReader, filename: String): Program =
+    parsePgm(in, filename, new JInteger(0), false)
+
+  def parsePgm(file: File, filename: String, start: JInteger, isCloneDetector: Boolean): Program = {
+    val fs = new FileInputStream(file)
+    val sr = new InputStreamReader(fs, Charset.forName("UTF-8"))
+    val in = new BufferedReader(sr)
+    val pgm = parsePgm(in, filename, start, isCloneDetector)
+    in.close; sr.close; fs.close
+    pgm
+  }
+
+  def parsePgm(in: BufferedReader, filename: String, start: JInteger, isCloneDetector: Boolean): Program = {
     val syntaxLogFile = filename + ".log"
     val commentLogFile = filename + ".comment"
     try {
       val parser = new JS(in, filename)
       NU.setCloneDetector(isCloneDetector)
-      val parseResult = parser.pJS$File(0)
+      val parseResult = parser.JSmain(0)
       if (parseResult.hasValue) {
         parseResult.asInstanceOf[SemanticValue].value.asInstanceOf[Program]
-      } else throw new ParserError(parseResult.asInstanceOf[ParseError], parser)
+      } else throw new ParserError(parseResult.asInstanceOf[ParseError], parser, start)
     } finally {
       try {
         Files.rm(syntaxLogFile)

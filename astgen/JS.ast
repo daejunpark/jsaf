@@ -191,7 +191,7 @@ interface Node() extends HasAt;
                     /**
                      * Stmt ::= try { Stmt* } (catch ( Id ) { Stmt* })? (finally { Stmt* })?
                      */
-                    Try(Block body, Option<Catch> catchBlock, Option<Block> fin);
+                    Try(List<Stmt> body, Option<Catch> catchBlock, Option<List<Stmt>> fin);
                     /**
                      * Stmt ::= debugger ;
                      */
@@ -203,11 +203,11 @@ interface Node() extends HasAt;
             /**
              * CaseClause ::= case Expr : Stmt*
              */
-            Case(Expr cond, Block body);
+            Case(Expr cond, List<Stmt> body);
             /**
              * Catch ::= catch ( Id ) { Stmt* }
              */
-            Catch(Id id, Block body);
+            Catch(Id id, List<Stmt> body);
             /**
              * ImportClause
              */

@@ -47,7 +47,11 @@ body {
         "void",
 
         // reserved identifiers
-        "prototype",    "constructor",  "toString"
+        "prototype",    "constructor",  "toString",
+
+        // for WebKitIDL
+        "module",       "in",           "raises",        "getraises",
+        "setraises"
     });
   }
 
@@ -72,29 +76,36 @@ body {
 
 option setOfString(JAVASCRIPT_RESERVED), parser(kr.ac.kaist.jsaf.parser.WIDL);
 
+public List<WDefinition> WIDL =
+     EndOfFile
+     { yyValue = Collections.<WDefinition>emptyList(); }
+   / yyVaue:Definitions w EndOfFile;
+
 /*
  * Definitions ::= ExtendedAttributeList w Definition w Definitions
  *               | \epsilon
  */
-public List<WDefinition> WIDL =
-     w EndOfFile
-     { yyValue = Collections.<WDefinition>emptyList(); }
-   / a1:(w a1:ExtendedAttributeList)? w a2:Definition w a3:WIDL w EndOfFile
-     { if (a1 == null) yyValue = Useful.list(a2, a3);
+public List<WDefinition> Definitions =
+     a1:(w ExtendedAttributeList)? w a2:Definition a3:(w Definitions)?
+     { if (a1 == null && a3 == null) yyValue = Useful.list(a2);
+       else if (a1 == null) yyValue = Useful.list(a2, a3);
+       else if (a3 == null) yyValue = Useful.list(WIDLFactory.addAttrs(a1, a2));
        else yyValue = Useful.list(WIDLFactory.addAttrs(a1, a2), a3);
      };
 
 /*
- * Definition ::= CallbackOrInterface
- *              | Partial 
- *              | Dictionary 
+ * Definition ::= Module              // WebKitIDL
+ *              | CallbackOrInterface
+ *              | Partial
+ *              | Dictionary
  *              | Exception 
  *              | Enum 
  *              | Typedef 
  *              | ImplementsStatement
  */
 private WDefinition Definition =
-     CallbackOrInterface
+     Module              // WebKitIDL
+   / CallbackOrInterface
    / Partial 
    / Dictionary 
    / Exception 
@@ -102,6 +113,15 @@ private WDefinition Definition =
    / Typedef 
    / ImplementsStatement
    ;
+
+/*
+ * Module ::= "module" w identifier w "{" w Definitions w "}" w ";"?
+ */
+private WDefinition Module =
+     module w a1:IdText w opencurly w a2:Definitions w closecurly (w semicolon)?
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = WIDLFactory.mkModule(span, a1, a2);
+     };
 
 /*
  * CallbackOrInterface ::= "callback" w CallbackRestOrInterface
@@ -124,14 +144,18 @@ private WDefinition CallbackRestOrInterface =
 
 /*
  * Interface ::= "interface" w identifier w Inheritance w "{" w InterfaceMembers w "}" w ";"
+ * // WebKitIDL
+ * Interface ::= "interface" w ExtendedAttributeList w identifier w Inheritance w "{" w InterfaceMembers w "}" w ";"
  */
 private WInterface Interface =
-     interface w a1:IdText a2:(w Inheritance)? w opencurly a3:(w InterfaceMembers)? w closecurly w semicolon
+   interface a1:(w ExtendedAttributeList)? w a2:IdText a3:(w Inheritance)? w opencurly a4:(w InterfaceMembers)? w closecurly w semicolon?
      { Span span = createSpan(yyStart,yyCount);
-       if (a2 == null && a3 == null) yyValue = WIDLFactory.mkInterface(span, a1);
-       else if (a2 == null) yyValue = WIDLFactory.mkInterface(span, a1, a3);
-       else if (a3 == null) yyValue = WIDLFactory.mkInterface(span, a1, a2);
-       else yyValue = WIDLFactory.mkInterface(span, a1, a2, a3);
+       if (a3 == null && a4 == null) yyValue = WIDLFactory.mkInterface(span, a2);
+       else if (a3 == null) yyValue = WIDLFactory.mkInterface(span, a2, a4);
+       else if (a4 == null) yyValue = WIDLFactory.mkInterface(span, a2, a3);
+       else yyValue = WIDLFactory.mkInterface(span, a2, a3, a4);
+       if (a1 != null)
+           yyValue = (WInterface)WIDLFactory.addAttrs(a1, yyValue);
      };
 
 /*
@@ -333,11 +357,14 @@ private WImplementsStatement ImplementsStatement =
 
 /*
  * Const ::= "const" w ConstType w identifier w "=" w ConstValue w ";"
+ * // WebKitIDL
+ * Const ::= "const" w ExtendedAttributeList w ConstType w identifier w "=" w ConstValue w ";"
  */
 private WConst Const =
-     const w a1:ConstType w a2:IdText w equals w a3:ConstValue w semicolon
+     const a1:(w ExtendedAttributeList)? w a2:ConstType w a3:IdText w equals w a4:ConstValue w semicolon
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = WIDLFactory.mkConst(span, a1, a2, a3);
+       yyValue = WIDLFactory.mkConst(span, a2, a3, a4);
+       if (a1 != null) yyValue = WIDLFactory.addAttrs(a1, yyValue);
      };
 
 /*
@@ -397,6 +424,8 @@ private WFloat FloatLiteral =
  *                        | Operation
  * Operation ::= Qualifiers w OperationRest
  * OperationRest ::= ReturnType w OptionalIdentifier w "(" w ArgumentList w ")" w ";"
+ * // WebKitIDL
+ * OperationRest ::= ReturnType w OptionalIdentifier w "(" w ArgumentList w ")" (w raises w ExceptionList)? w ";"
  * OptionalIdentifier ::= identifier | \epsilon
  * StringifierAttributeOrOperation ::= Attribute 
  *                                   | OperationRest 
@@ -417,6 +446,8 @@ private WFloat FloatLiteral =
  * to be of type DOMString.
  *
  * OperationRest ::= ReturnType w OptionalIdentifier w "(" w ArgumentList w ")" w ";"
+ * // WebKitIDL
+ * OperationRest ::= ReturnType w OptionalIdentifier w "(" w ArgumentList w ")" (w raises w ExceptionList)? w ";"
  * OptionalIdentifier ::= identifier | \epsilon
  *
  * If an operation has no identifier, then it must be declared to be
@@ -425,14 +456,16 @@ private WFloat FloatLiteral =
 private WInterfaceMember AttributeOrOperation =
      stringifier w a1:Attribute
      { yyValue = WIDLFactory.addStringifier(a1); }
-   / stringifier w a1:ReturnType a2:(w id)? w openparen a3:(w ArgumentList)? w closeparen w semicolon
+   / stringifier w a1:ReturnType a2:(w id)? w openparen a3:(w ArgumentList)? w closeparen a4:(w raises w ExceptionList)? w semicolon
      { Span span = createSpan(yyStart,yyCount);
        List<WEAttribute> attrs = new ArrayList<WEAttribute>();
        attrs.add(WIDLFactory.eaStringifier());
        List<WQualifier> quals = new ArrayList();
        if (a3 == null) a3 = Collections.<WArgument>emptyList();
-       if (a2 == null) yyValue = WIDLFactory.mkOperation(span, attrs, quals, a1, a3);
-       else yyValue = WIDLFactory.mkOperation(span, attrs, quals, a1, a2, a3);
+       if (a2 == null && a4 == null) yyValue = WIDLFactory.mkOperation(span, attrs, quals, a1, a3);
+       else if (a2 == null) yyValue = WIDLFactory.mkOperationExn(span, attrs, quals, a1, a3, a4);
+       else if (a4 == null) yyValue = WIDLFactory.mkOperation(span, attrs, quals, a1, a2, a3);
+       else yyValue = WIDLFactory.mkOperationExn(span, attrs, quals, a1, a2, a3, a4);
      }
    / stringifier w semicolon
      { Span span = createSpan(yyStart,yyCount);
@@ -443,21 +476,61 @@ private WInterfaceMember AttributeOrOperation =
                                          Collections.<WArgument>emptyList());
      }
    / Attribute 
-   / a1:Qualifiers w a2:ReturnType a3:(w id)? w openparen a4:(w ArgumentList)? w closeparen w semicolon
+   / a1:Qualifiers w a2:ReturnType a3:(w id)? w openparen a4:(w ArgumentList)? w closeparen a5:(w raises w ExceptionList)? w semicolon
      { Span span = createSpan(yyStart,yyCount);
        List<WEAttribute> attrs = new ArrayList<WEAttribute>();
        if (a4 == null) a4 = Collections.<WArgument>emptyList();
-       if (a3 == null) yyValue = WIDLFactory.mkOperation(span, attrs, a1, a2, a4);
-       else yyValue = WIDLFactory.mkOperation(span, attrs, a1, a2, a3, a4);
+       if (a3 == null && a5 == null) yyValue = WIDLFactory.mkOperation(span, attrs, a1, a2, a4);
+       else if (a3 == null) yyValue = WIDLFactory.mkOperationExn(span, attrs, a1, a2, a4, a5);
+       else if (a5 == null) yyValue = WIDLFactory.mkOperation(span, attrs, a1, a2, a3, a4);
+       else yyValue = WIDLFactory.mkOperationExn(span, attrs, a1, a2, a3, a4, a5);
+     };
+
+/*
+ * // WebKitIDL
+ * ExceptionList ::= "(" w ScopedName w ScopedNames w ")"
+ */
+private List<WQId> ExceptionList =
+     openparen w a1:ScopedName a2:(w ScopedNames)? w closeparen
+     { Span span = createSpan(yyStart,yyCount);
+       if (a2 == null) yyValue = Useful.list(a1);
+       else yyValue = Useful.list(a1, a2);
+     };
+
+/*
+ * // WebKitIDL
+ * ScopedNames ::= "," w ScopedName w ScopedNames
+ *             | \epsilon
+ */
+private List<WQId> ScopedNames =
+     comma w a1:ScopedName a2:(w ScopedNames)?
+     { if (a2 == null) yyValue = Useful.list(a1);
+       else yyValue = Useful.list(a1, a2);
+     };
+
+/*
+ * // WebKitIDL
+ * ScopedName ::= identifier w ScopedNameParts
+ * ScopedNameParts ::= "::" identifier w ScopedNameParts
+ *                 | \epsilon
+ */
+private WQId ScopedName =
+     a1:id a2s:(scope id)*
+     { Span span = createSpan(yyStart,yyCount);
+       yyValue = WIDLFactory.mkQId(span, Useful.cons(a1, a2s.list()));
      };
 
 /*
  * Attribute ::= Inherit w ReadOnly w "attribute" w Type w identifier w ";"
+ * // WebKitIDL
+ * Attribute ::= Inherit w ReadOnly w "attribute" w ExtendedAttributeList w Type w identifier w AttributeRaises w ";"
  * Inherit ::= "inherit" | \epsilon
  * ReadOnly ::=	"readonly" | \epsilon
  */
 private WAttribute Attribute =
-     a1:inherit? a2:(w readonly)? w attribute w a3:Type w a4:id w semicolon
+     a1:inherit? a2:(w readonly)? w attribute a3:(w ExtendedAttributeList)? w a4:Type w a5:id
+     w semicolon
+    // a6:(w AttributeRaises)? w semicolon
      { Span span = createSpan(yyStart,yyCount);
        List<WEAttribute> attrs = new ArrayList<WEAttribute>();
        if (a1 != null && a2 != null) {
@@ -465,7 +538,7 @@ private WAttribute Attribute =
            attrs.add(WIDLFactory.eaReadonly());
        } else if (a1 != null) attrs.add(WIDLFactory.eaInherit());
        else if (a2 != null) attrs.add(WIDLFactory.eaReadonly());
-       yyValue = WIDLFactory.mkAttribute(span, attrs, a3, a4);
+       yyValue = WIDLFactory.mkAttribute(span, attrs, a4, a5);
      };
 
 /*
@@ -505,7 +578,7 @@ private WQualifier Special =
  * ArgumentList ::= Argument w Arguments 
  *                | \epsilon
  * An argument must not be declared with the ... token unless it is the final
- * argument in the operation?™s argument list.
+ * argument in the operation's argument list.
  */
 private List<WArgument> ArgumentList =
      a1:Argument a2:(w Arguments)?
@@ -525,9 +598,11 @@ private List<WArgument> Arguments =
 
 /*
  * Argument ::=	ExtendedAttributeList w OptionalOrRequiredArgument
+ * // WebKitIDL
+ * Argument ::=	ExtendedAttributeList w in w OptionalOrRequiredArgument
  */
 private WArgument Argument =
-     a1:ExtendedAttributeList? w a2:OptionalOrRequiredArgument
+     a1:ExtendedAttributeList? (w in)? w a2:OptionalOrRequiredArgument
      { if (a1 == null) yyValue = a2;
        else yyValue = WIDLFactory.addAttrs(a1, a2);
      };
@@ -535,21 +610,26 @@ private WArgument Argument =
 /*
  * OptionalOrRequiredArgument ::= "optional" w Type w ArgumentName w Default
  *                              | Type w Ellipsis w ArgumentName
+ * // WebKitIDL
+ * OptionalOrRequiredArgument ::= "optional" w ExtendedAttributeList w Type w ArgumentName w Default
+ *                              | ExtendedAttributeList w Type w Ellipsis w ArgumentName
  * Ellipsis ::= "..." | \epsilon
  */
 private WArgument OptionalOrRequiredArgument =
-     optional w a1:Type w a2:ArgumentName a3:(w Default)?
+     optional a1:(w ExtendedAttributeList)? w a2:Type w a3:ArgumentName a4:(w Default)?
      { Span span = createSpan(yyStart,yyCount);
        List<WEAttribute> attrs = Useful.list(WIDLFactory.eaOptional());
-       if (a3 == null) yyValue = WIDLFactory.mkArgument(span, attrs, a1, a2);
-       else yyValue = WIDLFactory.mkArgument(span, attrs, a1, a2, a3);
+       if (a4 == null) yyValue = WIDLFactory.mkArgument(span, attrs, a2, a3);
+       else yyValue = WIDLFactory.mkArgument(span, attrs, a2, a3, a4);
+       if (a1 != null) yyValue = WIDLFactory.addAttrs(a1, yyValue);
      }
-   / a1:Type a2:(w ellipsis)? w a3:ArgumentName
+   / a1:(ExtendedAttributeList w)? a2:Type a3:(w ellipsis)? w a4:ArgumentName
      { Span span = createSpan(yyStart,yyCount);
-       if (a2 == null)
-         yyValue = WIDLFactory.mkArgument(span, Collections.<WEAttribute>emptyList(), a1, a3);
+       if (a3 == null)
+         yyValue = WIDLFactory.mkArgument(span, Collections.<WEAttribute>emptyList(), a2, a4);
        else
-         yyValue = WIDLFactory.mkArgument(span, Useful.list(WIDLFactory.eaEllipsis()), a1, a3);
+         yyValue = WIDLFactory.mkArgument(span, Useful.list(WIDLFactory.eaEllipsis()), a2, a4);
+       if (a1 != null) yyValue = WIDLFactory.addAttrs(a1, yyValue);
      };
 
 /*
@@ -675,9 +755,12 @@ private List<WEAttribute> ExtendedAttributeInner =
  *         | "long" | "null" | "object" | "octet" | "or" | "optional"
  *         | "sequence" | "short" | "true" | "unsigned" | "void" 
  *         | ArgumentNameKeyword
+ *         | "[" w "]" | in // WebKitIDL
  */
 private WEAttribute Other =
-     a1:(integer / floatL / minus / dot / colon / semicolon / "<" / equals / ">" /
+     opensquare w closesquare
+{ yyValue = WIDLFactory.eaArray(); }
+   / a1:(integer / floatL / minus / dot / colon / semicolon / "<" / equals / ">" /
          Date / DOMString / Infinity / NaN / any / boolean / byte / double / false /
          floatK / long / nullK / object / octet / or / sequence / short / true /
          unsigned / voidK)
@@ -1167,8 +1250,9 @@ transient void opencurly = "{";
 transient void closecurly = "}";
 transient void opensquare = "[";
 transient void closesquare = "]";
+transient void scope = "::";
 transient String semicolon = ";";
-transient String colon = ":";
+transient String colon = ":" !(":");
 transient String equals = "=" !("=");
 transient String comma = ",";
 transient String minus = "-" !("-" / "=");
@@ -1220,3 +1304,28 @@ transient String typedef = "typedef" !(idrest);
 transient String unrestricted = "unrestricted" !(idrest);
 
 transient void epsilon = "epsilon";
+
+// WebKit IDL
+transient void module = "module" !(idrest);
+transient void in = "in" !(idrest);
+transient void raises = "raises" !(idrest);
+transient void getraises = "getraises" !(idrest);
+transient void setraises = "setraises" !(idrest);
+
+// WebKit IDL (possible future extension)
+/*
+# Used in WebKitIDL Conditional attribute
+literals += '&|'
+# Used in WebKitIDL InterfaceUUID/ImplementationUUID attribute
+literals += '-'
+   'Other : ... | in'
+
+   'AttributeRaises : (getraises ExceptionList)? (setraises ExceptionList)?
+                    | GetterRaises
+                    | SetterRaises
+                    | GetterRaises "," SetterRaises
+                    | SetterRaises "," GetterRaises'
+
+    'GetterRaises : getter raises ExceptionList'
+    'SetterRaises : setter raises ExceptionList'
+ */

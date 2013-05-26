@@ -23,9 +23,11 @@ import _root_.javax.script.ScriptEngine;
 
 import kr.ac.kaist.jsaf.ProjectProperties
 import kr.ac.kaist.jsaf.Shell
+import kr.ac.kaist.jsaf.ShellParameters
 import kr.ac.kaist.jsaf.compiler.Hoister
-import kr.ac.kaist.jsaf.compiler.WithRewriter
 import kr.ac.kaist.jsaf.compiler.Parser
+import kr.ac.kaist.jsaf.compiler.Predefined
+import kr.ac.kaist.jsaf.compiler.WithRewriter
 import kr.ac.kaist.jsaf.nodes.Program
 import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete
 import kr.ac.kaist.jsaf.useful.TestCaseWrapper
@@ -43,6 +45,7 @@ object WithJUTest extends TestCaseWrapper {
 
   val SEP = File.separator
   val WITHREWRITER_FAIL_TESTS_DIR = "tests/with_tests"
+  Shell.pred = new Predefined(new ShellParameters())
 
   def suite(): TestSuite =
     new WithRewriterTestSuite("WithRewriterJUTest", WITHREWRITER_FAIL_TESTS_DIR)
@@ -123,7 +126,7 @@ object WithJUTest extends TestCaseWrapper {
         System.setOut(wt_out)
 
         val original : String = builder.toString()
-        val modified : String = new JSAstToConcrete(new WithRewriter(new Hoister(Parser.parseFileConvertExn(file)).doit.asInstanceOf[Program], true).doit.asInstanceOf[Program]).doit
+        val modified : String = JSAstToConcrete.doitTestWith(new WithRewriter(new Hoister(Parser.parseFileConvertExn(file)).doit.asInstanceOf[Program], true).doit.asInstanceOf[Program])
 
         val result1 : String = engine.eval(original).toString.replaceAll("\\s+$", "")
         val result2 : String = engine.eval(modified).toString.replaceAll("\\s+$", "")

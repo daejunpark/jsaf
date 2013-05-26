@@ -16,8 +16,10 @@ import java.io.*;
  */
 public class Files {
     public static void rm(String name) throws IOException {
-        if (! new File(name).delete())
-            throw new IOException();
+        File file = new File(name);
+        if (file.exists())
+            if (! file.delete())
+                throw new IOException();
     }
 
     public static void mkdir(String name) throws IOException {

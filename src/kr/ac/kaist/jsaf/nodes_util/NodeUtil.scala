@@ -117,8 +117,8 @@ object NodeUtil {
         SIRRoot(info, super.walk(fds).asInstanceOf[List[IRFunDecl]], vds,
                 simplify(irs.map(walk).asInstanceOf[List[IRStmt]]))
 
-      case SIRFunctional(i, n, params, args, fds, vds, body) =>
-        SIRFunctional(i, n, params, args.map(walk).asInstanceOf[List[IRStmt]],
+      case SIRFunctional(j, i, n, params, args, fds, vds, body) =>
+        SIRFunctional(j, i, n, params, args.map(walk).asInstanceOf[List[IRStmt]],
                       super.walk(fds).asInstanceOf[List[IRFunDecl]], vds,
                       simplify(body.map(walk).asInstanceOf[List[IRStmt]]))
 
@@ -204,6 +204,8 @@ object NodeUtil {
     }
   val toObjectName = freshGlobalName("toObject")
   val ignoreName = freshGlobalName("ignore")
+  val varTrue = freshGlobalName("true")
+  val varOne = freshGlobalName("one")
   def funexprName(span: Span) = freshName("funexpr@"+span.toStringWithoutFiles)
 
   def isFutureReserved(id: Id) = futureReserved contains id.getText
@@ -399,6 +401,7 @@ object NodeUtil {
     val begin = stmtinfo.getSpan.getBegin
     val end = nextinfo.getSpan.getBegin
     new IRSpanInfo(stmtinfo.isFromSource,
+                   stmtinfo.getAst,
                    new Span(new SourceLocRats(begin.getFileName, begin.getLine, begin.column+3, begin.getOffset),
                             new SourceLocRats(end.getFileName, end.getLine, end.column-1, end.getOffset)))
   }

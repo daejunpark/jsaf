@@ -9,10 +9,9 @@
 
 package kr.ac.kaist.jsaf.compiler
 
-import _root_.java.io.File
-import _root_.java.io.FileNotFoundException
-import _root_.java.io.IOException
-import _root_.java.io.BufferedReader
+import _root_.java.io._
+import _root_.java.lang.{Integer => JInteger}
+import _root_.java.nio.charset.Charset
 
 import xtc.parser.SemanticValue
 import xtc.parser.ParseError
@@ -47,7 +46,7 @@ object RegExpParser {
   def parseFileConvertExn(file: File) =
     try {
       val filename = file.getCanonicalPath
-      parsePattern(Useful.utf8BufferedFileReader(file), filename)
+      parsePattern(file, filename)
     } catch {
       case fnfe:FileNotFoundException =>
         throw convertExn(fnfe, file)
@@ -55,14 +54,31 @@ object RegExpParser {
         throw convertExn(ioe, file)
     }
 
-  def parsePattern(in: BufferedReader, filename: String) = {
+  def parsePattern(str: String, filename: String): RegExpPattern = {
+    val sr = new StringReader(str)
+    val in = new BufferedReader(sr)
+    val result = parsePattern(in, filename)
+    in.close; sr.close
+    result
+  }
+
+  def parsePattern(file: File, filename: String): RegExpPattern = {
+    val fs = new FileInputStream(file)
+    val sr = new InputStreamReader(fs, Charset.forName("UTF-8"))
+    val in = new BufferedReader(sr)
+    val result = parsePattern(in, filename)
+    in.close; sr.close; fs.close
+    result
+  }
+
+  def parsePattern(in: BufferedReader, filename: String): RegExpPattern = {
     val syntaxLogFile = filename + ".log"
     try {
       val parser = new RegExp(in, filename)
       val parseResult = parser.pPattern(0)
       if (parseResult.hasValue) {
         parseResult.asInstanceOf[SemanticValue].value.asInstanceOf[RegExpPattern]
-      } else throw new ParserError(parseResult.asInstanceOf[ParseError], parser)
+      } else throw new ParserError(parseResult.asInstanceOf[ParseError], parser, new JInteger(0))
     } finally {
       try {
         Files.rm(syntaxLogFile)

@@ -156,14 +156,14 @@ class WithRewriter(program: Program, forTest: Boolean) extends Walker {
                walk(index, env).asInstanceOf[Expr])
     case SCase(info, cond, body) =>
       SCase(info, walk(cond, env).asInstanceOf[Expr],
-            walk(body, env).asInstanceOf[Block])
+            body.map(b => walk(b, env)).asInstanceOf[List[Stmt]])
     case c@SCatch(info, id, body) => env match {
       case EmptyEnv() =>
-        SCatch(info, id, walk(body, env).asInstanceOf[Block])
+        SCatch(info, id, body.map(b => walk(b, env)).asInstanceOf[List[Stmt]])
       case ConsEnv(withs, names, isNested) =>
         val (first, rest) = splitNames(names)
         SCatch(info, id,
-               walk(body, new ConsEnv(withs, List(List(id.getText)++first)++rest, isNested)).asInstanceOf[Block])
+               body.map(b => walk(b, new ConsEnv(withs, List(List(id.getText)++first)++rest, isNested))).asInstanceOf[List[Stmt]])
     }
     case SCond(info, cond, trueBranch, falseBranch) =>
       SCond(info, walk(cond, env).asInstanceOf[Expr],
@@ -355,9 +355,9 @@ class WithRewriter(program: Program, forTest: Boolean) extends Walker {
     case SThrow(info, expr) =>
       SThrow(info, walk(expr, env).asInstanceOf[Expr])
     case STry(info, body, catchBlock, fin) =>
-      STry(info, walk(body, env).asInstanceOf[Block],
+      STry(info, body.map(b => walk(b, env)).asInstanceOf[List[Stmt]],
            walk(catchBlock, env).asInstanceOf[Option[Catch]],
-           walk(fin, env).asInstanceOf[Option[Block]])
+           fin.map(f => walk(f, env)).asInstanceOf[Option[List[Stmt]]])
     case ua@SUnaryAssignOpApp(info, lhs, op) => env match {
       case EmptyEnv() => SUnaryAssignOpApp(info, walk(lhs, env).asInstanceOf[LHS], op)
       case ConsEnv(withs, names, isNested) => withs match {

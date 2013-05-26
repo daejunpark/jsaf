@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Copyright (c) 2012, KAIST.
+    Copyright (c) 2012-2013, KAIST, S-Core.
     All rights reserved.
 
     Use is subject to license terms.
@@ -68,7 +68,11 @@ class JSArrayPrototype(_I: Interpreter, _proto: JSObject)
           case o:JSFunction if I.IH.isCallable(o) => o
           case _ => I.IS.ObjectPrototypeToString
         }
+        val oldEnv = I.IS.env
+        val oldTb = I.IS.tb
         I.IH.call(I.IS.info, I.IS.tb, argsObj, func)
+        I.IS.env = oldEnv
+        I.IS.tb = oldTb
       case err: JSError => I.IS.comp.setThrow(err, I.IS.span)
     }
   }
@@ -266,7 +270,11 @@ class JSArrayPrototype(_I: Interpreter, _proto: JSObject)
                     val a = I.IH.newObj(prop)
                     val argsObj = I.IH.newArgObj(comparefn.asInstanceOf[JSFunction], 2, a, I.IS.strict)
                     
+                    val oldEnv = I.IS.env
+                    val oldTb = I.IS.tb
                     comparefn.asInstanceOf[JSFunction]._call(IP.undefV, argsObj)
+                    I.IS.env = oldEnv
+                    I.IS.tb = oldTb
                     if(I.IS.comp.Type == CT.RETURN) I.IH.toNumber(I.IS.comp.value).getNum < 0
                     else if(I.IS.comp.Type == CT.THROW) throw new ThrowException(I.IS.comp.error) // TODO: !
                     else throw new InterpreterError("Array.prototype.sortCompare: ", I.IS.span)

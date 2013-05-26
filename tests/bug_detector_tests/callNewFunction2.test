@@ -15,11 +15,12 @@ bug-detector_out_WCIequals=\
  \n\
  \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/callNewFunction2.js:13:8~13:17: [Warning] Unreachable code is found. \n\
-${BUGDETECTOR_TESTS_DIR}/callNewFunction2.js:14:1~14:6: [Warning] Calling a function 'foo' both as a function and a constructor. \n\
+/Users/sukyoungryu/PLRG/safe-public/tests/bug_detector_tests/callNewFunction2.js:13:8~13:17: [Warning] Calling a function 'foo' both as a function and a constructor. \n\
+/Users/sukyoungryu/PLRG/safe-public/tests/bug_detector_tests/callNewFunction2.js:13:8~13:17: [Warning] Unreachable code is found. \n\
+/Users/sukyoungryu/PLRG/safe-public/tests/bug_detector_tests/callNewFunction2.js:14:1~14:6: [Warning] Calling a function 'foo' both as a function and a constructor. \n\
 # ReferenceErrors(#) : 0 \n\
 # TypeErrors(#)      : 0 \n\
-# Warnings(#)        : 2 \n\
+# Warnings(#)        : 3 \n\
  \n\
  \n\
 \n

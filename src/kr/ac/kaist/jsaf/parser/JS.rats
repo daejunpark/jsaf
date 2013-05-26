@@ -87,6 +87,16 @@ body {
     private String logFile = column(0).file + ".log";
     private String commentFile = column(0).file + ".comment";
 
+    public Result JSmain(final int yyStart) throws IOException {
+        Result result = this.pJS$File(yyStart);
+        if (result.hasValue()) return result;
+        else {
+            commentWriter.close();
+            writer.close();
+            return result;
+        }
+    }
+
     void initParser() {
         try {
             if (commentWriter == null)

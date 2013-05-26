@@ -234,16 +234,16 @@ object NodeFactory {
   def makeThrow(span: Span, expr: Expr) =
     new Throw(makeSpanInfo(span), expr)
 
-  def makeTry(span: Span, body: Block, catchB: Catch): Try =
-    makeTry(span, body, some(catchB), none[Block])
+  def makeTry(span: Span, body: JList[Stmt], catchB: Catch): Try =
+    makeTry(span, body, some(catchB), none[JList[Stmt]])
 
-  def makeTry(span: Span, body: Block, fin: Block): Try =
+  def makeTry(span: Span, body: JList[Stmt], fin: JList[Stmt]): Try =
     makeTry(span, body, none[Catch], some(fin))
 
-  def makeTry(span: Span, body: Block, catchB: Catch, fin: Block): Try =
+  def makeTry(span: Span, body: JList[Stmt], catchB: Catch, fin: JList[Stmt]): Try =
     makeTry(span, body, some(catchB), some(fin))
 
-  def makeTry(span: Span, body: Block, catchB: JOption[Catch], fin: JOption[Block]): Try =
+  def makeTry(span: Span, body: JList[Stmt], catchB: JOption[Catch], fin: JOption[JList[Stmt]]): Try =
     new Try(makeSpanInfo(span), body, catchB, fin)
 
   def makeDebugger(span: Span) =
@@ -252,10 +252,10 @@ object NodeFactory {
   def makeVarDecl(span: Span, name: Id, expr: JOption[Expr]) =
     new VarDecl(makeSpanInfo(span), name, expr)
 
-  def makeCase(span: Span, cond: Expr, body: Block) =
+  def makeCase(span: Span, cond: Expr, body: JList[Stmt]) =
     new Case(makeSpanInfo(span), cond, body)
 
-  def makeCatch(span: Span, id: Id, body: Block) =
+  def makeCatch(span: Span, id: Id, body: JList[Stmt]) =
     new Catch(makeSpanInfo(span), id, body)
 
   def makeExprList(span: Span, es: JList[Expr]) =

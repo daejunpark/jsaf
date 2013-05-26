@@ -63,13 +63,13 @@ class Instrumentor(program: IRRoot) extends IRWalker {
   val dummyId = IF.dummyIRId(NU.freshConcolicName("Instrumentor"))
   def executeAssignment(info: IRSpanInfo, e: IRExpr, v: IRId) =
     SIRInternalCall(info, dummyId,
-                    IF.makeTId(info.getSpan, NU.freshConcolicName("ExecuteAssignment")), e, Some(v))
+                    IF.makeTId(IF.dummyAst, info.getSpan, NU.freshConcolicName("ExecuteAssignment")), e, Some(v))
   def getInput(info: IRSpanInfo, v: IRId) =
     SIRInternalCall(info, dummyId,
-                    IF.makeTId(info.getSpan, NU.freshConcolicName("GetInput")), v, None)
+                    IF.makeTId(IF.dummyAst, info.getSpan, NU.freshConcolicName("GetInput")), v, None)
   def executeCondition(info: IRSpanInfo, e: IRExpr) =
     SIRInternalCall(info, dummyId,
-                    IF.makeTId(info.getSpan, NU.freshConcolicName("ExecuteCondition")), e, None)
+                    IF.makeTId(IF.dummyAst, info.getSpan, NU.freshConcolicName("ExecuteCondition")), e, None)
 
     /* var v
      * ==>
@@ -197,8 +197,8 @@ class Instrumentor(program: IRRoot) extends IRWalker {
     case SIRFunExpr(info, lhs, ftn) =>
       SIRFunExpr(info, lhs, walk(ftn).asInstanceOf[IRFunctional])
 
-    case SIRFunctional(i, name, params, args, fds, vds, body) =>
-      SIRFunctional(i, name, params, args.map(walk(_).asInstanceOf[IRStmt]),
+    case SIRFunctional(i, j, name, params, args, fds, vds, body) =>
+      SIRFunctional(i, j, name, params, args.map(walk(_).asInstanceOf[IRStmt]),
                     fds.map(walk(_).asInstanceOf[IRFunDecl]), vds,
                     vds.map(walkVarStmt(_))++body.map(walk(_).asInstanceOf[IRStmt]))
 

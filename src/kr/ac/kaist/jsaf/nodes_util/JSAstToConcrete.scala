@@ -27,16 +27,21 @@ import edu.rice.cs.plt.tuple.Option
  * Possible improvements:
  * 1. We may want to keep comments.
  */
-class JSAstToConcrete(program: Program) extends Walker {
+object JSAstToConcrete extends Walker {
 
   val width = 50
   var internal = false
+  var testWith = false
   val significantBits = NU.significantBits
 
-  def doit() = walk(program)
-  def doitInternal() = {
+  def doit(node: ASTNode) = walk(node)
+  def doitInternal(node: ASTNode) = {
     internal = true
-    walk(program)
+    walk(node)
+  }
+  def doitTestWith(node: ASTNode) = {
+    testWith = true
+    walk(node)
   }
 
   /* indentation utilities *************************************************/
@@ -97,7 +102,7 @@ class JSAstToConcrete(program: Program) extends Walker {
       case '\f' => s.append("\\f")
       case '\r' => s.append("\\r")
       case '\u000b' => s.append("\\v")
-      case '"'  => s.append("\\\"")
+      case '"'  => s.append("\"")
       case '\'' => s.append("'")
       case '\\' => s.append("\\")
       case c => s.append(c+"")
@@ -197,25 +202,22 @@ class JSAstToConcrete(program: Program) extends Walker {
       s.toString
     case SCase(info, cond, body) =>
       val s: StringBuilder = new StringBuilder
-      s.append("case ").append(walk(cond)).append(":\n")
-      body match {
-        case SBlock(info, stmts, _) => {
-          increaseIndent
-          s.append(getIndent).append(join(stmts, "\n"+getIndent, new StringBuilder("")))
-          decreaseIndent
-        }
-        case _ => s.append(getIndent).append(walk(body))
-      }
+      s.append("case ").append(walk(cond))
+      s.append(":\n")
+      increaseIndent
+      s.append(getIndent).append(join(body, "\n"+getIndent, new StringBuilder("")))
+      decreaseIndent
+      s.append("\n")
       s.toString
     case SCatch(info, id, body) =>
       val s: StringBuilder = new StringBuilder
       var oneline: Boolean = isOneline(body)
       s.append("catch(").append(walk(id)).append(")\n")
-
-      if(oneline) increaseIndent
-      s.append(getIndent).append(walk(body))
-      if(oneline) decreaseIndent
-
+      increaseIndent
+      s.append("{")
+      s.append(getIndent).append(join(body, "\n"+getIndent, new StringBuilder("")))
+      s.append("}\n")
+      decreaseIndent
       s.toString
     case SCond(info, cond, trueBranch, falseBranch) =>
       val s: StringBuilder = new StringBuilder
@@ -323,26 +325,26 @@ class JSAstToConcrete(program: Program) extends Walker {
     }
     case SFunExpr(info, SFunctional(fds, vds, body, name, params)) => {
       val s: StringBuilder = new StringBuilder
-      s.append("function ")
+      s.append("(function ")
       if(!NU.isFunExprName(name.getText)) s.append(walk(name))
       s.append("(")
       s.append(join(params, ", ", new StringBuilder("")))
       s.append(") \n").append(getIndent).append("{\n")
       prFtn(s, fds, vds, body)
-      s.append("\n").append(getIndent).append("}")
+      s.append("\n").append(getIndent).append("})")
       s.toString
     }
     //TODO: test
     case SGetProp(info, prop, SFunctional(fds, vds, body, _, _)) => {
       val s: StringBuilder = new StringBuilder
-      s.append("get ").append(walk(prop)).append("\n").append(getIndent).append("{\n")
+      s.append("get ").append(walk(prop)).append("()\n").append(getIndent).append("{\n")
       prFtn(s, fds, vds, body)
       s.append("\n").append(getIndent).append("}")
       s.toString
     }
     case SId(_, text, Some(uniq), _) =>
       if (internal && NU.isInternal(uniq))
-        text.dropRight(significantBits)+getE(text.takeRight(significantBits))
+        uniq.dropRight(significantBits)+getE(uniq.takeRight(significantBits))
       else text
     case SId(_, text, None, _) => text
     case SIf(_, cond, trueBranch, falseBranch) => {
@@ -410,8 +412,10 @@ class JSAstToConcrete(program: Program) extends Walker {
       s.toString
     case SPropId(info, id) => walk(id)
     case SPropNum(info, num) => walk(num)
-    case SPropStr(info, str) => str
-    case SRegularExpression(info, body, flags) => "/"+body+"/"+flags
+    case SPropStr(info, str) => "\""+str+"\""
+    case SRegularExpression(info, body, flags) =>
+      if (testWith) "/"+body+"/"+flags
+      else "/"+NU.unescapeJava(body)+"/"+NU.unescapeJava(flags)
     case SReturn(info, expr) => {
       val s: StringBuilder = new StringBuilder
       s.append("return")
@@ -459,14 +463,19 @@ class JSAstToConcrete(program: Program) extends Walker {
     }
     case STry(info, body, catchBlock, fin) => {
       val s: StringBuilder = new StringBuilder
-      s.append("try\n").append(getIndent).append(walk(body))
+      s.append("try\n{")
+      increaseIndent
+      s.append(getIndent).append(join(body, "\n"+getIndent, new StringBuilder("")))
+      s.append("}")
+      decreaseIndent
       if(catchBlock.isSome) s.append("\n").append(getIndent).append(walk(catchBlock))
       if(fin.isSome){
         var oneline: Boolean = isOneline(fin)
-        s.append("\n").append(getIndent).append("finally\n")
-        if(oneline) increaseIndent
-        s.append(getIndent).append(walk(fin))
-        if(oneline) decreaseIndent
+        s.append("\n").append(getIndent).append("finally\n{")
+        increaseIndent
+        s.append(getIndent).append(join(fin.get, "\n"+getIndent, new StringBuilder("")))
+        s.append("}\n")
+        decreaseIndent
       }
       s.toString
     }
@@ -482,11 +491,13 @@ class JSAstToConcrete(program: Program) extends Walker {
       s.toString
     }
     case SVarRef(info, id) => walk(id)
-    case SVarStmt(info, vds) => {
-      val s: StringBuilder = new StringBuilder
-      s.append("var ")
-      s.append(join(vds, ", ", new StringBuilder(""))).append(";")
-      s.toString
+    case SVarStmt(info, vds) => vds match {
+      case Nil => ""
+      case _ =>
+        val s: StringBuilder = new StringBuilder
+        s.append("var ")
+        s.append(join(vds, ", ", new StringBuilder(""))).append(";")
+        s.toString
     }
     case SWhile(info, cond, body) => {
       val s: StringBuilder = new StringBuilder
