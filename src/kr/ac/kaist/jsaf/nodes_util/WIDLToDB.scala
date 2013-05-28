@@ -114,7 +114,7 @@ object WIDLToDB extends Walker {
    * Store WIDL to db
    */
   def storeToDB(fileName: String, program: JList[WDefinition]) = {
-    val fw = new FileWriter(fileName+".db")
+    val fw = new FileWriter(fileName.substring(0,fileName.lastIndexOf('.'))+".db")
     bw = new BufferedWriter(fw)
     toList(program).foreach(walkUnit)
     bw.close
@@ -258,6 +258,7 @@ object WIDLToDB extends Walker {
     else if (node.isInstanceOf[WQCreator]) bw.write(QCREATOR+"\n")
     else if (node.isInstanceOf[WQDeleter]) bw.write(QDELETER+"\n")
     else if (node.isInstanceOf[WQLegacycaller]) bw.write(QLEGACYCALLER+"\n")
+    else if (node.isInstanceOf[String]) bw.write(node.asInstanceOf[String]+"\n")
     else bw.write("#@#"+node.getClass.toString+"\n")
 
   ////////////////////////////////////////////////////////
@@ -266,11 +267,9 @@ object WIDLToDB extends Walker {
   /**
    * Read the DB to reconstruct WIDL
    */
-  def readDB(fileName: String): Unit = {
-    val bs = Source.fromFile(fileName+".db")
+  def readDB(fileName: String): List[WDefinition] = {
+    val bs = Source.fromFile(fileName)
     val br = bs.getLines
-    val tfw = new FileWriter(fileName+".test")
-    val tbw = new BufferedWriter(tfw)
     var result = List[WDefinition]()
     def readLine() = if (br.hasNext) br.next else throw Done
     def readInt() = Integer.parseInt(readLine)
@@ -546,13 +545,11 @@ object WIDLToDB extends Walker {
     }
     try {
       while (true) result ++= List(readDefinition)
+      result
     } catch {
-      case Done =>
+      case Done => result
       case e => throw e
     } finally {
-      result.foreach(d => tbw.write(WS.walk(d)+"\n"))
-      tbw.close
-      tfw.close
       bs.close
     }
   }

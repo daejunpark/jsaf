@@ -39,6 +39,7 @@ public class ShellParameters
     public static final int                        CMD_GLOBAL_SPARSE = 20; // This command should be inserted into CMD_ANALYZE as an option.
     public static final int                        CMD_BUG_DETECTOR = 21;
     public static final int                        CMD_WIDLPARSE = 22;
+    public static final int                        CMD_WIDLCHECK = 23;
     public static final int                        CMD_HELP = 99;
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -46,6 +47,7 @@ public class ShellParameters
     ////////////////////////////////////////////////////////////////////////////////
     public int                                     command;
     public String                                  opt_OutFileName;
+    public boolean                                 opt_DB;
     public boolean                                 opt_Time;
     public boolean                                 opt_Model;
     public boolean                                 opt_Mozilla;
@@ -86,6 +88,7 @@ public class ShellParameters
     {
         command = CMD_USAGE;
         opt_OutFileName = null;
+        opt_DB = false;
         opt_Time = false;
         opt_Model = false;
         opt_Mozilla = false;
@@ -153,7 +156,11 @@ public class ShellParameters
         else if(cmd.compareTo("widlparse") == 0)
         {
             command = CMD_WIDLPARSE;
-            feasibleOptions.add("-out");
+            feasibleOptions.add("-db");
+        }
+        else if(cmd.compareTo("widlcheck") == 0)
+        {
+            command = CMD_WIDLCHECK;
         }
         else if(cmd.compareTo("strict") == 0)
         {
@@ -318,6 +325,7 @@ public class ShellParameters
                 ConsumedParameterCount = 1;
             }
         }
+        else if(opt.compareTo("-db") == 0) opt_DB = true;
         else if(opt.compareTo("-time") == 0) opt_Time = true;
         else if(opt.compareTo("-model") == 0) opt_Model = true;
         else if(opt.compareTo("-mozilla") == 0) opt_Mozilla = true;

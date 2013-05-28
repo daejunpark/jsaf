@@ -11,7 +11,7 @@ webapis.tv.channel.tune({
     major: 9,
     minor: 0,
     sourceID : 9,
-    programNumber: 9
+    programNumber: 9,
     transportStreamID : 90,
     tunecallback: {
         onsucess: function(programList) { console.log("getting program list is successfully"); }, 

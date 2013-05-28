@@ -53,13 +53,15 @@ import kr.ac.kaist.jsaf.nodes_util.JSFromHTML;
 import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete;
 import kr.ac.kaist.jsaf.nodes_util.JSIRUnparser;
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil;
+import kr.ac.kaist.jsaf.nodes_util.WIDLChecker;
 import kr.ac.kaist.jsaf.nodes_util.WIDLToDB;
 import kr.ac.kaist.jsaf.nodes_util.WIDLToString;
 import kr.ac.kaist.jsaf.parser.WIDL;
 import kr.ac.kaist.jsaf.tests.FileTests;
 import kr.ac.kaist.jsaf.tests.TypingSemanticsJUTest;
-import kr.ac.kaist.jsaf.useful.Triple;
+import kr.ac.kaist.jsaf.useful.Files;
 import kr.ac.kaist.jsaf.useful.Pair;
+import kr.ac.kaist.jsaf.useful.Triple;
 import kr.ac.kaist.jsaf.useful.Useful;
 import kr.ac.kaist.jsaf.scala_src.useful.WorkManager;
 import kr.ac.kaist.jsaf.analysis.typing.TypingInterface;
@@ -163,6 +165,9 @@ public final class Shell {
             case ShellParameters.CMD_WIDLPARSE :
                 return_code = widlparse();
                 break;
+            case ShellParameters.CMD_WIDLCHECK :
+                return_code = widlcheck();
+                break;
             case ShellParameters.CMD_STRICT :
                 return_code = strict();
                 break;
@@ -257,7 +262,8 @@ public final class Shell {
             "Usage:\n" +
             " parse [-out file] [-time] somefile.js ...\n" +
             " unparse [-out file] somefile.tjs\n" +
-            " widlparse [-out file] somefile.widl\n" +
+            " widlparse [-db] somefile.widl\n" +
+            " widlcheck somefile.js api1.db ...\n" +
             " strict [-out file] somefile.js\n" +
             " clone-detector\n" +
             " coverage somefile.js\n" +
@@ -297,9 +303,12 @@ public final class Shell {
          "  Converts a parsed file back to JavaScript source code. The output will be dumped to stdout if -out is not given.\n"+
          "  If -out file is given, the unparsed source code will be written to the file.\n"+
          "\n"+
-         "jsaf widlparse [-out file] somefile.widl\n"+
+         "jsaf widlparse [-db] somefile.widl\n"+
          "  Parses a Web IDL file.\n"+
-         "  If -out file is given, the parsed AST will be written to the file.\n"+
+         "  If -db file is given, the parsed AST will be written to the file.\n"+
+         "\n"+
+         "jsaf widlcheck somefile.js api1.db ..."+
+         "  Checks uses of APIS in Web IDL.\n"+
          "\n"+
          "jsaf strict [-out file] somefile.js\n"+
          "  Checks whether a file satisfies the strict mode restrictions.\n"+
@@ -1145,34 +1154,47 @@ public final class Shell {
             if (parseResult.hasValue()) {
                 List<WDefinition> widl = (List<WDefinition>)(((SemanticValue)parseResult).value);
                 String code = WIDLToString.doit(widl);
-                if (params.opt_OutFileName != null){
-                    try{
-                        BufferedWriter writer = Useful.filenameToBufferedWriter(params.opt_OutFileName);
-                        writer.write(code);
-                        writer.close();
-                    } catch (IOException e){
-                        throw new IOException("IOException " + e +
-                                              "while writing " + params.opt_OutFileName);
-                    }
+                if (params.opt_DB){
+                    // store WIDL information into a DB
+                    WIDLToDB.storeToDB(fileName, widl);
                 } else {
                     System.out.println(code);
                 }
-		// store WIDL information into a DB
-		WIDLToDB.storeToDB(fileName, widl);
-		WIDLToDB.readDB(fileName);
-            } else throw new ParserError((ParseError)parseResult, parser, 0);
+            } else {
+                System.out.println("WIDL parsing failed.");
+                throw new ParserError((ParseError)parseResult, parser, 0);
+            }
         } catch (FileNotFoundException f) {
             throw new UserError(fileName + " not found");
         }
         return return_code;
     }
 
-    public static int widlparse(String fileName, String outFileName) throws UserError, InterruptedException, IOException {
+    public static int widlparse(String fileName) throws UserError, InterruptedException, IOException {
         params.Clear();
-        params.opt_OutFileName = outFileName;
         params.FileNames = new String[1];
         params.FileNames[0] = fileName;
         return widlparse();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // 17. Web IDL Use Check
+    ////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Check the uses of APIs in Web IDL.
+     */
+    private static int widlcheck() throws UserError, InterruptedException, IOException {
+        if (params.FileNames.length == 0) throw new UserError("The widlcheck command needs a file to parse.");
+        String fileName = params.FileNames[0];
+        List<String> fileNames = Arrays.asList(Arrays.copyOfRange(params.FileNames, 1, params.FileNames.length));
+
+        int return_code = 0;
+        List<String> file = new ArrayList();
+        file.add(fileName);
+        Pair<Program, HashMap<String, String>> pair = Parser.fileToAST(file);
+        Program pgm = pair.first();
+        new WIDLChecker(pgm, fileNames).doit();
+        return return_code;
     }
 
     ////////////////////////////////////////////////////////////////////////////////
