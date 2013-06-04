@@ -36,6 +36,7 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
                if (index > 0) (s, file.substring(0,file.lastIndexOf('.'))) else (s, s)
              })
   var dbs: MMap[String, List[WDefinition]] = MHashMap[String, List[WDefinition]]()
+  var curDB = List[WDefinition]()
 
   def readDB(api: String) = dbs.get(api) match {
     case None =>
@@ -60,7 +61,6 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
       if (res != None) res
       else {
         varMethodType.foreach{ case(x, y, z) =>
-//          if (str == x) res = Some(("", x))
           if (str == x) res = Some((x, z))
         }
         res
@@ -76,12 +76,9 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
   
   def doit() = {
     walkUnit(program)
-    errorCheck()
+    if (!errorOccurred) println("OK")
   }
 
-  def errorCheck() = {
-
-  }
 
   var methodReturnType = ""
   var paramTypes = List[String]()
@@ -99,6 +96,8 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
   val error_PTTE = "Parameter Type - TypeMismatchError"
   val error_DMNSM = "Dictionary Member - No Such Member"
   val error_DMTNM = "Dictionary Member - Type Not Match"
+  val error_MCF = "Member Cannot Found"
+  val error_CARM = "Cannot Assign any values to Readonly Member"
   def printErrMsg(errType: String, name: String) = {
     errorOccurred = true
     println("ERROR : " + errType + " '" + name + "'")
@@ -110,30 +109,77 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
     }
     return false
   }
+  def getTypeOfVar(s: String): String = {
+    varMethodType.foreach{ case(x, y, z) =>
+      if (x == s) return z
+    }
+    return ""
+  }
+
+  def getVarName(node: Any): String = node match {
+    case fa@SDot(_, obj, SId(_, x, _, _)) => getVarName(obj)+"."+x
+    case fa@SVarRef(info, SId(_, x, _, _)) => x+"//"
+  } 
 
   override def walkUnit(node: Any): Unit = node match {
+    case fa@SAssignOpApp(_, lhs, SOp(_, op), r) =>
+      if (op == "=") {
+        var vtype = ""
+        r match {
+          case fa@SIntLiteral(info, intval, radix) => vtype = "int"
+          case fa@SStringLiteral(info, quote, str) => vtype = "string"
+          case fa@SDoubleLiteral(info, str, doubleval) => vtype = "double"
+        }
+        getVarName(lhs).split("//.") match {
+          case Array(v, attr) =>
+            curDB.foreach{ content =>
+              val info = getInfoInDB(content, getTypeOfVar(v))
+              var isAttrInAPI = false
+              info.foreach{ case(attrTyp, attrName) =>
+                if (attrName == attr) { 
+                  isAttrInAPI = true
+                  // does js code try assigning values to readonly attribute?
+                  if (!errorOccurred && attrTyp.contains("r/"))
+                    printErrMsg(error_CARM, v+"."+attr)
+                }
+              }
+              // is 'attr' a member of the interface?
+              if (!errorOccurred && !isAttrInAPI)
+                printErrMsg(error_MCF, attr)
+            }
+          case _ => None
+        }
+      }
+
     case fa@SDot(_, obj, SId(_, x, _, _)) =>
       isAPI(obj) match {
         case Some(p) =>
           if (!isVarForAPI(p._1)) {
-          val db = readDB(p._1)
-          db.foreach{ content =>
-            val methodInfo = getInfoInDB(content, x)
-            if (!errorOccurred && methodInfo.length == 0) // is const in webapi?
-              printErrMsg(error_CF, x)
+            curDB = readDB(p._1)
+            curDB.foreach{ content =>
+              val methodInfo = getInfoInDB(content, x)
+              if (!errorOccurred && methodInfo.length == 0) // is const in webapi?
+                printErrMsg(error_CF, x)
             
-            // get const value
-            methodInfo.foreach{ case(constval, constcase) =>
-              if (constcase == "const") temp ++= List((constval, "int"))
+              // get const value
+              methodInfo.foreach{ case(constval, constcase) =>
+                if (constcase == "const") temp ++= List((constval, "int"))
+              }
             }
           }
-          }
           else {
-            // 2. 1) A) B) processing
-            println(p._1)
-            println(p._2)
-            println("hahaha")
-            println(x)
+            // check if the variable assigned by API has a member 'x'.
+            curDB.foreach{ content =>
+              val info = getInfoInDB(content, p._2)
+              var isAttrInAPI = false
+              info.foreach{ case(attrTyp, attrName) =>
+                if (attrName == x) isAttrInAPI = true
+              }
+              // is 'x' a member of the interface?
+              if (!errorOccurred && !isAttrInAPI)
+                printErrMsg(error_MCF, x)
+
+            }
           }
             
         case _ => walkUnit(obj)
@@ -144,40 +190,42 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
          case SDot(_, obj, SId(_, x, _, _)) =>
            isAPI(obj) match {
              case Some(p) =>
-               val db = readDB(p._1)
-               db.foreach{ content =>
+               curDB = readDB(p._1)
+               curDB.foreach{ content =>
                  val methodInfo = getInfoInDB(content, x)
                  if (!errorOccurred && methodInfo.length == 0) // is method in webapi?
                    printErrMsg(error_CF, x)
 
-                 // get information about the method in WebAPI
+                 // extract information of the method
+                 var numOfOptParam = 0
                  methodInfo.foreach{ case(typname, typcase) =>
                    if (typcase == "return") methodReturnType = typname
                    else paramTypes ++= List(typname)
+                   if (typname.contains("o/")) numOfOptParam += 1
                  }
                  if (curReferVar != "") {
                    varMethodType ++= List((curReferVar, x, methodReturnType))
-                   //libs ++= List(curReferVar)
                    curReferVar = ""
                  }
                  
-                 // get parameters information in javascript
-                 //args.foreach(walkUnit(_))
+                 // get information of parameters in javascript
                  if (inputDict.length > 0)
                    inputParams ++= List((inputDict, "dict"))
                  inputParams ++= temp
 
-                 // 1. 2) A) 처리하기
-
-                 if (!errorOccurred && paramTypes.length != inputParams.length) // is # of parameters right?
+                 if (!errorOccurred && (inputParams.length > paramTypes.length
+                     || inputParams.length < paramTypes.length-numOfOptParam)) // is # of parameters right?
                    printErrMsg(error_NP, x)
+                 
+                 for (a <- 0 until (paramTypes.length-inputParams.length))
+                   inputParams ++= List(("","","")) // input arbitrary value
 
-                 paramTypes.zip(inputParams).foreach { case(ptype, inparam) => inparam match {
+                 paramTypes.zip(inputParams).foreach { case(partype, inparam) => inparam match {
                    case (name, typ) => name match {
                      case inDict:List[(String, Any, String)] =>
-                       val dictInfo = getInfoInDB(content, ptype)
+                       val dictInfo = getInfoInDB(content, partype)
                        if (!errorOccurred && dictInfo.length == 0) // is there the dictionary?
-                         printErrMsg(error_CF, ptype)
+                         printErrMsg(error_CF, partype)
                        
                        inDict.foreach{ case(inname, inval, intype) =>
                          var isExistent = false
@@ -196,29 +244,40 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
                            printErrMsg(error_DMTNM, inname)
                        }
                      case pname:Any =>
-                       val v = AnyToStr(pname)
-                       if (typ == "fun") {
-                         var isThereFunc = false
+                       val ptype = partype.replace("o/", "")
+                       var isForVar = false
+                       if (typ == "funOrVar") {
+                         var isExistent = false
                          functions.foreach{ func =>
-                           if (func == name) isThereFunc = true
+                           if (func == name) isExistent = true
                          }
-                         if (!errorOccurred && !isThereFunc) // is there the callback function?
-                           printErrMsg(error_CMCF, v)
+                         varMethodType.foreach{ case(v, m, t) =>
+                           if (v == name && t == ptype) {
+                             isExistent = true
+                             isForVar = true
+                           }
+                         }
+                         // is the callback function OR variable existent?
+                         if (!errorOccurred && !isExistent)
+                           printErrMsg(error_CMCF, AnyToStr(pname))
                        }
                        // is the parameter type right?
-                       if (!errorOccurred && ( (typ == "fun" && !ptype.contains("Callback")) ||
-                            (typ == "int" && !ptype.contains("short") &&
-                             !ptype.contains("int") && !ptype.contains("long")) ||
-                            (typ == "string" && !ptype.contains("string")) ||
-                            (typ == "double" && !ptype.contains("double") && !ptype.contains("float"))) )
-                         printErrMsg(error_PTTE, v)
+                       if (!errorOccurred && (
+                           (typ == "funOrVar" && (!ptype.contains("Callback") && !isForVar)) ||
+                           (typ == "int" && !ptype.contains("short") &&
+                            !ptype.contains("int") && !ptype.contains("long")) ||
+                           (typ == "string" && !ptype.contains("string")) ||
+                           (typ == "double" && !ptype.contains("double") && !ptype.contains("float"))) )
+                         printErrMsg(error_PTTE, AnyToStr(pname))
                      case _ => None
                    }
                    case _ => None
                  }}
-
-                 // variable interface check
-                 println(varMethodType)
+                 
+                 // initialize
+                 temp = List[Any]()
+                 paramTypes = List[String]()
+                 inputParams = List[Any]()
                }
              case _ => walkUnit(fun)
            }
@@ -226,25 +285,9 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
        }
 
      case fa@SVarDecl(info, SId(_, x, _, _), expr) => expr match {
-       case Some(p) => //p match {
+       case Some(p) =>
          curReferVar = x
          walkUnit(p)
-         /*case fa@SFunApp(info, fun, args) => fun match {
-           case SDot(_, obj, SId(_, y, _, _)) =>
-             isAPI(obj) match {
-               case Some(p) =>
-                 val db = readDB(p._1)
-                 db.foreach{ content =>
-                   val rr = getInfoInDB(content, y)
-                   println(rr)
-                   // rr에서 returnType을 뽑고, 그 type을 다시 db에서 information extract 후,
-                   // 2. 1) A)와 B)를 검사하자.
-                 }
-               case _ => None
-             }
-           case _ => None
-         }
-       }*/
        case _ => None
      }
        
@@ -254,7 +297,6 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
            if (x != "") functions ++= List(x)
        }
      case fa@SField(info, prop, expr) =>
-       // TuneCallback method 관련해서 처리해야함....(dictionary member)
        prop match {
          case SPropId(_, SId(_, x, _, _)) =>
            expr match {
@@ -265,7 +307,7 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
            }
          case _ => None
        }
-     case fa@SVarRef(info, SId(_, x, _, _)) => temp ++= List((x, "fun"))
+     case fa@SVarRef(info, SId(_, x, _, _)) => temp ++= List((x, "funOrVar"))
      case fa@SIntLiteral(info, intval, radix) => temp ++= List((intval, "int"))
      case fa@SStringLiteral(info, quote, str) => temp ++= List((str, "string"))
      case fa@SDoubleLiteral(info, str, doubleval) => temp ++= List((doubleval, "double"))
@@ -279,36 +321,45 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
        val defs = toList(c.getDefs())
        defs.foreach{ d => res ++= getInfoInDB(d, name) }
        res
-     case c:WInterface =>
+     case i:WInterface =>
        var res = List[(String,String)]()
-       val members = toList(c.getMembers())
-       members.foreach{ member => res ++= getInfoInDB(member, name) }
-       res
-     case c:WInterfaceMember => c match {
-       case o:WOperation =>
-         var res = List[(String,String)]()
-         val optNames = o.getName()
-         optNames.foreach{ optName =>
-           if (optName == name) {
-             var types = List[String]()
-             var typecases = List[String]()
-             types ++= List(typeName(o.getTyp()))
-             typecases ++= List("return")
-             toList(o.getArgs()).foreach{ a =>
-               types ++= List(typeName(a.getTyp()))
-               typecases ++= List("param")
+       val members = toList(i.getMembers())
+       members.foreach{ member => member match {
+         case im:WInterfaceMember => im match {
+           case o:WOperation =>
+             val optNames = o.getName()
+             optNames.foreach{ optName =>
+               if (optName == name) {
+                 var types = List[String]()
+                 var typecases = List[String]()
+                 types ++= List(typeName(o.getTyp()))
+                 typecases ++= List("return")
+                 toList(o.getArgs()).foreach{ a =>
+                   var optional = ""
+                   toList(a.getAttributes()).foreach{ b => b match {
+                     case opt:WEAOptional => optional = "o/"
+                   }}
+                   types ++= List(optional+typeName(a.getTyp()))
+                   typecases ++= List("param")
+                 }
+                 res ++= types.zip(typecases)
+               }
              }
-             res ++= types.zip(typecases)
-           }
+           case c:WConst =>
+             if (c.getName() == name)
+               res ++= List( (defValue(c.getValue()), "const") )
+           case a:WAttribute =>
+             if (i.getName() == name) {
+               var attr = ""
+               toList(a.getAttrs()).foreach{ at => at match {
+                 case att:WEAReadonly => attr = "r/"
+               }}
+               res ++= List( (attr+typeName(a.getTyp()), a.getName()) )
+             }
+           case _ => None//res ++= List[(String, String)]()
          }
-         res
-       case c:WConst =>
-         if (c.getName() == name) {
-           List( (defValue(c.getValue()), "const") )
-         }
-         else List[(String, String)]()
-       case _ => List[(String, String)]()
-     }
+       }}
+       res
      case c:WDictionary =>
        var res = List[(String, String)]()
        if (c.getName() == name) {

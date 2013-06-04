@@ -8,7 +8,8 @@ function errorCB(error) {
 
 try { 
     var channel = webapis.tv.channel.getCurrentChannel();
-    webapis.tv.channel.getProgramList(channel, webapis.tv.info.getEpochTime(), successCB, errorCB, 3600);
+    //webapis.tv.channel.getProgramList(channel, webapis.tv.info.getEpochTime(), successCB, errorCB, 3600);
+    webapis.tv.channel.getProgramList(channel, 0, successCB, errorCB, 3600);
 } catch (error) {
     console.log(error.name);
 }
