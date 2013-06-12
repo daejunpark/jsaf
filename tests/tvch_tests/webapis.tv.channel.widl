@@ -135,3 +135,22 @@ module channel {
         unsigned long getNumOfAvailableTuner() raises (WebAPIException);
     };
 };
+
+
+module webapis {
+
+  interface WebAPIError {
+        readonly attribute DOMString name; 
+        readonly attribute DOMString message;
+  };
+  
+  [Callback=FunctionOnly, NoInterfaceObject]
+  interface SuccessCallback {
+    void onsuccess();
+  };
+
+  [Callback=FunctionOnly, NoInterfaceObject]
+  interface ErrorCallback {
+    void onerror (WebAPIError error);
+  };
+};

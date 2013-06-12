@@ -8,6 +8,9 @@ function errorCB(error) {
     console.log(error.name);
 }
 
-webapis.tv.channel.tune2(successCB, errorCB, webapis.tv.channel.NAVIGATOR_MODE_ALL, 0);
-
+try {
+  webapis.tv.channel.tune2(successCB, errorCB, webapis.tv.channel.NAVIGATOR_MODE_ALL, 0);
+} catch (error) {
+  console.log(error.name);
+}
 

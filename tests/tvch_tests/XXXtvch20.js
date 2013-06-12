@@ -9,7 +9,8 @@ function errorCB(error) {
 }
 
 try {
-  webapis.tv.channel.tuneDown(successCB, errorCB, webapis.tv.channel.NAVIGATOR_MODE_ALL, "mismatch");
+  var program = webapis.tv.channel.getCurrentProgram();
+  webapis.tv.channel.tuneDown(successCB, errorCB, webapis.tv.channel.NAVIGATOR_MODE_ALL, program.title);
 } catch (error) {
   console.log(error.name);
 }

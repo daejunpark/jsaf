@@ -1,8 +1,17 @@
-// 2. 1) A) ERROR : Member Cannot Found (interface name)
+// ERROR : Member Cannot Find (interface name)
 
-try {
-    var channel = webapis.tv.channel.getCurrentChannel();
-    console.log("current channel is "  + channel.whatever);
-} catch (error) {
+function successCB() {
+    console.log("tuning is successful");
+}
+
+function errorCB(error) {
     console.log(error.name);
 }
+
+try {
+  var program = webapis.tv.channel.getCurrentProgram();
+  webapis.tv.channel.tuneDown(successCB, errorCB, webapis.tv.channel.NAVIGATOR_MODE_ALL, program.whatever);
+} catch (error) {
+  console.log(error.name);
+}
+
