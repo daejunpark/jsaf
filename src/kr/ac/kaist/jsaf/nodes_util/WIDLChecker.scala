@@ -56,15 +56,12 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
   }
 
   def isAPI(dot: LHS) = dotToStr(dot) match {
-    case Some(str) => 
-      var res = libs.find(p => str.equals(p._2))
-      if (res != None) res
-      else {
-        varMethodType.foreach{ case(x, y, z) =>
-          if (str == x) res = Some((x, z))
-        }
-        res
-      }
+    case Some(str) => libs.find(p => str.equals(p._2))
+    case _ => None
+  }
+
+  def isVarAPI(dot: LHS) = dotToStr(dot) match {
+    case Some(str) => vars.find(p => str.equals(p._1))
     case _ => None
   }
 
@@ -76,244 +73,275 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
   
   def doit() = {
     walkUnit(program)
-    if (!errorOccurred) println("OK")
+    if (!errorOccurred && !warningOccurred) println("OK")
   }
 
 
-  var methodReturnType = ""
-  var paramTypes = List[String]()
-  var functions = List[String]()
-  var inputParams = List[Any]()
-  var temp = List[Any]()
-  var inputDict = List[(String, Any, String)]()
-  var curReferVar = ""
-  var varMethodType = List[(String, String, String)]()
+  /* global variables */
+  var numOfTries = 0
+  var vars = List[(String, Any)]() // varName, value
+  var funs = List[(String, Int)]() // funName, #ofArgs
+  var fappMethodRetType = ""
+  var fappType = ""
 
+  /* error-related things */
+  var warningOccurred = false
   var errorOccurred = false
   val error_CF = "Cannot Found"
   val error_NP = "The Number of Parameters - Not Matched" 
   val error_CMCF = "Callback Method Cannot Found"
-  val error_PTTE = "Parameter Type - TypeMismatchError"
+  val error_CMPNM = "Callback Method Parameter - Not Matched"
+  val error_PTTE = "Parameter Type - TypeMismatch Error"
   val error_DMNSM = "Dictionary Member - No Such Member"
   val error_DMTNM = "Dictionary Member - Type Not Match"
   val error_MCF = "Member Cannot Found"
   val error_CARM = "Cannot Assign any values to Readonly Member"
+  val warning_TC = "Use Try-Catch for"
   def printErrMsg(errType: String, name: String) = {
+    if (!errorOccurred) println("ERROR : " + errType + " '" + name + "'")
     errorOccurred = true
-    println("ERROR : " + errType + " '" + name + "'")
+  }
+  def printWarningMsg(errType: String, name: String) = {
+    warningOccurred = true
+    println("WARNING : " + errType + " '" + name + "'")
   }
 
-  def isVarForAPI(s: String): Boolean = {
-    varMethodType.foreach{ case(x, y, z) =>
-      if (x == s) return true
-    }
-    return false
-  }
-  def getTypeOfVar(s: String): String = {
-    varMethodType.foreach{ case(x, y, z) =>
-      if (x == s) return z
-    }
-    return ""
-  }
-
-  def getVarName(node: Any): String = node match {
-    case fa@SDot(_, obj, SId(_, x, _, _)) => getVarName(obj)+"."+x
-    case fa@SVarRef(info, SId(_, x, _, _)) => x+"//"
-  } 
 
   override def walkUnit(node: Any): Unit = node match {
-    case fa@SAssignOpApp(_, lhs, SOp(_, op), r) =>
-      if (op == "=") {
-        var vtype = ""
-        r match {
-          case fa@SIntLiteral(info, intval, radix) => vtype = "int"
-          case fa@SStringLiteral(info, quote, str) => vtype = "string"
-          case fa@SDoubleLiteral(info, str, doubleval) => vtype = "double"
-        }
-        getVarName(lhs).split("//.") match {
-          case Array(v, attr) =>
-            curDB.foreach{ content =>
-              val info = getInfoInDB(content, getTypeOfVar(v))
-              var isAttrInAPI = false
-              info.foreach{ case(attrTyp, attrName) =>
-                if (attrName == attr) { 
-                  isAttrInAPI = true
-                  // does js code try assigning values to readonly attribute?
-                  if (!errorOccurred && attrTyp.contains("r/"))
-                    printErrMsg(error_CARM, v+"."+attr)
-                }
-              }
-              // is 'attr' a member of the interface?
-              if (!errorOccurred && !isAttrInAPI)
-                printErrMsg(error_MCF, attr)
-            }
-          case _ => None
-        }
-      }
+    case fa@STry(_, body, catchB, _) =>
+      numOfTries += 1
+      walkUnit(body)
+      walkUnit(catchB)
+      numOfTries -= 1
 
-    case fa@SDot(_, obj, SId(_, x, _, _)) =>
-      isAPI(obj) match {
+    case fa@SVarDecl(_, SId(_, x, _, _), expr) => expr match {
+      case Some(p) =>
+        walkUnit(p)
+        p match {
+          case fa@SFunApp(_, _, _) => vars ++= List((x, Some((fappMethodRetType, fappType))))
+          case _ => vars ++= List((x, p))
+        }
+      case _ => None
+    }
+
+    case fa@SFunDecl(_, SFunctional(_, _, body, SId(_, x, _, _), params)) =>
+      funs ++= List((x, params.length))
+
+    case fa@SDot(_, obj, SId(_, x, _, _)) => isAPI(obj) match {
+      case Some(p) =>
+        curDB = readDB(p._1)
+        val dotInfo = getInfo(curDB, x)
+        /***** 1. check *****/
+        if (dotInfo.length == 0) printErrMsg(error_CF, x)
+      case _ => isVarAPI(obj) match {
+        case Some((p, Some((v, m)))) =>
+          val typ = v.toString.replace("e/", "")
+          chkInterfaceMember(x, getInfo(curDB, typ))
+        case _ => None
+      }
+    }
+    
+    case fa@SFunApp(info, fun, args) => fun match {
+      case SDot(_, obj, SId(_, x, _, _)) => isAPI(obj) match {
         case Some(p) =>
-          if (!isVarForAPI(p._1)) {
-            curDB = readDB(p._1)
-            curDB.foreach{ content =>
-              val methodInfo = getInfoInDB(content, x)
-              if (!errorOccurred && methodInfo.length == 0) // is const in webapi?
-                printErrMsg(error_CF, x)
-            
-              // get const value
-              methodInfo.foreach{ case(constval, constcase) =>
-                if (constcase == "const") temp ++= List((constval, "int"))
-              }
-            }
-          }
-          else {
-            // check if the variable assigned by API has a member 'x'.
-            curDB.foreach{ content =>
-              val info = getInfoInDB(content, p._2)
-              var isAttrInAPI = false
-              info.foreach{ case(attrTyp, attrName) =>
-                if (attrName == x) isAttrInAPI = true
-              }
-              // is 'x' a member of the interface?
-              if (!errorOccurred && !isAttrInAPI)
-                printErrMsg(error_MCF, x)
+          curDB = readDB(p._1)
+          val argsInfo = getInfo(curDB, x)
 
+          /***** 1. check *****/
+          if (argsInfo.length == 0) printErrMsg(error_CF, x)
+
+          /* separate return type and argument types,
+             and count the number of optional argument. */
+          var methodRetType = ""
+          var argsWAPI = List[String]()
+          var numOfOpt = 0
+          argsInfo.foreach{ case(typ, which) =>
+            if (which == "return") methodRetType = typ
+            else if (which == "param") {
+              if (typ.contains("o/")) numOfOpt += 1
+              argsWAPI ++= List(typ)
             }
           }
-            
-        case _ => walkUnit(obj)
+          
+          /***** 2. 1) check *****/
+          if (args.length < argsWAPI.length-numOfOpt || args.length > argsWAPI.length)
+            printErrMsg(error_NP, x)
+
+          /* analyze arguments of the method in javascript code. */
+          args.zip(argsWAPI).foreach{ case(arg, typ) =>
+            /***** 2. 2) check *****/
+            if (!chkArg(arg, typ, getInfo(curDB, typ)))
+              printErrMsg(error_PTTE, x)
+          }
+          
+          /***** 3. check *****/
+          if (methodRetType.contains("e/") && numOfTries == 0)
+            printWarningMsg(warning_TC, x)
+
+          fappMethodRetType = methodRetType
+          fappType = x
+
+        case _ => None
       }
-     case fa@SFunApp(info, fun, args) =>
-       args.foreach(walkUnit(_))
-       fun match {
-         case SDot(_, obj, SId(_, x, _, _)) =>
-           isAPI(obj) match {
-             case Some(p) =>
-               curDB = readDB(p._1)
-               curDB.foreach{ content =>
-                 val methodInfo = getInfoInDB(content, x)
-                 if (!errorOccurred && methodInfo.length == 0) // is method in webapi?
-                   printErrMsg(error_CF, x)
+      case _ => None
+    }
 
-                 // extract information of the method
-                 var numOfOptParam = 0
-                 methodInfo.foreach{ case(typname, typcase) =>
-                   if (typcase == "return") methodReturnType = typname
-                   else paramTypes ++= List(typname)
-                   if (typname.contains("o/")) numOfOptParam += 1
-                 }
-                 if (curReferVar != "") {
-                   varMethodType ++= List((curReferVar, x, methodReturnType))
-                   curReferVar = ""
-                 }
-                 
-                 // get information of parameters in javascript
-                 if (inputDict.length > 0)
-                   inputParams ++= List((inputDict, "dict"))
-                 inputParams ++= temp
+    case _ => super.walkUnit(node)
+  }
 
-                 if (!errorOccurred && (inputParams.length > paramTypes.length
-                     || inputParams.length < paramTypes.length-numOfOptParam)) // is # of parameters right?
-                   printErrMsg(error_NP, x)
-                 
-                 for (a <- 0 until (paramTypes.length-inputParams.length))
-                   inputParams ++= List(("","","")) // input arbitrary value
 
-                 paramTypes.zip(inputParams).foreach { case(partype, inparam) => inparam match {
-                   case (name, typ) => name match {
-                     case inDict:List[(String, Any, String)] =>
-                       val dictInfo = getInfoInDB(content, partype)
-                       if (!errorOccurred && dictInfo.length == 0) // is there the dictionary?
-                         printErrMsg(error_CF, partype)
-                       
-                       inDict.foreach{ case(inname, inval, intype) =>
-                         var isExistent = false
-                         var isProperType = false
-                         dictInfo.foreach{ case(dmname, dmtype) =>
-                           if (dmname == inname) {
-                             isExistent = true
-                             if (((dmtype == "long" || dmtype == "short") && intype == "int") ||
-                                  (dmtype == intype))
-                               isProperType = true
-                           }
-                         }
-                         if (!errorOccurred && !isExistent) // is dictionary member right?
-                           printErrMsg(error_DMNSM, inname)
-                         if (!errorOccurred && isExistent && !isProperType) // is the member type proper?
-                           printErrMsg(error_DMTNM, inname)
-                       }
-                     case pname:Any =>
-                       val ptype = partype.replace("o/", "")
-                       var isForVar = false
-                       if (typ == "funOrVar") {
-                         var isExistent = false
-                         functions.foreach{ func =>
-                           if (func == name) isExistent = true
-                         }
-                         varMethodType.foreach{ case(v, m, t) =>
-                           if (v == name && t == ptype) {
-                             isExistent = true
-                             isForVar = true
-                           }
-                         }
-                         // is the callback function OR variable existent?
-                         if (!errorOccurred && !isExistent)
-                           printErrMsg(error_CMCF, AnyToStr(pname))
-                       }
-                       // is the parameter type right?
-                       if (!errorOccurred && (
-                           (typ == "funOrVar" && (!ptype.contains("Callback") && !isForVar)) ||
-                           (typ == "int" && !ptype.contains("short") &&
-                            !ptype.contains("int") && !ptype.contains("long")) ||
-                           (typ == "string" && !ptype.contains("string")) ||
-                           (typ == "double" && !ptype.contains("double") && !ptype.contains("float"))) )
-                         printErrMsg(error_PTTE, AnyToStr(pname))
-                     case _ => None
-                   }
-                   case _ => None
-                 }}
-                 
-                 // initialize
-                 temp = List[Any]()
-                 paramTypes = List[String]()
-                 inputParams = List[Any]()
-               }
-             case _ => walkUnit(fun)
-           }
-         case _ => walkUnit(fun)
-       }
+  /* Analyze type and detail content of an argument in a funapp. */
+  def chkArg(node: Any, typ: String, info: List[(String, String)]): Boolean = node match {
+    case fa@SObjectExpr(_, elmts) =>
+      toList(elmts).foreach{ e => 
+        if (!chkDictMem(e, info)) return false
+      }
+      true
+    case fa@SVarRef(_, SId(_, y, _, _)) => 
+      vars.foreach{ case(name, v) => 
+        if (name == y) {
+          v match {
+            case Some((retTyp, apiTyp)) => 
+              if (typ == retTyp.toString.replace("e/", "")) return true
+            case _ => return chkArg(v, typ, info)
+          }
+        }
+      }
+      if (typ.contains("Callback")) return isCallback(y, typ)
+      false
+    case fa@SDot(_, obj, SId(_, y, _, _)) => isAPI(obj) match {
+      case Some(p) => 
+        val dotInfo = getInfo(readDB(p._1), y)
+        /***** 1. check *****/
+        if (dotInfo.length == 0) printErrMsg(error_CF, y)
+        chkDot(dotInfo, typ)
+      case _ => isVarAPI(obj) match {
+        case Some((p, Some((v, m)))) =>
+          val typ = v.toString.replace("e/", "")
+          val varInfo = getInfo(curDB, typ)
+          if (chkInterfaceMember(y, varInfo)) {
+            varInfo.foreach{ case(n, t) =>
+              if (n == y) {
+                if (typ.contains("short") || typ.contains("int") || typ.contains("long"))
+                  return chkLiteral(t, List("long", "short", "int"))
+                else if (typ.contains("String"))
+                  return chkLiteral(t, List("String"))
+                else if (typ.contains("double") || typ.contains("float"))
+                  return chkLiteral(t, List("float", "double"))
+                else
+                  return (typ.replace("o/", "") == t)
+              }
+            }
+          }
+          false
+        case _ => false
+      }
+    }
+    case fa@SIntLiteral(_, y, _) => chkLiteral(typ, List("long", "short", "int"))
+    case fa@SStringLiteral(_, _, y) => chkLiteral(typ, List("String"))
+    case fa@SDoubleLiteral(_, _, y) => chkLiteral(typ, List("float", "double"))
+    case _ => false
+  }
 
-     case fa@SVarDecl(info, SId(_, x, _, _), expr) => expr match {
-       case Some(p) =>
-         curReferVar = x
-         walkUnit(p)
-       case _ => None
-     }
-       
-     case fa@SFunctional(fds, vds, body, name, params) =>
-       name match {
-         case SId(_, x, _, _) =>
-           if (x != "") functions ++= List(x)
-       }
-     case fa@SField(info, prop, expr) =>
-       prop match {
-         case SPropId(_, SId(_, x, _, _)) =>
-           expr match {
-             case SIntLiteral(_, intval, _) => inputDict ++= List((x, intval, "int"))
-             case SStringLiteral(_, _, str) => inputDict ++= List((x, str, "string"))
-             case SDoubleLiteral(_, _, doubleval) => inputDict ++= List((x, doubleval, "double"))
-             case _ => None
-           }
-         case _ => None
-       }
-     case fa@SVarRef(info, SId(_, x, _, _)) => temp ++= List((x, "funOrVar"))
-     case fa@SIntLiteral(info, intval, radix) => temp ++= List((intval, "int"))
-     case fa@SStringLiteral(info, quote, str) => temp ++= List((str, "string"))
-     case fa@SDoubleLiteral(info, str, doubleval) => temp ++= List((doubleval, "double"))
+  /* Check if member 'name' is in the Interface. */
+  def chkInterfaceMember(name: String, check: List[(String, String)]): Boolean = {
+    check.foreach{ case(n, t) =>
+      if (name == n) return true
+    }
+    /***** 4. 1) check *****/
+    printErrMsg(error_MCF, name)
+    false
+  }
 
-     case _ => super.walkUnit(node)
-   }
+  /* Check if the types of dot values are same. */
+  def chkDot(dotInfo: List[(String, String)], typ: String): Boolean = {
+    val dotTyp = dotInfo.last._1.replace("o/", "")
+    if (typ.replace("o/", "") == dotTyp) return true
+    else false
+  }
+
+  /* Check if the types of literal values are same. */
+  def chkLiteral(typ: String, check: List[String]): Boolean = {
+    var isSameType = false
+    check.foreach{ c =>
+      if (typ.contains(c)) isSameType = true
+    }
+    isSameType
+  }
+
+  /* Analyze each dictionary member. */
+  def chkDictMem(node: Any, info: List[(String, String)]): Boolean = node match {
+    case fa@SField(_, SPropId(_, SId(_, x, _, _)), expr) => expr match {
+      case fa@SIntLiteral(_, v, _) => chkDictMemLiteral(x, info, List("long", "short", "int"))
+      case fa@SStringLiteral(_, _, v) => chkDictMemLiteral(x, info, List("String"))
+      case fa@SDoubleLiteral(_, _, v) => chkDictMemLiteral(x, info, List("float", "double"))
+      case _ => true
+    }
+    case _ => true // chkDictMem(node, info)
+  }
+
+  /* Analyze each literal of a dictionary member. */
+  def chkDictMemLiteral(x: String, info: List[(String, String)], check: List[String]): Boolean = {
+    var isExistent = false
+    var isSameType = false
+    info.foreach{ case(name, typ) =>
+      if (x == name) {
+        isExistent = true
+        check.foreach{ id => if (typ.contains(id)) isSameType = true }
+      }
+    }
+    /***** 2. 3) A) a) check *****/
+    if (!isExistent) printErrMsg(error_DMNSM, x)
+    /***** 2. 3) A) b) check *****/
+    if (!isSameType) printErrMsg(error_DMTNM, x)
+    
+    if (isExistent && isSameType) true
+    else false
+  }
+
+
+  /* If an arg should be a callback method,
+     and the arg in JS code seems to be a function,
+     then check if it's for callback. */
+  def isCallback(name: String, cbTyp: String): Boolean = {
+    var isExistent = false
+    var numOfArgs = -1
+    funs.foreach{ case(m, v) =>
+      if (m == name) {
+        isExistent = true
+        numOfArgs = v
+      }
+    }
+    /***** 2. 3) B) a) check *****/
+    if (!isExistent) {
+      printErrMsg(error_CMCF, name)
+      return false
+    }
+ 
+    var isNumOfArgsRight = false
+    val info = getInfo(curDB, cbTyp)
+    info.foreach{ case(m, v) =>
+      if (numOfArgs == v.toInt) isNumOfArgsRight = true
+    }
+    /***** 2. 3) B) b) check *****/
+    if (!isNumOfArgsRight) {
+      printErrMsg(error_CMPNM, name)
+      return false
+    }
+    true
+  }
+
+
+
+  /******* DB-related defs *******/
+  
+  def getInfo(db: List[Any], x: String): List[(String, String)] = {
+    db.foreach{ c =>
+      val argsInfo = getInfoInDB(c, x)
+      if (argsInfo.length > 0) return argsInfo
+    }
+    return Nil
+  }
 
    def getInfoInDB(content: Any, name: String): List[(String, String)] = content match {
      case c:WModule =>
@@ -328,34 +356,47 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
          case im:WInterfaceMember => im match {
            case o:WOperation =>
              val optNames = o.getName()
+             var raiseException = ""
+             toList(o.getExns()).foreach{ a => 
+               toList(a.getName()).foreach{ exn =>
+                 if (exn == "WebAPIException") raiseException = "e/"
+               }
+             }
              optNames.foreach{ optName =>
-               if (optName == name) {
+               if (i.getName() == name) {
+                 res ++= List(( optName, toList(o.getArgs()).length.toString ))
+               }
+               else if (optName == name) {
                  var types = List[String]()
                  var typecases = List[String]()
-                 types ++= List(typeName(o.getTyp()))
+                 types ++= List(raiseException + typeName(o.getTyp()))
                  typecases ++= List("return")
                  toList(o.getArgs()).foreach{ a =>
                    var optional = ""
                    toList(a.getAttributes()).foreach{ b => b match {
                      case opt:WEAOptional => optional = "o/"
                    }}
-                   types ++= List(optional+typeName(a.getTyp()))
+                   types ++= List(optional + typeName(a.getTyp()))
                    typecases ++= List("param")
                  }
                  res ++= types.zip(typecases)
                }
              }
            case c:WConst =>
-             if (c.getName() == name)
-               res ++= List( (defValue(c.getValue()), "const") )
+             if (i.getName() == name)
+               res ++= List(( c.getName(), typeName(c.getTyp()) ))
+             else if (c.getName() == name)
+               res ++= List(( typeName(c.getTyp()), "const" ))
+              // res ++= List( (defValue(c.getValue()), "const") )
            case a:WAttribute =>
-             if (i.getName() == name) {
-               var attr = ""
-               toList(a.getAttrs()).foreach{ at => at match {
-                 case att:WEAReadonly => attr = "r/"
-               }}
+             var attr = ""
+             toList(a.getAttrs()).foreach{ at => at match {
+               case att:WEAReadonly => attr = "r/"
+             }}
+             if (i.getName() == name)
+               res ++= List(( a.getName(), typeName(a.getTyp()) ))
+             else if (a.getName() == name)
                res ++= List( (attr+typeName(a.getTyp()), a.getName()) )
-             }
            case _ => None//res ++= List[(String, String)]()
          }
        }}
