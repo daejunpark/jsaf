@@ -169,7 +169,7 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
 
           /* analyze arguments of the method in javascript code. */
           args.zip(argsWAPI).foreach{ case(arg, typ) =>
-            /***** 2. 2) check *****/
+            /***** 2. 2) E) check *****/
             if (!chkArg(arg, typ, getInfo(curDB, typ)))
               printErrMsg(error_PTTE, x)
           }
@@ -248,7 +248,7 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
     check.foreach{ case(n, t) =>
       if (name == n) return true
     }
-    /***** 4. 1) check *****/
+    /***** 4. check *****/
     printErrMsg(error_MCF, name)
     false
   }
@@ -290,9 +290,9 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
         check.foreach{ id => if (typ.contains(id)) isSameType = true }
       }
     }
-    /***** 2. 3) A) a) check *****/
+    /***** 2. 2) A) check *****/
     if (!isExistent) printErrMsg(error_DMNSM, x)
-    /***** 2. 3) A) b) check *****/
+    /***** 2. 2) B) check *****/
     if (!isSameType) printErrMsg(error_DMTNM, x)
     
     if (isExistent && isSameType) true
@@ -312,7 +312,7 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
         numOfArgs = v
       }
     }
-    /***** 2. 3) B) a) check *****/
+    /***** 2. 2) C) check *****/
     if (!isExistent) {
       printErrMsg(error_CMCF, name)
       return false
@@ -323,7 +323,7 @@ class WIDLChecker(program:Program, libraries: JList[String]) extends Walker {
     info.foreach{ case(m, v) =>
       if (numOfArgs == v.toInt) isNumOfArgsRight = true
     }
-    /***** 2. 3) B) b) check *****/
+    /***** 2. 2) D) check *****/
     if (!isNumOfArgsRight) {
       printErrMsg(error_CMPNM, name)
       return false
