@@ -629,7 +629,7 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
     }
 
     val abstractPattern = try {
-      RegExpParser.parsePattern(Useful.bufferedStringReader(p), "RegExp")
+      RegExpParser.parsePattern(p, "RegExp")
     } catch {
       case _ =>
         throw new TypeErrorException

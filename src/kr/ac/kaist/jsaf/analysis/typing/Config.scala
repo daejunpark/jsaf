@@ -21,8 +21,8 @@ object Config {
    * If turned on, all built-in objects and predefined properties of #global will be
    * included when printing analysis results.
    */
-  var verbose = false
-  def setVerbose(flag: Boolean) = verbose = flag
+  var verbose = 0
+  def setVerbose(level: Int) = verbose = level
   val globalVerboseProp: MSet[String] = MHashSet()
 
   /**

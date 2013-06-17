@@ -10,11 +10,16 @@
 package kr.ac.kaist.jsaf.interpreter
 
 import edu.rice.cs.plt.tuple.{Option => JOption}
+import kr.ac.kaist.jsaf.ShellParameters
+import kr.ac.kaist.jsaf.compiler.Predefined
 import kr.ac.kaist.jsaf.nodes_util.{Coverage, NodeUtil => NU}
 import kr.ac.kaist.jsaf.interpreter.{InterpreterPredefine => IP}
 import kr.ac.kaist.jsaf.interpreter.objects._
 import kr.ac.kaist.jsaf.nodes.{IRRoot, IRSpanInfo, IRFunctional}
 import kr.ac.kaist.jsaf.nodes_util.{Span, IRFactory => IF}
+import kr.ac.kaist.jsaf.scala_src.useful.Sets
+import kr.ac.kaist.jsaf.Shell
+import java.util.HashMap
 
 class InterpreterState(val I: Interpreter) {
   var env: Env = new EmptyEnv()
@@ -24,12 +29,14 @@ class InterpreterState(val I: Interpreter) {
   var eval: Boolean = false
   var span: Span = IP.defSpan
   var coverage: Option[Coverage] = None
+  var objectProps = Set[String]()
 
   def init() {
     // Set properties
     GlobalObject.init()
     ObjectConstructor.init()
     ObjectPrototype.init()
+    objectProps = Sets.toSet(ObjectPrototype.property.map.keySet)
     FunctionConstructor.init()
     FunctionPrototype.init()
     ArrayConstructor.init()
@@ -59,6 +66,30 @@ class InterpreterState(val I: Interpreter) {
     TypeErrorPrototype.init()
     URIErrorConstructor.init()
     URIErrorPrototype.init()
+    checkPredefined
+  }
+
+  def checkPredefined() {
+    val notYetImplemented = Set("JSON", "decodeURIComponent", "encodeURIComponent", "encodeURI",
+                                "<>Global<>global", "decodeURI", "Exception")
+    val predefNames = if (Shell.pred != null)
+                        Shell.pred.all.toSet.filterNot(notYetImplemented.contains(_))
+                      else
+                        (new Predefined(new ShellParameters())).all.toSet.filterNot(notYetImplemented.contains(_))
+    val interpNames = Sets.toSet[String](ObjectPrototype.property.map.keySet).filterNot(objectProps.contains(_)) ++
+                      Sets.toSet[String](GlobalObject.property.map.keySet)
+    if (!interpNames.subsetOf(predefNames)) {
+      System.out.println("The following names are defined in the initial heap of the interpreter\n"
+                         +"but not in the list of predefined names:\n  ")
+      interpNames.filterNot(predefNames.contains(_)).foreach((s:String) => System.out.print(s+" "))
+      throw new InterpreterError("Predefined names mismatch.", span)
+    }
+    if (!predefNames.subsetOf(interpNames)) {
+      System.out.println("The following names are defined in the list of predefined names\n"
+                         +"but not in the initial heap of the interpreter:\n  ")
+      predefNames.filterNot(interpNames.contains(_)).foreach((s:String) => System.out.print(s+" "))
+      throw new InterpreterError("Predefined names mismatch.", span)
+    }
   }
 
   def info(): IRSpanInfo = IF.makeSpanInfo(false, IF.dummyAst, span)

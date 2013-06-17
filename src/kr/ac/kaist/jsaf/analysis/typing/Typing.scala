@@ -724,7 +724,7 @@ class Typing(_cfg: CFG) extends TypingInterface {
               System.out.println(DomainPrinter.printContext(0, state._2))
 
               System.out.println("- Heap " + ccStr)
-              System.out.println(DomainPrinter.printHeap(4, state._1))
+              System.out.println(DomainPrinter.printHeap(4, state._1, cfg))
 
               first = false
               prevBottom = false

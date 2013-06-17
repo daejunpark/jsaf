@@ -217,7 +217,7 @@ class PreTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
     System.out.println(DomainPrinter.printContext(0, state._2))
 
     System.out.println("- Heap " )
-    System.out.println(DomainPrinter.printHeap(4, state._1))
+    System.out.println(DomainPrinter.printHeap(4, state._1, cfg))
     System.out.println("=========================================================================")
     System.out.println()
   }

@@ -26,7 +26,7 @@ import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
 import kr.ac.kaist.jsaf.scala_src.useful.Sets._
 
-object WIDLToDB extends Walker {
+object WIDLToDB extends WIDLWalker {
 
   object Done extends Exception
 

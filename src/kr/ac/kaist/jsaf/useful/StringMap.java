@@ -10,11 +10,7 @@
 
 package kr.ac.kaist.jsaf.useful;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -174,10 +170,13 @@ public interface StringMap {
         static Properties fromFile(String filename) {
             Properties p = null;
             try {
-                BufferedReader bis = Useful.utf8BufferedFileReader(filename);
+                FileInputStream fs = new FileInputStream(filename);
+                InputStreamReader ir = new InputStreamReader(fs, Charset.forName("UTF-8"));
+                BufferedReader bis = new BufferedReader(ir);
                 Properties tmp_p = new Properties();
                 tmp_p.load(bis);
                 p = tmp_p; // Assign if no exception.
+                bis.close(); ir.close(); fs.close();
             }
             catch (IOException ex) {
 

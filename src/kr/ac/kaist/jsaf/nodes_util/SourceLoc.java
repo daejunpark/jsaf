@@ -9,6 +9,7 @@
 
 package kr.ac.kaist.jsaf.nodes_util;
 
+import java.io.File;
 import java.io.Serializable;
 import kr.ac.kaist.jsaf.useful.HasAt;
 import kr.ac.kaist.jsaf.useful.MagicNumbers;
@@ -46,9 +47,19 @@ abstract public class SourceLoc implements Serializable, HasAt {
     }
 
     /**
-     * @return Returns the fileName.
+     * @return Returns the fileName. (contains full path "/c/safe_private/test.js")
      */
     abstract public String getFileName();
+
+    /**
+     * @return Returns the fileName. (contains only filename part "test.js")
+     */
+    public String getFileNameOnly() {
+        String fileName = getFileName();
+        int index = fileName.lastIndexOf('/' /*File.separatorChar*/);
+        if (index != -1) return fileName.substring(index + 1);
+        else return fileName;
+    }
 
     /**
      * @return Returns the line.

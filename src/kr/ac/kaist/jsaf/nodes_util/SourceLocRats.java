@@ -30,8 +30,7 @@ public class SourceLocRats extends SourceLoc {
     }
 
     public SourceLocRats addLines(int l) {
-        this.line += l;
-        return this;
+        return new SourceLocRats(fileName, line + l, col, offset);
     }
 
     @Override

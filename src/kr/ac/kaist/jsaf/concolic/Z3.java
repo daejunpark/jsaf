@@ -144,7 +144,10 @@ public final class Z3 {
 			HashMap<String, String> cfg = new HashMap<String, String>();
 			cfg.put("model", "true");
 			Context ctx = new Context(cfg);
-			return Option.<List<Integer>>some(this.ConstraintSolver(ctx, constraints, inum));
+			if (!constraints.isEmpty())
+				return Option.<List<Integer>>some(this.ConstraintSolver(ctx, constraints, inum));
+			else
+				return Option.<List<Integer>>none();
 		} catch (Z3Exception ex) {
             System.out.println("TEST CASE FAILED: " + ex.getMessage());
             System.out.println("Stack trace: ");

@@ -73,16 +73,18 @@ class Visualization(typing:Typing, fileMap: JHashMap[String, String], in:String,
       })
       contents.append("\"").append("\";")
       
-      var sb = new StringBuilder
+      val sb = new StringBuilder
       sb.append("var filename = \"").append(in).append("\";\n\n")
       sb.append("var file_contents = ").append(contents.toString).append(";\n\n")
       sb.append("var fid2name = ").append(getFuncsName).append(";\n\n")
       sb.append("var ir = ").append(dumpIR).append(";\n\n")
-      var writer = Useful.filenameToBufferedWriter(resultpath+"/data.js")
+      val pair = Useful.filenameToBufferedWriter(resultpath+"/data.js")
+      val fw = pair.first
+      val writer = pair.second
       System.out.println("writing in a " + resultpath+"/data.js" + " file")
       writer.write(sb.toString)
       writer.close
-     
+      fw.close
     } catch {
       case e:IOException =>
         throw new IOException("IOException " + e + "while writing " + resultpath);
@@ -90,15 +92,17 @@ class Visualization(typing:Typing, fileMap: JHashMap[String, String], in:String,
   }
   
   def dumpFuncInfo() {
-    var it = getFuncsId().iterator
+    val it = getFuncsId().iterator
     while(it.hasNext) {
       dumpHeap(it.next.toInt)		// write heap dump to result/f#.js
     }
   }
   
   def dumpHeap(fid:Int) {
-    val bw = Useful.filenameToBufferedWriter(resultpath+"/f"+fid+".js");
-    var sb = new StringBuilder
+    val pair = Useful.filenameToBufferedWriter(resultpath+"/f"+fid+".js")
+    val fw = pair.first
+    val bw = pair.second
+    val sb = new StringBuilder
     var names:List[String] = List()
     
     System.out.println("writing in a " + resultpath+"/f"+fid+".js" + " file");
@@ -127,7 +131,7 @@ class Visualization(typing:Typing, fileMap: JHashMap[String, String], in:String,
 
                 // normal state
                 if (state != StateBot) {
-                  csMap.update("heap",DomainPrinter.printHeap(state._1))
+                  csMap.update("heap",DomainPrinter.printHeap(state._1, cfg))
                   csMap.update("context",DomainPrinter.printContext(state._2))
                 } else {
                   csMap.update("state", "Bot")
@@ -144,7 +148,8 @@ class Visualization(typing:Typing, fileMap: JHashMap[String, String], in:String,
       }
     }
     bw.write("var names = " + compact(render(names)) + ";\n\n")
-    bw.close()
+    bw.close
+    fw.close
   }
   
   def dumpIR():String = {
@@ -238,7 +243,7 @@ class Visualization(typing:Typing, fileMap: JHashMap[String, String], in:String,
   def getFuncsName():String = {
     val fids = getFuncsId
     val fidname:List[JValue] =
-      cfg.getFunctionIds().foldLeft[List[JValue]](List())((l, fid) => {
+      cfg.getFunctionIds.foldLeft[List[JValue]](List())((l, fid) => {
         fids.contains(fid) match {
           case true =>  (("fid"->fid)~("name"->cfg.getFuncName(fid))) :: l
           case false =>  l

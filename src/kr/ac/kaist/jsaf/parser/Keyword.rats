@@ -28,11 +28,10 @@ body {
         "class",        "const",        "enum",         "export",
         "extends",      "import",       "super",
 
-        "null",         "true",         "false",
+        "null",         "true",         "false"
 
-        "module"
         /*
-,       "from",         "as"
+        "module",       "from",         "as"
         */
     });
   }

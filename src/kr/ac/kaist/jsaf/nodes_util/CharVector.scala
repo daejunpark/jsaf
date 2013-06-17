@@ -17,7 +17,7 @@ class CharVector extends HasAt {
   val NODE_COUNT = 63
   var node_kind = 62
   var vec: Vector[Int] = new Vector[Int]()
-  val _ = vec.clear; for (i <- 0 to NODE_COUNT-1) vec.add(0)
+  val _ = vec.clear(); for (i <- 0 to NODE_COUNT-1) vec.add(0)
   var mergeable = false
 
   override def toString = {

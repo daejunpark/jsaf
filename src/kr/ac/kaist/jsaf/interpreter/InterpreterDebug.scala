@@ -27,6 +27,7 @@ object InterpreterDebug {
   type TmpIdEnv = List[(String, String)]
   var tmpEnv = Nil.asInstanceOf[TmpIdEnv]
   def addE(uniq: String, new_uniq: String) = tmpEnv = (uniq, new_uniq)::tmpEnv
+  // def getE(uniq: String): String = uniq
   def getE(uniq: String): String = tmpEnv.find(p => p._1.equals(uniq)) match {
     case None =>
       val new_uniq = if (NU.isInternal(uniq) && !NU.isGlobalName(uniq)) fresh(uniq) else uniq

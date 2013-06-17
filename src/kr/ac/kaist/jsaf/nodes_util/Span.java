@@ -46,9 +46,7 @@ public class Span implements Serializable, HasAt {
     }
 
     public Span addLines(int line) {
-        begin = begin.addLines(line);
-        end = end.addLines(line);
-        return this;
+        return new Span(begin.addLines(line), end.addLines(line));
     }
 
     private static boolean beginsEarlierThan(Span a, Span b) {
@@ -82,10 +80,17 @@ public class Span implements Serializable, HasAt {
     }
 
     /**
-     * @return Returns the file name.
+     * @return Returns the fileName. (contains full path "/c/safe_private/test.js")
      */
     public String getFileName() {
         return begin.getFileName();
+    }
+
+    /**
+     * @return Returns the fileName. (contains only filename part "test.js")
+     */
+    public String getFileNameOnly() {
+        return begin.getFileNameOnly();
     }
 
     public String convertNameSeparatorToSlash(String fileName) {

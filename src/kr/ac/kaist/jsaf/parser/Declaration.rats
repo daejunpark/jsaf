@@ -27,7 +27,9 @@ public Program File =
      { Span span = createSpan(yyStart,yyCount);
        if (a1 == null) a1 = Collections.<SourceElement>emptyList();
        commentWriter.close();
-       commentReader = Useful.filenameToBufferedReader(commentFile);
+       cfw.close();
+       FileReader fr = new FileReader(commentFile);
+       commentReader = new BufferedReader(fr);
        HashMap<String, Span> map = new HashMap<String, Span>();
        String line = commentReader.readLine();
        Boolean inComment = false;
@@ -43,6 +45,7 @@ public Program File =
                map.put(commentString, spanC);
        }
        commentReader.close();
+       fr.close();
        List<Comment> comments = new ArrayList<Comment>();
        for (String cs : map.keySet()) {
            Comment comment = NodeFactory.makeComment(map.get(cs), cs);
@@ -57,6 +60,7 @@ void initParser = w { initParser(); };
 void closeParser = w EndOfFile
      { try {
            writer.close();
+           fw.close();
        } catch (IOException error) {
            error("Closing a log file for the parser failed!");
        }

@@ -9,20 +9,7 @@
 
 package kr.ac.kaist.jsaf.nodes_util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.FileNotFoundException;
-import java.io.NotSerializableException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Comparator;
 import edu.rice.cs.plt.tuple.Option;
@@ -33,6 +20,7 @@ import kr.ac.kaist.jsaf.nodes_util.NodeUtil;
 import kr.ac.kaist.jsaf.nodes.Comment;
 import kr.ac.kaist.jsaf.nodes.Program;
 import kr.ac.kaist.jsaf.nodes.TreeWalker;
+import kr.ac.kaist.jsaf.useful.Pair;
 import kr.ac.kaist.jsaf.useful.Useful;
 import kr.ac.kaist.jsaf.ProjectProperties;
 
@@ -40,6 +28,8 @@ public class ASTIO {
     private final static String LOG_FILE_NONE="";
     private static String logFileName = "";
 
+    private static volatile FileOutputStream fs = null;
+    private static volatile OutputStreamWriter fw = null;
     private static volatile BufferedWriter logFile = null;
 
     private static long logStart() {
@@ -50,7 +40,9 @@ public class ASTIO {
     private static synchronized boolean initLogFile() {
         if (logFile!=null) return false;
         try {
-            logFile = Useful.utf8BufferedFileWriter(logFileName, true);
+            fs = new FileOutputStream(logFileName, true);
+            fw = new OutputStreamWriter(fs, Charset.forName("UTF-8"));
+            logFile = new BufferedWriter(fw);
         } catch (FileNotFoundException x) {
             System.err.println("WARNING: log file "+logFileName+
                                " couldn't be opened.\nTurning logging off.");
@@ -69,6 +61,9 @@ public class ASTIO {
         try {
             logFile.write(toWrite);
             logFile.flush();
+            logFile.close();
+            fw.close();
+            fs.close();
         } catch (IOException e) {
             System.err.print("WARNING: could not log event.\n"+toWrite);
         }

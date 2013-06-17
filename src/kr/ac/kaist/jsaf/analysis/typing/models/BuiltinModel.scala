@@ -234,8 +234,8 @@ class BuiltinModel(cfg: CFG) {
       ("encodeURI",          AbsBuiltinFunc("Global.encodeURI", 1)),
       ("encodeURIComponent", AbsBuiltinFunc("Global.encodeURIComponent", 1)),
       // predefined constant variables from IR
-      (InterpreterPredefine.varTrue, AbsConstValue(PropValue(ObjectValue(BoolTrue, F, F, F)))),
-      (InterpreterPredefine.varOne, AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(1.0), F, F, F)))),
+      (NodeUtil.varTrue, AbsConstValue(PropValue(ObjectValue(BoolTrue, F, F, F)))),
+      (NodeUtil.varOne, AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(1.0), F, F, F)))),
       (NodeUtil.freshGlobalName("global"), AbsConstValue(PropValue(ObjectValue(Value(GlobalSingleton), F, F, F)))),
       // Browser supports
       ("alert",              AbsBuiltinFunc("Global.alert", 1))

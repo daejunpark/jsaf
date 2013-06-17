@@ -9,23 +9,21 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.domain
 
-import scala.collection.immutable.TreeSet
-import kr.ac.kaist.jsaf.analysis.cfg.FunctionId
-import scala.collection.immutable.HashSet
 import kr.ac.kaist.jsaf.analysis.typing.Config
+import kr.ac.kaist.jsaf.analysis.cfg.CFG
 
 object DomainPrinter {
-  def printHeap(ind: Int, heap: Heap, verbose: Boolean): String = {
-    val printer = new DomainPrinter(verbose)
+  def printHeap(ind: Int, heap: Heap, cfg: CFG, verbose_lv: Int): String = {
+    val printer = new DomainPrinter(verbose_lv)
     printer.indent(ind)
-    printer.ppHeap(ind, heap)
+    printer.ppHeap(ind, heap, cfg)
     printer.toString
   }
 
-  def printHeap(ind: Int, heap: Heap): String = {
+  def printHeap(ind: Int, heap: Heap, cfg: CFG): String = {
     val printer = new DomainPrinter(Config.verbose)
     printer.indent(ind)
-    printer.ppHeap(ind, heap)
+    printer.ppHeap(ind, heap, cfg)
     printer.toString
   }
 
@@ -57,12 +55,12 @@ object DomainPrinter {
   def printObj(ind: Int, o: Obj): String = {
     val printer = new DomainPrinter(Config.verbose)
     printer.indent(ind)
-    printer.ppObj(ind, o, Config.verbose)
+    printer.ppObj(ind, o, Config.verbose >= 2)
     printer.toString
   }
 }
 
-private class DomainPrinter(verbose: Boolean) {
+private class DomainPrinter(verbose_lv: Int) {
   val sb = new StringBuilder()
   
   def indent(n: Int): Unit = {
@@ -77,15 +75,23 @@ private class DomainPrinter(verbose: Boolean) {
     false
   }
   
-  def ppHeap(ind: Int, heap: Heap): Unit = {
+  def ppHeap(ind: Int, heap: Heap, cfg: CFG): Unit = {
     var first = true
     for ((loc, obj) <- heap.map.toSeq.sortBy(_._1)) {
       // for non-verbose mode, locations for built-in are skipped.
-      if (verbose || locToAddr(loc) >= locToAddr(CollapsedLoc)) {
+      // verbose level1 : user location & html location
+      // verbose level2 : user location & predefined location
+      // verbose level3 : print all
+      if ( verbose_lv == 3
+          || (locToAddr(loc) >= locToAddr(CollapsedLoc))
+          || (verbose_lv == 1)
+          || (verbose_lv == 2 && locToAddr(loc) < locToAddr(CollapsedLoc))) {
+      /*}
+      if (verbose_lv ==  || locToAddr(loc) >= locToAddr(CollapsedLoc)) { */
         first = newline(ind, first)
         val len = ppLoc(loc)
         sb.append(" -> ")
-        if (verbose || locToAddr(loc) != locToAddr(GlobalLoc)) {
+        if (verbose_lv >= 2 || locToAddr(loc) != locToAddr(GlobalLoc)) {
           ppObj(ind+len+4, obj, true)
         } else {
           ppObj(ind+len+4, obj, false)
@@ -101,7 +107,7 @@ private class DomainPrinter(verbose: Boolean) {
 //    ppLocSet(ctx._1);
     sb.append("} X {")
 //    ppLocSet(ctx._2)
-    if (Config.verbose) {
+    if (Config.verbose >= 2) {
       sb.append("} X {")
       ppAddrSet(ctx._3)
       sb.append("} X ")

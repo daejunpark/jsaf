@@ -31,8 +31,15 @@ class Hoister(program: Program) extends Walker {
   var errors = List[BugInfo]()
   def signal(span: Span, bugKind: Int, arg1: String, arg2: String): Unit =
     errors ++= List(new BugInfo(span, bugKind, arg1, arg2))
-
   def getErrors(): JList[BugInfo] = toJavaList(errors)
+  // Variable declarations in for statements
+  var fvds = List[VarDecl]()
+  var inFor = false
+  def contains(vds: List[VarDecl], vd: VarDecl) = {
+    val name = vd.getName.getText
+    val span = vd.getInfo.getSpan    
+    vds.find(v => v.getName.getText.equals(name) && v.getInfo.getSpan.equals(span)).isDefined
+  }
 
   // Utility functions
   def assignOp(info: ASTNodeInfo) = SOp(info, "=")
@@ -55,7 +62,28 @@ class Hoister(program: Program) extends Walker {
       case vd@SVarDecl(i, n, _) =>
         if (isTopLevel && Shell.pred != null && Shell.pred.contains(n.getText)) vd
         else if (isTopLevel && Shell.pred == null && (new Predefined(new ShellParameters())).contains(n.getText)) vd
-        else { varDecls ++= List(SVarDecl(i, n, None)); vd }
+        else {
+          val vds = List(SVarDecl(i, n, None))
+          varDecls ++= vds
+          if (inFor) fvds ++= vds
+          vd
+        }
+      case SForVar(info, vars, cond, action, body) =>
+        val oldInFor = inFor
+        inFor = true
+        val vds = walk(vars).asInstanceOf[List[VarDecl]]
+        inFor = oldInFor
+        SForVar(info, vds,
+                walk(cond).asInstanceOf[Option[Expr]],
+                walk(action).asInstanceOf[Option[Expr]],
+                walk(body).asInstanceOf[Stmt])
+      case SForVarIn(info, vd, expr, body) =>
+        val oldInFor = inFor
+        inFor = true
+        val walkedVd = walk(vd).asInstanceOf[VarDecl]
+        inFor = oldInFor
+        SForVarIn(info, walkedVd,
+                  walk(expr).asInstanceOf[Expr], walk(body).asInstanceOf[Stmt])
       case fe:FunExpr => fe
       case gp:GetProp => gp
       case sp:SetProp => sp
@@ -91,12 +119,14 @@ class Hoister(program: Program) extends Walker {
 
   def isInVd(vd: VarDecl, ds: List[VarDecl], vars: List[(Span, String)]) = {
     val name = vd.getName.getText
-    vars.find(p => name.equals(p._2) &&
-                   p._1.getBegin.at <= vd.getInfo.getSpan.getBegin.at) match {
-         case Some((span, n)) =>
-                signal(span, ShadowedVarByVar, name, vd.getInfo.getSpan.toStringWithoutFiles)
-         case _ =>
-    }
+    if (!contains(fvds, vd))
+      vars.find(p => name.equals(p._2) &&
+                     p._1.getBegin.getLine <= vd.getInfo.getSpan.getBegin.getLine &&
+                     p._1.getBegin.column <= vd.getInfo.getSpan.getBegin.column) match {
+           case Some((span, n)) =>
+             signal(span, ShadowedVarByVar, name, vd.getInfo.getSpan.toStringWithoutFiles)
+           case _ =>
+      }
     ds.exists(d => d.getName.getText.equals(name))
   }
   def isInFd(fd: FunDecl, ds: List[FunDecl]) = {

@@ -26,8 +26,8 @@ class JSGlobal(_I: Interpreter, _proto: JSObject)
   extends JSObject(_I, _proto, "Global", true, propTable) {
   def init(): Unit = {
     // Internal identifiers created by Translator
-    property.put(IP.varTrue, I.IH.mkDataProp(IP.truePV, false, false, false))
-    property.put(IP.varOne, I.IH.mkDataProp(PVal(IF.oneV), false, false, false))
+    property.put(NU.varTrue, I.IH.mkDataProp(IP.truePV, false, false, false))
+    property.put(NU.varOne, I.IH.mkDataProp(PVal(IF.oneV), false, false, false))
 
     // 15.1.1 Value Properties of the Global Object
     property.put("NaN", I.IH.mkDataProp(PVal(IP.NaN), false, false, false))
@@ -98,7 +98,7 @@ class JSGlobal(_I: Interpreter, _proto: JSObject)
     x match {
       case PVal(s: IRString) =>
         val prog: IRRoot = try {
-          var program: Program = Parser.parsePgm(Useful.bufferedStringReader(s.getStr), "eval")
+          var program: Program = Parser.parsePgm(s.getStr, "eval")
           val hoister = new Hoister(program)
           program = hoister.doit.asInstanceOf[Program]
           val disambiguator = new Disambiguator(program, false)

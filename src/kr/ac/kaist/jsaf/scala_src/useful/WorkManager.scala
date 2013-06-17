@@ -21,7 +21,7 @@ class WorkManager
   private var workThreadContexts: Array[Any] = null
   private var idleWorkThreadCount: Int = 0
   private var workQueue: ListBuffer[WorkTrait] = new ListBuffer[WorkTrait]()
-  private val workFinishEvent: AnyRef = AnyRef
+  private val workFinishEvent: AnyRef = new AnyRef()
 
   ////////////////////////////////////////////////////////////////////////////////
   // Initialize & Deinitialize
@@ -31,6 +31,18 @@ class WorkManager
    * @return                   Returns true if it is initialized, otherwise false.
    */
   def isInitialized(): Boolean = return initialized
+
+  /**
+   * Get total work thread count.
+   * @return                   Returns total work thread count.
+   */
+  def getTotalWorkThreadCount(): Int = workThreads.length
+
+  /**
+   * Get idle work thread count.
+   * @return                   Returns idle work thread count.
+   */
+  def getIdleWorkThreadCount(): Int = idleWorkThreadCount
 
   /**
    * Initialize the WorkManager.

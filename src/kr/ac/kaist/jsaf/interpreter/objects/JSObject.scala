@@ -122,7 +122,11 @@ case class JSObject(val I: Interpreter,
         // Argument
         val oldValue = I.IS.comp.value
         I.IS.comp.value = null
+        val oldEnv = I.IS.env
+        val oldTb = I.IS.tb
         I.IH.call(I.IS.info, this, I.IS.NoArgs, getter)
+        I.IS.env = oldEnv
+        I.IS.tb = oldTb
         if(I.IS.comp.value == null || (I.IS.comp.Type != CT.NORMAL && I.IS.comp.Type != CT.RETURN)) 
           throw new InterpreterError(className + "._get("+x+") error.", I.IS.span)
         val returnValue = I.IS.comp.value
@@ -191,7 +195,11 @@ case class JSObject(val I: Interpreter,
 
               val oldValue = I.IS.comp.value
               I.IS.comp.value = null
+              val oldEnv = I.IS.env
+              val oldTb = I.IS.tb
               I.IH.call(I.IS.info, this, args, setter)
+              I.IS.env = oldEnv
+              I.IS.tb = oldTb
               if(I.IS.comp.value == null || (I.IS.comp.Type != CT.NORMAL && I.IS.comp.Type != CT.RETURN)) 
                 throw new InterpreterError(className + "._set("+x+") error.", I.IS.span)
               val returnValue = I.IS.comp.value
@@ -240,7 +248,11 @@ case class JSObject(val I: Interpreter,
       val toString: Val = _get("toString")
       if (I.IH.isCallable(toString)) {
         val args: JSObject = I.IS.ArrayConstructor.construct(Nil)
+        val oldEnv = I.IS.env
+        val oldTb = I.IS.tb
         toString.asInstanceOf[JSFunction]._call(this, args)
+        I.IS.env = oldEnv
+        I.IS.tb = oldTb
         if(I.IS.comp.Type == CT.RETURN && I.IS.comp.value.isInstanceOf[PVal]) Some(I.IS.comp.value.asInstanceOf[PVal])
         else None
       } else None
@@ -249,7 +261,11 @@ case class JSObject(val I: Interpreter,
       val valueOf = _get("valueOf")
       if (I.IH.isCallable(valueOf)) {
         val args: JSObject = I.IS.ArrayConstructor.construct(Nil)
+        val oldEnv = I.IS.env
+        val oldTb = I.IS.tb
         valueOf.asInstanceOf[JSFunction]._call(this, args)
+        I.IS.env = oldEnv
+        I.IS.tb = oldTb
         if(I.IS.comp.Type == CT.RETURN && I.IS.comp.value.isInstanceOf[PVal]) Some(I.IS.comp.value.asInstanceOf[PVal])
         else None
       } else None

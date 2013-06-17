@@ -12,14 +12,14 @@ import kr.ac.kaist.jsaf.analysis.typing.Config
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json._
 import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
-import scala.collection.immutable.HashMap
+import kr.ac.kaist.jsaf.analysis.cfg.CFG
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 
 
 object DomainPrinter {
-  def printHeap(heap: Heap): JValue = {
+  def printHeap(heap: Heap, cfg: CFG): JValue = {
     val printer = new DomainPrinter(Config.verbose)
-    printer.toJHeap(heap)
+    printer.toJHeap(heap, cfg)
   }
 
   def printContext(ctx: Context): JValue = {
@@ -38,13 +38,16 @@ object DomainPrinter {
   }
 }
 
-private class DomainPrinter(verbose:Boolean) {
-  def toJHeap(heap: Heap):JValue  = {
+private class DomainPrinter(verbose_lv: Int) {
+  def toJHeap(heap: Heap, cfg: CFG):JValue  = {
     var locList:List[JValue] = List()
     for ((loc, obj) <- heap.map.toSeq.sortBy(_._1)) {
       // for non-verbose mode, locations for built-in are skipped.
-      if (verbose || locToAddr(loc) >= locToAddr(CollapsedLoc)) {
-        if (verbose || locToAddr(loc) != locToAddr(GlobalLoc)) {
+      if ( verbose_lv == 3
+        || (locToAddr(loc) >= locToAddr(CollapsedLoc))
+        || (verbose_lv == 1)
+        || (verbose_lv == 2 && locToAddr(loc) < locToAddr(CollapsedLoc))) {
+        if (verbose_lv >= 2 || locToAddr(loc) != locToAddr(GlobalLoc)) {
           locList ::= ("name"->toJLoc(loc))~("obj"->toJObj(obj, true))
         } else {
           locList ::= ("name"->toJLoc(loc))~("obj"->toJObj(obj, false))
@@ -55,7 +58,7 @@ private class DomainPrinter(verbose:Boolean) {
   }
 
   def toJContext(ctx: Context): JValue = {
-    if (Config.verbose) {
+    if (Config.verbose >= 2) {
       if (ctx._4 == null) {
         //("_1"->toJLocSet(ctx._1))~("_2"->toJLocSet(ctx._2))~("_3"->toJAddrSet(ctx._3))~("_4"->"TOP")
         ("_3"->toJAddrSet(ctx._3))~("_4"->"TOP")

@@ -333,10 +333,13 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
     case c@SContinue(info, target) =>
       if (!inIterator) {
         signal("Continue occurs outside of an iterator.", c); c
+        return SEmptyStmt(info)
       } else {
         val new_target = target match {
           case Some(label) => labEnv._1.find(p => p._1.equals(label.getId.getText)) match {
-            case None => signal("Continue occurs outside of a label.", c); None
+            case None =>
+              signal("Continue occurs outside of a label.", c)
+              return SEmptyStmt(info)
             case Some((_, uniq)) => Some(newLabel(label, uniq))
           }
           case None => None

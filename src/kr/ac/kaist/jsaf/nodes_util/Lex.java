@@ -243,7 +243,7 @@ public class Lex {
                     state = SAW_BACKSLASH;
                 }
             } else if (state == SAW_BACKSLASH) {
-                if (c == 'b' || c == 't' || c == 'n' || c == 'f' || c == 'r' || c == '\"' || c == '\\') {
+                if (c == 'b' || c == 't' || c == 'n' || c == 'f' || c == 'r' || c == 'v' || c == '\"' || c == '\\') {
                     state = NORMAL;
                 } else if (c == '\'') {
                     state = SAW_BACKSLASH_TICK;

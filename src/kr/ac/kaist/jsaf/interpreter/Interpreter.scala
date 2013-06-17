@@ -67,9 +67,10 @@ class Interpreter extends IRWalker {
     if (IS.coverage.isDefined) {
       val cov = IS.coverage.get
       cov.inputNum = 0
-      SH.initialize(cov.input)
+      SH.initialize(cov.input, cov.covered_function, cov.target_function)
       walkIRs(vds ++ fds ++ irs.filterNot(_.isInstanceOf[IRNoOp]))
       SH.print
+      cov.functions = SH.function_info.filter(!_._2.is_covered).keySet.toList
       CE.extract(SH.report)
       cov.constraints = CE.constraint
       CE.print()
@@ -474,7 +475,11 @@ class Interpreter extends IRWalker {
                             // TODO:
                             val args: JSArray = IS.ArrayConstructor.apply(IP.plusOneV, "Arguments")
                             args._defineOwnProperty("0", IH.mkDataProp(v3, true, true, true), false)
+                            val oldEnv = IS.env
+                            val oldTb = IS.tb
                             IH.call(IS.info, o, args, setter)
+                            IS.env = oldEnv
+                            IS.tb = oldTb
                             return
                           case _ => throw new InterpreterError(o.className + "._set(" + v2str + ") error.", IS.span)
                         }
@@ -537,7 +542,11 @@ class Interpreter extends IRWalker {
                             // TODO:
                             val args = IS.ArrayConstructor.apply(IP.plusOneV, "Arguments")
                             args._defineOwnProperty("0", IH.mkDataProp(v3, true, true, true), false)
+                            val oldEnv = IS.env
+                            val oldTb = IS.tb
                             IH.call(IS.info, o, args, setter)
+                            IS.env = oldEnv
+                            IS.tb = oldTb
                           case _ => throw new InterpreterError(o.className + "._set(" + v2str + ") error.", IS.span)
                         }
                       }
@@ -841,45 +850,68 @@ class Interpreter extends IRWalker {
       case SIRInternalCall(info, lhs: IRId, fun: IRId, thisB, args) =>
         IS.span = info.getSpan
         fun.getOriginalName match {
-          case "<>Concolic<>ExecuteAssignment" => thisB match {
-            case SIRBin(_, first, op, second) => first match {
-              case v1:IRId => second match {
-                case v2:IRId =>
-                  val c1 = IH.getBindingValue(IH.lookup(v1), v1.getOriginalName) match 
-                          { case v:Val => Some(IH.toString(v))
-                            case _:JSError => None }
-                  val c2 = IH.getBindingValue(IH.lookup(v2), v2.getOriginalName) match 
-                          { case v:Val => Some(IH.toString(v))
-                            case _:JSError => None}
-                  SH.executeAssignment(args.get, thisB, c1, c2)
-              }
+          case "<>Concolic<>StoreEnvironment" => 
+            SH.storeEnvironment(thisB.asInstanceOf[IRId], args.get)
+          case "<>Concolic<>ExecuteAssignment" => 
+            val env = SH.getEnvironment(args.get)
+            var bs = IH.lookup(args.get)
+            var loc = "Variable"
+            bs match {
+              case der: DeclEnvRec => loc = "LocalVariable"
+              case _ =>
             }
-            case _ => SH.executeAssignment(args.get, thisB, None, None)
-          }
+            thisB match {
+              case SIRBin(_, first, op, second) => first match {
+                case v1:IRId => second match {
+                  case v2:IRId =>
+                    val c1 = IH.getBindingValue(IH.lookup(v1), v1.getOriginalName) match { 
+                      case v:Val => Some(IH.toString(v))
+                      case _:JSError => None 
+                    }
+                    val c2 = IH.getBindingValue(IH.lookup(v2), v2.getOriginalName) match { 
+                      case v:Val => Some(IH.toString(v))
+                      case _:JSError => None
+                    }
+                    SH.executeAssignment(loc, args.get, thisB, c1, c2, env)
+                }
+              }
+              case _ => SH.executeAssignment(loc, args.get, thisB, None, None, env)
+            }
           case "<>Concolic<>GetInput" =>
             var cov = IS.coverage.get
             cov.inputNum = cov.inputNum + 1
             IS.span = info.getSpan
-            IH.putValue(thisB.asInstanceOf[IRId], PVal(IH.mkIRNum(SH.getInput(thisB.asInstanceOf[IRId]))), IS.strict)
-          case "<>Concolic<>ExecuteCondition" => thisB match {
-            case SIRBin(_, first, op, second) => first match {
-              case v1:IRId => second match {
-                case v2:IRId =>
-                  val branchTaken = walkExpr(thisB) match 
-                                   { case v:Val => Some(IH.toBoolean(v))
-                                     case _:JSError => None }
-                  val c1 = IH.getBindingValue(IH.lookup(v1), v1.getOriginalName) match 
-                          { case v:Val => Some(IH.toString(v))
-                            case _:JSError => None }
-                  val c2 = IH.getBindingValue(IH.lookup(v2), v2.getOriginalName) match 
-                          { case v:Val => Some(IH.toString(v))
-                            case _:JSError => None}
-                  
-                  SH.executeCondition(thisB, branchTaken, c1, c2)
-              }
+            SH.getInput(thisB.asInstanceOf[IRId], args.get) match {
+              case Some(v) => IH.putValue(thisB.asInstanceOf[IRId], PVal(IH.mkIRNum(v)), IS.strict)
+              case None =>
             }
-            case _ => SH.executeCondition(thisB, None, None, None)
+          case "<>Concolic<>ExecuteCondition" => { 
+            val branchTaken = walkExpr(thisB) match 
+                             { case v:Val => Some(IH.toBoolean(v))
+                               case _:JSError => None }
+            thisB match {
+              case SIRBin(_, first, op, second) => first match {
+                case v1:IRId => second match {
+                  case v2:IRId =>
+                    val c1 = IH.getBindingValue(IH.lookup(v1), v1.getOriginalName) match 
+                            { case v:Val => Some(IH.toString(v))
+                              case _:JSError => None }
+                    val c2 = IH.getBindingValue(IH.lookup(v2), v2.getOriginalName) match 
+                            { case v:Val => Some(IH.toString(v))
+                              case _:JSError => None}
+                    
+                    SH.executeCondition(thisB, branchTaken, c1, c2, args.get)
+                }
+              }
+              case v:IRId => SH.executeCondition(thisB, branchTaken, None, None, args.get)
+              case _ => SH.executeCondition(thisB, None, None, None, args.get)
+            }
           }
+          case "<>Concolic<>AddFunction" =>
+            SH.addFunction(thisB.asInstanceOf[IRId])
+          case "<>Concolic<>WalkVarStmt" =>
+            SH.walkVarStmt(thisB.asInstanceOf[IRId], args.get) 
+            
           case "<>Global<>toObject" => walkExpr(thisB) match {
             case v: Val => IH.toObject(v) match {
               // (H', A, tb), x = l

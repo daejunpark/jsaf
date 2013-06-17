@@ -63,8 +63,6 @@ object InterpreterPredefine {
   val minusZeroV = PVal(minusZero)
   val plusOneV = PVal(plusOne)
   val minusOneV = PVal(minusOne)
-  val varTrue = NU.freshGlobalName("true")
-  val varOne = NU.freshGlobalName("one")
   val thisName = NU.freshGlobalName("this")
   val argumentsName = NU.freshGlobalName("arguments")
   val thisTId = SIRTmpId(IF.dummySpanInfo("this"), thisName, thisName, false)

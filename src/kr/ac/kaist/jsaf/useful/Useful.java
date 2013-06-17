@@ -975,13 +975,6 @@ public class Useful {
     }
 
     /**
-     * @throws FileNotFoundException
-     */
-    public static BufferedReader filenameToBufferedReader(String filename) throws FileNotFoundException {
-        return new BufferedReader(new FileReader(filename));
-    }
-
-    /**
      * Returns a BufferedWriter for a file with name filename, creating
      * directories as necessary to Make It So.
      * 
@@ -989,7 +982,7 @@ public class Useful {
      * @return
      * @throws IOException
      */
-    public static BufferedWriter filenameToBufferedWriter(String filename) throws IOException {
+    public static Pair<FileWriter, BufferedWriter> filenameToBufferedWriter(String filename) throws IOException {
         FileWriter fw;
         try {
             fw = new FileWriter(filename);
@@ -1003,89 +996,7 @@ public class Useful {
             ensureDirectoryExists(dir);
             fw = new FileWriter(filename);
         }
-        return new BufferedWriter(fw);
-    }
-
-    /**
-     * @throws FileNotFoundException
-     */
-    public static BufferedReader bufferedReader(InputStream stream) throws FileNotFoundException {
-        return new BufferedReader(new InputStreamReader(stream));
-    }
-
-    public static BufferedWriter bufferedWriter(OutputStream stream) throws IOException {
-        return new BufferedWriter(new OutputStreamWriter(stream));
-    }
-
-    /**
-     * Returns a BufferedReader for the string s, with encoding assumed to be UTF-8.
-     *
-     * @throws FileNotFoundException
-     */
-    static public BufferedReader utf8BufferedStringReader(String s)
-        throws UnsupportedEncodingException {
-        return new BufferedReader(new InputStreamReader(new ByteArrayInputStream(s.getBytes("UTF-8"))));
-    }
-
-    /**
-     * Returns a BufferedReader for the file named s, with encoding assumed to be UTF-8.
-     *
-     * @throws FileNotFoundException
-     */
-    static public BufferedReader utf8BufferedFileReader(String s) throws FileNotFoundException {
-        return new BufferedReader(new InputStreamReader(new FileInputStream(s), Charset.forName("UTF-8")));
-    }
-
-    /**
-     * Returns a BufferedReader for the file f, with encoding assumed to be UTF-8.
-     *
-     * @throws FileNotFoundException
-     */
-    static public BufferedReader utf8BufferedFileReader(File f) throws FileNotFoundException {
-        return new BufferedReader(new InputStreamReader(new FileInputStream(f), Charset.forName("UTF-8")));
-    }
-
-    /**
-     * Returns a BufferedReader for the String s.
-     */
-    static public BufferedReader bufferedStringReader(String s) {
-        return new BufferedReader(new StringReader(s));
-    }
-
-    /**
-     * Returns a BufferedWriter for the file named s, with encoding assumed to be UTF-8.
-     *
-     * @throws FileNotFoundException
-     */
-    static public BufferedWriter utf8BufferedFileWriter(String s) throws FileNotFoundException {
-        return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(s), Charset.forName("UTF-8")));
-    }
-
-    /**
-     * Returns a BufferedWriter for the file f, with encoding assumed to be UTF-8.
-     *
-     * @throws FileNotFoundException
-     */
-    static public BufferedWriter utf8BufferedFileWriter(File f) throws FileNotFoundException {
-        return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), Charset.forName("UTF-8")));
-    }
-
-    /**
-     * Returns a BufferedWriter for the file named s, with encoding assumed to be UTF-8.
-     *
-     * @throws FileNotFoundException
-     */
-    static public BufferedWriter utf8BufferedFileWriter(String s, boolean append) throws FileNotFoundException {
-        return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(s, append), Charset.forName("UTF-8")));
-    }
-
-    /**
-     * Returns a BufferedWriter for the file f, with encoding assumed to be UTF-8.
-     *
-     * @throws FileNotFoundException
-     */
-    static public BufferedWriter utf8BufferedFileWriter(File f, boolean append) throws FileNotFoundException {
-        return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f, append), Charset.forName("UTF-8")));
+        return new Pair(fw, new BufferedWriter(fw));
     }
 
     static public boolean olderThanOrMissing(String resultFile, String inputFile) throws FileNotFoundException {
@@ -1197,35 +1108,6 @@ public class Useful {
         return e;
     }
 
-
-    /**
-     * Gets a string representing the pid of this program - Java VM
-     */
-    public static String getPid() {
-        ArrayList<String> commands = new ArrayList<String>();
-        commands.add("/bin/bash");
-        commands.add("-c");
-        commands.add("echo $PPID");
-        ProcessBuilder pb = new ProcessBuilder(commands);
-
-        try {
-
-            Process pr = pb.start();
-            pr.waitFor();
-            if (pr.exitValue() == 0) {
-                BufferedReader outReader = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-                return outReader.readLine().trim();
-            } else {
-                return null;
-            }
-        }
-        catch (IOException x) {
-            return null;
-        } catch (InterruptedException x) {
-            return null;
-        }
-    }
-
     public static String ensureDirectoryExists(String s) throws Error {
         File f = new File(s);
         if (f.exists()) {
@@ -1247,7 +1129,4 @@ public class Useful {
     public static void use(Object o) {}
     public static void use(int i) {}
     public static void use(boolean b) {}
-
-   
-
 }

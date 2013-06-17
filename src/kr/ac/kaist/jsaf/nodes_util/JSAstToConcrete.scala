@@ -34,7 +34,7 @@ object JSAstToConcrete extends Walker {
   var testWith = false
   val significantBits = NU.significantBits
 
-  def doit(node: ASTNode) = walk(node)
+  def doit(node: ASTNode): String = walk(node)
   def doitInternal(node: ASTNode) = {
     internal = true
     walk(node)

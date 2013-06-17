@@ -119,6 +119,7 @@ class Predefined(params: ShellParameters) {
     "HTMLTextAreaElement",
     "HTMLTitleElement",
     "HTMLUListElement",
+    "KeyboardEvent",
     "MouseEvent",
     "MutationEvent",
     "NameList",
@@ -195,6 +196,12 @@ class Predefined(params: ShellParameters) {
     NU.varOne,
     NU.freshGlobalName("global"))
 
+  val varsAll = params.command match {
+    case ShellParameters.CMD_HTML => vars ++ doms
+    case ShellParameters.CMD_HTML_SPARSE => vars ++ doms
+    case _ => vars
+  }
+
   val funs = List(
     // 15.1.2 Function Properties of the Global Object
     "eval",
@@ -208,9 +215,8 @@ class Predefined(params: ShellParameters) {
     "encodeURI",
     "encodeURIComponent"
   )
-
-  val all = vars ++ funs
+  val all = varsAll ++ funs
 
   def contains(name: String): Boolean =
-    vars.contains(name) || funs.contains(name)
+    varsAll.contains(name) || funs.contains(name)
 }

@@ -32,7 +32,7 @@ import edu.rice.cs.plt.tuple.Option
  * Possible improvements:
  * 1. We may want to keep comments.
  */
-object WIDLToString extends Walker {
+object WIDLToString extends WIDLWalker {
 
   val width = 50
 

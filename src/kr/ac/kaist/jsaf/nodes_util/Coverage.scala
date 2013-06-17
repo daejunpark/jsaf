@@ -13,6 +13,8 @@ import _root_.java.lang.{Integer => JInteger}
 import _root_.java.util.{List => JList}
 import kr.ac.kaist.jsaf.concolic.ConstraintForm
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
+import kr.ac.kaist.jsaf.scala_src.useful.Maps._
+import scala.collection.mutable.HashMap
 
 /* Calculates code coverage. */
 class Coverage() {
@@ -24,6 +26,9 @@ class Coverage() {
   var input = List[Int]()
   var inputNum = 0
   var constraints = List[ConstraintForm]()
+  var functions = List[String]()
+  var target_function = ""
+  var covered_function = ""
 
   def toInt(n: JInteger):Int = 
     n.intValue()
@@ -35,4 +40,12 @@ class Coverage() {
     toJavaList(constraints)
     
   def cont() = constraints.nonEmpty
+
+  def existCandidate() = functions.nonEmpty
+  def removeTarget() = {
+    covered_function = functions(0)
+    functions = functions diff List(covered_function)
+    if (functions.nonEmpty)
+        target_function = functions(0)
+  }
 }

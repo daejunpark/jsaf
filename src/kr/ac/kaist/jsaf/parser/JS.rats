@@ -49,9 +49,7 @@ import edu.rice.cs.plt.tuple.Option;
 import edu.rice.cs.plt.iter.IterUtil;
 import edu.rice.cs.plt.collect.CollectUtil;
 import xtc.util.Action;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -80,7 +78,9 @@ body {
         return NodeFactory.makeSpanInfo(createSpan(start, end));
     }
 
+    private FileWriter fw;
     private BufferedWriter writer;
+    private FileWriter cfw;
     private BufferedWriter commentWriter;
     private BufferedReader reader;
     private BufferedReader commentReader;
@@ -92,7 +92,9 @@ body {
         if (result.hasValue()) return result;
         else {
             commentWriter.close();
+            cfw.close();
             writer.close();
+            fw.close();
             return result;
         }
     }
@@ -100,9 +102,14 @@ body {
     void initParser() {
         try {
             if (commentWriter == null)
-                try { commentWriter = Useful.filenameToBufferedWriter( commentFile );
+                try {
+                    kr.ac.kaist.jsaf.useful.Pair<FileWriter,BufferedWriter> pair = Useful.filenameToBufferedWriter( commentFile );
+                    cfw = pair.first();
+                    commentWriter = pair.second();
                 } catch (IOException err) {}
-            writer = Useful.filenameToBufferedWriter( logFile );
+            kr.ac.kaist.jsaf.useful.Pair<FileWriter,BufferedWriter> pair = Useful.filenameToBufferedWriter( logFile );
+            fw = pair.first();
+            writer = pair.second();
         } catch (IOException error) {
             error("Creating a log file for the parser failed!");
         }
@@ -110,7 +117,10 @@ body {
 
     private void commentLog(Span span, String message) {
         if (commentWriter == null)
-            try { commentWriter = Useful.filenameToBufferedWriter( commentFile );
+            try {
+                kr.ac.kaist.jsaf.useful.Pair<FileWriter,BufferedWriter> pair = Useful.filenameToBufferedWriter( commentFile );
+                cfw = pair.first();
+                commentWriter = pair.second();
             } catch (IOException err) {}
         if (NodeUtil.getCloneDetector())
             NodeUtil.log(commentWriter, span, message);
@@ -124,7 +134,9 @@ body {
         try {
             List<Double> result = new ArrayList<Double>();
             writer.close();
-            reader = Useful.filenameToBufferedReader(logFile);
+            fw.close();
+            FileReader fr = new FileReader(logFile);
+            BufferedReader reader = new BufferedReader(fr);
             String line = reader.readLine();
             while (line != null) {
                 Double number = NodeFactory.makeNumericLiteral(writer, span, line);
@@ -132,6 +144,7 @@ body {
                 line = reader.readLine();
             }
             reader.close();
+            fr.close();
             Expr expr = NodeFactory.makeArrayNumberExpr(span, result);
             VarDecl vd = NodeFactory.makeVarDecl(span, name, Option.<Expr>some(expr));
             initParser();

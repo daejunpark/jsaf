@@ -130,7 +130,7 @@ class InterpreterHelper(I: Interpreter) {
     while(true) {
       if(o1_pt == IP.nullObj) return false
       else if (o1_pt.equals(o2)) return true
-      o1_pt = o1.proto
+      o1_pt = o1_pt.proto
     }
     false
   }

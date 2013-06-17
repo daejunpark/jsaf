@@ -23,7 +23,9 @@ class JSObjectConstructor(_I: Interpreter, _proto: JSObject)
     property.put("prototype", I.IH.mkDataProp(I.IS.ObjectPrototype, false, false, false))
     /*
     property.put("getPrototypeOf", IH.objProp(IS.ObjectGetPrototypeOf))
-    property.put("getOwnPropertyDescriptor", IH.objProp(IS.ObjectGetOwnPropertyDescriptor))
+    */
+    property.put("getOwnPropertyDescriptor", I.IH.objProp(I.IS.ObjectGetOwnPropertyDescriptor))
+    /*
     property.put("getOwnPropertyNames", IH.objProp(IS.ObjectGetOwnPropertyNames))
     */
     property.put("create", I.IH.objProp(I.IS.ObjectCreate))
@@ -52,7 +54,9 @@ class JSObjectConstructor(_I: Interpreter, _proto: JSObject)
     method match {
       /*
       case IS.ObjectGetPrototypeOf.s => getPrototypeOf(args(0))
-      case IS.ObjectGetOwnPropertyDescriptor.s => getOwnPropertyDescriptor(args(0), args(1))
+      */
+      case I.IS.ObjectGetOwnPropertyDescriptor => getOwnPropertyDescriptor(args(0), args(1))
+      /*
       case IS.ObjectGetOwnPropertyNames.s => getOwnPropertyNames(args(0))
       */
       case I.IS.ObjectCreate => create(args(0), args(1))
@@ -109,11 +113,22 @@ class JSObjectConstructor(_I: Interpreter, _proto: JSObject)
   // 15.2.3.2 getPrototypeOf(O)
   // TODO:
   def getPrototypeOf(o: Val): Unit = throwErr(nyiError, IS.Span)
+  */
 
   // 15.2.3.3 getOwnPropertyDescriptor(O, P)
   // TODO:
-  def getOwnPropertyDescriptor(o: Val, p: Val): Unit = throwErr(nyiError, IS.Span)
+  def getOwnPropertyDescriptor(o: Val, p: Val): Unit = o match {
+    case o: JSObject =>
+      val name = I.IH.toString(p)
+      val desc = o._getOwnProperty(name)
+      if (desc == null)
+        I.IS.comp.setReturn(IP.undefV)
+      else
+        I.IS.comp.setReturn(I.IH.fromPropertyDescriptor(desc))
+    case _ => I.IS.comp.setThrow(TypeError(), I.IS.span)
+  }
 
+  /*
   // 15.2.3.4 getOwnPropertyNames(O)
   // TODO:
   def getOwnPropertyNames(o: Val): Unit = throwErr(nyiError, IS.Span)
