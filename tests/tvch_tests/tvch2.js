@@ -5,5 +5,9 @@ function successCB() {
 function errorCB(error) {
     console.log(error.name);
 }
- 
-webapis.tv.channel.tuneUp(successCB, errorCB, webapis.tv.channel.NAVIGATOR_MODE_ALL, 0);
+
+try { 
+    webapis.tv.channel.tuneUp(successCB, errorCB, webapis.tv.channel.NAVIGATOR_MODE_ALL, 0);
+} catch (error) {
+    console.log(error.name);
+}

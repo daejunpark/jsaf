@@ -7,7 +7,7 @@ function errorCB(error) {
 }
 
 try {
-  webapis.tv.channel.tune({
+  var dict = {
     ptc: 9,  
     major: 9,
     minor: 0,
@@ -18,7 +18,8 @@ try {
         onsuccess: function(programList) { console.log("getting program list is successfully"); }, 
         onerror: function(channelList) { console.log("getting program list is successfully");  }
     }
-  }, successCB, errorCB, 0);
+  }
+  webapis.tv.channel.tune(dict, successCB, errorCB, 0);
 } catch (error) {
     console.log(error.name);
 }

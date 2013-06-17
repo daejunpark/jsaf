@@ -1,9 +1,15 @@
-// 2. 1) B) ERROR : Cannot Assign any values to readonly member (interface name)
+// 1. 2) B) ERROR : The Number of Parameters - Not Matched (tuneDown) 
+
+function successCB() {
+    console.log("tuning is successful");
+}
+
+function errorCB(error) {
+    console.log(error.name);
+}
 
 try {
-    var program = webapis.tv.channel.getCurrentProgram();
-    console.log("current channel shows "  + program.title);
-    program.title = "new title";
+  webapis.tv.channel.tuneDown(successCB);
 } catch (error) {
-    console.log(error.name);
+  console.log(error.name);
 }
