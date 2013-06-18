@@ -13,6 +13,14 @@ import java.util.{HashMap => JHashMap}
 
 object AbsString {
   private var alpha_cache: JHashMap[String, AbsString] = null
+  /* regexp, number string */
+  private val hex = "(0[xX][0-9a-fA-F]+)".r
+  private val exp = "[eE][+-]?[0-9]+"
+  private val dec1 = "[0-9]+\\.[0-9]*(" +exp+ ")?"
+  private val dec2 = "\\.[0-9]+(" +exp+ ")?"
+  private val dec3 = "[0-9]+(" +exp+ ")?"
+  private val dec = "([+-]?(Infinity|(" +dec1+ ")|(" +dec2 + ")|(" +dec3 + ")))"
+  val num_regexp = ("NaN|(" +hex+ ")|(" +dec+ ")").r
   
   def initCache: Unit = {
     clearCache
@@ -38,15 +46,11 @@ object AbsString {
     }
     
     // compute result if not cached
-    val result = {
-      try {
-        val num_double = str.toDouble
+    val result =
+      if (str.matches(num_regexp.toString))
         NumStrSingle(str)
-      } catch {
-        case ne: NumberFormatException =>
-          OtherStrSingle(str)
-      }
-    }
+      else
+        OtherStrSingle(str)
     
     // cache computed result
     if (alpha_cache != null) {
@@ -89,7 +93,7 @@ object AbsString {
   }
 }
 
-sealed abstract class AbsString {
+sealed abstract class AbsString extends AbsBase {
   /* partial order */
   def <= (that : AbsString) = (this, that) match {
     case (StrBot, _) => true
@@ -213,6 +217,17 @@ sealed abstract class AbsString {
     }
   }
 
+  def toUpperCase(): AbsString = {
+    this match {
+      case StrTop => StrTop
+      case StrBot => StrBot
+      case NumStr => StrTop
+      case OtherStr => OtherStr
+      case NumStrSingle(v) => AbsString.alpha(v.toUpperCase)
+      case OtherStrSingle(v) => AbsString.alpha(v.toUpperCase)
+    }
+  }
+
   override def toString(): String = {
     this match {
       case StrTop => "String"
@@ -221,6 +236,34 @@ sealed abstract class AbsString {
       case OtherStr => "OtherStr"
       case NumStrSingle(s) => "\"" + s + "\""
       case OtherStrSingle(s) => "\"" + s + "\""
+    }
+  }
+
+  override def isTop(): Boolean = {this == StrTop}
+
+  override def isBottom(): Boolean = {this == StrBot}
+
+  override def isConcrete(): Boolean = {
+    this match {
+      case _: NumStrSingle => true
+      case _: OtherStrSingle => true
+      case _ => false
+    }
+  }
+
+  def getConcreteValue(): Option[String] = {
+    this match {
+      case NumStrSingle(value) => Some(value)
+      case OtherStrSingle(value) => Some(value)
+      case _ => None
+    }
+  }
+
+  override def toAbsString(): AbsString = {
+    this match {
+      case _: NumStrSingle => this
+      case _: OtherStrSingle => this
+      case _ => StrBot
     }
   }
 }

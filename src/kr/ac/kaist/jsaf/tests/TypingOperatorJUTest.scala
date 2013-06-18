@@ -14,11 +14,16 @@ import junit.framework.TestCase
 import junit.framework.Assert._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.Operator
+import kr.ac.kaist.jsaf.Shell
+import kr.ac.kaist.jsaf.ShellParameters
+import kr.ac.kaist.jsaf.compiler.Predefined
 
 // class definition for eclipse JUnit runner 
 class TypingOperatorJUTest
 
 object TypingOperatorJUTest {
+  Shell.pred = new Predefined(new ShellParameters())
+
   val joinCases:List[(String, List[Any], List[Any], List[Any], Boolean)] = List(
       ("{} + {} = {}", List(), List(), List(), true),
       ("{1} + {2} = {1, 2}", List(1), List(2), List(1, 2), true),

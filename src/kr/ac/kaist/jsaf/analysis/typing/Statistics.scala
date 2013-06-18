@@ -15,9 +15,10 @@ import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import java.text.Format
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
+import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinError
 
-class Statistics(cfg: CFG, builtins:Map[FunctionId, String], inTable: Table) {
-  val sem = new Semantics(cfg, Worklist.computes(cfg))
+class Statistics(cfg: CFG, builtins:Map[FunctionId, String], inTable: Table, locclone: Boolean) {
+  val sem = new Semantics(cfg, Worklist.computes(cfg), locclone)
   val globalStat = new Stat(sem)
   
   def printDump() = {
@@ -942,13 +943,13 @@ class Stat(sem: Semantics) {
     var exist = false
     v_ex._2.foreach((l) => {
       l match {
-        case ErrLoc => errEx = errEx+ 1; exist = true
-        case EvalErrLoc => evalEx = evalEx+ 1; exist = true
-        case RangeErrLoc => rangeEx = rangeEx+ 1; exist = true
-        case RefErrLoc => refEx = refEx+ 1; exist = true
-        case SyntaxErrLoc => syntaxEx = syntaxEx+ 1; exist = true
-        case TypeErrLoc => typeEx = typeEx+ 1; exist = true
-        case URIErrLoc => uriEx = uriEx+ 1; exist = true
+        case BuiltinError.ErrLoc => errEx = errEx+ 1; exist = true
+        case BuiltinError.EvalErrLoc => evalEx = evalEx+ 1; exist = true
+        case BuiltinError.RangeErrLoc => rangeEx = rangeEx+ 1; exist = true
+        case BuiltinError.RefErrLoc => refEx = refEx+ 1; exist = true
+        case BuiltinError.SyntaxErrLoc => syntaxEx = syntaxEx+ 1; exist = true
+        case BuiltinError.TypeErrLoc => typeEx = typeEx+ 1; exist = true
+        case BuiltinError.URIErrLoc => uriEx = uriEx+ 1; exist = true
         case _ => ()
       }})
     if (exist) totalEx = totalEx + 1

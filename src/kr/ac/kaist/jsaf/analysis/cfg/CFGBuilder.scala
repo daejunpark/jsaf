@@ -5,27 +5,24 @@
     Use is subject to license terms.
 
     This distribution may include materials developed by third parties.
- ***************************************************************************** */
+  ***************************************************************************** */
 
 package kr.ac.kaist.jsaf.analysis.cfg
 
 import _root_.java.util.{List => JList}
 import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.nodes._
-import kr.ac.kaist.jsaf.nodes_util.IRFactory
-import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
+import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU, IRFactory}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.scala_src.useful.ErrorLog
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.useful.HasAt
 import scala.collection.immutable.HashMap
-import scala.collection.immutable.HashSet
 import scala.collection.mutable.{HashSet => MHashSet}
 import kr.ac.kaist.jsaf.analysis.typing.Config
-import kr.ac.kaist.jsaf.interpreter.InterpreterPredefine
 import kr.ac.kaist.jsaf.analysis.asserts.{ASSERTHelper => AH}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.nodes_util.NodeUtil
+import kr.ac.kaist.jsaf.analysis.typing.models.{ModelManager, DOMHelper}
 
 class CFGBuilder (ir: IRRoot) {
   /* Error handling
@@ -55,8 +52,8 @@ class CFGBuilder (ir: IRRoot) {
         val ns1 = translateFunDecls(fds,cfg,List(node_start),fid_global)
         val lmap: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set())
         val (ns2, lmap1) = translateStmts(stmts, cfg, ns1, lmap, fid_global)
+
         cfg.addEdge(ns2,(fid_global,LExit))
-        cfg.addEdge(lmap1("#return").toList,(fid_global,LExit))
         cfg.addExcEdge(lmap1("#throw").toList,(fid_global,LExitExc))
         cfg.addEdge(lmap1("#throw_end").toList,(fid_global,LExitExc))
 
@@ -64,7 +61,7 @@ class CFGBuilder (ir: IRRoot) {
         if (Config.libMode)
           addTopFunction(cfg)
 
-        cfg.setUserFuncCount
+        cfg.setUserFuncCount()
         cfg
     }
   }
@@ -89,7 +86,37 @@ class CFGBuilder (ir: IRRoot) {
 
   /* fd* rule : IRFunDecl list x CFG x Node list x FunctionId -> Node list */
   private def translateFunDecls(fds: List[IRFunDecl], cfg: CFG, nodes: List[Node], fid: FunctionId): List[Node] = {
-     fds.foldLeft(nodes){case (tails,fd) => translateFunDecl(fd,cfg,tails,fid)}
+    fds.foldLeft(nodes){case (tails,fd) => translateFunDecl(fd,cfg,tails,fid)}
+  }
+
+  // Collect event functions ids and store them in the temporary event map
+  private def getEventFunId(name: String, fid: FunctionId): Unit = {
+    // load event
+    if(name=="__LOADEvent__") {
+      val fid_set = DOMHelper.temp_eventMap("#LOAD")
+      DOMHelper.temp_eventMap+=("#LOAD" -> (fid_set + fid))
+    }
+    // unload event
+    else if(name=="__UNLOADEvent__") {
+      val fid_set = DOMHelper.temp_eventMap("#UNLOAD")
+      DOMHelper.temp_eventMap+=("#UNLOAD" -> (fid_set + fid))
+    }
+    // keyboard event
+    else if(name=="__KEYBOARDEvent__") {
+      val fid_set = DOMHelper.temp_eventMap("#KEYBOARD")
+      DOMHelper.temp_eventMap+=("#KEYBOARD" -> (fid_set + fid))
+    }
+    // mouse event
+    else if(name=="__MOUSEEvent__") {
+      val fid_set = DOMHelper.temp_eventMap("#MOUSE")
+      DOMHelper.temp_eventMap+=("#MOUSE" -> (fid_set + fid))
+    }
+    // other event
+    else if(name=="__OTHEREvent__") {
+      val fid_set = DOMHelper.temp_eventMap("#OTHER")
+      DOMHelper.temp_eventMap+=("#OTHER" -> (fid_set + fid))
+    }
+    ()
   }
 
   /* fd rule : IRFunDecl x CFG x Node list x FunctionId -> Node list */
@@ -99,6 +126,11 @@ class CFGBuilder (ir: IRRoot) {
         val arg_vars = namesOfArgs(args)
         val local_vars = (namesOfFunDecls(fds) ++ namesOfVars(vds)).filterNot(arg_vars.contains)
         val fid_new = cfg.newFunction(id2cfgId(params(1)).toString, arg_vars, local_vars, name.getOriginalName, irinfo)
+
+        // collect event function ids
+        //if (Config.domMode)
+        //  getEventFunId(name.getOriginalName, fid_new)
+
         val node_start = cfg.newBlock(fid_new)
         cfg.addEdge((fid_new, LEntry), node_start)
         val lmap: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set())
@@ -110,8 +142,8 @@ class CFGBuilder (ir: IRRoot) {
         cfg.addEdge(lmap1("#throw_end").toList,(fid_new,LExitExc))
         val node_tail = getTail(cfg,nodes,fid)
         cfg.addInst(node_tail,
-                    CFGFunExpr(cfg.newInstId, irinfo, id2cfgId(name), None, fid_new,
-                               cfg.newAddress, cfg.newAddress, None))
+          CFGFunExpr(cfg.newInstId, irinfo, id2cfgId(name), None, fid_new,
+            cfg.newProgramAddr, cfg.newProgramAddr, None))
         List(node_tail)
     }
   }
@@ -158,12 +190,12 @@ class CFGBuilder (ir: IRRoot) {
         val nameCFGId = id2cfgId(name)
         if (nameCFGId.getVarKind == CapturedVar) {
           cfg.addInst(node_tail,
-                      CFGFunExpr(cfg.newInstId, irinfo, id2cfgId(lhs), Some(nameCFGId), fid_new,
-                                 cfg.newAddress, cfg.newAddress, Some(cfg.newAddress)))
+            CFGFunExpr(cfg.newInstId, irinfo, id2cfgId(lhs), Some(nameCFGId), fid_new,
+              cfg.newProgramAddr, cfg.newProgramAddr, Some(cfg.newProgramAddr)))
         } else {
           cfg.addInst(node_tail,
-                      CFGFunExpr(cfg.newInstId, irinfo, id2cfgId(lhs), None, fid_new,
-                                 cfg.newAddress, cfg.newAddress, None))
+            CFGFunExpr(cfg.newInstId, irinfo, id2cfgId(lhs), None, fid_new,
+              cfg.newProgramAddr, cfg.newProgramAddr, None))
         }
         (List(node_tail), lmap)
       /* PEI : when proto is not object*/
@@ -172,11 +204,11 @@ class CFGBuilder (ir: IRRoot) {
         proto match {
           case None =>
             cfg.addInst(node_tail,
-                        CFGAlloc(cfg.newInstId, irinfo, id2cfgId(lhs), None, cfg.newAddress))
+              CFGAlloc(cfg.newInstId, irinfo, id2cfgId(lhs), None, cfg.newProgramAddr))
           case Some(p) =>
             cfg.addInst(node_tail,
-                        CFGAlloc(cfg.newInstId, irinfo,
-                                 id2cfgId(lhs), Some(id2cfgExpr(p)), cfg.newAddress))
+              CFGAlloc(cfg.newInstId, irinfo,
+                id2cfgId(lhs), Some(id2cfgExpr(p)), cfg.newProgramAddr))
         }
         members.foreach((m) => translateMember(m, cfg, node_tail, lhs))
         (List(node_tail), lmap.updated("#throw", lmap("#throw") + node_tail))
@@ -287,14 +319,14 @@ class CFGBuilder (ir: IRRoot) {
             signal("Wrong IRTryStmt.", stmt)
             (nodes, lmap)
         }
-//      case SIRArgs(irinfo, lhs, elements) =>
-//        translateStmt(SIRArray(irinfo, lhs, elements), cfg, nodes, lmap, fid)
+      //      case SIRArgs(irinfo, lhs, elements) =>
+      //        translateStmt(SIRArray(irinfo, lhs, elements), cfg, nodes, lmap, fid)
       /* PEI : element assign */
       case SIRArgs(irinfo, lhs, elements) =>
         val node_tail = getTail(cfg, nodes, fid)
         cfg.addInst(node_tail,
-                    CFGAllocArg(cfg.newInstId, irinfo,
-                                id2cfgId(lhs), elements.length, cfg.newAddress))
+          CFGAllocArg(cfg.newInstId, irinfo,
+            id2cfgId(lhs), elements.length, cfg.newProgramAddr))
         val _ = elements.foldLeft(0){case (k, e) =>
           e match {
             case None => k+1
@@ -305,8 +337,8 @@ class CFGBuilder (ir: IRRoot) {
       case SIRArray(irinfo, lhs, elements) =>
         val node_tail = getTail(cfg, nodes, fid)
         cfg.addInst(node_tail,
-                    CFGAllocArray(cfg.newInstId, irinfo,
-                                  id2cfgId(lhs), elements.length, cfg.newAddress))
+          CFGAllocArray(cfg.newInstId, irinfo,
+            id2cfgId(lhs), elements.length, cfg.newProgramAddr))
         val _ = elements.foldLeft(0){case (k, e) =>
           e match {
             case None => k+1
@@ -317,43 +349,51 @@ class CFGBuilder (ir: IRRoot) {
       case SIRArrayNumber(irinfo, lhs, elements) =>
         val node_tail = getTail(cfg, nodes, fid)
         cfg.addInst(node_tail,
-                    CFGAllocArray(cfg.newInstId, irinfo,
-                                  id2cfgId(lhs), elements.length, cfg.newAddress))
+          CFGAllocArray(cfg.newInstId, irinfo,
+            id2cfgId(lhs), elements.length, cfg.newProgramAddr))
         val _ = elements.foldLeft(0){case (k, e) =>
-                                     translateDoubleElement(irinfo, e, cfg, node_tail, lhs, k)
-          }
+          translateDoubleElement(irinfo, e, cfg, node_tail, lhs, k)
+        }
         (List(node_tail), lmap.updated("#throw", lmap("#throw") + node_tail))
       case SIRBreak(irinfo, label) =>
-        (Nil, lmap.updated(label.getUniqueName, (lmap(label.getUniqueName)++nodes)))
+        val ns = lmap.get(label.getUniqueName) match {
+          case None    => nodes.toSet
+          case Some(n) => n ++ nodes.toSet
+        }
+        (Nil, lmap.updated(label.getUniqueName, ns))
       /* PEI : fun == "<>toObject" */
       case SIRInternalCall(irinfo, lhs, fun@(SIRTmpId(_, originalName, uniqueName, _)), arg1, arg2) =>
         val n1 = getTail(cfg, nodes, fid)
-        val (addr,lm) = if (uniqueName.equals("<>Global<>toObject")) (Some(cfg.newAddress), lmap.updated("#throw", lmap("#throw")+n1)) else (None,lmap)
+        val (addr,lm) = if (uniqueName.equals("<>Global<>toObject")) (Some(cfg.newProgramAddr), lmap.updated("#throw", lmap("#throw")+n1)) else (None,lmap)
         val argslist = arg2 match {
-                         case None => List(ir2cfgExpr(arg1))
-                         case Some(arg) => List(ir2cfgExpr(arg1), id2cfgExpr(arg))
-                       }
+          case None => List(ir2cfgExpr(arg1))
+          case Some(arg) => List(ir2cfgExpr(arg1), id2cfgExpr(arg))
+        }
         cfg.addInst(n1,
-                    CFGInternalCall(cfg.newInstId, irinfo,
-                                    id2cfgId(lhs), id2cfgId(fun), argslist, addr))
+          CFGInternalCall(cfg.newInstId, irinfo,
+            id2cfgId(lhs), id2cfgId(fun), argslist, addr))
         (List(n1), lm)
       /* PEI : call, after-call */
       case SIRCall(irinfo, lhs, fun, thisB, args) =>
         val n1 = getTail(cfg, nodes, fid)
+        val addr = cfg.newProgramAddr
         cfg.addInst(n1,
-                    CFGCall(cfg.newInstId, irinfo,
-                            id2cfgExpr(fun), id2cfgExpr(thisB), id2cfgExpr(args),
-                            cfg.newAddress))
+          CFGCall(cfg.newInstId, irinfo,
+            id2cfgExpr(fun), id2cfgExpr(thisB), id2cfgExpr(args), addr))
+        // address for API
+        cfg.addAPIAddress(addr)
         val n2 = cfg.newAfterCallBlock(fid, id2cfgId(lhs))
         cfg.addCall(n1, n2)
         (List(n2), lmap.updated("#throw", (lmap("#throw")+n1)+n2))
       /* PEI : construct, after-call */
       case SIRNew(irinfo, lhs, cons, args) if (args.length == 2) =>
         val n1 = getTail(cfg, nodes, fid)
+        val addr = cfg.newProgramAddr
         cfg.addInst(n1,
-                    CFGConstruct(cfg.newInstId, irinfo,
-                                 id2cfgExpr(cons), id2cfgExpr(args(0)), id2cfgExpr(args(1)),
-                                 cfg.newAddress))
+          CFGConstruct(cfg.newInstId, irinfo,
+            id2cfgExpr(cons), id2cfgExpr(args(0)), id2cfgExpr(args(1)), addr))
+        // address for API
+        cfg.addAPIAddress(addr)
         val n2 = cfg.newAfterCallBlock(fid, id2cfgId(lhs))
         cfg.addCall(n1, n2)
         (List(n2), lmap.updated("#throw", (lmap("#throw")+n1)+n2))
@@ -369,17 +409,17 @@ class CFGBuilder (ir: IRRoot) {
       case SIRDeleteProp(irinfo, lhs, obj, index) =>
         val n = getTail(cfg, nodes, fid)
         cfg.addInst(n,
-                    CFGDeleteProp(cfg.newInstId, irinfo,
-                                  id2cfgId(lhs), id2cfgExpr(obj), ir2cfgExpr(index)))
+          CFGDeleteProp(cfg.newInstId, irinfo,
+            id2cfgId(lhs), id2cfgExpr(obj), ir2cfgExpr(index)))
         (List(n), lmap.updated("#throw", lmap("#throw") + n))
       /* PEI : expr == IRId */
       case SIRExprStmt(irinfo, lhs, expr, _) =>
         val n = getTail(cfg, nodes, fid)
         cfg.addInst(n, CFGExprStmt(cfg.newInstId, irinfo, id2cfgId(lhs), ir2cfgExpr(expr)))
-/*        expr match {
-          case _:IRId => (List(n), lmap.updated("#throw", lmap("#throw") + n))
-          case _ => (List(n), lmap)
-        } */
+        /*        expr match {
+                  case _:IRId => (List(n), lmap.updated("#throw", lmap("#throw") + n))
+                  case _ => (List(n), lmap)
+                } */
         /* XXX: temporal code for exception. */
         (List(n), lmap.updated("#throw", lmap("#throw") + n))
 
@@ -396,13 +436,13 @@ class CFGBuilder (ir: IRRoot) {
         cond match {
           case SIRBin(_, first, op, second) if AH.isAssertOperator(op) =>
             cfg.addInst(n2,
-                        CFGAssert(cfg.newInstId, condinfo,
-                                  CFGBin(irinfo,
-                                         ir2cfgExpr(first), AH.transIROp(op), ir2cfgExpr(second)), false))
+              CFGAssert(cfg.newInstId, condinfo,
+                CFGBin(irinfo,
+                  ir2cfgExpr(first), AH.transIROp(op), ir2cfgExpr(second)), false))
           case _ =>
             cfg.addInst(n2,
-                        CFGAssert(cfg.newInstId, condinfo,
-                                  CFGUn(irinfo, IRFactory.makeOp("!"), ir2cfgExpr(cond)), false))
+              CFGAssert(cfg.newInstId, condinfo,
+                CFGUn(irinfo, IRFactory.makeOp("!"), ir2cfgExpr(cond)), false))
         }
         /* true block */
         val (ns1, lmap1) = translateStmt(trueblock, cfg, List(n1), lmap, fid)
@@ -433,8 +473,8 @@ class CFGBuilder (ir: IRRoot) {
       case SIRStore(irinfo, obj, index, rhs) =>
         val n = getTail(cfg, nodes, fid)
         cfg.addInst(n,
-                    CFGStore(cfg.newInstId, irinfo,
-                             id2cfgExpr(obj), ir2cfgExpr(index), ir2cfgExpr(rhs)))
+          CFGStore(cfg.newInstId, irinfo,
+            id2cfgExpr(obj), ir2cfgExpr(index), ir2cfgExpr(rhs)))
         (List(n), lmap.updated("#throw", lmap("#throw") + n))
       case SIRThrow(irinfo, expr) =>
         val n = getTail(cfg, nodes, fid)
@@ -455,13 +495,13 @@ class CFGBuilder (ir: IRRoot) {
         cond match {
           case SIRBin(_, first, op, second) if AH.isAssertOperator(op) =>
             cfg.addInst(n3,
-                        CFGAssert(cfg.newInstId, condinfo,
-                                  CFGBin(irinfo,
-                                         ir2cfgExpr(first), AH.transIROp(op), ir2cfgExpr(second)), false))
+              CFGAssert(cfg.newInstId, condinfo,
+                CFGBin(irinfo,
+                  ir2cfgExpr(first), AH.transIROp(op), ir2cfgExpr(second)), false))
           case _ =>
             cfg.addInst(n3,
-                        CFGAssert(cfg.newInstId, condinfo,
-                                  CFGUn(irinfo, IRFactory.makeOp("!"), ir2cfgExpr(cond)), false))
+              CFGAssert(cfg.newInstId, condinfo,
+                CFGUn(irinfo, IRFactory.makeOp("!"), ir2cfgExpr(cond)), false))
         }
         /* add edge from tail to loop head */
         cfg.addEdge(n1, n_head)
@@ -479,7 +519,7 @@ class CFGBuilder (ir: IRRoot) {
         (nodes, lmap)
       }
     }
-      /* statements */
+    /* statements */
     //case SIREval(irinfo, lhs, _, arg) => (Nil, label_map)
     //case SIRWith(irinfo, expr, stmt) => (Nil, label_map)
     //case SIRGetProp(irinfo, fun) => (Nil, label_map)
@@ -503,16 +543,16 @@ class CFGBuilder (ir: IRRoot) {
   private def translateElement(irinfo: IRSpanInfo, elem: IRExpr, cfg: CFG, node: BlockNode, lhs: IRId, index: Int): Int  = {
     val lhs_expr = CFGVarRef(irinfo, id2cfgId(lhs))
     cfg.addInst(node,
-                CFGStore(cfg.newInstId, irinfo,
-                         lhs_expr, CFGString(index.toString), ir2cfgExpr(elem)))
+      CFGStore(cfg.newInstId, irinfo,
+        lhs_expr, CFGString(index.toString), ir2cfgExpr(elem)))
     (index + 1)
   }
   private def translateDoubleElement(irinfo: IRSpanInfo, elem: Double, cfg: CFG, node: BlockNode, lhs: IRId, index: Int): Int  = {
     val lhs_expr = CFGVarRef(irinfo, id2cfgId(lhs))
     cfg.addInst(node,
-                CFGStore(cfg.newInstId, irinfo,
-                         lhs_expr, CFGString(index.toString),
-                         CFGNumber(elem.toString, javaToScalaDouble(elem))))
+      CFGStore(cfg.newInstId, irinfo,
+        lhs_expr, CFGString(index.toString),
+        CFGNumber(elem.toString, javaToScalaDouble(elem))))
     (index + 1)
   }
 

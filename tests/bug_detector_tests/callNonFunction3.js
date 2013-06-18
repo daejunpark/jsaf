@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Copyright (c) 2013, S-Core.
+    Copyright (c) 2013, KAIST, S-Core.
     All rights reserved.
 
     Use is subject to license terms.
@@ -7,8 +7,7 @@
     This distribution may include materials developed by third parties.
  ***************************************************************************** */
 
-var x = 1;
-if (Math.random())
-	x = Math.random();
+f = {};
+if(Math.random()) f = function() {};
 
-x();
+f();

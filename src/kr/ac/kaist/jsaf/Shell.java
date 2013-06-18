@@ -26,9 +26,7 @@ import kr.ac.kaist.jsaf.analysis.cfg.DotWriter;
 import kr.ac.kaist.jsaf.analysis.typing.*;
 import kr.ac.kaist.jsaf.analysis.typing.domain.State;
 import kr.ac.kaist.jsaf.analysis.typing.models.BuiltinModel;
-/* Not yet ready for public
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMBuilder;
-*/
 import kr.ac.kaist.jsaf.analysis.visualization.*;
 import kr.ac.kaist.jsaf.bug_detector.BugDetector;
 import kr.ac.kaist.jsaf.bug_detector.BugInfo;
@@ -57,9 +55,7 @@ import kr.ac.kaist.jsaf.nodes_util.ASTIO;
 import kr.ac.kaist.jsaf.nodes_util.Coverage;
 import kr.ac.kaist.jsaf.nodes_util.IRFactory;
 import kr.ac.kaist.jsaf.nodes_util.JSFromUrl;
-/* Not yet ready for public
 import kr.ac.kaist.jsaf.nodes_util.JSFromHTML;
-*/
 import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete;
 import kr.ac.kaist.jsaf.nodes_util.JSIRUnparser;
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil;
@@ -68,9 +64,7 @@ import kr.ac.kaist.jsaf.nodes_util.WIDLToDB;
 import kr.ac.kaist.jsaf.nodes_util.WIDLToString;
 import kr.ac.kaist.jsaf.parser.WIDL;
 import kr.ac.kaist.jsaf.tests.FileTests;
-/* Not yet ready for public
 import kr.ac.kaist.jsaf.tests.SemanticsTest;
-*/
 import kr.ac.kaist.jsaf.useful.Files;
 import kr.ac.kaist.jsaf.useful.Pair;
 import kr.ac.kaist.jsaf.useful.Triple;
@@ -220,9 +214,6 @@ public final class Shell {
                 return_code = analyze();
                 break;
             case ShellParameters.CMD_NEW_SPARSE :
-                return_code = analyze();
-                break;
-            case ShellParameters.CMD_GLOBAL_SPARSE :
                 return_code = analyze();
                 break;
             case ShellParameters.CMD_HTML :
@@ -749,12 +740,15 @@ public final class Shell {
             System.out.println("Test mode enabled.");
         }
 
-        /* Not yet ready for public
         if(params.opt_Dom) {
             Config.setDomMode();
             System.out.println("DOM mode enabled.");
         }
-        */
+
+		if(params.opt_Tizen) {
+            Config.setTizenMode();
+            System.out.println("Tizen mode enabled.");
+        }
 
         if(params.opt_Library) {
             Config.setLibMode(new Boolean(params.opt_Library));
@@ -774,12 +768,10 @@ public final class Shell {
                              Option.<Pair<FileWriter,BufferedWriter>>none());
             }
             if (params.opt_Model) {
-                BuiltinModel builtinmodel = new BuiltinModel(cfg);
-                builtinmodel.initialize();
-            /* Not yet ready for public
+                //BuiltinModel builtinmodel = new BuiltinModel(cfg);
+                //builtinmodel.initialize();
                 InitHeap init = new InitHeap(cfg);
                 init.initialize();
-            */
             }
             if (params.opt_OutFileName != null){
                 String outfile = params.opt_OutFileName;
@@ -896,304 +888,6 @@ public final class Shell {
      */
     private static int analyze() throws UserError, InterruptedException, IOException {
         boolean quiet = params.command == ShellParameters.CMD_BUG_DETECTOR;
-
-        if (params.FileNames.length == 0) throw new UserError("Need a file to analyze");
-        String fileName = params.FileNames[0];
-        List<String> fileNames = Arrays.asList(params.FileNames);
-
-        if(params.opt_Verbose1) Config.setVerbose(1);
-        if(params.opt_Verbose2) Config.setVerbose(2);
-        if(params.opt_Verbose3) Config.setVerbose(3);
-
-        if(params.opt_Test) {
-            Config.setTestMode(new Boolean(params.opt_Test));
-            System.out.println("Test mode enabled.");
-        }
-
-        if(params.opt_Library) {
-            Config.setLibMode(new Boolean(params.opt_Library));
-            System.out.println("Library mode enabled.");
-        }
-
-        if(params.opt_NoAssert) {
-            Config.setAssertMode(new Boolean(!params.opt_NoAssert));
-            System.out.println("Assert mode disabled.");
-        }
-
-        if(params.opt_Compare) Config.setCompareMode(true);
-
-        int context = -1;
-        switch(params.command)
-        {
-        case ShellParameters.CMD_ANALYZE :
-        case ShellParameters.CMD_SPARSE :
-        case ShellParameters.CMD_NEW_SPARSE :
-        case ShellParameters.CMD_GLOBAL_SPARSE :
-        case ShellParameters.CMD_HTML :
-        case ShellParameters.CMD_BUG_DETECTOR :
-            context = Config.contextSensitivityMode();
-            if(params.opt_ContextInsensitive) context = Config.Context_Insensitive();
-            else if(params.opt_Context1Callsite) context = Config.Context_OneCallsite();
-            else if(params.opt_Context1Object) context = Config.Context_OneObject();
-            else if(params.opt_ContextTAJS) context = Config.Context_OneObjectTAJS();
-            break;
-        case ShellParameters.CMD_PREANALYZE :
-            context = Config.Context_Insensitive();
-            break;
-        }
-        Config.setContextSensitivityMode(new Integer(context));
-
-        if(params.opt_Unsound) {
-          Config.setUnsoundMode(new Boolean(params.opt_Unsound));
-          System.out.println("Unsound mode enabled.");
-        }
-
-        // for HTML
-        if(params.command == ShellParameters.CMD_HTML) {
-            if(params.FileNames.length > 1) throw new UserError("Only one HTML file supported at a time.");
-            String low = fileName.toLowerCase();
-            if(!(low.endsWith(".html") || low.endsWith(".xhtml") || low.endsWith(".htm")))
-                throw new UserError("Not an HTML file.");
-        }
-
-        if (!quiet)
-            System.out.println("Context-sensitivity mode is \"" + kr.ac.kaist.jsaf.analysis.typing.CallContext.getModeName() + "\".");
-
-        // Initialize
-        int return_code = 0;
-        long analyzeStartTime = System.nanoTime();
-        if (!quiet)
-            System.out.println("\n* Initialize *");
-
-        // Initialize AbsString cache
-        kr.ac.kaist.jsaf.analysis.typing.domain.AbsString.initCache();
-
-        // Read a JavaScript file and translate to IR
-        long start = System.nanoTime();
-        Pair<Program, HashMap<String, String>> pair;
-
-        // for HTML
-        /* Not yet ready for public
-        JSFromHTML jshtml = null;
-        if (params.command == ShellParameters.CMD_HTML) {
-            jshtml = new JSFromHTML(fileName);
-            // Parse JavaScript code in the target html file
-            pair = jshtml.parseScripts();
-        }
-        else
-        */
-            pair = Parser.fileToAST(fileNames);
-        Program program = pair.first();
-        HashMap<String,String> fileMap = pair.second();
-        Pair<Option<IRRoot>, List<BugInfo>> irErrors = ASTtoIR(fileName, program, Option.<String>none(), Option.<Coverage>none());
-        Option<IRRoot> irOpt = irErrors.first();
-
-        double irTranslationTime = (System.nanoTime() - start) / 1000000000.0;
-        if (!quiet)
-            System.out.format("# Time for IR translation(s): %.2f\n", irTranslationTime);
-
-        // Check the translation result
-        if(irOpt.isNone()) return -2;
-        IRRoot ir = irOpt.unwrap();
-
-        // Build a CFG
-        start = System.nanoTime();
-        CFGBuilder builder = new CFGBuilder(ir);
-        CFG cfg = builder.build();
-        double cfgBuildingTime = (System.nanoTime() - start) / 1000000000.0;
-        if (!quiet) {
-            System.out.format("# Time for CFG building(s): %.2f\n", cfgBuildingTime);
-            System.out.format("# Time for front end(s): %.2f\n", (irTranslationTime + cfgBuildingTime));
-        }
-        List<StaticError> errors = builder.getErrors();
-        /* Not yet ready for public
-        if (!(errors.isEmpty())) {
-            reportErrors(NodeUtil.getFileName(ir),
-                         flattenErrors(errors),
-                         Option.<BufferedWriter>none());
-        }
-        */
-
-        if (!quiet) {
-            System.out.println("\n* Analyze *");
-            System.out.format("# Initial peak memory(mb): %.2f\n", MemoryMeasurer.peakMemory());
-        }
-
-        // Initialize bulit-in models
-        int previousBasicBlocks = cfg.getNodes().size();
-        start = System.nanoTime();
-        BuiltinModel model = new BuiltinModel(cfg);
-        model.initialize();
-        double builtinModelInitializationTime = (System.nanoTime() - start) / 1000000000.0;
-        int presentBasicBlocks = cfg.getNodes().size();
-        if (!quiet) {
-            System.out.println("# Basic block(#): " + previousBasicBlocks + "(source) + " + (presentBasicBlocks - previousBasicBlocks) + "(bulit-in) = " + presentBasicBlocks);
-            System.out.format("# Time for initial heap(s): %.2f\n", builtinModelInitializationTime);
-        }
-
-        if(params.command == ShellParameters.CMD_PREANALYZE ||
-            params.command == ShellParameters.CMD_SPARSE ||
-            params.command == ShellParameters.CMD_NEW_SPARSE ||
-            params.command == ShellParameters.CMD_GLOBAL_SPARSE ||
-            params.command == ShellParameters.CMD_BUG_DETECTOR
-           ) {
-            // computes reachable nodes for each function(including built-in functions)
-            cfg.computeReachableNodes(quiet);
-        }
-
-        // Create Typing
-        TypingInterface typingInterface = null;
-        switch(params.command)
-        {
-        case ShellParameters.CMD_ANALYZE :
-        case ShellParameters.CMD_HTML :
-            typingInterface = new Typing(cfg);
-            break;
-        case ShellParameters.CMD_PREANALYZE :
-            typingInterface = new PreTyping(cfg, quiet);
-            break;
-        case ShellParameters.CMD_SPARSE :
-        case ShellParameters.CMD_BUG_DETECTOR :
-            typingInterface = new SparseTyping(cfg, quiet);
-            break;
-        case ShellParameters.CMD_NEW_SPARSE :
-            typingInterface = new DSparseTyping(cfg, quiet);
-            break;
-        case ShellParameters.CMD_GLOBAL_SPARSE :
-            typingInterface = new GSparseTyping(cfg, quiet);
-            break;
-        default :
-            throw new UserError("Cannot create the Typing. The command is unknown.");
-        }
-
-        // Compare with Pre Analysis
-        /*
-        if(Config.compare() && params.command != ShellParameters.CMD_PREANALYZE) {
-            Config.setContextSensitivityMode(new Integer(Config.Context_Insensitive()));
-            PreTyping preTyping = new PreTyping(cfg, quiet);
-            preTyping.analyze(model);
-            Config.setPreTyping(preTyping.state());
-            preTyping.dump();
-        }
-        */
-
-        /* Not yet ready for public
-        // Set the initial state with DOM objects
-        if(params.opt_Dom && jshtml != null)
-            (new DOMModel(cfg, model, jshtml.getDocument())).initialize();
-        */
-
-        // Analyze
-        switch(params.command)
-        {
-        case ShellParameters.CMD_ANALYZE :
-        case ShellParameters.CMD_PREANALYZE :
-        case ShellParameters.CMD_HTML :
-            // Analyze
-            typingInterface.analyze(model);
-            break;
-        case ShellParameters.CMD_SPARSE :
-        case ShellParameters.CMD_NEW_SPARSE :
-        case ShellParameters.CMD_GLOBAL_SPARSE :
-        case ShellParameters.CMD_BUG_DETECTOR :
-            PreTyping preTyping = new PreTyping(cfg, quiet);
-            preTyping.analyze(model);
-
-            // unsound because states among instructions are omitted.
-            State pre_result = preTyping.getMergedState();
-
-            // computes def/use set
-            long access_start = System.nanoTime();
-            Access duanalysis = new Access(cfg, preTyping.computeCallGraph(), pre_result);
-            duanalysis.process(quiet);
-            double accessTime = (System.nanoTime() - access_start) / 1000000000.0;
-            if (!quiet)
-                System.out.format("# Time for access analysis(s): %.2f\n", accessTime);
-
-            // computes def/use graph
-            if(params.command == ShellParameters.CMD_SPARSE ||
-               params.command == ShellParameters.CMD_BUG_DETECTOR)
-              cfg.drawIntraDefUseGraph(preTyping.computeCallGraph(), duanalysis.result(), quiet);
-            else if(params.command == ShellParameters.CMD_NEW_SPARSE)
-              cfg.drawIntraDDG(preTyping.computeCallGraph(), duanalysis.result(), quiet);
-            else if(params.command == ShellParameters.CMD_GLOBAL_SPARSE)
-              cfg.drawGlobalDDG(preTyping.computeCallGraph(), duanalysis.result(), quiet);
-
-            // Analyze
-            typingInterface.analyze(model, duanalysis.result());
-        }
-
-        // Report a result
-        if (!quiet) {
-          System.out.format("# Peak memory(mb): %.2f\n", MemoryMeasurer.peakMemory());
-          System.out.format("# Result heap memory(mb): %.2f\n", MemoryMeasurer.measureHeap());
-        }
-        if (params.opt_MemDump) {
-            System.out.println("\n* Dump *");
-            typingInterface.dump();
-            if(params.command == ShellParameters.CMD_PREANALYZE) typingInterface.dump_callgraph();
-        }
-        if (params.opt_Visual && typingInterface instanceof Typing) {
-            System.out.println("\n* Visualization *");
-            Visualization vs = new Visualization((Typing)typingInterface, fileMap, NodeUtil.getFileName(ir), toOption(params.opt_OutFileName));
-            vs.run();
-        }
-        if(Config.compare() && params.command == ShellParameters.CMD_GLOBAL_SPARSE) {
-            // Initialize bulit-in models
-            CFG dense_cfg = builder.build();
-            BuiltinModel dense_model = new BuiltinModel(dense_cfg);
-            dense_model.initialize();
-            cfg.computeReachableNodes(quiet);
-
-            Typing dense = new Typing(dense_cfg);
-            System.out.println("* Compare global sparse analysis and dense analysis *");
-
-            dense.analyze(model);
-            if (params.opt_MemDump) {
-                System.out.println("\n* Dense Dump *");
-                dense.dump();
-            }
-            ((GSparseTyping)typingInterface).checkTable(dense.getTable());
-            return return_code;
-        }
-
-        if (!quiet) {
-            System.out.println("\n* Statistics *");
-            typingInterface.statistics(params.opt_StatDump);
-        }
-        /* Not yet ready for public
-        if (params.opt_CheckResult && typingInterface instanceof Typing) {
-            TypingSemanticsJUTest.checkResult(typingInterface);
-            System.out.println("Test pass");
-        }
-        */
-
-        // Execute Bug Detector
-        System.out.println("\n* Bug Detector *");
-        BugDetector detector = new BugDetector(cfg, typingInterface, fileMap, quiet, irErrors.second());
-        detector.detectBug();
-
-        if (!quiet)
-            System.out.format("\nAnalysis took %.2fs\n", (System.nanoTime() - analyzeStartTime) / 1000000000.0);
-
-        boolean isGlobalSparse = params.command == ShellParameters.CMD_GLOBAL_SPARSE;
-        if(params.opt_DDGFileName != null) {
-            DotWriter.ddgwrite(cfg, params.opt_DDGFileName+".dot", params.opt_DDGFileName+".svg", "dot", false, isGlobalSparse);
-        }
-        if(params.opt_DDG0FileName != null) {
-            DotWriter.ddgwrite(cfg, params.opt_DDG0FileName+".dot", params.opt_DDG0FileName+".svg", "dot", true, isGlobalSparse);
-        }
-        if(params.opt_FGFileName != null) {
-            DotWriter.fgwrite(cfg, params.opt_FGFileName+".dot", params.opt_FGFileName+".svg", "dot", isGlobalSparse);
-        }
-        if (!quiet)
-            System.out.println("Ok");
-
-        return return_code;
-    }
-        /* puppy
-        int return_code = 0;
-        boolean quiet = params.command == ShellParameters.CMD_BUG_DETECTOR;
         boolean locclone = params.opt_LocClone;
 
         if (params.FileNames.length == 0) throw new UserError("Need a file to analyze");
@@ -1281,10 +975,17 @@ public final class Shell {
             Config.setDomMode();
         }
 
+		// for Tizen
+        if(params.opt_Tizen) {
+            Config.setTizenMode();
+            System.out.println("Tizen mode enabled.");
+        }
+
         if (!quiet)
             System.out.println("Context-sensitivity mode is \"" + kr.ac.kaist.jsaf.analysis.typing.CallContext.getModeName() + "\".");
 
         // Initialize
+        int return_code = 0;
         long analyzeStartTime = System.nanoTime();
         if (!quiet)
             System.out.println("\n* Initialize *");
@@ -1365,7 +1066,6 @@ public final class Shell {
         if(params.command == ShellParameters.CMD_PREANALYZE ||
             params.command == ShellParameters.CMD_SPARSE ||
             params.command == ShellParameters.CMD_NEW_SPARSE ||
-            params.command == ShellParameters.CMD_GLOBAL_SPARSE ||
             params.command == ShellParameters.CMD_BUG_DETECTOR ||
             params.command == ShellParameters.CMD_HTML_SPARSE
            ) {
@@ -1392,12 +1092,20 @@ public final class Shell {
         case ShellParameters.CMD_HTML_SPARSE :
             typingInterface = new DSparseTyping(cfg, quiet, locclone);
             break;
-        case ShellParameters.CMD_GLOBAL_SPARSE :
-            typingInterface = new GSparseTyping(cfg, quiet, locclone);
-            break;
         default :
             throw new UserError("Cannot create the Typing. The command is unknown.");
         }
+
+        // Compare with Pre Analysis
+        /*
+        if(Config.compare() && params.command != ShellParameters.CMD_PREANALYZE) {
+            Config.setContextSensitivityMode(new Integer(Config.Context_Insensitive()));
+            PreTyping preTyping = new PreTyping(cfg, quiet);
+            preTyping.analyze(model);
+            Config.setPreTyping(preTyping.state());
+            preTyping.dump();
+        }
+        */
 
         // Check global variables in initial heap against list of predefined variables.
         init.checkPredefined();
@@ -1432,7 +1140,6 @@ public final class Shell {
             break;
         case ShellParameters.CMD_SPARSE :
         case ShellParameters.CMD_NEW_SPARSE :
-        case ShellParameters.CMD_GLOBAL_SPARSE :
         case ShellParameters.CMD_BUG_DETECTOR :
         case ShellParameters.CMD_HTML_SPARSE:
             PreTyping preTyping = new PreTyping(cfg, quiet, false);
@@ -1472,27 +1179,6 @@ public final class Shell {
             vs.run();
         }
 
-        if(Config.compare() && params.command == ShellParameters.CMD_GLOBAL_SPARSE) {
-            // Initialize bulit-in models
-            CFG ddg_cfg = builder.build();
-
-            //BuiltinModel ddg_model = new BuiltinModel(ddg_cfg);
-            //ddg_model.initialize();
-            InitHeap ddg_init = new InitHeap(ddg_cfg);
-            ddg_init.initialize();
-            ddg_cfg.computeReachableNodes(quiet);
-
-            Typing ddg = new Typing(ddg_cfg, locclone);
-            ddg.analyze(ddg_init);
-            
-            if (params.opt_MemDump) {
-                System.out.println("\n* Sparse original Dump *");
-                ddg.dump();
-            }
-            ((GSparseTyping)typingInterface).checkTable(ddg.getTable());
-
-        }
-
         if (!quiet) {
             System.out.println("\n* Statistics *");
             System.out.println("# Total state count: " + typingInterface.getStateCount());
@@ -1511,7 +1197,7 @@ public final class Shell {
         if (!quiet)
             System.out.format("\nAnalysis took %.2fs\n", (System.nanoTime() - analyzeStartTime) / 1000000000.0);
 
-        boolean isGlobalSparse = params.command == ShellParameters.CMD_GLOBAL_SPARSE;
+        boolean isGlobalSparse = false;
         if(params.opt_DDGFileName != null) {
           DotWriter.ddgwrite(cfg, typingInterface.env(), params.opt_DDGFileName+".dot", params.opt_DDGFileName+".svg", "dot", false, isGlobalSparse);
         }
@@ -1526,7 +1212,6 @@ public final class Shell {
 
         return return_code;
     }
-*/
 
     ////////////////////////////////////////////////////////////////////////////////
     // 16. Web IDL Parse
@@ -1621,7 +1306,6 @@ public final class Shell {
     private static Pair<Option<IRRoot>, HashMap<String, String>> fileToIR(List<String> files, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {
         Pair<Program, HashMap<String, String>> pair;
         // html file support 
-        /* Not yet ready for public
         if(files.size() == 1 && (files.get(0).toLowerCase().endsWith(".html") || files.get(0).toLowerCase().endsWith(".xhtml") || files.get(0).toLowerCase().endsWith(".htm"))) { 
             // DOM mode
             Config.setDomMode();
@@ -1630,7 +1314,6 @@ public final class Shell {
             pair = jshtml.parseScripts();
         }
         else
-        */
             pair = Parser.fileToAST(files);
 
         // Pair<Program, HashMap<String,String>> pair = Parser.fileToAST(files);

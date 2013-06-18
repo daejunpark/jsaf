@@ -39,6 +39,19 @@ case class RelExpr(first: CFGExpr, op: IROp, second: CFGExpr) {
 
 object ASSERTHelper {
   // Check the operator is relational operator or not
+  def isConstantPruing(op: IROp, expr: CFGExpr): Boolean = {
+    if(op.getKind == EJSOp.BIN_COMP_EQ_NEQUAL || op.getKind == EJSOp.BIN_COMP_EQ_SNEQUAL) {
+      expr match {
+        case CFGNull() => true
+        case CFGVarRef(_, id) => id match {
+          case CFGUserId(_, text, _, _, _) if text.equals("undefined") => true
+          case _ => false
+        }
+        case _ => false
+      }
+    }
+    else false
+  }
   def isAssertOperator(op: IROp): Boolean = {
     EJSOp.isEquality(op.getKind)
   }

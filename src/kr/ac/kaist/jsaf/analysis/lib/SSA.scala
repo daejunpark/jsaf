@@ -18,10 +18,7 @@ import kr.ac.kaist.jsaf.analysis.lib.graph.{DataDependencyGraph => DDGraph}
 import kr.ac.kaist.jsaf.analysis.lib.graph.DomTree
 import kr.ac.kaist.jsaf.analysis.lib.graph.EGraph
 import kr.ac.kaist.jsaf.analysis.lib.graph.FlowGraph
-import kr.ac.kaist.jsaf.analysis.lib.graph.GEGraph
-import kr.ac.kaist.jsaf.analysis.lib.graph.GENode
 import kr.ac.kaist.jsaf.analysis.lib.graph.Graph
-import kr.ac.kaist.jsaf.analysis.lib.graph.Kind
 import kr.ac.kaist.jsaf.analysis.lib.graph.KindI
 import kr.ac.kaist.jsaf.analysis.lib.graph.KindO
 import kr.ac.kaist.jsaf.analysis.lib.graph.KindOE
@@ -29,7 +26,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.DomainPrinter
 import kr.ac.kaist.jsaf.analysis.typing.domain.LocSet
 import kr.ac.kaist.jsaf.analysis.typing.domain.LocSetBot
 import kr.ac.kaist.jsaf.analysis.typing.domain.Loc
-import kr.ac.kaist.jsaf.analysis.cfg.FunctionId
+import kr.ac.kaist.jsaf.analysis.cfg.LEntry
 import kr.ac.kaist.jsaf.analysis.lib.graph.ENode
 
 /**
@@ -185,7 +182,7 @@ object SSA {
     search(fg.entry)
   }
 
-  def computeDominanceFrontier[Node](g: Graph[Node], dt: DomTree[Node]): Map[Node, Set[Node]] = {
+  def computeDominanceFrontier[Node](g: Graph[Node], dt: DomTree[Node], isEntry: Node=>Boolean): Map[Node, Set[Node]] = {
     var df = HashMap[Node, Set[Node]]()
 
     def rec_computeDF(n: Node): Unit = {
@@ -204,8 +201,11 @@ object SSA {
     df
   }
 
+  private def isEntry(node: ENode): Boolean = {
+    node._1._2 == LEntry && node._2 == KindI
+  }
   def computesJoinpoints(g: EGraph, du: Map[Node, (LocSet, LocSet)], variables: LocSet, dt: DomTree[ENode]): Map[ENode, LocSet] = {
-    val domfront = computeDominanceFrontier[ENode](g, dt)
+    val domfront = computeDominanceFrontier[ENode](g, dt, isEntry)
     val nodes = g.reachable
     def getDU(node: ENode): (LocSet, LocSet) = {
       val locsets = du.get(node._1) match {
@@ -262,7 +262,7 @@ object SSA {
     })
     joinpoints
   }
-  
+/*
   def computesGlobalJoinpoints(g: GEGraph, du: Map[FunctionId, Map[Node, (LocSet, LocSet)]], variables: LocSet, dt: DomTree[GENode]): Map[GENode, LocSet] = {
     val domfront = computeDominanceFrontier[GENode](g, dt)
     val nodes = g.reachable
@@ -321,7 +321,7 @@ object SSA {
     })
     joinpoints
   }
-
+*/
   /* Cooper, Harvey and Kennedy(2001). A Simple, Fast Dominance Algorithm. */
   def buildDomTree[T: Manifest](g: Graph[T]): DomTree[T] = {
     val node2id: Map[T,Int] = g.getPostorder

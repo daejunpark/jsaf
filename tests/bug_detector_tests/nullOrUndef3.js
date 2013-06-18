@@ -14,4 +14,4 @@ if (Math.random())
 	
 var y = x.p;
 
-y.p;
+y.z;

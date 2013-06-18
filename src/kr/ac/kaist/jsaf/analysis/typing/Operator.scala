@@ -982,6 +982,7 @@ object Operator {
         var posInt = math.signum(n)*math.floor(math.abs(n))
         val int32bit = modulo(posInt, 0x100000000L);
         UIntSingle(int32bit.toInt)
+      case NumBot => NumBot
       case _ =>  UInt
     }
   }

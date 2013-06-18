@@ -10,14 +10,14 @@
 package kr.ac.kaist.jsaf.analysis
 
 import scala.collection.mutable.{Map=>MMap}
-import scala.collection.immutable.Map
-import scala.collection.immutable.TreeMap
+import collection.immutable.{HashSet, Map, TreeMap}
 import kr.ac.kaist.jsaf.analysis.cfg.Node
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.cfg.CFGId
 
 package object typing {
   type ControlPoint = (Node, CallContext)
+  type CPEdgeSet = HashSet[(ControlPoint, ControlPoint)]
   
   type CState = Map[CallContext, State]
   type Table = MMap[Node, CState]

@@ -47,11 +47,15 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Absent
 import kr.ac.kaist.jsaf.analysis.typing.domain.BoolTrue
 import kr.ac.kaist.jsaf.analysis.typing.domain.DomainPrinter
 import kr.ac.kaist.jsaf.analysis.typing.domain.State
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Value
-import kr.ac.kaist.jsaf.analysis.typing.models.BuiltinModel
+import kr.ac.kaist.jsaf.analysis.typing.models.{ModelManager, BuiltinModel}
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 
-class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
+class DSparseTyping(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingInterface {
+  val _env = new DSparseEnv(_cfg)
+
+  override def env: Environment = _env
   def cfg = _cfg
   var programNodes = _cfg.getNodes // without built-ins
   val inTable: Table = MHashMap()
@@ -59,7 +63,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
   var state = StateBot
   override def getMergedState = state
 
-  def checkTable(dense: Table) = {
+  def checkTable(dense: Table): Unit = {
     System.out.println("== Check Table ==")
     // soundness check
     inTable.foreach((nc) => {
@@ -81,7 +85,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
         val heap_sparse = state._1
         val heap_dense = dense_state._1
 
-        if (heap_sparse == HeapBot && heap_dense != HeapBot && (!cfg.isEmptyNode(node))) {
+        if (heap_sparse == HeapBot && heap_dense != HeapBot && (!env.isEmptyNode(node))) {
           System.out.println("* Warning: sparse result is bottom at "+node)
         }
 
@@ -127,8 +131,6 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
       if (exit_heap == HeapBot) {
         System.out.println("* Exit heap is bottom!")
       } else {
-        val cs_d = dense((0, LExit))
-        val exit_state_d = cs(CallContext.globalCallContext)
         val exit_heap_d = exit_state._1
 
         val g = exit_heap(GlobalLoc)
@@ -146,12 +148,12 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
         })
       }
     } catch {
-      case _ => System.out.println("* Exit heap is bottom!")
+      case _: Throwable => System.out.println("* Exit heap is bottom!")
     }
   }
 
-  var numIter = 0;
-  var elapsedTime = 0.0d;
+  var numIter = 0
+  var elapsedTime = 0.0d
   private var sem: Option[Semantics] = None
   def getSem: Semantics = sem match {
     case None => throw new InternalError("Do the analysis first.")
@@ -159,12 +161,12 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
   }
 
   // main entry point
-  override def analyze(model: BuiltinModel, duset: DUSet): Unit = {
-    val initHeap = model.getInitHeap()
+  override def analyze(init: InitHeap, duset: DUSet): Unit = {
+    val initHeap = init.getInitHeap()
     val initContext = ContextEmpty
     val initState = State(initHeap, initContext)
 
-    fset_builtin = model.fset_builtin
+    fset_builtin = ModelManager.getFIdMap()
 
     // Initialize call context for context-sensitivity
     CallContext.initialize
@@ -173,10 +175,10 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
     inTable.update((cfg.getGlobalFId, LEntry),
                    HashMap((CallContext.globalCallContext, initState)))
 
-    val worklist = Worklist.computesSparse(cfg, quiet)
+    val worklist = Worklist.computesSparse(_env.getInterDDG, quiet)
     val s = System.nanoTime
 
-    val fixpoint = new DSparseFixpoint(cfg, worklist, inTable, quiet)
+    val fixpoint = new DSparseFixpoint(cfg, _env, worklist, inTable, quiet, locclone)
 
     fixpoint.compute(duset)
     sem = Some(fixpoint.getSemantics)
@@ -184,7 +186,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
     numIter = fixpoint.count
     if (!quiet)
       System.out.println("# Fixpoint iteration(#): "+numIter)
-    elapsedTime = (System.nanoTime - s) / 1000000000.0;
+    elapsedTime = (System.nanoTime - s) / 1000000000.0
     if (!quiet)
       System.out.format("# Time for analysis(s): %.2f\n", new java.lang.Double(elapsedTime))
 
@@ -212,21 +214,21 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
     })
     if (!quiet) {
       System.out.println("== Error functions ==")
-      var functions = cfg.getFunctionIds()
+      val functions = cfg.getFunctionIds
       functions.foreach(fid => {
         (inTable.get((fid, LEntry)), inTable.get((fid, LExit)), inTable.get((fid, LExitExc))) match {
           case (Some(cs), Some(cs_exit), Some(cs_exitexc)) => {
             cs.keySet.foreach(cc => {
               (cs.get(cc), cs_exit.get(cc), cs_exitexc.get(cc)) match {
-                case (Some(s), Some(s_exit), Some(s_exitexc)) => {
-                  if (s._1 != HeapBot) {
+                case (Some(ss), Some(s_exit), Some(s_exitexc)) => {
+                  if (ss._1 != HeapBot) {
                     if (s_exit._1 == HeapBot && s_exitexc._1 == HeapBot) {
                       System.out.println("* Warning: Return state of function "+fid+" is bottom.")
                     }
                   }
                 }
-                case (Some(s), None, None) => {
-                  if (s._1 != HeapBot) {
+                case (Some(ss), None, None) => {
+                  if (ss._1 != HeapBot) {
                     System.out.println("* Warning: Return state of function "+fid+" is bottom.")
                   }
                 }
@@ -237,15 +239,15 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
           case (Some(cs), Some(cs_exit), None) => {
             cs.keySet.foreach(cc => {
               (cs.get(cc), cs_exit.get(cc)) match {
-                case (Some(s), Some(s_exit)) => {
-                  if (s._1 != HeapBot) {
+                case (Some(ss), Some(s_exit)) => {
+                  if (ss._1 != HeapBot) {
                     if (s_exit._1 == HeapBot) {
                       System.out.println("* Warning: Return state of function "+fid+" is bottom.")
                     }
                   }
                 }
-                case (Some(s), None) => {
-                  if (s._1 != HeapBot) {
+                case (Some(ss), None) => {
+                  if (ss._1 != HeapBot) {
                     System.out.println("* Warning: Return state of function "+fid+" is bottom.")
                   }
                 }
@@ -256,15 +258,15 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
           case (Some(cs), None, Some(cs_exitexc)) => {
             cs.keySet.foreach(cc => {
               (cs.get(cc), cs_exitexc.get(cc)) match {
-                case (Some(s), Some(s_exitexc)) => {
-                  if (s._1 != HeapBot) {
+                case (Some(ss), Some(s_exitexc)) => {
+                  if (ss._1 != HeapBot) {
                     if (s_exitexc._1 == HeapBot) {
                       System.out.println("* Warning: Return state of function "+fid+" is bottom.")
                     }
                   }
                 }
-                case (Some(s), None) => {
-                  if (s._1 != HeapBot) {
+                case (Some(ss), None) => {
+                  if (ss._1 != HeapBot) {
                     System.out.println("* Warning: Return state of function "+fid+" is bottom.")
                   }
                 }
@@ -290,6 +292,8 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
 
   override def builtinFset() = fset_builtin
 
+  override def getTable: Table = inTable
+
   /**
    * Reads the analysis result for the given control point.
    * The control point consists of node and call context.
@@ -304,7 +308,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
       case None => StateBot
       case Some(map) => map.get(cp._2) match {
         case None => StateBot
-        case Some(state) => state
+        case Some(s) => s
       }
     }
   }
@@ -368,7 +372,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
    */
   override def getStateAfterFile(file: String): State = {
     val f = new File(file)
-    mergeState(getStateAfterInst(cfg.getNoOp(f.getCanonicalPath())))
+    mergeState(getStateAfterInst(cfg.getNoOp(f.getCanonicalPath)))
   }
 
   /**
@@ -467,7 +471,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
    */
   override def getStateAfterLine(file: String, line: Int): CState = {
     val f = new File(file)
-    val file_full = f.getCanonicalPath()
+    val file_full = f.getCanonicalPath
     val insts = cfg.getNodes.foldLeft[List[CFGInst]](List())((list, node) =>
       cfg.getCmd(node) match { case Block(is) => list ++ is
                                case _ => list })
@@ -680,7 +684,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
    * If the states are bottom, i.e. no exception occurred, bottom value is returned.
    *
    * @param cstate the input context-sensitive states
-   * @returns the merged exception value
+   * @return the merged exception value
    */
   def readException(cstate: CState): Value = {
     cstate.foldLeft(ValueBot)((v, kv) =>
@@ -692,7 +696,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
    * If the state is bottom, i.e. no exception occurred, bottom value is returned.
    *
    * @param state the input state
-   * @returns the exception value
+   * @return the exception value
    */
   def readException(state: State): Value = {
     if (state._1 <= HeapBot)
@@ -717,7 +721,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
    *
    * @param state the input state
    * @param lset the set of locations holding the objects
-   * @returns the option of the computed list
+   * @return the option of the computed list
    */
   def computePropertyList(state: State, lset: Set[Loc]):
       Option[(List[(String, Absent)], Boolean, Boolean)] = {
@@ -751,7 +755,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
    * Note that the returned map might not contain entries for some caller instructions
    * if they are dead code or no valid functions were ever called at them.
    *
-   * @returns the map from caller to set of callees.
+   * @return the map from caller to set of callees.
    */
   override def computeCallGraph(): Map[CFGInst, Set[FunctionId]] = {
     cfg.getNodes.foldLeft[Map[CFGInst, Set[FunctionId]]](Map())(
@@ -811,7 +815,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
    *
    * @param state the state in which the hierarchy is to be computed
    * @param builtin the flag whether result includes built-in objects
-   * @returns the map from each location to set of prototypes
+   * @return the map from each location to set of prototypes
    */
   override def computePrototypeHierarchy(state: State): Map[Loc, Set[Loc]] = {
     state._1.map.foldLeft[Map[Loc, Set[Loc]]](Map())(
@@ -829,7 +833,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
    *
    * @param state input state
    * @param loc input location
-   * @returns set of function name
+   * @return set of function name
    */
   override def getFuncNameByLoc(state:State, loc: Loc): Set[String] = {
     val h = state._1
@@ -847,7 +851,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
   /**
    * Integrate old location and recent location
    * @param s input state
-   * @returns state
+   * @return state
    */
   override def integrateRecentState(s:State) : State = {
     var h = HeapBot
@@ -864,7 +868,7 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
     })
     // substitute old locations to recent locations
     s._1.map.foreach(kv => {
-      val (loc, obj) = kv
+      val (loc, _) = kv
       if(locToAddr(loc) >= 0 && isOldLoc(loc)) h = h.subsLoc(loc, addrToLoc(locToAddr(loc), Recent))
     })
     State(h, s._2)
@@ -874,17 +878,17 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
   // Statistics //
   ////////////////
 
-  override def statistics(statdump: Boolean) = {
-    val stat = new Statistics(cfg, fset_builtin, inTable)
-    stat.calculate();
+  override def statistics(statdump: Boolean): Unit = {
+    val stat = new Statistics(cfg, fset_builtin, inTable, locclone)
+    stat.calculate()
     if (statdump)
-      stat.printDump();
-    stat.printTable();
+      stat.printDump()
+    stat.printTable()
   }
 
   override def dump() {
     for (node <- cfg.getNodes) {
-      val nodeStr = node.toString
+      val nodeStr = node.toString()
       val sb = new StringBuilder
 
       inTable.get(node) match {
@@ -928,11 +932,11 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
             val state = kv._2
 
             if (state == StateBot) {
-              if (!prevBottom) System.out.println();
-              System.out.println("Bottom " + ccStr);
-              prevBottom = true;
+              if (!prevBottom) System.out.println()
+              System.out.println("Bottom " + ccStr)
+              prevBottom = true
             } else {
-              if (!first) System.out.println();
+              if (!first) System.out.println()
               System.out.print("- Context " + ccStr + " = ")
               System.out.println(DomainPrinter.printContext(0, state._2))
 

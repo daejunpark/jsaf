@@ -104,8 +104,10 @@ case class Heap(map: HeapMap) {
     Heap(m)
   }
 
-  def restrict(lset: LocSet) = {
-    Heap(this.map.filter((kv) => lset.contains(kv._1)))
+  def restrict(lset: LocSet) = 
+  posMask match {
+    case Some(posmask) => Heap(this.map.filter((kv) => lset.contains(if (kv._1 < 0) (kv._1 | negMask.get) else (kv._1 & posmask))))
+    case None => Heap(this.map.filter((kv) => lset.contains(kv._1)))
   }
 
   /* for temporal pre-analysis result, make all the properties absentTop. */

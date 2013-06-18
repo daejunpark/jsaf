@@ -18,6 +18,8 @@ import kr.ac.kaist.jsaf.analysis.typing.OrderMap
 import kr.ac.kaist.jsaf.analysis.typing.Worklist
 import kr.ac.kaist.jsaf.analysis.lib.graph.{DataDependencyGraph => DDGraph}
 import kr.ac.kaist.jsaf.ShellParameters
+import kr.ac.kaist.jsaf.analysis.typing.DSparseEnv
+import kr.ac.kaist.jsaf.analysis.typing.Environment
 
 object DotWriter {
   def NormalNodeShape:String = "shape=record, fontsize=11"
@@ -45,7 +47,7 @@ object DotWriter {
     for(inst<-insts) {
       if (first) first = false
       else sb.append("\\l")
-      sb.append(escape(inst.toString().toArray, escapeChars))
+      sb.append(escape(("[" + inst.getInstId.toString + "] " + inst.toString).toArray, escapeChars))
     }
     sb.append("\\l}\"]")
     sb.toString
@@ -119,7 +121,7 @@ object DotWriter {
           if(!cfg.getSucc(node).isEmpty) {
             sb.append(connectEdge(getLabel(node), cfg.getSucc(node), NormalEdgeStyle, o)).append(newLine)
           }
-          cfg.getExcSucc(node) match {
+          cfg.getExcSucc.get(node) match {
             case Some(succ) =>
               sb.append(connectEdge(getLabel(node), Set(succ), ExcEdgeStyle, o)).append(newLine)
             case None => ()
@@ -211,11 +213,10 @@ object DotWriter {
     spawnDot(dotExe, outputFile, writeDotFile(g, o, dotFile))
   }
 
-  def ddgwrite(g: CFG, dotFile: String, outputFile: String, dotExe: String, ddg0: Boolean, global: Boolean) = {
+  def ddgwrite(g: CFG, env: Environment, dotFile: String, outputFile: String, dotExe: String, ddg0: Boolean, global: Boolean) = {
     val wo = Worklist.computes(g)
     val o = wo.getOrder()
-    spawnDot(dotExe, outputFile, ddgwriteDotFile(g.getDDGStr(ddg0), o, dotFile))
-    if(global) spawnDot(dotExe, "global"+outputFile, ddgwriteDotFile(g.getGDDGStr(ddg0), o, "global"+dotFile))
+    if(!global) spawnDot(dotExe, "local"+outputFile, ddgwriteDotFile(env.asInstanceOf[DSparseEnv].getDDGStr(ddg0), o, "local"+dotFile))
   }
 
   def ddgwriteDotFile(str: String, o: OrderMap, dotfile: String) = {
@@ -231,10 +232,9 @@ object DotWriter {
     }
   }
 
-  def fgwrite(g: CFG, dotFile: String, outputFile: String, dotExe: String, global: Boolean) = {
+  def fgwrite(g: CFG, env:Environment, dotFile: String, outputFile: String, dotExe: String, global: Boolean) = {
     val wo = Worklist.computes(g)
     val o = wo.getOrder()
-    spawnDot(dotExe, outputFile, ddgwriteDotFile(g.getFGStr, o, dotFile))
-    if(global) spawnDot(dotExe, "global"+outputFile, ddgwriteDotFile(g.getGFGStr, o, "global"+dotFile))
+    spawnDot(dotExe, "local"+outputFile, ddgwriteDotFile(env.asInstanceOf[DSparseEnv].getFGStr(global), o, "local"+dotFile))
   }
 }

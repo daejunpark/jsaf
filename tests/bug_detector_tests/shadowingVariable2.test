@@ -11,17 +11,36 @@ BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
 bug-detector
 bug-detector_out_WCIequals=\
  \n\
- \n\
- \n\
- \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/shadowingVariable2.js:2:7~2:12: [Warning] Variable 'g' is shadowed by a function at '3:3-6:3'. \n\
-${BUGDETECTOR_TESTS_DIR}/shadowingVariable2.js:3:3~6:3: [Warning] Function 'g' is never used. \n\
-${BUGDETECTOR_TESTS_DIR}/shadowingVariable2.js:4:5~4:29: [Warning] Function 'h' is never used. \n\
-# ReferenceErrors(#) : 0 \n\
-# TypeErrors(#)      : 0 \n\
-# Warnings(#)        : 3 \n\
+shadowingVariable2.js:2:7~2:12: [Warning] Variable 'g' is shadowed by a function at '3:3-6:3'. \n\
+shadowingVariable2.js:3:3~6:3: [Warning] Function 'g' is never used. \n\
+shadowingVariable2.js:4:5~4:29: [Warning] Function 'h' is never used. \n\
  \n\
- \n\
+============== Total Count ============== \n\
+|  ReferenceErrors   :      0 (  0.00%) | \n\
+|  TypeErrors        :      0 (  0.00%) | \n\
+|  Warnings          :      3 (100.00%) | \n\
+========================================= \n\
+============ Statistics ============= \n\
+|  AbsentRead              :      0 | \n\
+|  BinaryOperator          :      0 | \n\
+|  BuiltinArgSize          :      0 | \n\
+|  BuiltinWrongType        :      0 | \n\
+|  CallConstFunc           :      0 | \n\
+|  CallNonConstructor      :      0 | \n\
+|  CallNonFunction         :      0 | \n\
+|  ConditionalBranch       :      0 | \n\
+|  ConvertToNumber         :      0 | \n\
+|  DefaultValueTypeError   :      0 | \n\
+|  GlobalThis              :      0 | \n\
+|  ImplicitTypeConversion  :      0 | \n\
+|  AccessingNullOrUndef    :      0 | \n\
+|  PrimitiveToObject       :      0 | \n\
+|  Shadowing               :      1 | \n\
+|  UnreachableCode         :      0 | \n\
+|  Unused                  :      2 | \n\
+|  VaryingTypeArguments    :      0 | \n\
+|  WrongThisType           :      0 | \n\
+===================================== \n\
 \n
 bug-detector_err_equals=

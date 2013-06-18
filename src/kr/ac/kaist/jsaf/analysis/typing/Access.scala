@@ -16,6 +16,11 @@ import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.scala_src.useful.WorkTrait
 import scala.collection.immutable.HashMap
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMEvent.{Event, MouseEvent, KeyboardEvent}
+import kr.ac.kaist.jsaf.analysis.typing.domain.Context
+import kr.ac.kaist.jsaf.analysis.typing.domain.State
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
 
 class Access(cfg: CFG, cg: Map[CFGInst, Set[FunctionId]], state_org: State) {
   val dusetLock: AnyRef = new AnyRef()
@@ -40,7 +45,7 @@ class Access(cfg: CFG, cg: Map[CFGInst, Set[FunctionId]], state_org: State) {
     else Shell.workManager.initialize(null, 1) // Single-thread
 
     // Push works
-    for(node <- programNodes) Shell.workManager.pushWork(new AccessWork(node))
+    for(node <- programNodes) Shell.workManager.pushWork(new AccessWork(cfg, node))
 
     // Wait until all works are finished.
     Shell.workManager.waitFinishEvent()
@@ -52,7 +57,7 @@ class Access(cfg: CFG, cg: Map[CFGInst, Set[FunctionId]], state_org: State) {
       System.err.println("  The size of du: "+ duset.foldLeft(0)((i, pair) => i + (pair._2._1.toSet.size) + (pair._2._2.toSet.size)))
   }
 
-  class AccessWork(node: Node) extends WorkTrait {
+  class AccessWork(cfg:CFG, node: Node) extends WorkTrait {
     override def doit(): Unit = {
       val state = getState(node._1)
       val du: (Node, (LPSet, LPSet)) = cfg.getCmd(node) match {
@@ -103,9 +108,10 @@ class Access(cfg: CFG, cg: Map[CFGInst, Set[FunctionId]], state_org: State) {
           val LPu_3 = LPSet(Set((ContextLoc, "3"), (ContextLoc, "4")))
           val LPu = LPu_1 ++ LPu_2 ++ LPu_3
 
-          // XXX: #PureLocal must not be passed between functions.
+          // Note: #PureLocal must not be passed between functions.
           val hold_purelocal = LPSet((SinglePureLocalLoc, "@temp"))
-          (node, ((hold_purelocal, LPu)))
+          val hold_context = LPSet(Set((ContextLoc, "3"), (ContextLoc, "4")))
+          (node, ((hold_purelocal ++ hold_context, LPu)))
         }
         case ExitExc => {
           val LPu_1 = LPSet((SinglePureLocalLoc, "@exception"))
@@ -113,9 +119,10 @@ class Access(cfg: CFG, cg: Map[CFGInst, Set[FunctionId]], state_org: State) {
           val LPu_3 = LPSet(Set((ContextLoc, "3"), (ContextLoc, "4")))
           val LPu = LPu_1 ++ LPu_2 ++ LPu_3
 
-          // XXX: #PureLocal must not be passed between functions.
+          // Note: #PureLocal must not be passed between functions.
           val hold_purelocal = LPSet((SinglePureLocalLoc, "@temp"))
-          (node, ((hold_purelocal, LPu)))
+          val hold_context = LPSet(Set((ContextLoc, "3"), (ContextLoc, "4")))
+          (node, ((hold_purelocal ++ hold_context, LPu)))
         }
         case Block(insts) => {
           val du = insts.foldLeft((LPBot, LPBot))((S, i) => {
@@ -124,8 +131,9 @@ class Access(cfg: CFG, cg: Map[CFGInst, Set[FunctionId]], state_org: State) {
                 case Some(id) => AH.VarStore_def(state._1, state._1(SinglePureLocalLoc)("@env")._1._2._2, id)
                 case None => LPBot
               }
-            val defset = Access.I_def(i, state._1, state._2) ++ returnVar
-            val useset = Access.I_use(i, state._1, state._2)// -- S._1
+
+            val defset = Access.I_def(cfg, i, state._1, state._2) ++ returnVar
+            val useset = Access.I_use(cfg, i, state._1, state._2)// -- S._1
 
             // if an instruction can make an exception state, defsets of following instructions must be included in useset.
             // now, we always merge defsets to useset(sound but not efficient).
@@ -140,8 +148,11 @@ class Access(cfg: CFG, cg: Map[CFGInst, Set[FunctionId]], state_org: State) {
         duset += (du._1 -> du._2)
 
         // after-call node
-        if (cfg.getAftercalls().contains(node)) {
-          duset += (node -> (du._2._1 ++ AH.absPair(state._1, SinglePureLocalLoc, StrTop), du._2._2))
+        if (cfg.getAftercalls.contains(node)) {
+          // Notes
+          // 1. Both of #Context and #PureLocal are defined by an edge transfer function.
+          // 2. @temp stands for all the properties in #PureLocal.
+          duset += (node -> (du._2._1 ++ LPSet(Set((SinglePureLocalLoc, "@temp"), (ContextLoc, "3"), (ContextLoc, "4"))), du._2._2))
         }
       }
     }
@@ -149,7 +160,7 @@ class Access(cfg: CFG, cg: Map[CFGInst, Set[FunctionId]], state_org: State) {
 }
 
 object Access {
-  def I_def(i: CFGInst, h: Heap, ctx: Context): LPSet = {
+  def I_def(cfg:CFG, i: CFGInst, h: Heap, ctx: Context): LPSet = {
     i match {
       case CFGAlloc(_, _, x, e, a_new) => {
         val l_r = addrToLoc(a_new, Recent)
@@ -421,9 +432,6 @@ object Access {
 
         LP_1 ++ LP_2
       }
-      case CFGBuiltinCall(_, fun, args, addr1, addr2, addr3, addr4) => {
-        AccessBuiltin.builtinCall_def(h, ctx, fun, args, addr1, addr2, addr3, addr4)
-      }
       case CFGInternalCall(_, _, lhs, fun, arguments, loc) => {
         (fun.toString, arguments, loc)  match {
           case ("<>Global<>toObject", List(expr), Some(a_new)) => {
@@ -463,11 +471,24 @@ object Access {
           }
         }
       }
+      case CFGAPICall(_, model, fun, args) => {
+        val def_map = ModelManager.getModel(model).getDefMap()
+        def_map.get(fun) match {
+          case Some(f) =>
+            f(h, ctx, cfg, fun, args)
+          case None =>
+            System.err.println("* Warning: def. info. of the API function '"+fun+"' are not defined.")
+            LPBot
+        }
+      }
+      case CFGAsyncCall(_, _, model, call_type, addr1, addr2, addr3) => {
+        ModelManager.getModel(model).asyncDef(h, ctx, cfg, call_type, List(addr1, addr2, addr3))
+      }
       case _ => LPBot
     }
   }
 
-  def I_use(i: CFGInst, h: Heap, ctx: Context): LPSet = {
+  def I_use(cfg:CFG, i: CFGInst, h: Heap, ctx: Context): LPSet = {
     i match {
       case CFGAlloc(_, _, x, e, a_new) => {
         val l_r = addrToLoc(a_new, Recent)
@@ -665,8 +686,9 @@ object Access {
 
         // because of PureLocal object is weak updated in edges, all the element are needed
         val LP_10 = h(SinglePureLocalLoc).map.foldLeft(LPBot)((S, kv) => S + ((SinglePureLocalLoc, kv._1)))
+        val LP_11 = LPSet(Set((ContextLoc, "3"), (ContextLoc, "4")))
 
-        LP_1 ++ LP_2 ++ LP_3 ++ LP_4 ++ LP_5 ++ LP_6 ++ LP_7 ++ LP_8 ++ LP_9 ++ LP_10
+        LP_1 ++ LP_2 ++ LP_3 ++ LP_4 ++ LP_5 ++ LP_6 ++ LP_7 ++ LP_8 ++ LP_9 ++ LP_10 ++ LP_11
       }
       case CFGCall(_, _, e_1, e_2, e_3, a_new) => {
         val (v_1, es_1) = SE.V(e_1, h, ctx)
@@ -701,8 +723,9 @@ object Access {
 
         // because of PureLocal object is weak updated in edges, all the element are needed
         val LP_10 = h(SinglePureLocalLoc).map.foldLeft(LPBot)((S, kv) => S + ((SinglePureLocalLoc, kv._1)))
+        val LP_11 = LPSet(Set((ContextLoc, "3"), (ContextLoc, "4")))
 
-        LP_1 ++ LP_2 ++ LP_3 ++ LP_4 ++ LP_5 ++ LP_6 ++ LP_7 ++ LP_8 ++ LP_9 ++ LP_10
+        LP_1 ++ LP_2 ++ LP_3 ++ LP_4 ++ LP_5 ++ LP_6 ++ LP_7 ++ LP_8 ++ LP_9 ++ LP_10 ++ LP_11
       }
       case CFGAssert(_, info, expr, _) => {
         V_use(expr, h, ctx) + ((GlobalLoc, "@class"))
@@ -731,9 +754,6 @@ object Access {
         val LP_2 = AH.RaiseException_use(es)
 
         LP_1 ++ LP_2 + ((SinglePureLocalLoc, "@exception_all"))
-      }
-      case CFGBuiltinCall(_, fun, args, addr1, addr2, addr3, addr4) => {
-        AccessBuiltin.builtinCall_use(h, ctx, fun, args, addr1, addr2, addr3, addr4)
       }
       case CFGInternalCall(_, _, x, fun, arguments, loc) => {
         (fun.toString, arguments, loc)  match {
@@ -784,6 +804,19 @@ object Access {
             throw new NotYetImplemented()
           }
         }
+      }
+      case CFGAPICall(_, model, fun, args) => {
+        val use_map = ModelManager.getModel(model).getUseMap()
+        use_map.get(fun) match {
+          case Some(f) =>
+            f(h, ctx, cfg, fun, args)
+          case None =>
+            System.err.println("* Warning: use. info. of the API function '"+fun+"' are not defined.")
+            LPBot
+        }
+      }
+      case CFGAsyncCall(_, _, model, call_type, addr1, addr2, addr3) => {
+        ModelManager.getModel(model).asyncUse(h, ctx, cfg, call_type, List(addr1, addr2, addr3))
       }
       case _ => LPBot
     }

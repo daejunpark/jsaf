@@ -128,4 +128,18 @@ case class PValue(undefval: AbsUndef,
       count = count + 1;
     count
   }
+
+  def typeKinds: String = {
+    val sb = new StringBuilder()
+    if(!undefval.isBottom) sb.append("Undefined")
+    if(!nullval.isBottom) sb.append((if(sb.length > 0) ", " else "") + "Null")
+    if(!boolval.isBottom) sb.append((if(sb.length > 0) ", " else "") + "Boolean")
+    if(!numval.isBottom) sb.append((if(sb.length > 0) ", " else "") + "Number")
+    if(!strval.isBottom) sb.append((if(sb.length > 0) ", " else "") + "String")
+    sb.toString
+  }
+
+  def foreach(f: (AbsBase => Unit)): Unit = {
+    f(undefval); f(nullval); f(boolval); f(numval); f(strval)
+  }
 }

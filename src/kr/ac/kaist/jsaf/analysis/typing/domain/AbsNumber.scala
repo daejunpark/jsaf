@@ -55,7 +55,7 @@ object AbsNumber {
   */
 }
 
-sealed abstract class AbsNumber {
+sealed abstract class AbsNumber extends AbsBase {
   /* partial order */
   def <= (that : AbsNumber) = (this, that) match {
     case (NumBot,_) => true
@@ -98,7 +98,7 @@ sealed abstract class AbsNumber {
   }
 
   /* abstract operator 'equal to' */
-  def === (that: AbsNumber) = {
+  def === (that: AbsNumber): AbsBool = {
     if (this <= NumBot || that <= NumBot)
       BoolBot
     else if (this <= NaN || that <= NaN)
@@ -158,6 +158,43 @@ sealed abstract class AbsNumber {
       case NUInt => "NUInt"
       case UIntSingle(n) => n.toString
       case NUIntSingle(n) => n.toString
+    }
+  }
+
+  override def isTop(): Boolean = {this == NumTop}
+
+  override def isBottom(): Boolean = {this == NumBot}
+
+  override def isConcrete(): Boolean = {
+    if(this == Infinity || this == PosInf || this == NegInf || this == NaN) return true
+    this match {
+      case _: UIntSingle => true
+      case _: NUIntSingle => true
+      case _ => false
+    }
+  }
+
+  def getConcreteValue(): Option[Double] = {
+    this match {
+      case PosInf => Some(Double.PositiveInfinity)
+      case NegInf => Some(Double.NegativeInfinity)
+      case NaN => Some(Double.NaN)
+      case UIntSingle(value) => Some(value)
+      case NUIntSingle(value) => Some(value)
+      case _ => None
+    }
+  }
+
+  override def toAbsString(): AbsString = {
+    this match {
+      case PosInf => NumStrSingle("Infinity")
+      case NegInf => NumStrSingle("-Infinity")
+      case NaN => NumStrSingle("NaN")
+      case UIntSingle(value) => NumStrSingle(value.toInt.toString)
+      case NUIntSingle(value) =>
+        if(value == value.toInt) AbsString.alpha(value.toInt.toString)
+        else AbsString.alpha(value.toString)
+      case _ => StrBot
     }
   }
 }

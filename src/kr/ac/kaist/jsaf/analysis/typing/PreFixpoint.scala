@@ -16,7 +16,7 @@ import scala.collection.immutable.HashMap
 import scala.collection.immutable.HashSet
 
 class PreFixpoint(cfg: CFG, worklist: Worklist, state: State, isBugDetector: Boolean) {
-  private val sem = new Semantics(cfg, worklist)
+  private val sem = new Semantics(cfg, worklist, false)
 
   // Flow-Insensitive
   def getSemantics = sem
@@ -31,7 +31,7 @@ class PreFixpoint(cfg: CFG, worklist: Worklist, state: State, isBugDetector: Boo
     Config.setPreAnalysisMode(true)
     loop()
     Config.setPreAnalysisMode(false)
-    System.out.println()
+    if(!isBugDetector) System.out.println()
   }
 
   private def loop(): Unit = {
@@ -74,7 +74,7 @@ class PreFixpoint(cfg: CFG, worklist: Worklist, state: State, isBugDetector: Boo
                   cp._1._2 match {
                     case LExitExc => {
                       val n_aftercall = kv._1._1
-                      cfg.getExcSucc(n_aftercall) match {
+                      cfg.getExcSucc.get(n_aftercall) match {
                         case None => throw new InternalError("After-call node must have exception successor")
                         case Some(node) => (node, kv._1._2)
                       }

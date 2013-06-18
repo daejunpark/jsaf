@@ -9,24 +9,41 @@
 
 package kr.ac.kaist.jsaf.bug_detector
 
+import scala.collection.mutable.{HashMap => MHashMap}
 import kr.ac.kaist.jsaf.bug_detector._
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.Typing
+import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
 import kr.ac.kaist.jsaf.nodes.AbstractNode
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
+import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.nodes_util.SourceLoc
+import kr.ac.kaist.jsaf.nodes.Cond
+import kr.ac.kaist.jsaf.nodes.If
+import kr.ac.kaist.jsaf.nodes.Expr
+import kr.ac.kaist.jsaf.scala_src.nodes._
 
-class FinalDetect(cfg: CFG, typing: TypingInterface, bugStorage: BugStorage, semantics: Semantics, callGraph: Map[CFGInst, FidSet], shadowings: List[BugInfo]) {
+class FinalDetect(bugDetector: BugDetector) {
+  val cfg           = bugDetector.cfg
+  val typing        = bugDetector.typing
+  val callGraph     = bugDetector.callGraph
+  val shadowings    = bugDetector.shadowings
+  val semantics     = bugDetector.semantics
+  val bugStorage    = bugDetector.bugStorage
+  val libMode       = bugDetector.libMode
+
+
 
   ////////////////////////////////////////////////////////////////
-  // Bug Detection Main (finally check)
+  // Bug Detection Main (final check)
   ////////////////////////////////////////////////////////////////
 
   def check(): Unit = {
     callConstFuncCheck
+    conditionalBranchCheck
     shadowingCheck
     unreachableCodeCheck
     unusedFunctionCheck
@@ -45,16 +62,96 @@ class FinalDetect(cfg: CFG, typing: TypingInterface, bugStorage: BugStorage, sem
     // constSet  : set of fids used as a constructor
     val (callSet, constSet) = callGraph.foldLeft[(FidSet, FidSet)]((Set(), Set()))((fidSetPair, calledFunction) => 
       calledFunction._1 match {
-        case CFGCall(_,info,_,_,_,_) => 
-          bugStorage.updateFuncMap(calledFunction._2, info)
-          (fidSetPair._1 ++ calledFunction._2, fidSetPair._2)
-        case CFGConstruct(_,info,_,_,_,_) => 
-          bugStorage.updateFuncMap(calledFunction._2, info)
-          (fidSetPair._1, fidSetPair._2 ++ calledFunction._2)
+        case CFGCall(_,_,_,_,_,_) => (fidSetPair._1 ++ calledFunction._2, fidSetPair._2)
+        case CFGConstruct(_,_,_,_,_,_) => (fidSetPair._1, fidSetPair._2 ++ calledFunction._2)
       })
     val bothUsed = callSet & constSet 
-    if (!bothUsed.isEmpty) bothUsed.foreach((fid) => bugStorage.getInfoSet(fid).foreach((info) => 
-      bugStorage.addMessage1(info.getSpan, 10, getFuncName(cfg.getFuncName(fid)))))
+    if (!bothUsed.isEmpty) bothUsed.foreach((fid) => bugStorage.addMessage(cfg.getFuncInfo(fid).getSpan, CallConstFunc, null, null, getFuncName(cfg.getFuncName(fid))))
+  }
+
+
+
+  ////////////////////////////////////////////////////////////////
+  //  ConditionalBranch Check
+  ////////////////////////////////////////////////////////////////
+
+  def conditionalBranchCheck(): Unit = {
+    // Remap ASTExpr to ASTStmt
+    bugDetector.traverseInsts((node, inst) => {
+      // Get CFGInfo
+      inst.getInfo match {
+        case Some(info) =>
+          // Get ASTStmt and ASTExpr
+          val astStmt = info.getAst
+          val condExpr = astStmt match {
+            case SCond(_, condExpr, _, _) => condExpr
+            case SIf(_, condExpr, _, _) => condExpr
+            case _ => null
+          }
+          if(condExpr != null) {
+            // Walk ASTExpr
+            def walkExpr(expr: Expr): Unit = {
+              bugStorage.remapConditionMap(expr, astStmt)
+              expr match {
+                case SExprList(_, exprList) => for(expr <- exprList) walkExpr(expr)
+                case SCond(_, condExpr, trueBranchExpr, falseBranchExpr) => walkExpr(condExpr); walkExpr(trueBranchExpr); walkExpr(falseBranchExpr)
+                case SInfixOpApp(_, leftExpr, _, rightExpr) => walkExpr(leftExpr); walkExpr(rightExpr)
+                case SPrefixOpApp(_, _, expr) => walkExpr(expr)
+                case SAssignOpApp(_, _, _, expr) => walkExpr(expr)
+                case _ =>
+              }
+            }
+            walkExpr(condExpr)
+          }
+        case None =>
+      }
+    })
+
+    for((stmt, resultSet) <- bugStorage.conditionMap) {
+      val condExpr = stmt match {
+        case SCond(_, condExpr, _, _) => condExpr
+        case SIf(_, condExpr, _, _) => condExpr
+        case _ => null
+      }
+      if(condExpr != null) {
+        //System.out.println(stmt + ", (" + JSAstToConcrete.doit(condExpr) + ")")
+        for(((node, assert), result) <- resultSet) {
+          // Get a CFGAssert instruction in node
+          def getAssertInst(node: Node): CFGAssert = {
+            cfg.getCmd(node) match {
+              case Block(insts) if(insts.length > 0 && insts.head.isInstanceOf[CFGAssert] &&
+                bugStorage.getRemappedASTNode(insts.head.asInstanceOf[CFGAssert].info.getAst) == stmt) => insts.head.asInstanceOf[CFGAssert]
+              case _ => null
+            }
+          }
+
+          // Check whether the node is leaf or not
+          val isLeaf = !cfg.getSucc(node).exists(succNode => getAssertInst(succNode) != null)
+          //System.out.println(assert + " = " + result + ", isLeaf = " + isLeaf)
+
+          if(isLeaf) {
+            var rootAssertInst: CFGAssert = null
+            def followUp(node: Node): Unit = {
+              val assertInst = getAssertInst(node)
+              if(assertInst == null) {
+                bugStorage.addMessage(condExpr.getInfo.getSpan, CondBranch, rootAssertInst, null, JSAstToConcrete.doit(condExpr), rootAssertInst.flag.toString)
+                return
+              }
+              else rootAssertInst = assertInst
+              //System.out.println("  > node = " + node + ", " + assertInst + " = " + resultSet.get((node, assertInst)))
+
+              resultSet.get((node, assertInst)) match {
+                case Some(result) => if(result != BoolTrue) return
+                case None => return
+              }
+
+              for(predNode <- cfg.getPred(node)) followUp(predNode)
+            }
+            followUp(node)
+          }
+        }
+      }
+    }
   }
 
 
@@ -63,7 +160,7 @@ class FinalDetect(cfg: CFG, typing: TypingInterface, bugStorage: BugStorage, sem
   // Shadowing Check
   ////////////////////////////////////////////////////////////////
 
-  private def shadowingCheck(): Unit = shadowings.foreach((bug) => bugStorage.addMessage2(bug.span, bug.bugKind, bug.arg1, bug.arg2))
+  private def shadowingCheck(): Unit = shadowings.foreach((bug) => bugStorage.addMessage(bug.span, bug.bugKind, null, null, bug.arg1, bug.arg2))
 
 
 
@@ -81,7 +178,7 @@ class FinalDetect(cfg: CFG, typing: TypingInterface, bugStorage: BugStorage, sem
         val spanBegin = span.getBegin
         val spanEnd   = span.getEnd
         if ((chunkEnd.getLine.toInt < spanBegin.getLine.toInt) || ((chunkEnd.getLine.toInt == spanBegin.getLine.toInt) && (chunkEnd.column.toInt < spanBegin.column.toInt))) {
-          bugStorage.addMessage0(new Span(chunkBegin, chunkEnd), 30)
+          bugStorage.addMessage(new Span(chunkBegin, chunkEnd), UnreachableCode, null, null)
           chunkBegin = span.getBegin; chunkEnd = span.getEnd
         } else {
           if ((spanBegin.getLine.toInt < chunkBegin.getLine.toInt) || ((spanBegin.getLine.toInt == chunkBegin.getLine.toInt) && 
@@ -90,7 +187,7 @@ class FinalDetect(cfg: CFG, typing: TypingInterface, bugStorage: BugStorage, sem
             (chunkEnd.column.toInt < spanEnd.column.toInt))) chunkEnd = spanEnd
         }
       }
-      bugStorage.addMessage0(new Span(chunkBegin, chunkEnd), 30)
+      bugStorage.addMessage(new Span(chunkBegin, chunkEnd), UnreachableCode, null, null)
     }
   }
 
@@ -107,7 +204,7 @@ class FinalDetect(cfg: CFG, typing: TypingInterface, bugStorage: BugStorage, sem
 
     for (fid <- bugStorage.filterUsedFunctions(fidSet toList)) {
       if (typing.getStateAtFunctionEntry(fid).isEmpty) {
-        bugStorage.addMessage1(cfg.getFuncInfo(fid).getSpan, 31, getFuncName(cfg.getFuncName(fid)))
+        bugStorage.addMessage(cfg.getFuncInfo(fid).getSpan, (if (libMode) UnreferencedFunction else UnusedFunction), null, null, getFuncName(cfg.getFuncName(fid)))
         bugStorage.appendUnusedFunction(fid)
       }
     }
@@ -189,12 +286,12 @@ class FinalDetect(cfg: CFG, typing: TypingInterface, bugStorage: BugStorage, sem
     cfg.getNodes.foreach((node) => 
       if (cfg.getAllSucc(node).isEmpty) {
         unusedMap.get(node) match {
-          case Some(unusedSet) => unusedSet.foreach((bug) => bugStorage.addMessage1(bug._4, if (bug._1) 33 else 32, bugStorage.getOriginalName(bug._3)))
+          case Some(unusedSet) => unusedSet.foreach((bug) => bugStorage.addMessage(bug._4, (if (bug._1) UnusedVariable else UnusedProperty), null, null, bugStorage.getOriginalName(bug._3)))
           case None => Unit
     }})
 
     ////////////////////////////////////////////////////////////////
-    // addSuccessros: add new node to checklist.
+    // addSuccessors: add new node to checklist.
     // If the last instruction of current node is call instruction, 
     // add following IPSucc node (from Semantics) to the checklist.
     // Otherwise, add successor nodes (from cfg) to the checkList.
@@ -217,10 +314,72 @@ class FinalDetect(cfg: CFG, typing: TypingInterface, bugStorage: BugStorage, sem
   ////////////////////////////////////////////////////////////////
 
   private def varyingTypeArgumentsCheck(): Unit = {
+    for((fid, (argObjSet, span)) <- bugStorage.detectedFuncMap) {
+      // function name, expected maximum argument length
+      val funcName = cfg.getFuncName(fid)
+      val funcArgList = cfg.getArgVars(fid)
+      val (funcArgLen, isBuildinFunc) = ModelManager.getFIdMap("Builtin").get(fid) match {
+        case Some(builtinFuncName) => (argSizeMap(builtinFuncName)._2, true)
+        case None => (funcArgList.length, false)
+      }
+      //println("- " + funcName + "(" + funcArgLen + ") #" + fid)
+
+      // maximum argument length
+      var maxArgObjLength = 0
+      val argObjLengthMap = new MHashMap[Obj, Int]()
+      for(argObj <- argObjSet) {
+        val (propValue, _) = argObj("length")
+        propValue.objval.value.pvalue.numval.getConcreteValue match {
+          case Some(lengthPropDouble) =>
+            val lengthPropInt = lengthPropDouble.toInt
+            if(maxArgObjLength < lengthPropInt) maxArgObjLength = lengthPropInt
+            argObjLengthMap.put(argObj, lengthPropInt)
+          case None => // TODO?
+        }
+      }
+      //println("  maximum argument length = " + maxArgObjLength)
+
+      // for each argument index 0, 1, 2, ...
+      for(i <- 0 until maxArgObjLength) {
+        var joinedValue: Value = ValueBot
+        for((argObj, argObjLength) <- argObjLengthMap) {
+          if(argObjLength <= maxArgObjLength) {
+            val (propValue, _) = argObj(i.toString)
+            joinedValue+= propValue.objval.value
+            //println("  argObj[" + i + "] = " + propValue.objval.value)
+          }
+        }
+        val joinedValueTypeCount = joinedValue.pvalue.typeCount
+        val isBug = (joinedValueTypeCount > 1 || joinedValueTypeCount == 1 && joinedValue.locset.size > 0)
+        if(isBug) {
+          var typeKinds: String = joinedValue.typeKinds
+          if(isBuildinFunc) {
+            // Built-in function
+            val ordinal = i + 1 match {
+              case 1 => "1st"
+              case 2 => "2nd"
+              case _ => i + "th"
+            }
+            bugStorage.addMessage(span, VaryingTypeArguments, null, null, getFuncName(funcName), ordinal + " ", "", typeKinds)
+          }
+          else {
+            // User function
+            val argName = funcArgList(i) match {
+              case CFGUserId(_, _, _, originalName, _) => originalName
+              case CFGTempId(text, _) => text
+            }
+            bugStorage.addMessage(span, VaryingTypeArguments, null, null, getFuncName(funcName), "", "'" + argName + "' ", typeKinds)
+          }
+          //println("    joined argObj[" + i + "] = " + joinedValue + ", isBug = " + isBug)
+        }
+      }
+    }
+    /* Previous code
     bugStorage.applyToDetectedFuncMap((fid: FunctionId, obj: Obj, spanSet: Set[Span]) => {
       val arglen = cfg.getArgVars(fid).size
       val isBug = (0 until arglen).foldLeft(false)((b, i) => b || (1 != obj(i.toString)._1._1._1.typeCount))
-      if (isBug) spanSet.foreach((span) => bugStorage.addMessage1(span, 34, getFuncName(cfg.getFuncName(fid))))
+      if (isBug) bugStorage.addMessage(cfg.getFuncInfo(fid).getSpan, VaryingTypeArguments, null, null, getFuncName(cfg.getFuncName(fid)))
     })
+    */
   }
 }

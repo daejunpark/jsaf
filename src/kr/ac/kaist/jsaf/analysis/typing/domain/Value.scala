@@ -86,4 +86,11 @@ case class Value(pvalue: PValue, locset: LocSet) {
     else
       pvalue.typeCount + 1
   }
+
+  def typeKinds: String = {
+    val sb = new StringBuilder()
+    sb.append(pvalue.typeKinds)
+    if(!locset.isEmpty) sb.append((if(sb.length > 0) ", " else "") + "Object")
+    sb.toString
+  }
 }

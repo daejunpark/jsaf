@@ -18,10 +18,10 @@ cfg_out_WCIequals=\
 (0,LBlock(10))\n\
     [EDGE] after-call(<>z<>17)\n\
     [37] <>temp<>18 := <>y<>11 + <>z<>17 + " won."\n\
-    [38] <>arguments<>19 := allocArg(1) @ #11\n\
+    [38] <>arguments<>19 := allocArg(1) @ #19\n\
     [39] <>arguments<>19["0"] := <>temp<>18\n\
     [40] <>fun<>20 := <>Global<>getBase(print)\n\
-    [41] call(<>obj<>10, <>fun<>20, <>arguments<>19) @ #12\n\
+    [41] call(<>obj<>10, <>fun<>20, <>arguments<>19) @ #20\n\
 \n\
 \n\
 (1,LBlock(9))\n\

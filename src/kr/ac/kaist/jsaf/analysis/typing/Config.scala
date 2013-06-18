@@ -14,6 +14,7 @@ import scala.collection.immutable.HashMap
 import scala.collection.mutable.{Set => MSet}
 import scala.collection.mutable.{HashSet => MHashSet}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
+import kr.ac.kaist.jsaf.analysis.typing.models.builtin.{BuiltinError, BuiltinObject}
 
 object Config {
   /**
@@ -40,15 +41,15 @@ object Config {
     ("__BoolTop", Value(BoolTop)),
     ("__NumTop", Value(NumTop)),
     ("__StrTop", Value(StrTop)),
-    ("__ObjConstLoc", Value(ObjConstLoc)),
-    ("__ArrayConstLoc", Value(ArrayConstLoc)),
-    ("__RefErrLoc", Value(RefErrLoc)),
-    ("__RangeErrLoc", Value(RangeErrLoc)),
-    ("__TypeErrLoc", Value(TypeErrLoc)),
-    ("__RefErrProtoLoc", Value(RefErrProtoLoc)),
-    ("__RangeErrProtoLoc", Value(RangeErrProtoLoc)),
-    ("__TypeErrProtoLoc", Value(TypeErrProtoLoc)),
-    ("__ErrProtoLoc", Value(ErrProtoLoc))
+    ("__ObjConstLoc", Value(BuiltinObject.ConstLoc)),
+    ("__ArrayConstLoc", Value(BuiltinObject.ConstLoc)),
+    ("__RefErrLoc", Value(BuiltinError.RefErrLoc)),
+    ("__RangeErrLoc", Value(BuiltinError.RangeErrLoc)),
+    ("__TypeErrLoc", Value(BuiltinError.TypeErrLoc)),
+    ("__RefErrProtoLoc", Value(BuiltinError.RefErrProtoLoc)),
+    ("__RangeErrProtoLoc", Value(BuiltinError.RangeErrProtoLoc)),
+    ("__TypeErrProtoLoc", Value(BuiltinError.TypeErrProtoLoc)),
+    ("__ErrProtoLoc", Value(BuiltinError.ErrProtoLoc))
   )
   
   /** Library mode.
@@ -56,7 +57,7 @@ object Config {
    */
   var libMode = false
   def setLibMode(flag: Boolean) = libMode = flag
-  val libModeProp = HashMap[String, Value](("<>TopVal<>", ValuePseudoTop))
+  val libModeProp = HashMap[String, Value](("<>TopVal<>", LibModeValueTop))
   
   /**
    * Assert flag.
@@ -78,9 +79,31 @@ object Config {
   val Context_OneCallsite = 1
   val Context_OneObject = 2
   val Context_OneObjectTAJS = 3
-  var contextSensitivityMode = Context_OneObjectTAJS
+  val Context_OneCallsiteAndObject = 4
+  val Context_OneCallsiteOrObject = 5
+  val Context_KCallsite = 6
+  val Context_KCallsiteAndObject = 7
+  val Context_CallsiteSet = 8
+  var contextSensitivityMode = Context_OneCallsite
   def setContextSensitivityMode(mode: Int) = contextSensitivityMode = mode
 
+  /**
+   * Context-sensitivity depth
+   */
+  var contextSensitivityDepth = 2
+  def setContextSensitivityDepth(depth: Int) = contextSensitivityDepth = depth
+  
+  /**
+   * Context-sensitivity flag for pre-analysis.
+   * This flag turns on context-sensitivity for PureLocal object during pre-analysis.
+   * The same context-sensitivity as main analysis is used for pre-analysis.
+   * For TAJS-style context-sensitivity, this flag has no effect as its precision is
+   * not comparable between pre and main analysis.
+   * (Equal or strictly less precise context-sensitivity must be used for pre-analysis.)  
+   */
+  var preContextSensitiveMode = false
+  def setPreContextSensitiveMode(flag: Boolean) = preContextSensitiveMode = flag
+  
   /**
    * Unsound flag.
    */
@@ -98,4 +121,22 @@ object Config {
   var preTyping = StateBot
   var preDebug = false
   def setPreDebug(flag: Boolean) = preDebug = flag
+
+  /**
+   * DOM mode flag
+   */
+  var domMode = false
+  def setDomMode = domMode = true
+
+  /**
+   * Tizen mode flag
+   */
+  var tizenMode = false
+  def setTizenMode = tizenMode = true
+
+  /**
+   * compare mode flag for html pre-analysis test
+   */
+  var compareMode = false
+  def setCompareMode = compareMode = true
 }

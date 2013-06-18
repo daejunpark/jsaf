@@ -14,7 +14,7 @@ import _root_.java.util.{HashMap=>JHashMap}
 import _root_.java.util.{List => JList}
 import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import scala.collection.immutable.HashMap
-
+import kr.ac.kaist.jsaf.ShellParameters
 import kr.ac.kaist.jsaf.bug_detector._
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing._
@@ -22,24 +22,39 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 
-class BugDetector(cfg: CFG, typing: TypingInterface, fileMap: JHashMap[String, String], quiet: Boolean, shadowings: JList[BugInfo]) {
-  val callgraph   = typing.computeCallGraph
-  val semantics   = new Semantics(cfg, Worklist.computes(cfg, quiet))
-  val bugStorage  = new BugStorage(fileMap)
-  val ExprDetect  = new ExprDetect(cfg, typing, bugStorage)
-  val InstDetect  = new InstDetect(cfg, typing, bugStorage)
-  val FinalDetect = new FinalDetect(cfg, typing, bugStorage, semantics, callgraph, toList(shadowings))
+class BugDetector(_params: ShellParameters, _cfg: CFG, _typing: TypingInterface, fileMap: JHashMap[String, String], quiet: Boolean, _shadowings: JList[BugInfo]) {
+  val params        = _params
+  val cfg           = _cfg
+  val typing        = _typing
+  val callGraph     = typing.computeCallGraph
+  val shadowings    = toList(_shadowings)
+
+  val errorOnly     = params.opt_ErrorOnly
+  val locclone      = params.opt_LocClone
+  val libMode       = params.opt_Library
+  val devMode       = params.opt_DeveloperMode
+   
+  val semantics     = new Semantics(cfg, Worklist.computes(cfg, quiet), locclone)
+  val varManager    = new VarManager(this)
+  val stateManager  = new StateManager(this)
+  val bugStorage    = new BugStorage(this, fileMap)
+  val bugOption     = new BugOption(!devMode)
+  val ExprDetect    = new ExprDetect(this)
+  val InstDetect    = new InstDetect(this)
+  val FinalDetect   = new FinalDetect(this)
+
+
 
   def detectBug() = {
     bugStorage.recordStartTime(System.nanoTime)
-    traverseCFG; FinalDetect.check 
+    traverseCFG; FinalDetect.check
     bugStorage.recordEndTime(System.nanoTime)
-    bugStorage.reportDetectedBugs(quiet)
+    bugStorage.reportDetectedBugs(params.opt_ErrorOnly, quiet)
   }
 
   /* Traverse all nodes in CFG */
   def traverseCFG() = {
-    cfg.getNodes.foreach((node) => 
+    cfg.getNodes.foreach((node) =>
       typing.readTable(node) match {
         case Some(map) => C(node, map, cfg.getCmd(node))
         case None => Unit
@@ -47,18 +62,17 @@ class BugDetector(cfg: CFG, typing: TypingInterface, fileMap: JHashMap[String, S
 
     def C(node: Node, map: CState, cmd: Cmd): Unit = {
       cmd match {
-        case Block(insts) => insts.foldLeft[CState](map)((stateMap, inst) => {
-          I(node, inst, stateMap)
-          // compute next normal states and exception state using semantics
-          val (cs, es) = stateMap.foldLeft[(CState,State)]((HashMap(),StateBot))((ms, kv) => {
-            val (s,es) = semantics.I((node, kv._1), inst, kv._2._1, kv._2._2, HeapBot, ContextBot)
-            (ms._1 + (kv._1 -> State(s._1, s._2)), ms._2 + State(es._1, es._2))}); cs})
+        case Block(insts) =>
+          for(inst <- insts) {
+            val cstate = stateManager.cache.get((node, inst.getInstId, CallContext._MOST_SENSITIVE)).get
+            I(node, inst, cstate)
+          }
         case _ => Unit
       }
     }
 
     def I(node: Node, inst: CFGInst, stateMap: CState) = {
-      InstDetect.check(inst, stateMap)
+      InstDetect.check(node, inst, stateMap)
       inst match {
         case CFGAlloc(_, _ , x, e, a_new) => 
           e match {
@@ -68,7 +82,7 @@ class BugDetector(cfg: CFG, typing: TypingInterface, fileMap: JHashMap[String, S
         case CFGAllocArray(_, _, x, n, a_new) => Unit
         case CFGAllocArg(_, _, x, n, a_new) => Unit
         case CFGAssert(_, info, expr, _) => V(node, inst, expr, stateMap)
-        case CFGBuiltinCall(_, fun, args, addr1, addr2, addr3, addr4) => Unit
+        case CFGAPICall(_, model, fun, args) => Unit
         case CFGCall(_, _, fun, base, arguments, a_new) => 
           V(node, inst, fun, stateMap)
           V(node, inst, base, stateMap)
@@ -82,8 +96,16 @@ class BugDetector(cfg: CFG, typing: TypingInterface, fileMap: JHashMap[String, S
         case CFGDeleteProp(_, _, lhs, obj, index) => 
           V(node, inst, obj, stateMap)
           V(node, inst, index, stateMap)
-        case CFGDomApiCall(_, fun, args, _, _, _, _) => Unit
-        case CFGExprStmt(_, _,x, expr) => V(node, inst, expr, stateMap)
+        case CFGExprStmt(_, _,x, expr) =>
+          if(expr.isInstanceOf[CFGString]) {
+            expr.asInstanceOf[CFGString].str match
+            {
+              case "safe_print_node" => cfg.dump(node)
+              case "safe_print_states" => stateManager.dump(node, inst, stateMap)
+              case _ =>
+            }
+          }
+          V(node, inst, expr, stateMap)
         case CFGFunExpr(_, _, lhs, name, fid, a_new1, a_new2, a_new3) => Unit
         case CFGInternalCall(_, _, lhs, fun, arguments, loc) => 
           (fun.toString, arguments, loc)  match {
@@ -115,7 +137,7 @@ class BugDetector(cfg: CFG, typing: TypingInterface, fileMap: JHashMap[String, S
     }
 
     def V(node: Node, inst: CFGInst, expr: CFGExpr, stateMap: CState): Unit = {
-      ExprDetect.check(inst, expr, stateMap)
+      ExprDetect.check(node, inst, expr, stateMap)
       expr match {
         case CFGBin(info, first, op, second) => 
           V(node, inst, first, stateMap)
@@ -130,5 +152,13 @@ class BugDetector(cfg: CFG, typing: TypingInterface, fileMap: JHashMap[String, S
       }
     }
   }
-}
 
+  def traverseInsts(f: (Node, CFGInst) => Unit): Unit = {
+    for(node <- cfg.getNodes) {
+      cfg.getCmd(node) match {
+        case Block(insts) => for(inst <- insts) f(node, inst)
+        case _ =>
+      }
+    }
+  }
+}

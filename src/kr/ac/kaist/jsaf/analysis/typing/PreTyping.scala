@@ -21,7 +21,8 @@ import kr.ac.kaist.jsaf.analysis.typing.models._
 import scala.util.parsing.json.JSONObject
 import kr.ac.kaist.jsaf.analysis.typing.{PreSemanticsExpr => SE}
 
-class PreTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
+class PreTyping(_cfg: CFG, quiet: Boolean, standAlone: Boolean) extends TypingInterface {
+  def env = null
   def cfg = _cfg
   var programNodes = _cfg.getNodes // without built-ins
   var fset_builtin: Map[FunctionId, String] = Map()
@@ -39,17 +40,27 @@ class PreTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
   }
 
   // main entry point
-  override def analyze(model: BuiltinModel): Unit = {
-    // Initialize call context for context-sensitivity
+  override def analyze(init: InitHeap): Unit = {
+    // Adjust context-sensitivity if not running in stand-alone mode.
     val old = Config.contextSensitivityMode
-    Config.setContextSensitivityMode(Config.Context_Insensitive);
+    if (!standAlone) {
+      // Enforce context-insensitivity if disabled or TAJS-style context-sensitivity is used.
+      // Equal or strictly less precise context-sensitivity must be used for pre-analysis.
+      // However, for TAJS-style context-sensitivity, the precision is incomparable.
+      if (!Config.preContextSensitiveMode || 
+          Config.contextSensitivityMode == Config.Context_OneObjectTAJS) {
+        Config.setContextSensitivityMode(Config.Context_Insensitive)
+      } 
+    }
+
+    // Initialize call context for context-sensitivity
     CallContext.initialize
 
-    val initHeap = model.getInitHeapPre()
+    val initHeap = init.getInitHeapPre()
     val initContext = ContextEmpty
     val initState = State(initHeap, initContext)
 
-    fset_builtin = model.fset_builtin
+    fset_builtin = ModelManager.getFIdMap()
 
     val s = System.nanoTime
 
@@ -157,16 +168,14 @@ class PreTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
                     map
                   }
                 }
-                case CFGBuiltinCall(_, "Function.prototype.apply", args, addr1, addr2, addr3, addr4) => {
+                case CFGAPICall(_, _, "Function.prototype.apply", args) => {
                   val h = state._1
                   val ctx = state._2
                   if (h.domIn(PureLocalLoc)) {
-                    val l_r1 = addrToLoc(addr1, Recent)
-                    val l_r2 = addrToLoc(addr2, Recent)
-                    val l_r3 = addrToLoc(addr3, Recent)
-                    val (h_1, ctx_1) = PreHelper.Oldify(h, ctx, addr1)
-                    val (h_2, ctx_2) = PreHelper.Oldify(h_1, ctx_1, addr2)
-                    val (h_3, ctx_3) = PreHelper.Oldify(h_2, ctx_2, addr3)
+                    //val (h_1, ctx_1) = PreHelper.Oldify(h, ctx, addr1)
+                    //val (h_2, ctx_2) = PreHelper.Oldify(h_1, ctx_1, addr2)
+                    //val (h_3, ctx_3) = PreHelper.Oldify(h_2, ctx_2, addr3)
+                    val h_3 = h
                     val lset_this = h_3(PureLocalLoc)("@this")._1._2._2
                     lset_this.foldLeft(map)((_m, l) => {
                       if (BoolTrue <= PreHelper.IsCallable(h_3,l)) {
@@ -182,14 +191,13 @@ class PreTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
                     map
                   }
                 }
-                case CFGBuiltinCall(_, "Function.prototype.call", args, addr1, addr2, addr3, addr4) => {
+                case CFGAPICall(_, _,"Function.prototype.call", args) => {
                   val h = state._1
                   val ctx = state._2
                   if (h.domIn(PureLocalLoc)) {
-                    val l_r1 = addrToLoc(addr1, Recent)
-                    val l_r2 = addrToLoc(addr2, Recent)
-                    val (h_1, ctx_1) = PreHelper.Oldify(h, ctx, addr1)
-                    val (h_2, ctx_2) = PreHelper.Oldify(h_1, ctx_1, addr2)
+                    //val (h_1, ctx_1) = PreHelper.Oldify(h, ctx, addr1)
+                    //val (h_2, ctx_2) = PreHelper.Oldify(h_1, ctx_1, addr2)
+                    val h_2 = h
                     val lset_this = h_2(PureLocalLoc)("@this")._1._2._2
                     lset_this.foldLeft(map)((_m, l) => {
                       if (BoolTrue <= PreHelper.IsCallable(h_2,l)) {
@@ -204,6 +212,10 @@ class PreTyping(_cfg: CFG, quiet: Boolean) extends TypingInterface {
                   } else {
                     map
                   }
+                }
+                // computes the call graph for event functions
+                case CFGAsyncCall(_,_, model, call_type, addr1, addr2, addr3) => {
+                  ModelManager.getModel(model).asyncCallgraph(state._1, i, map, call_type, List(addr1, addr2, addr3))
                 }
                 case _ => map
               }

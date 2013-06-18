@@ -83,8 +83,8 @@ private class DomainPrinter(verbose_lv: Int) {
       // verbose level2 : user location & predefined location
       // verbose level3 : print all
       if ( verbose_lv == 3
-          || (locToAddr(loc) >= locToAddr(CollapsedLoc))
-          || (verbose_lv == 1)
+          || (locToAddr(loc) >= locToAddr(CollapsedLoc) && !cfg.isHtmlAddr(locToAddr(loc)))
+          || (verbose_lv == 1 && cfg.isHtmlAddr(locToAddr(loc)))
           || (verbose_lv == 2 && locToAddr(loc) < locToAddr(CollapsedLoc))) {
       /*}
       if (verbose_lv ==  || locToAddr(loc) >= locToAddr(CollapsedLoc)) { */

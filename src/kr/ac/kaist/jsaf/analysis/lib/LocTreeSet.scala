@@ -9,7 +9,7 @@
 
 package kr.ac.kaist.jsaf.analysis.lib
 
-import kr.ac.kaist.jsaf.analysis.typing.domain.{Loc}
+import kr.ac.kaist.jsaf.analysis.typing.domain._
 
 /**
  * Immutable Loc tree set data structure.

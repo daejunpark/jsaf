@@ -1,450 +1,551 @@
 /*******************************************************************************
-    Copyright (c) 2012-2013, KAIST, S-Core.
+    Copyright (c) 2013, S-Core, KAIST.
     All rights reserved.
 
     Use is subject to license terms.
 
     This distribution may include materials developed by third parties.
- ******************************************************************************/
+  ******************************************************************************/
 
 package kr.ac.kaist.jsaf.analysis.typing.models
 
-import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.cfg._
+import kr.ac.kaist.jsaf.analysis.typing._
+import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.analysis.typing.Helper
-import scala.collection.immutable.TreeMap
-import scala.collection.immutable.HashSet
-import scala.collection.immutable.HashMap
-import kr.ac.kaist.jsaf.interpreter.InterpreterPredefine
-import kr.ac.kaist.jsaf.nodes_util.IRFactory
-import kr.ac.kaist.jsaf.nodes_util.NodeUtil
-import kr.ac.kaist.jsaf.analysis.typing.Config
-import kr.ac.kaist.jsaf.scala_src.useful.Lists._
-import org.w3c.dom.Node
-import org.w3c.dom.NodeList
-import kr.ac.kaist.jsaf.analysis.typing.CallContext
+import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse=>F, BoolTrue=>T}
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore._
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMEvent._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml._
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5._
+import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU, IRFactory}
 
-class DOMModel(cfg: CFG, builtinmodel: BuiltinModel, document: Node) {
-  val F = BoolFalse
-  val T = BoolTrue
-  val dummyInfo = IRFactory.makeInfo(IRFactory.dummySpan("DOM Object"))
-  var initHeap = builtinmodel.initHeap
-  var fset_builtin = builtinmodel.fset_builtin
-  /**
-   * Code for |> operator.
-   */
-  case class ToPipe[A](a: A) {
-    def |>[B](f: A => B) = f(a)
-  }
-  implicit def convert[A](s: A) = ToPipe(s)
 
-  private var uniqueNameCounter = 0
-  private def freshName(name: String) = {
-    uniqueNameCounter += 1
-    "<>DOM<>" + name + "<>" + uniqueNameCounter.toString
-  }
+object DOMModel {
+  val async_calls : List[String] = List("#LOAD", "#UNLOAD", "#KEYBOARD", "#MOUSE", "#OTHER", "#READY", "#TIME")
+  val async_fun_names = List("__LOADEvent__", "__UNLOADEvent__", "__KEYBOARDEvent__", "__MOUSEEvent__", "__OTHEREvent__", "__READYEvent__")
+}
 
-  /**
-   * Create cfg nodes for a dom function which is composed of ENTRY, single command body, EXIT and EXIT-EXC.
-   *
-   * @param DOMCall call name
-   * @return created function id
-   */
-  def makeDomApiCFG(DOMCall: String) : FunctionId = {
-    val nameArg = freshName("arguments")
-    val fid = cfg.newFunction(nameArg, List[CFGId](), List[CFGId](), DOMCall, dummyInfo)
-    val node = cfg.newBlock(fid)
+class DOMModel(cfg: CFG) extends Model(cfg) {
+  /* DOM list */
+  val list_dom = List[ModelData](
+    // DOM Core
+    DOMAttr, DOMCDATASection, DOMCharacterData, DOMComment, DOMConfiguration, DOMDocument,
+    DOMDocumentFragment, DOMDocumentType, DOMElement, DOMEntity, DOMEntityReference, DOMError,
+    DOMException, DOMImplementation, DOMImplementationList, DOMImplementationRegistry,
+    DOMImplementationSource, DOMLocator, DOMNamedNodeMap, DOMNameList, DOMNode, DOMNodeList,
+    DOMNotation, DOMProcessingInstruction, DOMStringList, DOMText, DOMTypeInfo, DOMUserDataHandler,
+    // DOM Event
+    DocumentEvent, Event, EventException, EventListener, EventTarget, MouseEvent, MutationEvent, UIEvent,
+    KeyboardEvent,
+    // DOM Html
+    HTMLAnchorElement, HTMLAppletElement, HTMLAreaElement, HTMLBaseElement, HTMLBaseFontElement, HTMLBodyElement,
+    HTMLBRElement, HTMLButtonElement, HTMLCollection, HTMLDirectoryElement, HTMLDivElement, HTMLDListElement,
+    HTMLDocument, HTMLElement, HTMLFieldSetElement, HTMLFontElement, HTMLFormElement, HTMLFrameElement,
+    HTMLFrameSetElement, HTMLHeadElement, HTMLHeadingElement, HTMLHRElement, HTMLHtmlElement, HTMLIFrameElement,
+    HTMLImageElement, HTMLInputElement, HTMLIsIndexElement, HTMLLabelElement, HTMLLegendElement, HTMLLIElement,
+    HTMLLinkElement, HTMLMapElement, HTMLMenuElement, HTMLMetaElement, HTMLModElement, HTMLObjectElement,
+    HTMLOListElement, HTMLOptGroupElement, HTMLOptionCollection, HTMLOptionElement, HTMLParagraphElement,
+    HTMLParamElement, HTMLPreElement, HTMLQuoteElement, HTMLScriptElement, HTMLSelectElement, HTMLStyleElement,
+    HTMLTableCaptionElement, HTMLTableCellElement, HTMLTableColElement, HTMLTableElement, HTMLTableRowElement,
+    HTMLTableSectionElement, HTMLTextAreaElement, HTMLTitleElement, HTMLUListElement,
+    DOMWindow,
+    // HTML 5
+    HTMLCanvasElement, CanvasRenderingContext2D, Navigator, CanvasGradient, DOMLocation 
+  )
 
-    cfg.addEdge((fid, LEntry), node)
-    cfg.addEdge(node, (fid,LExit))
-    cfg.addExcEdge(node, (fid,LExitExc))
-    cfg.addInst(node, 
-                CFGDomApiCall(cfg.newInstId, 
-                               DOMCall,
-                               CFGVarRef(dummyInfo, CFGTempId(nameArg, PureLocalVar)), 
-                               cfg.newAddress, cfg.newAddress, cfg.newAddress, cfg.newAddress))
+  private var map_fid = Map[FunctionId, String]()
+  private var map_semantic = Map[String, SemanticFun]()
+  private var map_presemantic =  Map[String, SemanticFun]()
+  private var map_def =  Map[String, AccessFun]()
+  private var map_use =  Map[String, AccessFun]()
 
-    fset_builtin = fset_builtin + (fid -> DOMCall)
 
-    (fid)
-  }
+  def initialize(h: Heap): Heap = {
+    /* init function map */
+    map_semantic = list_dom.foldLeft(map_semantic)((m, data) => m ++ data.getSemanticMap())
+    map_presemantic = list_dom.foldLeft(map_presemantic)((m, data) => m ++ data.getPreSemanticMap())
+    map_def = list_dom.foldLeft(map_def)((m, data) => m ++ data.getDefMap())
+    map_use = list_dom.foldLeft(map_use)((m, data) => m ++ data.getUseMap())
 
-  sealed abstract class AbsProperty
-  case class AbsBuiltinFunc(id: String, length: Double) extends AbsProperty
-  case class AbsConstValue(v: PropValue) extends AbsProperty
-
-  /**
-   * Preparing the given AbsProperty to be updated.
-   * If a property is a built-in function, create a new function object and pass it to name, value and object pair.
-   * If a property is a constant value, pass it to name, value and object pair. At this time, object is None.
-   *
-   * @param name the name of each property
-   * @param v the value of each property.
-   */
-  def prepareForUpdate(name: String, v: AbsProperty) = {
-    v match {
-      case AbsBuiltinFunc(id, length) => {
-        val fid = makeDomApiCFG(id)
-        val loc = newLoc(id)
-        val obj = Helper.NewFunctionObject(Some(fid), None, GlobalSingleton, None, AbsNumber.alpha(length))
-          (name, PropValue(ObjectValue(loc, T, F, T)), Some(loc, obj))
-      }
-      case AbsConstValue(value) => (name, value, None)
-    }
-  }
-
-  /**
-   * Initialize general built-in object.
-   */
-  def initGeneral(
-    name: String,
-    loc_con: Loc,
-    obj_con: Obj,
-    list_con: List[Tuple2[String, AbsProperty]],
-    loc_proto: Loc,
-    obj_proto: Obj,
-    list_proto: List[Tuple2[String, AbsProperty]],
-    map: HeapMap
-  ): HeapMap
-  = initGeneral(name, loc_con, obj_con, list_con, Some(loc_proto, obj_proto, list_proto), map)
-
-  /**
-   * Initialize general built-in object.
-   */
-  def initGeneral(
-    name: String,
-    loc_con: Loc,
-    obj_con: Obj,
-    list_con: List[Tuple2[String, AbsProperty]],
-    map: HeapMap
-  ): HeapMap
-  = initGeneral(name, loc_con, obj_con, list_con, None,  map)
-  
-  /**
-   * Initialize general built-in object. Prototype object can be optional(for Math).
-   *
-   * @param name Built-in object name by which the object can be accessed.
-   * @param loc_con Loc value for constructor(or object).
-   * @param obj_con Initial object for constructor.
-   * @param list_con Property list for constructor.
-   * @param proto Loc, initial object, property list for prototype(Optional)
-   * @param map global heap
-   */
-  def initGeneral(
-    name: String,
-    loc_con: Loc,
-    obj_con: Obj,
-    list_con: List[Tuple2[String, AbsProperty]],
-    proto: Option[(Loc, Obj, List[Tuple2[String, AbsProperty]])],
-    map: HeapMap
-  ): HeapMap = {
-
-    // Create function dummies for constructor
-    val obj_list = list_con.map((x) => prepareForUpdate(x._1, x._2))
-    // Add properties to constructor object
-    val obj_con_1 = obj_list.foldLeft(obj_con)((obj, v) => obj.update(AbsString.alpha(v._1), v._2))
-
-    // Adds to global area
-    val global = map(GlobalLoc).update(AbsString.alpha(name),
-                                       PropValue(ObjectValue(loc_con, T, F, T)))
-    // Make builtin properties to be dumped only in verbose mode
-    if (!name.startsWith("@")) Config.globalVerboseProp.add(name) 
-  
-    val map_1 = map + (GlobalLoc -> global) + (loc_con -> obj_con_1)
-
-    val map_2 = proto match {
-      case Some((loc, obj_proto, list_proto)) => {
-        // Create function dummies for prototype object
-        val proto_list = list_proto.map((x) => prepareForUpdate(x._1, x._2))
-        // Add properties to prototype object
-        val obj_proto_1 = proto_list.foldLeft(obj_proto)((obj, v) => obj.update(AbsString.alpha(v._1), v._2))
-
-        // Adds new allocated objects
-        val m_1 = map_1 + (loc -> obj_proto_1)
-        val m_2 = proto_list.foldLeft(m_1)((m, v) => v._3 match {
-          case Some((l, o)) => m + (l -> o)
-          case None => m
+    /* init api objects */
+    val h_1 = list_dom.foldLeft(h)((h1, data) =>
+      data.getInitList().foldLeft(h1)((h2, lp) => {
+        /* List[(String, PropValue, Option[(Loc, Obj)], Option[FunctionId]
+        *  property name : String
+        *  property value : PropValue
+        *  function loc and obj if function : Opt[(Loc, Obj)]
+        *  funtion id if function : Opt[FunctionId]
+        * */
+        val list_props = lp._2.map((x) => prepareForUpdate("DOM", x._1, x._2))
+        /* update api function map */
+        list_props.foreach((v) =>
+          v._4 match {
+            case Some((fid, name)) => {map_fid = map_fid + (fid -> name)}
+            case None => Unit
+          })
+        /* api object */
+        val obj = h2.map.get(lp._1) match {
+          case Some(o) =>
+            list_props.foldLeft(o)((oo, pv) => oo.update(pv._1, pv._2))
+          case None =>
+            list_props.foldLeft(ObjEmpty)((o, pvo) => o.update(pvo._1, pvo._2))
+        }
+        /* added function object to heap if any */
+        val heap = list_props.foldLeft(h2)((h3, pvo) => pvo._3 match {
+          case Some((l, o)) => Heap(h3.map.updated(l, o))
+          case None => h3
         })
-          m_2
-      }
-      case _ => map_1
-    }
 
-    // Adds new allocated objects
-    obj_list.foldLeft(map_2)((m, v) => v._3 match {
-      case Some((l, o)) => m + (l -> o)
-      case None => m
+        /* added api obejct to heap */
+        Heap(heap.map.updated(lp._1, obj))
+      })
+    )
+
+    // style object
+    val StyleObj = Obj(ObjMapBot.
+      updated("@default_number", (PropValue(StrTop), AbsentTop)).
+      updated("@default_other", (PropValue(StrTop), AbsentTop))).
+      update("@class", PropValue(AbsString.alpha("Object"))).
+      update("@proto", PropValue(ObjectValue(Value(ObjProtoLoc), BoolFalse, BoolFalse, BoolFalse))).
+      update("@extensible", PropValue(BoolTrue))
+
+    /* initialize lookup table & event table */
+    Heap(h_1.map + (IdTableLoc -> ObjEmpty) + (NameTableLoc -> ObjEmpty) + (TagTableLoc -> ObjEmpty) +
+      (EventTargetTableLoc -> ObjEmpty) + (EventFunctionTableLoc -> ObjEmpty) +
+      (ClassTableLoc -> ObjEmpty) + (TempStyleLoc -> StyleObj) +
+      (DOMEventTimeLoc -> Helper.NewDate(Value(UInt))))
+  }
+
+  def addAsyncCall(cfg: CFG, loop_head: Node): List[Node] = {
+    val fid_global = cfg.getGlobalFId
+    /* dummy info for EventDispatch instruction */
+    val dummy_info = IRFactory.makeInfo(IRFactory.dummySpan("DOMEvent"))
+    /* dummy var for after call */
+    val dummy_id = CFGTempId(NU.ignoreName+"#AsyncCall#", PureLocalVar)
+    /* add async call */
+    DOMModel.async_calls.foldLeft(List[Node]())((nodes, ev) => {
+      /* event call */
+      val event_call = cfg.newBlock(fid_global)
+      cfg.addInst(event_call,
+        CFGAsyncCall(cfg.newInstId, dummy_info, "DOM", ev, cfg.newProgramAddr, cfg.newProgramAddr, cfg.newProgramAddr))
+      /* event after call */
+      val event_after = cfg.newAfterCallBlock(fid_global, dummy_id)
+      cfg.addEdge(loop_head, event_call)
+      cfg.addCall(event_call, event_after)
+      cfg.addEdge(event_after, loop_head)
+      event_after::nodes
     })
   }
 
-  // Models the Node object in the DOM Core specification
-  def initDOMNode(map: HeapMap): HeapMap = {
-    val loc_proto = newLoc("DOMNodeProto")
-    val loc_con = newLoc("DOMNodeConst")
-    val loc_instance = newLoc("DOMNodeInstance")
+  def isModelFid(fid: FunctionId) = map_fid.contains(fid)
+  def getFIdMap(): Map[FunctionId, String] = map_fid
+  def getSemanticMap(): Map[String, SemanticFun] = map_semantic
+  def getPreSemanticMap(): Map[String, SemanticFun] = map_presemantic
+  def getDefMap(): Map[String, AccessFun] = map_def
+  def getUseMap(): Map[String, AccessFun] = map_use
 
-    // Constructor object
-    val obj_con = ObjEmpty.
-      update(OtherStrSingle("@class"),       PropValue(AbsString.alpha("Function"))).
-      update(OtherStrSingle("@proto"),       PropValue(ObjectValue(ObjProtoLoc, F, F, F))).
-      update(OtherStrSingle("length"),       PropValue(ObjectValue(NumTop, F, F, F))).
-      update(OtherStrSingle("prototype"),    PropValue(ObjectValue(loc_proto, F, F, F)))
+  def asyncSemantic(sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG,
+                    name: String, list_addr: List[Address]): ((Heap, Context), (Heap, Context)) = {
+    val addr1 = list_addr(0)
+    val addr2 = list_addr(1)
+    val addr3 = list_addr(2)
+    val all_event = DOMModel.async_calls
+    val all_event_name = DOMModel.async_fun_names
+    val fun_table = h(EventFunctionTableLoc)
+    val target_table = h(EventTargetTableLoc)
 
-    // Properties of the constructor object
-    val list_con = List()
-     
+    // lset_fun: function to dispatch
+    // lset_target: current target, 'this' in function body
+    val (lset_fun, lset_target) = name match {
 
-    // Properties of the Node Prototype Object
-    val list_proto = List(
-      // Fields
-      ("@class",                AbsConstValue(PropValue(AbsString.alpha("Object")))),
-      ("@proto",                AbsConstValue(PropValue(ObjectValue(ObjProtoLoc, F, F, F)))),
-      ("ELEMENT_NODE",          AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(1), F, T, T)))),
-      ("ATTRIBUTE_NODE",        AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(2), F, T, T)))),
-      ("TEXT_NODE",             AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(3), F, T, T)))),
-      ("CDATE_SECTION_NODE",    AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(4), F, T, T)))),
-      ("ENTITY_SECTION_NODE",   AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(5), F, T, T)))),
-      ("ENTITY_NODE",           AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(6), F, T, T)))),
-      ("PROCESSING_INSTRUCTION_NODE", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(7), F, T, T)))),
-      ("COMMENT_NODE",          AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(8), F, T, T)))),
-      ("DOCUMENT_NODE",         AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(9), F, T, T)))),
-      ("DOCUMENT_TYPE__NODE",   AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(10), F, T, T)))),
-      ("DOCUMENT_FRAGMENT_NODE", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(11), F, T, T)))),
-      ("NOTATION_NODE",         AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(12), F, T, T)))),
-      // DOM LEVEL 1 
-      ("nodeName",              AbsConstValue(PropValue(ObjectValue(StrTop, T, T, T)))),
-      ("nodeValue",             AbsConstValue(PropValue(ObjectValue(StrTop, T, T, T)))),
-      ("nodeType",              AbsConstValue(PropValue(ObjectValue(NumTop, T, T, T)))),
-      ("parentNode",            AbsConstValue(PropValue(ObjectValue(loc_instance, T, T, T)))),
-      // TODO : change loc_instance to the location of the NodeList instance object
-      ("childNodes",            AbsConstValue(PropValue(ObjectValue(loc_instance, T, T, T)))),
-      ("firstChild",            AbsConstValue(PropValue(ObjectValue(loc_instance, T, T, T)))),
-      ("lastChild",             AbsConstValue(PropValue(ObjectValue(loc_instance, T, T, T)))),
-      ("previousSibling",       AbsConstValue(PropValue(ObjectValue(loc_instance, T, T, T)))),
-      ("nextSibling",           AbsConstValue(PropValue(ObjectValue(loc_instance, T, T, T)))),
-      // DOM LEVEL 2
-      ("prefix",                AbsConstValue(PropValue(ObjectValue(StrTop, T, T, T)))),
-      ("localName",             AbsConstValue(PropValue(ObjectValue(StrTop, T, T, T)))),
-      ("namespaceURI",          AbsConstValue(PropValue(ObjectValue(StrTop, T, T, T)))),
-      // Methods
-      // DOM LEVEL 1
-      ("appendChild",           AbsBuiltinFunc("Node.prototype.appendChild", 1)),
-      ("cloneNode",             AbsBuiltinFunc("Node.prototype.cloneNode", 1)),
-      ("hasChildNodes",         AbsBuiltinFunc("Node.prototype.hasChildNodes", 0)),
-      ("insertBefore",          AbsBuiltinFunc("Node.prototype.insertBefore", 2)),
-      ("removeChild",           AbsBuiltinFunc("Node.prototype.removeChild", 1)),
-      ("replaceChild",          AbsBuiltinFunc("Node.prototype.replaceChild", 2)),
-      // DOM LEVEL 2
-      ("isSupported",           AbsBuiltinFunc("Node.prototype.isSupported", 2)),
-      ("hasAttributes",         AbsBuiltinFunc("Node.prototype.isSupported", 0)),
-      ("normalize",             AbsBuiltinFunc("Node.prototype.isSupported", 0))
-
-     )
-
-    // Instance object
-    val obj_ins = ObjEmpty.
-      update(OtherStrSingle("@class"),       PropValue(AbsString.alpha("Object"))).
-      update(OtherStrSingle("@proto"),       PropValue(ObjectValue(loc_proto, F, F, F)))
-
-   val map_1 = map + (loc_instance -> obj_ins)
-     
-   initGeneral("Node", loc_con, obj_con, list_con, loc_proto, ObjEmpty, list_proto, map_1)  
-
-  }
-
-  // Set the initial state for the DOM Core objects
-  def initCore(map: HeapMap): HeapMap = {
-    map |> initDOMNode
-  }
-
-  // Set the initial state for the DOM objects such as prototype and constructor objects
-  def initDOM(map: HeapMap): HeapMap = {
-    map |> 
-      DOMNode.init |>
-      DOMNodeList.init |>
-      DOMText.init |>
-      HTMLElement.init 
-  }
-  
-  // Model each HTML element depending on its kind 
-  def modelElement(map: HeapMap, node : Node) : (HeapMap, Loc) = {
-    val nodeName = node.getNodeName
-    nodeName match {
-      // root element
-      case "#document" =>
-        val (newmap, absloc) = HTMLDocument.instantiate(map, node)
-        // the root element does not have any siblings and parent
-        val newElementObj=newmap(absloc).
-                          update(OtherStrSingle("previousSibling"),
-                                  PropValue(ObjectValue(PValue(NullTop), F, T, T))).
-                          update(OtherStrSingle("nextSibling"),
-                                  PropValue(ObjectValue(PValue(NullTop), F, T, T))).
-                          update(OtherStrSingle("parentNode"),
-                                  PropValue(ObjectValue(PValue(NullTop), F, T, T)))
-        (newmap + (absloc -> newElementObj), absloc)
-      case "HTML" =>
-        // DocumentType
-        if(node.getNodeType == 10)
-          DOMDocumentType.instantiate(map, node)
-        else {// HTMLHtmlElement 
-          HTMLHtmlElement.instantiate(map, node)
-        }
-      case "HEAD" =>
-        HTMLHeadElement.instantiate(map, node)
-      case "LINK" =>
-        HTMLLinkElement.instantiate(map, node)
-      case "TITLE" =>
-        HTMLTitleElement.instantiate(map, node)
-      case "META" =>
-        HTMLMetaElement.instantiate(map, node)
-      case "STYLE" =>
-        HTMLStyleElement.instantiate(map, node)
-      case "BODY" =>
-        HTMLBodyElement.instantiate(map, node)
-      case "DIV" =>
-        HTMLDivElement.instantiate(map, node)
-      case "P" =>
-        HTMLParagraphElement.instantiate(map, node)
-      // Heading element
-      case "H1" | "H2" | "H3" | "H4" | "H5" | "H6"  =>
-        HTMLHeadingElement.instantiate(map, node)
-      case "#text" =>
-        DOMText.instantiate(map, node)
-      case "SCRIPT" =>
-        HTMLScriptElement.instantiate(map, node)
-      // Special tags
-      case "SUB" | "SUP" | "SPAN" | "BDO" =>
-        HTMLElement.instantiate(map, node)
-      // Font tags
-      case "TT" | "I" | "B" | "U" | "S" | "STRIKE" | "BIG" | "SMALL" =>
-        HTMLElement.instantiate(map, node)
-      // Phrase tags
-      case "EM" | "STRONG" | "DFN" | "CODE" | "SAMP" | "KBD" | "VAR" | "CITE" | "ACRONYM" | "ABBR" =>
-        HTMLElement.instantiate(map, node)
-      // List tags
-      case "DD" | "DT" =>
-        HTMLElement.instantiate(map, node)
-      // etc
-      case "NOFRAMES" | "NOSCRIPT" | "ADDRESS" | "CENTER" | "S"  =>
-        HTMLElement.instantiate(map, node)
-      case _ =>
-        HTMLElement.instantiate(map, node)
-   
-    }
-
-  }
-
-  def modelSource(map: HeapMap, node : Node) : (HeapMap, Loc) = {
-    
-    val children : NodeList = node.getChildNodes
-    val num_children = children.getLength
-        
-    val (newmap1, absloc1) = modelElement(map, node)     
-
-    if(num_children == 0) {
-      val (newmap2, absloc2) = DOMNodeList.instantiate(newmap1, 0)
-      val newElementObj = newmap2(absloc1).
-        update(OtherStrSingle("childNodes"),    PropValue(ObjectValue(absloc2, F, T, T))).
-        update(OtherStrSingle("firstChild"),    PropValue(ObjectValue(PValue(NullTop), F, T, T))).
-        update(OtherStrSingle("lastChild"),     PropValue(ObjectValue(PValue(NullTop), F, T, T)))
-      (newmap2 + (absloc1 -> newElementObj), absloc1)
-    }
-
-    else { 
-      var absloc_list : List[Loc]  = List()
-      var newmap : HeapMap = newmap1
-      for(i <- 0 until num_children) {
-        val (newmap2, absloc2) = modelSource(newmap, children.item(i))
-        absloc_list = absloc_list ++ List(absloc2)
-        newmap = newmap2
-      }
-      val (newmap3, absloc3) = DOMNodeList.instantiate(newmap, absloc_list.size)
-      
-      var children_obj = newmap3(absloc3)
-      
-      val absobj_list : List[Obj] = absloc_list.zipWithIndex.map(
-         ele => {
-          val x=ele._1
-          val i=ele._2
-          // object update for the 'childNodes' field
-          children_obj = children_obj.
-                        update(NumStrSingle(i.toString),   PropValue(ObjectValue(absloc_list(i), T, T, T)))
-          // set the 'parentNode' fields of all children nodes
-          val newObj1 = newmap3(x).
-                update(OtherStrSingle("parentNode"), PropValue(ObjectValue(absloc1, F, T, T)))
-          // set the sibling information
-          val newObj2 = if(i==0) newObj1.update(OtherStrSingle("previousSibling"), 
-                                                  PropValue(ObjectValue(PValue(NullTop), F, T, T)))
-                        else newObj1.update(OtherStrSingle("previousSibling"),   
-                                                  PropValue(ObjectValue(absloc_list(i-1), F, T, T)))
-          if (i==num_children-1)
-            newObj2.update(OtherStrSingle("nextSibling"),   
-                                                  PropValue(ObjectValue(PValue(NullTop), F, T, T)))
+      case "#ALL" =>
+        val (f, t) = all_event.foldLeft((LocSetBot, LocSetBot))((llset, e) =>
+          (llset._1 ++ fun_table(e)._1._2._2, llset._2 ++ target_table(e)._1._2._2)
+        )
+        val lset_static = h(GlobalLoc).map.foldLeft(LocSetBot)((lset, kv) =>
+          if (all_event_name.exists((e) => kv._1.startsWith(e)))
+            lset ++ kv._2._1._1._1._2
           else
-            newObj2.update(OtherStrSingle("nextSibling"),   
-                                                  PropValue(ObjectValue(absloc_list(i+1), F, T, T)))
-        })
+            lset
+        )
+        (f ++ lset_static, t)
+      case "#NOT_LOAD_UNLOAD" =>
+        val (f, t) = all_event.filterNot(_ == "#LOAD").filterNot(_ == "#UNLOAD").foldLeft((LocSetBot, LocSetBot))((llset, e) =>
+          (llset._1 ++ fun_table(e)._1._2._2, llset._2 ++ target_table(e)._1._2._2)
+        )
+        val event_names = all_event_name.filterNot(_ == "__LOADEvent__").filterNot(_ == "__UNLOADEvent__")
+        val lset_static = h(GlobalLoc).map.foldLeft(LocSetBot)((lset, kv) =>
+          if (event_names.exists((e) => kv._1.startsWith(e)))
+            lset ++ kv._2._1._1._1._2
+          else
+            lset
+        )
+        (f ++ lset_static, t)
 
-      // set the children information in the parent node
-      val newElementObj=newmap3(absloc1).
-                         update(OtherStrSingle("childNodes"),   PropValue(ObjectValue(absloc3, F, T, T))).
-                         update(OtherStrSingle("firstChild"),   PropValue(ObjectValue(absloc_list(0), F, T, T))).
-                         update(OtherStrSingle("lastChild"),   PropValue(ObjectValue(absloc_list(num_children-1), F, T, T)))
+      case _ =>
+        val (f,t) = (fun_table(name)._1._2._2 , target_table(name)._1._2._2)
+        val lset_static =
+          if (name == "#TIME")
+            LocSetBot
+          else {
+            val event_name = all_event_name(all_event.indexOf(name))
+            h(GlobalLoc).map.foldLeft(LocSetBot)((lset, kv) =>
+              if (kv._1.startsWith(event_name)) lset ++ kv._2._1._1._1._2
+              else lset
+            )
+          }
+        (f ++ lset_static, t)
+    }
+    // event call
+    val l_r = addrToLoc(addr1, Recent)
+    val l_arg = addrToLoc(addr2, Recent)
+    val l_event = addrToLoc(addr3, Recent)
+    val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+    val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
+    val (h_3, ctx_3) = Helper.Oldify(h_2, ctx_2, addr3)
 
-      val finalmap : HeapMap = ((absloc_list zip absobj_list).foldLeft(newmap3)((x, y) => x + (y._1 -> y._2)))
+    // 'this' = current target element
+    val lset_this =  Helper.getThis(h_3, Value(lset_target))
 
-      (finalmap + (absloc3 -> children_obj) + (absloc1 -> newElementObj), absloc1)
+    // need arguments obejct, arguments[0] = 'event object'
+    val o_event = name match {
+      case "#ALL" =>
+        // Event object
+        val proplist = MouseEvent.getInstList(lset_target) ++ KeyboardEvent.getInstList(lset_target)
+        proplist.foldLeft(Helper.NewObject(ObjProtoLoc))((o, pv) =>
+          o.update(pv._1, pv._2)
+        )
+      case "#MOUSE" =>
+        // MouseEvent object
+        val proplist = MouseEvent.getInstList(lset_target)
+        proplist.foldLeft(Helper.NewObject(ObjProtoLoc))((o, pv) =>
+          o.update(pv._1, pv._2)
+        )
+      case "#KEYBOARD" =>
+        // KeyboardEvent object
+        val proplist = KeyboardEvent.getInstList(lset_target)
+        proplist.foldLeft(Helper.NewObject(ObjProtoLoc))((o, pv) =>
+          o.update(pv._1, pv._2)
+        )
+      case _ =>
+        // Event object
+        Event.getInstList(lset_target).foldLeft(Helper.NewObject(ObjProtoLoc))((o, pv) =>
+          o.update(pv._1, pv._2)
+        )
     }
 
-  }
-  
-  // Set the initial state for the DOM HTML objects depending on the HTML source
-  def initHtml(map: HeapMap): HeapMap = {
-    printDom(document, "")
-    val (newmap, absloc) = modelSource(map, document)
-    //printDom(document, "")
-    //modelSource(toList(source.getChildElements)(0))
-    //System.out.println("start")
-    //toList(toList(source.getChildElements)(0).getChildElements).foreach((x:Element) => System.out.println(x.getName))
-    //System.out.println("end")
-    newmap
-  }
 
-  // Print the DOM tree
-  def printDom(node: Node, indent: String): Unit = {
-    System.out.println(indent + node.getNodeName + node.getNodeType + node.getClass().getName())
-    var child : Node = node.getFirstChild
-    while (child != null) {
-      printDom(child, indent+" ")
-      child = child.getNextSibling()
+    val h_4 = h_3.update(l_event, o_event).
+      update(l_arg, Helper.NewArrayObject(AbsNumber.alpha(1)))
+    val h_5 = Helper.PropStore(h_4, l_arg, AbsString.alpha("0"), Value(LocSet(l_event)))
+    val v_arg = Value(LocSet(l_arg))
+    val o_old = h_5(SinglePureLocalLoc)
+    val cc_caller = cp._2
+    val n_aftercall = cfg.getAftercallFromCall(cp._1)
+    val cp_aftercall = (n_aftercall, cc_caller)
+    lset_fun.foreach {l_f:Loc => {
+      val o_f = h_5(l_f)
+      val fids = o_f("@function")._1._3
+      fids.foreach {fid => {
+        val ccset = cc_caller.NewCallContext(cfg, fid, l_r, lset_this)
+        ccset.foreach {case (cc_new, o_new) => {
+          val value = PropValue(ObjectValue(v_arg, BoolTrue, BoolFalse, BoolFalse))
+          val o_new2 =
+            o_new.
+              update(cfg.getArgumentsName(fid), value).
+              update("@scope", o_f("@scope")._1)
+          sem.addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
+          sem.addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_3, o_old)
+          sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercall, ctx_3, o_old)
+        }}
+      }}
+    }}
+    val h_6 = v_arg._2.foldLeft(HeapBot)((hh, l) => {
+      val pv = PropValue(ObjectValue(Value(lset_fun), BoolTrue, BoolFalse, BoolTrue))
+      hh + h_5.update(l, h_5(l).update("callee", pv))
+    })
+    ((h_6, ctx_3), (he, ctxe))
+  }
+  def asyncPreSemantic(sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG,
+                       name: String, list_addr: List[Address]): (Heap, Context) = {
+    val addr1 = list_addr(0)
+    val addr2 = list_addr(1)
+    val addr3 = list_addr(2)
+    val all_event = DOMModel.async_calls
+    val all_event_name = DOMModel.async_fun_names
+    val fun_table = h(EventFunctionTableLoc)
+    val target_table = h(EventTargetTableLoc)
+
+    // lset_fun: function to dispatch
+    // lset_target: current target, 'this' in function body
+    val (lset_fun, lset_target) = name match {
+
+      case "#ALL" =>
+        val (f, t) = all_event.foldLeft((LocSetBot, LocSetBot))((llset, e) =>
+          (llset._1 ++ fun_table(e)._1._2._2, llset._2 ++ target_table(e)._1._2._2)
+        )
+        val lset_static = h(GlobalLoc).map.foldLeft(LocSetBot)((lset, kv) =>
+          if (all_event_name.exists((e) => kv._1.startsWith(e)))
+            lset ++ kv._2._1._1._1._2
+          else
+            lset
+        )
+        (f ++ lset_static, t)
+      case "#NOT_LOAD_UNLOAD" =>
+        val (f, t) = all_event.filterNot(_ == "#LOAD").filterNot(_ == "#UNLOAD").foldLeft((LocSetBot, LocSetBot))((llset, e) =>
+          (llset._1 ++ fun_table(e)._1._2._2, llset._2 ++ target_table(e)._1._2._2)
+        )
+        val event_names = all_event_name.filterNot(_ == "__LOADEvent__").filterNot(_ == "__UNLOADEvent__")
+        val lset_static = h(GlobalLoc).map.foldLeft(LocSetBot)((lset, kv) =>
+          if (event_names.exists((e) => kv._1.startsWith(e)))
+            lset ++ kv._2._1._1._1._2
+          else
+            lset
+        )
+        (f ++ lset_static, t)
+
+      case _ =>
+        val (f,t) = (fun_table(name)._1._2._2 , target_table(name)._1._2._2)
+        val lset_static =
+          if (name == "#TIME")
+            LocSetBot
+          else {
+            val event_name = all_event_name(all_event.indexOf(name))
+            h(GlobalLoc).map.foldLeft(LocSetBot)((lset, kv) =>
+              if (kv._1.startsWith(event_name)) lset ++ kv._2._1._1._1._2
+              else lset
+            )
+          }
+        (f ++ lset_static, t)
     }
+    // event call
+    val l_r = addrToLoc(addr1, Recent)
+    val l_arg = addrToLoc(addr2, Recent)
+    val l_event = addrToLoc(addr3, Recent)
+    val (h_1, ctx_1) = PreHelper.Oldify(h, ctx, addr1)
+    val (h_2, ctx_2) = PreHelper.Oldify(h_1, ctx_1, addr2)
+    val (h_3, ctx_3) = PreHelper.Oldify(h_2, ctx_2, addr3)
+
+    // 'this' = current target element
+    val lset_this =  PreHelper.getThis(h_3, Value(lset_target))
+
+    // need arguments obejct, arguments[0] = 'event object'
+    val o_event = name match {
+      case "#ALL" =>
+        // Event object
+        val proplist = MouseEvent.getInstList(lset_target) ++ KeyboardEvent.getInstList(lset_target)
+        proplist.foldLeft(PreHelper.NewObject(ObjProtoLoc))((o, pv) =>
+          o.update(pv._1, pv._2)
+        )
+      case "#MOUSE" =>
+        // MouseEvent object
+        val proplist = MouseEvent.getInstList(lset_target)
+        proplist.foldLeft(PreHelper.NewObject(ObjProtoLoc))((o, pv) =>
+          o.update(pv._1, pv._2)
+        )
+      case "#KEYBOARD" =>
+        // KeyboardEvent object
+        val proplist = KeyboardEvent.getInstList(lset_target)
+        proplist.foldLeft(PreHelper.NewObject(ObjProtoLoc))((o, pv) =>
+          o.update(pv._1, pv._2)
+        )
+      case _ =>
+        // Event object
+        Event.getInstList(lset_target).foldLeft(PreHelper.NewObject(ObjProtoLoc))((o, pv) =>
+          o.update(pv._1, pv._2)
+        )
+    }
+
+    val h_4 = h_3.update(l_event, o_event).
+      update(l_arg, PreHelper.NewArrayObject(AbsNumber.alpha(1)))
+    val h_5 = PreHelper.PropStore(h_4, l_arg, AbsString.alpha("0"), Value(LocSet(l_event)))
+    val v_arg = Value(LocSet(l_arg))
+    val o_old = h_5(SinglePureLocalLoc)
+    val cc_caller = cp._2
+    val n_aftercall = cfg.getAftercallFromCall(cp._1)
+    val cp_aftercall = (n_aftercall, cc_caller)
+    lset_fun.foreach {l_f:Loc => {
+      val o_f = h_5(l_f)
+      val fids = o_f("@function")._1._3
+      fids.foreach {fid => {
+        val ccset = cc_caller.NewCallContext(cfg, fid, l_r, lset_this)
+        ccset.foreach {case (cc_new, o_new) => {
+          val value = PropValue(ObjectValue(v_arg, BoolTrue, BoolFalse, BoolFalse))
+          val o_new2 =
+            o_new.
+              update(cfg.getArgumentsName(fid), value).
+              update("@scope", o_f("@scope")._1)
+          sem.addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
+          sem.addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_3, o_old)
+          sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercall, ctx_3, o_old)
+        }}
+      }}
+    }}
+    val h_6 = v_arg._2.foldLeft(HeapBot)((hh, l) => {
+      val pv = PropValue(ObjectValue(Value(lset_fun), BoolTrue, BoolFalse, BoolTrue))
+      hh + h_5.update(l, h_5(l).update("callee", pv))
+    })
+    (h_6, ctx_3)
+
+  }
+  def asyncDef(h: Heap, ctx: Context, cfg: CFG, name: String, list_addr: List[Address]): LPSet = {
+    val addr1 = list_addr(0)
+    val addr2 = list_addr(1)
+    val addr3 = list_addr(2)
+    val l_arg = addrToLoc(addr2, Recent)
+    val l_event = addrToLoc(addr3, Recent)
+    val lpset_1 = AH.Oldify_def(h, ctx, addr1)
+    val lpset_2 = AH.Oldify_def(h, ctx, addr2)
+    val lpset_3 = AH.Oldify_def(h, ctx, addr3)
+    // event object
+    val lpset_4 = (AH.NewObject_def ++ MouseEvent.instProps ++ KeyboardEvent.instProps).foldLeft(LPBot)((lpset, p) => lpset + ((l_event, p)))
+    // arguments object
+    val lpset_5 = AH.NewArrayObject_def.foldLeft(LPBot)((lpset, p) => lpset + ((l_arg, p)))
+    // arguments[0] = event
+    val lpset_6 = AH.PropStore_def(h, l_arg, AbsString.alpha("0"))
+    // callee
+    val lpset_7 = LPSet((l_arg, "callee"))
+    lpset_1 ++ lpset_2 ++ lpset_3 ++ lpset_4 ++ lpset_5 ++ lpset_6 ++ lpset_7
+  }
+  def asyncUse(h: Heap, ctx: Context, cfg: CFG, name: String, list_addr: List[Address]): LPSet = {
+    val addr1 = list_addr(0)
+    val addr2 = list_addr(1)
+    val addr3 = list_addr(2)
+    val all_event = DOMModel.async_calls
+    val all_event_name = DOMModel.async_fun_names
+    val fun_table = h(EventFunctionTableLoc)
+    val target_table = h(EventTargetTableLoc)
+
+    // lset_fun: function to dispatch
+    // lset_target: current target, 'this' in function body
+    val (lset_fun, lset_target, lpset_1) = name match {
+
+      case "#ALL" =>
+        val (f, t, lpset_1) = all_event.foldLeft((LocSetBot, LocSetBot, LPBot))((llpset, e) =>
+          (llpset._1 ++ fun_table(e)._1._2._2, llpset._2 ++ target_table(e)._1._2._2,
+            llpset._3 + (EventFunctionTableLoc, e) + (EventTargetTableLoc, e))
+        )
+        val (lset_static, lpset_2) = h(GlobalLoc).map.foldLeft((LocSetBot, LPBot))((set, kv) =>
+          if (all_event_name.exists((e) => kv._1.startsWith(e)))
+            (set._1 ++ kv._2._1._1._1._2, set._2 + (GlobalLoc, kv._1))
+          else
+            set
+        )
+        (f ++ lset_static, t, lpset_1 ++ lpset_2)
+      case "#NOT_LOAD_UNLOAD" =>
+        val (f, t, lpset_1) = all_event.filterNot(_ == "#LOAD").filterNot(_ == "#UNLOAD").foldLeft((LocSetBot, LocSetBot, LPBot))((llpset, e) =>
+          (llpset._1 ++ fun_table(e)._1._2._2, llpset._2 ++ target_table(e)._1._2._2,
+            llpset._3 + (EventFunctionTableLoc, e) + (EventTargetTableLoc, e))
+        )
+        val event_names = all_event_name.filterNot(_ == "__LOADEvent__").filterNot(_ == "__UNLOADEvent__")
+        val (lset_static, lpset_2) = h(GlobalLoc).map.foldLeft((LocSetBot, LPBot))((set, kv) =>
+          if (event_names.exists((e) => kv._1.startsWith(e)))
+            (set._1 ++ kv._2._1._1._1._2, set._2 + (GlobalLoc, kv._1))
+          else
+            set
+        )
+        (f ++ lset_static, t, lpset_1 ++ lpset_2)
+
+      case _ =>
+        val (f,t) = (fun_table(name)._1._2._2 , target_table(name)._1._2._2)
+        val lpset_1 =  LPBot + (EventFunctionTableLoc, name) + (EventTargetTableLoc, name)
+        val (lset_static, lpset_2) =
+          if (name == "#TIME")
+            (LocSetBot, LPBot)
+          else {
+            val event_name = all_event_name(all_event.indexOf(name))
+            h(GlobalLoc).map.foldLeft((LocSetBot, LPBot))((set, kv) =>
+              if (kv._1.startsWith(event_name))
+                (set._1 ++ kv._2._1._1._1._2, set._2 + (GlobalLoc, kv._1))
+              else
+                set
+            )
+          }
+        (f ++ lset_static, t, lpset_1 ++ lpset_2)
+    }
+
+    val l_arg = addrToLoc(addr2, Recent)
+    val l_event = addrToLoc(addr3, Recent)
+    val LP_2 = AH.Oldify_use(h, ctx, addr1)
+    val LP_3 = AH.Oldify_use(h, ctx, addr2)
+    val LP_4 = AH.Oldify_use(h, ctx, addr3)
+
+    // this
+    val LP_5 = AH.getThis_use(h, Value(lset_target))
+
+    // event object
+    val LP_6 = (AH.NewObject_def ++ MouseEvent.instProps ++ KeyboardEvent.instProps).foldLeft(LPBot)((lpset, p) => lpset + ((l_event, p)))
+    // arguments object
+    val LP_7 = AH.NewArrayObject_def.foldLeft(LPBot)((lpset, p) => lpset + ((l_arg, p)))
+    // arguments[0] = event
+    val LP_8 = AH.PropStore_def(h, l_arg, AbsString.alpha("0"))
+
+    // function
+    val LP_9 = lset_fun.foldLeft(LPBot)((S, l_f) => S + ((l_f, "@function")))
+    // callee
+    val LP_10 = LPSet((l_arg, "callee"))
+    // because of PureLocal object is weak updated in edges, all the element are needed
+    val LP_11 = h(SinglePureLocalLoc).map.foldLeft(LPBot)((S, kv) => S + ((SinglePureLocalLoc, kv._1)))
+    val LP_12 = LPSet(Set((ContextLoc, "3"), (ContextLoc, "4")))
+    lpset_1 ++ LP_2 ++ LP_3 ++ LP_4 ++ LP_5 ++ LP_6 ++ LP_7 ++ LP_8 ++ LP_9 ++ LP_10 ++ LP_11 ++ LP_12
   }
 
-  var initPureLocalObj: Obj = null
-  def getInitHeapPre() = {
-    val initCP = ((cfg.getGlobalFId, LEntry), CallContext.globalCallContext)
-    initHeap.update(cfg.getPureLocal(initCP), initPureLocalObj)
-  }
-  def getInitHeap() = {
-    initHeap.update(SinglePureLocalLoc, initPureLocalObj)
-  }
+  def asyncCallgraph(h: Heap, inst: CFGInst, map: Map[CFGInst, Set[FunctionId]],
+                     name: String, list_addr: List[Address]): Map[CFGInst, Set[FunctionId]] = {
+    val all_event = DOMModel.async_calls //List("#LOAD", "#UNLOAD", "#KEYBOARD", "#MOUSE", "#OTHER", "#TIME")
+    val all_event_name = DOMModel.async_fun_names
+    val fun_table = h(EventFunctionTableLoc)
+    val target_table = h(EventTargetTableLoc)
 
-  def initialize(): Unit = {
-    val s = System.nanoTime
-    val F = BoolFalse
-    val T = BoolTrue
-    
-    val m = initHeap.map |>
-      initDOM |>
-      initHtml
-      //initCore 
-
-    System.out.println("# Time for initial heap with DOM modeling(ms): "+(System.nanoTime - s) / 1000000.0)
-
-    builtinmodel.initHeap = Heap(m)
-    builtinmodel.fset_builtin = fset_builtin
+    // lset_fun: function to dispatch
+    val lset_fun = name match {
+      case "#ALL" =>
+        val f = all_event.foldLeft(LocSetBot)((llset, e) =>
+          llset ++ fun_table(e)._1._2._2
+        )
+        val lset_static = h(GlobalLoc).map.foldLeft(LocSetBot)((lset, kv) =>
+          if (all_event_name.exists((e) => kv._1.startsWith(e)))
+            lset ++ kv._2._1._1._1._2
+          else
+            lset
+        )
+        f ++ lset_static
+      case "#NOT_LOAD_UNLOAD" =>
+        val f = all_event.filterNot(_ == "#LOAD").filterNot(_ == "#UNLOAD").foldLeft(LocSetBot)((llset, e) =>
+          llset ++ fun_table(e)._1._2._2
+        )
+        val event_names = all_event_name.filterNot(_ == "__LOADEvent__").filterNot(_ == "__UNLOADEvent__")
+        val lset_static = h(GlobalLoc).map.foldLeft(LocSetBot)((lset, kv) =>
+          if (event_names.exists((e) => kv._1.startsWith(e)))
+            lset ++ kv._2._1._1._1._2
+          else
+            lset
+        )
+        f ++ lset_static
+      case _ =>
+        val f = fun_table(name)._1._2._2
+        val lset_static =
+          if (name == "#TIME")
+            LocSetBot
+          else {
+            val event_name = all_event_name(all_event.indexOf(name))
+            h(GlobalLoc).map.foldLeft(LocSetBot)((lset, kv) =>
+              if (kv._1.startsWith(event_name)) lset ++ kv._2._1._1._1._2
+              else lset
+            )
+          }
+        f ++ lset_static
+    }
+    lset_fun.foldLeft(map)((_m, l) => {
+      if (BoolTrue <= PreHelper.IsCallable(h,l)) {
+        _m.get(inst) match {
+          case None => _m + (inst -> h(l)("@function")._1._3.toSet)
+          case Some(set) => _m + (inst -> (set ++ h(l)("@function")._1._3.toSet))
+        }
+      } else {
+        _m
+      }
+    })
   }
 }

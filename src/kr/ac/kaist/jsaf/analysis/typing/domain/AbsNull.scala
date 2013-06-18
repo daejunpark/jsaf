@@ -13,7 +13,7 @@ object AbsNull {
   def alpha: AbsNull = NullTop
 }
 
-sealed abstract class AbsNull {
+sealed abstract class AbsNull extends AbsBase {
   /* partial order */
   def <= (that: AbsNull) = {
     (this == NullBot) || (that == NullTop)    
@@ -50,6 +50,22 @@ sealed abstract class AbsNull {
       case NullTop => "null"
       case NullBot => "Bot"
     }
+  }
+
+  override def isTop(): Boolean = {this == NullTop}
+
+  override def isBottom(): Boolean = {this == NullBot}
+
+  override def isConcrete(): Boolean = {
+    this == NullTop
+  }
+
+  def getConcreteValue(): Option[AbsNull] = {
+    if(isConcrete) Some(NullTop) else None
+  }
+
+  override def toAbsString(): AbsString = {
+    if(this == NullTop) OtherStrSingle("null") else StrBot
   }
 }
 

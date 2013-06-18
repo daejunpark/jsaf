@@ -21,7 +21,9 @@ object AccessHelper {
   var NewObject_def = Set("@class", "@proto", "@extensible", "@default_number", "@default_other")
   var NewArrayObject_def = Set("@class", "@proto", "length", "@extensible", "@default_number", "@default_other")
   var NewArgObject_def = Set("@class", "@proto", "length", "@extensible", "@default_number", "@default_other")
-  var NewFunctionObject_def = Set("@class", "@proto", "@extensible", "@function", "@construct", "@scope", "@default_number", "@default_other", "prototype", "length")
+  var NewFunctionObject_def = Set(
+    "@class", "@proto", "@extensible", "@function", "@construct", "@hasinstance",
+    "@scope", "@default_number", "@default_other", "prototype", "length")
   var NewDeclEnvRecord_def = Set("@outer", "@default_number", "@default_other")
   var NewBoolean_def = Set("@class", "@proto", "@extensible", "@primitive", "@default_number", "@default_other")
   var NewNumber_def = Set("@class", "@proto", "@extensible", "@primitive", "@default_number", "@default_other")
@@ -75,26 +77,38 @@ object AccessHelper {
   }
 
   def VarStoreL_def(h: Heap, l: Loc, x: String): LPSet = {
-    val env_obj = h(l)
-    val L_outer = env_obj("@outer")._1._2._2
-    val LP_1 =
-      if (env_obj.dom(x))
-        env_obj(x)._1._1._2 match {
-          case BoolTrue =>
-            LPSet((l,x))
-          case BoolFalse =>
+    var visited = LocSetBot
+    def visit(l: Loc): LPSet = {
+      if (visited.contains(l)) LPBot
+      else {
+        visited += l
+        val env = h(l)
+        val has_x = env.domIn(x)
+        val LP_1 = 
+          if (BoolTrue <= has_x) {
+            env(x)._1._1._2 match {
+              case BoolTrue =>
+                LPSet((l, x))
+              case BoolFalse =>
+                LPBot
+              case _ => 
+                throw new InternalError("Writable attribute must be exact for variables in local env.") 
+            }
+          } else {
             LPBot
-          case _ => 
-            throw new InternalError("Writable attribute must be exact for variables in local env.") 
-        }
-      else LPBot
-    val LP_2 =
-      if (BoolFalse <= h(l).domIn(x))
-        // TODO: infinite recursion.
-        L_outer.foldLeft(LPBot)((S,l_outer) => S ++ VarStoreL_def(h, l_outer, x))
-      else LPBot
-
-    LP_1 ++ LP_2
+          }
+        val LP_2 = 
+          if (BoolFalse <= has_x) {
+            val lset_outer = env("@outer")._1._2._2
+            lset_outer.foldLeft(LPBot)((S, l_outer) => S ++ visit(l_outer))
+          } else {
+            LPBot
+          }
+        LP_1 ++ LP_2
+      }
+    }
+    
+    visit(l)
   }
 
   def VarStoreG_def(h: Heap, x: String): LPSet = {
@@ -261,24 +275,25 @@ object AccessHelper {
 
   def LookupL_use(h: Heap, l: Loc, x: String): LPSet = {
     var visited = LocSetBot
-
-    def iter(h: Heap, l: Loc, x: String): LPSet = {
-      if (!visited.contains(l)) {
+    def visit(l: Loc): LPSet = {
+      if (visited.contains(l)) LPBot
+      else {
         visited += l
-        val env_obj = h(l)
-        if (env_obj.dom(x))
-          lookup(h, l, x)
-        else {
-          val lset_outer = env_obj("@outer")._1._2._2
-          LPSet((l, "@outer")) ++
-          lset_outer.foldLeft(LPBot)((S, l_outer) => S ++ iter(h,l_outer,x))
-        }
-      } else {
-        LPBot
+        val env = h(l)
+        val has_x = env.domIn(x)
+        val LP = 
+          if (BoolFalse <= has_x) {
+            val lset_outer = env("@outer")._1._2._2
+            LPSet((l, "@outer")) ++
+            lset_outer.foldLeft(LPBot)((S, l_outer) => S ++ visit(l_outer))
+          } else {
+            LPBot
+          }
+        lookup(h, l, x) ++ LP
       }
     }
 
-    iter(h, l, x)
+    visit(l)
   }
 
   def LookupG_use(h: Heap, x: String): LPSet = {
@@ -308,6 +323,9 @@ object AccessHelper {
   def HasConstruct_use(h: Heap, l: Loc): LPSet = {
     LPSet((l, "@construct"))
   }
+  def HasInstance_use(h: Heap, l: Loc): LPSet = {
+    LPSet((l, "@hasinstance"))
+  }
 
   def inherit_use(h: Heap, l_1: Loc, l_2: Loc): LPSet = {
     var visited = LocSetBot
@@ -315,13 +333,14 @@ object AccessHelper {
     def iter(h: Heap, l_1: Loc, l_2: Loc): LPSet = {
       if (!visited.contains(l_1)) {
         visited += l_1
+        val v_eq = Operator.bopSEq(Value(l_1), Value(l_2))
         val LP =
-          if (l_1 == l_2)
-            LPBot
-          else {
+          if (BoolFalse <= v_eq._1._3) {
             val lset_proto = h(l_1)("@proto")._1._1._1._2
             lset_proto.foldLeft(LPBot)((S, l) => S ++ iter(h,l,l_2))
           }
+          else
+            LPBot
         LP + ((l_1, "@proto"))
       } else {
         LPBot
@@ -367,12 +386,26 @@ object AccessHelper {
   }
 
   def VarStoreL_use(h: Heap, l: Loc, x: String): LPSet = {
-    if (h(l).dom(x))
-      lookup(h,l,x)
-    else {
-      val lset_outer = h(l)("@outer")._1._2._2
-      lset_outer.foldLeft(LPBot)((S, l_outer) => S ++ VarStoreL_use(h,l_outer,x) + ((l,"@outer")))
+    var visited = LocSetBot
+    def visit(l: Loc): LPSet = {
+      if (visited.contains(l)) LPBot
+      else {
+        visited += l
+        val env = h(l)
+        val has_x = env.domIn(x)
+        val LP = 
+          if (BoolFalse <= has_x) {
+            val lset_outer = env("@outer")._1._2._2
+            LPSet((l, "@outer")) ++
+            lset_outer.foldLeft(LPBot)((S, l_outer) => S ++ visit(l_outer))
+          } else {
+            LPBot
+          }
+        lookup(h, l, x) ++ LP
+      }
     }
+
+    visit(l)
   }
 
   def VarStoreG_use(h: Heap, x: String): LPSet = {
@@ -447,15 +480,26 @@ object AccessHelper {
   }
 
   def LookupBaseL_use(h: Heap, l: Loc, x: String): LPSet = {
-    val LP = 
-      if (h(l).dom(x))
-        LPBot
+    var visited = LocSetBot
+    def visit(l: Loc): LPSet = {
+      if (visited.contains(l)) LPBot
       else {
-        val lset_outer = h(l)("@outer")._1._2._2
-        lset_outer.foldLeft(LPBot)((S, l_outer) => S ++ LookupBaseL_use(h,l_outer,x))
+        visited += l
+        val env = h(l)
+        val has_x = env.domIn(x)
+        val LP = 
+          if (BoolFalse <= has_x) {
+            val lset_outer = env("@outer")._1._2._2
+            LPSet((l, "@outer")) ++
+            lset_outer.foldLeft(LPBot)((S, l_outer) => S ++ visit(l_outer))
+          } else {
+            LPBot
+          }
+        lookup(h, l, x) ++ LP
       }
+    }
 
-    LP ++ lookup(h, l, x) ++ LPSet((l, "@outer"))
+    visit(l)
   }
 
   def LookupBaseG_use(h: Heap, x: String): LPSet = {

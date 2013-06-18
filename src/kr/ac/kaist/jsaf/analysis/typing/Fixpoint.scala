@@ -14,8 +14,8 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import scala.collection.mutable.{HashMap => MHashMap}
 import scala.collection.immutable.HashMap
 
-class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table) {
-  private val sem = new Semantics(cfg, worklist)
+class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, locclone: Boolean) {
+  private val sem = new Semantics(cfg, worklist, locclone)
   def getSemantics = sem
   var count = 0
     
@@ -40,7 +40,7 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table) {
       val (outS, outES) = sem.C(cp, cfg.getCmd(cp._1), inS)
 
       val succs = cfg.getSucc(cp._1)
-      val esucc = cfg.getExcSucc(cp._1)
+      val esucc = cfg.getExcSucc.get(cp._1)
       
       // Propagate normal output state (outS) along normal edges.
       succs.foreach(node => {
@@ -82,7 +82,7 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table) {
               cp._1._2 match {
                 case LExitExc => {
                   val n_aftercall = kv._1._1
-                  cfg.getExcSucc(n_aftercall) match {
+                  cfg.getExcSucc.get(n_aftercall) match {
                     case None => throw new InternalError("After-call node must have exception successor")
                     case Some(node) => (node, kv._1._2)
                   }
@@ -113,30 +113,30 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table) {
     else {
       val exitHeap = exitState._1
       // this value for library function
-      val lset_this = LocSet(ObjPseudoTopLoc)
+      val lset_this = LocSet(LibModeObjTopLoc)
       exitHeap.map.foreach((kv) => {
         val obj = kv._2
         AbsString.concretize(obj("@class")._1._2._1._5) match {
           case Some(s) if s == "Function" =>
             obj("@function")._1._3.foreach((fid) => {
               if (cfg.isUserFunction(fid)) {
-                val l_r = addrToLoc(cfg.newAddress, Recent)
+                val l_r = addrToLoc(cfg.newProgramAddr(), Recent)
                 val ccset = globalCC.NewCallContext(cfg, fid, l_r, lset_this)
 	            ccset.foreach {case (cc_new, o_new) => {
   	              val o_arg = Obj(ObjMapBot.
-	                updated("@default_number", (PropValue(ObjectValue(ValuePseudoTop,BoolTrue,BoolTrue,BoolTrue)), AbsentTop)).
+	                updated("@default_number", (PropValue(ObjectValue(LibModeValueTop,BoolTrue,BoolTrue,BoolTrue)), AbsentTop)).
 	                updated("@default_other", (PropValueBot, AbsentTop)).
 	                updated("@class", (PropValue(AbsString.alpha("Arguments")), AbsentBot)).
 	                updated("@proto", (PropValue(ObjectValue(ObjProtoLoc, BoolFalse, BoolFalse, BoolFalse)), AbsentBot)).
 	                updated("@extensible", (PropValue(BoolTrue), AbsentBot)).
 	                updated("length", (PropValue(ObjectValue(UInt, BoolTrue, BoolFalse, BoolTrue)), AbsentBot)))
-	              val l_arg = addrToLoc(cfg.newAddress, Recent)
+	              val l_arg = addrToLoc(cfg.newProgramAddr(), Recent)
 	              val v_arg = Value(l_arg)
 	              val value = PropValue(ObjectValue(v_arg, BoolTrue, BoolFalse, BoolFalse))
 	              val o_new2 = o_new.update(cfg.getArgumentsName(fid), value).
 	                update("@scope", obj("@scope")._1)
 	          
-	              val env_obj = Helper.NewDeclEnvRecord(o_new2("@scope")._1._2._2)
+	              val env_obj = Helper.NewDeclEnvRecord(o_new2("@scope")._1._2)
 	                  
 	              val obj2 = o_new2 - "@scope"
 	              val h1 = exitState._1.update(l_arg, o_arg) // arguments object update

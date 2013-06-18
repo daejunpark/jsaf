@@ -121,7 +121,7 @@ object FunCFGWriter {
           if(!cfg.getSucc(node).isEmpty) {
             sb.append(connectEdge(getLabel(node), cfg.getSucc(node), NormalEdgeStyle, o)).append(newLine)
           }
-          cfg.getExcSucc(node) match {
+          cfg.getExcSucc.get(node) match {
             case Some(succ) => 
               sb.append(connectEdge(getLabel(node), Set(succ), ExcEdgeStyle, o)).append(newLine)
             case None => ()

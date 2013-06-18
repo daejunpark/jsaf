@@ -45,7 +45,7 @@ This is the main Ant build file.
   <property name="unicode.third" location="${JS}/third_party/unicode"/>
   <property name="wala" location="${JS}/third_party/wala"/>
   <property name="jericho" location="${JS}/third_party/jericho"/>
-  <property name="xtc" location="${JS}/third_party/xtc"/>
+  <property name="xtc" location="${JS}/bin"/>
   <property name="commons.io" location="${JS}/third_party/commons-io"/>
   <property name="commons.lang" location="${JS}/third_party/commons-lang"/>
   <property name="scala-json" location="${JS}/third_party/json"/>

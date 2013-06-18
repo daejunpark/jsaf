@@ -9,22 +9,26 @@
 
 package kr.ac.kaist.jsaf.analysis.typing
 
+import scala.collection.mutable.{HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.models.BuiltinModel
 
 trait TypingInterface {
+  def env: Environment
   def cfg: CFG
-  def getMergedState(): State
-  def analyze(model: BuiltinModel): Unit = {}
-  def analyze(model: BuiltinModel, duset: DUSet): Unit = {}
+  def getMergedState: State
+  def analyze(init: InitHeap): Unit = {}
+  def analyze(init: InitHeap, duset: DUSet): Unit = {}
   def dump(): Unit
   def dump_callgraph(): Unit = {}
   def statistics(statdump: Boolean): Unit = {}
 
   def builtinFset(): Map[FunctionId, String]
+  def getTable: Table = MHashMap()
   def readTable(cp: ControlPoint): State = StateBot
   def readTable(node: Node): Option[CState] = None
+  def getStateCount: Int = {var count = 0; for((node, cstate) <- getTable) count+= cstate.size; count}
   def getStateBeforeProgram: State = StateBot
   def getStateAfterProgram: State = StateBot
   def getExcStateAfterProgram: State = StateBot
@@ -44,4 +48,5 @@ trait TypingInterface {
   def computePrototypeHierarchy(state: State): Map[Loc, Set[Loc]] = Map()
   def getFuncNameByLoc(state:State, loc: Loc): Set[String] = Set()
   def integrateRecentState(s:State) : State = StateBot
+  def setCompare(preHeap: State, preCFG: CFG): Unit = {}
 }

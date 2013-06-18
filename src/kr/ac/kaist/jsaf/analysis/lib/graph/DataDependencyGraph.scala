@@ -11,7 +11,6 @@ package kr.ac.kaist.jsaf.analysis.lib.graph
 
 import scala.collection.immutable.HashMap
 import scala.collection.immutable.HashSet
-import scala.collection.mutable.{ Stack }
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{Loc, LocSet, LocSetBot, DomainPrinter}
 import kr.ac.kaist.jsaf.analysis.lib._
@@ -81,7 +80,7 @@ class DataDependencyGraph(nodes: Set[Node], var entry: Node) {
       map + (kv._1 -> kv._2)
     })
 
-    var newgraph = new DataDependencyGraph(this.nodes ++ g.getNodes, this.entry)
+    val newgraph = new DataDependencyGraph(this.nodes ++ g.getNodes, this.entry)
     newgraph.succs = new_succs
     newgraph.excSucc = new_excSucc
     newgraph.preds = new_preds
@@ -103,7 +102,7 @@ class DataDependencyGraph(nodes: Set[Node], var entry: Node) {
       case None => LocSetBot
     }
 
-  def dump_candidates = {
+  def dump_candidates(): Unit = {
     System.out.println("Preds===")
     preds.foreach(nl => System.out.println(nl))
     System.out.println("Candidates===")
@@ -124,7 +123,7 @@ class DataDependencyGraph(nodes: Set[Node], var entry: Node) {
     if (oldSet.contains(l)) {
       false
     } else {
-      // System.err.println("Edge: "+src+" -> "+dest+" { "+ DomainPrinter.printLoc(l) +" }")
+//      System.err.println("Edge: "+src+" -> "+dest+" { "+ DomainPrinter.printLoc(l) +" }")
       succs += (src -> (getNormalSuccs(src) +dest))
       preds += (dest -> (getSet(preds, dest) + src))
       dusetMap += ((src, dest) -> (oldSet + l))
@@ -149,7 +148,7 @@ class DataDependencyGraph(nodes: Set[Node], var entry: Node) {
     if (oldSet.contains(l)) {
       false
     } else {
-      // System.err.println("ExcEdge: "+src+" -> "+dest+" { "+ DomainPrinter.printLoc(l) +" }")
+//      System.err.println("ExcEdge: "+src+" -> "+dest+" { "+ DomainPrinter.printLoc(l) +" }")
       excSucc += (src -> dest)
       excPred += (dest -> (getSet(excPred, dest) + src))
       excdusetMap += ((src, dest) -> (oldSet + l))
@@ -185,7 +184,7 @@ class DataDependencyGraph(nodes: Set[Node], var entry: Node) {
     visited
   }
 
-  def dump() = {
+  def dump(): Unit = {
     System.out.println("entry: "+entry)
     succs.foreach(kv => {
       val src = kv._1
@@ -210,7 +209,7 @@ class DataDependencyGraph(nodes: Set[Node], var entry: Node) {
     "{ " + set.foldLeft("")((S,l) => S + DomainPrinter.printLoc(l) + ", ") + " }"
   }
 
-  def toDot_dugraph() = {
+  def toDot_dugraph(): Unit = {
     System.out.println("digraph \"DirectedGraph\" {")
     getNodes.foreach(src => {
       getNormalSuccs(src).foreach(dst => {
@@ -236,7 +235,7 @@ class DataDependencyGraph(nodes: Set[Node], var entry: Node) {
       getNormalSuccs(src).foreach(dst => {
         val duset = getDUSet(src, dst)
         // filtering #PureLocal#n because it is valid only in pre-analysis
-        val label = ppLocs(duset).toString().replaceAll("##?PureLocal#[0-9]+,", "").replaceAll(" ", "")
+        val label = ppLocs(duset).replaceAll("##?PureLocal#[0-9]+,", "").replaceAll(" ", "")
         if(!label.equals("{}"))
           str += (getLabel(src)+ "->"+getLabel(dst)+"["+NormalEdgeStyle+", label=\"" + label + "\"];\n")
       })

@@ -141,27 +141,12 @@ case class CFGInternalCall(iid: InstId, info: Info,
   }
 }
 
-case class CFGBuiltinCall(iid: InstId,
-                          fun: String, arguments: CFGExpr,
-                          addr1: Address, addr2: Address,
-                          addr3: Address, addr4: Address) extends CFGInst {
+case class CFGAPICall(iid: InstId,
+                      model: String, fun: String, arguments: CFGExpr) extends CFGInst {
   def getInstId = iid
   override def toString =
-    "[]"+fun+"("+arguments.toString+") @ #"+addr1.toString+", #"+
-    addr2.toString+", #"+addr3.toString+", #"+addr4.toString
+    "[]"+model+"."+fun+"("+arguments.toString+")"
 }
-
-// Instruction for DOM API calls
-case class CFGDomApiCall(iid: InstId,
-                          fun: String, arguments: CFGExpr,
-                          addr1: Address, addr2: Address,
-                          addr3: Address, addr4: Address) extends CFGInst {
-  def getInstId = iid
-  override def toString =
-    "[]"+fun+"("+arguments.toString+") @ #"+addr1.toString+", #"+
-    addr2.toString+", #"+addr3.toString+", #"+addr4.toString
-}
-
 
 case class CFGAssert(iid: InstId, info: Info,
                      expr: CFGExpr, flag: Boolean) extends CFGInst {
@@ -200,4 +185,11 @@ case class CFGNoOp(iid: InstId, info: Info,
   def getInstId = iid
   override def getInfo = Some(info)
   override def toString = "noop("+desc+")"
+}
+
+case class CFGAsyncCall(iid: InstId, info: Info, modelType: String, callType: String,
+                        addr1: Address, addr2: Address, addr3: Address) extends CFGInst {
+  def getInstId = iid
+  override def getInfo = Some(info)
+  override def toString = "async("+modelType+", "+ callType+") @ #"+addr1.toString+", #"+addr2.toString+", #"+addr3.toString
 }

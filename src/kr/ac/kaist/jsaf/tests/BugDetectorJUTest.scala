@@ -13,10 +13,13 @@ import junit.framework.TestSuite
 import _root_.java.io.File
 import kr.ac.kaist.jsaf.ProjectProperties
 import kr.ac.kaist.jsaf.Shell
+import kr.ac.kaist.jsaf.ShellParameters
+import kr.ac.kaist.jsaf.compiler.Predefined
 
 object BugDetectorJUTest {
   val SEP = File.separator
   val BUGDETECTOR_FAIL_TESTS_DIR = "tests/bug_detector_tests"
+  Shell.pred = new Predefined(new ShellParameters())
 
   def main(args: String*) = junit.textui.TestRunner.run(suite)
 

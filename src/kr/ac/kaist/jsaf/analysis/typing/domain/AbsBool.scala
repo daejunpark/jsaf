@@ -15,7 +15,7 @@ object AbsBool {
   }
 }
 
-sealed abstract class AbsBool {
+sealed abstract class AbsBool extends AbsBase {
   /* partial order */
   def <= (that: AbsBool) = {
     if (this == that) true
@@ -47,7 +47,7 @@ sealed abstract class AbsBool {
     else if (that == BoolTop) this
     else BoolBot
   }
-
+  
   /* abstract operator 'equal to' */
   def === (that: AbsBool): AbsBool = {
     (this, that) match {
@@ -67,6 +67,30 @@ sealed abstract class AbsBool {
       case BoolBot => "Bot"
       case BoolTrue => "true"
       case BoolFalse => "false"
+    }
+  }
+
+  override def isTop(): Boolean = {this == BoolTop}
+
+  override def isBottom(): Boolean = {this == BoolBot}
+
+  override def isConcrete(): Boolean = {
+    this == BoolTrue || this == BoolFalse
+  }
+
+  def getConcreteValue(): Option[Boolean] = {
+    this match {
+      case BoolTrue => Some(true)
+      case BoolFalse => Some(false)
+      case _ => None
+    }
+  }
+
+  override def toAbsString(): AbsString = {
+    this match {
+      case BoolTrue => OtherStrSingle("true")
+      case BoolFalse => OtherStrSingle("false")
+      case _ => StrBot
     }
   }
 }

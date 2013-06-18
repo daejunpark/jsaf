@@ -78,7 +78,7 @@ object Worklist {
     wl
   }
 
-  def computesSparse(cfg: CFG, quiet: Boolean): Worklist = {
+  def computesSparse(interDDG: DGraph[Node], quiet: Boolean): Worklist = {
     val s = System.nanoTime
     var map = TreeMap[Node, Int]()
     var headmap = TreeMap[Node, Int]()
@@ -139,8 +139,7 @@ object Worklist {
       order_i += 1
     }
 
-    val interDDG = cfg.getInterDDG.prunedGraph
-    makeSCCGraph(interDDG)
+    makeSCCGraph(interDDG.prunedGraph)
 
     val wl = new Worklist(map, quiet)
     wl.init(headmap, backedges)

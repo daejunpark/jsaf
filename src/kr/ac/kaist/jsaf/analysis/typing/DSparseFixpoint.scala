@@ -5,7 +5,7 @@
     Use is subject to license terms.
 
     This distribution may include materials developed by third parties.
- ***************************************************************************** */
+ ******************************************************************************/
 
 package kr.ac.kaist.jsaf.analysis.typing
 
@@ -15,8 +15,8 @@ import scala.collection.mutable.{HashMap => MHashMap}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 
-class DSparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean) {
-  private val sem = new Semantics(cfg, worklist)
+class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Table, quiet: Boolean, locclone: Boolean) {
+  private val sem = new Semantics(cfg, worklist, locclone)
   def getSemantics = sem
   var count = 0
   var duset: DUSet = Map()
@@ -25,11 +25,9 @@ class DSparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boole
   def compute(du: DUSet): Unit = {
     duset = du
     worklist.add(((cfg.getGlobalFId, LEntry), CallContext.globalCallContext))
-    System.out.println()
+    if(!quiet) System.out.println()
     loop()
-    System.out.println()
-    if (!quiet)
-      System.out.println("# edge recovering time: "+time)
+    if(!quiet) System.out.println("\n# edge recovering time: "+time)
   }
 
   private var cache = HashMap[Int, (ControlPoint, State, State, State)]()
@@ -53,7 +51,7 @@ class DSparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boole
       count = count+1
 
       val cp = worklist.getHead()
-      val (fg, ddg) = cfg.getFlowGraph(cp._1._1, cp._2)
+      val (fg, ddg) = env.getFlowGraph(cp._1._1, cp._2)
 
       val inS = readTable(cp)
 
@@ -80,35 +78,34 @@ class DSparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boole
       val recover_start = System.nanoTime()
       val edges =
         if (outS._1 != HeapBot && !cfg.getCalls.contains(cp._1)) {
-            cfg.recoverOutEdges(fg, cp._1)
+          env.recoverOutEdges(fg, cp._1)
         } else {
           HashSet[(Node,Node)]()
         }
       val excEdges =
         if (outES._1 != HeapBot) {
-          cfg.recoverOutExcEdge(fg, cp._1)
+          env.recoverOutExcEdge(fg, cp._1)
         } else {
           HashSet[(Node,Node)]()
         }
 
       if (!edges.isEmpty || !excEdges.isEmpty) {
-        val recovered = cfg.recover_intra_dugraph(fg, ddg, edges, excEdges) - cp._1
+        val recovered = env.recover_intra_dugraph(fg, ddg, edges, excEdges) - cp._1
         recovered.foreach(node => worklist.add((node, cp._2)))
       }
-      val recover_time = (System.nanoTime() - recover_start) / 1000000000.0;
+      val recover_time = (System.nanoTime() - recover_start) / 1000000000.0
       time += recover_time
 
       if (outS._1 != HeapBot) {
-        // System.out.println("\n== Heap ==\n" + DomainPrinter.printHeap(4,outS._1, false))
+        // System.out.println("\n== Heap ==\n" + DomainPrinter.printHeap(4,outS._1, cfg))
         val succs = ddg.getNormalSuccs(cp._1)
-
         // Propagate normal output state (outS) along normal edges.
         succs.foreach(node => {
           val cp_succ = (node, cp._2)
           val oldS = readTable(cp_succ)
           val succ_set = ddg.getDUSet(cp._1, node)
           // System.out.println("Propagates a heap from "+cp._1+" -> "+node)
-          // System.out.println(DomainPrinter.printHeap(4, (outS.restrict(succ_set))._1))
+          // System.out.println(DomainPrinter.printHeap(4, (outS.restrict(succ_set))._1, cfg))
           val outS2 = outS.restrict(succ_set)
           if (!(outS2 <= oldS)) {
             val newS = oldS + outS2
@@ -119,7 +116,7 @@ class DSparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boole
 
         if (cfg.getCalls.contains(cp._1)) {
           // Propagate normal output state along call/after-call edges.
-          val bypass_set = cfg.getBypassingSet(cp)
+          val bypass_set = env.getBypassingSet(cp)
           if (!bypass_set.isEmpty) {
             val cp_succ = (cfg.getAftercallFromCall(cp._1), cp._2)
             val oldS = readTable(cp_succ)
@@ -128,6 +125,25 @@ class DSparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boole
               val newS = oldS + outS2
               worklist.add(cp._1, cp_succ)
               updateTable(cp_succ, newS)
+            }
+          }
+        }
+        
+        // bypassingset of call->aftercatch is stored when exitexc node is analyzed
+        if (cfg.getCalls.contains(cp._1)) {
+          // Propagate exception output state along call/after-call edges.
+          val bypass_set = env.getBypassingExcSet(cp)
+          if (!bypass_set.isEmpty) {
+            val cp_exc = cfg.getExcSucc.get(cfg.getAftercallFromCall(cp._1)) match {
+              case None => throw new InternalError("After-call node must have exception successor")
+              case Some(node) => (node, cp._2)
+            }
+            val oldS = readTable(cp_exc)
+            val outS2 = outES.restrict(bypass_set)
+            if (!(outS2 <= oldS)) {
+              val newS = oldS + outS2
+              worklist.add(cp._1, cp_exc)
+              updateTable(cp_exc, newS)
             }
           }
         }
@@ -149,7 +165,7 @@ class DSparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boole
             val succ_set = ddg.getExcDUSet(cp._1, node)
             val outES2 = outES.restrict(succ_set)
             // System.out.println("Propagates a excheap from "+cp._1+" -> "+node)
-            // System.out.println(DomainPrinter.printHeap(4, outES._1))
+            // System.out.println(DomainPrinter.printHeap(4, outES._1, cfg))
             if (!(outES2 <= oldS)) {
               val newES = oldS + outES2
               worklist.add(cp._1, cp_succ)
@@ -157,24 +173,6 @@ class DSparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boole
             }
           }
           case None => ()
-        }
-
-        if (cfg.getCalls.contains(cp._1)) {
-          // Propagate exception output state along call/after-call edges.
-          val bypass_set = cfg.getBypassingExcSet(cp)
-          if (!bypass_set.isEmpty) {
-            val cp_exc = cfg.getExcSucc(cfg.getAftercallFromCall(cp._1)) match {
-              case None => throw new InternalError("After-call node must have exception successor")
-              case Some(node) => (node, cp._2)
-            }
-            val oldS = readTable(cp_exc)
-            val outS2 = outES.restrict(bypass_set)
-            if (!(outS2 <= oldS)) {
-              val newS = oldS + outS2
-              worklist.add(cp._1, cp_exc)
-              updateTable(cp_exc, newS)
-            }
-          }
         }
       }
 
@@ -192,7 +190,7 @@ class DSparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boole
               cp._1._2 match {
                 case LExitExc => {
                   val n_aftercall = kv._1._1
-                  cfg.getExcSucc(n_aftercall) match {
+                  cfg.getExcSucc.get(n_aftercall) match {
                     case None => throw new InternalError("After-call node must have exception successor")
                     case Some(node) => (node, kv._1._2)
                   }
@@ -210,16 +208,16 @@ class DSparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boole
                   val n_call = cfg.getCallFromAftercall(cp_aftercall._1)
                   val call = (n_call, cp_aftercall._2)
                   // System.out.println("try to recover normal: "+call)
-                  if (cfg.updateBypassing(call, cp._1._1)) {
+                  if (env.updateBypassing(call, cp._1._1)) {
                     worklist.add(cp._1, call)
                   }
-                  val (fg, ddg) = cfg.getFlowGraph(call._1._1, call._2)
-                  val edges = cfg.recoverOutEdges(fg, call._1)
+                  val (fg, ddg) = env.getFlowGraph(call._1._1, call._2)
+                  val edges = env.recoverOutEdges(fg, call._1)
                   if (!edges.isEmpty) {
-                    val recovered = cfg.recover_intra_dugraph(fg, ddg, edges, Set())
+                    val recovered = env.recover_intra_dugraph(fg, ddg, edges, Set())
                     recovered.foreach(node => worklist.add((node, call._2)))
                   }
-                  val recover_time = (System.nanoTime() - recover_start) / 1000000000.0;
+                  val recover_time = (System.nanoTime() - recover_start) / 1000000000.0
                   time += recover_time
                 }
               }
@@ -229,33 +227,66 @@ class DSparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boole
                   val n_call = cfg.getCallFromAftercall(cp_aftercall._1)
                   val call = (n_call, cp_aftercall._2)
                   // System.out.println("try to recover exception: "+call)
-                  if (cfg.updateBypassingExc(call, cp._1._1)) {
+                  if (env.updateBypassingExc(call, cp._1._1)) {
                     worklist.add(cp._1, call)
                   }
-                  val (fg, ddg) = cfg.getFlowGraph(call._1._1, call._2)
-
+                  val (fg, ddg) = env.getFlowGraph(call._1._1, call._2)
+/*
                   // recover CFG edge of call.
-                  val edges = cfg.recoverOutEdges(fg, call._1)
+                  val edges = env.recoverOutEdges(fg, call._1)
                   // recover EFG edge of aftercall.
-                  val exc_edges = cfg.recoverOutExcEdge(fg, cp_aftercall._1)
+                  val exc_edges = env.recoverOutExcEdge(fg, cp_aftercall._1)
 
                   if (!edges.isEmpty || !exc_edges.isEmpty) {
-                    val recovered = cfg.recover_intra_dugraph(fg, ddg, edges, exc_edges)
+                    val recovered = env.recover_intra_dugraph(fg, ddg, edges, exc_edges)
                     recovered.foreach(node => worklist.add((node, call._2)))
                   }
+*/
 
-                  val recover_time = (System.nanoTime() - recover_start) / 1000000000.0;
+                  // get after-catch node
+                  val cp_aftercatch = cfg.getExcSucc.get(cp_aftercall._1) match {
+                    case None => throw new InternalError("After-call node must have exception successor")
+                    case Some(node) => (node, cp_aftercall._2)
+                  }
+                  // recover CFG edge of call.
+                  //val edges = env.recoverOutEdges(fg, call._1)
+                  // edge : call -> aftercatch for normal flow
+                  val edges = HashSet[(Node, Node)]((n_call, cp_aftercatch._1))
+
+                  // recover EFG edge of aftercall.
+                  // val exc_edges = env.recoverOutExcEdge(fg, cp_aftercall._1)
+
+                  if (!fg.isCallExcRecovered(n_call)) {
+                    // call -> aftercatch normal edge should be added on flow graph
+                    fg.callExcRecovered(n_call)
+                    // val recovered = env.recover_intra_dugraph(fg, ddg, edges, exc_edges)
+                    val recovered = env.recover_intra_dugraph(fg, ddg, edges, Set())
+                    recovered.foreach(node => worklist.add((node, call._2)))
+                  }
+                  
+                  
+                  val recover_time = (System.nanoTime() - recover_start) / 1000000000.0
                   time += recover_time
                 }
               }
               case _ => ()
             }
-          if (!(outS_E <= oldS)) {
-            val newS = oldS + outS_E
-            worklist.add(cp._1, cp_succ)
-            updateTable(cp_succ, newS)
-          }
-        })
+
+            // Localization
+            val outS_E2 =
+              if (env.optionLocalization && cp_succ._1._2 == LEntry) {
+                val useset = env.getLocalizationSet(cp_succ._1._1)
+                State(outS_E._1.restrict(useset), outS_E._2)
+              } else {
+                outS_E
+              }
+
+            if (!(outS_E2 <= oldS)) {
+              val newS = oldS + outS_E2
+              worklist.add(cp._1, cp_succ)
+              updateTable(cp_succ, newS)
+            }
+          })
       }
     }
   }

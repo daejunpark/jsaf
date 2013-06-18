@@ -11,18 +11,34 @@ BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
 bug-detector
 bug-detector_out_WCIequals=\
  \n\
- \n\
- \n\
- \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:2:17~2:23: [Warning] Property 'p' is never used. \n\
-${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:3:9~3:18: [Warning] Unreachable code is found. \n\
-${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:4:3~4:4: [TypeError] Computing default value (toString, valueOf) of the object 'y' yields TypeError. \n\
-${BUGDETECTOR_TESTS_DIR}/defaultValueTypeError1.js:7:9~7:18: [Warning] Unreachable code is found. \n\
-# ReferenceErrors(#) : 0 \n\
-# TypeErrors(#)      : 1 \n\
-# Warnings(#)        : 4 \n\
+defaultValueTypeError1.js:2:17~2:23: [Warning] Property 'p' is never used. \n\
  \n\
- \n\
+============== Total Count ============== \n\
+|  ReferenceErrors   :      0 (  0.00%) | \n\
+|  TypeErrors        :      0 (  0.00%) | \n\
+|  Warnings          :      1 (100.00%) | \n\
+========================================= \n\
+============ Statistics ============= \n\
+|  AbsentRead              :      0 | \n\
+|  BinaryOperator          :      0 | \n\
+|  BuiltinArgSize          :      0 | \n\
+|  BuiltinWrongType        :      0 | \n\
+|  CallConstFunc           :      0 | \n\
+|  CallNonConstructor      :      0 | \n\
+|  CallNonFunction         :      0 | \n\
+|  ConditionalBranch       :      0 | \n\
+|  ConvertToNumber         :      0 | \n\
+|  DefaultValueTypeError   :      0 | \n\
+|  GlobalThis              :      0 | \n\
+|  ImplicitTypeConversion  :      0 | \n\
+|  AccessingNullOrUndef    :      0 | \n\
+|  PrimitiveToObject       :      0 | \n\
+|  Shadowing               :      0 | \n\
+|  UnreachableCode         :      0 | \n\
+|  Unused                  :      1 | \n\
+|  VaryingTypeArguments    :      0 | \n\
+|  WrongThisType           :      0 | \n\
+===================================== \n\
 \n
 bug-detector_err_equals=

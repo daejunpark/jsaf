@@ -12,7 +12,7 @@ package kr.ac.kaist.jsaf.analysis.typing.domain
 sealed abstract class Absent {
   /* partial order */
   def <= (that : Absent): Boolean = {
-    (this == AbsentBot) || (that == AbsentTop)    
+    (this == AbsentBot) || (that == AbsentTop)
   }
   
   /* not a partial order */

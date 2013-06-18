@@ -5,18 +5,17 @@
     Use is subject to license terms.
 
     This distribution may include materials developed by third parties.
- ***************************************************************************** */
+ ******************************************************************************/
 
 package kr.ac.kaist.jsaf.analysis.typing
 
 import scala.collection.immutable.HashMap
 import scala.collection.immutable.HashSet
-import scala.collection.mutable.{HashMap => MHashMap}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 
-class SparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean) {
-  private val sem = new Semantics(cfg, worklist)
+class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Table, quiet: Boolean, locclone: Boolean) {
+  private val sem = new Semantics(cfg, worklist, locclone)
   def getSemantics = sem
   var count = 0
   var duset: DUSet = Map()
@@ -53,11 +52,11 @@ class SparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolea
       count = count+1
 
       val cp = worklist.getHead()
-      val (fg, ddg) = cfg.getFlowGraph(cp._1._1, cp._2)
+      val (fg, ddg) = env.getFlowGraph(cp._1._1, cp._2)
 
       val inS = readTable(cp)
 
-      // System.out.println("\n== InHeap ==\n" + DomainPrinter.printHeap(4,inS._1, true))
+      //      System.out.println("\n== InHeap ==\n" + DomainPrinter.printHeap(4,inS._1, true))
 
       // val (outS, outES) = sem.C(cp, cfg.getCmd(cp._1), inS)
       val cmd = cfg.getCmd(cp._1)
@@ -80,26 +79,26 @@ class SparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolea
       val recover_start = System.nanoTime()
       val edges =
         if (outS._1 != HeapBot && !cfg.getCalls.contains(cp._1)) {
-            cfg.recoverOutEdges(fg, cp._1)
+          env.recoverOutEdges(fg, cp._1)
         } else {
           HashSet[(Node,Node)]()
         }
       val excEdges =
         if (outES._1 != HeapBot) {
-          cfg.recoverOutExcEdge(fg, cp._1)
+          env.recoverOutExcEdge(fg, cp._1)
         } else {
           HashSet[(Node,Node)]()
         }
 
       if (!edges.isEmpty || !excEdges.isEmpty) {
-        val recovered = cfg.draw_intra_dugraph_incremental(fg, ddg, edges, excEdges) - cp._1
+        val recovered = env.draw_intra_dugraph_incremental(fg, ddg, edges, excEdges) - cp._1
         recovered.foreach(node => worklist.add((node, cp._2)))
       }
-      val recover_time = (System.nanoTime() - recover_start) / 1000000000.0;
+      val recover_time = (System.nanoTime() - recover_start) / 1000000000.0
       time += recover_time
 
       if (outS._1 != HeapBot) {
-        // System.out.println("\n== Heap ==\n" + DomainPrinter.printHeap(4,outS._1, false))
+        //        System.out.println("\n== Heap ==\n" + DomainPrinter.printHeap(4,outS._1, false))
         val succs = ddg.getNormalSuccs(cp._1)
 
         // Propagate normal output state (outS) along normal edges.
@@ -116,10 +115,13 @@ class SparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolea
             updateTable(cp_succ, newS)
           }
         })
+        
+        
 
+        // bypassingset of call->aftercall is stored when exit node is analyzed
         if (cfg.getCalls.contains(cp._1)) {
           // Propagate normal output state along call/after-call edges.
-          val bypass_set = cfg.getBypassingSet(cp)
+          val bypass_set = env.getBypassingSet(cp)
           if (!bypass_set.isEmpty) {
             val cp_succ = (cfg.getAftercallFromCall(cp._1), cp._2)
             val oldS = readTable(cp_succ)
@@ -131,8 +133,30 @@ class SparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolea
             }
           }
         }
+        
+
+        // bypassingset of call->aftercatch is stored when exitexc node is analyzed
+        if (cfg.getCalls.contains(cp._1)) {
+          // Propagate exception output state along call/after-call edges.
+          val bypass_set = env.getBypassingExcSet(cp)
+          if (!bypass_set.isEmpty) {
+            val cp_exc = cfg.getExcSucc.get(cfg.getAftercallFromCall(cp._1)) match {
+              case None => throw new InternalError("After-call node must have exception successor")
+              case Some(node) => (node, cp._2)
+            }
+            val oldS = readTable(cp_exc)
+            val outS2 = outS.restrict(bypass_set)
+            if (!(outS2 <= oldS)) {
+              val newS = oldS + outS2
+              worklist.add(cp._1, cp_exc)
+              updateTable(cp_exc, newS)
+            }
+          }
+        }
       }
 
+      
+      
       if (outES._1 != HeapBot) {
         // System.out.println("\n== ExcHeap ==\n" + DomainPrinter.printHeap(4,outES._1, true))
         val esucc = ddg.getExcSucc(cp._1)
@@ -158,24 +182,6 @@ class SparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolea
           }
           case None => ()
         }
-
-        if (cfg.getCalls.contains(cp._1)) {
-          // Propagate exception output state along call/after-call edges.
-          val bypass_set = cfg.getBypassingExcSet(cp)
-          if (!bypass_set.isEmpty) {
-            val cp_exc = cfg.getExcSucc(cfg.getAftercallFromCall(cp._1)) match {
-              case None => throw new InternalError("After-call node must have exception successor")
-              case Some(node) => (node, cp._2)
-            }
-            val oldS = readTable(cp_exc)
-            val outS2 = outES.restrict(bypass_set)
-            if (!(outS2 <= oldS)) {
-              val newS = oldS + outS2
-              worklist.add(cp._1, cp_exc)
-              updateTable(cp_exc, newS)
-            }
-          }
-        }
       }
 
       // Propagate along inter-procedural edges
@@ -192,7 +198,7 @@ class SparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolea
               cp._1._2 match {
                 case LExitExc => {
                   val n_aftercall = kv._1._1
-                  cfg.getExcSucc(n_aftercall) match {
+                  cfg.getExcSucc.get(n_aftercall) match {
                     case None => throw new InternalError("After-call node must have exception successor")
                     case Some(node) => (node, kv._1._2)
                   }
@@ -210,16 +216,16 @@ class SparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolea
                   val n_call = cfg.getCallFromAftercall(cp_aftercall._1)
                   val call = (n_call, cp_aftercall._2)
                   // System.out.println("try to recover normal: "+call)
-                  if (cfg.updateBypassing(call, cp._1._1)) {
+                  if (env.updateBypassing(call, cp._1._1)) {
                     worklist.add(cp._1, call)
                   }
-                  val (fg, ddg) = cfg.getFlowGraph(call._1._1, call._2)
-                  val edges = cfg.recoverOutEdges(fg, call._1)
+                  val (fg, ddg) = env.getFlowGraph(call._1._1, call._2)
+                  val edges = env.recoverOutEdges(fg, call._1)
                   if (!edges.isEmpty) {
-                    val recovered = cfg.draw_intra_dugraph_incremental(fg, ddg, edges, Set())
+                    val recovered = env.draw_intra_dugraph_incremental(fg, ddg, edges, Set())
                     recovered.foreach(node => worklist.add((node, call._2)))
                   }
-                  val recover_time = (System.nanoTime() - recover_start) / 1000000000.0;
+                  val recover_time = (System.nanoTime() - recover_start) / 1000000000.0
                   time += recover_time
                 }
               }
@@ -229,33 +235,56 @@ class SparseFixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolea
                   val n_call = cfg.getCallFromAftercall(cp_aftercall._1)
                   val call = (n_call, cp_aftercall._2)
                   // System.out.println("try to recover exception: "+call)
-                  if (cfg.updateBypassingExc(call, cp._1._1)) {
+                  if (env.updateBypassingExc(call, cp._1._1)) {
                     worklist.add(cp._1, call)
                   }
-                  val (fg, ddg) = cfg.getFlowGraph(call._1._1, call._2)
+                  val (fg, ddg) = env.getFlowGraph(call._1._1, call._2)
 
+                  // get after-catch node
+                  val cp_aftercatch = cfg.getExcSucc.get(cp_aftercall._1) match {
+                    case None => throw new InternalError("After-call node must have exception successor")
+                    case Some(node) => (node, cp_aftercall._2)
+                  }
                   // recover CFG edge of call.
-                  val edges = cfg.recoverOutEdges(fg, call._1)
-                  // recover EFG edge of aftercall.
-                  val exc_edges = cfg.recoverOutExcEdge(fg, cp_aftercall._1)
+                  //val edges = env.recoverOutEdges(fg, call._1)
+                  // edge : call -> aftercatch for normal flow
+                  val edges = HashSet[(Node, Node)]((n_call, cp_aftercatch._1))
 
-                  if (!edges.isEmpty || !exc_edges.isEmpty) {
-                    val recovered = cfg.draw_intra_dugraph_incremental(fg, ddg, edges, exc_edges)
+                  // recover EFG edge of aftercall.
+                  // val exc_edges = env.recoverOutExcEdge(fg, cp_aftercall._1)
+
+//                  if (!edges.isEmpty || !exc_edges.isEmpty) {
+                  // callee of n_call contain exceptions
+                  if (!fg.isCallExcRecovered(n_call)) {
+                    // call -> aftercatch normal edge should be added on flow graph
+                    fg.callExcRecovered(n_call)
+//                    val recovered = env.draw_intra_dugraph_incremental(fg, ddg, edges, exc_edges)
+                    val recovered = env.draw_intra_dugraph_incremental(fg, ddg, edges, HashSet()) + cp_aftercatch._1
                     recovered.foreach(node => worklist.add((node, call._2)))
                   }
 
-                  val recover_time = (System.nanoTime() - recover_start) / 1000000000.0;
+                  val recover_time = (System.nanoTime() - recover_start) / 1000000000.0
                   time += recover_time
                 }
               }
               case _ => ()
             }
-          if (!(outS_E <= oldS)) {
-            val newS = oldS + outS_E
-            worklist.add(cp._1, cp_succ)
-            updateTable(cp_succ, newS)
-          }
-        })
+
+            // Localization
+            val outS_E2 =
+              if (env.optionLocalization && cp_succ._1._2 == LEntry) {
+                val useset = env.getLocalizationSet(cp_succ._1._1)
+                State(outS_E._1.restrict(useset), outS_E._2)
+              } else {
+                outS_E
+              }
+
+            if (!(outS_E2 <= oldS)) {
+              val newS = oldS + outS_E2
+              worklist.add(cp._1, cp_succ)
+              updateTable(cp_succ, newS)
+            }
+          })
       }
     }
   }

@@ -22,11 +22,15 @@ import scala.math.min
 class FlowGraph(entry: Node) extends TGraph[Node](entry) {
   private var recoveredCFG: HashSet[Node] = HashSet()
   private var recoveredEFG: HashSet[Node] = HashSet()
+  // add for exception in a function call
+  private var recoveredCallExc: HashSet[Node] = HashSet()
 
   def isRecovered(n: Node) = recoveredCFG.contains(n)
   def isExcRecovered(n: Node) = recoveredEFG.contains(n)
+  def isCallExcRecovered(n: Node) = recoveredCallExc.contains(n)
   def recovered(n: Node) = recoveredCFG += n
   def excRecovered(n: Node) = recoveredEFG += n
+  def callExcRecovered(n: Node) = recoveredCallExc += n
 
   def fid = entry._1
 
@@ -72,7 +76,7 @@ class FlowGraph(entry: Node) extends TGraph[Node](entry) {
     sourceNode.foreach(node => ssStr += getLabel(node)+";")
     ssStr += "}\n{rank=sink;"
     sinkNode.foreach(node => ssStr += getLabel(node)+";")
-    ssStr += "}\n}\n"
+    ssStr += "}\n"
 
     ssStr + str
   }

@@ -11,16 +11,34 @@ BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
 bug-detector
 bug-detector_out_WCIequals=\
  \n\
- \n\
- \n\
- \n\
 * Bug Detector * \n\
-${BUGDETECTOR_TESTS_DIR}/absentVariableRead5.js:1:1~12:3: [Warning] Unreachable code is found. \n\
-${BUGDETECTOR_TESTS_DIR}/absentVariableRead5.js:12:1~12:2: [ReferenceError] Reading absent variable 'x'. \n\
-# ReferenceErrors(#) : 1 \n\
-# TypeErrors(#)      : 0 \n\
-# Warnings(#)        : 1 \n\
+absentVariableRead5.js:12:1~12:2: [ReferenceError] Reading absent variable 'x'. \n\
  \n\
- \n\
+============== Total Count ============== \n\
+|  ReferenceErrors   :      1 (100.00%) | \n\
+|  TypeErrors        :      0 (  0.00%) | \n\
+|  Warnings          :      0 (  0.00%) | \n\
+========================================= \n\
+============ Statistics ============= \n\
+|  AbsentRead              :      1 | \n\
+|  BinaryOperator          :      0 | \n\
+|  BuiltinArgSize          :      0 | \n\
+|  BuiltinWrongType        :      0 | \n\
+|  CallConstFunc           :      0 | \n\
+|  CallNonConstructor      :      0 | \n\
+|  CallNonFunction         :      0 | \n\
+|  ConditionalBranch       :      0 | \n\
+|  ConvertToNumber         :      0 | \n\
+|  DefaultValueTypeError   :      0 | \n\
+|  GlobalThis              :      0 | \n\
+|  ImplicitTypeConversion  :      0 | \n\
+|  AccessingNullOrUndef    :      0 | \n\
+|  PrimitiveToObject       :      0 | \n\
+|  Shadowing               :      0 | \n\
+|  UnreachableCode         :      0 | \n\
+|  Unused                  :      0 | \n\
+|  VaryingTypeArguments    :      0 | \n\
+|  WrongThisType           :      0 | \n\
+===================================== \n\
 \n
 bug-detector_err_equals=

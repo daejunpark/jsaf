@@ -10,101 +10,104 @@
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml
 
 import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
-import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.analysis.typing.Helper
-import scala.collection.immutable.TreeMap
-import scala.collection.immutable.HashSet
-import scala.collection.immutable.HashMap
-import kr.ac.kaist.jsaf.interpreter.InterpreterPredefine
-import kr.ac.kaist.jsaf.nodes_util.IRFactory
-import kr.ac.kaist.jsaf.nodes_util.NodeUtil
-import kr.ac.kaist.jsaf.analysis.typing.Config
-import kr.ac.kaist.jsaf.scala_src.useful.Lists._
+import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
+import kr.ac.kaist.jsaf.analysis.typing.models._
 import org.w3c.dom.Node
-import kr.ac.kaist.jsaf.analysis.typing.CallContext
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMNode
 import org.w3c.dom.Element
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMNode
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMElement
+import kr.ac.kaist.jsaf.analysis.cfg.CFG
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import scala.Some
 
-object HTMLElement {
-  
-  val loc_proto = newLoc("HTMLElementProto")
-  
-  val F = BoolFalse
-  val T = BoolTrue
+object HTMLElement extends DOM {
+  private val name = "HTMLElement"
 
-  def get_prototype() : Loc = loc_proto
-   /**
-   * Code for |> operator.
-   */
-  case class ToPipe[A](a: A) {
-    def |>[B](f: A => B) = f(a)
+  /* predefined locatoins */
+  val loc_cons = newPredefLoc(name + "Cons")
+  val loc_proto = newPredefLoc(name + "Proto")
+
+  /* constructor */
+  private val prop_cons: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Function")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
+    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
+    ("length", AbsConstValue(PropValue(ObjectValue(Value(AbsNumber.alpha(0)), F, F, F)))),
+    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F))))
+  )
+  
+  /* prorotype */
+  private val prop_proto: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(Value(DOMElement.loc_proto), F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue)))
+  )
+
+  /* global */
+  private val prop_global: List[(String, AbsProperty)] = List(
+    (name, AbsConstValue(PropValue(ObjectValue(loc_cons, T, F, T))))
+  )
+
+  def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
+    (loc_cons, prop_cons), (loc_proto, prop_proto), (GlobalLoc, prop_global)
+  )
+
+  def getSemanticMap(): Map[String, SemanticFun] = {
+    Map()
   }
-  implicit def convert[A](s: A) = ToPipe(s)
 
- 
-  def init(map: HeapMap) : HeapMap = {
-    val loc_cons = newLoc("HTMLElementConst")
+  def getPreSemanticMap(): Map[String, SemanticFun] = {
+    Map()
+  }
 
-    // Constructor Object
-    val obj_con = ObjEmpty.
-      update(OtherStrSingle("@class"),    PropValue(AbsString.alpha("Function"))).
-      update(OtherStrSingle("@proto"),    PropValue(ObjectValue(ObjProtoLoc, F, F, F))).
-      update(OtherStrSingle("length"),    PropValue(ObjectValue(AbsNumber.alpha(0), F, F, F))).
-      update(OtherStrSingle("prototype"), PropValue(ObjectValue(loc_proto, F, F, F)))
-     
-    // Prototype Object
-    val obj_proto = ObjEmpty.
-      update(OtherStrSingle("@class"),    PropValue(AbsString.alpha("Object"))).
-      update(OtherStrSingle("@proto"),    PropValue(ObjectValue(ObjProtoLoc, F, F, F)))
-         
-    val global_object = map(GlobalLoc).update(AbsString.alpha("HTMLElement"), 
-                                       PropValue(ObjectValue(loc_cons, T, T, T)))   
-    
-    val newmap = map + (GlobalLoc -> global_object) + (loc_proto -> obj_proto) + (loc_cons -> obj_con)
-    newmap |> HTMLDocument.init |>
-           HTMLHtmlElement.init |>
-           HTMLLinkElement.init |>
-           HTMLTitleElement.init |>
-           HTMLMetaElement.init |>
-           HTMLStyleElement.init |>
-           HTMLBodyElement.init |>
-           HTMLDivElement.init |>
-           HTMLParagraphElement.init |>
-           HTMLHeadingElement.init |>
-           HTMLScriptElement.init 
+  def getDefMap(): Map[String, AccessFun] = {
+    Map()
+  }
+
+  def getUseMap(): Map[String, AccessFun] = {
+    Map()
+  }
+
+  override def getProto(): Option[Loc] = Some(loc_proto) 
+
+  /* semantics */  
+  // no function
+
+  /* instance */
+  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  /* list of properties in the instance object */
+  override def getInsList(node: Node): List[(String, PropValue)] = node match {
+    case e: Element => 
+      // This instance object has all properties of the Element object
+      DOMElement.getInsList(node) ++ List(
+      // DOM Level 1
+      ("id",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("id")), T, T, T))),
+      ("title",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("title")), T, T, T))),
+      ("lang",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("lang'")), T, T, T))),
+      ("dir",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("dir")), T, T, T))),
+      ("className",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("className")), T, T, T))))
+    case _ => {
+      System.err.println("* Warning: " + node.getNodeName + " cannot have instance objects.")
+      List()
+    }
   }
   
-  def instantiate(map: HeapMap, node: Node) : (HeapMap, Loc) = {
-    val loc_instance = newLoc("HTMLElementInstance")
-    // Instance Object
-    val elementnode = node.asInstanceOf[Element]
-    System.out.println("node id start:" + elementnode.getAttribute("id") + "end")
-    val obj_ins = ObjEmpty.
-      update(OtherStrSingle("@class"),    PropValue(AbsString.alpha("Object"))).
-      update(OtherStrSingle("@proto"),    PropValue(ObjectValue(loc_proto, F, F, F))).
+  def getInsList(id: PropValue, title: PropValue, lang: PropValue, dir: PropValue, className: PropValue): List[(String, PropValue)] = {
     // DOM Level 1
-      update(OtherStrSingle("id"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("id")), T, T, T))).
-      update(OtherStrSingle("title"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("title")), T, T, T))).
-      update(OtherStrSingle("lang"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("lang'")), T, T, T))).
-      update(OtherStrSingle("dir"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("dir")), T, T, T))).
-      update(OtherStrSingle("className"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("className")), T, T, T)))
-    // This object has all properties and functions of the Node object 
-    val obj_ins1 = DOMNode.update_Node(obj_ins, node) 
+    List(("id", id), 
+    ("title", title),
+    ("lang", lang), 
+    ("dir", dir),
+    ("className", className))
+  }
 
-    (map + (loc_instance -> obj_ins), loc_instance)
-  }
-  // update the HTML element with the properties of the Element object
-  def update_Element(obj : Obj, node : Node) : Obj = {
-    // This object has all properties and functions of the Node object 
-    val obj_ins = DOMNode.update_Node(obj, node) 
-    val elementnode = node.asInstanceOf[Element]
-    obj_ins.
-    // DOM Level 1
-      update(OtherStrSingle("id"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("id")), T, T, T))).
-      update(OtherStrSingle("title"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("title")), T, T, T))).
-      update(OtherStrSingle("lang"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("lang'")), T, T, T))).
-      update(OtherStrSingle("dir"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("dir")), T, T, T))).
-      update(OtherStrSingle("className"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("className")), T, T, T)))
-  }
+  override def default_getInsList(): List[(String, PropValue)] =
+    getInsList(PropValue(ObjectValue(AbsString.alpha(""), T, T, T)),
+               PropValue(ObjectValue(AbsString.alpha(""), T, T, T)),
+               PropValue(ObjectValue(AbsString.alpha(""), T, T, T)),
+               PropValue(ObjectValue(AbsString.alpha(""), T, T, T)),
+               PropValue(ObjectValue(AbsString.alpha(""), T, T, T)))
+
 }

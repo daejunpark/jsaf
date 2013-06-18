@@ -20,13 +20,13 @@ import kr.ac.kaist.jsaf.nodes_util.IRFactory
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 
-class Typing(_cfg: CFG) extends TypingInterface {
+class Typing(_cfg: CFG, locclone: Boolean) extends TypingInterface {
+  override def env: Environment = null
   def cfg = _cfg
   var programNodes = _cfg.getNodes // without built-ins
   val inTable: Table = MHashMap()
   var fset_builtin: Map[FunctionId, String] = Map[FunctionId, String]()
-  def getTable = inTable
-  
+
   var numIter = 0;
   var elapsedTime = 0.0d;
   private var sem: Option[Semantics] = None
@@ -40,12 +40,13 @@ class Typing(_cfg: CFG) extends TypingInterface {
   }
 
   // main entry point
-  override def analyze(model: BuiltinModel): Unit = {
-    val initHeap = model.getInitHeap()
+  override def analyze(init: InitHeap): Unit = {
+    val initHeap = init.getInitHeap()
     val initContext = ContextEmpty
     val initState = State(initHeap, initContext)
 
-    fset_builtin = model.fset_builtin
+    //fset_builtin = model.fset_builtin
+    fset_builtin = ModelManager.getFIdMap()
 
     // Initialize call context for context-sensitivity
     CallContext.initialize
@@ -68,7 +69,10 @@ class Typing(_cfg: CFG) extends TypingInterface {
     // })
 
     val worklist = Worklist.computes(cfg)
-    val fixpoint = new Fixpoint(cfg, worklist, inTable)
+    val fixpoint = new Fixpoint(cfg, worklist, inTable, locclone)
+    if(compareOption && preState != null) {
+      fixpoint.getSemantics.setCompare(preState, preCFG)
+    }
     fixpoint.compute()
     sem = Some(fixpoint.getSemantics)
     
@@ -78,6 +82,23 @@ class Typing(_cfg: CFG) extends TypingInterface {
     System.out.format("# Time for analysis(s): %.2f\n", new java.lang.Double(elapsedTime))
     
   }
+  
+  // a heap and a flag for the comparison using the pre-analyzed heap   
+  var preState: State = null
+  var preCFG: CFG = null
+  var compareOption = false
+  /**
+   * Compare a Heap with instructions for implementation testing
+   * When an input heap is not greater or equal than analyzed heap,
+   * an error will be printed on the display using System.err.println 
+   * 
+   * @param preHeap a heap using pre-analysis
+   */
+  override def setCompare(state: State, __cfg: CFG): Unit = {
+    preState = state
+    preCFG = __cfg
+    compareOption = true
+  }
 
   ///////////////
   // Query API //
@@ -86,6 +107,8 @@ class Typing(_cfg: CFG) extends TypingInterface {
   // Low-level interface ------------------------------------------------------
   
   override def builtinFset() = fset_builtin
+
+  override def getTable: Table = inTable
 
   /**
    * Reads the analysis result for the given control point.
@@ -514,7 +537,7 @@ class Typing(_cfg: CFG) extends TypingInterface {
    * 
    * @param state the input state
    * @param lset the set of locations holding the objects
-   * @returns the option of the computed list 
+   * @returns the option of the computed list
    */
   def computePropertyList(state: State, lset: Set[Loc]): 
       Option[(List[(String, Absent)], Boolean, Boolean)] = {
@@ -671,7 +694,7 @@ class Typing(_cfg: CFG) extends TypingInterface {
   ////////////////
 
   override def statistics(statdump: Boolean) = {
-    val stat = new Statistics(cfg, fset_builtin, inTable)
+    val stat = new Statistics(cfg, fset_builtin, inTable, locclone)
     stat.calculate();
     if (statdump)
     	stat.printDump();

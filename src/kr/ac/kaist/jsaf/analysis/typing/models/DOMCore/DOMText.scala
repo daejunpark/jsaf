@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Copyright (c) 2012-2013, KAIST, S-Core.
+    Copyright (c) 2013, S-Core, KAIST.
     All rights reserved.
 
     Use is subject to license terms.
@@ -10,61 +10,139 @@
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMCore
 
 import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
-import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.analysis.typing.Helper
-import scala.collection.immutable.TreeMap
-import scala.collection.immutable.HashSet
-import scala.collection.immutable.HashMap
-import kr.ac.kaist.jsaf.interpreter.InterpreterPredefine
-import kr.ac.kaist.jsaf.nodes_util.IRFactory
-import kr.ac.kaist.jsaf.nodes_util.NodeUtil
-import kr.ac.kaist.jsaf.analysis.typing.Config
-import kr.ac.kaist.jsaf.scala_src.useful.Lists._
+import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
+import kr.ac.kaist.jsaf.analysis.typing.models._
+import kr.ac.kaist.jsaf.analysis.typing.ControlPoint
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import org.w3c.dom.Node
-import kr.ac.kaist.jsaf.analysis.typing.CallContext
+import org.w3c.dom.Text
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLDocument
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.domain.Context
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 
+object DOMText extends DOM {
+  private val name = "Text"
 
-object DOMText {
-  
-  val loc_proto = newLoc("DOMTextProto")
-  
-  val F = BoolFalse
-  val T = BoolTrue
-  
-  def init(map: HeapMap) : HeapMap = {
-    val loc_cons = newLoc("DOMTextConst")
+  /* predefined locatoins */
+  val loc_cons = newPredefLoc(name + "Cons")
+  val loc_proto = newPredefLoc(name + "Proto")
 
-    // Constructor Object
-    val obj_con = ObjEmpty.
-      update(OtherStrSingle("@class"),    PropValue(AbsString.alpha("Function"))).
-      update(OtherStrSingle("@proto"),    PropValue(ObjectValue(ObjProtoLoc, F, F, F))).
-      update(OtherStrSingle("length"),    PropValue(ObjectValue(AbsNumber.alpha(0), F, F, F))).
-      update(OtherStrSingle("prototype"), PropValue(ObjectValue(loc_proto, F, F, F)))
-     
-    // Prototype Object
-    val obj_proto = ObjEmpty.
-      update(OtherStrSingle("@class"),    PropValue(AbsString.alpha("Object"))).
-      // TODO : changhe the prototype to CharacterData object
-      update(OtherStrSingle("@proto"),    PropValue(ObjectValue(ObjProtoLoc, F, F, F)))
-   
-    val global_object = map(GlobalLoc).update(AbsString.alpha("Text"), 
-                                       PropValue(ObjectValue(loc_cons, T, F, T)))   
-    
-    val newmap = map + (GlobalLoc -> global_object) + (loc_proto -> obj_proto) + (loc_cons -> obj_con)
-    newmap
+  /* constructor or object*/
+  private val prop_cons: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Function")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
+    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
+    ("length", AbsConstValue(PropValue(ObjectValue(Value(AbsNumber.alpha(0)), F, F, F)))),
+    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F))))
+  )
+
+  /* prorotype */
+  private val prop_proto: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(Value(DOMCharacterData.loc_proto), F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
+    ("splitText",        AbsBuiltinFunc("DOMText.splitText", 1)),
+    ("replaceWholeText", AbsBuiltinFunc("DOMText.replaceWholeText", 1))
+  )
+
+  /* global */
+  private val prop_global: List[(String, AbsProperty)] = List(
+    (name, AbsConstValue(PropValue(ObjectValue(loc_cons, T, F, T))))
+  )
+
+  def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
+    (loc_cons, prop_cons), (loc_proto, prop_proto), (GlobalLoc, prop_global)
+  )
+
+  def getSemanticMap(): Map[String, SemanticFun] = {
+    Map(
+      //TODO: not yet implemented
+      //case "DOMText.splitText" => ((h,ctx),(he,ctxe))
+      //case "DOMText.replaceWholeText" => ((h,ctx),(he,ctxe))
+    )
   }
-    
-  def instantiate(map: HeapMap, node: Node) : (HeapMap, Loc) = {
-    val loc_instance = newLoc("DOMTextInstance")
-    
-    // Instance Object
-    val obj_ins = ObjEmpty.
-      update(OtherStrSingle("@class"),    PropValue(AbsString.alpha("Object"))).
-      update(OtherStrSingle("@proto"),    PropValue(ObjectValue(loc_proto, F, F, F)))
-  
-    // This object has all properties and functions of the Node object 
-    val obj_ins1 = DOMNode.update_Node(obj_ins, node) 
-    (map + (loc_instance -> obj_ins1), loc_instance) 
+
+  def getPreSemanticMap(): Map[String, SemanticFun] = {
+    Map(
+      //TODO: not yet implemented
+      //case "DOMText.splitText" => ((h,ctx),(he,ctxe))
+      //case "DOMText.replaceWholeText" => ((h,ctx),(he,ctxe))
+    )
   }
+
+  def getDefMap(): Map[String, AccessFun] = {
+    Map(
+      //TODO: not yet implemented
+      //case "DOMText.splitText" => ((h,ctx),(he,ctxe))
+      //case "DOMText.replaceWholeText" => ((h,ctx),(he,ctxe))
+    )
+  }
+
+  def getUseMap(): Map[String, AccessFun] = {
+    Map(
+      //TODO: not yet implemented
+      //case "DOMText.splitText" => ((h,ctx),(he,ctxe))
+      //case "DOMText.replaceWholeText" => ((h,ctx),(he,ctxe))
+    )
+  }
+
+  /* instance */
+  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr(), Recent))
+  /* list of properties in the instance object */
+  override def getInsList(node: Node): List[(String, PropValue)] = node match {
+    case t: Text => 
+      // This instance object has all properties of the CharacterData object
+      DOMCharacterData.getInsList(node) ++ List(
+      ("@class",  PropValue(AbsString.alpha("Object"))),
+      ("@proto",  PropValue(ObjectValue(loc_proto, F, F, F))),
+      ("@extensible", PropValue(BoolTrue)),
+      // Introduced in DOM Level 3
+      ("isElementContentWhitespace",   PropValue(ObjectValue((if(t.isElementContentWhitespace==true) T else F), F, T, T))),
+      ("wholeText",   PropValue(ObjectValue(AbsString.alpha(t.getWholeText), F, T, T))))
+
+    case _ => {
+      System.err.println("* Warning: " + node.getNodeName + " cannot be an instance of Text.")
+      List()
+    }
+  }
+ 
+  def getInsList(isElementContentWhitespace: PropValue, wholeText: PropValue): List[(String, PropValue)] = List(
+    ("@class",    PropValue(AbsString.alpha("Object"))),
+    ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
+    ("@extensible", PropValue(BoolTrue)),
+    // DOM Level 3
+    ("isElementContentWhitespace",         isElementContentWhitespace),
+    ("wholeText",     wholeText)
+   )
+  
+  def default_getInsList(data: PropValue, parent: PropValue, childN: PropValue): List[(String, PropValue)] = {    
+    val nodeName = PropValue(ObjectValue(AbsString.alpha("#text"), F, T, T))
+    val nodeValue = data
+    val nodeType = PropValue(ObjectValue(AbsNumber.alpha(DOMNode.TEXT_NODE), F, T, T))
+    val parentNode = parent
+    val childNodes = childN
+    val firstChild = PropValue(ObjectValue(NullTop, F, T, T))
+    val lastChild = PropValue(ObjectValue(NullTop, F, T, T))
+    val previousSibling = PropValue(ObjectValue(NullTop, F, T, T))
+    val nextSibling = PropValue(ObjectValue(NullTop, F, T, T))
+    val ownerDocument = PropValue(ObjectValue(HTMLDocument.getInstance().get, F, T, T))
+    val namespaceURI = PropValue(ObjectValue(NullTop, F, T, T))
+    val prefix = PropValue(ObjectValue(NullTop, T, T, T))
+    val localName = PropValue(ObjectValue(NullTop, F, T, T))
+    val textContent = data
+ 
+    // This instance object has all properties of the CharacterData object and the Node object
+    // could be more precise
+    DOMCharacterData.getInsList(data) ++
+    DOMNode.getInsList(nodeName, nodeValue, nodeType, parentNode, childNodes, firstChild, lastChild,
+           previousSibling, nextSibling, ownerDocument, namespaceURI, prefix, localName, textContent) ++
+    getInsList(PropValue(ObjectValue(BoolTop, F, T, T)), PropValue(ObjectValue(StrTop, F, T, T)))
+
+  }
+
 }

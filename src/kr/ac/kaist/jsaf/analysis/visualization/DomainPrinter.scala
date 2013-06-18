@@ -44,8 +44,8 @@ private class DomainPrinter(verbose_lv: Int) {
     for ((loc, obj) <- heap.map.toSeq.sortBy(_._1)) {
       // for non-verbose mode, locations for built-in are skipped.
       if ( verbose_lv == 3
-        || (locToAddr(loc) >= locToAddr(CollapsedLoc))
-        || (verbose_lv == 1)
+        || (locToAddr(loc) >= locToAddr(CollapsedLoc) && !cfg.isHtmlAddr(locToAddr(loc)))
+        || (verbose_lv == 1 && cfg.isHtmlAddr(locToAddr(loc)))
         || (verbose_lv == 2 && locToAddr(loc) < locToAddr(CollapsedLoc))) {
         if (verbose_lv >= 2 || locToAddr(loc) != locToAddr(GlobalLoc)) {
           locList ::= ("name"->toJLoc(loc))~("obj"->toJObj(obj, true))

@@ -215,7 +215,12 @@ class Predefined(params: ShellParameters) {
     "encodeURI",
     "encodeURIComponent"
   )
-  val all = varsAll ++ funs
+  val tizens =
+    if (params.opt_Tizen == true)
+      List("tizen")
+    else List()
+
+  val all = varsAll ++ funs ++ tizens
 
   def contains(name: String): Boolean =
     varsAll.contains(name) || funs.contains(name)

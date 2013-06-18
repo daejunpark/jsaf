@@ -20,6 +20,8 @@ Note that you need an account at the plrg.kaist.ac.kr server.
 SETTING UP YOUR ENVIRONMENT
 ---------------------------
 
+Assume JS_HOME points to the SAFE directory you checked out.
+
 We assume you are using an operating system with a Unix-style shell
 (for example, Solaris, Linux, Mac OS X, or Cygwin on Windows).  You
 will need to have access to the following:
@@ -28,10 +30,11 @@ will need to have access to the following:
 * Ant 1.6.5 or later.  See http://ant.apache.org/bindownload.cgi
 * Bash version 2.5 or later, installed at /bin/bash.
   See http://www.gnu.org/software/bash/
+* xtc, copied as $JS_HOME/bin/xtc.jar.
+  See http://cs.nyu.edu/rgrimm/xtc/
 
-Assume JS_HOME points to the SAFE directory you checked out.  On
-Unix-like systems this should be a matter of using export or setenv.  If
-you are using Cygwin, one user reports success with the following
+On Unix-like systems this should be a matter of using export or setenv.
+If you are using Cygwin, one user reports success with the following
 command line for setting JS_HOME:
   export JS_HOME=`cygpath -am cygwin/path/to/safe/install/directory`
 e.g.:

@@ -13,7 +13,7 @@ object AbsUndef {
   def alpha: AbsUndef = UndefTop
 }
 
-sealed abstract class AbsUndef {
+sealed abstract class AbsUndef extends AbsBase {
   /* partial order */
   def <= (that: AbsUndef) = {
     (this == UndefBot) || (that == UndefTop)
@@ -50,6 +50,22 @@ sealed abstract class AbsUndef {
       case UndefTop => "undefined"
       case UndefBot => "Bot"
     }
+  }
+
+  override def isTop(): Boolean = {this == UndefTop}
+
+  override def isBottom(): Boolean = {this == UndefBot}
+
+  override def isConcrete(): Boolean = {
+    this == UndefTop
+  }
+
+  def getConcreteValue(): Option[AbsUndef] = {
+    if(isConcrete) Some(UndefTop) else None
+  }
+
+  override def toAbsString(): AbsString = {
+    if(isConcrete) OtherStrSingle("undefined") else StrBot
   }
 }
 

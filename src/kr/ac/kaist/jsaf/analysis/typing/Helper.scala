@@ -15,6 +15,15 @@ import kr.ac.kaist.jsaf.analysis.cfg.FunctionId
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolTrue => BT, BoolFalse => BF}
 import com.sun.org.apache.xpath.internal.operations.Equals
 import scala.collection.immutable.HashSet
+import kr.ac.kaist.jsaf.analysis.typing.models.builtin._
+import kr.ac.kaist.jsaf.analysis.typing.domain.NUIntSingle
+import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
+import kr.ac.kaist.jsaf.analysis.typing.domain.Context
+import kr.ac.kaist.jsaf.analysis.typing.domain.OtherStrSingle
+import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.domain.NumStrSingle
 
 object Helper {
   def IsObject(h: Heap, l: Loc): AbsBool = {
@@ -160,22 +169,38 @@ object Helper {
   }
 
   def VarStoreL(h: Heap, l: Loc, x: String, v: Value): Heap = {
-    val env_obj = h(l)
-    if (env_obj.dom(x)) {
-      env_obj(x)._1._1._2 match {
-        case BoolTrue => {
-          val pv = PropValue(ObjectValue(v, BoolTrue, BoolBot, BoolFalse))
-          h.update(l, env_obj.update(x, pv))
-        }
-        case BoolFalse => h
-        case _ => throw new InternalError("Writable attribute must be exact for variables in local env.")
+    var visited = LocSetBot
+    def visit(l: Loc): Heap = {
+      if (visited.contains(l)) HeapBot
+      else {
+        visited += l
+        val env = h(l)
+        val has_x = env.domIn(x)
+        val h_1 =
+          if (BoolTrue <= has_x) {
+            env(x)._1._1._2 match {
+              case BoolTrue => 
+                val pv = PropValue(ObjectValue(v, BoolTrue, BoolBot, BoolFalse))
+                h.update(l, env.update(x, pv))
+              case BoolFalse => h
+              case _ =>
+                throw new InternalError("Writable attribute must be exact for variables in local env.")
+            }
+          } else {
+            HeapBot
+          }
+        val h_2 =
+          if (BoolFalse <= has_x) {
+            val lset_outer = env("@outer")._1._2._2
+            lset_outer.foldLeft(HeapBot)((hh, l_outer) => hh + visit(l_outer))
+          } else {
+            HeapBot
+          }
+        h_1 + h_2
       }
-    } else {
-      val outer_env = env_obj("@outer")._1._2._2
-      outer_env.foldLeft(HeapBot)((hh, outer) => {
-        hh + VarStoreL(h, outer, x, v)
-      })
     }
+    
+    visit(l)
   }
 
   def VarStoreG(h: Heap, x: String, v: Value) = {
@@ -277,16 +302,31 @@ object Helper {
   }
 
   def LookupL(h: Heap, l: Loc, x: String): Value = {
-    if (DEBUG) verifyLocalAccess(l)
-    val env_obj = h(l)
-    if (env_obj.dom(x)) {
-      env_obj(x)._1._1._1
-    } else {
-      val outer_env = env_obj("@outer")._1._2._2
-      outer_env.foldLeft(ValueBot)((vv, outer) => {
-        vv + LookupL(h, outer, x)
-      })
+    var visited = LocSetBot
+    def visit(l: Loc): Value = {
+      if (visited.contains(l)) ValueBot
+      else {
+        visited += l
+        val env = h(l)
+        val has_x = env.domIn(x)
+        val v_1 =
+          if (BoolTrue <= has_x) {
+            env(x)._1._1._1
+          } else {
+            ValueBot
+          }
+        val v_2 =
+          if (BoolFalse <= has_x) {
+            val lset_outer = env("@outer")._1._2._2
+            lset_outer.foldLeft(ValueBot)((v, l_outer) => v + visit(l_outer))
+          } else {
+            ValueBot
+          }
+        v_1 + v_2
+      }
     }
+
+    visit(l)
   }
 
   def LookupG(h: Heap, x: String): (Value,Set[Exception]) = {
@@ -339,18 +379,32 @@ object Helper {
   }
 
   def LookupBaseL(h: Heap, l: Loc, x: String): LocSet = {
-    if (DEBUG) verifyLocalAccess(l)
-    val env_obj = h(l)
-    if (env_obj.dom(x)) {
-      LocSet(l)
-    } else {
-      val outer_env = env_obj("@outer")._1._2._2
-      outer_env.foldLeft(LocSetBot)((ll, outer) => {
-        ll ++ LookupBaseL(h, outer, x)
-      })
+    var visited = LocSetBot
+    def visit(l: Loc): LocSet = {
+      if (visited.contains(l)) LocSetBot
+      else {
+        visited += l
+        val env = h(l)
+        val has_x = env.domIn(x)
+        val lset_1 =
+          if (BoolTrue <= has_x) {
+            LocSet(l)
+          } else {
+            LocSetBot
+          }
+        val lset_2 =
+          if (BoolFalse <= has_x) {
+            val lset_outer = env("@outer")._1._2._2
+            lset_outer.foldLeft(LocSetBot)((lset, l_outer) => lset ++ visit(l_outer))
+          } else {
+            LocSetBot
+          }
+        lset_1 ++ lset_2
+      }
     }
+    
+    visit(l)
   }
-
 
   def LookupBaseG(h: Heap, x: String): LocSet = {
     val lset_1 =
@@ -528,22 +582,22 @@ object Helper {
     update("@proto", PropValue(ObjectValue(Value(lset), BoolFalse, BoolFalse, BoolFalse))).
     update("@extensible", PropValue(BoolTrue))
 
-  def NewFunctionObject(fid: FunctionId, env: LocSet, l: Loc, n: AbsNumber): Obj = {
+  def NewFunctionObject(fid: FunctionId, env: Value, l: Loc, n: AbsNumber): Obj = {
     NewFunctionObject(Some(fid), Some(fid), env, Some(l), n)
   }
 
-  def NewFunctionObject(fid: Option[FunctionId], cid: Option[FunctionId], env: LocSet,
+  def NewFunctionObject(fid: Option[FunctionId], cid: Option[FunctionId], env: Value,
                         l: Option[Loc], n: AbsNumber): Obj = {
     NewFunctionObject(fid, cid, env, l, BoolTrue, BoolFalse, BoolFalse, n)
   }
 
-  def NewFunctionObject(fid: Option[FunctionId], cid: Option[FunctionId], env: LocSet,
+  def NewFunctionObject(fid: Option[FunctionId], cid: Option[FunctionId], env: Value,
                         l: Option[Loc], w: AbsBool, e: AbsBool, c: AbsBool, n: AbsNumber): Obj = {
     val o_1 = ObjEmpty.
       update("@class", PropValue(AbsString.alpha("Function"))).
       update("@proto", PropValue(ObjectValue(Value(FunctionProtoLoc), BoolFalse, BoolFalse, BoolFalse))).
       update("@extensible", PropValue(BoolTrue)).
-      update("@scope", PropValue(Value(env))).
+      update("@scope", PropValue(env)).
       update("length", PropValue(ObjectValue(n, BoolFalse, BoolFalse, BoolFalse)))
     val o_2 = fid match {
       case Some(id) => o_1.update("@function", PropValue(ObjectValueBot, ValueBot, FunSet(id)))
@@ -554,16 +608,20 @@ object Helper {
       case None => o_2
     }
     val o_4 = l match {
-      case Some(loc) => o_3.update("prototype", PropValue(ObjectValue(Value(loc), w, e, c)))
+      case Some(loc) => o_3.update("@hasinstance", PropValue(Value(NullTop)))
       case None => o_3
     }
-    o_4
+    val o_5 = l match {
+      case Some(loc) => o_4.update("prototype", PropValue(ObjectValue(Value(loc), w, e, c)))
+      case None => o_4
+    }
+    o_5
   }
 
   def NewArrayObject(n: AbsNumber): Obj =
     ObjEmpty.
     update("@class", PropValue(AbsString.alpha("Array"))).
-    update("@proto", PropValue(ObjectValue(ArrayProtoLoc, BoolFalse, BoolFalse, BoolFalse))).
+    update("@proto", PropValue(ObjectValue(BuiltinArray.ProtoLoc, BoolFalse, BoolFalse, BoolFalse))).
     update("@extensible", PropValue(BoolTrue)).
     update("length", PropValue(ObjectValue(n, BoolTrue, BoolFalse, BoolFalse)))
 
@@ -588,8 +646,8 @@ object Helper {
     (b_1 + b_2)
   }
 
-  def NewDeclEnvRecord(outer_env: LocSet): Obj = {
-    ObjEmpty.update("@outer", PropValue(Value(outer_env)))
+  def NewDeclEnvRecord(outer_env: Value): Obj = {
+    ObjEmpty.update("@outer", PropValue(outer_env))
   }
 
   def HasConstruct(h: Heap, l: Loc): AbsBool = {
@@ -606,6 +664,20 @@ object Helper {
     (b_1 + b_2)
   }
 
+  def HasInstance(h: Heap, l: Loc): AbsBool = {
+    val b_1 =
+      if (BoolTrue <= h(l).domIn("@hasinstance"))
+        BoolTrue
+      else
+        BoolBot
+    val b_2 =
+      if (BoolFalse <= h(l).domIn("@hasinstance"))
+        BoolFalse
+      else
+        BoolBot
+    (b_1 + b_2)
+  }
+
   def allocObject(h: Heap, ls_v: LocSet, l_r: Loc) = {
     val o_new = ls_v.foldLeft[Obj](ObjBot)((obj,l_p) => obj + Helper.NewObject(l_p))
     val h_2 = h.update(l_r, o_new)
@@ -613,7 +685,7 @@ object Helper {
   }
 
   def NewString(primitive_value: AbsString) = {
-    val o_new = Helper.NewObject(StringProtoLoc)
+    val o_new = Helper.NewObject(BuiltinString.ProtoLoc)
 
     val s = primitive_value
     val v_len = s.length()
@@ -633,7 +705,7 @@ object Helper {
   }
 
   def NewNumber(primitive_value: AbsNumber) = {
-    val o_new = Helper.NewObject(NumberProtoLoc)
+    val o_new = Helper.NewObject(BuiltinNumber.ProtoLoc)
 
     // update properties of a Number instance
     o_new.update("@class", PropValue(AbsString.alpha("Number"))).
@@ -641,7 +713,7 @@ object Helper {
   }
 
   def NewBoolean(primitive_value: AbsBool) = {
-    val o_new = Helper.NewObject(BooleanProtoLoc)
+    val o_new = Helper.NewObject(BuiltinBoolean.ProtoLoc)
 
     // update properties of a Boolean instance
     o_new.update("@class", PropValue(AbsString.alpha("Boolean"))).
@@ -649,7 +721,7 @@ object Helper {
   }
 
   def NewDate(primitive_value: Value) = {
-    val o_new = Helper.NewObject(DateProtoLoc)
+    val o_new = Helper.NewObject(BuiltinDate.ProtoLoc)
 
     // update properties of a Date instance
     o_new.update("@class", PropValue(AbsString.alpha("Date"))).
@@ -693,18 +765,25 @@ object Helper {
       if (visited(l_1)) ValueBot
       else {
         visited += l_1
-        if (l_1 == l_2)
-          Value(BoolTrue)
-        else {
-          val v_proto = h(l_1)("@proto")._1._1._1
-          val v_1 =
-            if (v_proto._1._2 </ NullBot)
-              Value(BoolFalse)
-            else
-              Value(BoolBot)
-          v_1 +
-          v_proto._2.foldLeft[Value](ValueBot)((v,l) => v + iter(h, l, l_2))
-        }
+        val v_eq = Operator.bopSEq(Value(l_1), Value(l_2))
+        val v_1 =
+          if (BoolTrue <= v_eq._1._3)
+            Value(BoolTrue)
+          else
+            Value(BoolBot)
+        val v_2 =
+          if (BoolFalse <= v_eq._1._3) {
+            val v_proto = h(l_1)("@proto")._1._1._1
+            val v_1 =
+              if (v_proto._1._2 </ NullBot)
+                Value(BoolFalse)
+              else
+                Value(BoolBot)
+            v_1 + v_proto._2.foldLeft[Value](ValueBot)((v,l) => v + iter(h, l, l_2))
+          }
+          else
+            Value(BoolBot)
+        v_1 + v_2
       }
     }
 
@@ -728,13 +807,13 @@ object Helper {
 
   def NewExceptionLoc(exc: Exception): Loc = {
     exc match {
-      case Error => ErrLoc
-      case EvalError => EvalErrLoc
-      case RangeError => RangeErrLoc
-      case ReferenceError => RefErrLoc
-      case SyntaxError => SyntaxErrLoc
-      case TypeError => TypeErrLoc
-      case URIError => URIErrLoc
+      case Error => BuiltinError.ErrLoc
+      case EvalError => BuiltinError.EvalErrLoc
+      case RangeError => BuiltinError.RangeErrLoc
+      case ReferenceError => BuiltinError.RefErrLoc
+      case SyntaxError => BuiltinError.SyntaxErrLoc
+      case TypeError => BuiltinError.TypeErrLoc
+      case URIError => BuiltinError.URIErrLoc
     }
   }
 
@@ -769,12 +848,6 @@ object Helper {
           (ctx_new, obj_new)
         }
       })
-    }
-  }
-
-  def verifyLocalAccess(l: Loc): Unit = {
-    if (l == GlobalLoc) {
-      throw new InternalError("Global object must not be reachable in local variable access.")
     }
   }
 
@@ -825,8 +898,11 @@ object Helper {
         case OtherStrSingle(s) =>
           s.trim match {
             case "" =>  AbsNumber.alpha(0)
-            case str if (str.matches("0[xX][0-9a-fA-F]+")) => AbsNumber.alpha((str+"p0").toDouble)
-            case _ => try {AbsNumber.alpha(s.toDouble)} catch {case ne: NumberFormatException => NaN}
+            case str =>
+              if (str.matches(AbsString.num_regexp.toString))
+                AbsNumber.alpha(str.toDouble)
+              else
+                NaN
           }
       }
 
@@ -1037,12 +1113,13 @@ object Helper {
     }
   }
 
-  def NewPureLocal(lset_env: LocSet, lset_this: LocSet): Obj = {
+  // v_env is either LocSet or NullTop
+  def NewPureLocal(v_env: Value, lset_this: LocSet): Obj = {
     if (Config.preAnalysis) {
-      PreHelper.NewPureLocal(lset_env, lset_this)
+      PreHelper.NewPureLocal(v_env, lset_this)
     } else {
       ObjEmpty.
-        update("@env", PropValue(Value(lset_env))).
+        update("@env", PropValue(v_env)).
         update("@this", PropValue(Value(lset_this))).
         update("@exception", PropValueBot).
         update("@exception_all", PropValueBot).

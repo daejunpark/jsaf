@@ -36,7 +36,6 @@ public class ShellParameters
     public static final int                        CMD_SPARSE = 17; // This command should be inserted into CMD_ANALYZE as an option.
     public static final int                        CMD_HTML = 18; // This command should be inserted into CMD_ANALYZE as an option.
     public static final int                        CMD_NEW_SPARSE = 19; // This command should be inserted into CMD_ANALYZE as an option.
-    public static final int                        CMD_GLOBAL_SPARSE = 20; // This command should be inserted into CMD_ANALYZE as an option.
     public static final int                        CMD_BUG_DETECTOR = 21;
     public static final int                        CMD_WIDLPARSE = 22;
     public static final int                        CMD_HTML_SPARSE= 25;
@@ -87,6 +86,7 @@ public class ShellParameters
     public boolean                                 opt_PreContextSensitive;
     public boolean                                 opt_Unsound;
     public boolean                                 opt_Dom;
+    public boolean                                 opt_Tizen;
     public boolean                                 opt_MultiThread;
     public String                                  opt_DDGFileName;
     public String                                  opt_DDG0FileName;
@@ -259,6 +259,7 @@ public class ShellParameters
             command = CMD_CFG;
             feasibleOptions.add("-out");
             feasibleOptions.add("-dom");
+            feasibleOptions.add("-tizen");
             feasibleOptions.add("-test");
             feasibleOptions.add("-model");
             feasibleOptions.add("-library");
@@ -282,7 +283,6 @@ public class ShellParameters
                 cmd.compareTo("preanalyze") == 0 ||
                 cmd.compareTo("sparse") == 0 ||
                 cmd.compareTo("sparse-ddg") == 0 ||
-                cmd.compareTo("sparse-global") == 0 ||
                 cmd.compareTo("html") == 0 ||
                 cmd.compareTo("html-sparse") == 0)
         {
@@ -290,7 +290,6 @@ public class ShellParameters
             else if(cmd.compareTo("preanalyze") == 0) command = CMD_PREANALYZE;
             else if(cmd.compareTo("sparse") == 0) command = CMD_SPARSE;
             else if(cmd.compareTo("sparse-ddg") == 0) command = CMD_NEW_SPARSE;
-            else if(cmd.compareTo("sparse-global") == 0) command = CMD_GLOBAL_SPARSE;
             else if(cmd.compareTo("html") == 0) command = CMD_HTML;
             else if(cmd.compareTo("html-sparse") == 0) command = CMD_HTML_SPARSE;
             feasibleOptions.add("-verbose1");
@@ -326,6 +325,7 @@ public class ShellParameters
             feasibleOptions.add("-ddgout");
             feasibleOptions.add("-ddg0out");
             feasibleOptions.add("-fgout");
+            feasibleOptions.add("-tizen");
         }
         else if(cmd.compareTo("bug-detector") == 0)
         {
@@ -444,6 +444,7 @@ public class ShellParameters
         else if(opt.compareTo("-pre-context-sensitive") == 0) opt_PreContextSensitive = true;
         else if(opt.compareTo("-unsound") == 0) opt_Unsound = true;
         else if(opt.compareTo("-dom") == 0) opt_Dom = true;
+        else if(opt.compareTo("-tizen") == 0) opt_Tizen = true;
         else if(opt.compareTo("-multi-thread") == 0) opt_MultiThread = true;
         else
         {

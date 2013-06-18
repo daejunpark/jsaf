@@ -10,9 +10,10 @@
 package kr.ac.kaist.jsaf.analysis.typing
 
 import scala.collection.immutable.HashSet
+import scala.collection.mutable.{HashSet => MHashSet}
 import scala.collection.mutable.{HashMap => MHashMap}
+import scala.collection.mutable.{Set => MSet}
 import scala.collection.mutable.{Map => MMap}
-import scala.runtime.RichDouble
 
 import kr.ac.kaist.jsaf.analysis.asserts._
 import kr.ac.kaist.jsaf.analysis.asserts.{ASSERTHelper => AH}
@@ -25,9 +26,54 @@ import kr.ac.kaist.jsaf.nodes.IROp
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.analysis.typing.{PreSemanticsExpr => PSE}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolTrue => BTrue, BoolFalse => BFalse}
-import kr.ac.kaist.jsaf.analysis.typing.DomSemantics._
+import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMEvent.{Event, MouseEvent, KeyboardEvent}
 
-class Semantics(cfg : CFG, worklist: Worklist) {
+
+class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
+  // Inter-procedural edge set.
+  // These edges are added while processing call instruction.
+  val ipSuccMap: MMap[ControlPoint, MMap[ControlPoint, (Context,Obj)]] = MHashMap()
+  def getIPSucc(cp: ControlPoint): Option[MMap[ControlPoint, (Context,Obj)]] = ipSuccMap.get(cp)
+
+  val dummyInfo = IRFactory.makeInfo(IRFactory.dummySpan("CFGSemantics"))
+
+  // for debugging implementation using heap testing
+  var preState: State = null
+  var preCFG: CFG = null
+  var compareOption = false
+  def setCompare(state: State, cfg: CFG): Unit = {
+    preState = state
+    preCFG = cfg
+    compareOption = true
+  }
+
+  // for Address refinement
+  private var ccCount = 0
+  private var callContextMap: Map[CallContext, Int] = Map[CallContext, Int]()
+  private val maxProgramAddr = if (locclone) cfg.newProgramAddr else 0
+  private val shift = if (locclone) (() => {
+    var maxAddr = maxProgramAddr 
+    var retShift = 0
+    while (maxAddr > 0) {
+      maxAddr = maxAddr >> 1
+      retShift = retShift + 1
+    }
+    // Set Mask value in domain/package.
+    setMaskValue(retShift + 1) 
+    retShift + 1
+  })() else 0
+  def callContextToNumber(cc: CallContext): Int = {
+    if (callContextMap contains cc) callContextMap(cc)
+    else {
+      val old = ccCount
+      callContextMap = callContextMap + (cc -> old)
+      ccCount = ccCount + 1
+      old
+    }
+  }
+  def extendAddr(addr: Int, n: Int): Int = addr | (n << shift)
+  
   // Semantics of inter-procedural edge from cp1 to cp2 with context label ctx.
   def E(cp1: ControlPoint, cp2: ControlPoint, ctx: Context, obj: Obj, s: State): State = {
     cp2 match {
@@ -40,7 +86,7 @@ class Semantics(cfg : CFG, worklist: Worklist) {
         if (s._1 == HeapBot) {
           StateBot
         } else {
-          val env_obj = Helper.NewDeclEnvRecord(obj("@scope")._1._2._2)
+          val env_obj = Helper.NewDeclEnvRecord(obj("@scope")._1._2)
           val obj2 = obj - "@scope"
           val h1 = s._1
           val h2 = h1.remove(SinglePureLocalLoc)
@@ -48,23 +94,16 @@ class Semantics(cfg : CFG, worklist: Worklist) {
           val h4 = obj2("@env")._1._2._2.foldLeft(HeapBot)((hh, l_env) => {
             hh + h3.update(l_env, env_obj)
           })
-          // Localization
-          val h5 =
-            if (cfg.optionLocalization) {
-              val useset = cfg.getLocalizationSet(cp2._1._1)
-              h4.restrict(useset)
-            } else {
-              h4
-            }
-          State(h5, ctx)
+          State(h4, ctx)
         }
 
       case _ => cp1 match {
         case ((_, LExit),_) =>
-          // System.out.println("== "+cp1 +" -> "+cp2+" ==")
-          // System.out.println(DomainPrinter.printHeap(4, s._1))
-          // System.out.println("== Object ==")
-          // System.out.println(DomainPrinter.printObj(4, obj))
+//          System.out.println("== "+cp1 +" -> "+cp2+" ==")
+//          System.out.println(DomainPrinter.printHeap(4, s._1, cfg))
+//          System.out.println(DomainPrinter.printContext(4, s._2))
+//          System.out.println("== Object ==")
+//          System.out.println(DomainPrinter.printObj(4, obj))
           // exit return edge
           if (s._1 == HeapBot || s._2.isBottom) {
             StateBot
@@ -142,8 +181,61 @@ class Semantics(cfg : CFG, worklist: Worklist) {
           insts.foldLeft(((h, ctx), (HeapBot, ContextBot)))(
             (states, inst) => {
               val ((h_new, ctx_new), (he_new, ctxe_new)) = I(cp, inst, states._1._1, states._1._2, states._2._1, states._2._2)
-              // System.out.println("out heap#####\n" + DomainPrinter.printHeap(4, h_new))
+              // System.out.println("##### Instruction : " + inst)
+              // System.out.println("in heap#####\n" + DomainPrinter.printHeap(4, states._1._1, cfg))
+              // System.out.println("out heap#####\n" + DomainPrinter.printHeap(4, h_new, cfg))
+              // System.out.println("outexc heap#####\n" + DomainPrinter.printHeap(4, he_new, cfg))
               // System.out.println("out context#####\n" + DomainPrinter.printContext(4, ctx_new))
+              if(compareOption) {  
+                // change heap location for preanalyzed PureLocalLoc
+                val _obj = h_new(SinglePureLocalLoc)
+                val _h_new = h_new.remove(SinglePureLocalLoc).update(preCFG.getMergedPureLocal(cp._1._1), _obj) 
+                
+                if (!(_h_new <= preState._1)) { // && ctx_new <= preState._2)) {
+                System.err.println("\n\n *** PreAnalyzed Heap should include analyzed heap using current option ***")
+                System.err.println("   = Instruction : " + inst)
+                /*
+                System.err.println("   * dump heap")
+                System.err.println(DomainPrinter.printHeap(4, _h_new, cfg))
+                */
+                // get all locations in a dense heap
+                // pre-analyzed heap should include all dense heap
+                val lset = _h_new.map.keySet
+                lset.foreach(l => {
+                  // for each object
+                  val o1 = _h_new(l)
+                  val preHeap = preState._1
+                  preHeap.map.get(l) match {
+                    case Some(o2) => {
+                      // for each property
+                      val props = o1.map.keySet ++ o2.map.keySet
+                  props.foreach((prop) => {
+                    val pv_1 = o1(prop)
+                    val pv_2 = o2(prop)
+                    if (pv_1._1 <= pv_2._1 && pv_1._2 <= pv_2._2) {
+                          // dense <= pre && pre <= dense which means that equals...
+                          // dense <= pre && pre </ dense which means that pre is greater than dense OK!
+                    } else {
+                      if (pv_2._1 <= pv_1._1 && pv_2._2 <= pv_1._2) {
+                        // dense </ pre && pre <= dense
+                        System.err.println("more imprecise result for ("+DomainPrinter.printLoc(l)+"("+l+"),"+prop+")")
+                        System.err.println("dense   : "+ DomainPrinter.printObj(0, o1.restrict_(Set(prop))))
+                        System.err.println("pre     : "+ DomainPrinter.printObj(0, o2.restrict_(Set(prop))))
+                      } else {
+                        // dense </ pre && pre </ dense
+                        System.err.println("different result for ("+DomainPrinter.printLoc(l)+"("+l+"),"+prop+")")
+                        System.err.println("dense   : "+ DomainPrinter.printObj(0, o1.restrict_(Set(prop))))
+                        System.err.println("pre     : "+ DomainPrinter.printObj(0, o2.restrict_(Set(prop))))
+                      }
+                    }
+                  })
+                }
+                case None => {
+                  System.err.println("location "+DomainPrinter.printLoc(l)+" is missing in sparse-ddg result.")
+                }
+                  }
+                })
+              }}
               ((h_new, ctx_new), (he_new, ctxe_new))
               // val h_merged = states._1._1 + h_new
               // val c_merged = states._1._2 + ctx_new
@@ -219,21 +311,26 @@ class Semantics(cfg : CFG, worklist: Worklist) {
             })
         }
       }
+       // System.out.println("in heap#####\n" + DomainPrinter.printHeap(4, h, cfg))
+       // System.out.println("out heap#####\n" + DomainPrinter.printHeap(4, h_1, cfg))
+       // System.out.println("outexc heap#####\n" + DomainPrinter.printHeap(4, he_1, cfg))
       (State(h_1, ctx_1), State(he_1, ctxe_1))
     }
   }
 
   def I(cp: ControlPoint, i: CFGInst, h: Heap, ctx: Context, he: Heap, ctxe: Context) = {
+    // for debug
     // System.out.println("\nInstruction: "+i)
-    // System.out.println("in heap#####\n" + DomainPrinter.printHeap(4, h))
+    // System.out.println("in heap#####\n" + DomainPrinter.printHeap(4, h, cfg))
     // System.out.println("in context#####\n" + DomainPrinter.printContext(4, ctx))
     if (h == HeapBot) {
       ((h, ctx), (he, ctxe))
     } else {
       val s = i match {
         case CFGAlloc(_, _, x, e, a_new) => {
-          val l_r = addrToLoc(a_new, Recent)
-          val (h_1, ctx_1) = Helper.Oldify(h, ctx, a_new)
+          val a_new2 = if (locclone) extendAddr(a_new, callContextToNumber(cp._2)) else a_new
+          val l_r = addrToLoc(a_new2, Recent)
+          val (h_1, ctx_1) = Helper.Oldify(h, ctx, a_new2)
           val (ls_v, es) = e match {
             case None => (ObjProtoSingleton, ExceptionBot)
             case Some(proto) => {
@@ -252,16 +349,18 @@ class Semantics(cfg : CFG, worklist: Worklist) {
             ((h_3, ctx_1), s)
         }
         case CFGAllocArray(_, _, x, n, a_new) => {
-          val l_r = addrToLoc(a_new, Recent)
-          val (h_1, ctx_1)  = Helper.Oldify(h, ctx, a_new)
+          val a_new2 = if (locclone) extendAddr(a_new, callContextToNumber(cp._2)) else a_new
+          val l_r = addrToLoc(a_new2, Recent)
+          val (h_1, ctx_1) = Helper.Oldify(h, ctx, a_new2)
           val np = AbsNumber.alpha(n.toInt)
           val h_2 = h_1.update(l_r, Helper.NewArrayObject(np))
           val h_3 = Helper.VarStore(h_2, x, Value(l_r))
           ((h_3, ctx_1), (he, ctxe))
         }
         case CFGAllocArg(_, _, x, n, a_new) => {
-          val l_r = addrToLoc(a_new, Recent)
-          val (h_1, ctx_1)  = Helper.Oldify(h, ctx, a_new)
+          val a_new2 = if (locclone) extendAddr(a_new, callContextToNumber(cp._2)) else a_new
+          val l_r = addrToLoc(a_new2, Recent)
+          val (h_1, ctx_1) = Helper.Oldify(h, ctx, a_new2)
           val np = AbsNumber.alpha(n.toInt)
           val h_2 = h_1.update(l_r, Helper.NewArgObject(np))
           val h_3 = Helper.VarStore(h_2, x, Value(l_r))
@@ -339,7 +438,6 @@ class Semantics(cfg : CFG, worklist: Worklist) {
               else {
                 // lset must not be empty because obj is coming through <>toObject.
                 val lset = SE.V(obj, h, ctx)._1._2
-
                 // iterate over set of strings for index
                 val sset = Helper.toStringSet(Helper.toPrimitive(v_index))
                 val (h_2, es_2) = sset.foldLeft((HeapBot, es_index ++ es_rhs))((res, s) => {
@@ -463,7 +561,7 @@ class Semantics(cfg : CFG, worklist: Worklist) {
           val o_new = Helper.NewObject(ObjProtoLoc)
           val n = AbsNumber.alpha(cfg.getArgVars(fid).length)
           val fvalue = Value(PValueBot, LocSet(l_r1))
-          val scope = h_2(SinglePureLocalLoc)("@env")._1._2._2
+          val scope = h_2(SinglePureLocalLoc)("@env")._1._2
           val h_3 = h_2.update(l_r1, Helper.NewFunctionObject(fid, scope, l_r2, n))
 
           val pv = PropValue(ObjectValue(fvalue, BTrue, BFalse, BTrue))
@@ -481,10 +579,10 @@ class Semantics(cfg : CFG, worklist: Worklist) {
           val (h_3, ctx_3) = Helper.Oldify(h_2, ctx_2, a_new3)
           val o_new = Helper.NewObject(ObjProtoLoc)
           val n = AbsNumber.alpha(cfg.getArgVars(fid).length)
-          val scope = h_3(SinglePureLocalLoc)("@env")._1._2._2
+          val scope = h_3(SinglePureLocalLoc)("@env")._1._2
           val o_env = Helper.NewDeclEnvRecord(scope)
           val fvalue = Value(PValueBot, LocSet(l_r1))
-          val h_4 = h_3.update(l_r1, Helper.NewFunctionObject(fid, LocSet(l_r3), l_r2, n))
+          val h_4 = h_3.update(l_r1, Helper.NewFunctionObject(fid, Value(l_r3), l_r2, n))
           val h_5 = h_4.update(l_r2, o_new.update("constructor", PropValue(ObjectValue(fvalue, BTrue, BFalse, BTrue))))
           val h_6 = h_5.update(l_r3, o_env.update(name, PropValue(ObjectValue(fvalue, BFalse, BoolBot, BFalse))))
           val h_7 = Helper.VarStore(h_6, lhs, fvalue)
@@ -499,6 +597,9 @@ class Semantics(cfg : CFG, worklist: Worklist) {
           val lset_f = lset.filter(l => BTrue <= Helper.HasConstruct(h_1,l))
           val lset_this = Helper.getThis(h_1, SE.V(thisArg, h_1, ctx_1)._1)
           val v_arg = SE.V(arguments, h_1, ctx_1)._1
+          // XXX: stop if thisArg or arguments is LocSetBot(ValueBot)
+          if(lset_this == LocSetBot || v_arg == ValueBot) ((h, ctx), (he, ctxe))
+          else {
           val o_old = h_1(SinglePureLocalLoc)
           val cc_caller = cp._2
           val n_aftercall = cfg.getAftercallFromCall(cp._1)
@@ -544,7 +645,7 @@ class Semantics(cfg : CFG, worklist: Worklist) {
             else h_2
 
           ((h_3, ctx_1), s_1)
-        }
+        }}
         case CFGCall(_, _, fun, thisArg, arguments, a_new) => {
           // cons, thisArg and arguments must not be bottom
           val l_r = addrToLoc(a_new, Recent)
@@ -554,6 +655,9 @@ class Semantics(cfg : CFG, worklist: Worklist) {
           val lset_f = lset.filter(l => BTrue <= Helper.IsCallable(h_1,l))
           val lset_this = Helper.getThis(h_1, SE.V(thisArg, h_1, ctx_1)._1)
           val v_arg = SE.V(arguments, h_1, ctx_1)._1
+          // XXX: stop if thisArg or arguments is LocSetBot(ValueBot)
+          if(lset_this == LocSetBot || v_arg == ValueBot) ((h, ctx), (he, ctxe))
+          else {
           val o_old = h_1(SinglePureLocalLoc)
           val cc_caller = cp._2
           val n_aftercall = cfg.getAftercallFromCall(cp._1)
@@ -604,7 +708,7 @@ class Semantics(cfg : CFG, worklist: Worklist) {
             else h_2
 
           ((h_3, ctx_1), s_1)
-        }
+        }}
         /* Assert */
         case CFGAssert(_, info, expr, _) => {
           if(Config.assertMode)
@@ -645,12 +749,6 @@ class Semantics(cfg : CFG, worklist: Worklist) {
           val h_1 = h.update(SinglePureLocalLoc, new_obj)
 
           ((HeapBot, ContextBot), (h_1 + h_e, ctx + ctx_e))
-        }
-        case CFGBuiltinCall(_, fun, args, addr1, addr2, addr3, addr4) => {
-          SemanticsBuiltin.builtinCall(this, h, ctx, he, ctxe, cp, cfg, fun, args, addr1, addr2, addr3, addr4)
-        }
-        case CFGDomApiCall(_, fun, args, addr1, addr2, addr3, addr4) => {
-          SemanticsDOM.DOMCall(this, h, ctx, he, ctxe, cp, cfg, fun, args, addr1, addr2, addr3, addr4)
         }
         case CFGInternalCall(_, _, lhs, fun, arguments, loc) => {
           (fun.toString, arguments, loc)  match {
@@ -736,16 +834,25 @@ class Semantics(cfg : CFG, worklist: Worklist) {
         case CFGNoOp(_, _, _) => {
           ((h, ctx), (he, ctxe))
         }
+        case CFGAPICall(_, model, fun, args) => {
+          val semantics = ModelManager.getModel(model).getSemanticMap()
+          semantics.get(fun) match {
+            case Some(f) =>
+              f(this, h, ctx, he, ctxe, cp, cfg, fun, args)
+            case None =>
+              System.err.println("* Warning: Semantics of the API function '"+fun+"' are not defined.")
+              ((h,ctx), (he, ctxe))
+          }
+        }
+        case CFGAsyncCall(_, _, model, call_type, addr1, addr2, addr3) => {
+          ModelManager.getModel(model).asyncSemantic(this, h, ctx, he, ctxe, cp, cfg, call_type, List(addr1, addr2, addr3))
+        }
       }
+      // System.out.println("out heap#####\n" + DomainPrinter.printHeap(4, s._1._1, cfg))
       s
     }
   }
 
-
-  // Inter-procedural edge set.
-  // These edges are added while processing call instruction.
-  val ipSuccMap: MMap[ControlPoint, MMap[ControlPoint, (Context,Obj)]] = MHashMap()
-  def getIPSucc(cp: ControlPoint): Option[MMap[ControlPoint, (Context,Obj)]] = ipSuccMap.get(cp)
 
   // Adds inter-procedural call edge from call-node cp1 to entry-node cp2.
   // Edge label ctx records callee context, which is joined if the edge existed already.
@@ -798,7 +905,6 @@ class Semantics(cfg : CFG, worklist: Worklist) {
     }
   }
 
-  val dummyInfo = IRFactory.makeInfo(IRFactory.dummySpan("CFGSemantics"))
   // Assert semantics
   def B(info:Info, expr: CFGExpr, h: Heap, ctx: Context, he: Heap, ctxe: Context) = {
     val relSet = expr match {
@@ -833,6 +939,14 @@ class Semantics(cfg : CFG, worklist: Worklist) {
 
   def X(re: RelExpr, h: Heap, ctx: Context):(Heap, Context) = {
     re match {
+      case RelExpr(first, op, second) if AH.isConstantPruing(op, second) => 
+        val v1 = SE.V(first, h, ctx)._1
+        PruningConst(first match {
+          case id@CFGVarRef(_, _) => Id(id)
+          case prop@CFGLoad(_, _, _) => Prop(prop)
+          case _ => throw new InternalError("e1 of RelExpr must be a PrunExpression")
+        }, v1, op, second, h, ctx)
+
       case RelExpr(first, op, second) if AH.isRelationalOperator(op) =>
         val v1 = SE.V(first, h, ctx)._1
         val v2 = SE.V(second, h, ctx)._1
@@ -847,6 +961,65 @@ class Semantics(cfg : CFG, worklist: Worklist) {
     }
   }
 
+  def PruningConst(pe: PrunExpr, v1: Value, op: IROp, const: CFGExpr, h: Heap, ctx: Context):(Heap, Context) = {
+    val (l_loc, s) = pe match {
+      case Id(id: CFGVarRef) =>
+        (LocSetBot, AbsString.alpha(id.toString))
+      case Prop(CFGLoad(info: Info, obj: CFGExpr, index: CFGExpr)) =>
+        (SE.V(obj, h, ctx)._1._2, Helper.toString(Helper.toPrimitive(SE.V(index, h, ctx)._1)))
+    }
+    val L_base = pe match {
+      case Id(CFGVarRef(_, id)) => Helper.LookupBase(h, id)
+      case Prop(_) => l_loc.foldLeft(LocSetBot)((lset, l) => lset ++ Helper.ProtoBase(h, l, s))
+    }
+
+    L_base.size match {
+      case 1 =>
+        s match {
+          case NumStrSingle(x) =>
+            val ov = h(L_base.head)(s)._1._1
+            val pv = op.getKind match {
+              // in constant null and undefined for != operator, undefined and null are bottom for the lvalue
+              case EJSOp.BIN_COMP_EQ_NEQUAL => 
+                val pv = ov._1._1
+                PValue(pv._3) + PValue(pv._4) + PValue(pv._5)
+              case EJSOp.BIN_COMP_EQ_SNEQUAL =>
+                val pv = ov._1._1
+                const match {
+                  // for null, null is bottom
+                  case CFGNull() => PValue(pv._1) + PValue(pv._3) + PValue(pv._4) + PValue(pv._5)
+                  // otherwise undefined, undefined is bottom
+                  case _ => PValue(pv._2) + PValue(pv._3) + PValue(pv._4) + PValue(pv._5)
+                } 
+              case _ => throw new InternalError("It is not possible constant pruning.")
+            }
+            val propv = PropValue(ObjectValue(Value(pv, ov._1._2), ov._2, ov._3, ov._4), h(L_base.head)(s)._1._2, h(L_base.head)(s)._1._3)
+            (h.update(L_base.head, h(L_base.head).update(x, propv, h(L_base.head)(s)._2)), ctx)
+          case OtherStrSingle(x) =>
+            val ov = h(L_base.head)(s)._1._1
+            val pv = op.getKind match {
+              // in constant null and undefined for != operator, undefined and null are bottom for the lvalue
+              case EJSOp.BIN_COMP_EQ_NEQUAL => 
+                val pv = ov._1._1
+                PValue(pv._3) + PValue(pv._4) + PValue(pv._5)
+              case EJSOp.BIN_COMP_EQ_SNEQUAL =>
+                val pv = ov._1._1
+                const match {
+                  // for null, null is bottom
+                  case CFGNull() => PValue(pv._1) + PValue(pv._3) + PValue(pv._4) + PValue(pv._5)
+                  // otherwise undefined, undefined is bottom
+                  case _ => PValue(pv._2) + PValue(pv._3) + PValue(pv._4) + PValue(pv._5)
+                } 
+              case _ => throw new InternalError("It is not possible constant pruning.")
+            }
+            val propv = PropValue(ObjectValue(Value(pv, ov._1._2), ov._2, ov._3, ov._4), h(L_base.head)(s)._1._2, h(L_base.head)(s)._1._3)
+            (h.update(L_base.head, h(L_base.head).update(x, propv, h(L_base.head)(s)._2)), ctx)
+          case _ => (h, ctx)
+        }
+      case _ => (h, ctx)
+    }
+  }  
+  
   def Pruning(re: RelExpr, h: Heap, ctx: Context):(Heap, Context) = {
     val (e1, op, e2) = re match {
       case RelExpr(first, op, second) => (first, op, second)
@@ -1000,7 +1173,6 @@ class Semantics(cfg : CFG, worklist: Worklist) {
     validity(expr1, s) && validity(expr2, s) && validity(expr3, s)
   }
 
-
   // E function for Preanalysis
   def PreE(cp1: ControlPoint, cp2: ControlPoint, ctx: Context, obj: Obj, s: State): State = {
     cp2 match {
@@ -1013,7 +1185,7 @@ class Semantics(cfg : CFG, worklist: Worklist) {
         if (s._1 == HeapBot) StateBot
         else {
           // make new decl env
-          val env_obj = PreHelper.NewDeclEnvRecord(obj("@scope")._1._2._2)
+          val env_obj = PreHelper.NewDeclEnvRecord(obj("@scope")._1._2)
           // obj2 is new PureLocal
           val obj2 = obj // - "@scope"
           val h1 = s._1
@@ -1106,15 +1278,15 @@ class Semantics(cfg : CFG, worklist: Worklist) {
         case Block(insts) =>
           insts.foldLeft((h, ctx))(
             (states, inst) => {
-/*
-                      System.out.println("***************************************************************************")
-                      System.out.println("===========================  Before ===============================")
-                      System.out.println("- Instr : " + inst)
-                      System.out.print("- Context " + " = ")
-                      System.out.println(DomainPrinter.printContext(0, states._2))
-                      System.out.println("- Heap " )
-                      System.out.println(DomainPrinter.printHeap(4, states._1))
-*/
+              // for debug
+              //       System.out.println("***************************************************************************")
+              //       System.out.println("===========================  Before ===============================")
+              //       System.out.println("- Instruction : " + inst)
+              //       System.out.print("- Context " + " = ")
+              //       System.out.println(DomainPrinter.printContext(0, states._2))
+              //       System.out.println("- In Heap " )
+              //       System.out.println(DomainPrinter.printHeap(4, states._1, cfg))
+
               val (h_1, ctx_1) = PreI(cp, inst, states._1, states._2)
               // if( !(State(states._1, states._2) <= State(h_1, ctx_1)) ) {
               //       System.out.println("***************************************************************************")
@@ -1131,8 +1303,8 @@ class Semantics(cfg : CFG, worklist: Worklist) {
               //       System.out.println("- Instr : " + inst)
               //       System.out.print("- Context " + " = ")
               //       System.out.println(DomainPrinter.printContext(0, ctx_1))
-              //       System.out.println("- Heap " )
-              //       System.out.println(DomainPrinter.printHeap(4, h_1))
+              //       System.out.println("- Out Heap " )
+              //        System.out.println(DomainPrinter.printHeap(4, h_1, cfg))
               //       System.out.println("=========================================================================")
               //       System.out.println()
               // }
@@ -1145,8 +1317,9 @@ class Semantics(cfg : CFG, worklist: Worklist) {
 
   // I function for preanalysis
   def PreI(cp: ControlPoint, i: CFGInst, h: Heap, ctx: Context): (Heap, Context)= {
+    // for debug
     // System.out.println("\nInstruction: "+i)
-    // System.out.println("in heap#####\n" + DomainPrinter.printHeap(4, h))
+    // System.out.println("in heap#####\n" + DomainPrinter.printHeap(4, h, cfg, 0))
 
     val PureLocalLoc = cfg.getPureLocal(cp)
     val s = i match {
@@ -1371,7 +1544,7 @@ class Semantics(cfg : CFG, worklist: Worklist) {
         val o_new = PreHelper.NewObject(ObjProtoLoc)
         val n = AbsNumber.alpha(cfg.getArgVars(fid).length)
         val fvalue = Value(PValueBot, LocSet(l_r1))
-        val scope = h_2(PureLocalLoc)("@env")._1._2._2
+        val scope = h_2(PureLocalLoc)("@env")._1._2
         val h_3 = h_2.update(l_r1, PreHelper.NewFunctionObject(fid, scope, l_r2, n))
         val h_4 = h_3.update(l_r2, o_new.update("constructor",
           PropValue(ObjectValue(fvalue, BoolTrue, BoolFalse, BoolTrue))))
@@ -1387,10 +1560,10 @@ class Semantics(cfg : CFG, worklist: Worklist) {
         val (h_3, ctx_3) = PreHelper.Oldify(h_2, ctx_2, a_new3)
         val o_new = PreHelper.NewObject(ObjProtoLoc)
         val n = AbsNumber.alpha(cfg.getArgVars(fid).length)
-        val scope = h_3(PureLocalLoc)("@env")._1._2._2
+        val scope = h_3(PureLocalLoc)("@env")._1._2
         val o_env = PreHelper.NewDeclEnvRecord(scope)
         val fvalue = Value(PValueBot, LocSet(l_r1))
-        val h_4 = h_3.update(l_r1, PreHelper.NewFunctionObject(fid, LocSet(l_r3), l_r2, n))
+        val h_4 = h_3.update(l_r1, PreHelper.NewFunctionObject(fid, Value(l_r3), l_r2, n))
         val h_5 = h_4.update(l_r2, o_new.update("constructor",
           PropValue(ObjectValue(fvalue, BoolTrue, BoolFalse, BoolTrue))))
         val h_6 = h_5.update(l_r3, o_env.update(name,
@@ -1540,10 +1713,6 @@ class Semantics(cfg : CFG, worklist: Worklist) {
                                            update("@exception_all", PropValue(v + v_old)))
         (h_1, ctx_e)
       }
-      case CFGBuiltinCall(_, fun, args, addr1, addr2, addr3, addr4) => {
-        val bCall = PreSemanticsBuiltin.builtinCall(this, h, ctx, h, ctx, cp, cfg, fun, args, addr1, addr2, addr3, addr4)
-        (bCall._1._1 + bCall._2._1, bCall._1._2 + bCall._2._2)
-      }
       case CFGInternalCall(_, _, lhs, fun, arguments, loc) => {
         (fun.toString, arguments, loc)  match {
           case ("<>Global<>toObject", List(expr), Some(a_new)) => {
@@ -1623,6 +1792,20 @@ class Semantics(cfg : CFG, worklist: Worklist) {
       }
       case CFGNoOp(_, _, _) => {
         (h, ctx)
+      }
+      case CFGAPICall(_, model, fun, args) => {
+        val semantics = ModelManager.getModel(model).getPreSemanticMap()
+        val result = semantics.get(fun) match {
+          case Some(f) =>
+            f(this, h, ctx, h, ctx, cp, cfg, fun, args)
+          case None =>
+            System.err.println("* Warning: Pre-semantics of the API function '"+fun+"' are not defined.")
+            ((h,ctx), (h, ctx))
+        }
+        (result._1._1 + result._2._1, result._1._2 + result._2._2)
+      }
+      case CFGAsyncCall(_, _, model, call_type, addr1, addr2, addr3) => {
+        ModelManager.getModel(model).asyncPreSemantic(this, h, ctx, h, ctx, cp, cfg, call_type, List(addr1, addr2, addr3))
       }
     }
     //System.out.println("out heap#####\n" + DomainPrinter.printHeap(4, s._1._1))

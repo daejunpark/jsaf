@@ -60,10 +60,10 @@ object SemanticsExpr {
             case "instanceof" =>
               val lset_1 = v_1._2
               val lset_2 = v_2._2
-              val lset_3 = lset_2.filter((l) => BoolTrue <= Helper.HasConstruct(h, l))
+              val lset_3 = lset_2.filter((l) => BoolTrue <= Helper.HasInstance(h, l))
               val v_proto = lset_3.foldLeft(ValueBot)((v, l) => v + Helper.Proto(h,l,OtherStrSingle("prototype")))
               val lset_4 = v_proto._2
-              val lset_5 = lset_2.filter((l) => BoolFalse <= Helper.HasConstruct(h, l))
+              val lset_5 = lset_2.filter((l) => BoolFalse <= Helper.HasInstance(h, l))
               val b_1 = lset_1.foldLeft[Value](ValueBot)((v_1, l_1) =>
                 lset_4.foldLeft[Value](v_1)((v_2, l_2) => v_2 + Helper.inherit(h, l_1, l_2)))
               val b_2 =

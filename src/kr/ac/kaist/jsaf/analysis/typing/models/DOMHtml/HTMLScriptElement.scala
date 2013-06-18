@@ -10,73 +10,117 @@
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml
 
 import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
-import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.analysis.typing.Helper
-import scala.collection.immutable.TreeMap
-import scala.collection.immutable.HashSet
-import scala.collection.immutable.HashMap
-import kr.ac.kaist.jsaf.interpreter.InterpreterPredefine
-import kr.ac.kaist.jsaf.nodes_util.IRFactory
-import kr.ac.kaist.jsaf.nodes_util.NodeUtil
-import kr.ac.kaist.jsaf.analysis.typing.Config
-import kr.ac.kaist.jsaf.scala_src.useful.Lists._
+import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
+import kr.ac.kaist.jsaf.analysis.typing.models._
 import org.w3c.dom.Node
 import org.w3c.dom.Element
-import kr.ac.kaist.jsaf.analysis.typing.CallContext
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMNode
-import org.w3c.dom.html._
+import kr.ac.kaist.jsaf.analysis.cfg.CFG
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import scala.Some
 
+object HTMLScriptElement extends DOM {
+  private val name = "HTMLScriptElement"
 
-object HTMLScriptElement {
-  
-  val loc_proto = newLoc("HTMLScriptProto")
-  
-  val F = BoolFalse
-  val T = BoolTrue
-  
-  def init(map: HeapMap) : HeapMap = {
-    val loc_cons = newLoc("HTMLScriptConst")
+  /* predefined locatoins */
+  val loc_cons = newPredefLoc(name + "Cons")
+  val loc_proto = newPredefLoc(name + "Proto")
 
-    // Constructor Object
-    val obj_con = ObjEmpty.
-      update(OtherStrSingle("@class"),    PropValue(AbsString.alpha("Function"))).
-      update(OtherStrSingle("@proto"),    PropValue(ObjectValue(ObjProtoLoc, F, F, F))).
-      update(OtherStrSingle("length"),    PropValue(ObjectValue(AbsNumber.alpha(0), F, F, F))).
-      update(OtherStrSingle("prototype"), PropValue(ObjectValue(loc_proto, F, F, F)))
+  /* constructor */
+  private val prop_cons: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Function")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
+    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
+    ("length", AbsConstValue(PropValue(ObjectValue(Value(AbsNumber.alpha(0)), F, F, F)))),
+    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F))))
+  )
+  
+  /* prorotype */
+  private val prop_proto: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(Value(HTMLElement.loc_proto), F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue)))
+  )
+
+  /* global */
+  private val prop_global: List[(String, AbsProperty)] = List(
+    (name, AbsConstValue(PropValue(ObjectValue(loc_cons, T, F, T))))
+  )
+
+  def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
+    (loc_cons, prop_cons), (loc_proto, prop_proto), (GlobalLoc, prop_global)
+  )
+
+  def getSemanticMap(): Map[String, SemanticFun] = {
+    Map()
+  }
+
+  def getPreSemanticMap(): Map[String, SemanticFun] = {
+    Map()
+  }
+
+  def getDefMap(): Map[String, AccessFun] = {
+    Map()
+  }
+
+  def getUseMap(): Map[String, AccessFun] = {
+    Map()
+  }
+
+  /* semantics */
+  // no function
      
-    // Prototype Object
-    val obj_proto = ObjEmpty.
-      update(OtherStrSingle("@class"),    PropValue(AbsString.alpha("Object"))).
-      // TODO : changhe the prototype to CharacterData object
-      update(OtherStrSingle("@proto"),    PropValue(ObjectValue(HTMLElement.get_prototype, F, F, F)))
+  /* instance */
+  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  /* list of properties in the instance object */
+  override def getInsList(node: Node): List[(String, PropValue)] = node match {
+    case e: Element => 
+      // This object has all properties of the HTMLElement object 
+      HTMLElement.getInsList(node) ++ List(
+      ("@class",    PropValue(AbsString.alpha("Object"))),
+      ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
+      ("@extensible", PropValue(BoolTrue)),
+      // DOM Level 1
+      ("text", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("text")), T, T, T))),
+      ("htmlFor", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("htmlFor")), T, T, T))),
+      ("event", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("event")), T, T, T))),
+      ("charset", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("charset")), T, T, T))),
+      ("defer",   PropValue(ObjectValue((if(e.getAttribute("defer")=="true") T else F), T, T, T))),
+      ("src", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("src")), T, T, T))),
+      ("type", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("type")), T, T, T))))
+    case _ => {
+      System.err.println("* Warning: " + node.getNodeName + " cannot have instance objects.")
+      List()
+    }
+  }
    
-    val global_object = map(GlobalLoc).update(AbsString.alpha("HTMLScriptElement"), 
-                                       PropValue(ObjectValue(loc_cons, T, T, T)))   
-    
-    val newmap = map + (GlobalLoc -> global_object) + (loc_proto -> obj_proto) + (loc_cons -> obj_con) 
-    newmap
-  }
-    
-  def instantiate(map: HeapMap, node: Node) : (HeapMap, Loc) = {
-    val loc_instance = newLoc("HTMLScriptInstance")
-    
-    var elementnode = node.asInstanceOf[Element]
-    // Instance Object
-    val obj_ins = ObjEmpty.
-      update(OtherStrSingle("@class"),    PropValue(AbsString.alpha("Object"))).
-      update(OtherStrSingle("@proto"),    PropValue(ObjectValue(loc_proto, F, F, F))).
+  def getInsList(text: PropValue, htmlFor: PropValue, event: PropValue, charset: PropValue, defer: PropValue, 
+                 src: PropValue, ttype: PropValue): List[(String, PropValue)] = List(
+    ("@class",    PropValue(AbsString.alpha("Object"))),
+    ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
+    ("@extensible", PropValue(BoolTrue)),
     // DOM Level 1
-      update(OtherStrSingle("text"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("text")), T, T, T))).
-      update(OtherStrSingle("htmlFor"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("htmlFor")), T, T, T))).
-      update(OtherStrSingle("event"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("event")), T, T, T))).
-      update(OtherStrSingle("charset"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("charset")), T, T, T))).
-      update(OtherStrSingle("defer"),   PropValue(ObjectValue(if(elementnode.getAttribute("defer")=="true") T else F, T, T, T))).
-      update(OtherStrSingle("src"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("src")), T, T, T))).
-      update(OtherStrSingle("type"),   PropValue(ObjectValue(AbsString.alpha(elementnode.getAttribute("type")), T, T, T)))
+    ("text", text),
+    ("htmlFor", htmlFor),
+    ("event", event),
+    ("charset", charset),
+    ("defer",  defer),
+    ("src", src),
+    ("type", ttype)
+  )
   
-    // This object has all properties and functions of the Element object 
-    val obj_ins1 = HTMLElement.update_Element(obj_ins, node) 
-    (map + (loc_instance -> obj_ins1), loc_instance)
+  override def default_getInsList(): List[(String, PropValue)] = { 
+    val text = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
+    val htmlFor = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
+    val event = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
+    val charset = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
+    val defer = PropValue(ObjectValue(BoolFalse, T, T, T))
+    val src = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
+    val ttype = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
+    // This object has all properties of the HTMLElement object 
+    HTMLElement.default_getInsList ::: 
+      getInsList(text, htmlFor, event, charset, defer, src, ttype)
   }
+
 }

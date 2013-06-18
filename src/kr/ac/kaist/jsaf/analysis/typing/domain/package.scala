@@ -17,7 +17,13 @@ import scala.collection.immutable.TreeMap
 import scala.collection.immutable.TreeSet
 import scala.collection.mutable.{Map => MMap}
 import scala.collection.mutable.{HashMap => MHashMap}
-import kr.ac.kaist.jsaf.analysis.lib.{HeapTreeMap, ObjTreeMap, LocTreeSet, IntTreeSet} 
+import kr.ac.kaist.jsaf.analysis.lib.{HeapTreeMap, ObjTreeMap, LocTreeSet, IntTreeSet}
+import kr.ac.kaist.jsaf.analysis.typing.models.builtin._
+import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
+import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.domain.State
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 
 package object domain {
   /* abstract location */
@@ -26,8 +32,16 @@ package object domain {
   type RecencyTag = Int
   val Recent = 0
   val Old = 1
+
+  // To filter out refined location
+  var posMask: Option[Int] = None 
+  var negMask: Option[Int] = None 
   
-  
+  def setMaskValue(shift: Int) = {
+    posMask = Some((1 << shift) - 1)
+    negMask = Some((((1 << 31) - 1) | (1 << 31)) - posMask.get)
+  }
+
   def addrToLoc(addr: Address, recency: RecencyTag): Loc = (addr << 1) | recency
   
   def locToAddr(loc: Loc): Address = loc >> 1
@@ -75,53 +89,114 @@ package object domain {
   val GlobalLoc: Loc        = registerPredefLoc(-1, Recent, "Global")
   val SinglePureLocalLoc: Loc = registerPredefLoc(-2, Recent, "PureLocal")
   val CollapsedLoc: Loc     = registerPredefLoc(-3, Old, "Collapsed")
-  
-  val StringProtoLoc: Loc   = registerPredefLoc(-4, Recent, "StringProto")
   val ObjProtoLoc: Loc      = registerPredefLoc(-5, Recent, "ObjProto")
-  val NumberProtoLoc: Loc   = registerPredefLoc(-6, Recent, "NumberProto")
   val FunctionProtoLoc: Loc = registerPredefLoc(-7, Recent, "FunctionProto")
-  val BooleanProtoLoc: Loc  = registerPredefLoc(-8, Recent, "BooleanProto")
-  val ArrayProtoLoc: Loc    = registerPredefLoc(-9, Recent, "ArrayProto")
-  val DateProtoLoc: Loc     = registerPredefLoc(-10, Recent, "DateProto")
+  /*
+  val StringProtoLoc: Loc   = BuiltinString.ProtoLoc //registerPredefLoc(-4, Recent, "StringProto")
+  val NumberProtoLoc: Loc   = BuiltinNumber.ProtoLoc //registerPredefLoc(-6, Recent, "NumberProto")
+  val BooleanProtoLoc: Loc  = BuiltinBoolean.ProtoLoc //registerPredefLoc(-8, Recent, "BooleanProto")
+  val ArrayProtoLoc: Loc    = BuiltinArray.ProtoLoc //registerPredefLoc(-9, Recent, "ArrayProto")
+  val DateProtoLoc: Loc     = BuiltinDate.ProtoLoc //registerPredefLoc(-10, Recent, "DateProto")
   
-  val StringConstLoc: Loc   = registerPredefLoc(-11, Recent, "StringConst")
-  val ObjConstLoc: Loc      = registerPredefLoc(-12, Recent, "ObjConst")
-  val NumberConstLoc: Loc   = registerPredefLoc(-13, Recent, "NumberConst")
-  val FunctionConstLoc: Loc = registerPredefLoc(-14, Recent, "FunctionConst")
-  val BooleanConstLoc: Loc  = registerPredefLoc(-15, Recent, "BooleanConst")
-  val ArrayConstLoc: Loc    = registerPredefLoc(-16, Recent, "ArrayConst")
+  val StringConstLoc: Loc   = BuiltinString.ConstLoc //(-11, Recent, "StringConst")
+  val ObjConstLoc: Loc      = BuiltinObject.ConstLoc //registerPredefLoc(-12, Recent, "ObjConst")
+  val NumberConstLoc: Loc   = BuiltinNumber.ConstLoc //registerPredefLoc(-13, Recent, "NumberConst")
+  val FunctionConstLoc: Loc = BuiltinFunction.ConstLoc //registerPredefLoc(-14, Recent, "FunctionConst")
+  val BooleanConstLoc: Loc  = BuiltinBoolean.ConstLoc //registerPredefLoc(-15, Recent, "BooleanConst")
+  val ArrayConstLoc: Loc    = BuiltinArray.ConstLoc //registerPredefLoc(-16, Recent, "ArrayConst")
   
   /* error instance */
-  val ErrLoc: Loc           = registerPredefLoc(-17, Old, "Err")
-  val EvalErrLoc: Loc       = registerPredefLoc(-18, Old, "EvalErr")
-  val RangeErrLoc: Loc      = registerPredefLoc(-19, Old, "RangeErr")
-  val RefErrLoc: Loc        = registerPredefLoc(-20, Old, "RefErr")
-  val SyntaxErrLoc: Loc     = registerPredefLoc(-21, Old, "SyntaxErr")
-  val TypeErrLoc: Loc       = registerPredefLoc(-22, Old, "TypeErr")
-  val URIErrLoc: Loc        = registerPredefLoc(-23, Old, "URIErr")
+  val ErrLoc: Loc           = BuiltinError.ErrLoc //registerPredefLoc(-17, Old, "Err")
+  val EvalErrLoc: Loc       = BuiltinError.EvalErrLoc //registerPredefLoc(-18, Old, "EvalErr")
+  val RangeErrLoc: Loc      = BuiltinError.RangeErrLoc //registerPredefLoc(-19, Old, "RangeErr")
+  val RefErrLoc: Loc        = BuiltinError.RefErrLoc //registerPredefLoc(-20, Old, "RefErr")
+  val SyntaxErrLoc: Loc     = BuiltinError.SyntaxErrLoc //registerPredefLoc(-21, Old, "SyntaxErr")
+  val TypeErrLoc: Loc       = BuiltinError.TypeErrLoc //registerPredefLoc(-22, Old, "TypeErr")
+  val URIErrLoc: Loc        = BuiltinError.URIErrLoc //registerPredefLoc(-23, Old, "URIErr")
   
   /* error prototype object */
-  val ErrProtoLoc:Loc       = registerPredefLoc(-24, Recent, "ErrProto")
-  val EvalErrProtoLoc:Loc   = registerPredefLoc(-25, Recent, "EvalErrProto")
-  val RangeErrProtoLoc: Loc = registerPredefLoc(-26, Recent, "RangeErrProto")
-  val RefErrProtoLoc: Loc   = registerPredefLoc(-27, Recent, "RefErrProto")
-  val SyntaxErrProtoLoc: Loc= registerPredefLoc(-28, Recent, "SyntaxErrProto")
-  val TypeErrProtoLoc: Loc  = registerPredefLoc(-29, Recent, "TypeErrProto")
-  val URIErrProtoLoc: Loc   = registerPredefLoc(-30, Recent, "URIErrProto")
+  val ErrProtoLoc:Loc       = BuiltinError.ErrProtoLoc //registerPredefLoc(-24, Recent, "ErrProto")
+  val EvalErrProtoLoc:Loc   = BuiltinError.EvalErrProtoLoc //registerPredefLoc(-25, Recent, "EvalErrProto")
+  val RangeErrProtoLoc: Loc = BuiltinError.RangeErrProtoLoc //registerPredefLoc(-26, Recent, "RangeErrProto")
+  val RefErrProtoLoc: Loc   = BuiltinError.RefErrProtoLoc //registerPredefLoc(-27, Recent, "RefErrProto")
+  val SyntaxErrProtoLoc: Loc= BuiltinError.SyntaxErrProtoLoc //registerPredefLoc(-28, Recent, "SyntaxErrProto")
+  val TypeErrProtoLoc: Loc  = BuiltinError.TypeErrProtoLoc //registerPredefLoc(-29, Recent, "TypeErrProto")
+  val URIErrProtoLoc: Loc   = BuiltinError.URIErrProtoLoc //registerPredefLoc(-30, Recent, "URIErrProto")*/
   
-  val ObjPseudoTopLoc: Loc  = registerPredefLoc(-31, Old, "ObjPseudoTop")
+  val JSONObjTopLoc: Loc    = registerPredefLoc(-31, Old, "JSONObjTop")
+  val LibModeObjTopLoc: Loc = registerPredefLoc(-32, Old, "LibModeObjTop")
 
   /* special location standing for Context */
-  val ContextLoc: Loc       = registerPredefLoc(-32, Old, "Context")
+  val ContextLoc: Loc       = registerPredefLoc(-33, Old, "Context")
+
+  /* DOM error instance
+  val DOMErrIndexSize: Loc             = registerPredefLoc(-34, Old, "DOMErrIndexSize")
+  val DOMErrDomstringSize: Loc         = registerPredefLoc(-35, Old, "DOMErrDomstringSize")
+  val DOMErrHierarchyRequest: Loc      = registerPredefLoc(-36, Old, "DOMErrHierarchyRequest")
+  val DOMErrWrongDocument: Loc         = registerPredefLoc(-37, Old, "DOMErrWrongDocument")
+  val DOMErrInvalidCharacter: Loc      = registerPredefLoc(-38, Old, "DOMErrInvalidCharacter")
+  val DOMErrNoDataAllowed: Loc         = registerPredefLoc(-39, Old, "DOMErrNoDataAllowed")
+  val DOMErrNoModificationAllowed: Loc = registerPredefLoc(-40, Old, "DOMErrNoModificationAllowed")
+  val DOMErrNotFound: Loc              = registerPredefLoc(-41, Old, "DOMErrNotFound")
+  val DOMErrNotSupported: Loc          = registerPredefLoc(-42, Old, "DOMErrNotSupported")
+  val DOMErrInuseAttribute: Loc        = registerPredefLoc(-43, Old, "DOMErrInuseAttribute")
+  val DOMErrInvalidState: Loc          = registerPredefLoc(-44, Old, "DOMErrInvalidState")
+  val DOMErrSyntax: Loc                = registerPredefLoc(-45, Old, "DOMErrSyntax")
+  val DOMErrInvalidModification: Loc   = registerPredefLoc(-46, Old, "DOMErrInvalidModification")
+  val DOMErrNamespace: Loc             = registerPredefLoc(-47, Old, "DOMErrNamespace")
+  val DOMErrInvalidAccess: Loc         = registerPredefLoc(-48, Old, "DOMErrInvalidAccess")
+  val DOMErrValidation: Loc            = registerPredefLoc(-49, Old, "DOMErrValidation")
+  val DOMErrTypeMismatch: Loc          = registerPredefLoc(-50, Old, "DOMErrTypeMismatch")
+  */
+
+  /* DOM event TimeStamp */
+  val DOMEventTimeLoc: Loc = registerPredefLoc(-51, Old, "DOMEventTime")
+
+  /* HTML lookup table */
+  val IdTableLoc: Loc   = registerPredefLoc(-52, Recent, "IdTable")
+  val NameTableLoc: Loc = registerPredefLoc(-53, Recent, "NameTable")
+  val TagTableLoc: Loc  = registerPredefLoc(-54, Recent, "TagTable")
+  val ClassTableLoc: Loc  = registerPredefLoc(-55, Recent, "ClassTable")
+
+  /* Event table */
+  val EventTargetTableLoc: Loc   = registerPredefLoc(-56, Recent, "EventTargetTable")
+  val EventFunctionTableLoc: Loc = registerPredefLoc(-57, Recent, "EventFunctionTable")
+  val EventSelectorTableLoc: Loc = registerPredefLoc(-58, Recent, "EventSelectorTable")
+
+  /* temp use */
+  val TempStyleLoc: Loc  = registerPredefLoc(-59, Old, "TempStyle")
+  // CFG holds the start address of predefined location
 
   /* start address for PureLocal/builtin function addresses */
-  var startAddress          = -33
-  def newLoc(name: String) = {
-    val addr = startAddress
-    startAddress -= 1
-    registerPredefLoc(addr, Recent, name)
+  // Do not change or explicitly reset this address.
+  private var predefStartAddr = -60
+
+  // String name to predefined address table to ensure same address between analysis runs.
+  // This approach assumes that all predefined names are distinct.
+  val reversePredefTable: MMap[String, Address] = MHashMap()
+  
+  def newPredefLoc(name: String): Loc = {
+    reversePredefTable.get(name) match {
+      case Some(addr) => addrToLoc(addr, Recent)
+      case None =>
+        val addr = predefStartAddr
+        predefStartAddr -= 1
+        reversePredefTable(name) = addr
+        registerPredefLoc(addr, Recent, name)
+    }
   }
 
+  def newPreDefLoc(name: String, tag: Int): Loc = {
+    reversePredefTable.get(name) match {
+      case Some(addr) => addrToLoc(addr, tag)
+      case None =>
+        val addr = predefStartAddr
+        predefStartAddr -= 1
+        reversePredefTable(name) = addr
+        registerPredefLoc(addr, tag, name)
+    }
+  }
+  
   /* Map type for Heap */
   type HeapMap = HeapTreeMap
   val HeapMapBot: HeapMap = HeapTreeMap.Empty
@@ -182,20 +257,39 @@ package object domain {
   /* top value */
   val PValueTop = PValue(UndefTop, NullTop, BoolTop, NumTop, StrTop)
   
-  val FIdTop = -2
+  // Pseudo top value for JSON parsing results.
+  val JSONValueTop = Value(PValueTop, LocSet(JSONObjTopLoc))
+  val JSONObjectValueTop = ObjectValue(JSONValueTop, BoolTop,BoolTop,BoolTop) 
+  val JSONObjTop = Obj(ObjMapBot.
+    updated("@class", (PropValue(Value(StrTop)), AbsentTop)).
+    updated("@extensible", (PropValue(Value(BoolTop)), AbsentTop)).
+    updated("@proto", (PropValue(Value(PValue(NullTop))), AbsentTop)).
+    updated("@default_number", (PropValue(JSONObjectValueTop), AbsentTop)).
+    updated("@default_other", (PropValue(JSONObjectValueTop), AbsentTop)))
   
-  //act like ValueTop.(incorrect ValueTop, should not compare with other value
-  val ValuePseudoTop = Value(PValueTop, LocSet(ObjPseudoTopLoc))
-  val ObjectValuePseudoTop = ObjectValue(ValuePseudoTop, BoolTop,BoolTop,BoolTop) 
-  val ObjPseudoTop = Obj(ObjMapBot.
+  // Pseudo top value for unknown values in library mode.
+  // Should be used only when Config.libMode is turned on.
+  val FIdTop = -2
+  val LibModeValueTop = Value(PValueTop, LocSet(LibModeObjTopLoc))
+  val LibModeObjectValueTop = ObjectValue(LibModeValueTop, BoolTop,BoolTop,BoolTop) 
+  val LibModeObjTop = Obj(ObjMapBot.
     updated("@class", (PropValue(Value(StrTop)), AbsentTop)).
     updated("@extensible", (PropValue(Value(BoolTop)), AbsentTop)).
     updated("@proto", (PropValue(Value(PValue(NullTop))), AbsentTop)).
     updated("@function",  (PropValue(ObjectValueBot, ValueBot, FunSet(FIdTop)), AbsentTop)).
     updated("@construct", (PropValue(ObjectValueBot, ValueBot, FunSet(FIdTop)), AbsentTop)).
-    updated("@default_number", (PropValue(ObjectValuePseudoTop), AbsentTop)).
-    updated("@default_other", (PropValue(ObjectValuePseudoTop), AbsentTop)))
+    updated("@hasinstance", (PropValue(Value(NullTop)), AbsentTop)).
+    updated("@default_number", (PropValue(LibModeObjectValueTop), AbsentTop)).
+    updated("@default_other", (PropValue(LibModeObjectValueTop), AbsentTop)))
 
   val LPBot = LPSet(HashMap[Loc,Set[String]]())
   val LBot = LocSetBot
+
+  /* Tizen Error instance */
+  val TizenUnknownErrorLoc: Loc = newPreDefLoc("UnknownErr", Old)
+  val TizenTypeMismatchErrorLoc: Loc = newPreDefLoc("TypeMismatchErr", Old)
+  val TizenInvalidValuesErrorLoc: Loc = newPreDefLoc("InvalidValuesErr", Old)
+  /* Tizen Callback table */
+  val TizenCallbackTableLoc: Loc = newPreDefLoc("TizenCallbackTable", Recent)
+  val TizenCallbackArgTableLoc: Loc = newPreDefLoc("TizenCallbackArgTable", Recent)
 }

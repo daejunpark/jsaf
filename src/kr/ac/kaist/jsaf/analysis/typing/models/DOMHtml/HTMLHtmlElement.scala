@@ -10,62 +10,104 @@
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml
 
 import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
-import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.analysis.typing.Helper
-import scala.collection.immutable.TreeMap
-import scala.collection.immutable.HashSet
-import scala.collection.immutable.HashMap
-import kr.ac.kaist.jsaf.interpreter.InterpreterPredefine
-import kr.ac.kaist.jsaf.nodes_util.IRFactory
-import kr.ac.kaist.jsaf.nodes_util.NodeUtil
-import kr.ac.kaist.jsaf.analysis.typing.Config
-import kr.ac.kaist.jsaf.scala_src.useful.Lists._
+import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
+import kr.ac.kaist.jsaf.analysis.typing.models._
 import org.w3c.dom.Node
 import org.w3c.dom.Element
-import kr.ac.kaist.jsaf.analysis.typing.CallContext
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMNode
+import kr.ac.kaist.jsaf.analysis.cfg.CFG
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import scala.Some
 
 
-object HTMLHtmlElement {
-  
-  val loc_proto = newLoc("HTMLHtmlProto")
-  
-  val F = BoolFalse
-  val T = BoolTrue
-  
-  def init(map: HeapMap) : HeapMap = {
-    val loc_cons = newLoc("HTMLHtmlConst")
+object HTMLHtmlElement extends DOM {
+  private val name = "HTMLHtmlElement"
 
-    // Constructor Object
-    val obj_con = ObjEmpty.
-      update(OtherStrSingle("@class"),    PropValue(AbsString.alpha("Function"))).
-      update(OtherStrSingle("@proto"),    PropValue(ObjectValue(ObjProtoLoc, F, F, F))).
-      update(OtherStrSingle("length"),    PropValue(ObjectValue(AbsNumber.alpha(0), F, F, F))).
-      update(OtherStrSingle("prototype"), PropValue(ObjectValue(loc_proto, F, F, F)))
-     
-    // Prototype Object
-    val obj_proto = ObjEmpty.
-      update(OtherStrSingle("@class"),    PropValue(AbsString.alpha("Object"))).
-      update(OtherStrSingle("@proto"),    PropValue(ObjectValue(HTMLElement.get_prototype, F, F, F)))
+  /* predefined locatoins */
+  val loc_cons = newPredefLoc(name + "Cons")
+  val loc_proto = newPredefLoc(name + "Proto")
+
+  /* constructor */
+  private val prop_cons: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Function")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
+    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
+    ("length", AbsConstValue(PropValue(ObjectValue(Value(AbsNumber.alpha(0)), F, F, F)))),
+    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F))))
+  )
   
-    val global_object = map(GlobalLoc).update(AbsString.alpha("HTMLHtmlElement"), 
-                                       PropValue(ObjectValue(loc_cons, T, F, T)))   
-    
-    val newmap = map + (GlobalLoc -> global_object) + (loc_proto -> obj_proto) + (loc_cons -> obj_con) 
-    newmap
+  /* prorotype */
+  private val prop_proto: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(Value(HTMLElement.loc_proto), F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue)))
+  )
+
+  /* global */
+  private val prop_global: List[(String, AbsProperty)] = List(
+    (name, AbsConstValue(PropValue(ObjectValue(loc_cons, T, F, T))))
+  )
+
+  def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
+    (loc_cons, prop_cons), (loc_proto, prop_proto), (GlobalLoc, prop_global)
+  )
+
+  def getSemanticMap(): Map[String, SemanticFun] = {
+    Map()
+  }
+
+  def getPreSemanticMap(): Map[String, SemanticFun] = {
+    Map()
+  }
+
+  def getDefMap(): Map[String, AccessFun] = {
+    Map()
+  }
+
+  def getUseMap(): Map[String, AccessFun] = {
+    Map()
+  }
+
+  /* semantics */
+  // no function
+ 
+  /* instance */ 
+  // predifined location : only one 'HTMLHtmlElement" can be present in the heap 
+  var loc_ins_status: Option[Loc] = None
+  override def getInstance(cfg:CFG): Option[Loc] = {
+    val loc_ins=addrToLoc(cfg.newProgramAddr, Recent)
+    loc_ins_status = Some(loc_ins)
+    loc_ins_status
+  }
+  def getInstance(): Option[Loc] = loc_ins_status
+
+  /* list of properties in the instance object */
+  override def getInsList(node: Node): List[(String, PropValue)] = node match {
+    case e: Element => 
+      // This object has all properties of the HTMLElement object 
+      HTMLElement.getInsList(node) ++ List(
+      ("@class",    PropValue(AbsString.alpha("Object"))),
+      ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
+      ("@extensible", PropValue(BoolTrue)),
+      // DOM Level 1
+      ("version",     PropValue(ObjectValue(AbsString.alpha(e.getAttribute("version")), T, T, T))))
+    case _ => {
+      System.err.println("* Warning: " + node.getNodeName + " cannot have instance objects.")
+      List()
+    }
   }
   
-  def instantiate(map: HeapMap, node: Node) : (HeapMap, Loc) = {
-    val loc_instance = newLoc("HTMLHtmlInstance")
-    
-    // Instance Object
-    val obj_ins = ObjEmpty.
-      update(OtherStrSingle("@class"),    PropValue(AbsString.alpha("Object"))).
-      update(OtherStrSingle("@proto"),    PropValue(ObjectValue(loc_proto, F, F, F)))
+  def getInsList(version: PropValue): List[(String, PropValue)] = List(
+    ("@class",    PropValue(AbsString.alpha("Object"))),
+    ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
+    ("@extensible", PropValue(BoolTrue)),
+    // DOM Level 1
+    ("version",    version)
+   )
   
-    // This object has all properties and functions of the HTMLElement object 
-    val obj_ins1 = HTMLElement.update_Element(obj_ins, node) 
-    (map + (loc_instance -> obj_ins1), loc_instance)
-  }
+  override def default_getInsList(): List[(String, PropValue)] =    
+    // This object has all properties of the HTMLElement object 
+    HTMLElement.default_getInsList ::: getInsList(PropValue(ObjectValue(AbsString.alpha(""), T, T, T)))
+
 }
