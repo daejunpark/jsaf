@@ -210,28 +210,64 @@ object AccessHelper {
     LP_1 ++ LP_2
   }
 
+  def lookup(o: Obj, l: Loc, x: String): LPSet = {
+    val LP_1 =
+      AbsString.alpha(x) match {
+        case NumStrSingle(v) => LPSet((l, "@default_number"))
+        case OtherStrSingle(v) => LPSet((l, "@default_other"))
+        case _ =>{
+          System.err.println("impossible case?")
+          throw new InternalError("impossible case.")
+        }
+      }
+
+    val LP_2 = LPSet((l, x))
+
+    LP_1 ++ LP_2
+  }
+
   def absPair(h: Heap, l: Loc, s: AbsString): LPSet = {
     if (!h.domIn(l)) LPBot
     else {
       s match {
         case StrTop =>
           val pset = h(l).map.keySet.filter(x => !x.take(1).equals("@"))
-        val is = LPSet(Set((l,"@default_number"),(l,"@default_other")))
-        pset.foldLeft(is)((S,x) => S + ((l,x)))
+          val is = LPSet(Set((l,"@default_number"),(l,"@default_other")))
+          pset.foldLeft(is)((S,x) => S + ((l,x)))
         case StrBot => LPBot
         case NumStr =>
           val pset = h(l).map.keySet.filter(x => !x.take(1).equals("@") && AbsString.alpha(x) <= NumStr)
-        val is = LPSet((l,"@default_number"))
-        pset.foldLeft(is)((S,x) => S + ((l,x)))
+          val is = LPSet((l,"@default_number"))
+          pset.foldLeft(is)((S,x) => S + ((l,x)))
         case OtherStr =>
           val pset = h(l).map.keySet.filter(x => !x.take(1).equals("@") && AbsString.alpha(x) <= OtherStr)
-        val is = LPSet((l,"@default_other"))
-        pset.foldLeft(is)((S,x) => S + ((l,x)))
+          val is = LPSet((l,"@default_other"))
+          pset.foldLeft(is)((S,x) => S + ((l,x)))
         case NumStrSingle(v) => lookup(h,l,v) + ((l,"@default_number"))
         case OtherStrSingle(v) => lookup(h,l,v) + ((l,"@default_other"))
       }
     }
-  }    
+  }
+
+  def absPair(o: Obj, l: Loc, s: AbsString): LPSet = {
+    s match {
+      case StrTop =>
+        val pset = o.map.keySet.filter(x => !x.take(1).equals("@"))
+        val is = LPSet(Set((l,"@default_number"),(l,"@default_other")))
+        pset.foldLeft(is)((S,x) => S + ((l,x)))
+      case StrBot => LPBot
+      case NumStr =>
+        val pset = o.map.keySet.filter(x => !x.take(1).equals("@") && AbsString.alpha(x) <= NumStr)
+        val is = LPSet((l,"@default_number"))
+        pset.foldLeft(is)((S,x) => S + ((l,x)))
+      case OtherStr =>
+        val pset = o.map.keySet.filter(x => !x.take(1).equals("@") && AbsString.alpha(x) <= OtherStr)
+        val is = LPSet((l,"@default_other"))
+        pset.foldLeft(is)((S,x) => S + ((l,x)))
+      case NumStrSingle(v) => lookup(o,l,v) + ((l,"@default_number"))
+      case OtherStrSingle(v) => lookup(o,l,v) + ((l,"@default_other"))
+    }
+  }
 
   def Proto_use(h: Heap, l: Loc, s: AbsString): LPSet = {
     var visited = LocSetBot

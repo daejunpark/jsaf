@@ -705,7 +705,6 @@ class Typing(_cfg: CFG, locclone: Boolean) extends TypingInterface {
     for (node <- cfg.getNodes) {
       val nodeStr = node.toString
       val sb = new StringBuilder
-
       inTable.get(node) match {
         case None =>
           if (!(fset_builtin.contains(node._1))) {
@@ -748,7 +747,16 @@ class Typing(_cfg: CFG, locclone: Boolean) extends TypingInterface {
 
               System.out.println("- Heap " + ccStr)
               System.out.println(DomainPrinter.printHeap(4, state._1, cfg))
+/*
+              val out_s = sem.get.C((node,cc), cfg.getCmd(node), state)
 
+              System.out.println("- Out Normal Heap " + ccStr)
+              System.out.println(DomainPrinter.printHeap(4, out_s._1._1, cfg))
+              if(out_s._2._1 != HeapBot) {
+                System.out.println("- Out Exc Heap " + ccStr)
+                System.out.println(DomainPrinter.printHeap(4, out_s._2._1, cfg))
+              }
+*/
               first = false
               prevBottom = false
             }

@@ -77,7 +77,11 @@ class DSparseEnv(cfg: CFG) extends SparseEnv(cfg) {
           case Some(n) => HashSet(n)
           case None => HashSet()
         }
-        getCFG.getSucc(node) ++ n_1
+        val n_2 = getCFG.getAftercatchFromCallMap.get(node) match {
+          case Some(n) => HashSet(n)
+          case None => HashSet()
+        }
+        getCFG.getSucc(node) ++ n_1 ++ n_2
       }
       def succs_e(node: Node): Set[Node] = {
         getCFG.getExcSucc.get(node) match {
@@ -110,11 +114,12 @@ class DSparseEnv(cfg: CFG) extends SparseEnv(cfg) {
     })
     interDDG = interDDG_.toEdgeOnlyGraph
     // interDDG_.toDot_dugraph()
+    // dump_duset
     
     callgraph_node.foreach(kv => {
       val call = kv._1
       val aftercall = getCFG.getAftercallFromCall(call)
-      val aftercatch = getCFG.getExcSucc(aftercall)
+      val aftercatch = getCFG.getAftercatchFromCall(call)
       kv._2.foreach(callee => {
         val entry = (callee, LEntry)
         val exit = (callee, LExit)
@@ -231,7 +236,7 @@ class DSparseEnv(cfg: CFG) extends SparseEnv(cfg) {
     recovered_nodes
   }
 
-  def getDDGStr(ddg0: Boolean): String = {
+  override def getDDGStr(ddg0: Boolean): String = {
     var str = "digraph \"DirectedGraph\" {\n"
     if(ddg0) {
       str += interDDG_.toDot_String

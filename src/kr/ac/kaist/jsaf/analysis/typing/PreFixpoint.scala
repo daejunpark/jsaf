@@ -70,7 +70,8 @@ class PreFixpoint(cfg: CFG, worklist: Worklist, state: State, isBugDetector: Boo
             case Some(succMap) =>
               succMap.foreach(kv => {
                 // bypassing if IP edge is exception flow.
-                val cp_succ =
+                val cp_succ = kv._1
+/*
                   cp._1._2 match {
                     case LExitExc => {
                       val n_aftercall = kv._1._1
@@ -81,7 +82,7 @@ class PreFixpoint(cfg: CFG, worklist: Worklist, state: State, isBugDetector: Boo
                     }
                     case _ => kv._1
                   }
-                
+*/
                 val succ_fid = cp_succ._1._1
                 // if there is a new callee function, update reachable node set.
                 reachableFIds.get(succ_fid) match {

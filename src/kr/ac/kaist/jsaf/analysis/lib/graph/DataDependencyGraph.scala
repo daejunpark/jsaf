@@ -243,7 +243,10 @@ class DataDependencyGraph(nodes: Set[Node], var entry: Node) {
     getNodes.foreach(src => {
       getExcSucc(src) match {
         case Some(dst) => {
-          str += (getLabel(src)+ "->"+getLabel(dst)+"["+ExcEdgeStyle+"];\n")
+          val duset = getExcDUSet(src, dst)
+          val label = ppLocs(duset).replaceAll("##?PureLocal#[0-9]+,", "").replaceAll(" ", "")
+          if(!label.equals("{}"))
+            str += (getLabel(src)+ "->"+getLabel(dst)+"["+ExcEdgeStyle+", label=\"" + label + "\"];\n")
         }
         case _ => ()
       }

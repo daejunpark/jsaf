@@ -140,7 +140,28 @@ class CFG {
     }
   }
 
-  // normal successor + exception successor + aftercallFromCall successor
+  // Call <- Aftercatch link
+  private var callFromAftercatchMap: Map[Node, Node] = HashMap()
+  def getCallFromAftercaatchMap = callFromAftercatchMap
+  def getCallFromAftercatch(aftercatch: Node) = {
+    callFromAftercatchMap.get(aftercatch) match {
+      case Some(ac) => ac
+      case None => throw new InternalError("CFGCall must have corresponding after-catch("+aftercatch+")")
+    }
+  }
+
+  // Aftercatch <- Call link
+  private var aftercatchFromCallMap: Map[Node, Node] = HashMap()
+  def getAftercatchFromCallMap = aftercatchFromCallMap
+  def getAftercatchFromCall(call: Node) = {
+    aftercatchFromCallMap.get(call) match {
+      case Some(c) => c
+      case None => throw new InternalError("CFGAfterCatch must have corresponding call("+call+")")
+    }
+  }
+
+
+  // normal successor + exception successor + aftercallFromCall successor + aftercatchFromCall successor
   def getAllSucc(node: Node) = {
     val succs = getSet(succMap, node)
     val succs_exc = excSuccMap.get(node) match {
@@ -151,13 +172,19 @@ class CFG {
       case Some(n) => succs_exc + n
       case None => succs_exc
     }
-    succs_exc_ac
+    val succs_exc_ac_ac = aftercatchFromCallMap.get(node) match {
+      case Some(n) => succs_exc_ac + n
+      case None => succs_exc_ac
+    }
+    succs_exc_ac_ac
   }
 
   private var callBlock: Set[Node] = HashSet()
   private var aftercallBlock: Set[Node] = HashSet()
+  private var aftercatchBlock: Set[Node] = HashSet()
   def getCalls = callBlock
   def getAftercalls = aftercallBlock
+  def getAftercatches = aftercatchBlock
 
   // return variable for after-call node
   private var returnVarMap: Map[Node, CFGId] = HashMap()
@@ -237,6 +264,7 @@ class CFG {
     else 4
   private var apiAddrMap: Map[Address, List[Address]] = HashMap()
   def getAPIAddress(addr: Address, index: Int): Address = apiAddrMap(addr)(index)
+  def getAPIAddress(addr: Address): List[Address] = apiAddrMap(addr)
   def addAPIAddress(addr: Address) = {
     val new_list_1 = (0 until addrPerCallSite).foldLeft[List[Int]](List())((list, i) =>
       list :+ (programAddrCount + i)
@@ -339,6 +367,15 @@ class CFG {
     blockNode
   }
 
+  def newAfterCatchBlock(fid: FunctionId): BlockNode = {
+    val blockNode = newBlock(fid)
+
+    // add Block node to the funcMap
+    funcMap(fid)._4 :+ blockNode
+
+    blockNode
+  }
+
   private def initNode(node: Node): Unit = {
     // Extend nodes list.
     nodes ::= node
@@ -387,13 +424,25 @@ class CFG {
       case None => ()
     }
   }
-
+  
   def addCall(call: BlockNode, aftercall: BlockNode): Unit = {
     callFromAftercallMap += (aftercall -> call)
     aftercallFromCallMap += (call -> aftercall)
     callBlock += call
     aftercallBlock += aftercall
   }
+
+  def addCall(call: BlockNode, aftercall: BlockNode, aftercatch: BlockNode): Unit = {
+    callFromAftercallMap += (aftercall -> call)
+    aftercallFromCallMap += (call -> aftercall)
+    callBlock += call
+    aftercallBlock += aftercall
+    
+    callFromAftercatchMap += (aftercatch -> call)
+    aftercatchFromCallMap += (call -> aftercatch)
+    aftercatchBlock += aftercatch
+  }
+
 
   def addInst(node: BlockNode, inst: CFGInst): Unit = {
     val block = cmdMap(node).asInstanceOf[Block]

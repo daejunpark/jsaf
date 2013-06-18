@@ -69,12 +69,13 @@ abstract class Model(cfg: CFG) {
     val fid = cfg.newFunction(nameArg, List[CFGId](), List[CFGId](), funName, dummyInfo)
     val call_node = cfg.newBlock(fid)
     val return_node = cfg.newAfterCallBlock(fid, CFGTempId(rtn, PureLocalVar))
+    val return_exc_node = cfg.newAfterCatchBlock(fid)
 
     cfg.addEdge((fid, LEntry), call_node)
     cfg.addEdge(return_node, (fid,LExit))
-    cfg.addCall(call_node, return_node)
+    cfg.addCall(call_node, return_node, return_exc_node)
     cfg.addExcEdge(call_node, (fid,LExitExc))
-    cfg.addExcEdge(return_node, (fid,LExitExc))
+    cfg.addEdge(return_exc_node, (fid,LExitExc))
 
     // []built-in-call
     cfg.addInst(call_node,

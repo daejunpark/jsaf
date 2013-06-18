@@ -69,7 +69,7 @@ object SSA {
         case (KindO, KindI) => ddg.addEdge(src._1, dst._1, l)
         case (KindOE, KindI) => ddg.addExcEdge(src._1, dst._1, l)
         case _ => {
-          System.out.println(src + " => " + dst + "("+DomainPrinter.printLoc(l)+")")
+          // System.out.println(src + " => " + dst + "("+DomainPrinter.printLoc(l)+")")
           throw new InternalError("Impossible case.")
         }
       }
@@ -105,7 +105,7 @@ object SSA {
             recovered_nodes += src._1
         }
         case _ => {
-          System.out.println(src + " => " + dst + "("+DomainPrinter.printLoc(l)+")")
+          // System.out.println(src + " => " + dst + "("+DomainPrinter.printLoc(l)+")")
           throw new InternalError("Impossible case.")
         }
       }
@@ -165,6 +165,7 @@ object SSA {
     def search(x: ENode): Unit = {
       // draw edges from defs to uses.
       rhsof(x).foreach(v => add_du_edge_i(s(v).top, x, v))
+      
       // reset a source of each def to current node.
       lhsof(x).foreach(v => s(v).push(x))
 

@@ -10,38 +10,41 @@ tests=trycatchfinally3
 CFG_TESTS_DIR=${JS_HOME}/tests/cfg_tests
 cfg
 cfg_out_WCIequals=\
-(0,LBlock(43))\n\
+(0,LBlock(44))\n\
     [69] noop(EndOfFile)\n\
 \n\
 \n\
-(0,LBlock(42))\n\
+(0,LBlock(43))\n\
     [67] catch(<>e<>18)\n\
     [68] <>Global<>ignore10 := <>e<>18\n\
 \n\
 \n\
+(0,LBlock(42))\n\
+\n\
+\n\
 (0,LBlock(41))\n\
-\n\
-\n\
-(0,LBlock(40))\n\
     [66] assert(<>new<>17 != 0)\n\
 \n\
 \n\
-(0,LBlock(39))\n\
+(0,LBlock(40))\n\
     [65] assert(<>new<>17 == 0)\n\
 \n\
 \n\
+(0,LBlock(39))\n\
+\n\
+\n\
 (0,LBlock(38))\n\
-\n\
-\n\
-(0,LBlock(37))\n\
     [61] assert(! true)\n\
 \n\
 \n\
-(0,LBlock(36))\n\
+(0,LBlock(37))\n\
     [60] assert(true)\n\
     [62] <>old<>16 := x\n\
     [63] <>new<>17 := <>Global<>toNumber(<>old<>16)\n\
     [64] x := <>new<>17 - 1\n\
+\n\
+\n\
+(0,LBlock(36))\n\
 \n\
 \n\
 (0,LBlock(35))\n\
@@ -51,36 +54,36 @@ cfg_out_WCIequals=\
 \n\
 \n\
 (0,LBlock(33))\n\
-\n\
-\n\
-(0,LBlock(32))\n\
     [58] catch(<>e<>18)\n\
     [59] <>Global<>ignore10 := <>e<>18\n\
 \n\
 \n\
+(0,LBlock(32))\n\
+\n\
+\n\
 (0,LBlock(31))\n\
-\n\
-\n\
-(0,LBlock(30))\n\
     [57] assert(<>new<>17 != 0)\n\
 \n\
 \n\
-(0,LBlock(29))\n\
+(0,LBlock(30))\n\
     [56] assert(<>new<>17 == 0)\n\
 \n\
 \n\
+(0,LBlock(29))\n\
+\n\
+\n\
 (0,LBlock(28))\n\
-\n\
-\n\
-(0,LBlock(27))\n\
     [52] assert(! true)\n\
 \n\
 \n\
-(0,LBlock(26))\n\
+(0,LBlock(27))\n\
     [51] assert(true)\n\
     [53] <>old<>16 := x\n\
     [54] <>new<>17 := <>Global<>toNumber(<>old<>16)\n\
     [55] x := <>new<>17 - 1\n\
+\n\
+\n\
+(0,LBlock(26))\n\
 \n\
 \n\
 (0,LBlock(25))\n\
@@ -90,49 +93,49 @@ cfg_out_WCIequals=\
 \n\
 \n\
 (0,LBlock(23))\n\
-\n\
-\n\
-(0,LBlock(22))\n\
     [49] catch(<>e<>18)\n\
     [50] <>Global<>ignore10 := <>e<>18\n\
 \n\
 \n\
+(0,LBlock(22))\n\
+\n\
+\n\
 (0,LBlock(21))\n\
-\n\
-\n\
-(0,LBlock(20))\n\
     [48] assert(<>new<>17 != 0)\n\
 \n\
 \n\
-(0,LBlock(19))\n\
+(0,LBlock(20))\n\
     [47] assert(<>new<>17 == 0)\n\
 \n\
 \n\
+(0,LBlock(19))\n\
+\n\
+\n\
 (0,LBlock(18))\n\
-\n\
-\n\
-(0,LBlock(17))\n\
     [43] assert(! true)\n\
 \n\
 \n\
-(0,LBlock(16))\n\
+(0,LBlock(17))\n\
     [42] assert(true)\n\
     [44] <>old<>16 := x\n\
     [45] <>new<>17 := <>Global<>toNumber(<>old<>16)\n\
     [46] x := <>new<>17 - 1\n\
 \n\
 \n\
+(0,LBlock(16))\n\
+\n\
+\n\
 (0,LBlock(15))\n\
 \n\
 \n\
 (0,LBlock(14))\n\
-\n\
-\n\
-(0,LBlock(13))\n\
     [38] <>obj<>15 := <>Global<>toObject(y) @ #20\n\
     [39] <>Global<>ignore6 := alloc() @ #21\n\
     [40] <>Global<>ignore6["test"] := - 23.8\n\
     [41] <>obj<>15["d"] := <>Global<>ignore6\n\
+\n\
+\n\
+(0,LBlock(13))\n\
 \n\
 \n\
 (0,LBlock(12))\n\

@@ -604,6 +604,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
           val cc_caller = cp._2
           val n_aftercall = cfg.getAftercallFromCall(cp._1)
           val cp_aftercall = (n_aftercall, cc_caller)
+          val n_aftercatch = cfg.getAftercatchFromCall(cp._1)
+          val cp_aftercatch = (n_aftercatch, cc_caller)
           lset_f.foreach {l_f => {
             val o_f = h_1(l_f)
             val fids = o_f("@construct")._1._3
@@ -617,7 +619,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                     update("@scope", o_f("@scope")._1)
                 addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
                 addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_1, o_old)
-                addReturnEdge(((fid, LExitExc), cc_new), cp_aftercall, ctx_1, o_old)
+                addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_1, o_old)
               }}
             }}
           }}
@@ -662,6 +664,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
           val cc_caller = cp._2
           val n_aftercall = cfg.getAftercallFromCall(cp._1)
           val cp_aftercall = (n_aftercall, cc_caller)
+          val n_aftercatch = cfg.getAftercatchFromCall(cp._1)
+          val cp_aftercatch = (n_aftercatch, cc_caller)
           lset_f.foreach {l_f => {
             val o_f = h_1(l_f)
             val fids = o_f("@function")._1._3
@@ -675,7 +679,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                     update("@scope", o_f("@scope")._1)
                 addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
                 addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_1, o_old)
-                addReturnEdge(((fid, LExitExc), cc_new), cp_aftercall, ctx_1, o_old)
+                addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_1, o_old)
               }}
             }}
           }}
@@ -1586,6 +1590,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
         val cc_caller = cp._2
         val n_aftercall = cfg.getAftercallFromCall(cp._1)
         val cp_aftercall = (n_aftercall, cc_caller)
+        val n_aftercatch = cfg.getAftercatchFromCall(cp._1)
+        val cp_aftercatch = (n_aftercatch, cc_caller)
         lset_f.foreach((l_f) => {
           val o_f = h_1(l_f)
           o_f("@construct")._1._3.foreach((fid) => {
@@ -1598,7 +1604,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
 
               addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
               addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_1, o_old)
-              addReturnEdge(((fid, LExitExc), cc_new), cp_aftercall, ctx_1, o_old)
+              addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_1, o_old)
             })
           })
         })
@@ -1640,6 +1646,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
         val cc_caller = cp._2
         val n_aftercall = cfg.getAftercallFromCall(cp._1)
         val cp_aftercall = (n_aftercall, cc_caller)
+        val n_aftercatch = cfg.getAftercatchFromCall(cp._1)
+        val cp_aftercatch = (n_aftercatch, cc_caller)
         val propv_arg = PropValue(ObjectValue(v_arg, BoolTrue, BoolFalse, BoolFalse))
         lset_f foreach (l_f => {
           val o_f = h_1(l_f)
@@ -1651,7 +1659,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
               update("@scope", o_f("@scope")._1)
               addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
               addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_1, o_old)
-              addReturnEdge(((fid, LExitExc), cc_new), cp_aftercall, ctx_1, o_old)
+              addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_1, o_old)
             }}
           })
         })

@@ -151,6 +151,8 @@ object BuiltinFunction extends ModelData {
             val cc_caller = cp._2
             val n_aftercall = cfg.getAftercallFromCall(cp._1)
             val cp_aftercall = (n_aftercall, cc_caller)
+            val n_aftercatch = cfg.getAftercatchFromCall(cp._1)
+            val cp_aftercatch = (n_aftercatch, cc_caller)
             lset_f.foreach((l_f) => {
               val o_f = h_5(l_f)
               o_f("@function")._1._3.foreach((fid) => {
@@ -162,7 +164,7 @@ object BuiltinFunction extends ModelData {
                     update("@scope", o_f("@scope")._1)
                   sem.addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
                   sem.addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_5, o_old)
-                  sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercall, ctx_5, o_old)
+                  sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_5, o_old)
                 })
               })
             })
@@ -229,6 +231,8 @@ object BuiltinFunction extends ModelData {
           val cc_caller = cp._2
           val n_aftercall = cfg.getAftercallFromCall(cp._1)
           val cp_aftercall = (n_aftercall, cc_caller)
+          val n_aftercatch = cfg.getAftercatchFromCall(cp._1)
+          val cp_aftercatch = (n_aftercatch, cc_caller)
           lset_f.foreach((l_f) => {
             val o_f = h_4(l_f)
             o_f("@function")._1._3.foreach((fid) => {
@@ -240,7 +244,7 @@ object BuiltinFunction extends ModelData {
                   update("@scope", o_f("@scope")._1)
                 sem.addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
                 sem.addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_4, o_old)
-                sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercall, ctx_4, o_old)
+                sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_4, o_old)
               })
             })
           })
@@ -357,6 +361,8 @@ object BuiltinFunction extends ModelData {
           val cc_caller = cp._2
           val n_aftercall = cfg.getAftercallFromCall(cp._1)
           val cp_aftercall = (n_aftercall, cc_caller)
+          val n_aftercatch = cfg.getAftercatchFromCall(cp._1)
+          val cp_aftercatch = (n_aftercatch, cc_caller)
           lset_f.foreach((l_f) => {
             val o_f = h_5(l_f)
             o_f("@function")._1._3.foreach((fid) => {
@@ -368,7 +374,7 @@ object BuiltinFunction extends ModelData {
                   update("@scope", o_f("@scope")._1)
                 sem.addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
                 sem.addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_5, o_old)
-                sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercall, ctx_5, o_old)
+                sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_5, o_old)
               })
             })
           })
@@ -433,6 +439,8 @@ object BuiltinFunction extends ModelData {
           val cc_caller = cp._2
           val n_aftercall = cfg.getAftercallFromCall(cp._1)
           val cp_aftercall = (n_aftercall, cc_caller)
+          val n_aftercatch = cfg.getAftercatchFromCall(cp._1)
+          val cp_aftercatch = (n_aftercatch, cc_caller)
           lset_f.foreach((l_f) => {
             val o_f = h_4(l_f)
             o_f("@function")._1._3.foreach((fid) => {
@@ -444,7 +452,7 @@ object BuiltinFunction extends ModelData {
                   update("@scope", o_f("@scope")._1)
                 sem.addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
                 sem.addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_4, o_old)
-                sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercall, ctx_4, o_old)
+                sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_4, o_old)
               })
             })
           })

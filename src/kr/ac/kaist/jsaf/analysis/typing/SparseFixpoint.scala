@@ -75,8 +75,13 @@ class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Tabl
         } else {
           sem.C(cp, cmd, inS)
         }
-
-      val recover_start = System.nanoTime()
+/*
+          System.out.println("In State Dump for "+cp)
+          System.out.println(DomainPrinter.printHeap(4, inS._1, cfg))
+          System.out.println("Result State Dump for "+cp)
+          System.out.println(DomainPrinter.printHeap(4, outS._1, cfg))
+*/
+          val recover_start = System.nanoTime()
       val edges =
         if (outS._1 != HeapBot && !cfg.getCalls.contains(cp._1)) {
           env.recoverOutEdges(fg, cp._1)
@@ -106,11 +111,20 @@ class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Tabl
           val cp_succ = (node, cp._2)
           val oldS = readTable(cp_succ)
           val succ_set = ddg.getDUSet(cp._1, node)
-          // System.out.println("Propagates a heap from "+cp._1+" -> "+node)
-          // System.out.println(DomainPrinter.printHeap(4, (outS.restrict(succ_set))._1))
+/*
+          System.out.println("Propagates a heap from "+cp + " -> "+node)
+          System.out.println("Old State for "+cp_succ+"==")
+          System.out.println(DomainPrinter.printHeap(4, oldS._1, cfg))
+          System.out.println("Merge State== " + DomainPrinter.printLocSet(succ_set))
+          System.out.println(DomainPrinter.printHeap(4, (outS.restrict(succ_set))._1, cfg))
+*/
           val outS2 = outS.restrict(succ_set)
           if (!(outS2 <= oldS)) {
             val newS = oldS + outS2
+/*
+            System.out.println("Merged State by propagation "+cp_succ+"== " + DomainPrinter.printLocSet(succ_set))
+            System.out.println(DomainPrinter.printHeap(4, newS._1, cfg))
+*/
             worklist.add(cp._1, cp_succ)
             updateTable(cp_succ, newS)
           }
@@ -126,8 +140,19 @@ class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Tabl
             val cp_succ = (cfg.getAftercallFromCall(cp._1), cp._2)
             val oldS = readTable(cp_succ)
             val outS2 = outS.restrict(bypass_set)
+/*
+          System.out.println("Propagates a heap from "+cp + " -> "+cp_succ._1)
+          System.out.println("Old State for "+cp_succ+"==")
+          System.out.println(DomainPrinter.printHeap(4, oldS._1, cfg))
+          System.out.println("Merge State== " + DomainPrinter.printLocSet(bypass_set))
+          System.out.println(DomainPrinter.printHeap(4, (outS.restrict(bypass_set))._1, cfg))
+*/
             if (!(outS2 <= oldS)) {
               val newS = oldS + outS2
+/*
+            System.out.println("Merged State== " + DomainPrinter.printLocSet(bypass_set))
+            System.out.println(DomainPrinter.printHeap(4, newS._1, cfg))
+*/
               worklist.add(cp._1, cp_succ)
               updateTable(cp_succ, newS)
             }
@@ -137,17 +162,25 @@ class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Tabl
 
         // bypassingset of call->aftercatch is stored when exitexc node is analyzed
         if (cfg.getCalls.contains(cp._1)) {
-          // Propagate exception output state along call/after-call edges.
+          // Propagate exception output state along call/after-catch edges.
           val bypass_set = env.getBypassingExcSet(cp)
           if (!bypass_set.isEmpty) {
-            val cp_exc = cfg.getExcSucc.get(cfg.getAftercallFromCall(cp._1)) match {
-              case None => throw new InternalError("After-call node must have exception successor")
-              case Some(node) => (node, cp._2)
-            }
+            val cp_exc = (cfg.getAftercatchFromCall(cp._1), cp._2)
             val oldS = readTable(cp_exc)
             val outS2 = outS.restrict(bypass_set)
+/*
+          System.out.println("Propagates a heap from "+cp +" -> "+cp_exc._1)
+          System.out.println("Old State for "+cp_exc+"==")
+          System.out.println(DomainPrinter.printHeap(4, oldS._1, cfg))
+          System.out.println("Merge State== " + DomainPrinter.printLocSet(bypass_set))
+          System.out.println(DomainPrinter.printHeap(4, (outS.restrict(bypass_set))._1, cfg))
+*/
             if (!(outS2 <= oldS)) {
               val newS = oldS + outS2
+/*
+            System.out.println("Merged State== " + DomainPrinter.printLocSet(bypass_set))
+            System.out.println(DomainPrinter.printHeap(4, newS._1, cfg))
+*/
               worklist.add(cp._1, cp_exc)
               updateTable(cp_exc, newS)
             }
@@ -172,8 +205,10 @@ class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Tabl
             val oldS = readTable(cp_succ)
             val succ_set = ddg.getExcDUSet(cp._1, node)
             val outES2 = outES.restrict(succ_set)
-            // System.out.println("Propagates a excheap from "+cp._1+" -> "+node)
-            // System.out.println(DomainPrinter.printHeap(4, outES._1))
+/*
+            System.out.println("Propagates a excheap from "+cp +" -> "+node)
+            System.out.println(DomainPrinter.printHeap(4, outES2._1, cfg))
+*/
             if (!(outES2 <= oldS)) {
               val newES = oldS + outES2
               worklist.add(cp._1, cp_succ)
@@ -193,8 +228,9 @@ class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Tabl
           succMap.foreach(kv => {
 
             // bypassing if IP edge is exception flow.
-            val cp_aftercall = kv._1
-            val cp_succ =
+//            val cp_aftercall = kv._1
+            val cp_succ = kv._1
+/*
               cp._1._2 match {
                 case LExitExc => {
                   val n_aftercall = kv._1._1
@@ -205,22 +241,24 @@ class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Tabl
                 }
                 case _ => kv._1
               }
+*/
             val oldS = readTable(cp_succ)
             val outS_E = sem.E(cp, cp_succ, kv._2._1, kv._2._2, outS)
 
             // if cp is after-call, call-to-after-call cfg must be recovered.
             (cp) match {
               case ((_, LExit), _) => {
+                // cp_succ is after-call node
                 if (outS._1 != HeapBot) {
                   val recover_start = System.nanoTime()
-                  val n_call = cfg.getCallFromAftercall(cp_aftercall._1)
-                  val call = (n_call, cp_aftercall._2)
+                  val n_call = cfg.getCallFromAftercall(cp_succ._1)
+                  val call = (n_call, cp_succ._2)
                   // System.out.println("try to recover normal: "+call)
                   if (env.updateBypassing(call, cp._1._1)) {
                     worklist.add(cp._1, call)
                   }
                   val (fg, ddg) = env.getFlowGraph(call._1._1, call._2)
-                  val edges = env.recoverOutEdges(fg, call._1)
+                  val edges = env.recoverOutAftercall(fg, call._1)
                   if (!edges.isEmpty) {
                     val recovered = env.draw_intra_dugraph_incremental(fg, ddg, edges, Set())
                     recovered.foreach(node => worklist.add((node, call._2)))
@@ -230,29 +268,29 @@ class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Tabl
                 }
               }
               case ((_, LExitExc), _) => {
+                // cp_succ is after-catch node
                 if (outS._1 != HeapBot) {
                   val recover_start = System.nanoTime()
-                  val n_call = cfg.getCallFromAftercall(cp_aftercall._1)
-                  val call = (n_call, cp_aftercall._2)
+                  val n_call = cfg.getCallFromAftercatch(cp_succ._1)
+                  val call = (n_call, cp_succ._2)
                   // System.out.println("try to recover exception: "+call)
                   if (env.updateBypassingExc(call, cp._1._1)) {
                     worklist.add(cp._1, call)
                   }
                   val (fg, ddg) = env.getFlowGraph(call._1._1, call._2)
 
-                  // get after-catch node
-                  val cp_aftercatch = cfg.getExcSucc.get(cp_aftercall._1) match {
-                    case None => throw new InternalError("After-call node must have exception successor")
-                    case Some(node) => (node, cp_aftercall._2)
-                  }
                   // recover CFG edge of call.
                   //val edges = env.recoverOutEdges(fg, call._1)
                   // edge : call -> aftercatch for normal flow
-                  val edges = HashSet[(Node, Node)]((n_call, cp_aftercatch._1))
+                  val edges = env.recoverOutAftercatch(fg, call._1)
+                  if (!edges.isEmpty) {
+                    val recovered = env.draw_intra_dugraph_incremental(fg, ddg, edges, Set())
+                    recovered.foreach(node => worklist.add((node, call._2)))
+                  }
 
                   // recover EFG edge of aftercall.
                   // val exc_edges = env.recoverOutExcEdge(fg, cp_aftercall._1)
-
+/*
 //                  if (!edges.isEmpty || !exc_edges.isEmpty) {
                   // callee of n_call contain exceptions
                   if (!fg.isCallExcRecovered(n_call)) {
@@ -262,14 +300,13 @@ class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Tabl
                     val recovered = env.draw_intra_dugraph_incremental(fg, ddg, edges, HashSet()) + cp_aftercatch._1
                     recovered.foreach(node => worklist.add((node, call._2)))
                   }
-
+*/
                   val recover_time = (System.nanoTime() - recover_start) / 1000000000.0
                   time += recover_time
                 }
               }
               case _ => ()
             }
-
             // Localization
             val outS_E2 =
               if (env.optionLocalization && cp_succ._1._2 == LEntry) {
@@ -278,7 +315,13 @@ class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Tabl
               } else {
                 outS_E
               }
-
+/*
+          System.out.println("Propagates a heap from "+cp + " -> "+cp_succ + " using IP edge")
+          System.out.println("Old State for "+cp_succ+"==")
+          System.out.println(DomainPrinter.printHeap(4, oldS._1, cfg))
+          System.out.println("Merge State== ")// + DomainPrinter.printLocSet(bypass_set))
+          System.out.println(DomainPrinter.printHeap(4, (outS_E2)._1, cfg))
+*/
             if (!(outS_E2 <= oldS)) {
               val newS = oldS + outS_E2
               worklist.add(cp._1, cp_succ)

@@ -78,7 +78,8 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, locclone: Boolean) 
         case Some(succMap) =>
           succMap.foreach(kv => {
             // bypassing if IP edge is exception flow.
-            val cp_succ =
+            val cp_succ = kv._1
+/*
               cp._1._2 match {
                 case LExitExc => {
                   val n_aftercall = kv._1._1
@@ -89,6 +90,7 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, locclone: Boolean) 
                 }
                 case _ => kv._1
               }
+*/
             val oldS = readTable(cp_succ)
             val newS = oldS + sem.E(cp, cp_succ, kv._2._1, kv._2._2, outS)
             if (!(newS <= oldS)) {

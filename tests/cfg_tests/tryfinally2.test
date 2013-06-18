@@ -10,19 +10,22 @@ tests=tryfinally2
 CFG_TESTS_DIR=${JS_HOME}/tests/cfg_tests
 cfg
 cfg_out_WCIequals=\
-(0,LBlock(25))\n\
+(0,LBlock(29))\n\
     [41] x := 9\n\
 \n\
 \n\
-(0,LBlock(24))\n\
+(0,LBlock(28))\n\
+\n\
+\n\
+(0,LBlock(27))\n\
     [EDGE] after-call(<>Global<>ignore7)\n\
 \n\
 \n\
-(0,LBlock(23))\n\
+(0,LBlock(26))\n\
     [40] x := 9\n\
 \n\
 \n\
-(0,LBlock(22))\n\
+(0,LBlock(25))\n\
     [34] <>obj<>1 := <>Global<>toObject(print) @ #34\n\
     [35] <>temp<>2 := x\n\
     [36] <>arguments<>3 := allocArg(1) @ #35\n\
@@ -31,23 +34,26 @@ cfg_out_WCIequals=\
     [39] call(<>obj<>1, <>fun<>4, <>arguments<>3) @ #36\n\
 \n\
 \n\
-(0,LBlock(21))\n\
+(0,LBlock(24))\n\
     [33] x := 10\n\
 \n\
 \n\
-(0,LBlock(20))\n\
+(0,LBlock(23))\n\
     [32] x := 9\n\
 \n\
 \n\
-(0,LBlock(19))\n\
+(0,LBlock(22))\n\
+\n\
+\n\
+(0,LBlock(21))\n\
     [EDGE] after-call(<>Global<>ignore7)\n\
 \n\
 \n\
-(0,LBlock(18))\n\
+(0,LBlock(20))\n\
     [31] x := 9\n\
 \n\
 \n\
-(0,LBlock(17))\n\
+(0,LBlock(19))\n\
     [25] <>obj<>1 := <>Global<>toObject(print) @ #23\n\
     [26] <>temp<>2 := x\n\
     [27] <>arguments<>3 := allocArg(1) @ #24\n\
@@ -56,31 +62,34 @@ cfg_out_WCIequals=\
     [30] call(<>obj<>1, <>fun<>4, <>arguments<>3) @ #25\n\
 \n\
 \n\
-(0,LBlock(16))\n\
+(0,LBlock(18))\n\
     [24] x := 10\n\
 \n\
 \n\
-(0,LBlock(15))\n\
+(0,LBlock(17))\n\
     [23] x := 2\n\
 \n\
 \n\
-(0,LBlock(14))\n\
+(0,LBlock(16))\n\
     [22] x := 7\n\
 \n\
 \n\
-(0,LBlock(13))\n\
+(0,LBlock(15))\n\
     [21] x := 9\n\
 \n\
 \n\
-(0,LBlock(12))\n\
+(0,LBlock(14))\n\
+\n\
+\n\
+(0,LBlock(13))\n\
     [EDGE] after-call(<>Global<>ignore7)\n\
 \n\
 \n\
-(0,LBlock(11))\n\
+(0,LBlock(12))\n\
     [20] x := 9\n\
 \n\
 \n\
-(0,LBlock(10))\n\
+(0,LBlock(11))\n\
     [14] <>obj<>1 := <>Global<>toObject(print) @ #12\n\
     [15] <>temp<>2 := x\n\
     [16] <>arguments<>3 := allocArg(1) @ #13\n\
@@ -89,12 +98,15 @@ cfg_out_WCIequals=\
     [19] call(<>obj<>1, <>fun<>4, <>arguments<>3) @ #14\n\
 \n\
 \n\
-(0,LBlock(9))\n\
+(0,LBlock(10))\n\
     [13] x := 10\n\
 \n\
 \n\
-(0,LBlock(8))\n\
+(0,LBlock(9))\n\
     [12] x := 9\n\
+\n\
+\n\
+(0,LBlock(8))\n\
 \n\
 \n\
 (0,LBlock(7))\n\

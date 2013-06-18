@@ -947,6 +947,17 @@ class SparseTyping(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingI
 
               System.out.println("- Heap " + ccStr)
               System.out.println(DomainPrinter.printHeap(4, state._1, cfg))
+
+/*
+              val out_s = sem.get.C((node,cc), cfg.getCmd(node), state)
+
+              System.out.println("- Out Normal Heap " + ccStr)
+              System.out.println(DomainPrinter.printHeap(4, out_s._1._1, cfg))
+              if(out_s._2._1 != HeapBot) {
+                System.out.println("- Out Exc Heap " + ccStr)
+                System.out.println(DomainPrinter.printHeap(4, out_s._2._1, cfg))
+              }
+*/
               first = false
               prevBottom = false
             }

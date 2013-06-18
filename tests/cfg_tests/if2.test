@@ -10,9 +10,15 @@ tests=if2
 CFG_TESTS_DIR=${JS_HOME}/tests/cfg_tests
 cfg
 cfg_out_WCIequals=\
-(0,LBlock(11))\n\
+(0,LBlock(13))\n\
+\n\
+\n\
+(0,LBlock(12))\n\
     [EDGE] after-call(<>Global<>ignore4)\n\
     [42] noop(EndOfFile)\n\
+\n\
+\n\
+(0,LBlock(11))\n\
 \n\
 \n\
 (0,LBlock(10))\n\

@@ -10,6 +10,9 @@ tests=trycatchfinally4
 CFG_TESTS_DIR=${JS_HOME}/tests/cfg_tests
 cfg
 cfg_out_WCIequals=\
+(0,LBlock(15))\n\
+\n\
+\n\
 (0,LBlock(14))\n\
     [EDGE] after-call(<>temp<>13)\n\
     [28] <>temp<>13 := <>temp<>13\n\

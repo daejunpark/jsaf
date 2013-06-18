@@ -43,6 +43,8 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
     }
   }
 
+  // val debug_fid = 100
+  // val debug_loc = LocSet(addrToLoc(3606,Recent))
   private def loop(): Unit = {
     while (!worklist.isEmpty) {
       if (!quiet)
@@ -104,11 +106,24 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
           val cp_succ = (node, cp._2)
           val oldS = readTable(cp_succ)
           val succ_set = ddg.getDUSet(cp._1, node)
-          // System.out.println("Propagates a heap from "+cp._1+" -> "+node)
-          // System.out.println(DomainPrinter.printHeap(4, (outS.restrict(succ_set))._1, cfg))
           val outS2 = outS.restrict(succ_set)
+          /*
+          if(cp._1._1 == debug_fid) {
+          System.out.println("Propagates a heap from "+cp + " -> ("+node)
+          System.out.println("Old State for "+cp_succ+"==")
+          System.out.println(DomainPrinter.printHeap(4, oldS.restrict(debug_loc)._1, cfg))
+          System.out.println("Merge State== ")// + DomainPrinter.printLocSet(succ_set))
+          System.out.println(DomainPrinter.printHeap(4, (outS2.restrict(debug_loc))._1, cfg))
+          }
+          */
           if (!(outS2 <= oldS)) {
             val newS = oldS + outS2
+          /*
+          if(cp._1._1 == debug_fid) {
+            System.out.println("Merged State by propagation "+cp_succ+"== ")// + DomainPrinter.printLocSet(succ_set))
+            System.out.println(DomainPrinter.printHeap(4, newS.restrict(debug_loc)._1, cfg))
+          }
+          */
             worklist.add(cp._1, cp_succ)
             updateTable(cp_succ, newS)
           }
@@ -121,8 +136,23 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
             val cp_succ = (cfg.getAftercallFromCall(cp._1), cp._2)
             val oldS = readTable(cp_succ)
             val outS2 = outS.restrict(bypass_set)
+          /*
+          if(cp._1._1 == debug_fid) {
+          System.out.println("Propagates a heap from "+cp + " -> "+cp_succ._1)
+          System.out.println("Old State for "+cp_succ+"==")
+          System.out.println(DomainPrinter.printHeap(4, oldS.restrict(debug_loc)._1, cfg))
+          System.out.println("Merge State== ")// + DomainPrinter.printLocSet(bypass_set))
+          System.out.println(DomainPrinter.printHeap(4, (outS2.restrict(debug_loc))._1, cfg))
+          }
+          */
             if (!(outS2 <= oldS)) {
               val newS = oldS + outS2
+          /*
+          if(cp._1._1 == debug_fid) {
+            System.out.println("Merged State== ")// + DomainPrinter.printLocSet(bypass_set))
+            System.out.println(DomainPrinter.printHeap(4, newS.restrict(debug_loc)._1, cfg))
+          }
+          */
               worklist.add(cp._1, cp_succ)
               updateTable(cp_succ, newS)
             }
@@ -134,14 +164,26 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
           // Propagate exception output state along call/after-call edges.
           val bypass_set = env.getBypassingExcSet(cp)
           if (!bypass_set.isEmpty) {
-            val cp_exc = cfg.getExcSucc.get(cfg.getAftercallFromCall(cp._1)) match {
-              case None => throw new InternalError("After-call node must have exception successor")
-              case Some(node) => (node, cp._2)
-            }
+            val cp_exc = (cfg.getAftercatchFromCall(cp._1), cp._2)
             val oldS = readTable(cp_exc)
-            val outS2 = outES.restrict(bypass_set)
+            val outS2 = outS.restrict(bypass_set)
+          /*
+          if(cp._1._1 == debug_fid) {
+          System.out.println("Propagates a heap from "+cp +" -> "+cp_exc._1)
+          System.out.println("Old State for "+cp_exc+"==")
+          System.out.println(DomainPrinter.printHeap(4, oldS.restrict(debug_loc)._1, cfg))
+          System.out.println("Merge State== ")// + DomainPrinter.printLocSet(bypass_set))
+          System.out.println(DomainPrinter.printHeap(4, outS2.restrict(debug_loc)._1, cfg))
+          }
+          */
             if (!(outS2 <= oldS)) {
               val newS = oldS + outS2
+          /*
+          if(cp._1._1 == debug_fid) {
+            System.out.println("Merged State== ")// + DomainPrinter.printLocSet(bypass_set))
+            System.out.println(DomainPrinter.printHeap(4, newS.restrict(debug_loc)._1, cfg))
+          }
+          */
               worklist.add(cp._1, cp_exc)
               updateTable(cp_exc, newS)
             }
@@ -164,8 +206,12 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
             val oldS = readTable(cp_succ)
             val succ_set = ddg.getExcDUSet(cp._1, node)
             val outES2 = outES.restrict(succ_set)
-            // System.out.println("Propagates a excheap from "+cp._1+" -> "+node)
-            // System.out.println(DomainPrinter.printHeap(4, outES._1, cfg))
+          /*
+          if(cp._1._1 == debug_fid) {
+            System.out.println("Propagates a excheap from "+cp +" -> "+node)
+            System.out.println(DomainPrinter.printHeap(4, outES2.restrict(debug_loc)._1, cfg))
+          }
+          */
             if (!(outES2 <= oldS)) {
               val newES = oldS + outES2
               worklist.add(cp._1, cp_succ)
@@ -185,8 +231,9 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
           succMap.foreach(kv => {
 
             // bypassing if IP edge is exception flow.
-            val cp_aftercall = kv._1
-            val cp_succ =
+//            val cp_aftercall = kv._1
+            val cp_succ = kv._1
+/*
               cp._1._2 match {
                 case LExitExc => {
                   val n_aftercall = kv._1._1
@@ -197,22 +244,24 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
                 }
                 case _ => kv._1
               }
+*/
             val oldS = readTable(cp_succ)
             val outS_E = sem.E(cp, cp_succ, kv._2._1, kv._2._2, outS)
 
             // if cp is after-call, call-to-after-call cfg must be recovered.
             (cp) match {
               case ((_, LExit), _) => {
+                // cp_succ is cp_aftercall
                 if (outS._1 != HeapBot) {
                   val recover_start = System.nanoTime()
-                  val n_call = cfg.getCallFromAftercall(cp_aftercall._1)
-                  val call = (n_call, cp_aftercall._2)
+                  val n_call = cfg.getCallFromAftercall(cp_succ._1)
+                  val call = (n_call, cp_succ._2)
                   // System.out.println("try to recover normal: "+call)
                   if (env.updateBypassing(call, cp._1._1)) {
                     worklist.add(cp._1, call)
                   }
                   val (fg, ddg) = env.getFlowGraph(call._1._1, call._2)
-                  val edges = env.recoverOutEdges(fg, call._1)
+                  val edges = env.recoverOutAftercall(fg, call._1)
                   if (!edges.isEmpty) {
                     val recovered = env.recover_intra_dugraph(fg, ddg, edges, Set())
                     recovered.foreach(node => worklist.add((node, call._2)))
@@ -222,10 +271,11 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
                 }
               }
               case ((_, LExitExc), _) => {
+                // cp_succ is cp_aftercatch
                 if (outS._1 != HeapBot) {
                   val recover_start = System.nanoTime()
-                  val n_call = cfg.getCallFromAftercall(cp_aftercall._1)
-                  val call = (n_call, cp_aftercall._2)
+                  val n_call = cfg.getCallFromAftercatch(cp_succ._1)
+                  val call = (n_call, cp_succ._2)
                   // System.out.println("try to recover exception: "+call)
                   if (env.updateBypassingExc(call, cp._1._1)) {
                     worklist.add(cp._1, call)
@@ -242,7 +292,7 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
                     recovered.foreach(node => worklist.add((node, call._2)))
                   }
 */
-
+/*
                   // get after-catch node
                   val cp_aftercatch = cfg.getExcSucc.get(cp_aftercall._1) match {
                     case None => throw new InternalError("After-call node must have exception successor")
@@ -263,8 +313,13 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
                     val recovered = env.recover_intra_dugraph(fg, ddg, edges, Set())
                     recovered.foreach(node => worklist.add((node, call._2)))
                   }
-                  
-                  
+*/
+                  val edges = env.recoverOutAftercatch(fg, call._1)
+                  if (!edges.isEmpty) {
+                    val recovered = env.recover_intra_dugraph(fg, ddg, edges, Set())
+                    recovered.foreach(node => worklist.add((node, call._2)))
+                  }
+
                   val recover_time = (System.nanoTime() - recover_start) / 1000000000.0
                   time += recover_time
                 }
@@ -280,9 +335,23 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
               } else {
                 outS_E
               }
-
+/*
+          if(cp_succ._1._1 == debug_fid) {
+          System.out.println("Propagates a heap from "+cp + " -> "+cp_succ + " using IP edge")
+          System.out.println("Old State for "+cp_succ+"==")
+          System.out.println(DomainPrinter.printHeap(4, oldS.restrict(debug_loc)._1, cfg))
+          System.out.println("Merge State== ")// + DomainPrinter.printLocSet(bypass_set))
+          System.out.println(DomainPrinter.printHeap(4, outS_E2.restrict(debug_loc)._1, cfg))
+          }
+*/
             if (!(outS_E2 <= oldS)) {
               val newS = oldS + outS_E2
+/*
+          if(cp_succ._1._1 == debug_fid) {
+          System.out.println("Merged State== ")// + DomainPrinter.printLocSet(bypass_set))
+          System.out.println(DomainPrinter.printHeap(4, newS.restrict(debug_loc)._1, cfg))
+          }
+*/
               worklist.add(cp._1, cp_succ)
               updateTable(cp_succ, newS)
             }

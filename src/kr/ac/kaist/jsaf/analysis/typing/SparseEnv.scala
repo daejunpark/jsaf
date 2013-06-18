@@ -114,7 +114,11 @@ class SparseEnv(cfg: CFG) extends Environment(cfg) {
           case Some(n) => HashSet(n)
           case None => HashSet()
         }
-        getCFG.getSucc(node) ++ n_1
+        val n_2 = getCFG.getAftercatchFromCallMap.get(node) match {
+          case Some(n) => HashSet(n)
+          case None => HashSet()
+        }
+        getCFG.getSucc(node) ++ n_1 ++ n_2
       }
       def succs_e(node: Node): Set[Node] = {
         getCFG.getExcSucc.get(node) match {
@@ -146,16 +150,15 @@ class SparseEnv(cfg: CFG) extends Environment(cfg) {
 
       intraCFGMap += (fid -> cfg)
     })
-
+    // dump_duset
     callgraph_node.foreach(kv => {
       val call = kv._1
       val aftercall = getCFG.getAftercallFromCall(call)
-      val aftercatch = getCFG.getExcSucc(aftercall)
+      val aftercatch = getCFG.getAftercatchFromCall(call)
       kv._2.foreach(callee => {
         val entry = (callee, LEntry)
         val exit = (callee, LExit)
-        val exitexc
-        = (callee, LExitExc)
+        val exitexc = (callee, LExitExc)
 
         interDDG.addEdge(call, entry)
         interDDG.addEdge(exit, aftercall)
@@ -244,25 +247,56 @@ class SparseEnv(cfg: CFG) extends Environment(cfg) {
                 // -- defset_for_succs_func in useset: defined values in succs functions will be come through IP edges.
                 // useset = useset_for_node -- defset_for_succs_func - #PureLocal - #ContextLoc
                 // defset = defset_for_succs_func ++ defset_for_node + #PureLocal + #ContextLoc
-                bypassingMap += (call_node -> succs_du._1) // sets which will be used by IP edges.
+                val call_lset = bypassingMap.get(call_node) match {
+                  case Some(lset) => lset
+                  case None => LocSetBot
+                }
+                bypassingMap += (call_node -> (succs_du._1 ++ call_lset)) // sets which will be used by IP edges.
                 (defset_2 ++ succs_du._1 + SinglePureLocalLoc + ContextLoc, useset_2 -- succs_du._1 - SinglePureLocalLoc - ContextLoc)
               } else {
                 (defset_2, useset_2)
               }
-
-            m + (n -> (defset_3, useset_3))
+            
+            // after-catch node
+            val (defset_4, useset_4) =
+              if (getCFG.getAftercatches.contains(n)) {
+                val call_node = getCFG.getCallFromAftercatch(n)
+                val succs_du =
+                  callgraph.get(call_node) match {
+                    case Some(succs) => {
+                      succs.foldLeft((LBot, LBot))((S, succ) => {
+                        val afdu_succ = afdu(succ)
+                        (S._1 ++ afdu_succ._1.toLSet, S._2 ++ afdu_succ._2.toLSet)
+                      })
+                    }
+                    case None => (LBot, LBot)
+                  }
+                // -- defset_for_succs_func in useset: defined values in succs functions will be come through IP edges.
+                // useset = useset_for_node -- defset_for_succs_func - #PureLocal - #ContextLoc
+                // defset = defset_for_succs_func ++ defset_for_node + #PureLocal + #ContextLoc
+                val call_lset = bypassingMap.get(call_node) match {
+                  case Some(lset) => lset
+                  case None => LocSetBot
+                }
+                bypassingMap += (call_node -> (succs_du._1 ++ call_lset)) // sets which will be used by IP edges.
+                (defset_3 ++ succs_du._1 + SinglePureLocalLoc + ContextLoc, useset_3 -- succs_du._1 - SinglePureLocalLoc - ContextLoc)
+              } else {
+                (defset_3, useset_3)
+              }
+            m + (n -> (defset_4, useset_4))
           }
         }
       })
     // XXX: there are some missing defs which is from callee's exit-exc.
     // fortunately, after-call's defs provide it now.
-    val catches = getCFG.getExcPred.keySet
+    // LExitExc should only contain a def set in a function
+    val catches = getCFG.getExcPred.keySet.filter(node => node._2 != LExitExc)
     catches.foldLeft(intraDU)((m, cn) => {
       val preds = getSet(getCFG.getExcPred, cn)
       val defs =
         preds.foldLeft(LocSetBot)((S, pred) => {
           m.get(pred) match {
-            case Some(s) => S ++ s._1 ++ s._2
+            case Some(s) => S ++ s._1//  ++ s._2
             case None => S
           }
         })
@@ -340,7 +374,37 @@ class SparseEnv(cfg: CFG) extends Environment(cfg) {
       false
     }
   }
+  def recoverOutAftercall(fg: FlowGraph, call: Node): HashSet[(Node,Node)] = {
+    if (!fg.isRecovered(call)) {
+      fg.recovered(call)
+      val after_call = cfg.getAftercallFromCall(call)
+      val recovered_set =
+        if (isEmptyNode(after_call)) {
+          recoverOutEdges(fg, after_call)
+        }
+        else
+          HashSet[(Node,Node)]()
+      recovered_set + ((call, after_call))
+    } else {
+      HashSet()
+    }
+  }
+  def recoverOutAftercatch(fg: FlowGraph, call: Node): HashSet[(Node,Node)] = {
+    if (!fg.isCallExcRecovered(call)) {
+      fg.callExcRecovered(call)
+      val after_catch = cfg.getAftercatchFromCall(call)
 
+      val recovered_set =
+        if (isEmptyNode(after_catch)) {
+          recoverOutEdges(fg, after_catch)
+        }
+        else
+          HashSet[(Node,Node)]()
+      recovered_set + ((call, after_catch))
+    } else {
+      HashSet()
+    }
+  }
   def recoverOutEdges(fg: FlowGraph, src: Node): HashSet[(Node,Node)] = {
     if (!fg.isRecovered(src)) {
       fg.recovered(src)
@@ -380,7 +444,7 @@ class SparseEnv(cfg: CFG) extends Environment(cfg) {
     val joinpoints = joinpointsMap(fid)
 
     val variables = du.foldLeft(LBot)((s, du) => s ++ du._2._1 ++ du._2._2)
-
+    
     // add new edges
     edges.foreach(edge => fg.addEdge(edge._1, edge._2))
     excEdges.foreach(edge => fg.addExcEdge(edge._1, edge._2))
@@ -397,6 +461,42 @@ class SparseEnv(cfg: CFG) extends Environment(cfg) {
       System.out.println("== DDG for " + getCFG.getFuncName(kv._1._1) + " at " + kv._1._2 + " ==")
       kv._2._2.toDot_dugraph()
     })
+  }
+
+  def getDDGStr(ddg0: Boolean): String = {
+    var str = "digraph \"DirectedGraph\" {\n"
+    var i = 0
+    flowGraphMap.foreach(kv => {
+      str += "subgraph cluster" + i + " {\n"
+      str += "label = \"fid : " + getCFG.getFuncName(kv._1._1) + ", CallContext : " + kv._1._2 + "\";\n"
+      i += 1
+      str += kv._2._2.toDot_String
+      str += "\n}\n"
+    })
+    str += "\n}"
+    str
+  }
+  def dumpIntraCFGMap(): Unit = {
+    implicit def getLabel(node: Node): String = {
+      node._2 match {
+        case LBlock(id) => "Block"+id
+        case LEntry => "Entry" + node._1
+        case LExit => "Exit" + node._1
+        case LExitExc => "ExitExc" + node._1
+      }
+    }
+    
+    var str = "digraph \"DirectedGraph\" {\n"
+    var i = 0
+    intraCFGMap.foreach(kv => {
+      str += "subgraph cluster" + i + " {\n"
+      str += ("label = \"fid : " + getCFG.getFuncName(kv._1) + "(" + kv._1 + ")\";\n")
+      str += kv._2.toDot_String(getLabel)
+      str += "\n}\n"
+      i += 1
+    })
+    str + "\n}"
+    System.out.println(str)
   }
   def getFGStr(global: Boolean): String = {
     var str = "digraph \"DirectedGraph\" {\n"

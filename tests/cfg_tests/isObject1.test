@@ -10,19 +10,22 @@ tests=isObject1
 CFG_TESTS_DIR=${JS_HOME}/tests/cfg_tests
 cfg
 cfg_out_WCIequals=\
-(0,LBlock(5))\n\
+(0,LBlock(6))\n\
     [13] x := <>Global<>ignore2\n\
     [14] noop(EndOfFile)\n\
 \n\
 \n\
-(0,LBlock(4))\n\
+(0,LBlock(5))\n\
     [10] assert(! <>cond<>8)\n\
     [12] <>Global<>ignore2 := <>obj<>6\n\
 \n\
 \n\
-(0,LBlock(3))\n\
+(0,LBlock(4))\n\
     [9] assert(<>cond<>8)\n\
     [11] <>Global<>ignore2 := <>newObj<>7\n\
+\n\
+\n\
+(0,LBlock(3))\n\
 \n\
 \n\
 (0,LBlock(2))\n\

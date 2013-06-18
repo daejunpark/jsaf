@@ -44,6 +44,8 @@ G&\in&\CFG & : &
 	\emph{excPredMap} &:&\Node \mapsto\Nodeset\\
 	\emph{callFromAftercallMap} &:&\Node \mapsto \Node\\
 	\emph{aftercallFromCallMap} &:&\Node \mapsto \Node\\
+	\emph{callFromAftercatchMap} &:&\Node \mapsto \Node\\
+	\emph{aftercatchFromCallMap} &:&\Node \mapsto \Node\\
 	\emph{cmdMap} &:& \Node \mapsto \TT{Cmd}\\
 	\emph{funcMap} &:& \FunctionId \mapsto \TT{ArgumentsName} \times \ArgVars \times \LocalVars\\
 	\emph{returnVarMap} &:& \Node \mapsto \TT{CFGId} \\
@@ -51,12 +53,13 @@ G&\in&\CFG & : &
 	\emph{NewFunction} &:& \TT{ArgumentsName} \times \ArgVars \times \LocalVars \rightarrow \FunctionId\\
 	\emph{NewBlock} &:& \FunctionId \rightarrow \TT{BlockNode}\\
 	\emph{NewAfterCallBlock} &:& \FunctionId \times \TT{CFGId} \rightarrow \TT{BlockNode}\\
+	\emph{NewAfterCatchBlock} &:& \FunctionId \rightarrow \TT{BlockNode}\\
 	\emph{AddInst} &:& \TT{BlockNode} \times \TT{CFGInst} \rightarrow \Unit\\
 	\emph{AddEdge} &:&\Node \times\Node \rightarrow \Unit\\
 	\emph{AddEdge} &:&\Nodelist \times\Node \rightarrow \Unit\\
 	\emph{AddExcEdge} &:&\Node \times\Node \rightarrow \Unit\\
 	\emph{AddExcEdge} &:&\Nodelist \times\Node \rightarrow \Unit\\
-	\emph{AddCall} &:&\Node \times\Node \rightarrow \Unit\\
+	\emph{AddCall} &:&\Node \times\Node \times\Node \rightarrow \Unit\\
 	\end{Bmatrix}\\
 &&\\
 &&\Node & = & \FunctionId \times \Label\\
@@ -109,6 +112,10 @@ fid&\in&\FunctionId &=& \TT{Int}\\
    & & blockNode \\
 	& & \\
 
+\emph{NewAfterCatchBlock}(fid)
+	& = & NewBlock(fid) \\
+	& & \\
+
 \emph{AddInst}(\emph{blockNode}, \emph{inst})
 	& = & \emph{block} \letval \emph{cmdMap}(\emph{blockNode})\\
 	& & \emph{cmdMap} \leftarrow \emph{cmdMap}[\emph{blockNode} \mapsto \emph{block}@[\emph{inst}]]\\
@@ -138,6 +145,9 @@ fid&\in&\FunctionId &=& \TT{Int}\\
 	& = & \mbox{if}\ (\emph{aftercallFromCallMap}(n_1) \neq \nullK)\ \mbox{then}\\
 	& & \phantom{else} \emph{aftercallFromCallMap} \leftarrow \emph{aftercallFromCallMap}[n_1 \mapsto \{n_2\}\cup \emph{aftercallFromCallMap}(n_1)]\\
 	& & \phantom{else} \emph{callFromAftercallMap} \leftarrow \emph{callFromAftercallMap}[n_1 \mapsto \{n_2\}\cup \emph{callFromAftercallMap}(n_1)]\\
+	&  & \mbox{if}\ (\emph{aftercatchFromCallMap}(n_1) \neq \nullK)\ \mbox{then}\\
+	& & \phantom{else} \emph{aftercatchFromCallMap} \leftarrow \emph{aftercatchFromCallMap}[n_1 \mapsto \{n_3\}\cup \emph{aftercatchFromCallMap}(n_1)]\\
+	& & \phantom{else} \emph{callFromAftercatchMap} \leftarrow \emph{callFromAftercatchMap}[n_1 \mapsto \{n_3\}\cup \emph{callFromAftercatchMap}(n_1)]\\
 	& & \\
 
 %Duplicate(fromNode, toNodes)\
@@ -223,12 +233,13 @@ L&\in&\TT{LabelMap} &: \TT{String} \mapsto\Nodeset \\
 	& & n_{\emph{start}} \letval G.\emph{NewBlock}(fid_{\emph{global}})\\
 	& & G.\emph{AddEdge}((fid_{\emph{global}},\LEntry), n_{\emph{start}})\\
 	& & N_1 \letval \transfun{\emph{fd}^*}_{\emph{fd}^*}(G,[n_{\emph{start}}])(fid_{\emph{global}})\\
-	& & L \letval [\ \#return \mapsto [\ ], \#throw \mapsto [\ ] , \#throw\_end \mapsto [\ ]\ ] \\
+	& & L \letval [\ \#return \mapsto [\ ], \#throw \mapsto [\ ] , \#throw\_end \mapsto [\ ]\ , \#after\_catch \mapsto [\ ]\ ] \\
 	& & (N_2,L_1) \letval \transfun{\emph{stmt}^*}_{\emph{stmt}*}(G,N_1,L)(fid_{\emph{global}})\\
 	& & G.\emph{AddEdge}(N_2,(fid_{\emph{global}},\LExit))\\
 	& & G.\emph{AddEdge}(L_1(\#return),(fid_{\emph{global}},\LExit))\\
 	& & G.\emph{AddExcEdge}(L_1(\#throw),(fid_{\emph{global}},\LExitExc))\\
 	& & G.\emph{AddEdge}(L_1(\#throw\_end),(fid_{\emph{global}},\LExitExc))\\
+	& & G.\emph{AddEdge}(L_1(\#after\_catch),(fid_{\emph{global}},\LExitExc))\\
 	& & G\\
 	& & \\
 
@@ -255,13 +266,14 @@ L&\in&\TT{LabelMap} &: \TT{String} \mapsto\Nodeset \\
 	& & fid_{\emph{new}} \letval G.\emph{NewFunction}(\emph{args}, \argVars, \localVars)\\
 	& & n_{\emph{start}} \letval G.\emph{NewBlock}(fid_{\emph{new}})\\
 	& & G.\emph{AddEdge}((fid_{\emph{new}},\LEntry), n_{\emph{start}})\\
-	& & L \letval [\ \#return \mapsto [\ ], \#throw \mapsto [\ ]\ , \#throw\_end \mapsto [\ ]\ ] \\
+	& & L \letval [\ \#return \mapsto [\ ], \#throw \mapsto [\ ]\ , \#throw\_end \mapsto [\ ]\  , \#after\_catch \mapsto [\ ]\ ] \\
 	& & N_1 \letval \transfun{\emph{fd}^*}_{\emph{fd}^*}(G,[n_{\emph{start}}])(fid_{\emph{new}})\\
 	& & (N_2,L_1) \letval \transfun{\emph{stmt}^*}_{\emph{stmt}*}(G,N_1,L)(fid_{\emph{new}})\\
 	& & G.\emph{AddEdge}(N_2,(fid_{\emph{new}},\LExit))\\
 	& & G.\emph{AddEdge}(L_1(\#return),(fid_{\emph{new}},\LExit))\\
 	& & G.\emph{AddExcEdge}(L_1(\#throw),(fid_{\emph{new}},\LExitExc))\\
 	& & G.\emph{AddEdge}(L_1(\#throw\_end),(fid_{\emph{new}},\LExitExc))\\
+	& & G.\emph{AddEdge}(L_1(\#after\_catch),(fid_{\emph{new}},\LExitExc))\\
 	& & n_{\emph{tail}} \letval \GetTail(G,N)(fid)\\
 	& & G.\emph{AddInst}(n_{\emph{tail}},f := \TT{function}\ (fid_{\emph{new}})_{loc_1,loc_2})\\
 	& & [n_{\emph{tail}}]\\
@@ -291,13 +303,14 @@ L&\in&\TT{LabelMap} &: \TT{String} \mapsto\Nodeset \\
 	& & fid_{\emph{new}} \letval G.\emph{NewFunction}(\emph{args}, \argVars, \localVars)\\
 	& & n_{\emph{start}} \letval G.\emph{NewBlock}(fid_{\emph{new}})\\
 	& & G.\emph{AddEdge}((fid_{\emph{new}},\LEntry), n_{\emph{start}})\\
-	& & L_{\emph{new}} \letval [\ \#return \mapsto [\ ], \#throw \mapsto [\ ]\ , \#throw\_end \mapsto [\ ]\ ] \\
+	& & L_{\emph{new}} \letval [\ \#return \mapsto [\ ], \#throw \mapsto [\ ]\ , \#throw\_end \mapsto [\ ]\ , \#after\_catch \mapsto [\ ]\ ] \\
 	& & N_1 \letval \transfun{\emph{fd}^*}_{\emph{fd}^*}(G,[n_{\emph{start}}])(fid_{\emph{new}})\\
 	& & (N_2,L_1) \letval \transfun{\emph{stmt}^*}_{\emph{stmt}*}(G,N_1,L_{\emph{new}})(fid_{\emph{new}})\\
 	& & G.\emph{AddEdge}(N_2,(fid_{\emph{new}},\LExit))\\
 	& & G.\emph{AddEdge}(L_1(\#return),(fid_{\emph{new}},\LExit)))\\
 	& & G.\emph{AddExcEdge}(L_1(\#throw),(fid_{\emph{new}},\LExitExc)))\\
 	& & G.\emph{AddEdge}(L_1(\#throw\_end),(fid_{\emph{new}},\LExitExc))\\
+	& & G.\emph{AddEdge}(L_1(\#after\_catch),(fid_{\emph{new}},\LExitExc))\\
 	& & n_{\emph{tail}} \letval \GetTail(G,N)(fid)\\
 	& & if\ (\chf{getVarKind}_P(f) = \SF{CapturedVar}) \\
 	& & \phantom{if} G.\emph{AddInst}(n_{\emph{tail}},x := \TT{function}\ f\ (fid_{\emph{new}})_{loc_1,loc_2,loc_3})\\
@@ -354,8 +367,14 @@ L&\in&\TT{LabelMap} &: \TT{String} \mapsto\Nodeset \\
 	& & else\\
 	& & \phantom{if} G.\emph{AddInst}(n_1,\TT{call}(f,\emph{this},\emph{args})_{loc})\\
 	& & \phantom{if} n_2 \letval G.\emph{NewAfterCallBlock}(fid,x)\\
-	& & \phantom{if} G.\emph{AddCall}(n_1, n_2) \\
-	& & \phantom{if} ([n_2],L[\# throw \mapsto n_1::n_2::L(\# throw)])\\
+	& & \phantom{if} n_3 \letval G.\emph{NewAfterCatchBlock}(fid)\\
+	& & \phantom{if} G.\emph{AddCall}(n_1, n_2, n_3) \\
+	& & \phantom{if} ([n_2],L[\# throw \mapsto n_1::L(\# throw),\# after\_catch \mapsto n_3::L(\# after\_catch)])\\
+	
+%	& & \phantom{if} G.\emph{AddInst}(n_1,\TT{call}(f,\emph{this},\emph{args})_{loc})\\
+%	& & \phantom{if} n_2 \letval G.\emph{NewAfterCallBlock}(fid,x)\\
+%	& & \phantom{if} G.\emph{AddCall}(n_1, n_2) \\
+%	& & \phantom{if} ([n_2],L[\# throw \mapsto n_1::n_2::L(\# throw)])\\
 	& & \\
 	
 \transfun{\ircfgnew{x}{c}{\emph{args}}}_{\emph{stmt}}(G,N,L)(fid) & = &
@@ -363,8 +382,10 @@ L&\in&\TT{LabelMap} &: \TT{String} \mapsto\Nodeset \\
 (irnew)
 	& & G.\emph{AddInst}(n_1,\TT{construct}(c,\emph{args.hd},\emph{args.tl.hd})_{loc})\\
 	& & n_2 \letval G.\emph{NewAfterCallBlock}(fid,x)\\
-	& & G.\emph{AddCall}(n_1, n_2) \\
-	& & ([n_2],L[\# throw \mapsto n_1::n_2::L(\# throw)])\\
+	& & n_3 \letval G.\emph{NewAfterCatchBlock}(fid)\\
+	& & G.\emph{AddCall}(n_1, n_2, n_3) \\
+	& & ([n_2],(L[\# throw \mapsto n_1::L(\# throw),\# after\_catch \mapsto n_3::L(\# after\_catch)])\\
+%	& & ([n_2],L[\# throw \mapsto n_1::n_2::L(\# throw)])\\
 	& & \\
 	
 \transfun{\ircfgwith{x}{s}}_{\emph{stmt}}(G,N,L)(fid) & = &
@@ -379,23 +400,8 @@ L&\in&\TT{LabelMap} &: \TT{String} \mapsto\Nodeset \\
 	& & L_2 \letval L_1 - l\\
 	& & ([n],L_2 ) \\
 	& & \\
-
-\transfun{\ircfgbreak{l}}_{\emph{stmt}}(G,N,L)(fid) & = &
-	([\ ], L[\ToString(l) \mapsto N@L(l)])\\
-	& & \\
-\transfun{\irifelse{x}{s_{\emph{true}}}{s_{\emph{false}}}}_{\emph{stmt}}(G,N,L)(fid) & = &
-	n_1 \letval G.\emph{NewBlock}(fid)\\
-	%& & G.\emph{AddInst}(n_1,\TT{assert}({\inred x??}))\\
-	& & n_2 \letval G.\emph{NewBlock}(fid)\\
-	%& & G.\emph{AddInst}(n_2,\TT{assert}({\inred \neg x??}))\\
-	& & G.\emph{AddEdge}(N,n_1)\\
-	& & G.\emph{AddEdge}(N,n_2)\\
-	& & (N_1,L_1) \letval \transfun{s_{\emph{true}}}_{\emph{stmt}}(G,[n_1],L)(fid)\\
-	& & (N_2,L_2) \letval \transfun{s_{\emph{false}}}_{\emph{stmt}}(G,[n_2],L_1)(fid)\\
-	& & (N_1@N_2,L_2)\\
-	& & \\
 	
-{\inblue \textit{With the assertion flag}} \\
+%{\inblue \textit{With the assertion flag}} \\
 \transfun{\irifelse{e}{s_{\emph{true}}}{s_{\emph{false}}}}_{\emph{stmt}}(G,N,L)(fid) & = &
 	n_1 \letval G.\emph{NewBlock}(fid)\\
 	& & n_2 \letval G.\emph{NewBlock}(fid)\\
@@ -408,24 +414,7 @@ L&\in&\TT{LabelMap} &: \TT{String} \mapsto\Nodeset \\
 	& & (N_1@N_2,L_2[\#throw \mapsto n_1::n_2::L_2(\#throw)])\\
 	& & \\
 
-\end{array}
-\]
-\[
-\begin{array}{l@{}l@{~}l}
-
-\transfun{\ircfgif{x}{s_{\emph{true}}}{}}_{\emph{stmt}}(G,N,L)(fid) & = &
-	n_1 \letval G.\emph{NewBlock}(fid)\\
-	%& & G.\emph{AddInst}(n_1,\TT{assert}({\inred x??}))\\
-	& & n_2 \letval G.\emph{NewBlock}(fid)\\
-	%& & G.\emph{AddInst}(n_2,\TT{assert}({\inred \neg x??}))\\
-	& & G.\emph{AddEdge}(N,n_1)\\
-	& & G.\emph{AddEdge}(N,n_2)\\
-	& & (N_1,L_1) \letval \transfun{s_{\emph{true}}}_{\emph{stmt}}(G,[n_1],L)(fid)\\
-	& & G.\emph{AddEdge}(N_1,n_2)\\
-	& & ([n_2],L_1)\\
-	& & \\
-	
-{\inblue \textit{With the assertion flag}} \\
+%{\inblue \textit{With the assertion flag}} \\
 \transfun{\ircfgif{e}{s_{\emph{true}}}{}}_{\emph{stmt}}(G,N,L)(fid) & = &
 	n_1 \letval G.\emph{NewBlock}(fid)\\
 	& & n_2 \letval G.\emph{NewBlock}(fid)\\
@@ -437,22 +426,13 @@ L&\in&\TT{LabelMap} &: \TT{String} \mapsto\Nodeset \\
 	& & (N_1@[n_2],L_1[\#throw \mapsto n_1::n_2::L_1(\#throw)])\\
 	& & \\
 
-\transfun{\ircfgwhile{x}{s}}_{\emph{stmt}}(G,N,L)(fid) & = &
-	n_1 \letval \GetTail(G,N)(fid)\\
-	& & n_{head} \letval G.\emph{NewBlock}(fid)\\
-	& & n_2 \letval G.\emph{NewBlock}(fid)\\
-	%& & G.\emph{AddInst}(n_2,\TT{assert}({\inred x??}))\\
-	& & n_3 \letval G.\emph{NewBlock}(fid)\\
-	%& & G.\emph{AddInst}(n_3,\TT{assert}({\inred \neg x??}))\\
-	& & G.\emph{AddEdge}(n_1,n_{head})\\
-	& & G.\emph{AddEdge}(n_{head},n_2)\\
-	& & G.\emph{AddEdge}(n_{head},n_3)\\
-	& & (N_1,L_1) \letval \transfun{s}_{\emph{stmt}}(G,[n_2],L)(fid)\\
-	& & G.\emph{AddEdge}(N_1,n_{head})\\
-	& & ([n_3],L_1) \\
-	& & \\
+\end{array}
+\]
+\[
+\begin{array}{l@{}l@{~}l}
 
-{\inblue \textit{With the assertion flag}} \\
+
+%{\inblue \textit{With the assertion flag}} \\
 \transfun{\ircfgwhile{e}{s}}_{\emph{stmt}}(G,N,L)(fid) & = &
 	n_1 \letval \GetTail(G,N)(fid)\\
 	& & n_{head} \letval G.\emph{NewBlock}(fid)\\
@@ -496,12 +476,6 @@ L&\in&\TT{LabelMap} &: \TT{String} \mapsto\Nodeset \\
 	& & \phantom{if} ([n],L)\\
 	& & \\
 	
-\end{array}
-\]
-
-
-\[
-\begin{array}{l@{}l@{~}l}
 \transfun{\irdelete{x}{y}}_{\emph{stmt}}(G,N,L)(fid) & = &
 	n \letval \GetTail(G,N)(fid)\\
 	& & G.\emph{AddInst}(n,x := \TT{delete}(y))\\
@@ -512,8 +486,8 @@ L&\in&\TT{LabelMap} &: \TT{String} \mapsto\Nodeset \\
 	n \letval \GetTail(G,N)(fid)\\
 	& & G.\emph{AddInst}(n,x := \TT{delete}(y,z))\\
 	& & ([n],L[\#throw \mapsto n::L(\#throw)])\\
-	& & \\
-
+	& & \\	
+	
 \transfun{\irunop{x}{y}}_{\emph{stmt}}(G,N,L)(fid) & = &
 	n \letval \GetTail(G,N)(fid)\\
 	& & G.\emph{AddInst}(n,x := \preop y)\\
@@ -545,17 +519,31 @@ L&\in&\TT{LabelMap} &: \TT{String} \mapsto\Nodeset \\
 	& & G.\emph{AddInst}(n,x := y[e])\\
 	& & ([n],L[\#throw \mapsto n::L(\#throw)])\\
 	& & \\
+	
+\end{array}
+\]
+
+
+\[
+\begin{array}{l@{}l@{~}l}
+	
+
 
 \transfun{\ircfgtrycat{s}{x}{s_c}}_{\emph{stmt}}(G,N,L)(fid) & = &
 	n_1 \letval G.\emph{NewBlock}(fid)\\
 	& & G.\emph{AddEdge}(N,n_1)\\
 	& & n_3 \letval G.\emph{NewBlock}(fid)\\
 	& & G.\emph{AddInst}(n_3,\TT{catch}(x))\\
-	& & L_{try} \letval [\ \#return \mapsto [\ ], \#throw \mapsto [\ ]\ , \#throw\_end \mapsto [\ ]\ ] \\
+	& & L_{try} \letval [\ \#return \mapsto [\ ], \#throw \mapsto [\ ]\ , \#throw\_end \mapsto [\ ]\ ,\#after\_catch \mapsto [\ ]\ ] \\
 	& & (N_1,L_1) = \transfun{s}_{\emph{stmt}}(G,[n_2],L_{try})(fid)\\
 	& & G.\emph{AddExcEdge}(L_1(\#throw),n_2)\\
 	& & G.\emph{AddEdge}(L_1(\#throw\_end),n_2)\\
-	& & (N_2,L_2) = \transfun{s_c}_{\emph{stmt}}(G,[n_2],L_1[\#throw \mapsto [\ ]\ ,\#throw\_end \mapsto [\ ]\ ])(fid)\\
+
+    % a normal edge from after-catch to catch node
+	& & G.\emph{AddEdge}(L_1(\# catch),n_2)\\
+
+	& & (N_2,L_2) = \transfun{s_c}_{\emph{stmt}}(G,[n_2],L_1[\#throw \mapsto [\ ]\ ,\#throw\_end \mapsto [\ ]\ , \\
+	& & \phantom{(N_2,L_2) = \transfun{s_c}_{\emph{stmt}}(G,[n_2],L_1[} \#after\_catch \mapsto [\ ]\ ])(fid)\\
 	& & L_3 \letval \Fold(L_2)(L)(\lambda((l,N'),L') \Rightarrow\\
 	& & \phantom{L_3 \letval}if\ (L'.contains(l))\\
 	& & \phantom{L_3 \letval \Fold} L'[l \mapsto L'(l)@N']\\
@@ -568,47 +556,56 @@ L&\in&\TT{LabelMap} &: \TT{String} \mapsto\Nodeset \\
 	n_1 \letval G.\emph{NewBlock}(fid)\\
 	& & G.\emph{AddEdge}(N,n_1)\\
 	& & n_2 \letval G.\emph{NewBlock}(fid)\\
-	& & L_{try} \letval [\ \#return \mapsto [\ ], \#throw \mapsto [\ ]\ , \#throw\_end \mapsto [\ ]\ ] \\
+	& & L_{try} \letval [\ \#return \mapsto [\ ], \#throw \mapsto [\ ]\ , \#throw\_end \mapsto [\ ]\ , \#after\_catch \mapsto [\ ]\ ] \\
 	& & (N_1,L_1) \letval \transfun{s}_{\emph{stmt}}(G,[n_1],L_{try})(fid)\\
 	& & (N_2,L_2) \letval \transfun{s_f}_{\emph{stmt}}(G,[n_2],L)(fid)\\ % may create empty node
 	% normal type
 	& & G.\emph{AddEdge}(N_1,n_2)\\
 	% other type
-	& & L_3 \letval \Fold(L_1)(L_2)(\lambda((l,N'),L') \Rightarrow\\
+	% #after-catch and #throw share the same finally
+	& & L_3 \letval \Fold(L_1[\ \#after\_catch \mapsto [\ ]\ ])(L_2)(\lambda((l,N'),L') \Rightarrow\\
 	& & \phantom{L_3 \letval}if\ (N' \neq Nil)\\
 	& & \phantom{L_3 \letval \Fold} n_{dup} \letval G.\emph{NewBlock}(fid)\\
 	& & \phantom{L_3 \letval \Fold} (N'',L'') \letval \transfun{s_f}_{\emph{stmt}}(G,[n_{dup}],L')(fid)\\
-	& & \phantom{L_3 \letval \Fold} G.\emph{AddEdge}(N',n_{dup})\\
-	& & \phantom{L_3 \letval \Fold} L''[l \mapsto L''(l)@N'']\\
+	& & \phantom{L_3 \letval \Fold}if\ (l = \#throw)\\	
+	& & \phantom{L_3 \letval \Fold if} G.\emph{AddEdge}(L_1(\#after\_catch),n_{dup})\\
+	& & \phantom{L_3 \letval \Fold if} G.\emph{AddExcEdge}(N',n_{dup});\ L''[\#throw\_end \mapsto L''(\#throw\_end)@N'']\\
+	& & \phantom{L_3 \letval \Fold}else\\	
+	& & \phantom{L_3 \letval \Fold if} G.\emph{AddEdge}(N',n_{dup});\ L''[l \mapsto L''(l)@N''])\\
 	& & (N_2,L_3)\\
 	& & \\
 \end{array}
 \]
 
-
 \[
 \begin{array}{l@{}l@{~}l}
+
 \transfun{\irtryfull{s}{x}{s_c}{s_f}}_{\emph{stmt}}(G,N,L)(fid) & = &
 	n_1 \letval G.\emph{NewBlock}(fid)\\
 	& & G.\emph{AddEdge}(N,n_1)\\
 	& & n_2 \letval G.\emph{NewBlock}(fid)\\
 	& & G.\emph{AddInst}(n_2,\TT{catch}(x))\\
 	& & n_3 \letval G.\emph{NewBlock}(fid)\\
-	& & L_{try} \letval [\ \#return \mapsto [\ ], \#throw \mapsto [\ ]\ , \#throw\_end \mapsto [\ ]\ ] \\
+	& & L_{try} \letval [\ \#return \mapsto [\ ], \#throw \mapsto [\ ]\ , \#throw\_end \mapsto [\ ]\ , \#after\_catch \mapsto [\ ]\ ] \\
 	& & (N_1,L_1) \letval \transfun{s}_{\emph{stmt}}(G,[n_1],L_{try})(fid)\\
 	& & G.\emph{AddExcEdge}(L_1(\#throw),n_2)\\
 	& & G.\emph{AddEdge}(L_1(\#throw\_end),n_2)\\
-	& & (N_2,L_2) \letval \transfun{s_c}_{\emph{stmt}}(G,[n_2],L_1[\#throw \mapsto [\ ]\ , \#throw\_end \mapsto [\ ]\ ])(fid)\\
+	& & G.\emph{AddEdge}(L_1(\#after\_catch),n_2)\\
+	& & (N_2,L_2) \letval \transfun{s_c}_{\emph{stmt}}(G,[n_2],L_1[\#throw \mapsto [\ ]\ , \#throw\_end \mapsto [\ ]\ ,\\
+    & & \phantom{(N_2,L_2) \letval \transfun{s_c}_{\emph{stmt}}(G,[n_2],L_1[}	 \#after\_catch \mapsto [\ ]\ ])(fid)\\
 	& & (N_3,L_3) \letval \transfun{s_f}_{\emph{stmt}}(G,[n_3],L)(fid)\\
 	% normal type
 	& & G.\emph{AddEdge}(N_1@N_2,n_3)\\
 	% other type
-	& & L_4 \letval \Fold(L_2)(L_3)(\lambda((l,N'),L') \Rightarrow\\
+	& & L_4 \letval \Fold(L_2[\ \#after\_catch \mapsto [\ ]\ ])(L_3)(\lambda((l,N'),L') \Rightarrow\\
 	& & \phantom{L_3 \letval}if\ (N' \neq Nil)\\
 	& & \phantom{L_3 \letval \Fold} n_{dup} \letval G.\emph{NewBlock}(fid)\\
 	& & \phantom{L_3 \letval \Fold} (N'',L'') \letval \transfun{s_f}_{\emph{stmt}}(G,[n_{dup}],L')(fid)\\
-	& & \phantom{L_3 \letval \Fold} G.\emph{AddEdge}(N',n_{dup})\\
-	& & \phantom{L_3 \letval \Fold} L''[l \mapsto L''(l)@N'']\\
+	& & \phantom{L_3 \letval \Fold}if\ (l = \#throw)\\	
+	& & \phantom{L_3 \letval \Fold if} G.\emph{AddEdge}(L_2(\#after\_catch),n_{dup})\\
+	& & \phantom{L_3 \letval \Fold if} G.\emph{AddExcEdge}(N',n_{dup});\ L''[\#throw\_end \mapsto L''(\#throw\_end)@N'']\\
+	& & \phantom{L_3 \letval \Fold}else\\
+	& & \phantom{L_3 \letval \Fold if} G.\emph{AddEdge}(N',n_{dup});\ L''[l \mapsto L''(l)@N'']\\
 	& & (N_3,L_4)\\
 	& & \\  
 \end{array}

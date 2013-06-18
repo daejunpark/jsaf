@@ -11,7 +11,7 @@ package kr.ac.kaist.jsaf.analysis.typing.models
 
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE, PreSemanticsExpr => PSE, AccessHelper => AH, PreHelper, Helper, Access}
+import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE, PreSemanticsExpr => PSE, AccessHelper => AH, InternalError, PreHelper, Helper, Access}
 import kr.ac.kaist.jsaf.nodes_util.IRFactory
 
 trait ModelData {
@@ -47,5 +47,21 @@ trait ModelData {
     val LP1 = Access.V_use(args, h, ctx)
     val LP2 = lset.foldLeft(LPBot)((lpset, l) => lpset ++ AH.Proto_use(h,l,s))
     LP1 ++ LP2
+  }
+
+  protected def getAddrList(h : Heap, cfg: CFG): List[Address] = {
+    val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+    val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+    if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+    cfg.getAPIAddress(set_addr.head)
+  }
+  protected def getAddrList_pre(h : Heap, cfg: CFG, PureLocalLoc: Loc): List[Address] = {
+    val lset_env = h(PureLocalLoc)("@env")._1._2._2
+    val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+    if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+    cfg.getAPIAddress(set_addr.head)
+  }
+  protected def getAddrList_use(): LPSet = {
+    LPSet(SinglePureLocalLoc, "@env")
   }
 }

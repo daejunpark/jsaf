@@ -10,6 +10,9 @@ tests=return6
 CFG_TESTS_DIR=${JS_HOME}/tests/cfg_tests
 cfg
 cfg_out_WCIequals=\
+(0,LBlock(9))\n\
+\n\
+\n\
 (0,LBlock(8))\n\
     [EDGE] after-call(<>Global<>ignore2)\n\
     [9] noop(EndOfFile)\n\

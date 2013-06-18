@@ -50,12 +50,13 @@ class CFGBuilder (ir: IRRoot) {
         val node_start = cfg.newBlock(fid_global)
         cfg.addEdge((fid_global, LEntry), node_start)
         val ns1 = translateFunDecls(fds,cfg,List(node_start),fid_global)
-        val lmap: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set())
+        val lmap: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set(), "#after_catch" -> Set())
         val (ns2, lmap1) = translateStmts(stmts, cfg, ns1, lmap, fid_global)
 
         cfg.addEdge(ns2,(fid_global,LExit))
         cfg.addExcEdge(lmap1("#throw").toList,(fid_global,LExitExc))
         cfg.addEdge(lmap1("#throw_end").toList,(fid_global,LExitExc))
+        cfg.addEdge(lmap1("#after_catch").toList,(fid_global,LExitExc))
 
         // add top function
         if (Config.libMode)
@@ -133,13 +134,14 @@ class CFGBuilder (ir: IRRoot) {
 
         val node_start = cfg.newBlock(fid_new)
         cfg.addEdge((fid_new, LEntry), node_start)
-        val lmap: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set())
+        val lmap: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set(), "#after_catch" -> Set())
         val ns1 = translateFunDecls(fds,cfg,List(node_start),fid_new)
         val (ns2,lmap1) = translateStmts(body, cfg, ns1, lmap, fid_new)
         cfg.addEdge(ns2,(fid_new,LExit))
         cfg.addEdge(lmap1("#return").toList,(fid_new,LExit))
         cfg.addExcEdge(lmap1("#throw").toList,(fid_new,LExitExc))
         cfg.addEdge(lmap1("#throw_end").toList,(fid_new,LExitExc))
+        cfg.addEdge(lmap1("#after_catch").toList,(fid_new,LExitExc))
         val node_tail = getTail(cfg,nodes,fid)
         cfg.addInst(node_tail,
           CFGFunExpr(cfg.newInstId, irinfo, id2cfgId(name), None, fid_new,
@@ -179,13 +181,14 @@ class CFGBuilder (ir: IRRoot) {
         val fid_new = cfg.newFunction(id2cfgId(params(1)).toString, arg_vars, local_vars, name.getOriginalName, irinfo)
         val node_start = cfg.newBlock(fid_new)
         cfg.addEdge((fid_new, LEntry), node_start)
-        val lmap_new: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set())
+        val lmap_new: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set(), "#after_catch" -> Set())
         val ns1 = translateFunDecls(fds,cfg,List(node_start),fid_new)
         val (ns2,lmap1) = translateStmts(body, cfg, ns1, lmap_new, fid_new)
         cfg.addEdge(ns2,(fid_new,LExit))
         cfg.addEdge(lmap1("#return").toList,(fid_new,LExit))
         cfg.addExcEdge(lmap1("#throw").toList,(fid_new,LExitExc))
         cfg.addEdge(lmap1("#throw_end").toList,(fid_new,LExitExc))
+        cfg.addEdge(lmap1("#after_catch").toList,(fid_new,LExitExc))
         val node_tail = getTail(cfg,nodes,fid)
         val nameCFGId = id2cfgId(name)
         if (nameCFGId.getVarKind == CapturedVar) {
@@ -223,14 +226,15 @@ class CFGBuilder (ir: IRRoot) {
             val node2 = cfg.newBlock(fid)
             cfg.addInst(node2, CFGCatch(cfg.newInstId, irinfo, id2cfgId(x)))
             /* initial label map */
-            val lmap_try: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set())
+            val lmap_try: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set(), "#after_catch" -> Set())
             /* try body */
             val (ns1, lmap1) = translateStmt(body, cfg, List(node1), lmap_try, fid)
 
             cfg.addExcEdge(lmap1("#throw").toList, node2)
             cfg.addEdge(lmap1("#throw_end").toList, node2)
+            cfg.addEdge(lmap1("#after_catch").toList, node2)
             /* catch body */
-            val (ns2, lmap2) = translateStmt(catb, cfg, List(node2), lmap1.updated("#throw", Set()).updated("#throw_end", Set()), fid)
+            val (ns2, lmap2) = translateStmt(catb, cfg, List(node2), lmap1.updated("#throw", Set()).updated("#throw_end", Set()).updated("#after_catch", Set()), fid)
             val lmap3 = lmap2.foldLeft(lmap)((m, kv) => {
               if (m.contains(kv._1))
                 m.updated(kv._1, m(kv._1)++ kv._2)
@@ -255,18 +259,19 @@ class CFGBuilder (ir: IRRoot) {
             /* finally block */
             val node2 = cfg.newBlock(fid)
             /* initial label map */
-            val lmap_try: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set())
+            val lmap_try: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set(), "#after_catch" -> Set())
             /* build try block */
             val (ns1, lmap1) = translateStmt(body, cfg, List(node1), lmap_try, fid)
             /* build finally block */
             val (ns2, lmap2) = translateStmt(finb, cfg, List(node2), lmap, fid)
             /* edge : try -> finally */
             cfg.addEdge(ns1, node2)
-            val lmap3 = lmap1.foldLeft(lmap2)((map, kv) => {
+            val lmap3 = (lmap1-"#after_catch").foldLeft(lmap2)((map, kv) => {
               if (!(kv._2.isEmpty)){
                 val node_dup = cfg.newBlock(fid)
                 val (ns, lm) = translateStmt(finb, cfg, List(node_dup), map, fid)
                 if (kv._1 == "#throw"){
+                  cfg.addEdge(lmap1("#after_catch").toList, node_dup)
                   cfg.addExcEdge(kv._2.toList, node_dup)
                   lm.updated("#throw_end", lm("#throw_end") ++ ns)
                 }
@@ -288,23 +293,25 @@ class CFGBuilder (ir: IRRoot) {
             /* finally block */
             val node3 = cfg.newBlock(fid)
             /* initial label map */
-            val lmap_try: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" ->Set(), "#throw_end" -> Set())
+            val lmap_try: Map[String,Set[Node]]= HashMap("#return" -> Set(), "#throw" -> Set(), "#throw_end" -> Set(), "#after_catch" -> Set())
             /* build try block */
             val (ns1, lmap1) = translateStmt(body, cfg, List(node1), lmap_try, fid)
             /* exc edge : try -> catch */
             cfg.addExcEdge(lmap1("#throw").toList, node2)
             cfg.addEdge(lmap1("#throw_end").toList, node2)
+            cfg.addEdge(lmap1("#after_catch").toList, node2)
             /* build catch block */
-            val (ns2, lmap2) = translateStmt(catb, cfg, List(node2), lmap1.updated("#throw", Set()).updated("#throw_end", Set()), fid)
+            val (ns2, lmap2) = translateStmt(catb, cfg, List(node2), lmap1.updated("#throw", Set()).updated("#throw_end", Set()).updated("#after_catch", Set()), fid)
             /* build finally block */
             val (ns3, lmap3) = translateStmt(finb, cfg, List(node3), lmap, fid)
             /* edge : try+catch -> finally */
             cfg.addEdge(ns1 ++ ns2, node3)
-            val lmap4 = lmap2.foldLeft(lmap3)((map, kv) => {
+            val lmap4 = (lmap2-"#after_catch").foldLeft(lmap3)((map, kv) => {
               if (!(kv._2.isEmpty)){
                 val node_dup = cfg.newBlock(fid)
                 val (ns, lm) = translateStmt(finb, cfg, List(node_dup), map, fid)
                 if (kv._1 == "#throw"){
+                  cfg.addEdge(lmap2("#after_catch").toList, node_dup)
                   cfg.addExcEdge(kv._2.toList, node_dup)
                   lm.updated("#throw_end", lm("#throw_end") ++ ns)
                 }
@@ -383,8 +390,11 @@ class CFGBuilder (ir: IRRoot) {
         // address for API
         cfg.addAPIAddress(addr)
         val n2 = cfg.newAfterCallBlock(fid, id2cfgId(lhs))
-        cfg.addCall(n1, n2)
-        (List(n2), lmap.updated("#throw", (lmap("#throw")+n1)+n2))
+        // after-catch
+        val n3 = cfg.newAfterCatchBlock(fid)
+        cfg.addCall(n1, n2, n3)
+
+        (List(n2), lmap.updated("#throw", lmap("#throw")+n1).updated("#after_catch", lmap("#after_catch")+n3))
       /* PEI : construct, after-call */
       case SIRNew(irinfo, lhs, cons, args) if (args.length == 2) =>
         val n1 = getTail(cfg, nodes, fid)
@@ -395,8 +405,11 @@ class CFGBuilder (ir: IRRoot) {
         // address for API
         cfg.addAPIAddress(addr)
         val n2 = cfg.newAfterCallBlock(fid, id2cfgId(lhs))
-        cfg.addCall(n1, n2)
-        (List(n2), lmap.updated("#throw", (lmap("#throw")+n1)+n2))
+        // after-catch
+        val n3 = cfg.newAfterCatchBlock(fid)
+        cfg.addCall(n1, n2, n3)
+
+        (List(n2), lmap.updated("#throw", lmap("#throw")+n1).updated("#after_catch", lmap("#after_catch")+n3))
       case c@SIRNew(irinfo, lhs, fun, args) =>
         signal("IRNew should have two elements in args.", c)
         (Nil, lmap)
