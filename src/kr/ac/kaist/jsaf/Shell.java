@@ -304,7 +304,7 @@ public final class Shell {
          "  Parses a Web IDL file.\n"+
          "  If -out file is given, the parsed AST will be written to the file.\n"+
          "\n"+
-         "jsaf widlcheck somefile.js api1 ..."+
+         "jsaf widlcheck somefile.js api1.db ..."+
          "  Checks uses of APIS in Web IDL.\n"+
          "\n"+
          "jsaf strict [-out file] somefile.js\n"+
