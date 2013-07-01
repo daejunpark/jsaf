@@ -27,10 +27,3 @@ var __expect6 = "object";
 
 var __result7 = typeof (function () {});
 var __expect7 = "function";
-
-var __result8 = "";
-try {
-	__result8 = typeof y;
-} catch(e) {}
-var __expect8 = "";
-

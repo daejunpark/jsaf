@@ -52,48 +52,22 @@ object TIZENApplicationControlData extends Tizen {
     Map(
       ("tizen.ApplicationControlData.constructor" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
-          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
-          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
-          val addr_env = set_addr.head
-          val addr1 = cfg.getAPIAddress(addr_env, 0)
-          val l_r = addrToLoc(addr1, Recent)
-          val (h_1, ctx_1)  = Helper.Oldify(h, ctx, addr1)
-          val key = getArgValue(h_1, ctx_1, args, "0")
-          val value = getArgValue(h_1, ctx_1, args, "1")
-
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          val key = getArgValue(h, ctx, args, "0")
+          val value = getArgValue(h, ctx, args, "1")
           val es =
-            if (key._1 </ PValueTop)
+            if (value._2.exists((l) =>  Helper.IsArray(h, l) <= F))
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
-
-          val es2 =
-            if (value._1 <= PValueTop)
-              Set[WebAPIException](TypeMismatchError)
-            else TizenHelper.TizenExceptionBot
-
-          val locset = value._2.foldLeft(LocSetBot)((_L, l) => {
-            if (Helper.IsArray(h_1, l) <= T) _L + l
-            else _L
-          })
-
-          val es3 =
-            if (value._2.exists((l) =>  Helper.IsArray(h_1, l) <= F))
-              Set[WebAPIException](TypeMismatchError)
-            else TizenHelper.TizenExceptionBot
-
           val o_new = ObjEmpty.
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(loc_proto), F, F, F))).
             update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop))).
             update("key", PropValue(ObjectValue(Value(Helper.toString(key._1)), F, T, T))).
-            update("value", PropValue(ObjectValue(Value(locset), F, T, T)))
-
-          val h_2 = h_1.update(l_r, o_new)
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es2 ++ es3)
-          ((Helper.ReturnStore(h_2, Value(l_r)), ctx_1), (he + h_e, ctxe + ctx_e))
+            update("value", PropValue(ObjectValue(Value(value._2), F, T, T)))
+          val h_1 = lset_this.foldLeft(h)((_h, l) => _h.update(l, o_new))
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es)
+          ((Helper.ReturnStore(h_1, Value(lset_this)), ctx), (he + h_e, ctxe + ctx_e))
         }
         ))
     )

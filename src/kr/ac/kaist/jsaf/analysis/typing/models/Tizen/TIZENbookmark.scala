@@ -32,9 +32,7 @@ object TIZENbookmark extends Tizen {
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
-    ("@extensible",                 AbsConstValue(PropValue(T))),
-    ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
-    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop))))
+    ("@extensible",                 AbsConstValue(PropValue(T)))
   )
 
   /* prototype */
@@ -72,7 +70,7 @@ object TIZENbookmark extends Tizen {
                   Set[WebAPIException](TypeMismatchError)
                 else TizenHelper.TizenExceptionBot
               (h_2, es ++ es_1)
-            case UIntSingle(n) if n == 2 =>
+            case UIntSingle(n) if n >= 2 =>
               val parFld = getArgValue(h_2, ctx_2, args, "0")
               val recur = getArgValue(h_2, ctx_2, args, "1")
               val (b, es) = TizenHelper.instanceOf(h_2, parFld, Value(TIZENBookmarkFolder.loc_cons))
@@ -81,7 +79,7 @@ object TIZENbookmark extends Tizen {
                   Set[WebAPIException](TypeMismatchError)
                 else TizenHelper.TizenExceptionBot
               val es_2 =
-                if (recur._1._3 </ T)
+                if (recur._1._3 </ BoolTop)
                   Set[WebAPIException](TypeMismatchError)
                 else TizenHelper.TizenExceptionBot
               (h_2, es ++ es_1 ++ es_2)
@@ -94,8 +92,6 @@ object TIZENbookmark extends Tizen {
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENBookmarkItem.loc_proto), F, F, F))).
             update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop))).
             update("parent", PropValue(ObjectValue(Value(NullTop), F, T, T))).
             update("title", PropValue(ObjectValue(Value(StrTop), F, T, T))).
             update("url", PropValue(ObjectValue(Value(StrTop), F, T, T)))
@@ -104,8 +100,6 @@ object TIZENbookmark extends Tizen {
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENBookmarkFolder.loc_proto), F, F, F))).
             update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop))).
             update("parent", PropValue(ObjectValue(Value(NullTop), F, T, T))).
             update("title", PropValue(ObjectValue(Value(StrTop), F, T, T)))
 
@@ -113,8 +107,8 @@ object TIZENbookmark extends Tizen {
           val o_arr = Helper.NewArrayObject(UInt)
           val o_arr2 = o_arr.update("@default_number", PropValue(ObjectValue(l_r1, T, T, T)))
           val h_5 = h_4.update(l_r2, o_arr2)
-
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es_1)
+          val est = Set[WebAPIException](NotFoundError, SecurityError, UnknownError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es_1 ++ est)
           ((Helper.ReturnStore(h_5, Value(l_r2)), ctx_2), (he + h_e, ctxe + ctx_e))
         }
         )),
@@ -140,7 +134,8 @@ object TIZENbookmark extends Tizen {
               (h, TizenHelper.TizenExceptionBot)
             }
           }
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2)
+          val est = Set[WebAPIException](NotFoundError, InvalidValuesError, SecurityError, UnknownError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2 ++ est)
           ((h_1, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
@@ -150,17 +145,23 @@ object TIZENbookmark extends Tizen {
           val (h_1, es) = n_arglen match {
             case UIntSingle(n) if n == 1 =>
               val bm = getArgValue(h, ctx, args, "0")
-              val (b, es_1) = TizenHelper.instanceOf(h, bm, Value(TIZENBookmarkFolder.loc_cons + TIZENBookmarkItem.loc_cons))
-              val es_2 =
+              val (b, es_1) = TizenHelper.instanceOf(h, bm, Value(TIZENBookmarkFolder.loc_proto))
+              val (b_1, es_2) = TizenHelper.instanceOf(h, bm, Value(TIZENBookmarkItem.loc_proto))
+              val es_3 =
                 if (b._1._3 <= F)
                   Set[WebAPIException](TypeMismatchError)
                 else TizenHelper.TizenExceptionBot
-              (h, es_1 ++ es_2)
+              val es_4 =
+                if (b_1._1._3 <= F)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              (h, es_1 ++ es_2 ++ es_3 ++ es_4)
             case _ => {
               (h, TizenHelper.TizenExceptionBot)
             }
           }
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es)
+          val est = Set[WebAPIException](SecurityError, UnknownError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ est)
           ((h_1, ctx), (he + h_e, ctxe + ctx_e))
         }
         ))

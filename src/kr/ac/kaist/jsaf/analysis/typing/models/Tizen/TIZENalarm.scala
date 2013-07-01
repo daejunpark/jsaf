@@ -34,9 +34,17 @@ import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
+import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 
 object TIZENalarm extends Tizen {
   val name = "alarm"
@@ -44,16 +52,19 @@ object TIZENalarm extends Tizen {
   val loc_obj = TIZENtizen.loc_alarm
   val loc_proto = newPredefLoc(name + "Proto")
 
+  val loc_alarmabs: Loc = newPreDefLoc("AlarmAbsolute", Old)
+  val loc_alarmrel: Loc = newPreDefLoc("AlarmRelative", Old)
+  val loc_bydayvalarr: Loc = newPreDefLoc("ByDayValArr", Old)
+
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
-    (loc_obj, prop_obj), (loc_proto, prop_proto)
+    (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_alarmabs, prop_alarmabs_ins), (loc_alarmrel, prop_alarmrel_ins),
+    (loc_bydayvalarr, prop_bydayvalarr_ins)
   )
-  /* constructor or object*/
+  /* properties of instance */
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
     ("@extensible",                 AbsConstValue(PropValue(T))),
-    ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
-    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
     ("PERIOD_MINUTE", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(60), F, T, T)))),
     ("PERIOD_HOUR", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(3600), F, T, T)))),
     ("PERIOD_DAY", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(86400), F, T, T)))),
@@ -70,6 +81,33 @@ object TIZENalarm extends Tizen {
     ("removeAll", AbsBuiltinFunc("tizen.alarm.removeAll",0)),
     ("get", AbsBuiltinFunc("tizen.alarm.get",1)),
     ("getAll", AbsBuiltinFunc("tizen.alarm.getAll",0))
+  )
+
+  private val prop_alarmrel_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENAlarmAbsolute.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("id",                 AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("delay",                 AbsConstValue(PropValue(ObjectValue(Value(NumTop), F, T, T)))),
+    ("period",              AbsConstValue(PropValue(ObjectValue(Value(PValue(UndefBot, NullTop, BoolBot, NumTop, StrBot)), F, T, T))))
+  )
+
+  private val prop_alarmabs_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENAlarmAbsolute.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("id",                   AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("date",                 AbsConstValue(PropValue(ObjectValue(Value(TIZENtizen.loc_date), F, T, T)))),
+    ("period",               AbsConstValue(PropValue(ObjectValue(Value(PValue(UndefBot, NullTop, BoolBot, NumTop, StrBot)), F, T, T)))),
+    ("daysOfTheWeek",        AbsConstValue(PropValue(ObjectValue(Value(loc_bydayvalarr), F, T, T))))
+  )
+  private val prop_bydayvalarr_ins: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Array")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(BuiltinArray.ProtoLoc, F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(T))),
+    ("length", AbsConstValue(PropValue(ObjectValue(UInt, T, F, F)))),
+    ("@default_number", AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("MO") + AbsString.alpha("TU") +
+      AbsString.alpha("WE") + AbsString.alpha("TH") + AbsString.alpha("FR") + AbsString.alpha("SA") + AbsString.alpha("SU")), T, T, T))))
   )
 
   override def getSemanticMap(): Map[String, SemanticFun] = {
@@ -102,7 +140,8 @@ object TIZENalarm extends Tizen {
           val h_1 = v_1._2.foldLeft(HeapBot)((_h, l) => {
             (_h + h.update(l, h(l).update(AbsString.alpha("id"), PropValue(ObjectValue(Value(StrTop), T, T, T)))))
           })
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es_1 ++ es_2 ++ es_3 ++ es_4 ++ es_5)
+          val est = Set[WebAPIException](InvalidValuesError, SecurityError, UnknownError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es_1 ++ es_2 ++ es_3 ++ es_4 ++ es_5 ++ est)
           ((h_1, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
@@ -112,57 +151,19 @@ object TIZENalarm extends Tizen {
           val es =
             if (v._1._2 == NullTop || v._1._1 == UndefTop) Set[WebAPIException](InvalidValuesError)
             else TizenHelper.TizenExceptionBot
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es)
+          val est = Set[WebAPIException](NotFoundError, InvalidValuesError, SecurityError, UnknownError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ est)
           ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.alarm.removeAll" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((h, ctx), (he, ctxe))
+          val est = Set[WebAPIException](SecurityError, UnknownError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.alarm.get" -> (
-        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
-          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
-          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
-          val addr_env = set_addr.head
-          val addr1 = cfg.getAPIAddress(addr_env, 0)
-          val l_r1 = addrToLoc(addr1, Recent)
-          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
-
-          val alarmId = getArgValue(h, ctx_1, args, "0")
-          val es =
-            if (alarmId._1._2 == NullTop || alarmId._1._1 == UndefTop) Set[WebAPIException](InvalidValuesError)
-            else TizenHelper.TizenExceptionBot
-
-          /* New TIZENAlarmAbsolute */
-          val o_1 = ObjEmpty.update("@class", PropValue(AbsString.alpha("Object"))).
-            update("@proto", PropValue(ObjectValue(Value(TIZENAlarmAbsolute.loc_proto), F, F, F))).
-            update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(lset_env))).
-            update("@hasinstance", PropValue(Value(NullTop))).
-            update("id", PropValue(ObjectValue(Value(alarmId._1._5), F, T, T))).
-            update("date", PropValue(ObjectValue(Value(StrTop), F, T, T))).
-            update("period", PropValue(ObjectValue(Value(StrTop), F, T, T))).
-            update("daysOfTheWeek", PropValue(ObjectValue(Value(StrTop), F, T, T)))
-
-          /* New TIZENAlarmRelative */
-          val o_2 = ObjEmpty.update("@class", PropValue(AbsString.alpha("Function"))).
-            update("@proto", PropValue(ObjectValue(Value(TIZENAlarmRelative.loc_proto), F, F, F))).
-            update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(lset_env))).
-            update("@hasinstance", PropValue(Value(NullTop))).
-            update("id", PropValue(ObjectValue(Value(alarmId._1._5), F, T, T))).
-            update("delay", PropValue(ObjectValue(Value(StrTop), F, T, T))).
-            update("period", PropValue(ObjectValue(Value(StrTop), F, T, T)))
-
-          val h_2 = h_1.update(l_r1, o_1 + o_2)
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h_2, ctx, es)
-          ((Helper.ReturnStore(h_2, Value(PValue(UndefTop),LocSet(l_r1))), ctx_1), (he + h_e, ctxe + ctx_e))
-        }
-        )),
-      ("tizen.alarm.getAll" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
           val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
@@ -174,64 +175,62 @@ object TIZENalarm extends Tizen {
           val l_r2 = addrToLoc(addr2, Recent)
           val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
           val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
+          val alarmId = getArgValue(h_2, ctx_2, args, "0")
+          val es =
+            if (alarmId._1._2 </ NullBot || alarmId._1._1 </ UndefBot || alarmId._1 </ PValueTop)
+              Set[WebAPIException](InvalidValuesError)
+            else TizenHelper.TizenExceptionBot
 
           /* New TIZENAlarmAbsolute */
           val o_1 = ObjEmpty.update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENAlarmAbsolute.loc_proto), F, F, F))).
             update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(lset_env))).
-            update("@hasinstance", PropValue(Value(NullTop))).
-            update("id", PropValue(ObjectValue(Value(StrTop), F, T, T))).
+            update("id", PropValue(ObjectValue(Value(alarmId._1._5), F, T, T))).
             update("date", PropValue(ObjectValue(Value(StrTop), F, T, T))).
             update("period", PropValue(ObjectValue(Value(StrTop), F, T, T))).
-            update("daysOfTheWeek", PropValue(ObjectValue(Value(StrTop), F, T, T)))
+            update("daysOfTheWeek", PropValue(ObjectValue(Value(loc_bydayvalarr), F, T, T)))
 
           /* New TIZENAlarmRelative */
-          val o_2 = ObjEmpty.update("@class", PropValue(AbsString.alpha("Object"))).
+          val o_2 = ObjEmpty.update("@class", PropValue(AbsString.alpha("Function"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENAlarmRelative.loc_proto), F, F, F))).
             update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(lset_env))).
-            update("@hasinstance", PropValue(Value(NullTop))).
-            update("id", PropValue(ObjectValue(Value(StrTop), F, T, T))).
+            update("id", PropValue(ObjectValue(Value(alarmId._1._5), F, T, T))).
             update("delay", PropValue(ObjectValue(Value(StrTop), F, T, T))).
             update("period", PropValue(ObjectValue(Value(StrTop), F, T, T)))
+          val h_3 = h_2.update(l_r1, o_1).update(l_r2, o_2)
+          val est = Set[WebAPIException](NotFoundError, TypeMismatchError, UnknownError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ est)
+          ((Helper.ReturnStore(h_3, Value(PValue(UndefTop),LocSet(l_r1) ++ LocSet(l_r2))), ctx_1), (he + h_e, ctxe + ctx_e))
+        }
+        )),
+      ("tizen.alarm.getAll" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+          val l_r1 = addrToLoc(addr1, Recent)
+          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
 
-          val h_3 = h_2.update(l_r1, o_1 + o_2)
-          val o_3 = Helper.NewArrayObject(UInt)
-          val o_4 = o_3.update("@default_number", PropValue(ObjectValue(Value(l_r1), T, T, T)))
-          val h_4 = h_3.update(l_r2, o_4)
-
-          ((Helper.ReturnStore(h_4, Value(l_r2)), ctx_2), (he, ctxe))
+          val o_arr = Helper.NewArrayObject(UInt).
+            update("@default_number", PropValue(ObjectValue(Value(LocSet(loc_alarmabs) ++ LocSet(loc_alarmrel)), T, T, T)))
+          val h_2 = h_1.update(l_r1, o_arr)
+          val est = Set[WebAPIException](UnknownError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((Helper.ReturnStore(h_2, Value(l_r1)), ctx_1), (he + h_e, ctxe + ctx_e))
         }
         ))
     )
   }
 
   override def getPreSemanticMap(): Map[String, SemanticFun] = {
-    Map(
-      ("tizen.alarm.removeAll" -> (
-        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((h, ctx), (he, ctxe))
-        }
-        ))
-    )
+    Map()
   }
   override def getDefMap(): Map[String, AccessFun] = {
-    Map(
-      ("tizen.alarm.removeAll" -> (
-        (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
-          LPSet((SinglePureLocalLoc, "@return"))
-        }
-        ))
-    )
+    Map()
   }
   override def getUseMap(): Map[String, AccessFun] = {
-    Map(
-      ("tizen.alarm.removeAll" -> (
-        (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
-          LPSet((SinglePureLocalLoc, "@return"))
-        }
-        ))
-    )
+    Map()
   }
 }

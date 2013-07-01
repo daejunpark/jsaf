@@ -90,28 +90,7 @@ object TIZENCalendarEvent extends Tizen {
     ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
     ("@construct",               AbsInternalFunc("tizen.CalendarEvent.constructor")),
     ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
-    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
-    ("id", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("calendarId", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("lastModificationDate", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("description", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("summary", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("isAllDay", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("startDate", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("duration", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("location", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("geolocation", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("organizer", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("visibility", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("status", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("priority", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("alarms", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("categories", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("attendees", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("isDetached", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("endDate", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("availability", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("recurrenceRule", AbsConstValue(PropValue(Value(UndefTop))))
+    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F))))
   )
 
   /* prototype */
@@ -130,6 +109,7 @@ object TIZENCalendarEvent extends Tizen {
     Map(
       ("tizen.CalendarEvent.constructor" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
           val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
           if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
@@ -137,30 +117,25 @@ object TIZENCalendarEvent extends Tizen {
           val addr1 = cfg.getAPIAddress(addr_env, 0)
           val addr2 = cfg.getAPIAddress(addr_env, 1)
           val addr3 = cfg.getAPIAddress(addr_env, 2)
-          val addr4 = cfg.getAPIAddress(addr_env, 3)
           val l_r1 = addrToLoc(addr1, Recent)
           val l_r2 = addrToLoc(addr2, Recent)
           val l_r3 = addrToLoc(addr3, Recent)
-          val l_r4 = addrToLoc(addr4, Recent)
           val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
           val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
           val (h_3, ctx_3) = Helper.Oldify(h_2, ctx_2, addr3)
-          val (h_4, ctx_4) = Helper.Oldify(h_3, ctx_3, addr4)
-          val n_arglen = Operator.ToUInt32(getArgValue(h_4, ctx_4, args, "length"))
+          val n_arglen = Operator.ToUInt32(getArgValue(h_3, ctx_3, args, "length"))
 
           val o_new = ObjEmpty.
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENCalendarEvent.loc_proto), F, F, F))).
-            update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop)))
+            update("@extensible", PropValue(T))
 
           val (h_5, es_1) = n_arglen match {
             case UIntSingle(n) if n == 0 =>
               val o_arr = Helper.NewArrayObject(AbsNumber.alpha(0))
               val o_arr2 = Helper.NewArrayObject(AbsNumber.alpha(0))
               val o_arr3 = Helper.NewArrayObject(AbsNumber.alpha(0))
-              val h_5 = h_4.update(l_r1, o_arr).update(l_r2, o_arr2).update(l_r3, o_arr3)
+              val h_4 = h_3.update(l_r1, o_arr).update(l_r2, o_arr2).update(l_r3, o_arr3)
               val o_new2 = o_new.
                 update("id", PropValue(ObjectValue(Value(NullTop), F, T, T))).
                 update("calendarId", PropValue(ObjectValue(Value(NullTop), F, T, T))).
@@ -183,37 +158,37 @@ object TIZENCalendarEvent extends Tizen {
                 update("endDate", PropValue(ObjectValue(Value(UndefTop), T, T, T))).
                 update("availability", PropValue(ObjectValue(Value(AbsString.alpha("BUSY")), T, T, T))).
                 update("recurrenceRule", PropValue(ObjectValue(Value(UndefTop), T, T, T)))
-              val h_6 = h_5.update(l_r4, o_new2)
-              (h_6, TizenHelper.TizenExceptionBot)
+              val h_5 = lset_this.foldLeft(h_4)((_h, l) => _h.update(l, o_new2))
+              (h_5, TizenHelper.TizenExceptionBot)
             case UIntSingle(n) if n == 1 =>
-              val v = getArgValue(h_4, ctx_4, args, "0")
+              val v = getArgValue(h_3, ctx_3, args, "0")
               val es =
-                if (v._1 <= PValueTop)
+                if (v._1 </ PValueBot)
                   Set[WebAPIException](TypeMismatchError)
                 else TizenHelper.TizenExceptionBot
               val o_arr = Helper.NewArrayObject(AbsNumber.alpha(0))
               val o_arr2 = Helper.NewArrayObject(AbsNumber.alpha(0))
               val o_arr3 = Helper.NewArrayObject(AbsNumber.alpha(0))
-              val h_5 = h_4.update(l_r1, o_arr).update(l_r2, o_arr2).update(l_r3, o_arr3)
+              val h_4 = h_3.update(l_r1, o_arr).update(l_r2, o_arr2).update(l_r3, o_arr3)
               val (obj, es_1) = v._2.foldLeft((o_new, TizenHelper.TizenExceptionBot))((_o, l) => {
-                val v_1 = Helper.Proto(h_5, l, AbsString.alpha("endDate"))
-                val v_2 = Helper.Proto(h_5, l, AbsString.alpha("availability"))
-                val v_3 = Helper.Proto(h_5, l, AbsString.alpha("recurrenceRule"))
-                val v_4 = Helper.Proto(h_5, l, AbsString.alpha("description"))
-                val v_5 = Helper.Proto(h_5, l, AbsString.alpha("summary"))
-                val v_6 = Helper.Proto(h_5, l, AbsString.alpha("isAllDay"))
-                val v_7 = Helper.Proto(h_5, l, AbsString.alpha("startDate"))
-                val v_8 = Helper.Proto(h_5, l, AbsString.alpha("duration"))
-                val v_9 = Helper.Proto(h_5, l, AbsString.alpha("location"))
-                val v_10 = Helper.Proto(h_5, l, AbsString.alpha("geolocation"))
-                val v_11 = Helper.Proto(h_5, l, AbsString.alpha("organizer"))
-                val v_12 = Helper.Proto(h_5, l, AbsString.alpha("visibility"))
-                val v_13 = Helper.Proto(h_5, l, AbsString.alpha("status"))
-                val v_14 = Helper.Proto(h_5, l, AbsString.alpha("priority"))
-                val v_15 = Helper.Proto(h_5, l, AbsString.alpha("alarms"))
-                val v_16 = Helper.Proto(h_5, l, AbsString.alpha("categories"))
-                val v_17 = Helper.Proto(h_5, l, AbsString.alpha("attendees"))
-                val (b_1, es_1) = TizenHelper.instanceOf(h_5, v_1, Value(TIZENTZDate.loc_proto))
+                val v_1 = Helper.Proto(h_4, l, AbsString.alpha("endDate"))
+                val v_2 = Helper.Proto(h_4, l, AbsString.alpha("availability"))
+                val v_3 = Helper.Proto(h_4, l, AbsString.alpha("recurrenceRule"))
+                val v_4 = Helper.Proto(h_4, l, AbsString.alpha("description"))
+                val v_5 = Helper.Proto(h_4, l, AbsString.alpha("summary"))
+                val v_6 = Helper.Proto(h_4, l, AbsString.alpha("isAllDay"))
+                val v_7 = Helper.Proto(h_4, l, AbsString.alpha("startDate"))
+                val v_8 = Helper.Proto(h_4, l, AbsString.alpha("duration"))
+                val v_9 = Helper.Proto(h_4, l, AbsString.alpha("location"))
+                val v_10 = Helper.Proto(h_4, l, AbsString.alpha("geolocation"))
+                val v_11 = Helper.Proto(h_4, l, AbsString.alpha("organizer"))
+                val v_12 = Helper.Proto(h_4, l, AbsString.alpha("visibility"))
+                val v_13 = Helper.Proto(h_4, l, AbsString.alpha("status"))
+                val v_14 = Helper.Proto(h_4, l, AbsString.alpha("priority"))
+                val v_15 = Helper.Proto(h_4, l, AbsString.alpha("alarms"))
+                val v_16 = Helper.Proto(h_4, l, AbsString.alpha("categories"))
+                val v_17 = Helper.Proto(h_4, l, AbsString.alpha("attendees"))
+                val (b_1, es_1) = TizenHelper.instanceOf(h_4, v_1, Value(TIZENTZDate.loc_proto))
                 val es_2 =
                   if (v_1._1._1 </ UndefTop && b_1._1._3 <= F)
                     Set[WebAPIException](TypeMismatchError)
@@ -230,7 +205,7 @@ object TIZENCalendarEvent extends Tizen {
                   if (v_2._1._1 </ UndefBot)
                     _o._1.update("availability", PropValue(ObjectValue(Value(AbsString.alpha("BUSY")), T, T, T)))
                   else _o._1.update("availability", PropValue(ObjectValue(Value(v_2._1._5), T, T, T)))
-                val (b_2, es_4) = TizenHelper.instanceOf(h_5, v_3, Value(TIZENCalendarRecurrenceRule.loc_proto))
+                val (b_2, es_4) = TizenHelper.instanceOf(h_4, v_3, Value(TIZENCalendarRecurrenceRule.loc_proto))
                 val es_5 =
                   if (v_3._1._1 </ UndefTop && b_2._1._3 <= F)
                     Set[WebAPIException](TypeMismatchError)
@@ -263,7 +238,7 @@ object TIZENCalendarEvent extends Tizen {
                   if (v_6._1._3 </ BoolBot)
                     _o._1.update("isAllDay", PropValue(ObjectValue(Value(v_6._1._3), T, T, T)))
                   else _o._1.update("isAllDay", PropValue(ObjectValue(Value(F), T, T, T)))
-                val (b_3, es_9) = TizenHelper.instanceOf(h_5, v_7, Value(TIZENTZDate.loc_proto))
+                val (b_3, es_9) = TizenHelper.instanceOf(h_4, v_7, Value(TIZENTZDate.loc_proto))
                 val es_10 =
                   if (v_7._1._1 </ UndefTop && b_3._1._3 <= F)
                     Set[WebAPIException](TypeMismatchError)
@@ -272,7 +247,7 @@ object TIZENCalendarEvent extends Tizen {
                   if (b_3._1._3 <= T)
                     _o._1.update("startDate", PropValue(ObjectValue(Value(v_7._2), T, T, T)))
                   else _o._1.update("startDate", PropValue(ObjectValue(Value(UndefTop), T, T, T)))
-                val (b_4, es_11) = TizenHelper.instanceOf(h_5, v_8, Value(TIZENTimeDuration.loc_proto))
+                val (b_4, es_11) = TizenHelper.instanceOf(h_4, v_8, Value(TIZENTimeDuration.loc_proto))
                 val es_12 =
                   if (v_8._1._1 </ UndefTop && b_4._1._3 <= F)
                     Set[WebAPIException](TypeMismatchError)
@@ -289,7 +264,7 @@ object TIZENCalendarEvent extends Tizen {
                   if (v_9._1._5 </ StrBot)
                     _o._1.update("location", PropValue(ObjectValue(Value(v_9._1._5), T, T, T)))
                   else _o._1.update("location", PropValue(ObjectValue(Value(AbsString.alpha("")), T, T, T)))
-                val (b_5, es_14) = TizenHelper.instanceOf(h_5, v_10, Value(TIZENSimpleCoordinates.loc_proto))
+                val (b_5, es_14) = TizenHelper.instanceOf(h_4, v_10, Value(TIZENSimpleCoordinates.loc_proto))
                 val es_15 =
                   if (v_10._1._1 </ UndefTop && b_5._1._3 <= F)
                     Set[WebAPIException](TypeMismatchError)
@@ -337,13 +312,13 @@ object TIZENCalendarEvent extends Tizen {
                 val (o_15, es_20) =
                   if (v_15._1._1 <= UndefBot) {
                     val es_ = v_15._2.foldLeft(TizenHelper.TizenExceptionBot)((_es, ll) => {
-                      val n_length = Operator.ToUInt32(Helper.Proto(h_5, ll, AbsString.alpha("length")))
+                      val n_length = Operator.ToUInt32(Helper.Proto(h_4, ll, AbsString.alpha("length")))
                       val ess = n_length match {
                         case NumBot => TizenHelper.TizenExceptionBot
                         case UIntSingle(n) => {
                           val es__ = (0 until n.toInt).foldLeft(TizenHelper.TizenExceptionBot)((_e, i) => {
-                            val vi = Helper.Proto(h_5, ll, AbsString.alpha(i.toString))
-                            val (bi, esi) = TizenHelper.instanceOf(h_5, vi, Value(TIZENCalendarAlarm.loc_proto))
+                            val vi = Helper.Proto(h_4, ll, AbsString.alpha(i.toString))
+                            val (bi, esi) = TizenHelper.instanceOf(h_4, vi, Value(TIZENCalendarAlarm.loc_proto))
                             val esii =
                               if (bi._1._3 <= F) Set[WebAPIException](TypeMismatchError)
                               else TizenHelper.TizenExceptionBot
@@ -352,8 +327,8 @@ object TIZENCalendarEvent extends Tizen {
                           es__
                         }
                         case _ => {
-                          val vi = Helper.Proto(h_5, ll, AbsString.alpha("@default_number"))
-                          val (bi, esi) = TizenHelper.instanceOf(h_5, vi, Value(TIZENCalendarAlarm.loc_proto))
+                          val vi = Helper.Proto(h_4, ll, AbsString.alpha("@default_number"))
+                          val (bi, esi) = TizenHelper.instanceOf(h_4, vi, Value(TIZENCalendarAlarm.loc_proto))
                           val esii =
                             if (bi._1._3 <= F) Set[WebAPIException](TypeMismatchError)
                             else TizenHelper.TizenExceptionBot
@@ -368,12 +343,12 @@ object TIZENCalendarEvent extends Tizen {
                 val (o_16, es_21) =
                   if (v_16._1._1 <= UndefBot) {
                     val es_ = v_16._2.foldLeft(TizenHelper.TizenExceptionBot)((_es, ll) => {
-                      val n_length = Operator.ToUInt32(Helper.Proto(h_5, ll, AbsString.alpha("length")))
+                      val n_length = Operator.ToUInt32(Helper.Proto(h_4, ll, AbsString.alpha("length")))
                       val ess = n_length match {
                         case NumBot => TizenHelper.TizenExceptionBot
                         case UIntSingle(n) => {
                           val es__ = (0 until n.toInt).foldLeft(TizenHelper.TizenExceptionBot)((_e, i) => {
-                            val vi = Helper.Proto(h_5, ll, AbsString.alpha(i.toString))
+                            val vi = Helper.Proto(h_4, ll, AbsString.alpha(i.toString))
                             val esi =
                               if (vi._1._5 </ StrTop) Set[WebAPIException](TypeMismatchError)
                               else TizenHelper.TizenExceptionBot
@@ -382,7 +357,7 @@ object TIZENCalendarEvent extends Tizen {
                           es__
                         }
                         case _ => {
-                          val vi = Helper.Proto(h_5, ll, AbsString.alpha("@default_number"))
+                          val vi = Helper.Proto(h_4, ll, AbsString.alpha("@default_number"))
                           val esi =
                             if (vi._1._5 </ StrTop) Set[WebAPIException](TypeMismatchError)
                             else TizenHelper.TizenExceptionBot
@@ -397,13 +372,13 @@ object TIZENCalendarEvent extends Tizen {
                 val (o_17, es_22) =
                   if (v_17._1._1 <= UndefBot) {
                     val es_ = v_17._2.foldLeft(TizenHelper.TizenExceptionBot)((_es, ll) => {
-                      val n_length = Operator.ToUInt32(Helper.Proto(h_5, ll, AbsString.alpha("length")))
+                      val n_length = Operator.ToUInt32(Helper.Proto(h_4, ll, AbsString.alpha("length")))
                       val ess = n_length match {
                         case NumBot => TizenHelper.TizenExceptionBot
                         case UIntSingle(n) => {
                           val es__ = (0 until n.toInt).foldLeft(TizenHelper.TizenExceptionBot)((_e, i) => {
-                            val vi = Helper.Proto(h_5, ll, AbsString.alpha(i.toString))
-                            val (bi, esi) = TizenHelper.instanceOf(h_5, vi, Value(TIZENCalendarAttendee.loc_proto))
+                            val vi = Helper.Proto(h_4, ll, AbsString.alpha(i.toString))
+                            val (bi, esi) = TizenHelper.instanceOf(h_4, vi, Value(TIZENCalendarAttendee.loc_proto))
                             val esii =
                               if (bi._1._3 <= F) Set[WebAPIException](TypeMismatchError)
                               else TizenHelper.TizenExceptionBot
@@ -412,8 +387,8 @@ object TIZENCalendarEvent extends Tizen {
                           es__
                         }
                         case _ => {
-                          val vi = Helper.Proto(h_5, ll, AbsString.alpha("@default_number"))
-                          val (bi, esi) = TizenHelper.instanceOf(h_5, vi, Value(TIZENCalendarAttendee.loc_proto))
+                          val vi = Helper.Proto(h_4, ll, AbsString.alpha("@default_number"))
+                          val (bi, esi) = TizenHelper.instanceOf(h_4, vi, Value(TIZENCalendarAttendee.loc_proto))
                           val esii =
                             if (bi._1._3 <= F) Set[WebAPIException](TypeMismatchError)
                             else TizenHelper.TizenExceptionBot
@@ -436,24 +411,102 @@ object TIZENCalendarEvent extends Tizen {
                 update("calendarId", PropValue(ObjectValue(Value(NullTop), F, T, T))).
                 update("lastModificationDate", PropValue(ObjectValue(Value(NullTop), F, T, T))).
                 update("isDetached", PropValue(ObjectValue(Value(F), F, T, T)))
-              val h_6 = h_5.update(l_r4, o_new2)
-              (h_6, es ++ es_1)
+              val h_5 = lset_this.foldLeft(h_4)((_h, l) => _h.update(l, o_new2))
+              (h_5, es ++ es_1)
             case UIntSingle(n) if n == 2 =>
-              //TODO: not yet implemented
-              (h_4, TizenHelper.TizenExceptionBot)
+              val o_arr = Helper.NewArrayObject(AbsNumber.alpha(0))
+              val o_arr2 = Helper.NewArrayObject(AbsNumber.alpha(0))
+              val o_arr3 = Helper.NewArrayObject(AbsNumber.alpha(0))
+              val h_4 = h_3.update(l_r1, o_arr).update(l_r2, o_arr2).update(l_r3, o_arr3)
+              val o_new2 = o_new.
+                update("id", PropValue(ObjectValue(Value(NullTop), F, T, T))).
+                update("calendarId", PropValue(ObjectValue(Value(NullTop), F, T, T))).
+                update("lastModificationDate", PropValue(ObjectValue(Value(NullTop), F, T, T))).
+                update("description", PropValue(ObjectValue(Value(AbsString.alpha("")), T, T, T))).
+                update("summary", PropValue(ObjectValue(Value(AbsString.alpha("")), T, T, T))).
+                update("isAllDay", PropValue(ObjectValue(Value(F), T, T, T))).
+                update("startDate", PropValue(ObjectValue(Value(UndefTop), T, T, T))).
+                update("duration", PropValue(ObjectValue(Value(UndefTop), T, T, T))).
+                update("location", PropValue(ObjectValue(Value(AbsString.alpha("")), T, T, T))).
+                update("geolocation", PropValue(ObjectValue(Value(UndefTop), T, T, T))).
+                update("organizer", PropValue(ObjectValue(Value(AbsString.alpha("")), T, T, T))).
+                update("visibility", PropValue(ObjectValue(Value(AbsString.alpha("PUBLIC")), T, T, T))).
+                update("status", PropValue(ObjectValue(Value(AbsString.alpha("TENTATIVE")), T, T, T))).
+                update("priority", PropValue(ObjectValue(Value(AbsString.alpha("LOW")), T, T, T))).
+                update("alarms", PropValue(ObjectValue(Value(l_r3), T, T, T))).
+                update("categories", PropValue(ObjectValue(Value(l_r1), T, T, T))).
+                update("attendees", PropValue(ObjectValue(Value(l_r2), T, T, T))).
+                update("isDetached", PropValue(ObjectValue(Value(F), F, T, T))).
+                update("endDate", PropValue(ObjectValue(Value(UndefTop), T, T, T))).
+                update("availability", PropValue(ObjectValue(Value(AbsString.alpha("BUSY")), T, T, T))).
+                update("recurrenceRule", PropValue(ObjectValue(Value(UndefTop), T, T, T)))
+              val h_5 = lset_this.foldLeft(h_4)((_h, l) => _h.update(l, o_new2))
+              (h_5, TizenHelper.TizenExceptionBot)
             case _ => {
-              (h_4, TizenHelper.TizenExceptionBot)
+              (h_3, TizenHelper.TizenExceptionBot)
             }
           }
           val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es_1)
-          ((Helper.ReturnStore(h_5, Value(l_r4)), ctx_4), (he + h_e, ctxe + ctx_e))
+          ((Helper.ReturnStore(h_5, Value(lset_this)), ctx_3), (he + h_e, ctxe + ctx_e))
         }
-        ))/*,
+        )),
       ("tizen.CalendarEvent.expandRecurrence" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+          val addr2 = cfg.getAPIAddress(addr_env, 1)
+          val l_r1 = addrToLoc(addr1, Recent)
+          val l_r2 = addrToLoc(addr2, Recent)
+          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+          val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
+          val v_1 = getArgValue(h_2, ctx_2, args, "0")
+          val v_2 = getArgValue(h_2, ctx_2, args, "1")
+          val v_3 = getArgValue(h_2, ctx_2, args, "2")
+          val n_arglen = Operator.ToUInt32(getArgValue(h_2, ctx_2, args, "length"))
+          val (b_1, es_1) = TizenHelper.instanceOf(h_2, v_1, Value(TIZENTZDate.loc_proto))
+          val es_2 =
+            if (b_1._1._3 <= F)
+              Set[WebAPIException](TypeMismatchError)
+            else TizenHelper.TizenExceptionBot
+          val (b_2, es_3) = TizenHelper.instanceOf(h_2, v_2, Value(TIZENTZDate.loc_proto))
+          val es_4 =
+            if (b_2._1._3 <= F)
+              Set[WebAPIException](TypeMismatchError)
+            else TizenHelper.TizenExceptionBot
+          val es_5 =
+            if (v_3._2.exists((l) => Helper.IsCallable(h_2, l) <= F))
+              Set[WebAPIException](TypeMismatchError)
+            else TizenHelper.TizenExceptionBot
+          val o_arr = Helper.NewArrayObject(AbsNumber.alpha(1)).
+            update("0", PropValue(ObjectValue(Value(TIZENcalendarObj.loc_caleventarr), T, T, T)))
+          val h_3 = h_2.update(l_r1, o_arr)
+          val h_4 = TizenHelper.addCallbackHandler(h_3, AbsString.alpha("CalEventArrSuccessCB"), Value(v_3._2), Value(l_r1))
 
+          val (h_5, es) = n_arglen match {
+            case UIntSingle(n) if n == 3 =>
+              (h_4, TizenHelper.TizenExceptionBot)
+            case UIntSingle(n) if n >= 4 =>
+              val v_4 = getArgValue(h_4, ctx_2, args, "3")
+              val es1 =
+                if (v_4._2.exists((l) => Helper.IsCallable(h_4, l) <= F))
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val o_arr1 = Helper.NewArrayObject(AbsNumber.alpha(1)).
+                update("0", PropValue(ObjectValue(Value(LocSet(TIZENtizen.loc_invalidValueserr) ++ LocSet(TIZENtizen.loc_unknownerr)), T, T, T)))
+              val h_5 = h_4.update(l_r2, o_arr1)
+              val h_6 = TizenHelper.addCallbackHandler(h_5, AbsString.alpha("CalEventArrSuccessCB"), Value(v_3._2), Value(l_r1))
+              val h_7 = TizenHelper.addCallbackHandler(h_6, AbsString.alpha("errorCB"), Value(v_4._2), Value(l_r2))
+              (h_7, es1)
+            case _ =>
+              (h_4, TizenHelper.TizenExceptionBot)
+          }
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2 ++ es_3 ++ es_4 ++ es_5)
+          ((h_5, ctx_2), (he + h_e, ctxe + ctx_e))
         }
-        )) */
+        ))
     )
   }
 

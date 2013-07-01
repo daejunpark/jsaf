@@ -51,7 +51,7 @@ object TizenHelper {
         "#CONTENTARRSUCESSCB", "#CONTENTDIRARRSUCCESSCB", "#DATACTRLERRCB", "#DATACTRLINSERTSUCCESSCB", "#DATACTRLSELECTSUCCESSCB",
         "#DATACTRLGETVALSUCCESSCB", "#SYNCPROGRESSCB.onprogress", "#SYNCPROGRESSCB.onfailed", "#DOWNLOADCB.onprogress", "#DOWNLOADCB.oncompleted",
         "#DOWNLOADCB.onfailed", "#FILESUCCESSCB", "#FILESYSSTORARRSUCCESSCB", "#FILESTREAMSUCCESSCB", "#FILEARRSUCCESSCB", "#MSGPORTCB",
-        "#MSGRECIPIENTSCB", "#MSGBODYSUCCESSCB", "#MSGATTACHMENTSUCCESSCB", "#MSGSERVARRSUCCESSCB", "#NFCTAGDETECTCB.onattach", "#NFCPEERDETECTCB.onattach",
+        "#MSGRECIPIENTSCB", "#MSGBODYSUCCESSCB", "#MSGATTACHMENTSUCCESSCB", "#MSGSERVARRSUCCESSCB", "#MSGFOLDARRSUCCESSCB", "#NFCTAGDETECTCB.onattach", "#NFCPEERDETECTCB.onattach",
         "#NDEFMSGREADCB", "#BYTEARRSUCCESSCB", "#SETYPECHANGECB", "#PKGINFOARRSUCCESSCB", "#PKGPROGRESSCB.onprogress", "#SCREENSTATECHANGECB",
         "#PUSHNOTICB", "#READERARRSUCCESSCB", "#SESSIONSUCCESSCB", "#CHANNELSUCCESSCB", "#TRANSMITSUCCESSCB", "#SYSINFOPROPSUCCESSCB")
       case OtherStrSingle(s_ev) =>
@@ -75,9 +75,9 @@ object TizenHelper {
         else if (s_ev == "AppInfoArraySuccessCB")List("#APPINFOARRSUCCESSCB")
         else if (s_ev == "FindAppCtrlSuccessCB")List("#FINDAPPCTRLSUCCESSCB")
         else if (s_ev == "AppContextArraySuccessCB")List("#APPCONTEXTARRAYSUCCESSCB")
-        else if (s_ev == "AppCtrlDataArrayReplyCB.onsuccess")List("#APPCTRLDATAARRAYREPLYCB")
+        else if (s_ev == "AppCtrlDataArrayReplyCB.onsuccess")List("#APPCTRLDATAARRAYREPLYCB.onsuccess")
         else if (s_ev == "BTSocketSuccessCB")List("#BTSOCKETSUCCESSCB")
-        else if (s_ev == "BTServicdSuccessCB")List("#BTSERVSUCCESSCB")
+        else if (s_ev == "BTServiceSuccessCB")List("#BTSERVSUCCESSCB")
         else if (s_ev == "CalEventArrSuccessCB")List("#CALEVENTARRSUCCESSCB")
         else if (s_ev == "CalArrSuccessCB")List("#CALARRSUCCESSCB")
         else if (s_ev == "CalChangeCB.onitemsremoved")List("#CALCHANGECB.onitemsremoved")
@@ -105,6 +105,7 @@ object TizenHelper {
         else if (s_ev == "MsgBodySuccessCB")List("#MSGBODYSUCCESSCB")
         else if (s_ev == "MsgAttachmentSuccessCB")List("#MSGATTACHMENTSUCCESSCB")
         else if (s_ev == "MsgServiceArrSuccessCB")List("#MSGSERVARRSUCCESSCB")
+        else if (s_ev == "MsgFolderArrSuccessCB")List("#MSGFOLDARRSUCCESSCB")
         else if (s_ev == "NFCTagDetectCB.onattach")List("#NFCTAGDETECTCB.onattach")
         else if (s_ev == "NFCPeerDetectCB.onattach")List("#NFCPEERDETECTCB.onattach")
         else if (s_ev == "NDEFMessageReadCB")List("#NDEFMSGREADCB")
@@ -145,9 +146,16 @@ object TizenHelper {
 
   def TizenNewExceptionLoc(exc: WebAPIException): Loc = {
     exc match {
-      case UnknownError => TizenUnknownErrorLoc
-      case TypeMismatchError => TizenTypeMismatchErrorLoc
-      case InvalidValuesError => TizenInvalidValuesErrorLoc
+      case UnknownError => TIZENtizen.loc_unknownerr
+      case TypeMismatchError => TIZENtizen.loc_typemismatcherr
+      case InvalidValuesError => TIZENtizen.loc_invalidValueserr
+      case IOError => TIZENtizen.loc_IOerr
+      case ServiceNotAvailableError => TIZENtizen.loc_serviceNotAvailableerr
+      case NetworkError => TIZENtizen.loc_networkerr
+      case NotFoundError => TIZENtizen.loc_notFounderr
+      case AbortError => TIZENtizen.loc_aborterr
+      case SecurityError => TIZENtizen.loc_securityerr
+      case NotSupportedError => TIZENtizen.loc_notSupportederr
     }
   }
 
@@ -161,7 +169,7 @@ object TizenHelper {
   def isStrCBAttribute(attr: String): Boolean = {
     attr=="AppInfoEventCB.onuninstalled" || attr=="BluetoothDiscvDevsSuccessCB.ondevicedisappeared" || attr=="ContentScanSuccessCB" ||
     attr=="ContentChangeCB.oncontentremoved" || attr=="SyncProgressCB.oncompleted" || attr=="SyncProgressCB.onstopped" ||
-    attr=="FileStringSuccessCB" || attr=="PackageProgressCB.oncomplete" || attr=="PackageInfoEventCB.onuninstalled" ||
+    attr=="FileStringSuccessCB" || attr=="PkgProgressCB.oncomplete" || attr=="PkgInfoEventCB.onuninstalled" ||
     attr=="PushRegisterSuccessCB" || attr=="SystemSettingSuccessCB"
   }
 
@@ -178,7 +186,7 @@ object TizenHelper {
     attr=="BluetoothDevArraySuccessCB" || attr=="BluetoothDiscvDevsSuccessCB.onfinished"
   }
   def isCalItemArrCBAttribute(attr: String): Boolean = {
-    attr=="CalendarItemArraySuccessCB" || attr=="CalendarChangeCB.onitemsadded" || attr=="CalendarChangeCB.onitemsupdated"
+    attr=="CalendarItemArraySuccessCB" || attr=="CalChangeCB.onitemsadded" || attr=="CalChangeCB.onitemsupdated"
   }
   def isCHEntryArrCBAttribute(attr: String): Boolean = {
     attr=="CHEntryArraySuccessCB" || attr=="CHChangeCB.onadded" || attr=="CHChangeCB.onchanged"

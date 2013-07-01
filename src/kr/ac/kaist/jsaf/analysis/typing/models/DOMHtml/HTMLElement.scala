@@ -87,7 +87,7 @@ object HTMLElement extends DOM {
       ("title",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("title")), T, T, T))),
       ("lang",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("lang'")), T, T, T))),
       ("dir",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("dir")), T, T, T))),
-      ("className",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("className")), T, T, T))))
+      ("className",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("class")), T, T, T))))
     case _ => {
       System.err.println("* Warning: " + node.getNodeName + " cannot have instance objects.")
       List()

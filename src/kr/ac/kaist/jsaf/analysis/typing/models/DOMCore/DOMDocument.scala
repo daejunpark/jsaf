@@ -74,7 +74,9 @@ object DOMDocument extends DOM {
     ("getElementsByClassName",      AbsBuiltinFunc("DOMDocument.getElementsByClassName", 2)),
     ("adoptNode",                   AbsBuiltinFunc("DOMDocument.adoptNode", 1)),
     ("normalizeDocument",           AbsBuiltinFunc("DOMDocument.normalizeDocument", 0)),
-    ("renameNode",                  AbsBuiltinFunc("DOMDocument.renameNode", 3))
+    ("renameNode",                  AbsBuiltinFunc("DOMDocument.renameNode", 3)),
+    ("querSelector",                AbsBuiltinFunc("DOMDocument.querSelector", 0)),
+    ("querSelectorAll",             AbsBuiltinFunc("DOMDocument.querSelectorAll", 0))
   )
 
   /* global */
@@ -214,11 +216,10 @@ object DOMDocument extends DOM {
           /* arguments */
           val s_id = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
           if (s_id </ StrBot) {
-            val obj_table = h(IdTableLoc)
-            val propv_element = obj_table(s_id)
-            val v_null = if (propv_element._2 </ AbsentBot) Value(NullTop) else ValueBot
+            val lset_find = DOMHelper.findById(h, s_id)
+            val v_null = if (lset_find.isEmpty) Value(NullTop) else ValueBot
             /* imprecise semantic */
-            ((Helper.ReturnStore(h, propv_element._1._1._1 + v_null), ctx), (he, ctxe))
+            ((Helper.ReturnStore(h, Value(lset_find) + v_null), ctx), (he, ctxe))
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
@@ -249,10 +250,66 @@ object DOMDocument extends DOM {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        }))
+        })),
       //case "DOMDocument.adoptNode" => ((h, ctx), (he, ctxe))
       //case "DOMDocument.normalizeDocument" => ((h, ctx), (he, ctxe))
       //case "DOMDocument.renameNode" => ((h, ctx), (he, ctxe))
+      ("DOMDocument.querySelector" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val list_addr = getAddrList(h, cfg)
+          val addr1 = list_addr(0)
+
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          /* arguments */
+          val s_selector = getArgValue(h, ctx, args, "0")._1._5
+          if (s_selector </ StrBot) {
+            val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+            // start here
+            val l_result = addrToLoc(addr1, Recent)
+            val lset_find = lset_this.foldLeft(LocSetBot)((ls, l) => ls ++ DOMHelper.querySelectorAll(h_1, l, s_selector))
+            val (h_ret, v_ret) =
+              if(lset_find.isEmpty)
+                (h_1, Value(NullTop))
+              else {
+                val o_result = Helper.NewObject(ObjProtoLoc)
+                  .update("0", PropValue(ObjectValue(Value(lset_find), T,T,T)))
+                  .update("length", PropValue(ObjectValue(AbsNumber.alpha(0), T,T,T)))
+                val h_2 = h_1.update(l_result, o_result)
+                (h_2, Value(lset_find))
+              }
+            ((Helper.ReturnStore(h_ret, v_ret), ctx_1), (he, ctxe))
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        })),
+      ("DOMDocument.querySelectorAll" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val list_addr = getAddrList(h, cfg)
+          val addr1 = list_addr(0)
+
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          /* arguments */
+          val s_selector = getArgValue(h, ctx, args, "0")._1._5
+          if (s_selector </ StrBot) {
+            val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+            // start here
+            val l_result = addrToLoc(addr1, Recent)
+            val lset_find = lset_this.foldLeft(LocSetBot)((ls, l) => ls ++ DOMHelper.querySelectorAll(h_1, l, s_selector))
+            val (h_ret, v_ret) =
+              if(lset_find.isEmpty)
+                (h_1, Value(NullTop))
+              else {
+                val o_result = Helper.NewObject(ObjProtoLoc)
+                  .update(NumStr, PropValue(ObjectValue(Value(lset_find), T,T,T)))
+                  .update("length", PropValue(ObjectValue(Value(UInt), T,T,T)))
+                val h_2 = h_1.update(l_result, o_result)
+                (h_2, Value(lset_find))
+              }
+            ((Helper.ReturnStore(h_ret, v_ret), ctx_1), (he, ctxe))
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        }))
     )
   }
 

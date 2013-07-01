@@ -206,6 +206,33 @@ sealed abstract class AbsString extends AbsBase {
     }
   }
 
+  def contains(s: AbsString): AbsBool = {
+    this match {
+      case StrTop => BoolTop
+      case StrBot => BoolBot
+      case NumStr => BoolTop
+      case OtherStr => BoolTop
+      case NumStrSingle(v) =>
+        AbsString.concretize(s) match {
+          case Some(_s) => AbsBool.alpha(v.contains(_s))
+          case None =>
+            if (s </ StrBot)
+              BoolTop
+            else
+              BoolBot
+        }
+      case OtherStrSingle(v) =>
+        AbsString.concretize(s) match {
+          case Some(_s) => AbsBool.alpha(v.contains(_s))
+          case None =>
+            if (s </ StrBot)
+              BoolTop
+            else
+              BoolBot
+        }
+    }
+  }
+
   def length(): AbsNumber = {
     this match {
       case StrTop => NumTop

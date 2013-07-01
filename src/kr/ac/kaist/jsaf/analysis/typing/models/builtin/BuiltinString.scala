@@ -381,6 +381,59 @@ object BuiltinString extends ModelData {
           else
             ((HeapBot, ContextBot), (he, ctxe))
         })),
+
+      // Temporary implementation
+      // 1) RegExp is not covered
+      // 2) java split is not fully compatible with JS split
+      // 3) Cover more corner cases (eg. when separator is undefined)
+      ("String.prototype.split" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          // [[default Value]] ??
+          val lset_prim = lset_this.filter((l) => BoolTrue <= h(l).domIn("@primitive"))
+          // TODO: v_this must be the result of [[DefaultValue]](string)
+          val v_this = lset_prim.foldLeft(ValueBot)((_v, l) => _v + h(l)("@primitive")._1._2)
+          val s_this = Helper.toString(Helper.toPrimitive(v_this))
+          val s_separator = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          val v_limit = getArgValue(h, ctx, args, "1")
+          
+          if (s_this <= StrBot || s_separator <= StrBot || v_limit <= ValueBot)
+            ((HeapBot, ContextBot), (he, ctxe))
+          else {
+            // allocate new location 
+            val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+            val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+            if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+            val addr_env = set_addr.head
+            val addr1 = cfg.getAPIAddress(addr_env, 0)
+            val l_r = addrToLoc(addr1, Recent)
+            val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+            
+            // concretize string inputs
+            val cs_this_opt = AbsString.concretize(s_this)
+            val cs_separator_opt = AbsString.concretize(s_separator)
+            val limit_undefined = v_limit <= Value(UndefTop)
+            
+            // make output array
+            val o_array = 
+              (cs_this_opt, cs_separator_opt, limit_undefined) match {
+                case (Some(cs_this), Some(cs_separator), true) =>
+                  val splitted = cs_this.split("\\Q" + cs_separator + "\\E")
+                  var obj_new = Helper.NewArrayObject(AbsNumber.alpha(splitted.length))
+                  for (i <- 0 until splitted.length) {
+                    val value = Value(AbsString.alpha(splitted(i)))
+                    obj_new = obj_new.update(i.toString, PropValue(ObjectValue(value, T, T, T)))
+                  }
+                  obj_new
+                case _ =>
+                  val obj_new = Helper.NewArrayObject(UInt)
+                  obj_new.update(NumStr, PropValue(ObjectValue(Value(StrTop), T, T, T)))
+            }
+            val h_2 = h_1.update(l_r, o_array)
+            ((Helper.ReturnStore(h_2, Value(l_r)), ctx_1), (he, ctxe))            
+          }
+        })),
+
       ("String.prototype.substring" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2

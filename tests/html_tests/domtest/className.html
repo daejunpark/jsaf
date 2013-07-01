@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<!-- Test for 'className' in HTMLElement -->
+<body> ddd
+  <input id="input1" type="text" value="2" class="test1" />
+  <input id="input2" type="text" value="3" class="test2" />
+  <div id="div1" class="test3">
+    <div id="div2"> ttt2 </div>
+  </div>
+  <script>
+     var inputelem1 = document.getElementById("input1"); // HTMLInputElement
+     var inputelem2 = document.getElementById("input2"); // HTMLInputElement
+     var divelem1 = document.getElementById("div1"); // HTMLDivElement
+     var __result1 = inputelem1.className;    // "test1"
+     var __expect1 = "test1"; 
+     var __result2 = inputelem2.className;    // "test2"
+     var __expect2 = "test2"; 
+     var __result3 = divelem1.className;    // "test3"
+     var __expect3 = "test3"; 
+     inputelem1.setAttribute("class", "changed");    // 'className' should be changed
+     var __result4 = inputelem1.getAttribute("class");  // 
+     var __expect4 = "changed";
+     var __result5 = inputelem1.className;  
+     var __expect5 = "changed";
+  </script>
+</body>
+

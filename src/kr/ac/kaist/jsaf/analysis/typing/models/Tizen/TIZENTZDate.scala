@@ -36,6 +36,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinDate
 
 object TIZENTZDate extends Tizen {
   private val name = "TZDate"
@@ -43,7 +44,7 @@ object TIZENTZDate extends Tizen {
   val loc_cons = newPredefLoc(name + "Cons")
   val loc_proto = newPredefLoc(name + "Proto")
 
-  val loc_tzdate: Loc        = newPreDefLoc("TZDate", Old)
+
   /* constructor or object*/
   private val prop_cons: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Function")))),
@@ -74,6 +75,7 @@ object TIZENTZDate extends Tizen {
     ("getMonth", AbsBuiltinFunc("tizen.TZDate.getMonth", 0)),
     ("setMonth", AbsBuiltinFunc("tizen.TZDate.setMonth", 1)),
     ("getSeconds", AbsBuiltinFunc("tizen.TZDate.getSeconds", 0)),
+    ("setSeconds", AbsBuiltinFunc("tizen.TZDate.setSeconds", 1)),
     ("getUTCDate", AbsBuiltinFunc("tizen.TZDate.getUTCDate", 0)),
     ("setUTCDate", AbsBuiltinFunc("tizen.TZDate.setUTCDate", 1)),
     ("getUTCDay", AbsBuiltinFunc("tizen.TZDate.getUTCDay", 0)),
@@ -111,41 +113,236 @@ object TIZENTZDate extends Tizen {
     ("getNextDSTTransition", AbsBuiltinFunc("tizen.TZDate.getNextDSTTransition", 0))
   )
 
-  private val prop_tzdate_ins: List[(String, AbsProperty)] = List(
-    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
-    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENTZDate.loc_proto, F, F, F)))),
-    ("@extensible",          AbsConstValue(PropValue(T)))
-  )
+
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
-    (loc_cons, prop_cons), (loc_proto, prop_proto), (loc_tzdate, prop_tzdate_ins)
+    (loc_cons, prop_cons), (loc_proto, prop_proto)
   )
 
   override def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
       ("tizen.TZDate.constructor" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
-          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
-          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
-          val addr_env = set_addr.head
-          val addr1 = cfg.getAPIAddress(addr_env, 0)
-          //val addr2 = cfg.getAPIAddress(addr_env, 1)
-          val l_r1 = addrToLoc(addr1, Recent)
-          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
-          //val v_1 = getArgValue(h_2, ctx_2, args, "0")
-          //val n_arglen = Operator.ToUInt32(getArgValue(h_2, ctx_2, args, "length"))
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          val n_arglen = Operator.ToUInt32(getArgValue(h, ctx, args, "length"))
 
+          val (h_1, es_1) = n_arglen match {
+            case UIntSingle(n) if n == 0 =>
+              (h, TizenHelper.TizenExceptionBot)
+            case UIntSingle(n) if n == 1 =>
+              val v_1 = getArgValue(h, ctx, args, "0")
+              val (b_1, es_1) = TizenHelper.instanceOf(h, v_1, Value(BuiltinDate.ProtoLoc))
+              val es_2 =
+                if (b_1._1._3 <= F && v_1._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              (h, es_1 ++ es_2)
+            case UIntSingle(n) if n == 2 =>
+              val v_1 = getArgValue(h, ctx, args, "0")
+              val v_2 = getArgValue(h, ctx, args, "1")
+              val (b_1, es_1) = TizenHelper.instanceOf(h, v_1, Value(BuiltinDate.ProtoLoc))
+              val es_2 =
+                if (b_1._1._3 <= F && v_1._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_3 =
+                if (v_2._1._4 </ NumTop && v_2._1._5 </ StrTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              (h, es_1 ++ es_2 ++ es_3)
+            case UIntSingle(n) if n == 3 =>
+              val v_1 = getArgValue(h, ctx, args, "0")
+              val v_2 = getArgValue(h, ctx, args, "1")
+              val v_3 = getArgValue(h, ctx, args, "2")
+              val (b_1, es_1) = TizenHelper.instanceOf(h, v_1, Value(BuiltinDate.ProtoLoc))
+              val es_2 =
+                if (b_1._1._3 <= F && v_1._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_3 =
+                if (v_2._1._4 </ NumTop && v_2._1._5 </ StrTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_4 =
+                if (v_3._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              (h, es_1 ++ es_2 ++ es_3 ++ es_4)
+            case UIntSingle(n) if n == 4 =>
+              val v_1 = getArgValue(h, ctx, args, "0")
+              val v_2 = getArgValue(h, ctx, args, "1")
+              val v_3 = getArgValue(h, ctx, args, "2")
+              val v_4 = getArgValue(h, ctx, args, "3")
+              val (b_1, es_1) = TizenHelper.instanceOf(h, v_1, Value(BuiltinDate.ProtoLoc))
+              val es_2 =
+                if (b_1._1._3 <= F && v_1._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_3 =
+                if (v_2._1._4 </ NumTop && v_2._1._5 </ StrTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_4 =
+                if (v_3._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_5 =
+                if (v_4._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              (h, es_1 ++ es_2 ++ es_3 ++ es_4 ++ es_5)
+            case UIntSingle(n) if n == 5 =>
+              val v_1 = getArgValue(h, ctx, args, "0")
+              val v_2 = getArgValue(h, ctx, args, "1")
+              val v_3 = getArgValue(h, ctx, args, "2")
+              val v_4 = getArgValue(h, ctx, args, "3")
+              val v_5 = getArgValue(h, ctx, args, "4")
+              val (b_1, es_1) = TizenHelper.instanceOf(h, v_1, Value(BuiltinDate.ProtoLoc))
+              val es_2 =
+                if (b_1._1._3 <= F && v_1._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_3 =
+                if (v_2._1._4 </ NumTop && v_2._1._5 </ StrTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_4 =
+                if (v_3._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_5 =
+                if (v_4._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_6 =
+                if (v_5._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              (h, es_1 ++ es_2 ++ es_3 ++ es_4 ++ es_5 ++ es_6)
+            case UIntSingle(n) if n == 6 =>
+              val v_1 = getArgValue(h, ctx, args, "0")
+              val v_2 = getArgValue(h, ctx, args, "1")
+              val v_3 = getArgValue(h, ctx, args, "2")
+              val v_4 = getArgValue(h, ctx, args, "3")
+              val v_5 = getArgValue(h, ctx, args, "4")
+              val v_6 = getArgValue(h, ctx, args, "5")
+              val (b_1, es_1) = TizenHelper.instanceOf(h, v_1, Value(BuiltinDate.ProtoLoc))
+              val es_2 =
+                if (b_1._1._3 <= F && v_1._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_3 =
+                if (v_2._1._4 </ NumTop && v_2._1._5 </ StrTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_4 =
+                if (v_3._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_5 =
+                if (v_4._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_6 =
+                if (v_5._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_7 =
+                if (v_6._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              (h, es_1 ++ es_2 ++ es_3 ++ es_4 ++ es_5 ++ es_6 ++ es_7)
+            case UIntSingle(n) if n == 7 =>
+              val v_1 = getArgValue(h, ctx, args, "0")
+              val v_2 = getArgValue(h, ctx, args, "1")
+              val v_3 = getArgValue(h, ctx, args, "2")
+              val v_4 = getArgValue(h, ctx, args, "3")
+              val v_5 = getArgValue(h, ctx, args, "4")
+              val v_6 = getArgValue(h, ctx, args, "5")
+              val v_7 = getArgValue(h, ctx, args, "6")
+              val (b_1, es_1) = TizenHelper.instanceOf(h, v_1, Value(BuiltinDate.ProtoLoc))
+              val es_2 =
+                if (b_1._1._3 <= F && v_1._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_3 =
+                if (v_2._1._4 </ NumTop && v_2._1._5 </ StrTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_4 =
+                if (v_3._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_5 =
+                if (v_4._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_6 =
+                if (v_5._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_7 =
+                if (v_6._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_8 =
+                if (v_7._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              (h, es_1 ++ es_2 ++ es_3 ++ es_4 ++ es_5 ++ es_6 ++ es_7 ++ es_8)
+            case UIntSingle(n) if n >= 8 =>
+              val v_1 = getArgValue(h, ctx, args, "0")
+              val v_2 = getArgValue(h, ctx, args, "1")
+              val v_3 = getArgValue(h, ctx, args, "2")
+              val v_4 = getArgValue(h, ctx, args, "3")
+              val v_5 = getArgValue(h, ctx, args, "4")
+              val v_6 = getArgValue(h, ctx, args, "5")
+              val v_7 = getArgValue(h, ctx, args, "6")
+              val v_8 = getArgValue(h, ctx, args, "7")
+              val (b_1, es_1) = TizenHelper.instanceOf(h, v_1, Value(BuiltinDate.ProtoLoc))
+              val es_2 =
+                if (b_1._1._3 <= F && v_1._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_3 =
+                if (v_2._1._4 </ NumTop && v_2._1._5 </ StrTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_4 =
+                if (v_3._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_5 =
+                if (v_4._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_6 =
+                if (v_5._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_7 =
+                if (v_6._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_8 =
+                if (v_7._1._4 </ NumTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val es_9 =
+                if (v_8._1._5 </ StrTop)
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              (h, es_1 ++ es_2 ++ es_3 ++ es_4 ++ es_5 ++ es_6 ++ es_7 ++ es_8 ++ es_9)
+            case _ =>
+              (HeapBot, TizenHelper.TizenExceptionBot)
+          }
           val o_new = ObjEmpty.
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENTZDate.loc_proto), F, F, F))).
-            update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop)))
-          val h_2 = h_1.update(l_r1, o_new)
-
-          //val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es)
-          ((Helper.ReturnStore(h_2, Value(l_r1)), ctx_1), (he, ctxe))
+            update("@extensible", PropValue(T))
+          val h_2 = lset_this.foldLeft(h_1)((_h, l) => _h.update(l, o_new))
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es_1)
+          ((Helper.ReturnStore(h_2, Value(lset_this)), ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.TZDate.getDate" -> (
@@ -252,6 +449,17 @@ object TIZENTZDate extends Tizen {
       ("tizen.TZDate.getSeconds" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           ((Helper.ReturnStore(h, Value(NumTop)), ctx), (he, ctxe))
+        }
+        )),
+      ("tizen.TZDate.setSeconds" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val v = getArgValue(h, ctx, args, "0")
+          val es =
+            if (v._1._4 <= NumBot)
+              Set[WebAPIException](TypeMismatchError)
+            else TizenHelper.TizenExceptionBot
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es)
+          ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.TZDate.getUTCDate" -> (
@@ -384,22 +592,24 @@ object TIZENTZDate extends Tizen {
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
           val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es)
-          ((Helper.ReturnStore(h, Value(loc_tzdate)), ctx), (he + h_e, ctxe + ctx_e))
+          ((Helper.ReturnStore(h, Value(TIZENtime.loc_tzdate)), ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.TZDate.toLocalTimezone" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((Helper.ReturnStore(h, Value(loc_tzdate)), ctx), (he, ctxe))
+          ((Helper.ReturnStore(h, Value(TIZENtime.loc_tzdate)), ctx), (he, ctxe))
         }
         )),
       ("tizen.TZDate.toUTC" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((Helper.ReturnStore(h, Value(loc_tzdate)), ctx), (he, ctxe))
+          ((Helper.ReturnStore(h, Value(TIZENtime.loc_tzdate)), ctx), (he, ctxe))
         }
         )),
-/*      ("tizen.TZDate.difference" -> (
-
-        )),*/
+      ("tizen.TZDate.difference" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          ((Helper.ReturnStore(h, Value(TIZENtime.loc_timeduration)), ctx), (he, ctxe))
+        }
+        )),
       ("tizen.TZDate.equalsTo" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val v = getArgValue(h, ctx, args, "0")
@@ -445,7 +655,7 @@ object TIZENTZDate extends Tizen {
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
           val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1)
-          ((Helper.ReturnStore(h, Value(loc_tzdate)), ctx), (he + h_e, ctxe + ctx_e))
+          ((Helper.ReturnStore(h, Value(TIZENtime.loc_tzdate)), ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.TZDate.toLocaleDateString" -> (
@@ -495,12 +705,12 @@ object TIZENTZDate extends Tizen {
         )),
       ("tizen.TZDate.getPreviousDSTTransition" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((Helper.ReturnStore(h, Value(PValue(NullTop), LocSet(loc_tzdate))), ctx), (he, ctxe))
+          ((Helper.ReturnStore(h, Value(PValue(NullTop), LocSet(TIZENtime.loc_tzdate))), ctx), (he, ctxe))
         }
         )),
       ("tizen.TZDate.getNextDSTTransition" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((Helper.ReturnStore(h, Value(PValue(NullTop), LocSet(loc_tzdate))), ctx), (he, ctxe))
+          ((Helper.ReturnStore(h, Value(PValue(NullTop), LocSet(TIZENtime.loc_tzdate))), ctx), (he, ctxe))
         }
         ))
     )

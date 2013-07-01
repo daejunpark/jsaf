@@ -10,6 +10,7 @@
 package kr.ac.kaist.jsaf.bug_detector
 
 import scala.collection.mutable.{HashMap => MHashMap}
+import scala.collection.mutable.{HashSet => MHashSet}
 import kr.ac.kaist.jsaf.bug_detector._
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
@@ -33,6 +34,7 @@ class FinalDetect(bugDetector: BugDetector) {
   val shadowings    = bugDetector.shadowings
   val semantics     = bugDetector.semantics
   val bugStorage    = bugDetector.bugStorage
+  val bugOption     = bugDetector.bugOption
   val libMode       = bugDetector.libMode
 
 
@@ -76,6 +78,14 @@ class FinalDetect(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////
 
   def conditionalBranchCheck(): Unit = {
+    // Insert left CFGAsserts
+    bugDetector.traverseInsts((node, inst) => {
+      inst match {
+        case inst: CFGAssert => bugStorage.insertConditionMap(node, inst, BoolBot, false)
+        case _ =>
+      }
+    })
+
     // Remap ASTExpr to ASTStmt
     bugDetector.traverseInsts((node, inst) => {
       // Get CFGInfo
@@ -126,8 +136,13 @@ class FinalDetect(bugDetector: BugDetector) {
           }
 
           // Check whether the node is leaf or not
-          val isLeaf = !cfg.getSucc(node).exists(succNode => getAssertInst(succNode) != null)
+          val level1Succ = new MHashSet[Node] ++ cfg.getAllSucc(node)
+          val level2Succ = new MHashSet[Node]
+          for(node <- level1Succ) level2Succ++= (cfg.getAllSucc(node))
+          val isLeaf = !(level1Succ ++ level2Succ).exists(succNode => getAssertInst(succNode) != null)
           //System.out.println(assert + " = " + result + ", isLeaf = " + isLeaf)
+          //System.out.println(node + "'s level1Succ = " + level1Succ)
+          //System.out.println(node + "'s level2Succ = " + (level2Succ -- level1Succ))
 
           if(isLeaf) {
             var rootAssertInst: CFGAssert = null
@@ -318,7 +333,7 @@ class FinalDetect(bugDetector: BugDetector) {
       // function name, expected maximum argument length
       val funcName = cfg.getFuncName(fid)
       val funcArgList = cfg.getArgVars(fid)
-      val (funcArgLen, isBuildinFunc) = ModelManager.getFIdMap("Builtin").get(fid) match {
+      val (funcArgLen, isBuiltinFunc) = ModelManager.getFIdMap("Builtin").get(fid) match {
         case Some(builtinFuncName) => (argSizeMap(builtinFuncName)._2, true)
         case None => (funcArgList.length, false)
       }
@@ -339,6 +354,9 @@ class FinalDetect(bugDetector: BugDetector) {
       }
       //println("  maximum argument length = " + maxArgObjLength)
 
+      //println("funcName = " + funcName)
+      //println("funcArgList.length = " + funcArgList.length)
+      //println("maxArgObjLength = " + maxArgObjLength)
       // for each argument index 0, 1, 2, ...
       for(i <- 0 until maxArgObjLength) {
         var joinedValue: Value = ValueBot
@@ -349,11 +367,12 @@ class FinalDetect(bugDetector: BugDetector) {
             //println("  argObj[" + i + "] = " + propValue.objval.value)
           }
         }
-        val joinedValueTypeCount = joinedValue.pvalue.typeCount
-        val isBug = (joinedValueTypeCount > 1 || joinedValueTypeCount == 1 && joinedValue.locset.size > 0)
+        var joinedValueTypeCount = joinedValue.pvalue.typeCount
+        if(!bugOption.VaryingTypeArguments_CheckUndefined && joinedValueTypeCount > 1 && joinedValue.pvalue.undefval != UndefBot) joinedValueTypeCount-= 1
+        val isBug: Boolean = (joinedValueTypeCount > 1 || joinedValueTypeCount == 1 && joinedValue.locset.size > 0)
         if(isBug) {
           var typeKinds: String = joinedValue.typeKinds
-          if(isBuildinFunc) {
+          if(isBuiltinFunc || i >= funcArgList.length) {
             // Built-in function
             val ordinal = i + 1 match {
               case 1 => "1st"

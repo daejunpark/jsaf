@@ -10,12 +10,24 @@
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
-import kr.ac.kaist.jsaf.analysis.typing.domain._
+import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing._
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -30,16 +42,25 @@ object TIZENbluetooth extends Tizen {
   val loc_devMinor = newPredefLoc(name + "DevMinor")
   val loc_devService = newPredefLoc(name + "DevService")
 
+  val loc_btadapter: Loc = newPreDefLoc("BluetoothAdapterObj", Old)
+  val loc_btdevice: Loc = newPreDefLoc("BluetoothDevice", Old)
+  val loc_btdevicearr: Loc = newPreDefLoc("BluetoothDeviceArr", Old)
+  val loc_btclass: Loc = newPreDefLoc("BluetoothClass", Old)
+  val loc_btservhandler: Loc = newPreDefLoc("BluetoothServiceHandler", Old)
+  val loc_btsocket: Loc = newPreDefLoc("BluetoothSocket", Old)
+  val loc_strarr: Loc = newPreDefLoc("bluetoothStrArr", Old)
+  val loc_shortarr: Loc = newPreDefLoc("bluetoothShortArr", Old)
+
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
-    (loc_obj, prop_obj), (loc_proto, prop_proto)
+    (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_btadapter, prop_btadapter_ins), (loc_btdevice, prop_btdevice_ins),
+    (loc_btdevicearr, prop_btdevicearr_ins), (loc_btclass, prop_btclass_ins), (loc_strarr, prop_strarr_ins),
+    (loc_shortarr, prop_shortarr_ins), (loc_btservhandler, prop_btservhandler_ins), (loc_btsocket, prop_btsocket_ins)
   )
   /* constructor or object*/
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
     ("@extensible",                 AbsConstValue(PropValue(T))),
-    ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
-    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
     ("deviceMajor", AbsConstValue(PropValue(ObjectValue(Value(loc_devMajor), F, F, F)))),
     ("deviceMinor", AbsConstValue(PropValue(ObjectValue(Value(loc_devMinor), F, F, F)))),
     ("deviceService", AbsConstValue(PropValue(ObjectValue(Value(loc_devService), F, F, F))))
@@ -49,15 +70,94 @@ object TIZENbluetooth extends Tizen {
   private val prop_proto: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("CallbackObject")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
-    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
+    ("@extensible", AbsConstValue(PropValue(T))),
     ("getDefaultAdapter", AbsBuiltinFunc("tizen.bluetooth.getDefaultAdapter",0))
+  )
+
+  private val prop_btadapter_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENBluetoothAdapter.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("name", AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("address", AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("powered", AbsConstValue(PropValue(ObjectValue(Value(BoolTop), F, T, T)))),
+    ("visible", AbsConstValue(PropValue(ObjectValue(Value(BoolTop), F, T, T))))
+  )
+
+  private val prop_btdevice_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENBluetoothDevice.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("name", AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("address", AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("deviceClass", AbsConstValue(PropValue(ObjectValue(Value(loc_btclass), F, T, T)))),
+    ("isBonded", AbsConstValue(PropValue(ObjectValue(Value(BoolTop), F, T, T)))),
+    ("isTrusted", AbsConstValue(PropValue(ObjectValue(Value(BoolTop), F, T, T)))),
+    ("isConnected", AbsConstValue(PropValue(ObjectValue(Value(BoolTop), F, T, T)))),
+    ("uuids", AbsConstValue(PropValue(ObjectValue(Value(loc_strarr), F, T, T))))
+  )
+
+  private val prop_btdevicearr_ins: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Array")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(BuiltinArray.ProtoLoc, F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(T))),
+    ("length", AbsConstValue(PropValue(ObjectValue(UInt, T, F, F)))),
+    ("@default_number", AbsConstValue(PropValue(ObjectValue(Value(loc_btdevice), T, T, T))))
+  )
+
+  private val prop_btclass_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENBluetoothClass.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("major", AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("minor", AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("services", AbsConstValue(PropValue(ObjectValue(Value(loc_shortarr), F, T, T))))
+  )
+
+  private val prop_btservhandler_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENBluetoothServiceHandler.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("uuid", AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("name", AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("isConnected", AbsConstValue(PropValue(ObjectValue(Value(BoolTop), F, T, T)))),
+    ("onconnect", AbsConstValue(PropValue(ObjectValue(Value(NullTop), F, T, T))))
+  )
+
+  private val prop_btsocket_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENBluetoothSocket.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("uuid", AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("state", AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("CLOSED") + AbsString.alpha("OPEN")), F, T, T)))),
+    ("peer", AbsConstValue(PropValue(ObjectValue(Value(loc_btdevice), F, T, T)))),
+    ("onmessage", AbsConstValue(PropValue(ObjectValue(Value(NullTop), T, T, T)))),
+    ("onclose", AbsConstValue(PropValue(ObjectValue(Value(NullTop), T, T, T)))),
+    ("onerror", AbsConstValue(PropValue(ObjectValue(Value(NullTop), T, T, T))))
+  )
+
+  private val prop_strarr_ins: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Array")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(BuiltinArray.ProtoLoc, F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(T))),
+    ("length", AbsConstValue(PropValue(ObjectValue(UInt, T, F, F)))),
+    ("@default_number", AbsConstValue(PropValue(ObjectValue(Value(StrTop), T, T, T))))
+  )
+  private val prop_shortarr_ins: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Array")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(BuiltinArray.ProtoLoc, F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(T))),
+    ("length", AbsConstValue(PropValue(ObjectValue(UInt, T, F, F)))),
+    ("@default_number", AbsConstValue(PropValue(ObjectValue(Value(NumTop), T, T, T))))
   )
 
   override def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
       ("tizen.bluetooth.getDefaultAdapter" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((Helper.ReturnStore(h, Value(TIZENtizen.loc_bluetooth)),ctx), (he, ctxe))
+          val est = Set[WebAPIException](SecurityError, NotSupportedError, UnknownError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((Helper.ReturnStore(h, Value(loc_btadapter)),ctx), (he + h_e, ctxe + ctx_e))
         }
         ))
     )
@@ -83,9 +183,7 @@ object TIZENBluetoothClassDeviceMajor extends Tizen {
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
-    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
-    ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
-    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
+    ("@extensible", AbsConstValue(PropValue(T))),
     ("MISC", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(0x00), F, T, T)))),
     ("COMPUTER", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(0x01), F, T, T)))),
     ("PHONE", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(0x02), F, T, T)))),
@@ -103,7 +201,7 @@ object TIZENBluetoothClassDeviceMajor extends Tizen {
   private val prop_proto: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("CallbackObject")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
-    ("@extensible", AbsConstValue(PropValue(BoolTrue)))
+    ("@extensible", AbsConstValue(PropValue(T)))
   )
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
@@ -135,9 +233,7 @@ object TIZENBluetoothClassDeviceMinor extends Tizen {
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
-    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
-    ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
-    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
+    ("@extensible", AbsConstValue(PropValue(T))),
     ("COPUTER_UNCATEGORIZED", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(0x00), F, T, T)))),
     ("COPUTER_DESKTOP", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(0x01), F, T, T)))),
     ("COPUTER_SERVER", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(0x02), F, T, T)))),
@@ -216,7 +312,7 @@ object TIZENBluetoothClassDeviceMinor extends Tizen {
   private val prop_proto: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("CallbackObject")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
-    ("@extensible", AbsConstValue(PropValue(BoolTrue)))
+    ("@extensible", AbsConstValue(PropValue(T)))
   )
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
@@ -248,9 +344,7 @@ object TIZENBluetoothClassDeviceService extends Tizen {
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
-    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
-    ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
-    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
+    ("@extensible", AbsConstValue(PropValue(T))),
     ("LIMITED_DISCOVERABILITY", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(0x0001), F, T, T)))),
     ("POSITIONING", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(0x0008), F, T, T)))),
     ("NETWORKING", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(0x0010), F, T, T)))),
@@ -266,7 +360,7 @@ object TIZENBluetoothClassDeviceService extends Tizen {
   private val prop_proto: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("CallbackObject")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
-    ("@extensible", AbsConstValue(PropValue(BoolTrue)))
+    ("@extensible", AbsConstValue(PropValue(T)))
   )
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(

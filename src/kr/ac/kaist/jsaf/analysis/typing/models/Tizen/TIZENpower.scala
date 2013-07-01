@@ -42,9 +42,7 @@ object TIZENpower extends Tizen {
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
-    ("@extensible",                 AbsConstValue(PropValue(T))),
-    ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
-    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop))))
+    ("@extensible",                 AbsConstValue(PropValue(T)))
   )
 
   /* prototype */
@@ -76,17 +74,17 @@ object TIZENpower extends Tizen {
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
           val es_1 =
-            if (v_1._1._5 </ AbsString.alpha("SCREEN") && v_1._1._5 </ AbsString.alpha("CPU"))
+            if (v_1._1._5 != AbsString.alpha("SCREEN") && v_1._1._5 != AbsString.alpha("CPU"))
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
           val es_2 =
-            if (v_2._1._5 </ AbsString.alpha("SCREEN_OFF") && v_1._1._5 </ AbsString.alpha("SCREEN_DIM") &&
-              v_1._1._5 </ AbsString.alpha("SCREEN_NORMAL") && v_1._1._5 </ AbsString.alpha("SCREEN_BRIGHT") &&
-              v_1._1._5 </ AbsString.alpha("CPU_AWAKE"))
+            if (v_2._1._5 != AbsString.alpha("SCREEN_OFF") && v_1._1._5 != AbsString.alpha("SCREEN_DIM") &&
+              v_1._1._5 != AbsString.alpha("SCREEN_NORMAL") && v_1._1._5 != AbsString.alpha("SCREEN_BRIGHT") &&
+              v_1._1._5 != AbsString.alpha("CPU_AWAKE"))
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
-
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2)
+          val est = Set[WebAPIException](SecurityError, UnknownError, InvalidValuesError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2 ++ est)
           ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
@@ -99,10 +97,11 @@ object TIZENpower extends Tizen {
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
           val es_1 =
-            if (v._1._5 </ AbsString.alpha("SCREEN") && v._1._5 </ AbsString.alpha("CPU"))
+            if (v._1._5 != AbsString.alpha("SCREEN") && v._1._5 != AbsString.alpha("CPU"))
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1)
+          val est = Set[WebAPIException](UnknownError, InvalidValuesError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ est)
           ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
@@ -129,19 +128,24 @@ object TIZENpower extends Tizen {
             update("0", PropValue(ObjectValue(Value(StrTop), T, T, T))).
             update("1", PropValue(ObjectValue(Value(StrTop), T, T, T)))
           val h_2 = h_1.update(l_r1, o_arr)
-          /*val h_3 = TizenHelper.addCallbackHandler(h_2, AbsString.alpha("ScreenStateChangeCB"), v, Value(l_r1))*/
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1)
-          ((h_2, ctx_1), (he + h_e, ctxe + ctx_e))
+          val h_3 = TizenHelper.addCallbackHandler(h_2, AbsString.alpha("ScreenStateChangeCB"), Value(v._2), Value(l_r1))
+          val est = Set[WebAPIException](UnknownError, InvalidValuesError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ est)
+          ((h_3, ctx_1), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.power.unsetScreenStateChangeListener" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((h, ctx), (he, ctxe))
+          val est = Set[WebAPIException](UnknownError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.power.getScreenBrightness" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((Helper.ReturnStore(h, Value(NumTop)), ctx), (he, ctxe))
+          val est = Set[WebAPIException](UnknownError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((Helper.ReturnStore(h, Value(NumTop)), ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.power.setScreenBrightness" -> (
@@ -156,28 +160,37 @@ object TIZENpower extends Tizen {
             if (v._1._4 </ NumTop)
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1)
+          val est = Set[WebAPIException](UnknownError, NotSupportedError, InvalidValuesError, SecurityError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ est)
           ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.power.isScreenOn" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((Helper.ReturnStore(h, Value(BoolTop)), ctx), (he, ctxe))
+          val est = Set[WebAPIException](UnknownError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((Helper.ReturnStore(h, Value(BoolTop)), ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.power.restoreScreenBrightness" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((h, ctx), (he, ctxe))
+          val est = Set[WebAPIException](UnknownError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.power.turnScreenOn" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((h, ctx), (he, ctxe))
+          val est = Set[WebAPIException](UnknownError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.power.turnScreenOff" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((h, ctx), (he, ctxe))
+          val est = Set[WebAPIException](UnknownError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         ))
     )

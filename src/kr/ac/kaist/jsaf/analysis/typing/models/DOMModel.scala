@@ -19,6 +19,7 @@ import kr.ac.kaist.jsaf.analysis.typing.models.DOMEvent._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5._
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU, IRFactory}
+import kr.ac.kaist.jsaf.analysis.typing.models.jquery.JQueryHelper
 
 
 object DOMModel {
@@ -184,7 +185,17 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
         (f ++ lset_static, t)
 
       case _ =>
-        val (f,t) = (fun_table(name)._1._2._2 , target_table(name)._1._2._2)
+        val (f,t) =
+          if (Config.jqMode) {
+            // delegate
+            val selector_table = h(EventSelectorTableLoc)
+            val s_selector = selector_table(name)._1._2._1._5
+            val lset_target = DOMHelper.querySelectorAll(h, s_selector)
+            (fun_table(name)._1._2._2 , lset_target)
+          }
+          else
+            (fun_table(name)._1._2._2 , target_table(name)._1._2._2)
+
         val lset_static =
           if (name == "#TIME")
             LocSetBot
@@ -195,7 +206,17 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
               else lset
             )
           }
-        (f ++ lset_static, t)
+        val (f_onload, t_onload) =
+          if (name == "#LOAD") {
+            val lset_window = Helper.Proto(h, GlobalLoc, AbsString.alpha("window"))._2
+            val lset_onload = lset_window.foldLeft(LocSetBot)((lset, l) =>
+              lset ++ Helper.Proto(h, l, AbsString.alpha("onload"))._2
+            )
+            (lset_onload, lset_window)
+          }
+          else
+            (LocSetBot, LocSetBot)
+        (f ++ lset_static ++ f_onload, t ++ t_onload)
     }
     // event call
     val l_r = addrToLoc(addr1, Recent)

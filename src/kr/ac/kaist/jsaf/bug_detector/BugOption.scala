@@ -66,6 +66,8 @@ class BugOption(defaultForUser: Boolean = true) {
   var PrimitiveToObject_PrimitiveMustBeConvertedDefinitely      = false
   var PrimitiveToObject_CheckEvenThoughPrimitiveIsString        = false
 
+  var VaryingTypeArguments_CheckUndefined                       = false
+
   ////////////////////////////////////////////////////////////////////////////////
   // Constructor
   ////////////////////////////////////////////////////////////////////////////////
@@ -145,6 +147,9 @@ class BugOption(defaultForUser: Boolean = true) {
     PrimitiveToObject_PrimitiveMustBeConvertedInEveryState = false
     PrimitiveToObject_PrimitiveMustBeConvertedDefinitely = false
     PrimitiveToObject_CheckEvenThoughPrimitiveIsString = false
+
+    // VaryingTypeArguments
+    VaryingTypeArguments_CheckUndefined = false
   }
 
   // For SAFE developer
@@ -211,5 +216,8 @@ class BugOption(defaultForUser: Boolean = true) {
     PrimitiveToObject_PrimitiveMustBeConvertedInEveryState = true
     PrimitiveToObject_PrimitiveMustBeConvertedDefinitely = true
     PrimitiveToObject_CheckEvenThoughPrimitiveIsString = true
+
+    // VaryingTypeArguments
+    VaryingTypeArguments_CheckUndefined = true
   }
 }

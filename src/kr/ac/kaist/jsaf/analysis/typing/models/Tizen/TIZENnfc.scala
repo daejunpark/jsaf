@@ -9,11 +9,26 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.CFGExpr
-import kr.ac.kaist.jsaf.analysis.typing.domain._
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
+import kr.ac.kaist.jsaf.analysis.typing._
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.domain.Context
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 
 object TIZENnfc extends Tizen {
   private val name = "nfc"
@@ -21,16 +36,24 @@ object TIZENnfc extends Tizen {
   val loc_obj = TIZENtizen.loc_nfc
   val loc_proto = newPredefLoc(name + "Proto")
 
+  val loc_nfcadapter: Loc = newPreDefLoc("NFCAdapter", Old)
+  val loc_nfctag: Loc = newPreDefLoc("NFCTag", Old)
+  val loc_nfcpeer: Loc = newPreDefLoc("NFCPeer", Old)
+  val loc_ndefmsg: Loc = newPreDefLoc("NDEFMessage", Old)
+  val loc_ndefrecord: Loc = newPreDefLoc("NDEFRecord", Old)
+  val loc_ndefrecordarr: Loc = newPreDefLoc("NDEFRecordArr", Old)
+  val loc_bytearr: Loc = newPreDefLoc("ByteArr", Old)
+
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
-    (loc_obj, prop_obj), (loc_proto, prop_proto)
+    (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_nfcadapter, prop_nfcadapter_ins), (loc_nfctag, prop_nfctag_ins),
+    (loc_nfcpeer, prop_nfcpeer_ins), (loc_ndefmsg, prop_ndefmsg_ins), (loc_ndefrecord, prop_ndefrecord_ins),
+    (loc_ndefrecordarr, prop_ndefrecordarr_ins), (loc_bytearr, prop_bytearr_ins)
   )
   /* constructor or object*/
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
     ("@extensible",                 AbsConstValue(PropValue(T))),
-    ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
-    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
     ("NFC_RECORD_TNF_EMPTY", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(0), F, T, T)))),
     ("NFC_RECORD_TNF_WELL_KNOWN", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(1), F, T, T)))),
     ("NFC_RECORD_TNF_MIME_MEDIA", AbsConstValue(PropValue(ObjectValue(AbsNumber.alpha(2), F, T, T)))),
@@ -44,13 +67,84 @@ object TIZENnfc extends Tizen {
   private val prop_proto: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("CallbackObject")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
-    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
-    ("getDefaultAdapter", AbsBuiltinFunc("TIZENtizen.TIZENnfc.getDefaultAdapter",0))
+    ("@extensible", AbsConstValue(PropValue(T))),
+    ("getDefaultAdapter", AbsBuiltinFunc("tizen.nfc.getDefaultAdapter",0))
   )
+
+  private val prop_nfcadapter_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENNFCAdapter.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("powered", AbsConstValue(PropValue(ObjectValue(Value(BoolTop), F, T, T))))
+  )
+
+  private val prop_nfctag_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENNFCTag.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("type", AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("GENERIC_TARGET") + AbsString.alpha("ISO14443_A") +
+      AbsString.alpha("ISO14443_4A") + AbsString.alpha("ISO14443_3A") + AbsString.alpha("MIFARE_MINI") +
+      AbsString.alpha("MIFARE_1K") + AbsString.alpha("MIFARE_4K") + AbsString.alpha("MIFARE_ULTRA") +
+      AbsString.alpha("MIFARE_DESFIRE") + AbsString.alpha("ISO14443_B") + AbsString.alpha("ISO14443_4B") +
+      AbsString.alpha("ISO14443_BPRIME") + AbsString.alpha("FELICA") + AbsString.alpha("JEWEL") +
+      AbsString.alpha("ISO15693") + AbsString.alpha("UNKNOWN_TARGET")), F, T, T)))),
+    ("isSupportedNDEF", AbsConstValue(PropValue(ObjectValue(Value(BoolTop), F, T, T)))),
+    ("ndefSize", AbsConstValue(PropValue(ObjectValue(Value(NumTop), F, T, T)))),
+    ("properties", AbsConstValue(PropValue(ObjectValue(Value(UndefTop), F, T, T)))),
+    ("isConnected", AbsConstValue(PropValue(ObjectValue(Value(BoolTop), F, T, T))))
+  )
+
+  private val prop_nfcpeer_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENNFCPeer.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("isConnected", AbsConstValue(PropValue(ObjectValue(Value(BoolTop), F, T, T))))
+  )
+
+  private val prop_ndefmsg_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENNDEFMessage.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("recordCount", AbsConstValue(PropValue(ObjectValue(Value(UInt), F, T, T)))),
+    ("records", AbsConstValue(PropValue(ObjectValue(Value(loc_ndefrecordarr), T, T, T))))
+  )
+
+  private val prop_ndefrecord_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENNDEFRecord.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("tnf", AbsConstValue(PropValue(ObjectValue(Value(NumTop), F, T, T)))),
+    ("type", AbsConstValue(PropValue(ObjectValue(Value(loc_bytearr), F, T, T)))),
+    ("id", AbsConstValue(PropValue(ObjectValue(Value(loc_bytearr), F, T, T)))),
+    ("payload", AbsConstValue(PropValue(ObjectValue(Value(loc_bytearr), F, T, T))))
+  )
+
+  private val prop_ndefrecordarr_ins: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Array")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(BuiltinArray.ProtoLoc, F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(T))),
+    ("length", AbsConstValue(PropValue(ObjectValue(UInt, T, F, F)))),
+    ("@default_number", AbsConstValue(PropValue(ObjectValue(Value(loc_ndefrecord), T, T, T))))
+  )
+
+  private val prop_bytearr_ins: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("Array")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(BuiltinArray.ProtoLoc, F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(T))),
+    ("length", AbsConstValue(PropValue(ObjectValue(UInt, T, F, F)))),
+    ("@default_number", AbsConstValue(PropValue(ObjectValue(Value(UInt), T, T, T))))
+  )
+
 
   override def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
-/*      ("TIZENtizen.TIZENnfc.getDefaultAdapter" -> ())*/
+      ("tizen.nfc.getDefaultAdapter" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val est = Set[WebAPIException](SecurityError, UnknownError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((Helper.ReturnStore(h, Value(loc_nfcadapter)),ctx), (he + h_e, ctxe + ctx_e))
+        }
+        ))
     )
   }
 

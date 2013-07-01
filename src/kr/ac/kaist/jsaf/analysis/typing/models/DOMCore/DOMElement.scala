@@ -72,7 +72,9 @@ object DOMElement extends DOM {
     ("hasAttributeNS",         AbsBuiltinFunc("DOMElement.hasAttributeNS", 2)),
     ("setIdAttribute",         AbsBuiltinFunc("DOMElement.setIdAttribute", 2)),
     ("setIdAttributeNS",       AbsBuiltinFunc("DOMElement.setIdAttributeNS", 3)),
-    ("setIdAttributeNode",     AbsBuiltinFunc("DOMElement.setIdAttributeNode", 2))
+    ("setIdAttributeNode",     AbsBuiltinFunc("DOMElement.setIdAttributeNode", 2)),
+    ("querSelector",           AbsBuiltinFunc("DOMDocument.querSelector", 0)),
+    ("querSelectorAll",        AbsBuiltinFunc("DOMDocument.querSelectorAll", 0))
   )
 
   /* global */
@@ -90,29 +92,11 @@ object DOMElement extends DOM {
       ("DOMElement.getAttribute" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          /* arguments */
           val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
-          if(attr_name </ StrBot) {
-            val attr_val = lset_this.foldLeft(ValueBot)((v, l_this) => {
-              // read the list of attributes in the current node
-              val attributes_lset = Helper.Proto(h, l_this, AbsString.alpha("attributes"))._2
-              val attr_val_1= attributes_lset.foldLeft(ValueBot)((v, l_attributes) => {
-                val attr_val_2 = Helper.HasOwnProperty(h, l_attributes, attr_name) match {
-                  // in case that the current node does not have an attribute with the given name
-                  case BoolFalse => Value(NullTop)
-                  // in case that the current node may have an attribute with the given name
-                  case _ =>
-                    val attr_lset = Helper.Proto(h, l_attributes, attr_name)._2
-                    attr_lset.foldLeft(ValueBot)((v, l_attr) => {
-                      Helper.Proto(h, l_attr, AbsString.alpha("value")) + v
-                    })
-                }
-                v + attr_val_2
-              })
-              v + attr_val_1
-            })
-            ((Helper.ReturnStore(h, attr_val), ctx), (he, ctxe))
-          }
+          // get attribute
+          val v_ret = DOMHelper.getAttribute(h, lset_this, attr_name)
+          if(v_ret </ ValueBot)
+            ((Helper.ReturnStore(h, v_ret), ctx), (he, ctxe))
           else
             ((HeapBot, ContextBot), (he, ctxe))
         })),
@@ -144,42 +128,7 @@ object DOMElement extends DOM {
 
           /* imprecise semantics : no exception handling */
           if(attr_name </ StrBot || attr_val </StrBot) {
-            val name = PropValue(ObjectValue(attr_name, F, T, T))
-            val value = PropValue(ObjectValue(attr_val, T, T, T))
-            // create a new Attr node object
-            val attr_obj_list = DOMAttr.default_getInsList(name, value, PropValue(ObjectValue(l_child1, F, T, T)), PropValue(ObjectValue(l_text, F, T, T)))
-            val attr_obj = attr_obj_list.foldLeft(ObjEmpty) ((obj, v) => obj.update(AbsString.alpha(v._1), v._2))
-            // create a new text node object
-            val text_obj_list = DOMText.default_getInsList(value, PropValue(ObjectValue(l_attr, F, T, T)), PropValue(ObjectValue(l_child2, F, T, T)))
-            val text_obj = text_obj_list.foldLeft(ObjEmpty) ((obj, v) => obj.update(AbsString.alpha(v._1), v._2))
-
-            // objects for 'childNodes' of the Attr node
-            val child_obj_list1 = DOMNamedNodeMap.getInsList(1)
-            val child_obj1 = child_obj_list1.foldLeft(ObjEmpty.update(AbsString.alpha("0"), PropValue(ObjectValue(l_text, T, T, T))))((obj, v) =>
-              obj.update(AbsString.alpha(v._1), v._2))
-            // objects for 'childNodes' of the Text node
-            val child_obj_list2 = DOMNamedNodeMap.getInsList(0)
-            val child_obj2 = child_obj_list2.foldLeft(ObjEmpty)((obj, v) => obj.update(AbsString.alpha(v._1), v._2))
-
-            val h_5 = lset_this.foldLeft(h_4)((h_in, l_this) => {
-              // read the list of attributes in the current node
-              val attributes_lset = Helper.Proto(h_in, l_this, AbsString.alpha("attributes"))._2
-              attributes_lset.foldLeft(h_in)((h_in2, l_attributes) => {
-                val attributes_obj = h_in2(l_attributes)
-                val length_pval = attributes_obj("length")._1._1._1._1
-                // increate 'length' of 'attributes' by 1
-                val length_val = Helper.toNumber(length_pval) match {
-                  case UIntSingle(v) => UIntSingle(v+1)
-                  case _ => Helper.toNumber(length_pval)
-                }
-                val attributes_obj_new =
-                  attributes_obj.update(attr_name, PropValue(ObjectValue(l_attr, T, T, T))).
-                    update(Helper.toString(length_pval), PropValue(ObjectValue(l_attr, T, T, T))).
-                    update(AbsString.alpha("length"), PropValue(ObjectValue(length_val, T, T, T)))
-                // update heap
-                h_in2.update(l_attr, attr_obj).update(l_text, text_obj).update(l_attributes, attributes_obj_new).update(l_child1, child_obj1).update(l_child2, child_obj2)
-              })
-            })
+            val h_5 = DOMHelper.setAttribute(h_4, lset_this, l_attr, l_text, l_child1, l_child2, attr_name, attr_val)
             ((h_5, ctx_4), (he, ctxe))
           }
           else
@@ -268,11 +217,67 @@ object DOMElement extends DOM {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        }))
+        })),
       //case "DOMElement.hasAttributeNS" => ((h, ctx), (he, ctxe))
       //case "DOMElement.setIdAttribute" => ((h, ctx), (he, ctxe))
       //case "DOMElement.setIdAttributeNS" => ((h, ctx), (he, ctxe))
       //case "DOMElement.setIdAttributeNode" => ((h, ctx), (he, ctxe))
+      ("DOMElement.querySelector" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val list_addr = getAddrList(h, cfg)
+          val addr1 = list_addr(0)
+
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          /* arguments */
+          val s_selector = getArgValue(h, ctx, args, "0")._1._5
+          if (s_selector </ StrBot) {
+            val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+            // start here
+            val l_result = addrToLoc(addr1, Recent)
+            val lset_find = lset_this.foldLeft(LocSetBot)((ls, l) => ls ++ DOMHelper.querySelectorAll(h_1, l, s_selector))
+            val (h_ret, v_ret) =
+              if(lset_find.isEmpty)
+                (h_1, Value(NullTop))
+              else {
+                val o_result = Helper.NewObject(ObjProtoLoc)
+                  .update("0", PropValue(ObjectValue(Value(lset_find), T,T,T)))
+                  .update("length", PropValue(ObjectValue(AbsNumber.alpha(0), T,T,T)))
+                val h_2 = h_1.update(l_result, o_result)
+                (h_2, Value(lset_find))
+              }
+            ((Helper.ReturnStore(h_ret, v_ret), ctx_1), (he, ctxe))
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        })),
+      ("DOMElement.querySelectorAll" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val list_addr = getAddrList(h, cfg)
+          val addr1 = list_addr(0)
+
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          /* arguments */
+          val s_selector = getArgValue(h, ctx, args, "0")._1._5
+          if (s_selector </ StrBot) {
+            val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+            // start here
+            val l_result = addrToLoc(addr1, Recent)
+            val lset_find = lset_this.foldLeft(LocSetBot)((ls, l) => ls ++ DOMHelper.querySelectorAll(h_1, l, s_selector))
+            val (h_ret, v_ret) =
+              if(lset_find.isEmpty)
+                (h_1, Value(NullTop))
+              else {
+                val o_result = Helper.NewObject(ObjProtoLoc)
+                  .update(NumStr, PropValue(ObjectValue(Value(lset_find), T,T,T)))
+                  .update("length", PropValue(ObjectValue(Value(UInt), T,T,T)))
+                val h_2 = h_1.update(l_result, o_result)
+                (h_2, Value(lset_find))
+              }
+            ((Helper.ReturnStore(h_ret, v_ret), ctx_1), (he, ctxe))
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        }))
     )
   }
 
@@ -356,9 +361,28 @@ object DOMElement extends DOM {
             val child_obj2 = child_obj_list2.foldLeft(ObjEmpty)((obj, v) => obj.update(AbsString.alpha(v._1), v._2))
 
             val h_5 = lset_this.foldLeft(h_4)((h_in, l_this) => {
+              // update 'className' property if the value of the 'class' attribute would be changed
+              val thisobj = h_in(l_this)
+              val className = PreHelper.Proto(h_in, l_this, AbsString.alpha("className"))
+              val h_in1 = attr_name match {
+                case StrTop =>
+                  // join the old value and new value
+                  val thisobj_new = thisobj.update(AbsString.alpha("className"), value + PropValue(className))
+                  h_in.update(l_this, thisobj_new)
+                case OtherStr =>
+                  // join the old value and new value
+                  val thisobj_new = thisobj.update(AbsString.alpha("className"), value + PropValue(className))
+                  h_in.update(l_this, thisobj_new)
+                case OtherStrSingle(v) if v=="class" =>
+                  // update 'className' property with a new value
+                  val thisobj_new = thisobj.update(AbsString.alpha("className"), value)
+                  h_in.update(l_this, thisobj_new)
+                case _ => h_in
+              }
+
               // read the list of attributes in the current node
-              val attributes_lset = PreHelper.Proto(h_in, l_this, AbsString.alpha("attributes"))._2
-              attributes_lset.foldLeft(h_in)((h_in2, l_attributes) => {
+              val attributes_lset = PreHelper.Proto(h_in1, l_this, AbsString.alpha("attributes"))._2
+              attributes_lset.foldLeft(h_in1)((h_in2, l_attributes) => {
                 val attributes_obj = h_in2(l_attributes)
                 val length_pval = attributes_obj("length")._1._1._1._1
                 // increate 'length' of 'attributes' by 1
@@ -520,30 +544,30 @@ object DOMElement extends DOM {
             // create a new Attr node object
             val attr_obj_list = DOMAttr.default_getInsList(name, value, PropValue(ObjectValue(l_child1, F, T, T)), PropValue(ObjectValue(l_text, F, T, T)))
             val LP5 = attr_obj_list.foldLeft(LPBot)((lpset, v) =>
-              //lpset + (l_attr, v._1))
+            //lpset + (l_attr, v._1))
               lpset ++ set_addr.foldLeft(LPBot)((lp, a) => lp + (addrToLoc(cfg.getAPIAddress(a, 0),Recent), v._1)))
             // create a new text node object
             val text_obj_list = DOMText.default_getInsList(value, PropValue(ObjectValue(l_attr, F, T, T)), PropValue(ObjectValue(l_child2, F, T, T)))
             val LP6 = text_obj_list.foldLeft(LPBot)((lpset, v) =>
-              //lpset + (l_text, v._1))
+            //lpset + (l_text, v._1))
               lpset ++ set_addr.foldLeft(LPBot)((lp, a) => lp + (addrToLoc(cfg.getAPIAddress(a, 1),Recent), v._1)))
 
             // objects for 'childNodes' of the Attr node
             val child_obj_list1 = DOMNamedNodeMap.getInsList(1)
             val LP_child1 = set_addr.foldLeft(LPBot)((lp, a) => lp + (addrToLoc(cfg.getAPIAddress(a, 2),Recent), "0"))
             val LP7 = child_obj_list1.foldLeft(LP_child1)((lpset, v) =>
-              //lpset + (l_child1, v._1))
+            //lpset + (l_child1, v._1))
               lpset ++ set_addr.foldLeft(LPBot)((lp, a) => lp + (addrToLoc(cfg.getAPIAddress(a, 2),Recent), v._1)))
             // objects for 'childNodes' of the Text node
             val child_obj_list2 = DOMNamedNodeMap.getInsList(0)
             val LP8 = child_obj_list2.foldLeft(LPBot)((lpset, v) =>
-              //lpset + (l_child2, v._1))
+            //lpset + (l_child2, v._1))
               lpset ++ set_addr.foldLeft(LPBot)((lp, a) => lp + (addrToLoc(cfg.getAPIAddress(a, 3),Recent), v._1)))
 
             val LP9 = lset_this.foldLeft(LPBot)((lpset, l_this) => {
               // read the list of attributes in the current node
               val attributes_lset = Helper.Proto(h, l_this, AbsString.alpha("attributes"))._2
-              attributes_lset.foldLeft(lpset)((lpset2, l_attributes) => {
+              attributes_lset.foldLeft(lpset + (l_this, "className"))((lpset2, l_attributes) => {
                 val attributes_obj = h(l_attributes)
                 val length_pval = attributes_obj("length")._1._1._1._1
                 lpset2 ++ AccessHelper.absPair(h, l_attributes, attr_name) ++ AccessHelper.absPair(h, l_attributes, Helper.toString(length_pval)) + (l_attributes, "length")
@@ -575,7 +599,7 @@ object DOMElement extends DOM {
                   lp ++ AccessHelper.Oldify_def(h, ctx, cfg.getAPIAddress(a, 0)))
                 /* empty NodeList */
                 val LP1_2 = DOMNodeList.getInsList(0).foldLeft(LPBot)((lpset, pv) =>
-                  //lpset + (l_r, pv._1))
+                //lpset + (l_r, pv._1))
                   lpset ++ set_addr.foldLeft(LPBot)((lp, a) => lp + (addrToLoc(cfg.getAPIAddress(a, 0),Recent), pv._1)))
                 LP1_1 ++ LP1_2
               } else LPBot
@@ -606,7 +630,7 @@ object DOMElement extends DOM {
                   lp ++ AccessHelper.Oldify_def(h, ctx, cfg.getAPIAddress(a, 0)))
                 /* empty NodeList */
                 val LP1_2 = DOMNodeList.getInsList(0).foldLeft(LPBot)((lpset, pv) =>
-                  //lpset + (l_r, pv._1))
+                //lpset + (l_r, pv._1))
                   lpset ++ set_addr.foldLeft(LPBot)((lp, a) => lp + (addrToLoc(cfg.getAPIAddress(a, 0),Recent), pv._1)))
                 LP1_1 ++ LP1_2
               } else LPBot
@@ -699,7 +723,7 @@ object DOMElement extends DOM {
               // read the list of attributes in the current node
               val attributes_lset = Helper.Proto(h, l_this, AbsString.alpha("attributes"))._2
               val LP6_1 = AccessHelper.Proto_use(h, l_this, AbsString.alpha("attributes"))
-              attributes_lset.foldLeft(lpset ++ LP6_1)((lpset, l_attributes) => {
+              attributes_lset.foldLeft(lpset ++ LP6_1 + (l_this, "className"))((lpset, l_attributes) => {
                 lpset + (l_attributes, "length")
               })
             })
@@ -797,7 +821,7 @@ object DOMElement extends DOM {
       // This instance object has all properties of the Node object
       DOMNode.getInsList(node) ++ List(
         // DOM Level 1
-        ("tagName",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("tagName")), T, T, T))),
+        ("tagName",   PropValue(ObjectValue(AbsString.alpha(e.getTagName), F, T, T))),
         // DOM Level 2 Style
         ("style",   PropValue(ObjectValue(TempStyleLoc, T, T, T))))
     // TODO: schemaTypeInfo in DOM Level 3

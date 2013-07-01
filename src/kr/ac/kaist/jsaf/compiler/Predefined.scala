@@ -12,6 +12,7 @@ package kr.ac.kaist.jsaf.compiler
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.ShellParameters
+import kr.ac.kaist.jsaf.analysis.typing.Config
 
 class Predefined(params: ShellParameters) {
   val doms = List(
@@ -220,7 +221,12 @@ class Predefined(params: ShellParameters) {
       List("tizen")
     else List()
 
-  val all = varsAll ++ funs ++ tizens
+  val jquery =
+    if (params.opt_jQuery == true)
+      List("$", "jQuery")
+    else List()
+
+  val all = varsAll ++ funs ++ tizens ++ jquery
 
   def contains(name: String): Boolean =
     varsAll.contains(name) || funs.contains(name)

@@ -87,6 +87,7 @@ public class ShellParameters
     public boolean                                 opt_Unsound;
     public boolean                                 opt_Dom;
     public boolean                                 opt_Tizen;
+    public boolean                                 opt_jQuery;
     public boolean                                 opt_MultiThread;
     public String                                  opt_DDGFileName;
     public String                                  opt_DDG0FileName;
@@ -147,6 +148,8 @@ public class ShellParameters
         opt_PreContextSensitive = false;
         opt_Unsound = false;
         opt_Dom = false;
+        opt_Tizen = false;
+        opt_jQuery = false;
         opt_MultiThread = false;
         opt_DDGFileName = null;
         opt_DDG0FileName = null;
@@ -326,6 +329,7 @@ public class ShellParameters
             feasibleOptions.add("-ddg0out");
             feasibleOptions.add("-fgout");
             feasibleOptions.add("-tizen");
+            feasibleOptions.add("-jq");
         }
         else if(cmd.compareTo("bug-detector") == 0)
         {
@@ -445,6 +449,7 @@ public class ShellParameters
         else if(opt.compareTo("-unsound") == 0) opt_Unsound = true;
         else if(opt.compareTo("-dom") == 0) opt_Dom = true;
         else if(opt.compareTo("-tizen") == 0) opt_Tizen = true;
+        else if(opt.compareTo("-jq") == 0) opt_jQuery = true;
         else if(opt.compareTo("-multi-thread") == 0) opt_MultiThread = true;
         else
         {

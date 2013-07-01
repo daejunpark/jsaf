@@ -111,57 +111,57 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
         case None => Unit
       }
     }
+  }
 
-    // Print call-context trace to a bug.
-    def printContextTrace(inst: CFGInst, callContext: CallContext): Unit = {
-      val traceStack = new Stack[(Int, ControlPoint, CFGInst)]()
-      traceStack.push((0, (cfg.findEnclosingNode(inst), callContext), inst))
-      while (!traceStack.isEmpty) {
-        val (currentLevel, (currentNode, currentCallContext), currentInst) = traceStack.pop
+  // Print call-context trace to a bug.
+  def printContextTrace(inst: CFGInst, callContext: CallContext): Unit = {
+    val traceStack = new Stack[(Int, ControlPoint, CFGInst)]()
+    traceStack.push((0, (cfg.findEnclosingNode(inst), callContext), inst))
+    while (!traceStack.isEmpty) {
+      val (currentLevel, (currentNode, currentCallContext), currentInst) = traceStack.pop
 
-        // Instruction info
-        val currentInst2: CFGInst = if (currentInst != null) currentInst else {
-          cfg.getCmd(currentNode) match {
-            case Block(insts) => insts.last
-            case _ => null
-          }
+      // Instruction info
+      val currentInst2: CFGInst = if (currentInst != null) currentInst else {
+        cfg.getCmd(currentNode) match {
+          case Block(insts) => insts.last
+          case _ => null
         }
-        val source: String = if (currentInst2 == null) "" else {
-          val instSpanString = currentInst2.getInfo match {
-            case Some(info) => "(at line " + info.getSpan().getBegin().getLine() + ")"
-            case None => ""
-          }
-          "\"" + currentInst2.toString() + "\"" + instSpanString + " "
+      }
+      val source: String = if (currentInst2 == null) "" else {
+        val instSpanString = currentInst2.getInfo match {
+          case Some(info) => "(at line " + info.getSpan().getBegin().getLine() + ")"
+          case None => ""
         }
+        "\"" + currentInst2.toString() + "\"" + instSpanString + " "
+      }
 
-        // Function info
-        val funcId = currentNode._1
-        val funcName = if (funcId == cfg.getGlobalFId) "global function"
-          else {
-            var tempFuncName = cfg.getFuncName(funcId)
-            val index = tempFuncName.indexOf("<>")
-            if (index != -1) tempFuncName = tempFuncName.substring(0, index)
-            "function " + tempFuncName
-          }
-        val funcSpan = cfg.getFuncInfo(funcId).getSpan()
-        val funcSpanBegin = funcSpan.getBegin()
-        val funcSpanEnd = funcSpan.getEnd()
-        val funcLineNumber = if (funcId == cfg.getGlobalFId) "" else "(at line " + funcSpanBegin.getLine + ")"
+      // Function info
+      val funcId = currentNode._1
+      val funcName = if (funcId == cfg.getGlobalFId) "global function"
+        else {
+          var tempFuncName = cfg.getFuncName(funcId)
+          val index = tempFuncName.indexOf("<>")
+          if (index != -1) tempFuncName = tempFuncName.substring(0, index)
+          "function " + tempFuncName
+        }
+      val funcSpan = cfg.getFuncInfo(funcId).getSpan()
+      val funcSpanBegin = funcSpan.getBegin()
+      val funcSpanEnd = funcSpan.getEnd()
+      val funcLineNumber = if (funcId == cfg.getGlobalFId) "" else "(at line " + funcSpanBegin.getLine + ")"
 
-        printf("  Context trace: [%d] ", currentLevel)
-        for(i <- 0 until currentLevel) printf("  ")
+      printf("  Context trace: [%d] ", currentLevel)
+      for(i <- 0 until currentLevel) printf("  ")
 
-        // "call(<>obj<>6, <>fun<>8, <>arguments<>7) @ #8"(at line 8) in function f(at line 6), (env = #8, this = Global)
-        printf("%sin %s%s", source, funcName, funcLineNumber)
-        if (bugDetector.params.opt_DeveloperMode) printf(", %s", currentCallContext.toString2)
-        println()
+      // "call(<>obj<>6, <>fun<>8, <>arguments<>7) @ #8"(at line 8) in function f(at line 6), (env = #8, this = Global)
+      printf("%sin %s%s", source, funcName, funcLineNumber)
+      if (bugDetector.params.opt_DeveloperMode) printf(", %s", currentCallContext.toString2)
+      println()
 
-        // Follow up the trace (Call relation "1(callee) : n(caller)" is possible)
-        val controlPointPredSet = stateManager.controlPointPredMap.get((funcId, LEntry), currentCallContext) //semantics.getIPPred((funcId, LEntry), currentCallContext)
-        if (controlPointPredSet.isDefined) {
-          for(controlPointPred <- controlPointPredSet.get) {
-            traceStack.push((currentLevel + 1, controlPointPred, null))
-          }
+      // Follow up the trace (Call relation "1(callee) : n(caller)" is possible)
+      val controlPointPredSet = stateManager.controlPointPredMap.get((funcId, LEntry), currentCallContext) //semantics.getIPPred((funcId, LEntry), currentCallContext)
+      if (controlPointPredSet.isDefined) {
+        for(controlPointPred <- controlPointPredSet.get) {
+          traceStack.push((currentLevel + 1, controlPointPred, null))
         }
       }
     }

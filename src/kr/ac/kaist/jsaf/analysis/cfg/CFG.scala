@@ -162,7 +162,7 @@ class CFG {
 
 
   // normal successor + exception successor + aftercallFromCall successor + aftercatchFromCall successor
-  def getAllSucc(node: Node) = {
+  def getAllSucc(node: Node): Set[Node] = {
     val succs = getSet(succMap, node)
     val succs_exc = excSuccMap.get(node) match {
       case Some(n) => succs + n
@@ -260,7 +260,7 @@ class CFG {
 
   /* new address for builtin function */
   private val addrPerCallSite =  // Function.prototype.apply uses 4 addresses
-    if (Config.tizenMode) 5
+    if (Config.tizenMode) 8
     else 4
   private var apiAddrMap: Map[Address, List[Address]] = HashMap()
   def getAPIAddress(addr: Address, index: Int): Address = apiAddrMap(addr)(index)

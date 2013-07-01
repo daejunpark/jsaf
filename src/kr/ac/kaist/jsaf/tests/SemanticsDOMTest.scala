@@ -28,10 +28,7 @@ import kr.ac.kaist.jsaf.nodes.Program
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
 import kr.ac.kaist.jsaf.nodes_util.JSFromHTML
 
-class SemanticsDOMTest(dir: String, tc: String) extends SemanticsTest(dir, tc) {
-  // Currently, sparse analysis is not supported for analyzing HTML.
-  override val TYPING_MODE = "sparse"
-
+class SemanticsDOMTest(dir: String, tc: String, typing_mode: String) extends SemanticsTest(dir, tc, typing_mode) {
   override def analyze(file: File): TypingInterface = {
     Shell.params.Set(Array[String]("html", "-context-1-callsite", "-test"))
     // setup testing options
@@ -75,25 +72,18 @@ class SemanticsDOMTest(dir: String, tc: String) extends SemanticsTest(dir, tc) {
     dom_model.initialize();
 
     // typing
-    val typing = 
-      TYPING_MODE match {
+    val typing =
+      typing_mode match {
         case "pre"     => cfg.computeReachableNodes(); new PreTyping(cfg, false, true)
-        case "dense"   => new Typing(cfg, false)
+        case "dense"   => new Typing(cfg, false, false)
         case "sparse"  => cfg.computeReachableNodes(); new SparseTyping(cfg, false, false)
         case "dsparse" => cfg.computeReachableNodes(); new DSparseTyping(cfg, false, false)
       }
 
-    CONTEXT_SENSITIVITY match {
-      case "no"        => Config.setContextSensitivityMode(Config.Context_Insensitive)
-      case "1callsite" => Config.setContextSensitivityMode(Config.Context_OneCallsite)
-      case "1obj"      => Config.setContextSensitivityMode(Config.Context_OneObject)
-      case "1tajs"     => Config.setContextSensitivityMode(Config.Context_OneObjectTAJS)
-    }
-
     Config.setAssertMode(true)
     typing.analyze(init)
 
-    TYPING_MODE match {
+    typing_mode match {
       case "pre" |"dense" =>
         typing.analyze(init)
       case "sparse" | "dsparse" =>

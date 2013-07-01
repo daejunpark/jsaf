@@ -12,14 +12,18 @@ package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 
 abstract class WebAPIException {
-/*  val code
-  val name
-  val message*/
   override def toString(): String = {
     this match {
       case UnknownError => "UnknownErr"
       case TypeMismatchError => "TypeMismatchErr"
       case InvalidValuesError => "InvalidValuesErr"
+      case IOError => "IOErr"
+      case ServiceNotAvailableError => "ServiceNotAvailableErr"
+      case NetworkError => "NetworkErr"
+      case NotFoundError => "NotFoundErr"
+      case AbortError => "AbortErr"
+      case SecurityError => "SecurityErr"
+      case NotSupportedError => "NotSupportedErr"
     }
   }
 }
@@ -27,3 +31,10 @@ abstract class WebAPIException {
 case object UnknownError extends WebAPIException
 case object TypeMismatchError extends WebAPIException
 case object InvalidValuesError extends WebAPIException
+case object IOError extends WebAPIException
+case object ServiceNotAvailableError extends WebAPIException
+case object NetworkError extends WebAPIException
+case object NotFoundError extends WebAPIException
+case object AbortError extends WebAPIException
+case object SecurityError extends WebAPIException
+case object NotSupportedError extends WebAPIException

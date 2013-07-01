@@ -29,9 +29,8 @@ import kr.ac.kaist.jsaf.nodes.IRRoot
 import kr.ac.kaist.jsaf.nodes.Program
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
 
-class SemanticsTest(dir: String, tc: String) extends TestCase(tc) {
+class SemanticsTest(dir: String, tc: String, typing_mode: String) extends TestCase(tc) {
   // "pre", "dense", "sparse", "dsparse"
-  val TYPING_MODE = "sparse"
 
   // "no", "1callsite", "1obj", "1tajs"
   val CONTEXT_SENSITIVITY = "1callsite" 
@@ -94,9 +93,9 @@ class SemanticsTest(dir: String, tc: String) extends TestCase(tc) {
 
     // typing
     val typing: TypingInterface =
-      TYPING_MODE match {
+      typing_mode match {
         case "pre"     => cfg.computeReachableNodes(); new PreTyping(cfg, false, true)
-        case "dense"   => new Typing(cfg, false)
+        case "dense"   => new Typing(cfg, false, false)
         case "sparse"  => cfg.computeReachableNodes(); new SparseTyping(cfg, false, false)
         case "dsparse" => cfg.computeReachableNodes(); new DSparseTyping(cfg, false, false)
       }
@@ -110,8 +109,8 @@ class SemanticsTest(dir: String, tc: String) extends TestCase(tc) {
     
     Config.setAssertMode(true)
     //typing.analyze(init_heap)
-    
-    TYPING_MODE match {
+
+    typing_mode match {
       case "pre" |"dense" =>
         typing.analyze(init)
       case "sparse" | "dsparse" =>

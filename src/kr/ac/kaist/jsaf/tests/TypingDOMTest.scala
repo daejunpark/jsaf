@@ -35,7 +35,7 @@ object TypingDOMTest {
     val testcases = collectTestcase(TESTS_DIR)
     for (tc <- testcases) {
       //$JUnit-BEGIN$
-      suite.addTest(new SemanticsDOMTest(TESTS_DIR, tc))
+      suite.addTest(new SemanticsDOMTest(TESTS_DIR, tc, "sparse"))
       //$JUnit-END$
     }
     suite

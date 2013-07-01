@@ -47,24 +47,7 @@ object TIZENMessage extends Tizen {
     ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
     ("@construct",               AbsInternalFunc("tizen.Message.constructor")),
     ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
-    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
-    ("id", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("conversationId", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("folderId", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("type", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("timestamp", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("from", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("to", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("cc", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("bcc", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("body", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("isRead", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("hasAttachment", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("isHighPriority", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("subject", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("inResponseTo", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("messageStatus", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("attachments", AbsConstValue(PropValue(Value(UndefTop))))
+    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F))))
   )
 
   /* prototype */
@@ -82,32 +65,28 @@ object TIZENMessage extends Tizen {
     Map(
       ("tizen.Message.constructor" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
           val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
           if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
           val addr_env = set_addr.head
           val addr1 = cfg.getAPIAddress(addr_env, 0)
           val addr2 = cfg.getAPIAddress(addr_env, 1)
-          val addr3 = cfg.getAPIAddress(addr_env, 2)
           val l_r1 = addrToLoc(addr1, Recent)
           val l_r2 = addrToLoc(addr2, Recent)
-          val l_r3 = addrToLoc(addr3, Recent)
           val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
-          val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
-          val (h_3, ctx_3) = Helper.Oldify(h_2, ctx_2, addr3)
+          val (h_3, ctx_3) = Helper.Oldify(h_1, ctx_1, addr2)
           val v1 = getArgValue(h_3, ctx_3, args, "0")
           val n_arglen = Operator.ToUInt32(getArgValue(h_3, ctx_3, args, "length"))
           val es =
-            if (v1._1._5 </ AbsString.alpha("messaging.sms") && v1._1._5 </ AbsString.alpha("messaging.mms") &&
-              v1._1._5 </ AbsString.alpha("messaging.email"))
+            if (v1._1._5 != AbsString.alpha("messaging.sms") && v1._1._5 != AbsString.alpha("messaging.mms") &&
+              v1._1._5 != AbsString.alpha("messaging.email"))
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
           val o_new = ObjEmpty.
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENMessage.loc_proto), F, F, F))).
-            update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop)))
+            update("@extensible", PropValue(T))
 
           val (h_4, ess) = n_arglen match {
             case UIntSingle(n) if n == 1 =>
@@ -129,12 +108,12 @@ object TIZENMessage extends Tizen {
                 update("isRead", PropValue(ObjectValue(Value(F), T, T, T))).
                 update("hasAttachment", PropValue(ObjectValue(Value(BoolTop), T, T, T))).
                 update("isHighPriority", PropValue(ObjectValue(Value(BoolTop), T, T, T))).
-                update("subject", PropValue(ObjectValue(Value(UndefTop), T, T, T))).
+                update("subject", PropValue(ObjectValue(Value(AbsString.alpha("")), T, T, T))).
                 update("inResponseTo", PropValue(ObjectValue(Value(PValue(UndefBot, NullTop, BoolBot, NumBot, StrTop)), F, T, T))).
                 update("messageStatus", PropValue(ObjectValue(Value(AbsString.alpha("SENT") + AbsString.alpha("SENDING") +
                                                               AbsString.alpha("FAILED") + AbsString.alpha("DRAFT")), F, T, T))).
                 update("attachments", PropValue(ObjectValue(Value(l_r2), T, T, T)))
-              val h_5 = h_4.update(l_r3, o_new2)
+              val h_5 = lset_this.foldLeft(h_4)((_h, l) => _h.update(l, o_new2))
               (h_5, TizenHelper.TizenExceptionBot)
             case UIntSingle(n) if n >= 2 =>
               val v2 = getArgValue(h_3, ctx_3, args, "1")
@@ -289,12 +268,12 @@ object TIZENMessage extends Tizen {
                 update("messageStatus", PropValue(ObjectValue(Value(AbsString.alpha("SENT") + AbsString.alpha("SENDING") +
                 AbsString.alpha("FAILED") + AbsString.alpha("DRAFT")), F, T, T))).
                 update("attachments", PropValue(ObjectValue(Value(l_r2), T, T, T)))
-              val h_5 = h_4.update(l_r3, o_new2)
+              val h_5 = lset_this.foldLeft(h_4)((_h, l) => _h.update(l, o_new2))
               (h_5, es_1)
             case _ => (h_3, TizenHelper.TizenExceptionBot)
           }
           val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ ess)
-          ((Helper.ReturnStore(h_4, Value(l_r3)), ctx_3), (he + h_e, ctxe + ctx_e))
+          ((Helper.ReturnStore(h_4, Value(lset_this)), ctx_3), (he + h_e, ctxe + ctx_e))
         }
         ))
     )
@@ -307,6 +286,54 @@ object TIZENMessage extends Tizen {
 
 object TIZENMessageBody extends Tizen {
   private val name = "MessageBody"
+  /* predefined locations */
+  val loc_proto = newPredefLoc(name + "Proto")
+  /* prototype */
+  private val prop_proto: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("CallbackObject")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(T)))
+  )
+
+  override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
+    (loc_proto, prop_proto)
+  )
+
+  override def getSemanticMap(): Map[String, SemanticFun] = {
+    Map()
+  }
+
+  override def getPreSemanticMap(): Map[String, SemanticFun] = {Map()}
+  override def getDefMap(): Map[String, AccessFun] = {Map()}
+  override def getUseMap(): Map[String, AccessFun] = {Map()}
+}
+
+object TIZENMessageFolder extends Tizen {
+  private val name = "MessageFolder"
+  /* predefined locations */
+  val loc_proto = newPredefLoc(name + "Proto")
+  /* prototype */
+  private val prop_proto: List[(String, AbsProperty)] = List(
+    ("@class", AbsConstValue(PropValue(AbsString.alpha("CallbackObject")))),
+    ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(T)))
+  )
+
+  override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
+    (loc_proto, prop_proto)
+  )
+
+  override def getSemanticMap(): Map[String, SemanticFun] = {
+    Map()
+  }
+
+  override def getPreSemanticMap(): Map[String, SemanticFun] = {Map()}
+  override def getDefMap(): Map[String, AccessFun] = {Map()}
+  override def getUseMap(): Map[String, AccessFun] = {Map()}
+}
+
+object TIZENMessageConversation extends Tizen {
+  private val name = "MessageConversation"
   /* predefined locations */
   val loc_proto = newPredefLoc(name + "Proto")
   /* prototype */

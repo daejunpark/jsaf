@@ -46,27 +46,7 @@ object TIZENCalendarTask extends Tizen {
     ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
     ("@construct",               AbsInternalFunc("tizen.CalendarTask.constructor")),
     ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
-    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
-    ("id", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("calendarId", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("lastModificationDate", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("description", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("summary", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("isAllDay", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("startDate", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("duration", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("location", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("geolocation", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("organizer", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("visibility", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("status", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("priority", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("alarms", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("categories", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("attendees", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("dueDate", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("completedDate", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("progress", AbsConstValue(PropValue(Value(UndefTop))))
+    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F))))
   )
 
   /* prototype */
@@ -84,6 +64,7 @@ object TIZENCalendarTask extends Tizen {
     Map(
       ("tizen.CalendarTask.constructor" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
           val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
           if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
@@ -91,23 +72,18 @@ object TIZENCalendarTask extends Tizen {
           val addr1 = cfg.getAPIAddress(addr_env, 0)
           val addr2 = cfg.getAPIAddress(addr_env, 1)
           val addr3 = cfg.getAPIAddress(addr_env, 2)
-          val addr4 = cfg.getAPIAddress(addr_env, 3)
           val l_r1 = addrToLoc(addr1, Recent)
           val l_r2 = addrToLoc(addr2, Recent)
           val l_r3 = addrToLoc(addr3, Recent)
-          val l_r4 = addrToLoc(addr4, Recent)
           val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
           val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
-          val (h_3, ctx_3) = Helper.Oldify(h_2, ctx_2, addr3)
-          val (h_4, ctx_4) = Helper.Oldify(h_3, ctx_3, addr4)
+          val (h_4, ctx_4) = Helper.Oldify(h_2, ctx_2, addr3)
           val n_arglen = Operator.ToUInt32(getArgValue(h_4, ctx_4, args, "length"))
 
           val o_new = ObjEmpty.
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENCalendarEvent.loc_proto), F, F, F))).
-            update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop)))
+            update("@extensible", PropValue(T))
 
           val (h_5, es_1) = n_arglen match {
             case UIntSingle(n) if n == 0 =>
@@ -136,7 +112,7 @@ object TIZENCalendarTask extends Tizen {
                 update("dueDate", PropValue(ObjectValue(Value(UndefTop), F, T, T))).
                 update("completedDate", PropValue(ObjectValue(Value(UndefTop), T, T, T))).
                 update("progress", PropValue(ObjectValue(Value(AbsNumber.alpha(0)), T, T, T)))
-              val h_6 = h_5.update(l_r4, o_new2)
+              val h_6 = lset_this.foldLeft(h_5)((_h, l) => _h.update(l, o_new2))
               (h_6, TizenHelper.TizenExceptionBot)
             case UIntSingle(n) if n == 1 =>
               val v = getArgValue(h_4, ctx_4, args, "0")
@@ -389,17 +365,42 @@ object TIZENCalendarTask extends Tizen {
                 update("calendarId", PropValue(ObjectValue(Value(NullTop), F, T, T))).
                 update("lastModificationDate", PropValue(ObjectValue(Value(NullTop), F, T, T))).
                 update("isDetached", PropValue(ObjectValue(Value(F), F, T, T)))
-              val h_6 = h_5.update(l_r4, o_new2)
+              val h_6 = lset_this.foldLeft(h_5)((_h, l) => _h.update(l, o_new2))
               (h_6, es ++ es_1)
             case UIntSingle(n) if n == 2 =>
-              //TODO: not yet implemented
-              (h_4, TizenHelper.TizenExceptionBot)
+              val o_arr = Helper.NewArrayObject(AbsNumber.alpha(0))
+              val o_arr2 = Helper.NewArrayObject(AbsNumber.alpha(0))
+              val o_arr3 = Helper.NewArrayObject(AbsNumber.alpha(0))
+              val h_5 = h_4.update(l_r1, o_arr).update(l_r2, o_arr2).update(l_r3, o_arr3)
+              val o_new2 = o_new.
+                update("id", PropValue(ObjectValue(Value(NullTop), F, T, T))).
+                update("calendarId", PropValue(ObjectValue(Value(NullTop), F, T, T))).
+                update("lastModificationDate", PropValue(ObjectValue(Value(NullTop), F, T, T))).
+                update("description", PropValue(ObjectValue(Value(AbsString.alpha("")), T, T, T))).
+                update("summary", PropValue(ObjectValue(Value(AbsString.alpha("")), T, T, T))).
+                update("isAllDay", PropValue(ObjectValue(Value(F), T, T, T))).
+                update("startDate", PropValue(ObjectValue(Value(UndefTop), T, T, T))).
+                update("duration", PropValue(ObjectValue(Value(UndefTop), T, T, T))).
+                update("location", PropValue(ObjectValue(Value(AbsString.alpha("")), T, T, T))).
+                update("geolocation", PropValue(ObjectValue(Value(UndefTop), T, T, T))).
+                update("organizer", PropValue(ObjectValue(Value(AbsString.alpha("")), T, T, T))).
+                update("visibility", PropValue(ObjectValue(Value(AbsString.alpha("PUBLIC")), T, T, T))).
+                update("status", PropValue(ObjectValue(Value(AbsString.alpha("TENTATIVE")), T, T, T))).
+                update("priority", PropValue(ObjectValue(Value(AbsString.alpha("LOW")), T, T, T))).
+                update("alarms", PropValue(ObjectValue(Value(l_r3), T, T, T))).
+                update("categories", PropValue(ObjectValue(Value(l_r1), T, T, T))).
+                update("attendees", PropValue(ObjectValue(Value(l_r2), T, T, T))).
+                update("dueDate", PropValue(ObjectValue(Value(UndefTop), F, T, T))).
+                update("completedDate", PropValue(ObjectValue(Value(UndefTop), T, T, T))).
+                update("progress", PropValue(ObjectValue(Value(AbsNumber.alpha(0)), T, T, T)))
+              val h_6 = lset_this.foldLeft(h_5)((_h, l) => _h.update(l, o_new2))
+              (h_6, TizenHelper.TizenExceptionBot)
             case _ => {
               (h_4, TizenHelper.TizenExceptionBot)
             }
           }
           val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es_1)
-          ((Helper.ReturnStore(h_5, Value(l_r4)), ctx_4), (he + h_e, ctxe + ctx_e))
+          ((Helper.ReturnStore(h_5, Value(lset_this)), ctx_4), (he + h_e, ctxe + ctx_e))
         }
         ))
     )

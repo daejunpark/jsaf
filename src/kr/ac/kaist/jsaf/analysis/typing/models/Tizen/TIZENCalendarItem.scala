@@ -34,7 +34,6 @@ object TIZENCalendarItem extends Tizen {
     ("@class", AbsConstValue(PropValue(AbsString.alpha("CallbackObject")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
     ("@extensible",                 AbsConstValue(PropValue(T))),
-    ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
     ("convertToString", AbsBuiltinFunc("tizen.CalendarItem.convertToString", 1)),
     ("clone", AbsBuiltinFunc("tizen.CalendarItem.clone", 0))
   )

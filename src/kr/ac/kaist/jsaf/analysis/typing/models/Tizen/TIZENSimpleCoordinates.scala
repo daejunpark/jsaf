@@ -9,11 +9,21 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.CFGExpr
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing._
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsInternalFunc
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.domain.Context
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsInternalFunc
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.domain.Context
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import java.lang.InternalError
 
 object TIZENSimpleCoordinates extends Tizen {
   private val name = "SimpleCoordinates"
@@ -26,11 +36,9 @@ object TIZENSimpleCoordinates extends Tizen {
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
     ("@extensible",                 AbsConstValue(PropValue(T))),
     ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
-    ("@construct",               AbsInternalFunc("TIZENtizen.TIZENSimpleCoordinates.constructor")),
+    ("@construct",               AbsInternalFunc("tizen.SimpleCoordinates.constructor")),
     ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
-    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
-    ("latitude", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("longitude", AbsConstValue(PropValue(Value(UndefTop))))
+    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F))))
   )
 
   /* prototype */
@@ -46,7 +54,30 @@ object TIZENSimpleCoordinates extends Tizen {
 
   override def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
-/*      ("TIZENtizen.TIZENSimpleCoordinates.constructor" -> ()) */
+      ("tizen.SimpleCoordinates.constructor" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          val v_1 = getArgValue(h, ctx, args, "0")
+          val v_2 = getArgValue(h, ctx, args, "1")
+          val es_1 =
+            if (v_1._1._4 </ NumTop)
+              Set[WebAPIException](TypeMismatchError)
+            else TizenHelper.TizenExceptionBot
+          val es_2 =
+            if (v_2._1._4 </ NumTop)
+              Set[WebAPIException](TypeMismatchError)
+            else TizenHelper.TizenExceptionBot
+          val o_new = ObjEmpty.
+            update("@class", PropValue(AbsString.alpha("Object"))).
+            update("@proto", PropValue(ObjectValue(Value(TIZENSimpleCoordinates.loc_proto), F, F, F))).
+            update("@extensible", PropValue(T)).
+            update("latitude", PropValue(ObjectValue(Value(v_1._1._4), F, T, T))).
+            update("longitude", PropValue(ObjectValue(Value(v_2._1._4), F, T, T)))
+          val h_2 = lset_this.foldLeft(h)((_h, l) => _h.update(l, o_new))
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es_1 ++ es_2)
+          ((Helper.ReturnStore(h_2, Value(lset_this)), ctx), (he + h_e, ctxe + ctx_e))
+        }
+        ))
     )
   }
 

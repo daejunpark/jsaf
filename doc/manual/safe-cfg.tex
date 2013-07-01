@@ -35,6 +35,7 @@ n & \in & \SF{Node} & = & \fid \times \SF{Label}\\
   \chf{isUserFunction}_{P} & : & \SF{FunctionId} \rightarrow \SF{Boolean} \\
 \end{array}
 \]
+
 \section{Syntax of $\Command$}
 {\inblue\tt .../jsaf/analysis/cfg/\{CFG, CFGInst, CFGExpr\}.scala}\\
 
@@ -78,8 +79,8 @@ i \in \Instruction & ::= &
  & \mbox{\tt\inblue CFGStore}
 \\
 
-& \mid & \inred \verb+with(+e^*,x,x\verb+)+~\verb+:=+~e
- \\
+%& \mid & \inred \verb+with(+e^*,x,x\verb+)+~\verb+:=+~e
+% \\
 
 & \mid & x_1 ~\verb+:=+~ \TT{function} ~x_2^{?}\verb+(+fid\verb+)+
  & \mbox{\tt\inblue CFGFunExpr}
@@ -133,11 +134,11 @@ e \in \Expression & ::= & x
  & \mbox{\tt\inblue CFGLoad}
 \\
 
-& \mid & \inred\verb+with(+e^*,x,x\verb+)+\\
+% & \mid & \inred\verb+with(+e^*,x,x\verb+)+\\
 % v \in \Value & ::= 
 % & \mid & \inred loc & \inred \comment{Location} \\
-& \mid & n & \mbox{\tt\inblue CFGInt, CFGDouble}
-&\comment{Number}\\
+& \mid & n & \mbox{\tt\inblue CFGNumber}
+&\comment{Number, double}\\
 & \mid & ``s" 
  & \mbox{\tt\inblue CFGString}
 & \comment{String}\\
@@ -664,8 +665,8 @@ exc \in & \SF{Exception} & ::= & \exc{ReferenceError} ~\mid~ \exc{RangeError} ~\
 & \chf{inherit}(H,l_1,l_2) = \left\{
   \begin{array}{ll}
     \vtrue & \ifc{l_1 = l_2} \\
-    \vfalse & \ifc{l_1 \neq l_2 \land H(l)(\varprop{proto}).value\ = \SF{null}} \\
-    \chf{inherit}(H,H(l_1)(\varprop{proto}).value,l_2) & \ifc{l_1 \neq l_2 \land H(l)(\varprop{proto}).value\ \neq \SF{null}} \\
+    \vfalse & \ifc{l_1 \neq l_2 \land H(l_1)(\varprop{proto}).value\ = \SF{null}} \\
+    \chf{inherit}(H,H(l_1)(\varprop{proto}).value,l_2) & \ifc{l_1 \neq l_2 \land H(l_1)(\varprop{proto}).value\ \neq \SF{null}} \\
   \end{array}
   \right.\\
 \\
@@ -911,8 +912,8 @@ H_2 = \chf{VarStoreE}(H_1,A,x,l_{new},\vtrue)
   l=\V\lbr e_1\rbr(H,A)\\
   v_{idx}=\V\lbr e_2\rbr(H,A)\\
   v=\V\lbr e_3\rbr(H,A)\\
-  n_{oldLen}=\chf{Proto}(H,l,``length")\\a
-  H_1=H[l\mapsto H(l)[n\mapsto \set{value=v;writable=\vtrue;enumerable=\vtrue;configurable=\vtrue}]] \\
+  n_{oldLen}=\chf{Proto}(H,l,``length")\\
+  H_1=H[l\mapsto H(l)[v_{idx}\mapsto \set{value=v;writable=\vtrue;enumerable=\vtrue;configurable=\vtrue}]] \\
   H_2= \left\{
     \begin{array}{ll}
       H_1[l\mapsto H_1(l)[``length"\mapsto H(l)(``length")\SF{ with } value=v_{idx}+1]] & \ifc{n_{oldLen} \leq v_{idx}}\\
@@ -991,6 +992,16 @@ H_2 = \chf{VarStoreE}(H_1,A,x,l_{new},\vtrue)
 \I _{cp}\lbr \TT{construct}\TT{(}e_1,e_2,e_3\TT{)} \rbr(H,A)
  = \left(H\left[
       \begin{array}{l}
+       l_{arg}\mapsto
+           H(l_{arg})\left[
+             callee \mapsto
+               \set{
+                 value=l_{fun};\\
+                 writable=\vtrue;\\
+                 enumerable=\vfalse;\\
+                 configurable=\vtrue}
+           \right],
+       \\
        l_{new}\mapsto \set{
             arguments \mapsto
               \set{
@@ -1064,7 +1075,6 @@ H_2 = \chf{VarStoreE}(H_1,A,x,l_{new},\vtrue)
 \quad\wherec{
   l_{fun} = \V\lbr e_1\rbr(H,A) \land\ \chf{IsCallable}(H,l_{fun}) \land A_1=\chf{PushStack}(\V\lbr
   e_1\TT{[}\varprop{scope}\TT{]}\rbr(H,A),l_{new}) \\
-  \land\ l = \V\lbr e_1\rbr(H,A) \\
   \land\ arguments = \chf{getArgumentsName}_{P}(fid_{callee}) \\
   \land\ l_{arg} = \V\lbr e_3\rbr(H,A) \\
   \land\ l_{this} = \chf{getThis}(\V\lbr e_2\rbr(H,A)) \\
@@ -1157,7 +1167,7 @@ H_2 = \chf{VarStoreE}(H_1,A,x,l_{new},\vtrue)
 \I _{cp}\lbr x \TT{:=} \chfi{toObject}\TT{(}e\TT{)} \rbr(H,A)
  = (H_2,A)\quad\ifc{v = \V\lbr e\rbr(H,A)\ \land\ (H_1, l_{new}) = \chf{toObject}(H, v)}\\
  \quad\wherec{
-   H_2=\chf{VarStoreE}(H,A,x,l_{new},\SF{true})
+   H_2=\chf{VarStoreE}(H_1,A,x,l_{new},\SF{true})
 }\\
 \I _{cp}\lbr x \TT{:=} \chfi{toObject}\TT{(}e\TT{)} \rbr(H,A)
  = (H_1, A)\quad\ifc{v = \V\lbr e\rbr(H,A)\ \land\ (\_, exc) = \chf{toObject}(H, v)}\\
@@ -1734,7 +1744,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 % \[
 % \powerset{\SF{PValue}} \galois{\alpha_{PValue}}{\gamma_{PValue}} \abs{PValue}
 % \]
-
+\newpage
 \section{Domain Operators}
 \[
 \begin{array}{ll}
@@ -2040,11 +2050,11 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
          & \ifc{\hat{o} \neq \bot_{Obj} \land \hat{s} = \hat{\SF{NumStrSingle}}(x) }\\
          \hat{o} - x
          & \ifc{\hat{o} \neq \bot_{Obj} \land \hat{s} = \hat{\SF{OtherStrSingle}}(x) }\\
-         \bigsqcup_{x \in P_1}\ \{ (y,\langle \hat{propv}, \hat{abs}\rangle)\ |\ (y,\langle \hat{propv}, \hat{abs}\rangle) \in \hat{o} \land y \neq x \}
+          \hat{o} \sqcup \bigsqcup_{x \in P_1}\ \{ (y,\langle \hat{propv}, \hat{abs}\rangle)\ |\ (y,\langle \hat{propv}, \hat{abs}\rangle) \in \hat{o} \land y \neq x \}
          & \ifc{\hat{o} \neq \bot_{Obj} \land \hat{s} = \hat{\SF{NumStr}} }\\
-         \bigsqcup_{x \in P_2}\ \{ (y,\langle \hat{propv}, \hat{abs}\rangle)\ |\ (y,\langle \hat{propv}, \hat{abs}\rangle) \in \hat{o} \land y \neq x \}
+          \hat{o} \sqcup \bigsqcup_{x \in P_2}\ \{ (y,\langle \hat{propv}, \hat{abs}\rangle)\ |\ (y,\langle \hat{propv}, \hat{abs}\rangle) \in \hat{o} \land y \neq x \}
          & \ifc{\hat{o} \neq \bot_{Obj} \land \hat{s} = \hat{\SF{OtherStr}} }\\
-         \bigsqcup_{x \in P_3}\ \{ (y,\langle \hat{propv}, \hat{abs}\rangle)\ |\ (y,\langle \hat{propv}, \hat{abs}\rangle) \in \hat{o} \land y \neq x \}
+          \hat{o} \sqcup \bigsqcup_{x \in P_3}\ \{ (y,\langle \hat{propv}, \hat{abs}\rangle)\ |\ (y,\langle \hat{propv}, \hat{abs}\rangle) \in \hat{o} \land y \neq x \}
          & \ifc{\hat{o} \neq \bot_{Obj} \land \hat{s} = \top_{String} }\\
          \bot_{Obj}
          & \ifc{\hat{o} = \bot_{Obj} \lor \hat{s} = \bot_{String} }\\
@@ -2081,52 +2091,81 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 \end{array}
 \]
 
-
+\newpage
 \section{Helper Functions}
 {\inblue\tt .../jsaf/analysis/typing/Helper.scala}
 
+%%% CanPut %%%
 \[
 \begin{array}{ll}
-\ahf{IsArray} & : \aHeap \times \aLoc \rightarrow \abs{Bool} \\
-& {\inblue \hat{H}(\hat{l})(\varprop{class}).1.2\textit{ is the }\abs{Value}} \\
-& \ahf{IsArray}(\hat{H},\hat{l}) = \hat{b}_1\sqcup\hat{b}_2\\
-& \quad\wherec{
-    \hat{b}_1=\left\{
+\ahf{CanPut} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \abs{Bool}\\
+&
+\begin{array}{ll}
+  \ahf{CanPut}(\hat{H},\hat{l},\hat{s}) = \ahf{CanPutHelp}(\hat{H},\hat{l},\hat{s},\hat{l}) & \\
+\end{array}
+\\\\
+
+%& {\inblue \textit{For all case of }\hat{s}_n\textit{ if the condition is false, the value of }\hat{s}_n\textit{ is }\bot_{String}.} \\
+& {\inblue \textit{Cycle in prototype chain is detected at implementation level.}} \\
+\ahf{CanPutHelp} &  : \aHeap \times \aLoc \times \abs{String} \times \aLoc \rightarrow \abs{Bool}\\
+&  \ahf{CanPutHelp}(\hat{H},\hat{l}_1,\hat{s},\hat{l}_2)  = \hat{b}_1\sqcup\hat{b}_2\\
+&  \quad\wherec{
+    \hat{b}_1 =
+    \left\{
       \begin{array}{ll}
-        \atrue &\ifc{\hat{``Array"} \sqsubseteq \hat{H}(\hat{l})(\varprop{class}).1.2}\\
-        \bot_{Bool} & \owc \\
-      \end{array}
-    \right.\\
-    \hat{b}_2 = \left\{
-      \begin{array}{ll}
-        \afalse & \ifc{\hat{``Array"} \neq \hat{H}(\hat{l})(\varprop{class}).1.2}\\
+        \hat{H}(\hat{l}_1)(\hat{s}).1.1.2
+        ~~{\inblue \textit{// writable attribute}}
+        & \ifc{\atrue\sqsubseteq(\hat{s} \dot{\in} dom(\hat{H}(\hat{l})))}\\
         \bot_{Bool} & \owc\\
       \end{array}
     \right.\\
-  }\\
-\\
-\end{array}
-\]
-
-\[
-\begin{array}{ll}
-\ahf{IsObject} & : \aHeap \times \aLoc \rightarrow \abs{Bool} \\
-& \ahf{IsObject}(\hat{H},\hat{l}) = \varprop{class} ~ \dot{\in} ~ dom(\hat{h}(\hat{l})) \\
-\\
-
-\ahf{IsArrayIndex} & : \abs{String} \rightarrow \abs{Bool} \\
-& \ahf{IsArrayIndex}(\hat{s}) = \left\{
+    \hat{L}_{proto}=\hat{H}(\hat{l}_1)(\varprop{proto}).1.1.1.2
+~~{\inblue \textit{// $\powerset{\aLoc}$ type}}\\
+    \hat{b}_2 =
+    \left\{
       \begin{array}{ll}
-        \top_{Bool} & \ifc{\hat{s} = \top_{String}}\\
-        \top_{Bool} & \ifc{\hat{s} = \hat{\SF{NumStr}}}\\
-        \afalse     & \ifc{\hat{s} = \hat{\SF{OtherStr}}}\\
-        \atrue      & \ifc{\hat{s} = \hat{\SF{NumStrSingle}}(s) \land 0 \leq \SF{ToNumber}(s) < 2^{32}-1}\\
-        \top_{Bool} & \ifc{\hat{s} = \hat{\SF{NumStrSingle}}(s) \land (\SF{ToNumber}(s) < 0 \lor < 2^{32}-1 \leq \SF{ToNumber}(s))}\\
-        \afalse     & \ifc{\hat{s} = \hat{\SF{OtherStrSingle}}}\\
-        \bot_{Bool} & \ifc{\hat{s} = \bot_{String}} \\
+        \hat{b}_3 \sqcup \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}\ahf{CanPutHelp}(\hat{H},\hat{l}_{proto},\hat{s},\hat{l}_2)& \ifc{\afalse\sqsubseteq(\hat{s} \dot{\in} dom(\hat{H}(\hat{l})))}\\
+        \bot_{Bool} & \owc\\
       \end{array}
     \right.\\
+    \hat{b}_3 =
+    \left\{
+      \begin{array}{ll}
+        \hat{H}(\hat{l}_2)(\varprop{extensible}).1.2.1.3& \ifc{\hat{H}(\hat{l}_1)(\varprop{proto}).1.1.1.1.2 \not\sqsubseteq \bot_{Null}}\\
+        \bot_{Bool} & \owc\\
+      \end{array}
+    \right.\\
+    }\\
 \\
+
+\ahf{CanPutVar} & : \aHeap \times \SF{Prop} \rightarrow \abs{Bool}\\
+&
+\begin{array}{ll}
+\ahf{CanPutVar}(\hat{H},x)
+  =  \hat{b}_1\sqcup\hat{b}_2\\
+  \quad\wherec{
+    \hat{b}_1 =
+      \left\{
+        \begin{array}{ll}
+          \hat{H}(\avarloc{Global}_R)(x).1.1.2 & \ifc{\atrue\sqsubseteq(x \dot{\in} dom(\hat{H}(\avarloc{Global})))} \\
+          \bot_{Bool} & \owc \\
+        \end{array}
+      \right.\\
+    \hat{b}_2 = 
+      \left\{
+        \begin{array}{ll}
+          \ahf{CanPut}(\hat{H},\avarloc{Global}_R,\hat{x}) & \ifc{\afalse\sqsubseteq(x \dot{\in} dom(\hat{H}(\avarloc{Global})))} \\
+          \bot_{Bool} & \owc \\
+        \end{array}
+      \right.\\
+  }
+\end{array}\\
+\\
+
+\\
+
+%%% CreateMutableBinding %%%
+
 
 & {\inblue \textit{Temporaries and pure local variables are always mutable in non-strict mode.}} \\
 & {\inblue \textit{In strict-mode, ``arguments" is immutable AND pure local, which invalidates current approach.}} \\
@@ -2135,7 +2174,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 & \quad\wherec{\hat{H}_1 = \hat{H}[\avarloc{PureLocal}_R \mapsto \hat{H}(\avarloc{PureLocal}_R)
     [x \mapsto \langle \hat{v},\bot_{Bool},\bot_{Bool},\afalse \rangle]]} \\
 & \ahf{CreateMutableBinding}(\hat{H}, x, \hat{v}) = \hat{H}_1 \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedVar}} \\
-& \quad\wherec{\hat{H}_1 = \bigsqcup_{\hat{l}\in\hat{H}(\avarloc{PureLocal})(\varprop{env}).1.2.2} \hat{H}[\hat{l} \mapsto \hat{H}(\hat{l})
+& \quad\wherec{\hat{H}_1 = \bigsqcup_{\hat{l}\in\hat{H}(\avarloc{PureLocal}_R)(\varprop{env}).1.2.2} \hat{H}[\hat{l} \mapsto \hat{H}(\hat{l})
     [x \mapsto \langle \hat{v},\atrue,\bot_{Bool},\afalse \rangle]]} \\
 & \ahf{CreateMutableBinding}(\hat{H}, x, \hat{v}) = \hat{H}_1 \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedCatchVar}} \\
 & \quad\wherec{\hat{H}_1 = \hat{H}[\avarloc{Collapsed}_O \mapsto \hat{H}(\avarloc{Collapsed}_O)
@@ -2144,112 +2183,13 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 & \quad\wherec{\hat{H}_1 = \hat{H}[\avarloc{Global}_R \mapsto \hat{H}(\avarloc{Global}_R)
     [x \mapsto \langle \hat{v},\atrue,\atrue,\afalse \rangle]]} \\
 \\
-
-\ahf{VarStore} & : \aHeap \times \SF{Prop} \times \aValue \rightarrow \aHeap\\
-& \ahf{VarStore}(\hat{H}, x, \hat{v}) = \hat{H}_1 \quad\ifc{\chf{getVarKind}_P(x) = \SF{PureLocalVar}} \\
-& \quad\wherec{\hat{H}_1 = \hat{H}[\avarloc{PureLocal}_R \mapsto \hat{H}(\avarloc{PureLocal}_R)
-    [x \mapsto \langle \hat{v},\bot_{Bool},\bot_{Bool},\afalse \rangle]]} \\
-& \ahf{VarStore}(\hat{H}, x, \hat{v}) = \hat{H}_1 \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedVar}} \\
-& \quad\wherec{\hat{H}_1 = \bigsqcup_{\hat{l}\in\hat{H}(\avarloc{PureLocal})(\varprop{env}).1.2.2} \ahf{VarStoreL}(\hat{H},\hat{l},x,\hat{v})} \\
-& \ahf{VarStore}(\hat{H}, x, \hat{v}) = \hat{H}_1 \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedCatchVar}} \\
-& \quad\wherec{\hat{H}_1 = \hat{H}[\avarloc{Collapsed}_O \mapsto \hat{H}(\avarloc{Collapsed}_O)
-    [x \mapsto \langle \hat{v},\bot_{Bool},\bot_{Bool},\afalse \rangle]]} \\
-& \ahf{VarStore}(\hat{H}, x, \hat{v}) = \hat{H}_1 \sqcup \hat{H}_2 
-    \quad\ifc{\chf{getVarKind}_P(x) = \SF{GlobalVar}} \\
-& \quad\wherec{
-  \hat{H}_1 = \left\{
-    \begin{array}{ll}
-      \ahf{VarStoreG}(\hat{H}, x, \hat{v}) & \quad\ifc{\atrue\sqsubseteq\ahf{CanPutVar}(\hat{H}, x)} \\
-      \bot_{Heap} & \quad\owc
-    \end{array}
-  \right. \\
-  \land\ \hat{H}_2 = \left\{
-    \begin{array}{ll}
-      \hat{H} & \quad\ifc{\afalse \sqsubseteq \ahf{CanPutVar}(\hat{H}, x)} \\
-      \bot_{Heap} & \quad\owc
-    \end{array}
-  \right. \\
-} \\
-\\
-
-& {\inblue \textit{Writable is false only for function name variables, which is always determined exactly.}} \\
-\ahf{VarStoreL} & : \aHeap \times \aLoc \times \SF{Prop} \times \aValue \rightarrow \aHeap\\
-& \ahf{VarStoreL}(\hat{H}, \hat{l}, x, \hat{v}) = \hat{H}_1 \quad\ifc{x \in \hat{H}(\hat{l}) ~\land~ \hat{H}(\hat{l})(x).1.1.2 = \atrue}\\
-&   \quad\wherec{\hat{H}_1 = \hat{H}[\hat{l} \mapsto \hat{H}(l)[x \mapsto \langle \hat{v},\atrue,\bot_{Bool},\afalse \rangle]]} \\
-& \ahf{VarStoreL}(\hat{H}, \hat{l}, x, \hat{v}) = \hat{H} \quad\ifc{x \in \hat{H}(\hat{l}) ~\land~ \hat{H}(\hat{l})(x).1.1.2 = \afalse}\\
-& \ahf{VarStoreL}(\hat{H}, \hat{l}, x, \hat{v}) = \hat{H}_1 \quad\ifc{x \not\in \hat{H}(\hat{l})} \\
-&   \quad\wherec{\hat{L}_{outer} = \hat{H}(\hat{l})(\varprop{outer}).1.2.2 ~\land~ 
-    \hat{H}_1 = \bigsqcup_{\hat{l}_{outer}\in\hat{L}_{outer}}\ahf{VarStoreL}(\hat{H}, \hat{l}_{outer}, x, \hat{v})} \\
-
-
-\\
-
-
-\ahf{VarStoreG} & : \aHeap \times \SF{Prop} \times \aValue \rightarrow \aHeap \\
-& \ahf{VarStoreG}(\hat{H}, x, \hat{v})
-  =
-  \hat{H}_1 \sqcup \hat{H}_2 \\
-&\wherec{
-  \hat{l}_g = \avarloc{Global}_R\ \land\ \hat{ov}_{old} = \hat{H}(\hat{l}_g)(x).1.1\\
-  \hat{H}_1 =
-  \left\{
-    \begin{array}{ll}
-      \ahf{PropStore}(\hat{H},\hat{l}_g,\hat{x},\hat{v}) & \ifc{\afalse\sqsubseteq(x \dot{\in} dom(\hat{H}(\hat{l}_g)))} \\
-      \bot_{Heap} & \owc \\
-    \end{array}
-   \right.\\ 
-  \hat{H}_2 =
-  \left\{
-    \begin{array}{ll}
-      \hat{H}[\hat{l}_g\mapsto \hat{H}(\hat{l}_g)[x \mapsto
-        \langle \hat{v},\hat{ov}_{old}.2,\hat{ov}_{old}.3,\hat{ov}_{old}.4\rangle]]
-        & \ifc{
-          \atrue\sqsubseteq (x \dot{\in} dom(\hat{H}(\hat{l}_g)))\\
-        } \\
-        \bot_{Heap} & \owc \\
-    \end{array}
-  \right. \\
-}\\
-\\
-% & \ahf{VarStore}(\hat{H},\hat{l}_{hd}::\hat{l}_{tl}^{*},x,\hat{v},\hat{b})
-%   =  \hat{H}\sqcup\hat{H}[\hat{l}_{hd}\mapsto \hat{H}(\hat{l}_{hd})[x\mapsto \set{\hat{H}(\hat{l}_{hd})(x) \rwith value=\hat{v}; writable=\hat{b}}]]\\
-% & \quad\ifc{x \in \ahf{Dom}(\hat{H}(\hat{l}_{hd}))}\\
-% & \ahf{VarStore}(\hat{H},\hat{l}_{hd}::\hat{l}_{tl}^{*},x,\hat{v},\hat{b})
-%   =  \ahf{VarStore}(\hat{H},\hat{l}_{tl}^{*},x,\hat{v},\hat{b})\\
-% & \quad\ifc{x \not\in \ahf{Dom}(\hat{H}(\hat{l}_{hd}))}\\\\
-
 \end{array}
 \]
+\\
 
+%%% Delete %%%
 \[
 \begin{array}{ll}
-
-\ahf{PropStore} & : \aHeap \times \aLoc \times \abs{String} \times \aValue \rightarrow \aHeap \\
-& \ahf{PropStore}(\hat{H},\hat{l},\hat{s},\hat{v})
-  = \hat{H}_1\sqcup\hat{H}_2\\
-& \quad\wherec{
-\hat{H}_1 = \left\{
-    \begin{array}{ll}
-      \hat{H}\left[\hat{l}\mapsto \hat{H}(\hat{l})\left[\hat{s}\mapsto \langle\hat{v},\atrue,\atrue,\atrue\rangle\right]\right] & \ifc{\afalse\sqsubseteq(\hat{s} \dot{\in} dom(\hat{H}(\hat{l})))} \\
-      \bot_{Heap} & \owc \\
-    \end{array}
-  \right. \\
-  \hat{ov}_{old}=\hat{H}(\hat{l})(\hat{s}).1.1\\
-  \hat{H}_2 = \left\{
-    \begin{array}{ll}
-      \hat{H}\left[\hat{l}\mapsto \hat{H}(\hat{l})\left[\hat{s}\mapsto
-          \langle \hat{v},\hat{ov}_{old}.2,\hat{ov}_{old}.3,\hat{ov}_{old}.4\rangle
-% \set{H(l)(x)\rwith value=v}
-        \right]\right] & \ifc{\atrue\sqsubseteq (\hat{s} \dot{\in} dom(\hat{H}(\hat{l})))}\\
-      \bot_{Heap} & \owc \\
-    \end{array}
-  \right. \\
-}\\
-\\
-
-\ahf{ReturnStore} & : \aHeap \times \aValue \rightarrow \aHeap\\
-& \ahf{ReturnStore}(\hat{H}, \hat{v}) = \hat{H}[\avarloc{PureLocal}_R \mapsto \hat{H}(\avarloc{PureLocal}_R)[\varprop{return} \mapsto \hat{v}]]\\
-\\
 
 & {\inblue \hat{H}(\hat{l})(\hat{s}).1.1.4\textit{ means the configurable attribute of the property.}} \\
 \ahf{Delete} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \aHeap
@@ -2293,664 +2233,26 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
     \right.\\
   }\\
 \\
-\end{array}
-\]
 
-\[
-\begin{array}{ll}
-
-\ahf{Lookup} & : \aHeap \times \SF{Prop} \rightarrow \aValue \times \powerset{\abs{Exception}}\\
-& \ahf{Lookup}(\hat{H},x) = (\hat{H}(\avarloc{PureLocal}_R)(x).1.1.1, \set{ }) 
-      \quad\ifc{\chf{getVarKind}_P(x) = \SF{PureLocalVar}} \\
-& \ahf{Lookup}(\hat{H},x) = (\bigsqcup_{\hat{l}\in\hat{H}(\avarloc{PureLocal})(\varprop{env}).1.2.2} \ahf{LookupL}(\hat{H},\hat{l},x), \set{ })
-      \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedVar}} \\
-& \ahf{Lookup}(\hat{H},x) = (\hat{H}(\avarloc{Collapsed}_O)(x).1.1.1, \set{ }) 
-      \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedCatchVar}} \\
-& \ahf{Lookup}(\hat{H},x) = \ahf{LookupG}(\hat{H},x)
-      \quad\ifc{\chf{getVarKind}_P(x) = \SF{GlobalVar}} \\
-\\
-
-\ahf{LookupL} & : \aHeap \times \aLoc \times \SF{Prop} \rightarrow \aValue \\
-& \ahf{LookupL}(\hat{H}, \hat{l}, x) = \hat{H}(\hat{l})(x).1.1.1 \quad\ifc{x \in \hat{H}(\hat{l})}\\
-& \ahf{LookupL}(\hat{H}, \hat{l}, x) = \bigsqcup_{\hat{l}_{outer}\in\hat{L}_{outer}}\ahf{LookupL}(\hat{H}, \hat{l}_{outer}, x)
-    \quad\ifc{x \not\in \hat{H}(\hat{l})} \\
-&   \quad\wherec{\hat{L}_{outer} = \hat{H}(\hat{l})(\varprop{outer}).1.2.2} \\
-\\
-
-\ahf{LookupG} & : \aHeap \times \SF{Prop} \rightarrow \aValue \times \powerset{\abs{Exception}}\\
-&
-  \ahf{LookupG}(\hat{H},x)
-   = (\hat{v}_1\sqcup\hat{v}_2, \hat{es})\\
+\ahf {DeleteAll} &: \aHeap \times \aLoc \times \abs{String} \rightarrow \aHeap\\
+& \ahf{DeleteAll} (\hat{H}, \hat{l}, \hat{s}) = \hat{H}_1\\
 & \quad\wherec{
-  \hat{v}_1 = \left\{
+  \hat{H}_2 = \ahf{Delete}(\hat{H}, \hat{l}, \hat{s}).1\\
+  \hat{H}_1 = \left\{
     \begin{array}{ll}
-      \hat{H}(\avarloc{Global}_R)(x).1.1.1
-      & \ifc{\atrue\sqsubseteq(x \dot{\in} dom(\hat{H}(\avarloc{Global})))} \\
-      \bot_{Value}
-      & \owc \\
-    \end{array}\right. \\
-  (\hat{v}_2, \hat{es}) = \left\{
-    \begin{array}{ll}
-      (\hat{v}_3, \hat{exc})
-      & \ifc{\vfalse\sqsubseteq(x \dot{\in} dom(\hat{H}(\avarloc{Global})))}\\
-      (\bot_{Value}, \{\})
-      & \owc \\
-    \end{array}\right. \\
-  \hat{L}_{proto} = \hat{H}(\avarloc{Global}_R)(\hat{\varprop{proto}}).1.1.1.2\\
-  \hat{v}_3 = 
-    \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}
-    \left\{
-    \begin{array}{ll}
-      \ahf{Proto}(\hat{H}, \hat{l}_{proto}, \hat{x})
-      & \ifc{\atrue\sqsubseteq\ahf{HasProperty}(\hat{H},\hat{l}_{proto},\hat{x})}\\
-      \bot_{Value}
-      & \owc \\
-    \end{array}\right. \\
-  \hat{exc} = 
-    \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}
-    \left\{
-    \begin{array}{ll}
-      \{\hat{\SF{ReferenceError}}\}
-      & \ifc{\afalse\sqsubseteq\ahf{HasProperty}(\hat{H},\hat{l}_{proto},\hat{x})}\\
-      \bot_{Exception}
-      & \owc \\
-    \end{array}\right. \\
-}\\
-\\
-
-& {\inblue \textit{For all case of }\hat{s}_n\textit{ if the condition is false, the value of }\hat{s}_n\textit{ is }\bot_{String}.} \\
-\ahf{TypeTag} & : \aHeap \times \aValue \rightarrow \abs{String}\\
-& \ahf{TypeTag}(\hat{H},\hat{v}) = \hat{s}_1\sqcup\hat{s}_2\sqcup\hat{s}_3\sqcup\hat{s}_4\sqcup\hat{s}_5\sqcup\hat{s}_6\sqcup\hat{s}_7 \\
-& \wherec{
-  \begin{array}{ll}
-  \hat{s}_1 = \hat{``number"} & \ifc{\hat{v}.1.4\not\sqsubseteq\bot_{number}} \\
-  \hat{s}_2 = \hat{``boolean"} & \ifc{\hat{v}.1.3\not\sqsubseteq\bot_{boolean}} \\
-  \hat{s}_3 = \hat{``string"} & \ifc{\hat{v}.1.5\not\sqsubseteq\bot_{string}} \\
-  \hat{s}_4 = \hat{``object"} & \ifc{\hat{v}.2\not\sqsubseteq\bot_{Loc}\land\afalse\sqsubseteq\bigsqcup_{\hat{l}\in\hat{v}.2}\ahf{IsCallable}(\hat{H},\hat{l})} \\
-  \hat{s}_5 = \hat{``function"} & \ifc{\hat{v}.2\not\sqsubseteq\bot_{Loc}\land\atrue\sqsubseteq\bigsqcup_{\hat{l}\in\hat{v}.2}\ahf{IsCallable}(\hat{H},\hat{l})} \\
-  \hat{s}_6 = \hat{``object"} & \ifc{\hat{v}.1.2\not\sqsubseteq\bot_{null}} \\
-  \hat{s}_7 = \hat{``undefined"} & \ifc{\hat{v}.1.1\not\sqsubseteq\bot_{undef}} \\
-  \end{array}\\
-  }\\
-\\
-
-
-\ahf{CanPut} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \abs{Bool}\\
-&
-\begin{array}{ll}
-  \ahf{CanPut}(\hat{H},\hat{l},\hat{s}) = \ahf{CanPutHelp}(\hat{H},\hat{l},\hat{s},\hat{l}) & \\
-\end{array}
-\\\\
-
-%& {\inblue \textit{For all case of }\hat{s}_n\textit{ if the condition is false, the value of }\hat{s}_n\textit{ is }\bot_{String}.} \\
-& {\inblue \textit{Cycle in prototype chain is detected at implementation level.}} \\
-\ahf{CanPutHelp} &  : \aHeap \times \aLoc \times \abs{String} \times \aLoc \rightarrow \abs{Bool}\\
-&  \ahf{CanPutHelp}(\hat{H},\hat{l}_1,\hat{s},\hat{l}_2)  = \hat{b}_1\sqcup\hat{b}_2\\
-&  \quad\wherec{
-    \hat{b}_1 =
-    \left\{
-      \begin{array}{ll}
-        \hat{H}(\hat{l}_1)(\hat{s}).1.1.2
-        ~~{\inblue \textit{// writable attribute}}
-        & \ifc{\atrue\sqsubseteq(\hat{s} \dot{\in} dom(\hat{h}(\hat{l})))}\\
-        \bot_{Bool} & \owc\\
-      \end{array}
-    \right.\\
-    \hat{L}_{proto}=\hat{H}(\hat{l}_1)(\varprop{proto}).1.1.1.2
-~~{\inblue \textit{// $\powerset{\aLoc}$ type}}\\
-    \hat{b}_2 =
-    \left\{
-      \begin{array}{ll}
-        \hat{b}_3 \sqcup \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}\ahf{CanPutHelp}(\hat{H},\hat{l}_{proto},\hat{s},\hat{l}_2)& \ifc{\afalse\sqsubseteq(\hat{s} \dot{\in} dom(\hat{h}(\hat{l})))}\\
-        \bot_{Bool} & \owc\\
-      \end{array}
-    \right.\\
-    \hat{b}_3 =
-    \left\{
-      \begin{array}{ll}
-        \hat{H}(\hat{l})(\varprop{extensible}).1.2.1.3& \ifc{\hat{H}(\hat{l}_1)(\varprop{proto}).1.1.1.1.2 \not\sqsubseteq \bot_{Null}}\\
-        \bot_{Bool} & \owc\\
-      \end{array}
-    \right.\\
-    }\\
-\\
-
-\ahf{CanPutVar} & : \aHeap \times \SF{Prop} \rightarrow \abs{Bool}\\
-&
-\begin{array}{ll}
-\ahf{CanPutVar}(\hat{H},x)
-  =  \hat{b}_1\sqcup\hat{b}_2\\
-  \quad\wherec{
-    \hat{b}_1 =
-      \left\{
-        \begin{array}{ll}
-          \hat{H}(\avarloc{Global}_R)(x).1.1.2 & \ifc{\atrue\sqsubseteq(x \dot{\in} dom(\hat{H}(\avarloc{Global})))} \\
-          \bot_{Bool} & \owc \\
-        \end{array}
-      \right.\\
-    \hat{b}_2 = 
-      \left\{
-        \begin{array}{ll}
-          \ahf{CanPut}(\hat{H},\avarloc{Global}_R,\hat{x}) & \ifc{\afalse\sqsubseteq(x \dot{\in} dom(\hat{H}(\avarloc{Global})))} \\
-          \bot_{Bool} & \owc \\
-        \end{array}
-      \right.\\
-  }
-\end{array}\\
-\\
-\end{array}
-\]
-
-
-\[
-\begin{array}{ll}
-
-& {\inblue \textit{Cycle in prototype chain is detected at implementation level.}} \\
-\ahf{HasProperty} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \abs{Bool} \\
-& \ahf{HasProperty}(\hat{H},\hat{l},\hat{s}) = \hat{b}_1\sqcup\hat{b}_2 \\
-& \wherec{
-  \hat{b}_1 = \left\{
-    \begin{array}{ll}
-      \atrue & \ifc{\atrue\sqsubseteq\ahf{HasOwnProperty}(\hat{H},\hat{l},\hat{s})} \\
-      \bot_{Bool} & \owc \\
+      \ahf{DeleteAll}(\hat{H}_2, \hat{l}_1, \hat{s}) & \ifc{\hat{H}(\hat{l})(@proto).1.1.1.1.2 \sqsubseteq \bot_{Null} \\ \land \hat{H}(\hat{l})(@proto).1.1.1.2 = \{ \hat{l}_1\}}\\
+      \hat{H}_2 & \owc
     \end{array}
-    \right.\\
-    \hat{L}_{proto} = \hat{H}(\hat{l})(\varprop{proto}).1.1.1.2 \\
-  \hat{b}_2 = \left\{
-    \begin{array}{ll}
-      \hat{b}_3 \sqcup \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}\ahf{HasProperty}(\hat{H},\hat{l}_{proto},\hat{s})
-      & \ifc{\afalse\sqsubseteq\ahf{HasOwnProperty}(\hat{H},\hat{l},\hat{s})} \\
-      \bot_{Bool} & \owc \\
-    \end{array}
-    \right.\\
-    \hat{b}_3 =
-    \left\{
-      \begin{array}{ll}
-        \afalse & \ifc{\hat{H}(\hat{l}_1)(\varprop{proto}).1.1.1.1.2 \not\sqsubseteq \bot_{Null}}\\
-        \bot_{Bool} & \owc\\
-      \end{array}
-    \right.\\
-  }\\
-\\
-
-\ahf{HasOwnProperty} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \abs{Bool} \\
-&  \ahf{HasOwnProperty}(\hat{H},\hat{l},\hat{s}) = (\hat{s} \dot{\in} dom(\hat{h}(\hat{l})))\\
-\\\\
-
-& {\inblue \textit{Cycle in prototype chain is detected at implementation level.}} \\
-\ahf{Proto} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \aValue\\
-  & \ahf{Proto}(\hat{H},\hat{l},\hat{s})
-    =\hat{v}_1\sqcup\hat{v}_2\\
-  & \quad\wherec{
-     \hat{v}_1 =
-        \left\{
-          \begin{array}{ll}
-            \hat{H}(\hat{l})(\hat{s}).1.1.1
-            & \atrue\sqsubseteq(\hat{s} \dot{\in} dom(\hat{h}(\hat{l}))))\\
-            \bot_{Value} & \owc \\
-          \end{array}
-        \right.\\
-      \hat{L}_{proto} = \hat{H}(\hat{l})(\varprop{proto}).1.1.1.2\\
-      \hat{v}_2 =
-        \left\{
-          \begin{array}{ll}
-            \hat{v}_3 \sqcup \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}\ahf{Proto}(\hat{H},\hat{l}_{proto},\hat{s})
-            & \afalse\sqsubseteq(\hat{s} \dot{\in} dom(\hat{h}(\hat{l})))\\
-            \bot_{Value} & \owc \\
-          \end{array}
-        \right.\\
-    \hat{v}_3 =
-      \left\{
-      \begin{array}{ll}
-        \aundef_{Value} & \ifc{\hat{H}(\hat{l}_1)(\varprop{proto}).1.1.1.1.2 \not\sqsubseteq \bot_{Null}}\\
-        \bot_{Value} & \owc\\
-      \end{array}
-    \right.\\
-    }\\
-\\
-
-\ahf{NewObject} & : \aLoc \rightarrow \aObj \\
-& \ahf{NewObject}(\hat{l}) = \set{\varprop{class}\mapsto \hat{``Object"}_{Value},\\
-  \varprop{proto}\mapsto
-   \langle \langle\bot_{PValue},\{\hat{l}\}\rangle,\afalse,\afalse,\afalse \rangle,\\
-  \varprop{extensible}\mapsto \atrue_{Value}
-  }\\\\
-
-\ahf{NewFunctionObject} & : \fid \times \powerset{\aLoc} \times \aLoc \times \abs{Number} \rightarrow \aObj \\
-& \ahf{NewFunctionObject}(fid,\hat{L},\hat{l},\hat{n}) = \set{
-  \varprop{class}\mapsto \hat{``Function"}_{Value},\\
-  \varprop{proto}\mapsto
-    \langle\langle\bot_{PValue},\{\avarloc{FunctionProto}_R\}\rangle,\afalse,\afalse,\afalse\rangle,\\
-  \varprop{extensible}\mapsto \atrue_{Value},\\
-  \varprop{function}\mapsto \{fid\},\\
-  \varprop{construct}\mapsto \{fid\},\\
-  \varprop{scope}\mapsto \hat{L}_{Value},\\
-  ``prototype"\mapsto
-    \langle\langle\bot_{PValue},\{\hat{l}\}\rangle,\atrue,\afalse,\afalse\rangle,\\
-  ``length"\mapsto
-    \langle\hat{n}_{Value},\afalse,\afalse,\afalse\rangle
-}\\\\
-
-\ahf{NewArrayObject} & : \abs{Number} \rightarrow \aObj \\
-& \ahf{NewArrayObject}(\hat{n}) = \set{
-    \varprop{class}\mapsto \hat{``Array"}_{Value},\\
-    \varprop{proto}\mapsto 
-    \langle\langle\bot_{PValue},\{\avarloc{ArrayProto}_R\}\rangle,\afalse,\afalse,\afalse\rangle,\\
-   ``length"\mapsto
-   \langle\hat{n}_{Value},\atrue,\afalse,\afalse\rangle,\\
-  \varprop{extensible}\mapsto \atrue_{Value}
-}\\\\
-\end{array}
-\]
-\[
-\begin{array}{ll}
-\ahf{NewArgObject} & : \abs{Number} \rightarrow \aObj \\
-& \ahf{NewArgObject}(\hat{n}) = \set{
-    \varprop{class}\mapsto \hat{``Arguments"}_{Value},\\
-    \varprop{proto}\mapsto 
-    \langle\langle\bot_{PValue},\{\avarloc{ObjProto}_R\}\rangle,\afalse,\afalse,\afalse\rangle,\\
-   ``length"\mapsto
-   \langle\hat{n}_{Value},\atrue,\afalse,\atrue\rangle,\\
-  \varprop{extensible}\mapsto \atrue_{Value}
-}\\\\
-
-\ahf{NewBoolean} & : \abs{Value} \rightarrow \aObj \\
-& \ahf{NewBoolean}(\hat{v}) = \set{
-    \varprop{class}\mapsto \hat{``Boolean"}_{Value},\\
-    \varprop{proto}\mapsto 
-    \langle\langle\bot_{PValue},\{\avarloc{BoolProto}_R\}\rangle,\afalse,\afalse,\afalse\rangle,\\
-    \varprop{extensible}\mapsto \atrue_{Value}, \\
-    \varprop{primitive}\mapsto \hat{v}
-}\\\\
-
-\ahf{NewNumber} & : \abs{Value} \rightarrow \aObj \\
-& \ahf{NewNumber}(\hat{v}) = \set{
-    \varprop{class}\mapsto \hat{``Number"}_{Value},\\
-    \varprop{proto}\mapsto 
-    \langle\langle\bot_{PValue},\{\avarloc{NumProto}_R\}\rangle,\afalse,\afalse,\afalse\rangle,\\
-    \varprop{extensible}\mapsto \atrue_{Value}, \\
-    \varprop{primitive}\mapsto \hat{v}
-}\\\\
-
-\ahf{NewString} & : \abs{Value} \rightarrow \aObj \\
-& \ahf{NewString}(\hat{v}) = \hat{o}_1 \sqcup \hat{o}_2 \\
-& \quad\wherec{
-  \hat{s} = \hat{v}.1.5\ \land\ \hat{v}_{len} = length(\hat{s})\\
-  \hat{o}_1 = \set{
-    \varprop{class}\mapsto \hat{``String"}_{Value},\\
-    \varprop{proto}\mapsto 
-    \langle\langle\bot_{PValue},\{\avarloc{StrProto}_R\}\rangle,\afalse,\afalse,\afalse\rangle,\\
-    \varprop{extensible}\mapsto \atrue_{Value}, \\
-    \varprop{primitive}\mapsto \hat{v}, \\
-    ``length"\mapsto \langle (\hat{v}_{len})_{Value}, \afalse, \afalse, \afalse\rangle \\
-  } \\
-  \hat{o}_2 = \set{``i"\mapsto \langle (\hat{v}_{char})_{Value}, \afalse, \atrue, \afalse\rangle ~\left|~
-      \begin{array}{l}
-        0 \leq i\\
-        \land\ \exists l\in\gamma(\hat{v}_{len}).i < l\\
-        \land\ \hat{v}_{char} = charAt(\hat{s},i)
-      \end{array}
-    \right.}
-}\\
-\\
-
-\ahf{NewPureLocal} & : \powerset{\abs{Loc}} \times \powerset{\abs{Loc}} \rightarrow \aObj \\
-& \ahf{NewPureLocal}(\hat{L}_{env}, \hat{L}_{this}) = \set{
-    \varprop{env} \mapsto \hat{L}_{env}, \\
-    \varprop{this} \mapsto \hat{L}_{this}, \\
-    \varprop{exception} \mapsto \bot_{PropValue}, \\
-    \varprop{exception\_all} \mapsto \bot_{PropValue}, \\
-    \varprop{return} \mapsto \aundef_{Value} 
-}\\
-\\
-
-\ahf{NewDeclEnvRecord} & : \powerset{\aLoc} \rightarrow \aObj \\
-& \ahf{NewDeclEnvRecord}(\hat{L}) = \set{
-    \varprop{outer} \mapsto \hat{L}_{Value}
-}\\
-\\
-
-\ahf{IsCallable} & : \aHeap \times \aLoc \rightarrow \abs{Bool} \\
-& \ahf{IsCallable}(\hat{H},\hat{l})
-  = \hat{b}_1\sqcup\hat{b}_2 \\
-& \quad\wherec{
-  \hat{b}_1 = 
-    \left\{
-      \begin{array}{l@{\quad\quad\quad}l}
-        \atrue &\ifc{\atrue\sqsubseteq(\varprop{function} \dot{\in} dom(\hat{H}(\hat{l})))}\\
-        \bot_{Bool} &\owc
-      \end{array}
-    \right.\\
-  \hat{b}_2 = 
-    \left\{
-      \begin{array}{l@{\quad\quad\quad}l}
-        \afalse &\ifc{\afalse\sqsubseteq(\varprop{function} \dot{\in} dom(\hat{H}(\hat{l})))}\\
-        \bot_{Bool} &\owc
-      \end{array}
-    \right.\\
-  }\\\\
-\\
-
-\ahf{HasConstruct} & : \aHeap \times \aLoc \rightarrow \abs{Bool} \\
-& \ahf{HasConstruct}(\hat{H},\hat{l})
-  = \hat{b}_1\sqcup\hat{b}_2 \\
-& \quad\wherec{
-  \hat{b}_1 = 
-    \left\{
-      \begin{array}{l@{\quad\quad\quad}l}
-        \atrue &\ifc{\atrue\sqsubseteq(\varprop{construct} \dot{\in} dom(\hat{H}(\hat{l})))}\\
-        \bot_{Bool} &\owc
-      \end{array}
-    \right.\\
-  \hat{b}_2 = 
-    \left\{
-      \begin{array}{l@{\quad\quad\quad}l}
-        \afalse &\ifc{\afalse\sqsubseteq(\varprop{construct} \dot{\in} dom(\hat{H}(\hat{l})))}\\
-        \bot_{Bool} &\owc
-      \end{array}
-    \right.\\
-
-  }\\\\
-\end{array}
-\]
-\[
-\begin{array}{ll}
-% \chf{newLocation} & : \SF{Unit} \rightarrow \SF{Loc} \\
-% & \chf{newLocation}()
-%   = l_{new}\\
-% \\
-\ahf{toObject} & : \aHeap \times \abs{Context} \times \aValue \times \abs{Address} \rightarrow \aValue \times \aHeap \times \abs{Context} \times  \powerset{\abs{Exception}} \\
-& \ahf{toObject}(\hat{H}, \hat{C}, \hat{v}, \hat{a})
-  = (\langle\bot_{PValue},\hat{L}_3\rangle,\hat{H}_4,\hat{C}_4,\hat{es}) \\
-  & \quad\wherec{
-    \hat{L} = \hat{v}.2\\
-    \hat{o}_1 =
-    \left\{
-      \begin{array}{ll}
-        \ahf{NewString}(\hat{v}.1.5) & \ifc{\hat{v}.1.5\not\sqsubseteq\bot_{string}} \\
-        \bot_{Obj} & \owc\\
-      \end{array}
-    \right.\\
-    \hat{o}_2 =
-    \left\{
-      \begin{array}{ll}
-        \ahf{NewBoolean}(\hat{v}.1.3) & \ifc{\hat{v}.1.3\not\sqsubseteq\bot_{boolean}} \\
-        \bot_{Obj} & \owc\\
-      \end{array}
-    \right.\\
-    \hat{o}_3 =
-    \left\{
-      \begin{array}{ll}
-        \ahf{NewNumber}(\hat{v}.1.4) & \ifc{\hat{v}.1.4\not\sqsubseteq\bot_{number}} \\
-        \bot_{Obj} & \owc\\
-      \end{array}
-    \right.\\
-    \hat{es} = 
-    \left\{
-      \begin{array}{ll}
-        \{\hat{\SF{TypeException}}\} & \ifc{\hat{v}.1.1\not\sqsubseteq\bot_{undef}\lor \hat{v}.1.2\not\sqsubseteq\bot_{null}} \\
-        \{\} & \owc\\
-      \end{array}
-    \right.\\
-    \hat{o} = \hat{o}_1 \sqcup \hat{o}_2 \sqcup \hat{o}_3 \\
-
-    \inblue (\hat{H}_1, \hat{C}_1) = \ahf{Oldify}(\hat{H}, \hat{C}, \hat{a}_{new})
-    \quad\comment{{\inblue // Recency Abstraction}}\\
-    \inblue\hat{l}_{R} = (\hat{a}_{new}, Recent)
-    \quad\comment{{\inblue // Recency Abstraction}}\\
-
-    (\hat{L}_1, \hat{H}_2, \hat{C}_2) = \left\{
-      \begin{array}{ll}
-        (\{\hat{l}_R\}, \hat{H}_1[\hat{l}_R\mapsto \hat{o}], \hat{C}_1)& \quad\ifc{\hat{o}\not\sqsubseteq \bot_{Obj}} \\
-        (\set{}, \bot_{Heap}, \bot_{Context})& \owc
-      \end{array}
-    \right.\\
-    (\hat{L}_2, \hat{H}_3, \hat{C}_3) = \left\{
-      \begin{array}{ll}
-        (\hat{L}, \hat{H}, \hat{C}& \quad\ifc{\hat{L}\not\sqsubseteq \set{}} \\
-        (\set{}, \bot_{Heap}, \bot_{Context})& \owc
-      \end{array}
-    \right.\\
-    
-    \hat{L}_3 = \hat{L}_1\sqcup\hat{L}_2 \land\ \hat{H}_4 = \hat{H}_2 \sqcup \hat{H}_3\land\ \hat{C}_4 = \hat{C}_2 \sqcup \hat{C}_3\\
-  }\\
-\\
-
-\ahf{toNumber} & : \abs{PValue} \rightarrow \abs{Number} \\
-& \ahf{toNumber}(\hat{pv})
-  = \hat{n}_1\sqcup\hat{n}_2\sqcup\hat{n}_3\sqcup\hat{n}_4\sqcup\hat{n}_5 \\
-& \quad\wherec{
-  \hat{n}_1 = \hat{\SF{NaN}}\quad\ifc{\aundef_{Value}\sqsubseteq\hat{pv}}\\
-  \hat{n}_2 = \hat{0}\quad\ifc{\anull\sqsubseteq\hat{pv}\lor\afalse\sqsubseteq\hat{pv}}\\
-  \hat{n}_3 = \hat{1}\quad\ifc{\atrue\sqsubseteq\hat{pv}}\\
-  \hat{n}_4 = \hat{pv}.4\\
-  \hat{n}_5 = {\inred \ahf{Str2Num}(\hat{pv})}\quad\ifc{\hat{pv}.5\not\sqsubseteq\bot_{string}}\\
-}\\
-\\
-
-\ahf{toString} & : \abs{PValue} \rightarrow \abs{String} \\
-& \ahf{toString}(\hat{pv})
-  = \hat{s}_1\sqcup\hat{s}_2\sqcup\hat{s}_3\sqcup\hat{s}_4\sqcup\hat{s}_5\\
-& \quad\wherec{
-  \hat{s}_1 = \hat{``undefined"}\quad\ifc{\hat{pv}.1\not\sqsubseteq\bot_{Undefined}} \\
-  \hat{s}_2 = \hat{``null"}\quad\ifc{\hat{pv}.2\not\sqsubseteq\bot_{Null}} \\
-  \hat{s}_3 = \hat{``pv.3"}\quad\ifc{\hat{pv}.3\not\sqsubseteq\bot_{Bool}} \\
-  \hat{s}_4 = \hat{``pv.4"}\quad\ifc{\hat{pv}.4\not\sqsubseteq\bot_{Number}} \\
-  \hat{s}_5 = \hat{pv}.5\\
-}\\
-\\
-
-\ahf{toStringSet} & : \abs{PValue} \rightarrow \powerset{\abs{String}} \\
-& \ahf{toStringSet}(\hat{pv})
-  = \hat{ss} ~ \textit{with redundancies removed}\\
-& \quad\wherec{
-  \hat{ss}_1 = 
-    \left\{\begin{array}{ll}
-      \{ \hat{``undefined"} \} & \ifc{\hat{pv}.1\not\sqsubseteq\bot_{Undefined}} \\
-      \{\} & \owc \\
-    \end{array}\right. \\
-  \hat{ss}_2 = 
-    \left\{\begin{array}{ll}
-      \{ \hat{``null"} \} & \ifc{\hat{pv}.2\not\sqsubseteq\bot_{Undefined}} \\
-      \{\} & \owc \\
-    \end{array}\right. \\
-  \hat{ss}_3 = 
-    \left\{\begin{array}{ll}
-      \{ \hat{``pv.3"} \} & \ifc{\hat{pv}.3\not\sqsubseteq\bot_{Undefined}} \\
-      \{\} & \owc \\
-    \end{array}\right. \\
-  \hat{ss}_4 = 
-    \left\{\begin{array}{ll}
-      \{ \hat{``pv.4"} \} & \ifc{\hat{pv}.4\not\sqsubseteq\bot_{Undefined}} \\
-      \{\} & \owc \\
-    \end{array}\right. \\
-  \hat{ss}_5 = 
-    \left\{\begin{array}{ll}
-      \{ \hat{pv}.5 \} & \ifc{\hat{pv}.5\not\sqsubseteq\bot_{Undefined}} \\
-      \{\} & \owc \\
-    \end{array}\right. \\
-  \hat{ss} = \hat{ss}_1\cup\hat{ss}_2\cup\hat{ss}_3\cup\hat{ss}_4\cup\hat{ss}_5
-}\\
-\\
-
-& {\inblue \textit{Cycle in prototype chain is detected at implementation level.}} \\
-\ahf{inherit} & : \aHeap \times \aLoc \times \aLoc \rightarrow \aValue \\
-& \ahf{inherit}(\hat{H},\hat{l}_1,\hat{l}_2)
-  = \left\{
-    \begin{array}{ll}
-      \atrue & \ifc{\hat{l}_1 = \hat{l}_2} \\
-      \hat{v}_1 \sqcup \bigsqcup_{\hat{l}\in \hat{H}(\hat{l}_1)(\varprop{proto}).1.1.1.2} \ahf{inherit}(\hat{H},\hat{l},\hat{l}_2) & \ifc{\hat{l}_1 \neq \hat{l}_2} \\
-    \end{array}
-  \right.\\
-& \quad\wherec{
-  \hat{v}_1 =
-    \left\{
-    \begin{array}{ll}
-      \afalse & \ifc{\hat{H}(\hat{l}_1)(\varprop{proto}).1.1.1.1.2 \not\sqsubseteq \bot_{Null}}\\
-      \bot_{Value} & \owc\\
-    \end{array}
-    \right.
-  }\\
-\\
-\end{array}
-\]
-\[
-\begin{array}{ll}
-% &  \left\{
-%     \begin{array}{l@{\quad\quad}l}
-%       \vfalse   & \ifc{v=\SF{undefined}} \\
-%       \vfalse   & \ifc{v=\SF{null}} \\
-%       v         & \ifc{v\in\SF{Boolean}} \\
-%       \vfalse   & \ifc{v\in\SF{Number}\land v\in\set{\sf 0,NaN}} \\
-%       \vtrue    & \ifc{v\in\SF{Number}\land v\not\in\set{\sf 0,NaN}} \\
-%       \vfalse   & \ifc{v\in\SF{String}\land v=``"} \\
-%       \vtrue    & \ifc{v\in\SF{String}\land v\neq``"} \\
-%       \vtrue    & \ifc{v\in\SF{Loc}}
-%     \end{array}
-%   \right.\\
-
-\ahf{toBoolean} & : \aValue \rightarrow \abs{Bool} \\
-& \ahf{toBoolean}(\hat{v})
-  = \langle\langle \bot,\bot,\displaystyle\bigsqcup_{n=1\cdots8}\hat{b}_n,\bot,\bot\rangle,\{\}\rangle \\
-& \wherec{
-  \hat{b}_1 = \afalse \quad\ifc{\aundef\sqsubseteq\hat{v}.1.1}\\
-  \hat{b}_2 = \afalse \quad\ifc{\anull\sqsubseteq\hat{v}.1.2}\\
-  \hat{b}_3 = \hat{v}.1.3 \\
-  \hat{b}_4 = \afalse \quad\ifc{\hat{0}\sqsubseteq\hat{v}.1.4\lor\hat{\SF{NaN}}\sqsubseteq\hat{v}.1.4} \\
-  \hat{b}_5 = \atrue \quad\ifc{\hat{v}.1.4\not\sqsubseteq\bot_{number}\land\hat{v}.1.4\neq\hat{0}\land\hat{v}.1.4\neq\hat{\SF{NaN}}} \\
-  \hat{b}_6 = \afalse \quad\ifc{\hat{``"}\sqsubseteq\hat{v}.1.5} \\
-  \hat{b}_7 = \atrue \quad\ifc{\hat{v}.1.5\not\sqsubseteq\bot_{string}\land\hat{v}.1.5\neq\hat{``"}}\\
-  \hat{b}_8 = \atrue \quad\ifc{\hat{v}.2\not\sqsubseteq\bot_{Loc}}\\
-}\\
-\\
-
-\ahf{toPrimitive} & : \aValue \rightarrow \abs{PValue} \\
-& \ahf{toPrimitive}(\hat{v})
-  = \hat{v}.1 \sqcup \inred \ahf{Obj2Str}(\hat{v}.2) \\
-\\
-\ahf{getThis} & : \aHeap \times \aValue \rightarrow \powerset{\aLoc} \\
-& \ahf{getThis}(\hat{H}, \hat{v})
-  = \hat{L}_1\cup\hat{L}_2\cup\hat{L}_3\\
-& \quad\wherec{
-  \hat{L}_1 = \left\{
-    \begin{array}{ll}
-      \{\avarloc{Global}_R\} & \ifc{\aundef\sqsubseteq\hat{v}.1.1 \vee \anull\sqsubseteq\hat{v}.1.2} \\
-      \{\} & \owc \\
-    \end{array}
-    \right.\\
-  \hat{L}_2 = \left\{
-    \begin{array}{ll}
-      \{\avarloc{Global}_R\} & \ifc{\exists\ \hat{l} \in \hat{v}.2 : \afalse \sqsubseteq \ahf{IsObject}(\hat{h},\hat{l})} \\
-      \{\} & \owc \\
-    \end{array}
-    \right.\\
-  \hat{L}_3 = \{ \hat{l} \in \hat{v}.2 ~|~ \atrue \sqsubseteq \ahf{IsObject}(\hat{h},\hat{l}) \} \\
+  \right.
 }
-
-\\
-\\
-\ahf{LookupBase} & : \aHeap \times \SF{Prop} \rightarrow \powerset{\aLoc}\\
-& \ahf{LookupBase}(\hat{H},x) = \{ \avarloc{PureLocal}_R \} 
-    \quad\ifc{\chf{getVarKind}_P(x) = \SF{PureLocalVar}} \\
-& \ahf{LookupBase}(\hat{H},x) = \bigcup_{\hat{l}\in\hat{H}(\avarloc{PureLocal})(\varprop{env}).1.2.2} \ahf{LookupBaseL}(\hat{H},\hat{l},x)
-    \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedVar}} \\
-& \ahf{LookupBase}(\hat{H},x) = \{ \avarloc{Collapsed}_O \} 
-    \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedCatchVar}} \\
-& \ahf{LookupBase}(\hat{H},x) = \ahf{LookupBaseG}(\hat{H},x)
-    \quad\ifc{\chf{getVarKind}_P(x) = \SF{GlobalVar}} \\
 \\
 
-\ahf{LookupBaseL} & : \aHeap \times \aLoc \times \SF{Prop} \rightarrow \powerset{\aLoc} \\
-& \ahf{LookupBaseL}(\hat{H}, \hat{l}, x) = \{\hat{l}\} \quad\ifc{x \in \hat{H}(\hat{l})}\\
-& \ahf{LookupBaseL}(\hat{H}, \hat{l}, x) = \bigcup_{\hat{l}_{outer}\in\hat{L}_{outer}}\ahf{LookupBaseL}(\hat{H}, \hat{l}_{outer}, x)
-    \quad\ifc{x \not\in \hat{H}(\hat{l})} \\
-&   \quad\wherec{\hat{L}_{outer} = \hat{H}(\hat{l})(\varprop{outer}).1.2.2} \\
 \\
 
-\ahf{LookupBaseG} & : \aHeap \times \SF{Prop} \rightarrow \powerset{\aLoc}\\
-&
-  \ahf{LookupBaseG}(\hat{H},x)
-   = \hat{L}_1\cup\hat{L}_2\\
-& \quad\wherec{
-  \hat{L}_1 = \left\{
-    \begin{array}{ll}
-      \{\avarloc{Global}_R\}
-      & \ifc{\atrue\sqsubseteq(x \dot{\in} dom(\hat{H}(\avarloc{Global}_R))} \\
-      \{\}
-      & \owc \\
-    \end{array}\right. \\
-  \hat{L}_2 = \left\{
-    \begin{array}{ll}
-      \hat{L}_3
-      & \ifc{\vfalse\sqsubseteq(x \dot{\in} dom(\hat{H}(\avarloc{Global}_R))}\\
-      \{\}
-      & \owc \\
-    \end{array}\right. \\
-  \hat{L}_{proto} = \hat{H}(\avarloc{Global}_R)(\varprop{proto}).1.1.1.2\\
-  \hat{L}_3 = 
-    \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}
-    \ahf{ProtoBase}(\hat{H}, \hat{l}_{proto}, \hat{x})\\
-}\\
-\\
+%Exception
 
 
-& {\inblue \textit{Cycle in prototype chain is detected at implementation level.}} \\
-\ahf{ProtoBase} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \powerset{\aLoc}\\
-  & \ahf{ProtoBase}(\hat{H},\hat{l},\hat{s})
-    = \hat{L}_1\cup\hat{L}_2\\
-  & \quad\wherec{
-      \hat{l} \in dom(\hat{H})\\
-      \land\ \hat{L}_1 =
-        \left\{
-          \begin{array}{ll}
-            \set{\hat{l}} & \atrue\sqsubseteq(\hat{s} \dot{\in} dom(\hat{H}(\hat{l}))\\
-            \set{} & \owc \\
-          \end{array}
-        \right.\\
-        \land\ \hat{L}_{proto} = \hat{H}(\hat{l})(\varprop{proto}).1.1.1.2\\
-      \land\ \hat{L}_2 =
-        \left\{
-          \begin{array}{ll}
-            \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}\ahf{ProtoBase}(\hat{H},\hat{l}_{proto},\hat{s})
-            & \afalse\sqsubseteq(\hat{s} \dot{\in} dom(\hat{H}(\hat{l}))\\
-            \set{} & \owc \\
-          \end{array}
-        \right.\\
-        
-      \\
-    }\\
-\\
-% \inred\ahf{iteratorInit} & : \aObj \times \powerset{\abs{Prop}} \times
-% \abs{Number} \rightarrow \aObj \\
-% & \ahf{iteratorInit}(\hat{o},\hat{P},\hat{n})
-%   = 
-% \\
-% \\
-\end{array}
-\]
-\[
-\begin{array}{ll}
-% \ahf{NewExceptionObject} & : \abs{Exception} \rightarrow \abs{Obj} \\
-% & \ahf{NewExceptionObject}(\hat{exc}) = \hat{o}_1\sqcup\hat{o}_2\sqcup\hat{o}_3\\
-% & \quad\wherec{
-%   \begin{array}{ll}
-%     \hat{o}_1=\ahf{NewObject}(\avarloc{RefErrProto})&\ifc{\hat{\SF{ReferenceError}}\sqsubseteq \hat{exc}} \\
-%     \hat{o}_2=\ahf{NewObject}(\avarloc{RangeErrProto})&\ifc{\hat{\SF{RangeError}}\sqsubseteq \hat{exc}} \\
-%     \hat{o}_3=\ahf{NewObject}(\avarloc{TypeErrProto})&\ifc{\hat{\SF{TypeError}}\sqsubseteq \hat{exc}} \\
-%   \end{array}
-% }
-% \\\\
-% \ahf{NewExceptionLoc} & : \abs{Exception} \rightarrow \abs{Loc} \\
-% & \chf{NewExceptionObject}(exc) =\left\{
-%     \begin{array}{ll}
-%       \varloc{RefErr}&\ifc{\hat{\SF{ReferenceError}}\sqsubseteq \hat{exc}} \\
-%       \varloc{RangeErr}&\ifc{\hat{\SF{RangeError}}\sqsubseteq \hat{exc}} \\
-%       \varloc{TypeErr}&\ifc{\hat{\SF{TypeError}}\sqsubseteq \hat{exc}} \\
-%     \end{array}
-%   \right.
-% \end{array}
-
-\ahf{RaiseException} & : \aHeap \times \abs{Context} \times \powerset{\abs{Exception}} \rightarrow \aHeap\\
+\ahf{RaiseException} & : \aHeap \times \abs{Context} \times \powerset{\abs{Exception}} \rightarrow \aHeap \times \abs{Context}\\
  & \ahf{RaiseException}(\hat{H},\hat{C}, \hat{es}) = (\hat{H}_1, \hat{C}_1) \\
  & \quad\wherec{
    \hat{v}_{old} = \hat{H}(\avarloc{PureLocal}_R)(\varprop{exception\_all}).1.2 \\
@@ -2983,105 +2285,199 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
    \end{array}
  \right.\\
 \\
+\end{array}
+\]
+\\
 
-\ahf{Oldify} & : \aHeap \times \abs{Context} \times \abs{Address} \rightarrow \aHeap \times \abs{Context}\\
- & \ahf{Oldify}(\hat{H},\hat{C}, \hat{a}) =
-     \left\{
-       \begin{array}{ll}
-         (\hat{H}_1, \hat{C}_1) & \ifc{\hat{C} \neq \bot_{Context}} \\
-         (\bot_{Heap}, \bot_{Context}) & \ifc{\hat{C} = \bot_{Context}} \\
-       \end{array}
-     \right.\\
- & \quad\wherec{
-   \hat{l}_R = (\hat{a}, \hat{Recent}) \land\ \hat{l}_O = (\hat{a}, \hat{Old})\\
-   \land\ \hat{H}_1 =
-     \left\{
-       \begin{array}{ll}
-         (\hat{H}[\hat{l_O}\mapsto \hat{H}(\hat{l_R})]-\hat{l}_R)\{\hat{l}_O / \hat{l}_R\}
-         & \ifc{\hat{l_R}\in dom(\hat{H})} \\
-         \hat{H}\{\hat{l}_O / \hat{l}_R\}
-         & \ifc{\hat{l_R}\not\in dom(\hat{H})} \\
-       \end{array}
-     \right.\\
-   \land\ \hat{C}_1 = \langle {\inred \{ \}, \{ \}}, \hat{C}.3 \cup \{\hat{a}\}, \hat{C}.4 \cup \{\hat{a}\} \rangle
-}\\
+%%% get %%%
+\[
+\begin{array}{ll}
+
+\ahf{getRel} & : \SF{RelExpr} \rightarrow \aState \rightarrow \powerset{\SF{RelExpr}}\\
+%& \ahf{getRel}(\hat{re}, \hat{S}) = \hat{re}_1 \sqcup \hat{re}_2 \sqcup \hat{re}_3\\
+%& \quad\wherec{
+%  (\hat{H}, \hat{C}) = \hat{S}\\
+%  e_1 \rel e_2 = \hat{re}\\
+%  b = \ahf{validity}(\aV \lbr e_2 \rbr (\hat{H}, \hat{C}).1) \land b_1\\
+%  b_1 = \left\{
+%    \begin{array}{ll}
+%      \ahf{validity}(\aV \lbr e_3 \rbr (\hat{H}, \hat{C}).1) \land \ahf{validity}(\aV \lbr e_4 \rbr (\hat{H}, \hat{C}).1) & \ifc { e_3 \otimes e_4 = e_1}\\
+%      \vfalse & \owc\\
+%    \end{array}
+%  \right.\\
+%  \hat{re}_1 = \left\{
+%    \begin{array}{ll}
+%      \{\hat{re}\} &  \ifc{ e_1 \in \$\sf{Expression}}\\
+%      \{\} & \owc
+%    \end{array}
+%   \right.\\
+%  \hat{re}_2 = \left\{
+%    \begin{array}{ll}
+%      \ahf{getRel}(e_3 \rel ( e_2 - e_4 ), \hat{S} ) \sqcup \ahf{getRel}(e_4 \rel ( e_2 - e_3 ), \hat{S} ) &  \ifc{ e_3 + e_4 = e_1 \land b}\\
+%      \ahf{getRel}(e_3 \rel ( e_2 + e_4 ), \hat{S} ) \sqcup \ahf{getRel}(e_4 \rel^t ( e_2 - e_3 ), \hat{S} ) &  \ifc{ e_3 - e_4 = e_1 \land b}\\
+%      \{\} & \owc
+%    \end{array}
+%   \right.\\
+%  \hat{re}_3 = \left\{
+%    \begin{array}{ll}
+%      \ahf{getRel}((e_3 * n ) \rel e_2, \hat{S} ) &  \ifc{ n * e_3 = e_1 \land b}\\
+%      \ahf{getRel}(e_3 \rel ( e_2 / n), \hat{S} ) &  \ifc{ e_3 * n = e_1 \land b \land n > 0}\\
+%      \ahf{getRel}(e_3 \rel ( e_2 * n), \hat{S} ) &  \ifc{ e_3 / n = e_1 \land b \land n > 0}\\
+%      \ahf{getRel}(e_3 \rel^t ( e_2 / n), \hat{S} ) &  \ifc{ e_3 * n = e_1 \land b \land n < 0}\\
+%      \ahf{getRel}(e_3 \rel^t ( e_2 * n), \hat{S} ) &  \ifc{ e_3 / n = e_1 \land b \land n < 0}\\
+%      \{\} & \owc
+%    \end{array}
+%   \right.\\
+%}\\
+& \begin{array}{lll}
+  \ahf{getRel}(pe \rel e, \hat{S}) &=& \{pe \rel e\}\\
+  \ahf{getRel}((e_1 + e_2) \rel e_3, \, \hat{S})  &=& \ahf{getRel} (e_1 \rel (e_3 - e_2), \hat{S}) \cup \ahf{getRel} (e_2 \rel (e_3 - e_1), \hat{S}) \quad \ifc{\ahf{validity}_3(e_1, e_2, e_3, \hat{S})}\\
+  \ahf{getRel}((e_1 - e_2) \rel e_3, \hat{S})  &=& \ahf{getRel} (e_1 \rel (e_3 + e_2), \hat{S}) \cup \ahf{getRel} (e_2 \rel^t (e_1 - e_3), \hat{S})\quad \ifc{\ahf{validity}_3(e_1, e_2, e_3, \hat{S})}\\
+  \ahf{getRel} ((n * e_1) \rel e_2, \hat{S})  &=& \ahf{getRel} ((e_1  * n) \rel e_2, \hat{S}) \quad \ifc{\ahf{validity}_2(e_1, e_2, \hat{S})}\\
+  \ahf{getRel} ((e_1  * n) \rel e_2, \hat{S}) &=& \ahf{getRel} (e_1 \rel (e_2/n), \hat{S}) \quad \ifc {n>0 \land \ahf{validity}_2(e_1, e_2, \hat{S})}\\
+  \ahf{getRel} ((e_1  * n) \rel e_2, \hat{S}) &=& \ahf{getRel} (e_1 \rel^t (e_2/n), \hat{S}) \quad \ifc {n<0 \land \ahf{validity}_2(e_1, e_2, \hat{S})}\\
+  \ahf{getRel} ((e_1  / n) \rel e_2, \hat{S}) &=& \ahf{getRel} (e_1 \rel (e_2*n), \hat{S}) \quad \ifc {n>0 \land \ahf{validity}_2(e_1, e_2, \hat{S})}\\
+  \ahf{getRel} ((e_1  / n) \rel e_2, \hat{S}) &=& \ahf{getRel} (e_1 \rel^t (e_2*n), \hat{S}) \quad \ifc {n<0 \land \ahf{validity}_2(e_1, e_2, \hat{S})}\\
+\end{array}\\
+%& \quad \wherec{
+%  (\hat{H}, \hat{C}) = \hat{S}\\
+%  (\hat{v}_1, \hat{es}_1) = \hat{\V}_{cp} \lbr e_1 \rbr (\hat{H}, \hat{C})\\
+%  (\hat{v}_2, \hat{es}_2) = \hat{\V}_{cp} \lbr e_2 \rbr (\hat{H}, \hat{C})\\
+%  (\hat{v}_3, \hat{es}_3) = \hat{\V}_{cp} \lbr e_3 \rbr (\hat{H}, \hat{C})\\
+%  \vtrue = \ahf{validity}(\hat{v}_1)\\
+%  \vtrue = \ahf{validity}(\hat{v}_2)\\
+%  \vtrue = \ahf{validity}(\hat{v}_3)\\
+%}\\
+
+& \begin{array}{lll}
+  \ahf{getRel}(re) &=& \O \quad\owc
+\end{array}
 \\\\
 
-& {\inblue \textit{At function return, this method oldifies bypassed pure local object.}} \\
-\ahf{FixOldify} & : \abs{Context} \times \aObj \times \powerset{\abs{Address}} \times \powerset{\abs{Address}} \rightarrow \abs{Context} \times \aObj \\
-& \ahf{FixOldify}(\hat{C}, \hat{o}, \hat{A}_{may}, \hat{A}_{must}) =
+\ahf{getThis} & : \aHeap \times \aValue \rightarrow \powerset{\aLoc} \\
+& \ahf{getThis}(\hat{H}, \hat{v})
+  = \hat{L}_1\cup\hat{L}_2\cup\hat{L}_3\\
+& \quad\wherec{
+  \hat{L}_1 = \left\{
+    \begin{array}{ll}
+      \{\avarloc{Global}_R\} & \ifc{\aundef\sqsubseteq\hat{v}.1.1 \vee \anull\sqsubseteq\hat{v}.1.2} \\
+      \{\} & \owc \\
+    \end{array}
+    \right.\\
+  \hat{L}_2 = \left\{
+    \begin{array}{ll}
+      \{\avarloc{Global}_R\} & \ifc{\exists\ \hat{l} \in \hat{v}.2 : \afalse \sqsubseteq \ahf{IsObject}(\hat{h},\hat{l})} \\
+      \{\} & \owc \\
+    \end{array}
+    \right.\\
+  \hat{L}_3 = \{ \hat{l} \in \hat{v}.2 ~|~ \atrue \sqsubseteq \ahf{IsObject}(\hat{h},\hat{l}) \} \\
+}
+\\
+
+\\
+
+%%% Has %%%
+
+\ahf{HasConstruct} & : \aHeap \times \aLoc \rightarrow \abs{Bool} \\
+& \ahf{HasConstruct}(\hat{H},\hat{l})
+  = \hat{b}_1\sqcup\hat{b}_2 \\
+& \quad\wherec{
+  \hat{b}_1 = 
+    \left\{
+      \begin{array}{l@{\quad\quad\quad}l}
+        \atrue &\ifc{\atrue\sqsubseteq(\varprop{construct} \dot{\in} dom(\hat{H}(\hat{l})))}\\
+        \bot_{Bool} &\owc
+      \end{array}
+    \right.\\
+  \hat{b}_2 = 
+    \left\{
+      \begin{array}{l@{\quad\quad\quad}l}
+        \afalse &\ifc{\afalse\sqsubseteq(\varprop{construct} \dot{\in} dom(\hat{H}(\hat{l})))}\\
+        \bot_{Bool} &\owc
+      \end{array}
+    \right.\\
+  }
+\\\\
+
+\ahf{HasInstance} & : \aHeap \times \aLoc \rightarrow \abs{Bool} \\
+& \ahf{HasConstruct}(\hat{H},\hat{l})
+  = \hat{b}_1\sqcup\hat{b}_2 \\
+& \quad\wherec{
+  \hat{b}_1 = 
+    \left\{
+      \begin{array}{l@{\quad\quad\quad}l}
+        \atrue &\ifc{\atrue\sqsubseteq(\varprop{hasinstance} \dot{\in} dom(\hat{H}(\hat{l})))}\\
+        \bot_{Bool} &\owc
+      \end{array}
+    \right.\\
+  \hat{b}_2 = 
+    \left\{
+      \begin{array}{l@{\quad\quad\quad}l}
+        \afalse &\ifc{\afalse\sqsubseteq(\varprop{hasinstance} \dot{\in} dom(\hat{H}(\hat{l})))}\\
+        \bot_{Bool} &\owc
+      \end{array}
+    \right.\\
+  }
+\\\\
+
+& {\inblue \textit{Cycle in prototype chain is detected at implementation level.}} \\
+\ahf{HasProperty} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \abs{Bool} \\
+& \ahf{HasProperty}(\hat{H},\hat{l},\hat{s}) = \hat{b}_1\sqcup\hat{b}_2 \\
+& \wherec{
+  \hat{b}_1 = \left\{
+    \begin{array}{ll}
+      \atrue & \ifc{\atrue\sqsubseteq\ahf{HasOwnProperty}(\hat{H},\hat{l},\hat{s})} \\
+      \bot_{Bool} & \owc \\
+    \end{array}
+    \right.\\
+    \hat{L}_{proto} = \hat{H}(\hat{l})(\varprop{proto}).1.1.1.2 \\
+  \hat{b}_2 = \left\{
+    \begin{array}{ll}
+      \hat{b}_3 \sqcup \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}\ahf{HasProperty}(\hat{H},\hat{l}_{proto},\hat{s})
+      & \ifc{\afalse\sqsubseteq\ahf{HasOwnProperty}(\hat{H},\hat{l},\hat{s})} \\
+      \bot_{Bool} & \owc \\
+    \end{array}
+    \right.\\
+    \hat{b}_3 =
     \left\{
       \begin{array}{ll}
-        (\hat{C}_n, \hat{o}_n) & \ifc{\hat{C} \neq \bot_{Context}} \\
-        (\bot_{Context}, \bot_{Obj}) & \ifc{\hat{C} = \bot_{Context}} \\
+        \afalse & \ifc{\hat{H}(\hat{l}_1)(\varprop{proto}).1.1.1.1.2 \not\sqsubseteq \bot_{Null}}\\
+        \bot_{Bool} & \owc\\
       \end{array}
     \right.\\
-& \quad\wherec{\hat{a}_1\cdots\hat{a}_n = \hat{A}_{may} ~ \land} \\
-& \quad\forall 1 \leq i \leq n.\\
-& \quad\quad \begin{array}{l}
-    \hat{l}_{R_i} = (\hat{a}_i, \hat{Recent}) \land\ \hat{l}_{O_i} = (\hat{a}_i, \hat{Old})\ \land \\
-    \hat{C}_i = 
-    \left\{\begin{array}{ll}
-      \langle {\inred \{ \}},
-              {\inred \{ \}},
-              \hat{C}_{i-1}.3 \cup \{\hat{a}_i\},
-              \hat{C}_{i-1}.4 \cup \{\hat{a}_i\}
-      \rangle & \ifc{a_i \in \hat{A}_{must}} \\
-      \langle {\inred \{ \}},
-              {\inred \{ \}},
-              \hat{C}_{i-1}.3 \cup \{\hat{a}_i\},
-              \hat{C}_{i-1}.4 
-      \rangle & \ifc{a_i \not\in \hat{A}_{must}} \\
-    \end{array}\right. \\
-    \hat{o}_i = 
-    \left\{\begin{array}{ll}
-      \hat{o}_i = \hat{o}_{i-1}\{\hat{l}_{O_i} / \hat{l}_{R_i} \} & \ifc{a_i \in \hat{A}_{must}} \\
-      \hat{o}_i = \hat{o}_{i-1}\{\{\hat{l}_{O_i}, \hat{l}_{R_i}\} / \hat{l}_{R_i} \} & \ifc{a_i \not\in \hat{A}_{must}}
-    \end{array}\right. \\
-  \end{array}\\
+  }\\
+\\
+
+\ahf{HasOwnProperty} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \abs{Bool} \\
+&  \ahf{HasOwnProperty}(\hat{H},\hat{l},\hat{s}) = (\hat{s} \dot{\in} dom(\hat{h}(\hat{l})))\\
+\\
+\end{array}
+\]
 \\\\
 
-
-\ahf{X} & : \SF{RelExpr} \rightarrow \aState \rightarrow \aState\\
-& \ahf{X} \lbr re \rbr (\hat{H}, \hat{C}) = (\hat{H}_1, \hat{C}_1)\\
+%%% inherit %%%
+\[
+\begin{array}{ll}
+& {\inblue \textit{Cycle in prototype chain is detected at implementation level.}} \\
+\ahf{inherit} & : \aHeap \times \aLoc \times \aLoc \rightarrow \aValue \\
+& \ahf{inherit}(\hat{H},\hat{l}_1,\hat{l}_2)
+  = \left\{
+    \begin{array}{ll}
+      \atrue & \ifc{\hat{l}_1 \hat{=} \hat{l}_2} \\
+      \hat{v}_1 \sqcup \bigsqcup_{\hat{l}\in \hat{H}(\hat{l}_1)(\varprop{proto}).1.1.1.2} \ahf{inherit}(\hat{H},\hat{l},\hat{l}_2) & \ifc{\hat{l}_1 \hat{\neq} \hat{l}_2} \\
+    \end{array}
+  \right.\\
 & \quad\wherec{
-  e_1 ~ \rel ~ e_2 = re\\
-  \hat{v}_1 = (\aV \lbr e_1 \rbr (\hat{H}, \hat{C})).1\\
-  \hat{v}_2 = (\aV \lbr e_2 \rbr (\hat{H}, \hat{C})).1\\
-  (\hat{H}_1, \hat{C}_1) = 
-    \left\{ 
-      \begin{array}{ll}
-        \ahf {Pruning}_1 (e_1, \hat{v}_1, \rel, \hat{v}_2, (\hat{H}, \hat{C})) & 
-          \ifc{\rel \in \SF{IRRelOP} \land e_1 \in \SF{PrunExpression}}\\
-        \ahf {Pruning}_2 ( re, (\hat{H}, \hat{C})) & 
-          \ifc{\rel \in \SF{IRObjOP}}\\
-        (\hat{H}, \hat{C}) & \owc\\
-      \end{array}
-    \right.\\
-}\\
-\\\\
-%
-%\ahf{X} & : \powerset{\abs{RelExpr}} \rightarrow \aState \times \aState \rightarrow \aState \times \aState\\
-%& \ahf{X} \lbr relSet \rbr \left( (\hat{H}, \hat{C}), \hat{S} \right) = \left( (\hat{H}_1, \hat{C}_1), \hat{S}_1 \right)\\
-%& \quad\wherec{
-%  (\hat{H}_1, \hat{C}_1) = 
-%    \left\{ 
-%      \begin{array}{ll}
-%        \left( \bigsqcap_{\hat{re} \in relSet} \ahf {Pruning}_1(\$e_1,\hat{v}_1, \rel, \hat{v}_2, (\hat{H}, \hat{C}))\right) & 
-%          \ifc{ relSet \not= \O \land \rel \in \abs{IRRelOP}}\\
-%          & \wherec{ \$e_1 \rel e_2 = \hat{re}\\
-%              (\hat{v}_1, \hat{es}_1) = \hat{\V}_{cp} \lbr \$e_1 \rbr (\hat{H}, \hat{C})\\
-%              (\hat{v}_2, \hat{es}_2) = \hat{\V}_{cp} \lbr e_2 \rbr (\hat{H}, \hat{C}) }\\
-%        \left( (\hat{H}, \hat{C}), \hat{S} \right) & \owc\\
-%      \end{array}
-%    \right.\\
-%  \hat{S}_1 = 
-%    \hat{S} \sqcup \left( \bigsqcup_{\hat{re} \in relSet} (\ahf{RaiseException} (\hat{H}, \hat{C}, \hat{es}_1) \sqcup \ahf{RaiseException} (\hat{H}, \hat{C}, \hat{es}_2)) \right)\\
-%      \quad \wherec{ \$e_1 \rel e_2 = \hat{re} \\
-%         (\hat{v}_1, \hat{es}_1) = \aV_{cp} \lbr \$e_1 \rbr (\hat{H}, \hat{C})\\
-%         (\hat{v}_2, \hat{es}_2) = \aV_{cp} \lbr e_2 \rbr (\hat{H}, \hat{C})}\\
-%}\\
-%\\\\
+  \hat{v}_1 =
+    \left\{
+    \begin{array}{ll}
+      \afalse & \ifc{\hat{H}(\hat{l}_1)(\varprop{proto}).1.1.1.1.2 \not\sqsubseteq \bot_{Null}}\\
+      \bot_{Value} & \owc\\
+    \end{array}
+    \right.
+  }\\
+\\
+
 \ahf {inheritProto}_1 &:  \aHeap \times \aLoc \times \aLoc \times \abs{Bool} \rightarrow \powerset{\aLoc}\\
 & \ahf {inheritProto}_1 (\hat{H}, \hat{l}_1, \hat{l}_2, \hat{b}) = \hat{L}\\
 & \quad \wherec{
@@ -3093,6 +2489,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
   \right.\\
 }
 \\\\
+
 \ahf {inheritProto}_2 &:  \aHeap \times \aLoc \times \aLoc \times \abs{Bool} \rightarrow \powerset{\aLoc}\\
 & \ahf {inheritProto}_2 (\hat{H}, \hat{l}_1, \hat{l}_2, \hat{b}) = \hat{L}\\
 & \quad \wherec{
@@ -3103,219 +2500,76 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
     \end{array}
   \right.\\
 }
-\\\\
- \end{array}
-\]
-\[
-\begin{array}{ll}
-%\ahf {PrunProto} &:  \aLoc \times \aLoc \times \abs{Bool} \times \aHeap \rightarrow \aHeap\\
-%& \ahf {PrunProto} (\hat{l}_1, \hat{l}_2, \hat{b}, \hat{H}) = \hat{H}_1\\
-%& \quad \wherec{
-%  \hat{L}_{proto} = \bigsqcup_{\hat{l} \in \hat{H}(\hat{l}_1)(@proto).1.1.1.2} \ahf{inheritProto}_1(\hat{H}, \hat{l}, \hat{l}_2, \hat{b})\\
-%  \hat{H}_2 = \hat{H}[\hat{l}_1 \mapsto \hat{H}(\hat{l}_1)[@proto \mapsto \langle \langle \bot_{PValue}, \hat{L}_{proto} \rangle, \afalse, \afalse, \afalse \rangle]]\\
-%  \hat{H}_1 = \left\{
-%    \begin{array}{ll}
-%      \bigsqcap_{\hat{l} \in (\hat{L}_{proto} - \hat{l}_2)} \ahf{PrunProto}(\hat{l}, \hat{l}_2, \hat{b}, \hat{H}_2) & \ifc{ \hat{L}_{proto} \not= \O}\\
-%      \hat{H} & \owc\\
-%    \end{array}        
-%  \right.\\
-%}
-%\\\\
-%\ahf {PrunProto}_2 &:  \aLoc \times \aLoc \times \abs{Bool} \times \aHeap \rightarrow \aHeap\\
-%& \ahf {PrunProto} (\hat{l}_1, \hat{l}_2, \hat{b}, \hat{H}) = \hat{H}_1\\
-%& \quad \wherec{
-%  \hat{L}_{proto} = \bigsqcup_{\hat{l} \in \hat{H}(\hat{l}_2)(@proto).1.1.1.2} \ahf{inheritProto}_2(\hat{H}, \hat{l}_1, \hat{l}, \hat{b})\\
-%  \hat{H}_2 = \hat{H}[\hat{l}_2 \mapsto \hat{H}(\hat{l}_2)[@proto \mapsto \langle \langle \bot_{PValue}, \hat{L}_{proto} \rangle, \afalse, \afalse, \afalse \rangle]]\\
-%  \hat{H}_1 = \left\{
-%    \begin{array}{ll}
-%      \bigsqcap_{\hat{l} \in \hat{L}_{proto}} \ahf{PrunProto}(\hat{l}_1, \hat{l}, \hat{b}, \hat{H}_2) & \ifc{ \hat{L}_{proto} \not= \O}\\
-%      \hat{H} & \owc\\
-%    \end{array}        
-%  \right.\\
-%}
-\\\\
-\ahf {PrunInstanceof} &:  \aLoc \times \aLoc \times \abs{Bool} \times \aHeap \rightarrow \aHeap\\
-& \ahf {PrunInstanceof} (\hat{l}_{obj}, \hat{l}_{fun}, \hat{b}, \hat{H}) = \hat{H}_1 \sqcap \hat{H}_2\\
+\\
+
+\\
+
+%%% Is %%%
+
+\ahf{IsArray} & : \aHeap \times \aLoc \rightarrow \abs{Bool} \\
+& {\inblue \hat{H}(\hat{l})(\varprop{class}).1.2\textit{ is the }\abs{Value}} \\
+& \ahf{IsArray}(\hat{H},\hat{l}) = \hat{b}_1\sqcup\hat{b}_2\\
 & \quad\wherec{
-  \hat{L}_{prototype} = \hat{H}(\hat{l}_{fun})(``prototype").1.1.1.2\\
-  \hat{L}_{proto} = \hat{H}(\hat{l}_{obj})(@proto).1.1.1.2\\
-  \hat{L}_1 = 
-      \bigsqcup_{\hat{l}_1 \in \hat{L}_{proto}} \bigsqcup_{\hat{l}_2 \in \hat{L}_{prototype}} \ahf{inheritProto}_2(\hat{H}, \hat{l}_1, \hat{l}_2, \hat{b})\\
-%  \left\{
-%    \begin{array}{ll}
-%      \bigsqcup_{\hat{l}_2 \in \hat{L}_{prototype}} \ahf{inheritProto}_2(\hat{H}, \hat{l}_1, \hat{l}_2, \hat{b}) & \ifc{ \hat{L}_{proto} = \{ \hat{l}_1 \} }\\
-%      \{\} & \owc
-%    \end{array}
-%  \right.\\
-  \hat{L}_2 = 
-      \bigsqcup_{\hat{l}_1 \in \hat{L}_{proto}} \bigsqcup_{\hat{l}_2 \in \hat{L}_{prototype}} \ahf{inheritProto}_1(\hat{H}, \hat{l}_1, \hat{l}_2, \hat{b})\\
-%  \left\{
-%    \begin{array}{ll}
-%      \bigsqcup_{\hat{l}_1 \in \hat{L}_{proto}} \ahf{inheritProto}_1(\hat{H}, \hat{l}_1, \hat{l}_2, \hat{b}) & \ifc{ \hat{L}_{prototype} = \{ \hat{l}_2 \} }\\
-%      \{\} & \owc
-%    \end{array}
-%  \right.\\
-  \hat{H}_1 = 
-%  \left\{
-%    \begin{array}{ll}
-      \hat{H} \left[ \hat{l}_{obj} \mapsto \hat{H}(\hat{l}_{obj}) \left[ @proto \mapsto 
-        \left\langle 
-        \begin{array}{l}
-        \langle \bot_{PValue}, \hat{L}_1 \rangle,\\
-        \afalse,\\
-        \afalse,\\
-        \afalse\\
-        \end{array}
-        \right\rangle      
-      \right]\right]\\
-%         & \ifc{\ahf{size}(\hat{L}_{prototype}) = 1}\\
-%      \hat{H} & \owc
-%    \end{array}
-%  \right.\\
-  \hat{H}_2 = 
-%  \left\{
-%    \begin{array}{ll}
-      \hat{H} \left[ \hat{l}_{fun} \mapsto \hat{H}(\hat{l}_{fun}) \left[ ``prototype" \mapsto 
-        \left\langle 
-        \begin{array}{l}
-        \langle \bot_{PValue}, \hat{L}_2 \rangle,\\
-        \afalse,\\
-        \afalse,\\
-        \afalse\\
-        \end{array}
-        \right\rangle      
-      \right]\right]\\
-%         & \ifc{\ahf{size}(\hat{L}_{proto}) = 1}\\
-%      \hat{H} & \owc
-%    \end{array}
-%  \right.\\
-%  \hat{H}_3 = \left\{
-%    \begin{array}{ll}
-%      \bigsqcap_{\hat{l}_2 \in (\hat{L}_{prototype} - \hat{l}_1)} \ahf{PrunProto}_2(\hat{l}_1, \hat{l}_2, \hat{b}, \hat{H}) & \ifc{ \hat{L}_{proto} = \{ \hat{l}_1 \} }\\
-%      \hat{H} & \owc\\
-%    \end{array}
-%  \right.\\
-}
-
-\\\\
-\ahf {DeleteAll} &: \aHeap \times \aLoc \times \abs{String} \rightarrow \aHeap\\
-& \ahf{DeleteAll} (\hat{H}, \hat{l}, \hat{s}) = \hat{H}_1\\
-& \quad\wherec{
-  \hat{H}_2 = \ahf{Delete}(\hat{H}, \hat{l}, \hat{s}).1\\
-  \hat{H}_1 = \left\{
-    \begin{array}{ll}
-      \ahf{DeleteAll}(\hat{H}_2, \hat{l}_1, \hat{s}) & \ifc{\hat{H}(\hat{l})(@proto).1.1.1.1.2 \sqsubseteq \bot_{Null} \\ \land \hat{H}(\hat{l})(@proto).1.1.1.2 = \{ \hat{l}_1\}}\\
-      \hat{H}_2 & \owc
-    \end{array}
-  \right.
-}
-
-
-\\\\
-\ahf {Pruning}_2 &: \SF{RelExpr} \times \aState \rightarrow \aState\\
-& \ahf{Pruning}_2( re, (\hat{H}, \hat{C})) = (\hat{H}_1, \hat{C}_1)\\
-& \quad\wherec {
-  e_1 ~ \rel ~ e_2 = re\\
-  \hat{v}_1 = (\aV \lbr e_1 \rbr (\hat{H}, \hat{C})).1\\
-  \hat{v}_2 = (\aV \lbr e_2 \rbr (\hat{H}, \hat{C})).1\\
-  \hat{s} = \ahf{toString}(\ahf{toPrimitive}(\hat{v}_1))\\
-
-  \hat{L}_{base} = \left\{
-    \begin{array}{ll}
-      \bigsqcup_{\hat{l} \in \hat{v}_2.2} \ahf{ProtoBase}(\hat{H}, \hat{l}, \hat{s})  & \ifc{ \rel = \TT{in}}\\
-      \hat{v}_2.2  & \owc \\
-    \end{array}
-  \right.\\
-  (\hat{H}_1, \hat{C}_1) = \left\{
-    \begin{array}{ll}
-      (\hat{H}[\hat{l} \mapsto \hat{H}(\hat{l})[\hat{s} \mapsto (\hat{H}(\hat{l})(\hat{s})).1]], \hat{C}) & \ifc{\{\hat{l} \} = \hat{L}_{base} \land \{x\} = \gamma (\hat{s}) \land \rel = \TT{in}}\\
-      (\ahf{DeleteAll}(\hat{H}, \hat{l}, \hat{s}), \hat{C}) & \ifc{ \{\hat{l} \} = \hat{L}_{base} \land \{x\} = \gamma (\hat{s}) \land \rel = \TT{notIn}}\\
-%      ((\bigsqcap_{\hat{l}_1 \in \hat{L}_{base}} \ahf{Delete}(\hat{H}, \hat{l}_1, \hat{s})), \hat{C}) & \ifc{ \{\hat{l} \} = \hat{v}_1.2 \land \{x\} = \gamma (\hat{s}) \land \rel = \TT{notIn}}\\
-      (\ahf{PrunInstanceof}(\hat{l}_1, \hat{l}, \atrue, \hat{H}), \hat{C}) & \ifc{ \{\hat{l} \} = \hat{L}_{base}  \land \{\hat{l}_1 \} = \hat{v}_1.2  \\ \land \rel = \TT{instanceof}}\\
-      (\ahf{PrunInstanceof}(\hat{l}_1, \hat{l}, \afalse, \hat{H}), \hat{C}) & \ifc{ \{\hat{l} \} = \hat{L}_{base} \land \{\hat{l}_1 \} = \hat{v}_1.2 \\ \land \rel = \TT{notInstanceof}}\\
-      (\bot_{Heap}, \bot_{Context}) & \ifc{ \ahf{size}(\hat{L}_{base}) = 0}\\
-      (\hat{H}, \hat{C}) & \owc\\
-    \end{array}
-  \right.
-}
-
-
-\\\\
- \end{array}
-\]
-\[
-\begin{array}{ll}
-\ahf {Pruning}_1 &: \SF{PrunExpr} \times \aValue \times \SF{IRRelOP} \times \aValue \times \aState \rightarrow \aState\\
-& \ahf{Pruning}_1(pe, \hat{v}_1, \rel, \hat{v}_2, (\hat{H}, \hat{C})) = (\hat{H}_1, \hat{C}_1)\\
-& \quad\wherec {
-%  \hat{abs} = \hat{abs}_1 \sqcap \hat{H}(\hat{l})(\hat{s}).2\\
-%  \hat{L} = 
-%    \left\{
-%      \begin{array}{ll}
-%        \{ \#\hat{Global}_{R}, \#\hat{PureLocal}_{R} \} & \ifc{ \$e = x}\\
-%        (\hat{V}_{cp} \lbr e_1 \rbr (\hat{H}, \hat{C})).1.2 & \ifc{ \$e = e_1[e_2] }\\
-%      \end{array}
-%    \right.\\
-  (\hat{v}, \hat{abs}) = \ahf{K}_\rel (\hat{v}_2)\\
-  \hat{s} = 
-    \left\{
+    \hat{b}_1=\left\{
       \begin{array}{ll}
-        ``\hat{x}" & \ifc{ pe = x}\\
-        \ahf{toString}(\hat{pv}) &
-          \ifc{ pe = e_1[e_2]}\\
-          & \wherec{\hat{pv} = \ahf{toPrimitive}((\aV \lbr e_2 \rbr (\hat{H}, \hat{C})).1) }
+        \atrue &\ifc{\hat{``Array"} \sqsubseteq \hat{H}(\hat{l})(\varprop{class}).1.2}\\
+        \bot_{Bool} & \owc \\
       \end{array}
     \right.\\
-  \hat{L}_{base} = \left\{
-    \begin{array}{ll}
-      \ahf{LookupBase}(\hat{H}, \hat{C}.1, ``x") & \ifc{ pe = x }\\
-      \bigsqcup_{\hat{l} \in (\aV \lbr e_1 \rbr (\hat{H}, \hat{C})).1.2 } \ahf{ProtoBase}(\hat{H}, \hat{l}, \hat{s}) & \ifc{ pe = e_1[e_2] }\\
-    \end{array}
-  \right.\\
-  \hat{propv} = \left\{
-    \begin{array}{ll}
-      \langle \langle \hat{v} \sqcap \hat{v}_1, \hat{ov}.2, \hat{ov}.3, \hat{ov}.4 \rangle, \bot_{Value}, \bot_{FunctionId} \rangle & \ifc {\ahf{size}(\hat{L}_{base}) = 1}\\
-        &\wherec{
-          \hat{l} \in \hat{L}_{base}\\
-          \hat{ov} = \hat{H}(\hat{l})(\hat{s}).1.1\\
-          }\\
-      \bot_{PropValue} & \owc\\
-    \end{array}
-  \right.\\
-  (\hat{H}_1, \hat{C}_1) = 
-    \left\{
+    \hat{b}_2 = \left\{
       \begin{array}{ll}
-      (\hat{H}[\hat{l} \mapsto \hat{H} (\hat{l})[ \hat{s} \mapsto \langle \hat{propv},  \hat{abs} \sqcap \hat{H}(\hat{l})(\hat{s}).2 \rangle]], \hat{C}) &
-         \ifc{\ahf{size}(\hat{L}_{base}) = 1\land \{x\} = \gamma(\hat{s})}\\
-         & \wherec{ \hat{l} \in \hat{L}_{base} }\\
-        (\bot_{Heap}, \bot_{Context}) &
-          \ifc{ \ahf{size}(\hat{L}_{base}) = 0} \\
-        (\hat{H}, \hat{C}) &
-          \owc \\
+        \afalse & \ifc{\hat{``Array"} \neq \hat{H}(\hat{l})(\varprop{class}).1.2}\\
+        \bot_{Bool} & \owc\\
       \end{array}
-    \right.
-}\\
+    \right.\\
+  }\\
+\\
+
+\ahf{IsArrayIndex} & : \abs{String} \rightarrow \abs{Bool} \\
+& \ahf{IsArrayIndex}(\hat{s}) = \left\{
+      \begin{array}{ll}
+        \top_{Bool} & \ifc{\hat{s} = \top_{String}}\\
+        \top_{Bool} & \ifc{\hat{s} = \hat{\SF{NumStr}}}\\
+        \afalse     & \ifc{\hat{s} = \hat{\SF{OtherStr}}}\\
+        \atrue      & \ifc{\hat{s} = \hat{\SF{NumStrSingle}}(s) \land 0 \leq \SF{ToNumber}(s) < 2^{32}-1}\\
+        \top_{Bool} & \ifc{\hat{s} = \hat{\SF{NumStrSingle}}(s) \land (\SF{ToNumber}(s) < 0 \lor < 2^{32}-1 \leq \SF{ToNumber}(s))}\\
+        \afalse     & \ifc{\hat{s} = \hat{\SF{OtherStrSingle}}}\\
+        \bot_{Bool} & \ifc{\hat{s} = \bot_{String}} \\
+      \end{array}
+    \right.\\
+\\
+
+\ahf{IsCallable} & : \aHeap \times \aLoc \rightarrow \abs{Bool} \\
+& \ahf{IsCallable}(\hat{H},\hat{l})
+  = \hat{b}_1\sqcup\hat{b}_2 \\
+& \quad\wherec{
+  \hat{b}_1 = 
+    \left\{
+      \begin{array}{l@{\quad\quad\quad}l}
+        \atrue &\ifc{\atrue\sqsubseteq(\varprop{function} \dot{\in} dom(\hat{H}(\hat{l})))}\\
+        \bot_{Bool} &\owc
+      \end{array}
+    \right.\\
+  \hat{b}_2 = 
+    \left\{
+      \begin{array}{l@{\quad\quad\quad}l}
+        \afalse &\ifc{\afalse\sqsubseteq(\varprop{function} \dot{\in} dom(\hat{H}(\hat{l})))}\\
+        \bot_{Bool} &\owc
+      \end{array}
+    \right.\\
+  }\\
+\\
+
+\ahf{IsObject} & : \aHeap \times \aLoc \rightarrow \abs{Bool} \\
+& \ahf{IsObject}(\hat{H},\hat{l}) = \varprop{class} ~ \dot{\in} ~ dom(\hat{h}(\hat{l})) \\
+\\
+\end{array}
+\]
 \\\\
-%
-%\ahf{GetPropLoc} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \powerset{\aLoc}\\
-%& \ahf{GetPropLoc} (\hat{H}, \hat{l}, \hat{s}) = \hat{L}_1 \sqcup \hat{L}_2\\
-%&  \quad\wherec{
-%    \hat{L}_{proto} = \hat{H}(\hat{l})(@proto).1.1.1.2\\
-%    \hat{L}_1 = \left\{
-%      \begin{array}{ll}
-%        \{\hat{l}\} & 
-%        \ifc{ \atrue \sqsubseteq \ahf{HasOwnProperty}(\hat{H}, \hat{l}, \hat{s}) }\\
-%        \{\} & \owc\\
-%      \end{array}
-%    \right.\\
-%    \hat{L}_2 = \left\{
-%      \begin{array}{ll}
-%        \bigsqcup_{\hat{l}_{proto} \in \hat{L}_{proto}} \ahf{GetPropLoc}(\hat{H}, \hat{l}_{proto}, \hat{s}) & 
-%        \ifc{ \afalse \sqsubseteq \ahf{HasOwnProperty}(\hat{H}, \hat{l}, \hat{s}) }\\
-%        \{\} & \owc\\
-%      \end{array}
-%    \right.
-%  }
+
+%%% K %%%
+\[
+\begin{array}{ll}
 \ahf{K} & : \SF{IRRelOP} \rightarrow \aValue \rightarrow \aValue \times \abs{Absent}\\
 & \ahf{K}_{!==} \hat{v}_1 = (\top_{Value}, \hat{\SF{absent}})\\
 & \ahf{K}_{===} \hat{v}_1 = (\hat{v}_1, \hat{abs})\\
@@ -3384,90 +2638,847 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
     \end{array}
   \right.\\
 }\\
-%\\\\
-%\ahf{getLoc} & : \aHeap \times \aLoc \rightarrow \powerset{\aLoc}\\
-%& \begin{array}{ll}
-%  \ahf{getLoc}(\hat{H}, \hat{l}) = \{\hat{l}\} \cup (\bigcup_{\hat{l}_1 \in \hat{v}.2} \ahf{getLoc}(\hat{l}_1))\\
-%  \quad\wherec{
-%    \hat{v} = \hat{H}(\hat{l})\\
-%  }
-%\end{array}\\
-\\\\
 \end{array}
 \]
+\\\\
+
+%%% Lookup %%%
+
 \[
 \begin{array}{ll}
+\ahf{Lookup} & : \aHeap \times \SF{Prop} \rightarrow \aValue \times \powerset{\abs{Exception}}\\
+& \ahf{Lookup}(\hat{H},x) = (\hat{H}(\avarloc{PureLocal}_R)(x).1.1.1, \set{ }) 
+      \quad\ifc{\chf{getVarKind}_P(x) = \SF{PureLocalVar}} \\
+& \ahf{Lookup}(\hat{H},x) = (\bigsqcup_{\hat{l}\in\hat{H}(\avarloc{PureLocal})(\varprop{env}).1.2.2} \ahf{LookupL}(\hat{H},\hat{l},x), \set{ })
+      \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedVar}} \\
+& \ahf{Lookup}(\hat{H},x) = (\hat{H}(\avarloc{Collapsed}_O)(x).1.1.1, \set{ }) 
+      \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedCatchVar}} \\
+& \ahf{Lookup}(\hat{H},x) = \ahf{LookupG}(\hat{H},x)
+      \quad\ifc{\chf{getVarKind}_P(x) = \SF{GlobalVar}} \\
+\\
+
+\ahf{LookupG} & : \aHeap \times \SF{Prop} \rightarrow \aValue \times \powerset{\abs{Exception}}\\
+&
+  \ahf{LookupG}(\hat{H},x)
+   = (\hat{v}_1\sqcup\hat{v}_2, \hat{es})\\
+& \quad\wherec{
+  \hat{v}_1 = \left\{
+    \begin{array}{ll}
+      \hat{H}(\avarloc{Global}_R)(x).1.1.1
+      & \ifc{\atrue\sqsubseteq(x \dot{\in} dom(\hat{H}(\avarloc{Global})))} \\
+      \bot_{Value}
+      & \owc \\
+    \end{array}\right. \\
+  (\hat{v}_2, \hat{es}) = \left\{
+    \begin{array}{ll}
+      (\hat{v}_3, \hat{exc})
+      & \ifc{\afalse\sqsubseteq(x \dot{\in} dom(\hat{H}(\avarloc{Global})))}\\
+      (\bot_{Value}, \{\})
+      & \owc \\
+    \end{array}\right. \\
+  \hat{L}_{proto} = \hat{H}(\avarloc{Global}_R)(\hat{\varprop{proto}}).1.1.1.2\\
+  \hat{v}_3 = 
+    \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}
+    \left\{
+    \begin{array}{ll}
+      \ahf{Proto}(\hat{H}, \hat{l}_{proto}, \hat{x})
+      & \ifc{\atrue\sqsubseteq\ahf{HasProperty}(\hat{H},\hat{l}_{proto},x)}\\
+      \bot_{Value}
+      & \owc \\
+    \end{array}\right. \\
+  \hat{exc} = 
+    \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}
+    \left\{
+    \begin{array}{ll}
+      \{\hat{\SF{ReferenceError}}\}
+      & \ifc{\afalse\sqsubseteq\ahf{HasProperty}(\hat{H},\hat{l}_{proto},x)}\\
+      \bot_{Exception}
+      & \owc \\
+    \end{array}\right. \\
+}
+\\\\
+
+& {\inblue \textit{Cycle in scope chain is detected at implementation level.}} \\
+\ahf{LookupL} & : \aHeap \times \aLoc \times \SF{Prop} \rightarrow \aValue \\
+& \ahf{LookupL}(\hat{H}, \hat{l}, x) = \hat{v}_1 \sqcup \hat{v}_2 \\
+& \quad\wherec{
+    \hat{v}_1 =
+      \left\{
+      \begin{array}{ll}
+        \hat{H}(\hat{l})(x).1.1.1 & \ifc{\atrue \sqsubseteq (x \dot{\in} dom(\hat{H}(\hat{l})))}\\
+        \bot_{Value} & \owc \\
+      \end{array}
+      \right.\\
+    \hat{L}_{outer} = \hat{H}(\hat{l})(\varprop{outer}).1.2.2 \\
+    \hat{v}_2 =
+      \left\{
+      \begin{array}{ll}
+        \bigsqcup_{\hat{l}_{outer}\in\hat{L}_{outer}}\ahf{LookupL}(\hat{H}, \hat{l}_{outer}, x) 
+          & \ifc{\afalse \sqsubseteq(x \dot{\in} dom(\hat{H}(\hat{l})))} \\
+        \bot_{Value} & \owc \\
+      \end{array}
+      \right.\\
+  } \\
+\\
+
+\ahf{LookupBase} & : \aHeap \times \SF{Prop} \rightarrow \powerset{\aLoc}\\
+& \ahf{LookupBase}(\hat{H},x) = \{ \avarloc{PureLocal}_R \} 
+    \quad\ifc{\chf{getVarKind}_P(x) = \SF{PureLocalVar}} \\
+& \ahf{LookupBase}(\hat{H},x) = \bigcup_{\hat{l}\in\hat{H}(\avarloc{PureLocal}_R)(\varprop{env}).1.2.2} \ahf{LookupBaseL}(\hat{H},\hat{l},x)
+    \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedVar}} \\
+& \ahf{LookupBase}(\hat{H},x) = \{ \avarloc{Collapsed}_O \} 
+    \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedCatchVar}} \\
+& \ahf{LookupBase}(\hat{H},x) = \ahf{LookupBaseG}(\hat{H},x)
+    \quad\ifc{\chf{getVarKind}_P(x) = \SF{GlobalVar}} \\
+\\
+
+\ahf{LookupBaseG} & : \aHeap \times \SF{Prop} \rightarrow \powerset{\aLoc}\\
+&
+  \ahf{LookupBaseG}(\hat{H},x)
+   = \hat{L}_1\cup\hat{L}_2\\
+& \quad\wherec{
+  \hat{L}_1 = \left\{
+    \begin{array}{ll}
+      \{\avarloc{Global}_R\}
+      & \ifc{\atrue\sqsubseteq(x \dot{\in} dom(\hat{H}(\avarloc{Global}_R))} \\
+      \{\}
+      & \owc \\
+    \end{array}\right. \\
+  \hat{L}_2 = \left\{
+    \begin{array}{ll}
+      \hat{L}_3
+      & \ifc{\vfalse\sqsubseteq(x \dot{\in} dom(\hat{H}(\avarloc{Global}_R))}\\
+      \{\}
+      & \owc \\
+    \end{array}\right. \\
+  \hat{L}_{proto} = \hat{H}(\avarloc{Global}_R)(\varprop{proto}).1.1.1.2\\
+  \hat{L}_3 = 
+    \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}
+    \ahf{ProtoBase}(\hat{H}, \hat{l}_{proto}, \hat{x})\\
+}
+\\\\
+
+& {\inblue \textit{Cycle in scope chain is detected at implementation level.}} \\
+\ahf{LookupBaseL} & : \aHeap \times \aLoc \times \SF{Prop} \rightarrow \powerset{\aLoc} \\
+& \ahf{LookupBaseL}(\hat{H}, \hat{l}, x) = \hat{L}_1\cup\hat{L}_2 \\
+& \quad\wherec{
+    \hat{L}_1 =
+      \left\{
+      \begin{array}{ll}
+        \{ \hat{l} \} & \ifc{\atrue \sqsubseteq (x \dot{\in} dom(\hat{H}(\hat{l})))} \\
+        \{ \} & \owc \\
+      \end{array}
+      \right.\\
+    \hat{L}_{outer} = \hat{H}(\hat{l})(\varprop{outer}).1.2.2 \\
+    \hat{L}_2 =
+      \left\{
+      \begin{array}{ll}
+        \bigcup_{\hat{l}_{outer}\in\hat{L}_{outer}}\ahf{LookupBaseL}(\hat{H}, \hat{l}_{outer}, x)
+          & \ifc{\afalse \sqsubseteq (x \dot{\in} dom(\hat{H}(\hat{l})))} \\
+        \set{} & \owc \\
+      \end{array}
+      \right.\\
+  } \\
+\\
+\end{array}
+\]
+\\
+
+%%% New %%%
+\[
+\begin{array}{ll}
+
+\ahf{NewBoolean} & : \abs{Value} \rightarrow \aObj \\
+& \ahf{NewBoolean}(\hat{v}) = \set{
+    \varprop{class}\mapsto \hat{``Boolean"}_{Value},\\
+    \varprop{proto}\mapsto 
+    \langle\langle\bot_{PValue},\{\avarloc{BoolProto}_R\}\rangle,\afalse,\afalse,\afalse\rangle,\\
+    \varprop{extensible}\mapsto \atrue_{Value}, \\
+    \varprop{primitive}\mapsto \hat{v}
+}\\\\
+
+\ahf{NewNumber} & : \abs{Value} \rightarrow \aObj \\
+& \ahf{NewNumber}(\hat{v}) = \set{
+    \varprop{class}\mapsto \hat{``Number"}_{Value},\\
+    \varprop{proto}\mapsto 
+    \langle\langle\bot_{PValue},\{\avarloc{NumProto}_R\}\rangle,\afalse,\afalse,\afalse\rangle,\\
+    \varprop{extensible}\mapsto \atrue_{Value}, \\
+    \varprop{primitive}\mapsto \hat{v}
+}\\\\
+
+\ahf{NewString} & : \abs{Value} \rightarrow \aObj \\
+& \ahf{NewString}(\hat{v}) = \hat{o}_1 \sqcup \hat{o}_2 \\
+& \quad\wherec{
+  \hat{s} = \hat{v}.1.5\ \land\ \hat{v}_{len} = length(\hat{s})\\
+  \hat{o}_1 = \set{
+    \varprop{class}\mapsto \hat{``String"}_{Value},\\
+    \varprop{proto}\mapsto 
+    \langle\langle\bot_{PValue},\{\avarloc{StrProto}_R\}\rangle,\afalse,\afalse,\afalse\rangle,\\
+    \varprop{extensible}\mapsto \atrue_{Value}, \\
+    \varprop{primitive}\mapsto \hat{v}, \\
+    ``length"\mapsto \langle (\hat{v}_{len})_{Value}, \afalse, \afalse, \afalse\rangle \\
+  } \\
+  \hat{o}_2 = \set{``i"\mapsto \langle (\hat{v}_{char})_{Value}, \afalse, \atrue, \afalse\rangle ~\left|~
+      \begin{array}{l}
+        0 \leq i\\
+        \land\ \exists l\in\gamma(\hat{v}_{len}).i < l\\
+        \land\ \hat{v}_{char} = charAt(\hat{s},i)
+      \end{array}
+    \right.}
+}\\
+
+\\
+
+\ahf{NewDeclEnvRecord} & : \abs{Value} \rightarrow \aObj \\
+& \comment{\inblue outer is either location set or null value} \\
+& \ahf{NewDeclEnvRecord}(\hat{v}) = \set{
+    \varprop{outer} \mapsto \hat{v}
+}\\\\
+
+\ahf{NewObject} & : \aLoc \rightarrow \aObj \\
+& \ahf{NewObject}(\hat{l}) = \set{\varprop{class}\mapsto \hat{``Object"}_{Value},\\
+  \varprop{proto}\mapsto
+   \langle \langle\bot_{PValue},\{\hat{l}\}\rangle,\afalse,\afalse,\afalse \rangle,\\
+  \varprop{extensible}\mapsto \atrue_{Value}
+  }\\
+\\
+
+\ahf{NewArgObject} & : \abs{Number} \rightarrow \aObj \\
+& \ahf{NewArgObject}(\hat{n}) = \set{
+    \varprop{class}\mapsto \hat{``Arguments"}_{Value},\\
+    \varprop{proto}\mapsto 
+    \langle\langle\bot_{PValue},\{\avarloc{ObjProto}_R\}\rangle,\afalse,\afalse,\afalse\rangle,\\
+   ``length"\mapsto
+   \langle\hat{n}_{Value},\atrue,\afalse,\atrue\rangle,\\
+  \varprop{extensible}\mapsto \atrue_{Value}
+}\\\\
+    
+\ahf{NewArrayObject} & : \abs{Number} \rightarrow \aObj \\
+& \ahf{NewArrayObject}(\hat{n}) = \set{
+    \varprop{class}\mapsto \hat{``Array"}_{Value},\\
+    \varprop{proto}\mapsto 
+    \langle\langle\bot_{PValue},\{\avarloc{ArrayProto}_R\}\rangle,\afalse,\afalse,\afalse\rangle,\\
+   ``length"\mapsto
+   \langle\hat{n}_{Value},\atrue,\afalse,\afalse\rangle,\\
+  \varprop{extensible}\mapsto \atrue_{Value}
+}\\\\
+
+\ahf{NewFunctionObject} & : \fid \times \abs{Value} \times \aLoc \times \abs{Number} \rightarrow \aObj \\
+& \comment{\inblue scope is either location set or null value} \\
+& \ahf{NewFunctionObject}(fid,\hat{v},\hat{l},\hat{n}) = \set{
+  \varprop{class}\mapsto \hat{``Function"}_{Value},\\
+  \varprop{proto}\mapsto
+    \langle\langle\bot_{PValue},\{\avarloc{FunctionProto}_R\}\rangle,\afalse,\afalse,\afalse\rangle,\\
+  \varprop{extensible}\mapsto \atrue_{Value},\\
+  \varprop{function}\mapsto \{fid\},\\
+  \varprop{construct}\mapsto \{fid\},\\
+  \varprop{hasinstance}\mapsto \top_{Null},\\
+  \varprop{scope}\mapsto \hat{v},\\
+  ``prototype"\mapsto
+    \langle\langle\bot_{PValue},\{\hat{l}\}\rangle,\atrue,\afalse,\afalse\rangle,\\
+  ``length"\mapsto
+    \langle\hat{n}_{Value},\afalse,\afalse,\afalse\rangle
+}\\\\
+
+
+\ahf{NewPureLocal} & : \abs{Value} \times \powerset{\abs{Loc}} \rightarrow \aObj \\
+& \comment{\inblue env is either location set or null value} \\
+& \ahf{NewPureLocal}(\hat{v}_{env}, \hat{L}_{this}) = \set{
+    \varprop{env} \mapsto \hat{v}_{env}, \\
+    \varprop{this} \mapsto \hat{L}_{this}, \\
+    \varprop{exception} \mapsto \bot_{PropValue}, \\
+    \varprop{exception\_all} \mapsto \bot_{PropValue}, \\
+    \varprop{return} \mapsto \aundef_{Value} 
+}\\
+\end{array}
+\]
+\\
+
+%%% Oldify %%%
+\[
+\begin{array}{ll}
+
+\ahf{Oldify} & : \aHeap \times \abs{Context} \times \abs{Address} \rightarrow \aHeap \times \abs{Context}\\
+ & \ahf{Oldify}(\hat{H},\hat{C}, \hat{a}) =
+     \left\{
+       \begin{array}{ll}
+         (\hat{H}_1, \hat{C}_1) & \ifc{\hat{C} \neq \bot_{Context}} \\
+         (\bot_{Heap}, \bot_{Context}) & \ifc{\hat{C} = \bot_{Context}} \\
+       \end{array}
+     \right.\\
+ & \quad\wherec{
+   \hat{l}_R = (\hat{a}, \hat{Recent}) \land\ \hat{l}_O = (\hat{a}, \hat{Old})\\
+   \land\ \hat{H}_1 =
+     \left\{
+       \begin{array}{ll}
+         (\hat{H}[\hat{l_O}\mapsto \hat{H}(\hat{l_R})]-\hat{l}_R)\{\hat{l}_O / \hat{l}_R\}
+         & \ifc{\hat{l_R}\in dom(\hat{H})} \\
+         \hat{H}\{\hat{l}_O / \hat{l}_R\}
+         & \ifc{\hat{l_R}\not\in dom(\hat{H})} \\
+       \end{array}
+     \right.\\
+   \land\ \hat{C}_1 = \langle {\inred \{ \}, \{ \}}, \hat{C}.3 \cup \{\hat{a}\}, \hat{C}.4 \cup \{\hat{a}\} \rangle
+}\\\\
+
+
+& {\inblue \textit{At function return, this method oldifies bypassed pure local object.}} \\
+\ahf{FixOldify} & : \abs{Context} \times \aObj \times \powerset{\abs{Address}} \times \powerset{\abs{Address}} \rightarrow \abs{Context} \times \aObj \\
+& \ahf{FixOldify}(\hat{C}_0, \hat{o}_0, \hat{A}_{may}, \hat{A}_{must}) =
+    \left\{
+      \begin{array}{ll}
+        (\hat{C}_n, \hat{o}_n) & \ifc{\hat{C} \neq \bot_{Context}} \\
+        (\bot_{Context}, \bot_{Obj}) & \ifc{\hat{C} = \bot_{Context}} \\
+      \end{array}
+    \right.\\
+& \quad\wherec{\hat{a}_1\cdots\hat{a}_n = \hat{A}_{may} ~ \land} \\
+& \quad\forall 1 \leq i \leq n.\\
+& \quad\quad \begin{array}{l}
+    \hat{l}_{R_i} = (\hat{a}_i, \hat{Recent}) \land\ \hat{l}_{O_i} = (\hat{a}_i, \hat{Old})\ \land \\
+    \hat{C}_i = 
+    \left\{\begin{array}{ll}
+      \langle {\inred \{ \}},
+              {\inred \{ \}},
+              \hat{C}_{i-1}.3 \cup \{\hat{a}_i\},
+              \hat{C}_{i-1}.4 \cup \{\hat{a}_i\}
+      \rangle & \ifc{a_i \in \hat{A}_{must}} \\
+      \langle {\inred \{ \}},
+              {\inred \{ \}},
+              \hat{C}_{i-1}.3 \cup \{\hat{a}_i\},
+              \hat{C}_{i-1}.4 
+      \rangle & \ifc{a_i \not\in \hat{A}_{must}} \\
+    \end{array}\right. \\
+    \hat{o}_i = 
+    \left\{\begin{array}{ll}
+      \hat{o}_i = \hat{o}_{i-1}\{\hat{l}_{O_i} / \hat{l}_{R_i} \} & \ifc{a_i \in \hat{A}_{must}} \\
+      \hat{o}_i = \hat{o}_{i-1}\{\{\hat{l}_{O_i}, \hat{l}_{R_i}\} / \hat{l}_{R_i} \} & \ifc{a_i \not\in \hat{A}_{must}}
+    \end{array}\right. \\
+  \end{array}
+\\
+\\
+
+%%% Proto %%%
+& {\inblue \textit{Cycle in prototype chain is detected at implementation level.}} \\
+\ahf{Proto} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \aValue\\
+  & \ahf{Proto}(\hat{H},\hat{l},\hat{s})
+    =\hat{v}_1\sqcup\hat{v}_2\\
+  & \quad\wherec{
+     \hat{v}_1 =
+        \left\{
+          \begin{array}{ll}
+            \hat{H}(\hat{l})(\hat{s}).1.1.1
+            & \atrue\sqsubseteq(\hat{s} \dot{\in} dom(\hat{H}(\hat{l}))))\\
+            \bot_{Value} & \owc \\
+          \end{array}
+        \right.\\
+      \hat{L}_{proto} = \hat{H}(\hat{l})(\varprop{proto}).1.1.1.2\\
+      \hat{v}_2 =
+        \left\{
+          \begin{array}{ll}
+            \hat{v}_3 \sqcup \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}\ahf{Proto}(\hat{H},\hat{l}_{proto},\hat{s})
+            & \afalse\sqsubseteq(\hat{s} \dot{\in} dom(\hat{H}(\hat{l})))\\
+            \bot_{Value} & \owc \\
+          \end{array}
+        \right.\\
+    \hat{v}_3 =
+      \left\{
+      \begin{array}{ll}
+        \aundef_{Value} & \ifc{\hat{H}(\hat{l})(\varprop{proto}).1.1.1.1.2 \not\sqsubseteq \bot_{Null}}\\
+        \bot_{Value} & \owc\\
+      \end{array}
+    \right.\\
+    }\\
+\\
+
+& {\inblue \textit{Cycle in prototype chain is detected at implementation level.}} \\
+\ahf{ProtoBase} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \powerset{\aLoc}\\
+  & \ahf{ProtoBase}(\hat{H},\hat{l},\hat{s})
+    = \hat{L}_1\cup\hat{L}_2\\
+  & \quad\wherec{
+      \hat{l} \in dom(\hat{H})\\
+      \land\ \hat{L}_1 =
+        \left\{
+          \begin{array}{ll}
+            \set{\hat{l}} & \atrue\sqsubseteq(\hat{s} \dot{\in} dom(\hat{H}(\hat{l}))\\
+            \set{} & \owc \\
+          \end{array}
+        \right.\\
+        \land\ \hat{L}_{proto} = \hat{H}(\hat{l})(\varprop{proto}).1.1.1.2\\
+      \land\ \hat{L}_2 =
+        \left\{
+          \begin{array}{ll}
+            \bigsqcup_{\hat{l}_{proto}\in\hat{L}_{proto}}\ahf{ProtoBase}(\hat{H},\hat{l}_{proto},\hat{s})
+            & \afalse\sqsubseteq(\hat{s} \dot{\in} dom(\hat{H}(\hat{l}))\\
+            \set{} & \owc \\
+          \end{array}
+        \right.\\
+        
+      \\
+    }\\
+\\
+\end{array}
+\]
+\\
+
+%%% Prun %%%
+\[
+\begin{array}{ll}
+
+\ahf {Pruning}_1 &: \SF{PrunExpr} \times \aValue \times \SF{IRRelOP} \times \aValue \times \aState \rightarrow \aState\\
+& \ahf{Pruning}_1(pe, \hat{v}_1, \rel, \hat{v}_2, (\hat{H}, \hat{C})) = (\hat{H}_1, \hat{C}_1)\\
+& \quad\wherec {
+%  \hat{abs} = \hat{abs}_1 \sqcap \hat{H}(\hat{l})(\hat{s}).2\\
+%  \hat{L} = 
+%    \left\{
+%      \begin{array}{ll}
+%        \{ \#\hat{Global}_{R}, \#\hat{PureLocal}_{R} \} & \ifc{ \$e = x}\\
+%        (\hat{V}_{cp} \lbr e_1 \rbr (\hat{H}, \hat{C})).1.2 & \ifc{ \$e = e_1[e_2] }\\
+%      \end{array}
+%    \right.\\
+  (\hat{v}, \hat{abs}) = \ahf{K}_\rel (\hat{v}_2)\\
+  \hat{s} = 
+    \left\{
+      \begin{array}{ll}
+        ``\hat{x}" & \ifc{ pe = x}\\
+        \ahf{toString}(\hat{pv}) &
+          \ifc{ pe = e_1[e_2]}\\
+          & \wherec{\hat{pv} = \ahf{toPrimitive}((\aV \lbr e_2 \rbr (\hat{H}, \hat{C})).1) }
+      \end{array}
+    \right.\\
+  \hat{L}_{base} = \left\{
+    \begin{array}{ll}
+      \ahf{LookupBase}(\hat{H}, \hat{C}.1, ``x") & \ifc{ pe = x }\\
+      \bigsqcup_{\hat{l} \in (\aV \lbr e_1 \rbr (\hat{H}, \hat{C})).1.2 } \ahf{ProtoBase}(\hat{H}, \hat{l}, \hat{s}) & \ifc{ pe = e_1[e_2] }\\
+    \end{array}
+  \right.\\
+  \hat{propv} = \left\{
+    \begin{array}{ll}
+      \langle \langle \hat{v} \sqcap \hat{v}_1, \hat{ov}.2, \hat{ov}.3, \hat{ov}.4 \rangle, \bot_{Value}, \bot_{FunctionId} \rangle & \ifc {\ahf{size}(\hat{L}_{base}) = 1}\\
+        &\wherec{
+          \hat{l} \in \hat{L}_{base}\\
+          \hat{ov} = \hat{H}(\hat{l})(\hat{s}).1.1\\
+          }\\
+      \bot_{PropValue} & \owc\\
+    \end{array}
+  \right.\\
+  (\hat{H}_1, \hat{C}_1) = 
+    \left\{
+      \begin{array}{ll}
+      (\hat{H}[\hat{l} \mapsto \hat{H} (\hat{l})[ \hat{s} \mapsto \langle \hat{propv},  \hat{abs} \sqcap \hat{H}(\hat{l})(\hat{s}).2 \rangle]], \hat{C}) &
+         \ifc{\ahf{size}(\hat{L}_{base}) = 1\land \{x\} = \gamma(\hat{s})}\\
+         & \wherec{ \hat{l} \in \hat{L}_{base} }\\
+        (\bot_{Heap}, \bot_{Context}) &
+          \ifc{ \ahf{size}(\hat{L}_{base}) = 0} \\
+        (\hat{H}, \hat{C}) &
+          \owc \\
+      \end{array}
+    \right.
+}\\\\
+
+\ahf {Pruning}_2 &: \SF{RelExpr} \times \aState \rightarrow \aState\\
+& \ahf{Pruning}_2( re, (\hat{H}, \hat{C})) = (\hat{H}_1, \hat{C}_1)\\
+& \quad\wherec {
+  e_1 ~ \rel ~ e_2 = re\\
+  \hat{v}_1 = (\aV \lbr e_1 \rbr (\hat{H}, \hat{C})).1\\
+  \hat{v}_2 = (\aV \lbr e_2 \rbr (\hat{H}, \hat{C})).1\\
+  \hat{s} = \ahf{toString}(\ahf{toPrimitive}(\hat{v}_1))\\
+
+  \hat{L}_{base} = \left\{
+    \begin{array}{ll}
+      \bigsqcup_{\hat{l} \in \hat{v}_2.2} \ahf{ProtoBase}(\hat{H}, \hat{l}, \hat{s})  & \ifc{ \rel = \TT{in}}\\
+      \hat{v}_2.2  & \owc \\
+    \end{array}
+  \right.\\
+  (\hat{H}_1, \hat{C}_1) = \left\{
+    \begin{array}{ll}
+      (\hat{H}[\hat{l} \mapsto \hat{H}(\hat{l})[\hat{s} \mapsto (\hat{H}(\hat{l})(\hat{s})).1]], \hat{C}) & \ifc{\{\hat{l} \} = \hat{L}_{base} \land \{x\} = \gamma (\hat{s}) \land \rel = \TT{in}}\\
+      (\ahf{DeleteAll}(\hat{H}, \hat{l}, \hat{s}), \hat{C}) & \ifc{ \{\hat{l} \} = \hat{L}_{base} \land \{x\} = \gamma (\hat{s}) \land \rel = \TT{notIn}}\\
+%      ((\bigsqcap_{\hat{l}_1 \in \hat{L}_{base}} \ahf{Delete}(\hat{H}, \hat{l}_1, \hat{s})), \hat{C}) & \ifc{ \{\hat{l} \} = \hat{v}_1.2 \land \{x\} = \gamma (\hat{s}) \land \rel = \TT{notIn}}\\
+      (\ahf{PrunInstanceof}(\hat{l}_1, \hat{l}, \atrue, \hat{H}), \hat{C}) & \ifc{ \{\hat{l} \} = \hat{L}_{base}  \land \{\hat{l}_1 \} = \hat{v}_1.2  \\ \land \rel = \TT{instanceof}}\\
+      (\ahf{PrunInstanceof}(\hat{l}_1, \hat{l}, \afalse, \hat{H}), \hat{C}) & \ifc{ \{\hat{l} \} = \hat{L}_{base} \land \{\hat{l}_1 \} = \hat{v}_1.2 \\ \land \rel = \TT{notInstanceof}}\\
+      (\bot_{Heap}, \bot_{Context}) & \ifc{ \ahf{size}(\hat{L}_{base}) = 0}\\
+      (\hat{H}, \hat{C}) & \owc\\
+    \end{array}
+  \right.
+}\\\\
+
+\ahf {PrunInstanceof} &:  \aLoc \times \aLoc \times \abs{Bool} \times \aHeap \rightarrow \aHeap\\
+& \ahf {PrunInstanceof} (\hat{l}_{obj}, \hat{l}_{fun}, \hat{b}, \hat{H}) = \hat{H}_1 \sqcap \hat{H}_2\\
+& \quad\wherec{
+  \hat{L}_{prototype} = \hat{H}(\hat{l}_{fun})(``prototype").1.1.1.2\\
+  \hat{L}_{proto} = \hat{H}(\hat{l}_{obj})(@proto).1.1.1.2\\
+  \hat{L}_1 = 
+      \bigsqcup_{\hat{l}_1 \in \hat{L}_{proto}} \bigsqcup_{\hat{l}_2 \in \hat{L}_{prototype}} \ahf{inheritProto}_2(\hat{H}, \hat{l}_1, \hat{l}_2, \hat{b})\\
+%  \left\{
+%    \begin{array}{ll}
+%      \bigsqcup_{\hat{l}_2 \in \hat{L}_{prototype}} \ahf{inheritProto}_2(\hat{H}, \hat{l}_1, \hat{l}_2, \hat{b}) & \ifc{ \hat{L}_{proto} = \{ \hat{l}_1 \} }\\
+%      \{\} & \owc
+%    \end{array}
+%  \right.\\
+  \hat{L}_2 = 
+      \bigsqcup_{\hat{l}_1 \in \hat{L}_{proto}} \bigsqcup_{\hat{l}_2 \in \hat{L}_{prototype}} \ahf{inheritProto}_1(\hat{H}, \hat{l}_1, \hat{l}_2, \hat{b})\\
+%  \left\{
+%    \begin{array}{ll}
+%      \bigsqcup_{\hat{l}_1 \in \hat{L}_{proto}} \ahf{inheritProto}_1(\hat{H}, \hat{l}_1, \hat{l}_2, \hat{b}) & \ifc{ \hat{L}_{prototype} = \{ \hat{l}_2 \} }\\
+%      \{\} & \owc
+%    \end{array}
+%  \right.\\
+  \hat{H}_1 = 
+%  \left\{
+%    \begin{array}{ll}
+      \hat{H} \left[ \hat{l}_{obj} \mapsto \hat{H}(\hat{l}_{obj}) \left[ @proto \mapsto 
+        \left\langle 
+        \begin{array}{l}
+        \langle \bot_{PValue}, \hat{L}_1 \rangle,\\
+        \afalse,\\
+        \afalse,\\
+        \afalse\\
+        \end{array}
+        \right\rangle      
+      \right]\right]\\
+%         & \ifc{\ahf{size}(\hat{L}_{prototype}) = 1}\\
+%      \hat{H} & \owc
+%    \end{array}
+%  \right.\\
+  \hat{H}_2 = 
+%  \left\{
+%    \begin{array}{ll}
+      \hat{H} \left[ \hat{l}_{fun} \mapsto \hat{H}(\hat{l}_{fun}) \left[ ``prototype" \mapsto 
+        \left\langle 
+        \begin{array}{l}
+        \langle \bot_{PValue}, \hat{L}_2 \rangle,\\
+        \afalse,\\
+        \afalse,\\
+        \afalse\\
+        \end{array}
+        \right\rangle      
+      \right]\right]\\
+%         & \ifc{\ahf{size}(\hat{L}_{proto}) = 1}\\
+%      \hat{H} & \owc
+%    \end{array}
+%  \right.\\
+%  \hat{H}_3 = \left\{
+%    \begin{array}{ll}
+%      \bigsqcap_{\hat{l}_2 \in (\hat{L}_{prototype} - \hat{l}_1)} \ahf{PrunProto}_2(\hat{l}_1, \hat{l}_2, \hat{b}, \hat{H}) & \ifc{ \hat{L}_{proto} = \{ \hat{l}_1 \} }\\
+%      \hat{H} & \owc\\
+%    \end{array}
+%  \right.\\
+}\\
+\\
+
+%%% size %%%
+
 \ahf{size} & : \powerset{\aLoc} \rightarrow {\sf Number}\\
 & \begin{array}{llll}
   \ahf{size}(\{\}) & = & {\sf 0}\\
   \ahf{size}( \hat{L} ) & = & {\sf 1} + \ahf{size}(\hat{L}_1) & \wherec { \hat{l} \in \hat{L}\\ \hat{L}_1 = \hat{L} - \{\hat{l}\}}\\
 \end{array}\\
-\\\\
-
-\ahf{getRel} & : \SF{RelExpr} \rightarrow \aState \rightarrow \powerset{\SF{RelExpr}}\\
-%& \ahf{getRel}(\hat{re}, \hat{S}) = \hat{re}_1 \sqcup \hat{re}_2 \sqcup \hat{re}_3\\
-%& \quad\wherec{
-%  (\hat{H}, \hat{C}) = \hat{S}\\
-%  e_1 \rel e_2 = \hat{re}\\
-%  b = \ahf{validity}(\aV \lbr e_2 \rbr (\hat{H}, \hat{C}).1) \land b_1\\
-%  b_1 = \left\{
-%    \begin{array}{ll}
-%      \ahf{validity}(\aV \lbr e_3 \rbr (\hat{H}, \hat{C}).1) \land \ahf{validity}(\aV \lbr e_4 \rbr (\hat{H}, \hat{C}).1) & \ifc { e_3 \otimes e_4 = e_1}\\
-%      \vfalse & \owc\\
-%    \end{array}
-%  \right.\\
-%  \hat{re}_1 = \left\{
-%    \begin{array}{ll}
-%      \{\hat{re}\} &  \ifc{ e_1 \in \$\sf{Expression}}\\
-%      \{\} & \owc
-%    \end{array}
-%   \right.\\
-%  \hat{re}_2 = \left\{
-%    \begin{array}{ll}
-%      \ahf{getRel}(e_3 \rel ( e_2 - e_4 ), \hat{S} ) \sqcup \ahf{getRel}(e_4 \rel ( e_2 - e_3 ), \hat{S} ) &  \ifc{ e_3 + e_4 = e_1 \land b}\\
-%      \ahf{getRel}(e_3 \rel ( e_2 + e_4 ), \hat{S} ) \sqcup \ahf{getRel}(e_4 \rel^t ( e_2 - e_3 ), \hat{S} ) &  \ifc{ e_3 - e_4 = e_1 \land b}\\
-%      \{\} & \owc
-%    \end{array}
-%   \right.\\
-%  \hat{re}_3 = \left\{
-%    \begin{array}{ll}
-%      \ahf{getRel}((e_3 * n ) \rel e_2, \hat{S} ) &  \ifc{ n * e_3 = e_1 \land b}\\
-%      \ahf{getRel}(e_3 \rel ( e_2 / n), \hat{S} ) &  \ifc{ e_3 * n = e_1 \land b \land n > 0}\\
-%      \ahf{getRel}(e_3 \rel ( e_2 * n), \hat{S} ) &  \ifc{ e_3 / n = e_1 \land b \land n > 0}\\
-%      \ahf{getRel}(e_3 \rel^t ( e_2 / n), \hat{S} ) &  \ifc{ e_3 * n = e_1 \land b \land n < 0}\\
-%      \ahf{getRel}(e_3 \rel^t ( e_2 * n), \hat{S} ) &  \ifc{ e_3 / n = e_1 \land b \land n < 0}\\
-%      \{\} & \owc
-%    \end{array}
-%   \right.\\
-%}\\
-& \begin{array}{lll}
-  \ahf{getRel}(pe \rel e, \hat{S}) &=& \{pe \rel e\}\\
-  \ahf{getRel}((e_1 + e_2) \rel e_3, \, \hat{S})  &=& \ahf{getRel} (e_1 \rel (e_3 - e_2), \hat{S}) \cup \ahf{getRel} (e_2 \rel (e_3 - e_1), \hat{S}) \quad \ifc{\ahf{validity}_3(e_1, e_2, e_3, \hat{S})}\\
-  \ahf{getRel}((e_1 - e_2) \rel e_3, \hat{S})  &=& \ahf{getRel} (e_1 \rel (e_3 + e_2), \hat{S}) \cup \ahf{getRel} (e_2 \rel^t (e_1 - e_3), \hat{S})\quad \ifc{\ahf{validity}_3(e_1, e_2, e_3, \hat{S})}\\
-  \ahf{getRel} ((n * e_1) \rel e_2, \hat{S})  &=& \ahf{getRel} ((e_1  * n) \rel e_2, \hat{S}) \quad \ifc{\ahf{validity}_2(e_1, e_2, \hat{S})}\\
-  \ahf{getRel} ((e_1  * n) \rel e_2, \hat{S}) &=& \ahf{getRel} (e_1 \rel (e_2/n), \hat{S}) \quad \ifc {n>0 \land \ahf{validity}_2(e_1, e_2, \hat{S})}\\
-  \ahf{getRel} ((e_1  * n) \rel e_2, \hat{S}) &=& \ahf{getRel} (e_1 \rel^t (e_2/n), \hat{S}) \quad \ifc {n<0 \land \ahf{validity}_2(e_1, e_2, \hat{S})}\\
-  \ahf{getRel} ((e_1  / n) \rel e_2, \hat{S}) &=& \ahf{getRel} (e_1 \rel (e_2*n), \hat{S}) \quad \ifc {n>0 \land \ahf{validity}_2(e_1, e_2, \hat{S})}\\
-  \ahf{getRel} ((e_1  / n) \rel e_2, \hat{S}) &=& \ahf{getRel} (e_1 \rel^t (e_2*n), \hat{S}) \quad \ifc {n<0 \land \ahf{validity}_2(e_1, e_2, \hat{S})}\\
-\end{array}\\
-%& \quad \wherec{
-%  (\hat{H}, \hat{C}) = \hat{S}\\
-%  (\hat{v}_1, \hat{es}_1) = \hat{\V}_{cp} \lbr e_1 \rbr (\hat{H}, \hat{C})\\
-%  (\hat{v}_2, \hat{es}_2) = \hat{\V}_{cp} \lbr e_2 \rbr (\hat{H}, \hat{C})\\
-%  (\hat{v}_3, \hat{es}_3) = \hat{\V}_{cp} \lbr e_3 \rbr (\hat{H}, \hat{C})\\
-%  \vtrue = \ahf{validity}(\hat{v}_1)\\
-%  \vtrue = \ahf{validity}(\hat{v}_2)\\
-%  \vtrue = \ahf{validity}(\hat{v}_3)\\
-%}\\
-
-& \begin{array}{lll}
-  \ahf{getRel}(re) &=& \O \quad\owc
-\end{array}\\\\
 
 \end{array}
 \]
+\\
+
+%%% Store %%%
 \[
 \begin{array}{ll}
+
+\ahf{VarStore} & : \aHeap \times \SF{Prop} \times \aValue \rightarrow \aHeap\\
+& \ahf{VarStore}(\hat{H}, x, \hat{v}) = \hat{H}_1 \quad\ifc{\chf{getVarKind}_P(x) = \SF{PureLocalVar}} \\
+& \quad\wherec{\hat{H}_1 = \hat{H}[\avarloc{PureLocal}_R \mapsto \hat{H}(\avarloc{PureLocal}_R)
+    [x \mapsto \langle \hat{v},\bot_{Bool},\bot_{Bool},\afalse \rangle]]} \\
+& \ahf{VarStore}(\hat{H}, x, \hat{v}) = \hat{H}_1 \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedVar}} \\
+& \quad\wherec{\hat{H}_1 = \bigsqcup_{\hat{l}\in\hat{H}(\avarloc{PureLocal}_R)(\varprop{env}).1.2.2} \ahf{VarStoreL}(\hat{H},\hat{l},x,\hat{v})} \\
+& \ahf{VarStore}(\hat{H}, x, \hat{v}) = \hat{H}_1 \quad\ifc{\chf{getVarKind}_P(x) = \SF{CapturedCatchVar}} \\
+& \quad\wherec{\hat{H}_1 = \hat{H}[\avarloc{Collapsed}_O \mapsto \hat{H}(\avarloc{Collapsed}_O)
+    [x \mapsto \langle \hat{v},\bot_{Bool},\bot_{Bool},\afalse \rangle]]} \\
+& \ahf{VarStore}(\hat{H}, x, \hat{v}) = \hat{H}_1 \sqcup \hat{H}_2 
+    \quad\ifc{\chf{getVarKind}_P(x) = \SF{GlobalVar}} \\
+& \quad\wherec{
+  \hat{H}_1 = \left\{
+    \begin{array}{ll}
+      \ahf{VarStoreG}(\hat{H}, x, \hat{v}) & \quad\ifc{\atrue\sqsubseteq\ahf{CanPutVar}(\hat{H}, x)} \\
+      \bot_{Heap} & \quad\owc
+    \end{array}
+  \right. \\
+  \land\ \hat{H}_2 = \left\{
+    \begin{array}{ll}
+      \hat{H} & \quad\ifc{\afalse \sqsubseteq \ahf{CanPutVar}(\hat{H}, x)} \\
+      \bot_{Heap} & \quad\owc
+    \end{array}
+  \right. \\
+} \\
+\\
+
+\ahf{VarStoreG} & : \aHeap \times \SF{Prop} \times \aValue \rightarrow \aHeap \\
+& \ahf{VarStoreG}(\hat{H}, x, \hat{v})
+  =
+  \hat{H}_1 \sqcup \hat{H}_2 \\
+&\wherec{
+  \hat{l}_g = \avarloc{Global}_R\ \land\ \hat{ov}_{old} = \hat{H}(\hat{l}_g)(x).1.1\\
+  \hat{H}_1 =
+  \left\{
+    \begin{array}{ll}
+      \ahf{PropStore}(\hat{H},\hat{l}_g,\hat{x},\hat{v}) & \ifc{\afalse\sqsubseteq(x \dot{\in} dom(\hat{H}(\hat{l}_g)))} \\
+      \bot_{Heap} & \owc \\
+    \end{array}
+   \right.\\ 
+  \hat{H}_2 =
+  \left\{
+    \begin{array}{ll}
+      \hat{H}[\hat{l}_g\mapsto \hat{H}(\hat{l}_g)[x \mapsto
+        \langle \hat{v},\hat{ov}_{old}.2,\hat{ov}_{old}.3,\hat{ov}_{old}.4\rangle]]
+        & \ifc{
+          \atrue\sqsubseteq (x \dot{\in} dom(\hat{H}(\hat{l}_g)))\\
+        } \\
+        \bot_{Heap} & \owc \\
+    \end{array}
+  \right. \\
+}\\\\
+
+& {\inblue \textit{Writable is false only for function name variables, which is always determined exactly.}} \\
+& {\inblue \textit{Cycle in scope chain is detected at implementation level.}} \\
+\ahf{VarStoreL} & : \aHeap \times \aLoc \times \SF{Prop} \times \aValue \rightarrow \aHeap\\
+& \ahf{VarStoreL}(\hat{H}, \hat{l}, x, \hat{v}) = \hat{H}_1 \sqcup \hat{H}_2 \\
+& \quad\wherec{
+    \hat{H}_1 = 
+      \left\{
+      \begin{array}{ll}
+        \hat{H}\left[\hat{l}\mapsto \hat{H}(\hat{l})\left[x \mapsto \langle\hat{v},\atrue,\bot_{Bool},\afalse\rangle\right]\right] 
+          & \ifc{\atrue \sqsubseteq (x \dot{\in} dom(\hat{H}(\hat{l}))) ~\land~ \hat{H}(\hat{l})(x).1.1.2 = \atrue} \\
+        \hat{H} 
+          & \ifc{\atrue \sqsubseteq (x \dot{\in} dom(\hat{H}(\hat{l}))) ~\land~ \hat{H}(\hat{l})(x).1.1.2 = \afalse} \\
+        \bot_{Heap} & \owc \\
+      \end{array}
+      \right. \\
+    \hat{L}_{outer} = \hat{H}(\hat{l})(\varprop{outer}).1.2.2 \\
+    \hat{H}_2 = 
+      \left\{ 
+      \begin{array}{ll}
+        \bigsqcup_{\hat{l}_{outer}\in\hat{L}_{outer}}\ahf{VarStoreL}(\hat{H}, \hat{l}_{outer}, x, \hat{v})
+          & \afalse \sqsubseteq (x \dot{\in} dom(\hat{H}(\hat{l}))) \\
+        \bot_{Heap} & \owc \\
+      \end{array}
+      \right. \\
+  } \\
+\\
+
+%\ahf{PropStore}_{Pre} & : \aHeap \times \aLoc \times \abs{String} \times \aValue \rightarrow \aHeap \\
+%& \ahf{PropStore}_{Pre}(\hat{H},\hat{l},\hat{s},\hat{v})
+%  = \hat{H}_2\\
+%& \quad\wherec{
+%\hat{H}_1 = \left\{
+%    \begin{array}{ll}
+%      \hat{H}\left[\hat{l}\mapsto \hat{H}(\hat{l})\left[\hat{s}\mapsto \langle\hat{v},\atrue,\atrue,\atrue\rangle\right]\right] & \ifc{\afalse\sqsubseteq(\hat{s} \dot{\in} dom(\hat{H}(\hat{l})))} \\
+%      \hat{H} & \owc \\
+%    \end{array}
+%  \right. \\
+%  \hat{ov}_{old}=\hat{H}_1(\hat{l})(\hat{s}).1.1\\
+%  \hat{H}_2 = \left\{
+%    \begin{array}{ll}
+%      \hat{H}_1\left[\hat{l}\mapsto \hat{H}_1(\hat{l})\left[\hat{s}\mapsto
+%          \langle \hat{v},\hat{ov}_{old}.2,\hat{ov}_{old}.3,\hat{ov}_{old}.4\rangle
+% \set{H(l)(x)\rwith value=v}
+%        \right]\right] & \ifc{\atrue\sqsubseteq (\hat{s} \dot{\in} dom(\hat{H}(\hat{l})))}\\
+%      \hat{H}_1 & \owc \\
+%    \end{array}
+%  \right. \\
+%}\\
+%\\
+
+\ahf{PropStore} & : \aHeap \times \aLoc \times \abs{String} \times \aValue \rightarrow \aHeap \\
+& \ahf{PropStore}(\hat{H},\hat{l},\hat{s},\hat{v})
+  = \hat{H}_1\sqcup\hat{H}_2\\
+& \quad\wherec{
+\hat{H}_1 = \left\{
+    \begin{array}{ll}
+      \hat{H}\left[\hat{l}\mapsto \hat{H}(\hat{l})\left[\hat{s}\mapsto \langle\hat{v},\atrue,\atrue,\atrue\rangle\right]\right] & \ifc{\afalse\sqsubseteq(\hat{s} \dot{\in} dom(\hat{H}(\hat{l})))} \\
+      \bot_{Heap} & \owc \\
+    \end{array}
+  \right. \\
+  \hat{ov}_{old}=\hat{H}(\hat{l})(\hat{s}).1.1\\
+  \hat{H}_2 = \left\{
+    \begin{array}{ll}
+      \hat{H}\left[\hat{l}\mapsto \hat{H}(\hat{l})\left[\hat{s}\mapsto
+          \langle \hat{v},\hat{ov}_{old}.2,\hat{ov}_{old}.3,\hat{ov}_{old}.4\rangle
+% \set{H(l)(x)\rwith value=v}
+        \right]\right] & \ifc{\atrue\sqsubseteq (\hat{s} \dot{\in} dom(\hat{H}(\hat{l})))}\\
+      \bot_{Heap} & \owc \\
+    \end{array}
+  \right. \\
+}\\
+\\
+
+\ahf{ReturnStore} & : \aHeap \times \aValue \rightarrow \aHeap\\
+& \ahf{ReturnStore}(\hat{H}, \hat{v}) = \hat{H}[\avarloc{PureLocal}_R \mapsto \hat{H}(\avarloc{PureLocal}_R)[\varprop{return} \mapsto \hat{v}]]\\
+\\
+\end{array}
+\]
+\\
+
+%%% to %%%
+\[
+\begin{array}{ll}
+% \chf{newLocation} & : \SF{Unit} \rightarrow \SF{Loc} \\
+% & \chf{newLocation}()
+%   = l_{new}\\
+% \\
+\ahf{toBoolean} & : \aValue \rightarrow \abs{Bool} \\
+& \ahf{toBoolean}(\hat{v})
+  = \langle\langle \bot,\bot,\displaystyle\bigsqcup_{n=1\cdots8}\hat{b}_n,\bot,\bot\rangle,\{\}\rangle \\
+& \wherec{
+  \hat{b}_1 = \afalse \quad\ifc{\aundef\sqsubseteq\hat{v}.1.1}\\
+  \hat{b}_2 = \afalse \quad\ifc{\anull\sqsubseteq\hat{v}.1.2}\\
+  \hat{b}_3 = \hat{v}.1.3 \\
+  \hat{b}_4 = \afalse \quad\ifc{\hat{0}\sqsubseteq\hat{v}.1.4\lor\hat{\SF{NaN}}\sqsubseteq\hat{v}.1.4} \\
+  \hat{b}_5 = \atrue \quad\ifc{\hat{v}.1.4\not\sqsubseteq\bot_{number}\land\hat{v}.1.4\neq\hat{0}\land\hat{v}.1.4\neq\hat{\SF{NaN}}} \\
+  \hat{b}_6 = \afalse \quad\ifc{\hat{``"}\sqsubseteq\hat{v}.1.5} \\
+  \hat{b}_7 = \atrue \quad\ifc{\hat{v}.1.5\not\sqsubseteq\bot_{string}\land\hat{v}.1.5\neq\hat{``"}}\\
+  \hat{b}_8 = \atrue \quad\ifc{\hat{v}.2\not\sqsubseteq\bot_{Loc}}\\
+}\\\\
+
+\ahf{toNumber} & : \abs{PValue} \rightarrow \abs{Number} \\
+& \ahf{toNumber}(\hat{pv})
+  = \hat{n}_1\sqcup\hat{n}_2\sqcup\hat{n}_3\sqcup\hat{n}_4\sqcup\hat{n}_5 \\
+& \quad\wherec{
+  \hat{n}_1 = \hat{\SF{NaN}}\quad\ifc{\aundef_{Value}\sqsubseteq\hat{pv}}\\
+  \hat{n}_2 = \hat{0}\quad\ifc{\anull\sqsubseteq\hat{pv}\lor\afalse\sqsubseteq\hat{pv}}\\
+  \hat{n}_3 = \hat{1}\quad\ifc{\atrue\sqsubseteq\hat{pv}}\\
+  \hat{n}_4 = \hat{pv}.4\\
+  \hat{n}_5 = {\inred \ahf{Str2Num}(\hat{pv})}\quad\ifc{\hat{pv}.5\not\sqsubseteq\bot_{string}}\\
+}\\\\
+
+\ahf{toString} & : \abs{PValue} \rightarrow \abs{String} \\
+& \ahf{toString}(\hat{pv})
+  = \hat{s}_1\sqcup\hat{s}_2\sqcup\hat{s}_3\sqcup\hat{s}_4\sqcup\hat{s}_5\\
+& \quad\wherec{
+  \hat{s}_1 = \hat{``undefined"}\quad\ifc{\hat{pv}.1\not\sqsubseteq\bot_{Undefined}} \\
+  \hat{s}_2 = \hat{``null"}\quad\ifc{\hat{pv}.2\not\sqsubseteq\bot_{Null}} \\
+  \hat{s}_3 = \hat{``pv.3"}\quad\ifc{\hat{pv}.3\not\sqsubseteq\bot_{Bool}} \\
+  \hat{s}_4 = \hat{``pv.4"}\quad\ifc{\hat{pv}.4\not\sqsubseteq\bot_{Number}} \\
+  \hat{s}_5 = \hat{pv}.5\\
+}\\
+\\
+
+\ahf{toStringSet} & : \abs{PValue} \rightarrow \powerset{\abs{String}} \\
+& \ahf{toStringSet}(\hat{pv})
+  = \hat{ss} ~ \textit{with redundancies removed}\\
+& \quad\wherec{
+  \hat{ss}_1 = 
+    \left\{\begin{array}{ll}
+      \{ \hat{``undefined"} \} & \ifc{\hat{pv}.1\not\sqsubseteq\bot_{Undefined}} \\
+      \{\} & \owc \\
+    \end{array}\right. \\
+  \hat{ss}_2 = 
+    \left\{\begin{array}{ll}
+      \{ \hat{``null"} \} & \ifc{\hat{pv}.2\not\sqsubseteq\bot_{Null}} \\
+      \{\} & \owc \\
+    \end{array}\right. \\
+  \hat{ss}_3 = 
+    \left\{\begin{array}{ll}
+      \{ \hat{``pv.3"} \} & \ifc{\hat{pv}.3\not\sqsubseteq\bot_{Bool}} \\
+      \{\} & \owc \\
+    \end{array}\right. \\
+  \hat{ss}_4 = 
+    \left\{\begin{array}{ll}
+      \{ \hat{``pv.4"} \} & \ifc{\hat{pv}.4\not\sqsubseteq\bot_{Number}} \\
+      \{\} & \owc \\
+    \end{array}\right. \\
+  \hat{ss}_5 = 
+    \left\{\begin{array}{ll}
+      \{ \hat{pv}.5 \} & \ifc{\hat{pv}.5\not\sqsubseteq\bot_{String}} \\
+      \{\} & \owc \\
+    \end{array}\right. \\
+  \hat{ss} = \hat{ss}_1\cup\hat{ss}_2\cup\hat{ss}_3\cup\hat{ss}_4\cup\hat{ss}_5
+}\\
+\\
+\end{array}
+\]
+
+\[
+\begin{array}{ll}
+
+\ahf{toObject} & : \aHeap \times \abs{Context} \times \aValue \times \abs{Address} \rightarrow \aHeap \times \abs{Context} \times \aValue \times \powerset{\abs{Exception}} \\
+& \ahf{toObject}(\hat{H}, \hat{C}, \hat{v}, \hat{a})
+  = (\langle\bot_{PValue},\hat{L}_3\rangle,\hat{H}_4,\hat{C}_4,\hat{es}) \\
+  & \quad\wherec{
+    \hat{L} = \hat{v}.2\\
+    \hat{o}_1 =
+    \left\{
+      \begin{array}{ll}
+        \ahf{NewString}(\hat{v}.1.5) & \ifc{\hat{v}.1.5\not\sqsubseteq\bot_{string}} \\
+        \bot_{Obj} & \owc\\
+      \end{array}
+    \right.\\
+    \hat{o}_2 =
+    \left\{
+      \begin{array}{ll}
+        \ahf{NewBoolean}(\hat{v}.1.3) & \ifc{\hat{v}.1.3\not\sqsubseteq\bot_{boolean}} \\
+        \bot_{Obj} & \owc\\
+      \end{array}
+    \right.\\
+    \hat{o}_3 =
+    \left\{
+      \begin{array}{ll}
+        \ahf{NewNumber}(\hat{v}.1.4) & \ifc{\hat{v}.1.4\not\sqsubseteq\bot_{number}} \\
+        \bot_{Obj} & \owc\\
+      \end{array}
+    \right.\\
+    \hat{es} = 
+    \left\{
+      \begin{array}{ll}
+        \{\hat{\SF{TypeException}}\} & \ifc{\hat{v}.1.1\not\sqsubseteq\bot_{undef}\lor \hat{v}.1.2\not\sqsubseteq\bot_{null}} \\
+        \{\} & \owc\\
+      \end{array}
+    \right.\\
+    \hat{o} = \hat{o}_1 \sqcup \hat{o}_2 \sqcup \hat{o}_3 \\
+
+    \inblue (\hat{H}_1, \hat{C}_1) = \ahf{Oldify}(\hat{H}, \hat{C}, \hat{a}_{new})
+    \quad\comment{{\inblue // Recency Abstraction}}\\
+    \inblue\hat{l}_{R} = (\hat{a}, \hat{Recent})
+    \quad\comment{{\inblue // Recency Abstraction}}\\
+
+    (\hat{L}_1, \hat{H}_2, \hat{C}_2) = \left\{
+      \begin{array}{ll}
+        (\{\hat{l}_R\}, \hat{H}_1[\hat{l}_R\mapsto \hat{o}], \hat{C}_1)& \quad\ifc{\hat{o}\not\sqsubseteq \bot_{Obj}} \\
+        (\set{}, \bot_{Heap}, \bot_{Context})& \owc
+      \end{array}
+    \right.\\
+    (\hat{L}_2, \hat{H}_3, \hat{C}_3) = \left\{
+      \begin{array}{ll}
+        (\hat{L}, \hat{H}, \hat{C}& \quad\ifc{\hat{L}\not\sqsubseteq \set{}} \\
+        (\set{}, \bot_{Heap}, \bot_{Context})& \owc
+      \end{array}
+    \right.\\
+    
+    \hat{L}_3 = \hat{L}_1\sqcup\hat{L}_2 \land\ \hat{H}_4 = \hat{H}_2 \sqcup \hat{H}_3\land\ \hat{C}_4 = \hat{C}_2 \sqcup \hat{C}_3\\
+  }\\\\
+
+\ahf{toPrimitive} & : \aValue \rightarrow \abs{PValue} \\
+& \ahf{toPrimitive}(\hat{v})
+  = \hat{v}.1 \sqcup \inred \ahf{Obj2Str}(\hat{v}.2) \\
+\\
+
+
+
+
+%%% TypeTag %%%
+
+& {\inblue \textit{For all case of }\hat{s}_n\textit{ if the condition is false, the value of }\hat{s}_n\textit{ is }\bot_{String}.} \\
+\ahf{TypeTag} & : \aHeap \times \aValue \rightarrow \abs{String}\\
+& \ahf{TypeTag}(\hat{H},\hat{v}) = \hat{s}_1\sqcup\hat{s}_2\sqcup\hat{s}_3\sqcup\hat{s}_4\sqcup\hat{s}_5\sqcup\hat{s}_6\sqcup\hat{s}_7 \\
+& \wherec{
+  \begin{array}{ll}
+  \hat{s}_1 = \hat{``number"} & \ifc{\hat{v}.1.4\not\sqsubseteq\bot_{number}} \\
+  \hat{s}_2 = \hat{``boolean"} & \ifc{\hat{v}.1.3\not\sqsubseteq\bot_{boolean}} \\
+  \hat{s}_3 = \hat{``string"} & \ifc{\hat{v}.1.5\not\sqsubseteq\bot_{string}} \\
+  \hat{s}_4 = \hat{``object"} & \ifc{\hat{v}.2\not\sqsubseteq\bot_{Loc}\land\afalse\sqsubseteq\bigsqcup_{\hat{l}\in\hat{v}.2}\ahf{IsCallable}(\hat{H},\hat{l})} \\
+  \hat{s}_5 = \hat{``function"} & \ifc{\hat{v}.2\not\sqsubseteq\bot_{Loc}\land\atrue\sqsubseteq\bigsqcup_{\hat{l}\in\hat{v}.2}\ahf{IsCallable}(\hat{H},\hat{l})} \\
+  \hat{s}_6 = \hat{``object"} & \ifc{\hat{v}.1.2\not\sqsubseteq\bot_{null}} \\
+  \hat{s}_7 = \hat{``undefined"} & \ifc{\hat{v}.1.1\not\sqsubseteq\bot_{undef}} \\
+  \end{array}\\
+  }\\
+\\
+\\
+%%% validity %%%
 
 \ahf{validity}_1 & : \sf{Expression} \times \aState \rightarrow {\sf Boolean}\\
 & \ahf{validity}_1(e, (\hat{H}, \hat{C})) = b\\
@@ -3482,17 +3493,163 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
     \end{array}
   \right.
 }\\
+\\
 
 \ahf{validity}_2 & : \sf{Expression} \times \sf{Expression} \times \aState \rightarrow {\sf Boolean}\\
-& \ahf{validity}_2(e_1, e_2, (\hat{H}, \hat{S})) = \ahf{validity}_1(e_1, \hat{S}) \land \ahf{validity}_1(e_2, \hat{S})\\
+& \ahf{validity}_2(e_1, e_2, (\hat{H}, \hat{S})) = \ahf{validity}_1(e_1, \hat{S}) \land \ahf{validity}_1(e_2, \hat{S})\\\\
 
 \ahf{validity}_3 & : \sf{Expression} \times \sf{Expression} \times \sf{Expression} \times \aState \rightarrow {\sf Boolean}\\
 & \ahf{validity}_3(e_1, e_2, e_3, (\hat{H}, \hat{S})) = \ahf{validity}_1(e_1, \hat{S}) \land \ahf{validity}_1(e_2, \hat{S}) \land \ahf{validity}_1(e_3, \hat{S})\\
+\\\\
+
+%%% X %%%
+
+\ahf{X} & : \SF{RelExpr} \rightarrow \aState \rightarrow \aState\\
+& \ahf{X} \lbr re \rbr (\hat{H}, \hat{C}) = (\hat{H}_1, \hat{C}_1)\\
+& \quad\wherec{
+  e_1 ~ \rel ~ e_2 = re\\
+  \hat{v}_1 = (\aV \lbr e_1 \rbr (\hat{H}, \hat{C})).1\\
+  \hat{v}_2 = (\aV \lbr e_2 \rbr (\hat{H}, \hat{C})).1\\
+  (\hat{H}_1, \hat{C}_1) = 
+    \left\{ 
+      \begin{array}{ll}
+        \ahf {Pruning}_1 (e_1, \hat{v}_1, \rel, \hat{v}_2, (\hat{H}, \hat{C})) & 
+          \ifc{\rel \in \SF{IRRelOP} \land e_1 \in \SF{PrunExpression}}\\
+        \ahf {Pruning}_2 ( re, (\hat{H}, \hat{C})) & 
+          \ifc{\rel \in \SF{IRObjOP}}\\
+        (\hat{H}, \hat{C}) & \owc\\
+      \end{array}
+    \right.\\
+}\\
 
 
-
-  \end{array}
+\end{array}
 \]
+\\
+
+% &  \left\{
+%     \begin{array}{l@{\quad\quad}l}
+%       \vfalse   & \ifc{v=\SF{undefined}} \\
+%       \vfalse   & \ifc{v=\SF{null}} \\
+%       v         & \ifc{v\in\SF{Boolean}} \\
+%       \vfalse   & \ifc{v\in\SF{Number}\land v\in\set{\sf 0,NaN}} \\
+%       \vtrue    & \ifc{v\in\SF{Number}\land v\not\in\set{\sf 0,NaN}} \\
+%       \vfalse   & \ifc{v\in\SF{String}\land v=``"} \\
+%       \vtrue    & \ifc{v\in\SF{String}\land v\neq``"} \\
+%       \vtrue    & \ifc{v\in\SF{Loc}}
+%     \end{array}
+%   \right.\\
+
+
+
+% \inred\ahf{iteratorInit} & : \aObj \times \powerset{\abs{Prop}} \times
+% \abs{Number} \rightarrow \aObj \\
+% & \ahf{iteratorInit}(\hat{o},\hat{P},\hat{n})
+%   = 
+% \\
+% \\
+
+%\[
+%\begin{array}{ll}
+% \ahf{NewExceptionObject} & : \abs{Exception} \rightarrow \abs{Obj} \\
+% & \ahf{NewExceptionObject}(\hat{exc}) = \hat{o}_1\sqcup\hat{o}_2\sqcup\hat{o}_3\\
+% & \quad\wherec{
+%   \begin{array}{ll}
+%     \hat{o}_1=\ahf{NewObject}(\avarloc{RefErrProto})&\ifc{\hat{\SF{ReferenceError}}\sqsubseteq \hat{exc}} \\
+%     \hat{o}_2=\ahf{NewObject}(\avarloc{RangeErrProto})&\ifc{\hat{\SF{RangeError}}\sqsubseteq \hat{exc}} \\
+%     \hat{o}_3=\ahf{NewObject}(\avarloc{TypeErrProto})&\ifc{\hat{\SF{TypeError}}\sqsubseteq \hat{exc}} \\
+%   \end{array}
+% }
+% \\\\
+% \ahf{NewExceptionLoc} & : \abs{Exception} \rightarrow \abs{Loc} \\
+% & \chf{NewExceptionObject}(exc) =\left\{
+%     \begin{array}{ll}
+%       \varloc{RefErr}&\ifc{\hat{\SF{ReferenceError}}\sqsubseteq \hat{exc}} \\
+%       \varloc{RangeErr}&\ifc{\hat{\SF{RangeError}}\sqsubseteq \hat{exc}} \\
+%       \varloc{TypeErr}&\ifc{\hat{\SF{TypeError}}\sqsubseteq \hat{exc}} \\
+%     \end{array}
+%   \right.
+% \end{array}
+
+%
+%\ahf{X} & : \powerset{\abs{RelExpr}} \rightarrow \aState \times \aState \rightarrow \aState \times \aState\\
+%& \ahf{X} \lbr relSet \rbr \left( (\hat{H}, \hat{C}), \hat{S} \right) = \left( (\hat{H}_1, \hat{C}_1), \hat{S}_1 \right)\\
+%& \quad\wherec{
+%  (\hat{H}_1, \hat{C}_1) = 
+%    \left\{ 
+%      \begin{array}{ll}
+%        \left( \bigsqcap_{\hat{re} \in relSet} \ahf {Pruning}_1(\$e_1,\hat{v}_1, \rel, \hat{v}_2, (\hat{H}, \hat{C}))\right) & 
+%          \ifc{ relSet \not= \O \land \rel \in \abs{IRRelOP}}\\
+%          & \wherec{ \$e_1 \rel e_2 = \hat{re}\\
+%              (\hat{v}_1, \hat{es}_1) = \hat{\V}_{cp} \lbr \$e_1 \rbr (\hat{H}, \hat{C})\\
+%              (\hat{v}_2, \hat{es}_2) = \hat{\V}_{cp} \lbr e_2 \rbr (\hat{H}, \hat{C}) }\\
+%        \left( (\hat{H}, \hat{C}), \hat{S} \right) & \owc\\
+%      \end{array}
+%    \right.\\
+%  \hat{S}_1 = 
+%    \hat{S} \sqcup \left( \bigsqcup_{\hat{re} \in relSet} (\ahf{RaiseException} (\hat{H}, \hat{C}, \hat{es}_1) \sqcup \ahf{RaiseException} (\hat{H}, \hat{C}, \hat{es}_2)) \right)\\
+%      \quad \wherec{ \$e_1 \rel e_2 = \hat{re} \\
+%         (\hat{v}_1, \hat{es}_1) = \aV_{cp} \lbr \$e_1 \rbr (\hat{H}, \hat{C})\\
+%         (\hat{v}_2, \hat{es}_2) = \aV_{cp} \lbr e_2 \rbr (\hat{H}, \hat{C})}\\
+%}\\
+%\\\\
+
+%\ahf {PrunProto} &:  \aLoc \times \aLoc \times \abs{Bool} \times \aHeap \rightarrow \aHeap\\
+%& \ahf {PrunProto} (\hat{l}_1, \hat{l}_2, \hat{b}, \hat{H}) = \hat{H}_1\\
+%& \quad \wherec{
+%  \hat{L}_{proto} = \bigsqcup_{\hat{l} \in \hat{H}(\hat{l}_1)(@proto).1.1.1.2} \ahf{inheritProto}_1(\hat{H}, \hat{l}, \hat{l}_2, \hat{b})\\
+%  \hat{H}_2 = \hat{H}[\hat{l}_1 \mapsto \hat{H}(\hat{l}_1)[@proto \mapsto \langle \langle \bot_{PValue}, \hat{L}_{proto} \rangle, \afalse, \afalse, \afalse \rangle]]\\
+%  \hat{H}_1 = \left\{
+%    \begin{array}{ll}
+%      \bigsqcap_{\hat{l} \in (\hat{L}_{proto} - \hat{l}_2)} \ahf{PrunProto}(\hat{l}, \hat{l}_2, \hat{b}, \hat{H}_2) & \ifc{ \hat{L}_{proto} \not= \O}\\
+%      \hat{H} & \owc\\
+%    \end{array}        
+%  \right.\\
+%}
+%\\\\
+%\ahf {PrunProto}_2 &:  \aLoc \times \aLoc \times \abs{Bool} \times \aHeap \rightarrow \aHeap\\
+%& \ahf {PrunProto} (\hat{l}_1, \hat{l}_2, \hat{b}, \hat{H}) = \hat{H}_1\\
+%& \quad \wherec{
+%  \hat{L}_{proto} = \bigsqcup_{\hat{l} \in \hat{H}(\hat{l}_2)(@proto).1.1.1.2} \ahf{inheritProto}_2(\hat{H}, \hat{l}_1, \hat{l}, \hat{b})\\
+%  \hat{H}_2 = \hat{H}[\hat{l}_2 \mapsto \hat{H}(\hat{l}_2)[@proto \mapsto \langle \langle \bot_{PValue}, \hat{L}_{proto} \rangle, \afalse, \afalse, \afalse \rangle]]\\
+%  \hat{H}_1 = \left\{
+%    \begin{array}{ll}
+%      \bigsqcap_{\hat{l} \in \hat{L}_{proto}} \ahf{PrunProto}(\hat{l}_1, \hat{l}, \hat{b}, \hat{H}_2) & \ifc{ \hat{L}_{proto} \not= \O}\\
+%      \hat{H} & \owc\\
+%    \end{array}        
+%  \right.\\
+%}
+
+%
+%\ahf{GetPropLoc} & : \aHeap \times \aLoc \times \abs{String} \rightarrow \powerset{\aLoc}\\
+%& \ahf{GetPropLoc} (\hat{H}, \hat{l}, \hat{s}) = \hat{L}_1 \sqcup \hat{L}_2\\
+%&  \quad\wherec{
+%    \hat{L}_{proto} = \hat{H}(\hat{l})(@proto).1.1.1.2\\
+%    \hat{L}_1 = \left\{
+%      \begin{array}{ll}
+%        \{\hat{l}\} & 
+%        \ifc{ \atrue \sqsubseteq \ahf{HasOwnProperty}(\hat{H}, \hat{l}, \hat{s}) }\\
+%        \{\} & \owc\\
+%      \end{array}
+%    \right.\\
+%    \hat{L}_2 = \left\{
+%      \begin{array}{ll}
+%        \bigsqcup_{\hat{l}_{proto} \in \hat{L}_{proto}} \ahf{GetPropLoc}(\hat{H}, \hat{l}_{proto}, \hat{s}) & 
+%        \ifc{ \afalse \sqsubseteq \ahf{HasOwnProperty}(\hat{H}, \hat{l}, \hat{s}) }\\
+%        \{\} & \owc\\
+%      \end{array}
+%    \right.
+%  }
+
+%\\\\
+%\ahf{getLoc} & : \aHeap \times \aLoc \rightarrow \powerset{\aLoc}\\
+%& \begin{array}{ll}
+%  \ahf{getLoc}(\hat{H}, \hat{l}) = \{\hat{l}\} \cup (\bigcup_{\hat{l}_1 \in \hat{v}.2} \ahf{getLoc}(\hat{l}_1))\\
+%  \quad\wherec{
+%    \hat{v} = \hat{H}(\hat{l})\\
+%  }
+%\end{array}\\
+
 
 
 \newpage
@@ -3538,6 +3695,42 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
          \{ \langle (\hat{cc}.1, \hat{l}.1), ~ \ahf{NewPureLocal}(\{\hat{l}\}, \hat{L}) \rangle \} & \owc \\
        \end{array}
      \right.\\
+\end{array}
+\]
+
+
+% k-callsite sensitivity
+\subsection{k-callsite sensitivity}
+\[
+\begin{array}{rcl}
+\abs{CallContext} & = & \abs{Address} \listd \\
+\abs{globalCallContext} & = & \SF{nil} \\
+\\
+
+\ahf{NewCallContext} & : & \abs{CallContext} \times \SF{FunctionId} \times \abs{Loc} \times \powerset{\abs{Loc}} \rightarrow \powerset{\abs{CallContext} \times \abs{Obj}} \\
+& & \comment{\inblue caller context, callee function, callsite, this}  \\
+& & \ahf{NewCallContext}(\hat{cc}, fid, \hat{l}, \hat{L}) = \\
+& & \quad\quad \left\{
+       \begin{array}{ll}
+         \{ \langle (\hat{l}.1 :: \hat{cc})|_{k}, ~ \ahf{NewPureLocal}(\{\hat{l}\}, \hat{L}) \rangle \} & \ifc{\chf{isUserFunction}_P(fid)} \\
+         \{ \langle (\hat{l}.1 :: \hat{cc})|_{k+1}, ~ \ahf{NewPureLocal}(\{\hat{l}\}, \hat{L}) \rangle \} & \owc \\
+       \end{array}
+     \right.\\
+\end{array}
+\]
+
+
+% callsite-set sensitivity
+\subsection{callsite-set sensitivity}
+\[
+\begin{array}{rcl}
+\abs{CallContext} & = & \powerset{\abs{Address}} \\
+\abs{globalCallContext} & = & \set{ } \\
+\\
+
+\ahf{NewCallContext} & : & \abs{CallContext} \times \SF{FunctionId} \times \abs{Loc} \times \powerset{\abs{Loc}} \rightarrow \powerset{\abs{CallContext} \times \abs{Obj}} \\
+& & \comment{\inblue caller context, callee function, callsite, this}  \\
+& & \ahf{NewCallContext}(\hat{cc}, fid, \hat{l}, \hat{L}) = \{ \langle \hat{cc} \cup \{ \hat{l}.1 \}, ~ \ahf{NewPureLocal}(\{\hat{l}\}, \hat{L}) \rangle \} \\
 \end{array}
 \]
 
@@ -3610,7 +3803,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 % call inter-procedural edge
 \aE \lbr \acp \cfgnext_{\hat{C},\hat{o}} ((fid,\SF{ENTRY}),\hat{cc}) \rbr (\hat{H}_1,\hat{C}_1) = (\hat{H}_3,\hat{C}) \\
   \quad\wherec{
-    \hat{o}_{env} = \ahf{NewDeclEnvRecord}(\hat{o}(\varprop{scope}).1.2.2) \\
+    \hat{o}_{env} = \ahf{NewDeclEnvRecord}(\hat{o}(\varprop{scope}).1.2) \\
     \land\ \hat{o}_2 = \hat{o} - \varprop{scope} \\
     \land\ \hat{H}_2 = \hat{H}_1[\avarloc{PureLocal}_R \mapsto \hat{o}_2] \\
     \land\ \hat{H}_3 = \bigsqcup_{\hat{l}_{env}\in\hat{o}_2(\varprop{env}).1.2.2} \hat{H}_2[\hat{l}_{env} \mapsto \hat{o}_{env}]
@@ -3638,11 +3831,11 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 \\\\
 
 % exception return inter-procedural edge (bottom heap)
-\aE \lbr ((fid,\SF{LExitExc}),\hat{cc}) \cfgnext_{\hat{C},\hat{o}} \acp \rbr (\bot_{Heap},\hat{C}_1) = \bot_{State}
+\aE \lbr ((fid,\SF{EXIT-EXC}),\hat{cc}) \cfgnext_{\hat{C},\hat{o}} \acp \rbr (\bot_{Heap},\hat{C}_1) = \bot_{State}
 \vspace{1mm}\\
 
 % exception return inter-procedural edge
-\aE \lbr ((fid,\SF{LExitExc}),\hat{cc}) \cfgnext_{\hat{C},\hat{o}} \acp \rbr (\hat{H}_1,\hat{C}_1) =
+\aE \lbr ((fid,\SF{EXIT-EXC}),\hat{cc}) \cfgnext_{\hat{C},\hat{o}} \acp \rbr (\hat{H}_1,\hat{C}_1) =
   \left\{
     \begin{array}{ll}
       (\hat{H}_2, \hat{C}_2) & \ifc{\hat{C}_2 \neq \bot_{Context}} \\
@@ -3677,7 +3870,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
    \land\ x_{n+1} \cdots x_m = \chf{getLocalVars}_P(fid_{this}) \\
    \land\ \hat{L}_{arg} = \hat{H}_0(\avarloc{PureLocal}_R)(\chf{getArgumentsName}(fid_{this})).1.1.1.2 \\
    \land\ \forall 1 \leq i \leq n.\ \hat{H_i}= \ahf{CreateMutableBinding}(\hat{H}_{i-1}, x_i, 
-     \bigsqcup_{\hat{l}_{arg}\in\hat{L}_{arg}}\ahf{Proto}(\hat{H}_{i-1},\hat{l},\hat{``i-1"}) \\
+     \bigsqcup_{\hat{l}_{arg}\in\hat{L}_{arg}}\ahf{Proto}(\hat{H}_{i-1},\hat{l}_{arg},\hat{``i-1"}) \\
    \land\ \forall n+1 \leq j \leq m.\ \hat{H_j}= \ahf{CreateMutableBinding}(\hat{H}_{j-1}, x_j, \aundef_{Value})
 }\\
 \\
@@ -3704,7 +3897,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 \aI_{\acp}\lbr x\TT{:=}\TT{alloc(}e^{?}\TT{)}_{\hat{a}_{new}}\rbr \left((\hat{H},\hat{C}),\hat{S}\right)
  = \left((\hat{H}_3,\hat{C}_1),\hat{S}_1\right) \\
 \quad\wherec{
-  \inblue\hat{l}_{R} = (\hat{a}_{new}, Recent)
+  \inblue\hat{l}_{R} = (\hat{a}_{new}, \hat{Recent})
   \land\ \inblue (\hat{H}_1, \hat{C}_1) = \ahf{Oldify}(\hat{H}, \hat{C}, \hat{a}_{new})
     \quad\comment{{\inblue // Recency Abstraction}}\\
   \land\ (\hat{v},\hat{es})=\aV\lbr e \rbr(\hat{H}_1,\hat{C}_1) \quad\comment{\inblue // if $e$ is None, $\hat{v}$ is considered as an element of $PValue$.}
@@ -3735,7 +3928,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 \aI_{\acp}\lbr x\TT{:=}\SF{allocArray}\TT{(n)}_{\hat{a}_{new}} \rbr \left((\hat{H},\hat{C}),\hat{S}\right)
  = \left((\hat{H}_3,\hat{C}_1),\hat{S}\right) \\
 \quad\wherec{
-  \inblue\hat{l}_{R} = (\hat{a}_{new}, Recent)
+  \inblue\hat{l}_{R} = (\hat{a}_{new}, \hat{Recent})
   \land\ \inblue (\hat{H}_1, \hat{C}_1) = \ahf{Oldify}(\hat{H}, \hat{C}, \hat{a}_{new})
     \quad\comment{{\inblue // Recency Abstraction}}\\
   \land\ \hat{n} = (\aV\lbr \TT{n}\rbr(\hat{H}_1,\hat{C}_1)).1.1.4\\ 
@@ -3748,7 +3941,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 \aI_{\acp}\lbr x\TT{:=}\SF{allocArg}\TT{(n)}_{\hat{a}_{new}} \rbr \left((\hat{H},\hat{C}),\hat{S}\right)
  = \left((\hat{H}_3,\hat{C}_1),\hat{S}\right) \\
 \quad\wherec{
-  \inblue\hat{l}_{R} = (\hat{a}_{new}, Recent)
+  \inblue\hat{l}_{R} = (\hat{a}_{new}, \hat{Recent})
   \land\ \inblue (\hat{H}_1, \hat{C}_1) = \ahf{Oldify}(\hat{H}, \hat{C}, \hat{a}_{new})
     \quad\comment{{\inblue // Recency Abstraction}}\\
   \land \hat{n} = (\aV\lbr \TT{n}\rbr(\hat{H}_1,\hat{C}_1)).1.1.4\\
@@ -3818,22 +4011,22 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 }\\
 \\
 
-\aI _{\acp}\lbr x \TT{:=} \SF{delete}\TT{(}e_1,e_2\TT{)} \rbr \left((\hat{H},\hat{C}),\hat{S}\right)
- = \left((\ahf{VarStore}(\hat{H}_1,x,\hat{b}_{Value}),\hat{C}),\hat{S}\right) \\
-\quad\wherec{
-  \hat{L}=(\aV\lbr e_1\rbr(\hat{H},\hat{C})).1.2
-  \land\ \hat{s}=(\aV\lbr e_2\rbr(\hat{H},\hat{C})).1.1.5\\
-  \land\
-  (\hat{H}_1,\hat{b})=\bigsqcup_{\hat{l}\in\hat{L}}\ahf{Delete}(\hat{H},\hat{l},\hat{s})
-}\\
-\\
+%\aI _{\acp}\lbr x \TT{:=} \SF{delete}\TT{(}e_1,e_2\TT{)} \rbr \left((\hat{H},\hat{C}),\hat{S}\right)
+% = \left((\ahf{VarStore}(\hat{H}_1,x,\hat{b}_{Value}),\hat{C}),\hat{S}\right) \\
+%\quad\wherec{
+%  \hat{L}=(\aV\lbr e_1\rbr(\hat{H},\hat{C})).1.2
+%  \land\ \hat{s}=(\aV\lbr e_2\rbr(\hat{H},\hat{C})).1.1.5\\
+%  \land\
+%  (\hat{H}_1,\hat{b})=\bigsqcup_{\hat{l}\in\hat{L}}\ahf{Delete}(\hat{H},\hat{l},\hat{s})
+%}\\
+%\\
 
 
 % e\verb+[+e\verb+]+ ~\verb+:=+~ e 
 \aI_{\acp}\lbr e_1\TT{[}e_2\TT{]}\TT{=}e_3 \rbr \left((\hat{H},\hat{C}),\hat{S}\right)
  = \left((\hat{H}_1,\hat{C}_1),\hat{S}_1\right) \\
 \quad\wherec{
-  \hat{L} = (\aV\lbr e_1\rbr(\hat{H},\hat{C})).1.2 \land \hat{s}=(\aV\lbr e_2\rbr(\hat{H},\hat{C})).1.1.5
+  \hat{L} = (\aV\lbr e_1\rbr(\hat{H},\hat{C})).1.2 \land (\hat{s},\hat{es}_{s})=(\aV\lbr e_2\rbr(\hat{H},\hat{C}))
   \land (\hat{v},\hat{es})=\aV\lbr e_3\rbr(\hat{H},\hat{C}) \\
   \land\ \hat{v}_{newLen} = \ahf{ToUInt32}(\hat{v}) \land \hat{v}_{oldLen} = \hat{H}(\hat{l})(``length").1.1.1.1.4\\
   \land\ \hat{L}_{\emph{NArr}}=\set{\hat{l}~\mid~\hat{l}\in\hat{L}
@@ -3841,7 +4034,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
     \land \atrue\sqsubseteq \ahf{CanPut}(\hat{H}, \hat{l}, \hat{s})} \\
   \land\ \hat{L}_{\emph{Arr}}=\set{\hat{l}~\mid~\hat{l}\in\hat{L}
     \land \atrue\sqsubseteq\ahf{IsArray}(\hat{H},\hat{l})
-    \land \atrue\sqsubseteq \ahf{CanPut}(\hat{H}, \hat{l}, \hat{s}} \\
+    \land \atrue\sqsubseteq \ahf{CanPut}(\hat{H}, \hat{l}, \hat{s})} \\
   
   \land\ \hat{H}_{\emph{CantPut}} = \left\{\begin{array}{ll}
       \hat{H}
@@ -3871,7 +4064,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
     \end{array}\right.\\
   \land\ \hat{H}_{\emph{Arr}_{\emph{length3}}} = \left\{\begin{array}{ll}
       \hat{H}
-      & \ifc{\atrue \sqsubseteq \ahf{CanPut}(\hat{H}, \hat{l}, \hat{``length"})}\\
+      & \ifc{\afalse \sqsubseteq \ahf{CanPut}(\hat{H}, \hat{l}, \hat{``length"})}\\
       \bot_{Heap} & \owc \\
     \end{array}\right.\\
   \land\ \hat{H}_{\emph{Arr}_{\emph{length4}}} = \left\{ \begin{array}{ll}
@@ -3891,17 +4084,17 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
     \end{array}\right.\\
   \land\ \hat{H}_{\emph{Arr}_{\emph{index1}}} = \left\{\begin{array}{ll}
       \hat{H} 
-      & \ifc{\atrue \sqsubseteq (\hat{v}_{oldLen} \hat{\leq} \hat{s})\land \afalse \sqsubseteq \ahf{CanPut}(\hat{H}, \hat{l}, \hat{``length"})}\\
+      & \ifc{\atrue \sqsubseteq (\hat{v}_{oldLen} \hat{\leq} \ahf{ToUInt32}(\hat{s}))\land \afalse \sqsubseteq \ahf{CanPut}(\hat{H}, \hat{l}, \hat{``length"})}\\
       \bot_{Heap} & \owc \\
     \end{array}\right.\\
   \land\ \hat{H}_{\emph{Arr}_{\emph{index2}}} = \left\{\begin{array}{ll}
       \ahf{PropStore}(\hat{H}, \hat{l}, \hat{s}, \hat{v})
-      & \ifc{\atrue \sqsubseteq (\hat{s}) \hat{<} \hat{v}_{oldLen})}\\
+      & \ifc{\atrue \sqsubseteq (\ahf{ToUInt32}(\hat{s}) \hat{<} \hat{v}_{oldLen})}\\
       \bot_{Heap} & \owc \\
     \end{array}\right.\\
   \land\ \hat{H}_{\emph{Arr}_{\emph{index3}}} = \left\{\begin{array}{ll}
-      \ahf{PropStore}(\ahf{PropStore}(\hat{H}, \hat{l}, \hat{s}, \hat{v}), \hat{l}, \hat{``length"}, \hat{v}_{newLen} \hat{+} \hat{1})
-      & \ifc{\atrue \sqsubseteq (\hat{v}_{oldLen} \hat{\leq} \hat{s}) \land \atrue \sqsubseteq \ahf{CanPut}(\hat{H}, \hat{l}, \hat{``length"})}\\
+      \ahf{PropStore}(\ahf{PropStore}(\hat{H}, \hat{l}, \hat{s}, \hat{v}), \hat{l}, \hat{``length"}, \ahf{ToUInt32}(\hat{s} \hat{+} \hat{1}))
+      & \ifc{\atrue \sqsubseteq (\hat{v}_{oldLen} \hat{\leq} \ahf{ToUInt32}(\hat{s})) \land \atrue \sqsubseteq \ahf{CanPut}(\hat{H}, \hat{l}, \hat{``length"})}\\
       \bot_{Heap} & \owc \\
     \end{array}\right.\\
 
@@ -3913,7 +4106,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
     \end{array}\right.\\
 
   \land\ (\hat{H}_1, \hat{C}_1) = (\hat{H}_{\emph{CantPut}} \sqcup \hat{H}_{\emph{NArr}} \sqcup \hat{H}_{\emph{Arr}}, \hat{C})\\
-  \land\ \hat{S}_1 = \hat{S}\sqcup\ahf{RaiseException}(\hat{H},\hat{C}, \hat{es}\sqcup \hat{es}_{\emph{Arr}})
+  \land\ \hat{S}_1 = \hat{S}\sqcup\ahf{RaiseException}(\hat{H},\hat{C}, \hat{es}_{s}\sqcup \hat{es}\sqcup \hat{es}_{\emph{Arr}})
 }\\\\
 
 	
@@ -3976,7 +4169,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
  = \left(\left(\hat{H}_3
     \left[
        \begin{array}{l}
-         \hat{l}_{R1}\mapsto\ahf{NewFunctionObject}(fid,\hat{H}_3(\avarloc{PureLocal})(\varprop{env}).1.2.2,\hat{l}_{R2},\hat{n}), \\
+         \hat{l}_{R1}\mapsto\ahf{NewFunctionObject}(fid,\hat{H}_3(\avarloc{PureLocal}_R)(\varprop{env}).1.2,\hat{l}_{R2},\hat{n}), \\
          \hat{l}_{R2}\mapsto\hat{o}_{new}
          \left[``constructor"\mapsto 
            \langle\langle\bot_{PValue},\{\hat{l}_{R1}\}\rangle,\atrue,\afalse,\atrue\rangle
@@ -3987,7 +4180,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
    \right),\hat{S}\right) \\
 \quad\wherec{
   \hat{n}=\alpha(\mid\chf{getArgVars}_{P}(fid)\mid) \\
-  \land\ \hat{o}_{new}=\ahf{NewObject}(\avarloc{ObjProto})\\
+  \land\ \hat{o}_{new}=\ahf{NewObject}(\avarloc{ObjProto}_R)\\
   \land\ {\inblue \hat{l}_{R1} = (\hat{a}_{new1}, \hat{Recent})}
     \land\ {\inblue (\hat{H}_1,\hat{C}_1) = \ahf{Oldify}(\hat{H}, \hat{C}, \hat{a}_{new1})} 
     \quad\comment{{\inblue // Recency Abstraction}} \\
@@ -4003,7 +4196,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
  = \left(\left(\hat{H}_5
     \left[
        \begin{array}{l}
-         \hat{l}_{R1}\mapsto\ahf{NewFunctionObject}(fid,\{\hat{l}_{R3}\},\hat{l}_{R2},\hat{n}), \\
+         \hat{l}_{R1}\mapsto\ahf{NewFunctionObject}(fid,\{\hat{l}_{R3}\}_{Value},\hat{l}_{R2},\hat{n}), \\
          \hat{l}_{R2}\mapsto\hat{o}_{new}
          \left[``constructor"\mapsto 
            \langle\langle\bot_{PValue},\{\hat{l}_{R1}\}\rangle,\atrue,\afalse,\atrue\rangle
@@ -4014,7 +4207,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
    \right),\hat{S}\right) \\
 \quad\wherec{
   \hat{n}=\alpha(\mid\chf{getArgVars}_{P}(fid)\mid) \\
-  \land\ \hat{o}_{new}=\ahf{NewObject}(\avarloc{ObjProto})\\
+  \land\ \hat{o}_{new}=\ahf{NewObject}(\avarloc{ObjProto}_R)\\
   \land\ {\inblue \hat{l}_{R1} = (\hat{a}_{new1}, \hat{Recent})}
     \land\ {\inblue (\hat{H}_1,\hat{C}_1) = \ahf{Oldify}(\hat{H}, \hat{C}, \hat{a}_{new1})} 
     \quad\comment{{\inblue // Recency Abstraction}} \\
@@ -4024,7 +4217,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
   \land\ {\inblue \hat{l}_{R3} = (\hat{a}_{new3}, \hat{Recent})}
     \land\ {\inblue (\hat{H}_3,\hat{C}_3) = \ahf{Oldify}(\hat{H}_2, \hat{C}_2, \hat{a}_{new3})} 
     \quad\comment{{\inblue // Recency Abstraction}} \\
-  \land\ \hat{o}_{env} = \ahf{NewDeclEnvRecord}(\hat{H}_3(\avarloc{PureLocal})(\varprop{env}).1.2.2) \\
+  \land\ \hat{o}_{env} = \ahf{NewDeclEnvRecord}(\hat{H}_3(\avarloc{PureLocal}_R)(\varprop{env}).1.2) \\
   \land\ \hat{H}_4=\hat{H}_3[\hat{l}_{R3} \mapsto \hat{o}_{env}
     [x_2\mapsto\langle\langle\bot_{PValue},\{\hat{l}_{R1}\}\rangle,\afalse,\bot_{Bool},\afalse\rangle]]\\
   \land\ \hat{H}_5=\ahf{VarStore}(\hat{H}_4,x_1,\langle\bot_{PValue},\{\hat{l}_{R1}\}\rangle)\\
@@ -4058,7 +4251,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
    \quad\quad\set{
     \acp\ \ipnext_{\hat{C}_{new}, \hat{o}_{new_2}} ((fid,\SF{ENTRY}),\hat{cc}_{new}) \\
       \quad\wherec{
-        \hat{C}_{new} = \bot_{Context} \\
+        \hat{C}_{new} = \langle {\inred \{ \}, \{ \}}, \{ \}, \{ \} \rangle \\
         \hat{o}_{new_2} = \hat{o}_{new} 
         \left[\begin{array}{l} 
           \chf{getArgumentsName}(fid) ~\mapsto~ \langle\hat{v}_{arg},\atrue,\afalse,\afalse\rangle, \\
@@ -4111,7 +4304,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
    \quad\quad\set{
     \acp\ \ipnext_{\hat{C}_{new}, \hat{o}_{new_2}} ((fid,\SF{ENTRY}),\hat{cc}_{new}) \\
       \quad\wherec{
-        \hat{C}_{new} = \bot_{Context} \\
+        \hat{C}_{new} = \langle {\inred \{ \}, \{ \}}, \{ \}, \{ \} \rangle \\
         \hat{o}_{new_2} = \hat{o}_{new} 
         \left[\begin{array}{l} 
           \chf{getArgumentsName}(fid) ~\mapsto~ \langle\hat{v}_{arg},\atrue,\afalse,\afalse\rangle, \\
@@ -4223,7 +4416,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
  }
 \\
 \\
-\aI_{\acp}\lbr x \TT{:=} \ahfi{isObject}\TT{(}e\TT{)}_{l_{new}} \rbr \left((\hat{H},\hat{C}),\hat{S}\right)
+\aI_{\acp}\lbr x \TT{:=} \ahfi{isObject}\TT{(}e\TT{)} \rbr \left((\hat{H},\hat{C}),\hat{S}\right)
  = \left((\hat{H}_1,\hat{C}_1),\hat{S}_1\right)\\
  \quad\wherec{
    (\hat{v},\hat{es})=\aV\lbr e\rbr(\hat{H},\hat{C})\\
@@ -4252,20 +4445,20 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 \\
 \\
 
-\aI_{\acp}\lbr x \TT{:=} \ahfi{toString}\TT{(}e\TT{)} \rbr \left((\hat{H},\hat{C}_1),\hat{S}\right)
-= \left((\hat{H}_1,\hat{C}_1),\hat{S}_1\right)
-\\\quad\wherec{
-  (\hat{v},\hat{es}) = \aV\lbr e\rbr(\hat{H},\hat{C})\\
-  \land\ (\hat{H}_1, \hat{C}_1) = \left\{
-     \begin{array}{ll}
-       (\ahf{VarStore}(\hat{H},x,(\ahf{toString}(\hat{pv}))_{Value}), \hat{C})
-       & \quad\ifc{\hat{v}\not\sqsubseteq\bot_{Value}} \\
-       (\bot_{Heap}, \bot_{Context}) & \quad\owc
-     \end{array}\right.\\
-  \land\ \hat{pv}=\ahf{toPrimitive}(\hat{v})\\
-  \land\ \hat{S}_1 = \hat{S}\sqcup\ahf{RaiseException}(\hat{H},\hat{C}, \hat{es})
-}\\
-\\
+%\aI_{\acp}\lbr x \TT{:=} \ahfi{toString}\TT{(}e\TT{)} \rbr \left((\hat{H},\hat{C}_1),\hat{S}\right)
+%= \left((\hat{H}_1,\hat{C}_1),\hat{S}_1\right)
+%\\\quad\wherec{
+%  (\hat{v},\hat{es}) = \aV\lbr e\rbr(\hat{H},\hat{C})\\
+%  \land\ (\hat{H}_1, \hat{C}_1) = \left\{
+%     \begin{array}{ll}
+%       (\ahf{VarStore}(\hat{H},x,(\ahf{toString}(\hat{pv}))_{Value}), \hat{C})
+%       & \quad\ifc{\hat{v}\not\sqsubseteq\bot_{Value}} \\
+%       (\bot_{Heap}, \bot_{Context}) & \quad\owc
+%     \end{array}\right.\\
+%  \land\ \hat{pv}=\ahf{toPrimitive}(\hat{v})\\
+%  \land\ \hat{S}_1 = \hat{S}\sqcup\ahf{RaiseException}(\hat{H},\hat{C}, \hat{es})
+%}\\
+%\\
 \end{array}
 \]
 \[
@@ -4322,10 +4515,17 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 
 % e \inop e 
 \aV\lbr e_1\inop e_2 \rbr(\hat{H},\hat{C})
-   = \left(\hat{v}_1\ainop \hat{v}_2,\hat{es}_1\sqcup\hat{es}_2\right)\\
+   = \left(\hat{v}, \hat{es}\right)\\
 \quad\wherec{
   (\hat{v}_1,\hat{es}_1) = \aV\lbr e_1\rbr(\hat{H},\hat{C})
-  \land\ (\hat{v}_2,\hat{es}_2) = \aV\lbr e_2\rbr(\hat{H},\hat{C})
+  \land\ (\hat{v}_2,\hat{es}_2) = \aV\lbr e_2\rbr(\hat{H},\hat{C}) \\
+  \land\ (\hat{v}, \hat{es}) = 
+  \left\{\begin{array} {ll}
+    (\bot_{Value},\hat{es}_1) & \ifc{\hat{v}_1 \sqsubseteq \bot_{Value}} \\
+    (\bot_{Value},\hat{es}_1\sqcup\hat{es}_2) & \ifc{\hat{v}_1 \not\sqsubseteq \bot_{Value} 
+    \land\ \hat{v}_2 \sqsubseteq \bot_{Value}} \\
+    \left(\hat{v}_1\ainop \hat{v}_2,\hat{es}_1\sqcup\hat{es}_2\right) & \owc \\ 
+    \end{array}\right. \\
 }
 \\\\
 
@@ -4353,14 +4553,14 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 \\\\
 
 % e\verb+[+e\verb+]+
-\aV\lbr e_1\TT{[}e_2\TT{]} \rbr(\hat{H},\hat{C})
-   = \left(\hat{v},\bot_{Exception}\right)\\
-   \quad\wherec{
-     \hat{L} = (\aV\lbr e_1\rbr(\hat{H},\hat{C})).1.2\ 
-     \land\ \hat{s} = (\aV\lbr e_2\rbr(\hat{H},\hat{C})).1.1.5
-     \land\ \hat{v}=\bigsqcup_{\hat{l}\in\hat{L}}\ahf{Proto}(\hat{H},\hat{l},\hat{s})
-   }
-\\\\
+%\aV\lbr e_1\TT{[}e_2\TT{]} \rbr(\hat{H},\hat{C})
+%   = \left(\hat{v},\bot_{Exception}\right)\\
+%   \quad\wherec{
+%     \hat{L} = (\aV\lbr e_1\rbr(\hat{H},\hat{C})).1.2\
+%     \land\ \hat{s} = (\aV\lbr e_2\rbr(\hat{H},\hat{C})).1.1.5
+%     \land\ \hat{v}=\bigsqcup_{\hat{l}\in\hat{L}}\ahf{Proto}(\hat{H},\hat{l},\hat{s})
+%   }
+%\\\\
 
 \aV\lbr \TT{n} \rbr(\hat{H},\hat{C}) = \left(\hat{n}_{Value},\bot_{Exception}\right)\\\\
 
@@ -4385,10 +4585,10 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
   \land\ (\hat{v}_2,\hat{es}_2) = \aV\lbr e_2\rbr(\hat{H},\hat{C})\\
   \land\ \hat{L}_1 = \hat{v}_1.2
   \land\ \hat{L}_2 = \hat{v}_2.2\\
-  \land\ \hat{L}_3 = \set{ \hat{l} \,\mid\ \hat{l}\in\hat{L}_2\land\ \atrue\sqsubseteq\ahf{HasConstruct}(\hat{H},\hat{l}) } \\
+  \land\ \hat{L}_3 = \set{ \hat{l} \,\mid\ \hat{l}\in\hat{L}_2\land\ \atrue\sqsubseteq\ahf{HasInstance}(\hat{H},\hat{l}) } \\
   \land\ \hat{v}_{proto} = \bigsqcup_{\hat{l}\in\hat{L}_3} \ahf{Proto}(\hat{H},\hat{l},\hat{``prototype"}) \\
   \land\ \hat{L}_4 = \hat{v}_{proto}.2 \\
-  \land\ \hat{L}_5 = \set{ \hat{l} \,\mid\ \hat{l}\in\hat{L}_2\land\ \afalse\sqsubseteq\ahf{HasConstruct}(\hat{H},\hat{l}) } \\
+  \land\ \hat{L}_5 = \set{ \hat{l} \,\mid\ \hat{l}\in\hat{L}_2\land\ \afalse\sqsubseteq\ahf{HasInstance}(\hat{H},\hat{l}) } \\
   \land\ \hat{b}_1 = \bigsqcup_{\hat{l_1}\in\hat{L}_1}\bigsqcup_{\hat{l_2}\in\hat{L}_4}\ahf{inherit}(\hat{H},\hat{l}_1,\hat{l}_2) \\
   \land\ \hat{b}_2 = \left\{
     \begin{array}{ll}
@@ -4419,6 +4619,18 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
     \end{array}
   \right.\\
   \land\ \hat{es} = \hat{es}_1 \sqcup \hat{es}_2 \sqcup \hat{es}_3
+}
+\\\\
+
+\aV\lbr \TT{typeof}\,\TT{x}\rbr (\hat{H},\hat{C}) = \left((\hat{s}_1 \sqcup \hat{s}_2)_{Value}, \set{}\right)\\
+\quad\wherec{
+  (\hat{v},\hat{es}) = \aV\lbr e\rbr(\hat{H},\hat{C}) \\
+  \land\ \hat{s}_1 = \ahf{TypeTag}(\hat{H},\hat{v}) \\
+  \land\ \hat{s}_2 = 
+  \left\{\begin{array} {ll}
+    \hat{``undefined"} & \ifc{\hat{\exc{ReferenceError}} \in \hat{es}} \\
+    \bot_{String}      & \owc \\
+    \end{array}\right. \\
 }
 \\\\
 

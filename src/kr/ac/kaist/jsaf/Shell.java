@@ -414,7 +414,7 @@ public final class Shell {
                 }
             }
         } catch (FileNotFoundException f) {
-            throw new UserError(params.FileNames[0] + " not found");
+            throw new UserError(f + " not found");
         }
         if (params.opt_Time) printTimeTitle = "Parsing";
         return return_code;
@@ -1079,7 +1079,7 @@ public final class Shell {
         {
         case ShellParameters.CMD_ANALYZE :
         case ShellParameters.CMD_HTML :
-            typingInterface = new Typing(cfg, locclone);
+            typingInterface = new Typing(cfg, quiet, locclone);
             break;
         case ShellParameters.CMD_PREANALYZE :
             typingInterface = new PreTyping(cfg, quiet, true);

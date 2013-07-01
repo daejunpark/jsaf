@@ -21,6 +21,7 @@ import kr.ac.kaist.jsaf.compiler.Parser
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.useful.Triple
 import kr.ac.kaist.jsaf.useful.Pair
+import kr.ac.kaist.jsaf.analysis.typing.Config
 import org.cyberneko.html.parsers._
 import org.apache.html.dom.HTMLDocumentImpl
 import org.w3c.dom.Document
@@ -53,8 +54,20 @@ class JSFromHTML(filename: String) extends Walker {
           true
         else false
       })
+
+    // filter out modeled library and enable model
+    val nonmodeled_scriptelements = filtered_scriptelements.filter((e) => {
+      val srcname = e.getAttributeValue("src")
+      if (srcname != null && isModeledLibrary(srcname)) {
+        enableModel(srcname); // side-effect
+        false
+      }
+      else
+        true
+    })
+
     // get a list of JavaScript code in script elements
-    val codecontents: JList[Triple[String, JInteger, String]] = filtered_scriptelements.map(x => 
+    val codecontents: JList[Triple[String, JInteger, String]] = nonmodeled_scriptelements.map(x =>
       { 
         val srcname = x.getAttributeValue("src")
         // embedded script code
@@ -132,5 +145,23 @@ class JSFromHTML(filename: String) extends Walker {
       })
       codecontents.addAll(eventsources)
       Parser.scriptToAST(codecontents)
+  }
+
+  private val regex_jquery = """.*jquery[^/]*\.js""".r
+  private val regex_mobile = """.*mobile[^/]*\.js""".r
+
+  /* eable model */
+  def enableModel(srcname: String): Unit = {
+    if (regex_jquery.findFirstIn(srcname).nonEmpty && regex_mobile.findFirstIn(srcname).isEmpty)
+      Config.setJQueryMode
+  }
+
+  private def list_regex_lib = List(
+    regex_jquery
+  )
+  /* check library */
+  def isModeledLibrary(srcname: String): Boolean = {
+    list_regex_lib.exists((regex) =>
+      regex_jquery.findFirstIn(srcname).nonEmpty && regex_mobile.findFirstIn(srcname).isEmpty)
   }
 }

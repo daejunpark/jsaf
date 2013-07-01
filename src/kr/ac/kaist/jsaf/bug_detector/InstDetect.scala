@@ -147,7 +147,7 @@ class InstDetect(bugDetector: BugDetector) {
               if (!lhs.getText.contains("<>fun<>")) accessingNullOrUndefCheck(info.getSpan, expr)
               primitiveToObjectCheck(info.getSpan, expr)
             case ("<>Global<>toNumber", List(expr), None) =>
-              bugDetector.ExprDetect.convertToNumberCheck(inst, expr, null, false, null)
+              bugDetector.ExprDetect.convertToNumberCheck(node, inst, expr, null, false, null)
             case _ => Unit
           }; unusedVarPropCheck2(inst, lhs, write, variable)
         case CFGStore(_, info, obj, index, _) =>

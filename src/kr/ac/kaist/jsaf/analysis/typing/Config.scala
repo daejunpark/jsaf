@@ -135,6 +135,12 @@ object Config {
   def setTizenMode = tizenMode = true
 
   /**
+   * jQuery mode flag
+   */
+  var jqMode = false
+  def setJQueryMode = jqMode = true
+
+  /**
    * compare mode flag for html pre-analysis test
    */
   var compareMode = false

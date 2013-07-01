@@ -10,16 +10,20 @@
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
 import kr.ac.kaist.jsaf.analysis.cfg.CFGExpr
-import kr.ac.kaist.jsaf.analysis.typing.domain._
+import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinDate
 
 
 object TIZENtizen extends Tizen {
   private val name = "tizen"
-  /* predefined locations */
+  /* predefined property locations */
   val loc_obj = newPredefLoc(name + "Obj")
   val loc_proto = newPredefLoc(name + "Proto")
   val loc_alarm = newPredefLoc(name + "alarm")
@@ -47,7 +51,20 @@ object TIZENtizen extends Tizen {
   val loc_systemsetting = newPredefLoc(name + "systemsetting")
   val loc_time = newPredefLoc(name + "time")
 
-  val loc_err: Loc = newPreDefLoc("WebAPIError", Old)
+  /* predefined error locations */
+  val loc_notFounderr: Loc = newPreDefLoc("NotFoundError", Old)
+  val loc_unknownerr: Loc = newPreDefLoc("UnknownError", Old)
+  val loc_invalidValueserr: Loc = newPreDefLoc("InvalidValuesError", Old)
+  val loc_IOerr: Loc = newPreDefLoc("IOError", Old)
+  val loc_serviceNotAvailableerr: Loc = newPreDefLoc("ServiceNotAvailableError", Old)
+  val loc_typemismatcherr: Loc = newPreDefLoc("TypeMismatchError", Old)
+  val loc_networkerr: Loc = newPreDefLoc("NetworkError", Old)
+  val loc_aborterr: Loc = newPreDefLoc("AbortError", Old)
+  val loc_securityerr: Loc = newPreDefLoc("SecurityError", Old)
+  val loc_notSupportederr: Loc = newPreDefLoc("NotSupportedError", Old)
+
+  /* predefined instance locations */
+  val loc_date: Loc = newPreDefLoc("DateObj", Old)
 
   /* constructor or object*/
   private val prop_obj: List[(String, AbsProperty)] = List(
@@ -89,6 +106,7 @@ object TIZENtizen extends Tizen {
     ("NDEFRecordMedia",        AbsConstValue(PropValue(ObjectValue(Value(TIZENNDEFRecordMedia.loc_cons), F, F, F)))),
     ("NDEFRecordText",         AbsConstValue(PropValue(ObjectValue(Value(TIZENNDEFRecordText.loc_cons), F, F, F)))),
     ("NDEFRecordURI",          AbsConstValue(PropValue(ObjectValue(Value(TIZENNDEFRecordURI.loc_cons), F, F, F)))),
+    ("NotificationDetailInfo", AbsConstValue(PropValue(ObjectValue(Value(TIZENNotificationDetailInfo.loc_cons), F, F, F)))),
     ("SimpleCoordinates",      AbsConstValue(PropValue(ObjectValue(Value(TIZENSimpleCoordinates.loc_cons), F, F, F)))),
     ("SortMode",               AbsConstValue(PropValue(ObjectValue(Value(TIZENSortMode.loc_cons), F, F, F)))),
     ("StatusNotification",     AbsConstValue(PropValue(ObjectValue(Value(TIZENStatusNotification.loc_cons), F, F, F)))),
@@ -127,33 +145,110 @@ object TIZENtizen extends Tizen {
   private val prop_proto: List[(String, AbsProperty)] = List(
     ("@class",                      AbsConstValue(PropValue(AbsString.alpha("CallbackObject")))),
     ("@proto",                      AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
-    ("@extensible",                 AbsConstValue(PropValue(BoolTrue))),
-    ("listActivatedFeatures",       AbsBuiltinFunc("tizen.listActivatedFeatures", 0)),
-    ("listAvailableFeatures",       AbsBuiltinFunc("tizen.listAvailableFeatures", 0))
+    ("@extensible",                 AbsConstValue(PropValue(T)))
   )
   /* global */
   private val prop_global: List[(String, AbsProperty)] = List(
     (name,       AbsConstValue(PropValue(ObjectValue(Value(loc_obj), F, F, F))))
   )
 
-  private val prop_err_ins: List[(String, AbsProperty)] = List(
+  private val prop_notFounderr_ins: List[(String, AbsProperty)] = List(
     ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
     ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENWebAPIError.loc_proto, F, F, F)))),
     ("@extensible",          AbsConstValue(PropValue(T))),
-    ("code",               AbsConstValue(PropValue(Value(StrTop)))),
-    ("name",                 AbsConstValue(PropValue(Value(StrTop)))),
-    ("message",                 AbsConstValue(PropValue(Value(StrTop))))
+    ("code",                 AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("name",                 AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("NotFoundError")), F, T, T)))),
+    ("message",              AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T))))
+  )
+  private val prop_unknownerr_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENWebAPIError.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("code",                 AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("name",                 AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("UnknownError")), F, T, T)))),
+    ("message",              AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T))))
+  )
+  private val prop_invalidValueserr_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENWebAPIError.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("code",                 AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("name",                 AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("InvalidValuesError")), F, T, T)))),
+    ("message",              AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T))))
+  )
+  private val prop_IOerr_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENWebAPIError.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("code",                 AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("name",                 AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("IOError")), F, T, T)))),
+    ("message",              AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T))))
+  )
+  private val prop_serviceNotAvailableerr_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENWebAPIError.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("code",                 AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("name",                 AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("ServiceNotAvailableError")), F, T, T)))),
+    ("message",              AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T))))
+  )
+  private val prop_networkerr_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENWebAPIError.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("code",                 AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("name",                 AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("NetworkError")), F, T, T)))),
+    ("message",              AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T))))
+  )
+  private val prop_typemismatcherr_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENWebAPIError.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("code",                 AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("name",                 AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("TypeMismatchError")), F, T, T)))),
+    ("message",              AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T))))
+  )
+  private val prop_aborterr_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENWebAPIError.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("code",                 AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("name",                 AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("AbortError")), F, T, T)))),
+    ("message",              AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T))))
+  )
+  private val prop_securityerr_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENWebAPIError.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("code",                 AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("name",                 AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("SecurityError")), F, T, T)))),
+    ("message",              AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T))))
+  )
+  private val prop_notSupportederr_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENWebAPIError.loc_proto, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T))),
+    ("code",                 AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T)))),
+    ("name",                 AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("NotSupportedError")), F, T, T)))),
+    ("message",              AbsConstValue(PropValue(ObjectValue(Value(StrTop), F, T, T))))
+  )
+
+  private val prop_date_ins: List[(String, AbsProperty)] = List(
+    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(BuiltinDate.ProtoLoc, F, F, F)))),
+    ("@extensible",          AbsConstValue(PropValue(T)))
   )
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
-    (loc_obj, prop_obj), (loc_proto, prop_proto), (GlobalLoc, prop_global), (loc_err, prop_err_ins)
+    (loc_obj, prop_obj), (loc_proto, prop_proto), (GlobalLoc, prop_global),
+    (loc_date, prop_date_ins), (loc_notFounderr, prop_notFounderr_ins), (loc_unknownerr, prop_unknownerr_ins), (loc_invalidValueserr, prop_invalidValueserr_ins),
+    (loc_IOerr, prop_IOerr_ins), (loc_serviceNotAvailableerr, prop_serviceNotAvailableerr_ins), (loc_networkerr, prop_networkerr_ins),
+    (loc_typemismatcherr, prop_typemismatcherr_ins), (loc_aborterr, prop_aborterr_ins), (loc_securityerr, prop_securityerr_ins),
+    (loc_notSupportederr, prop_notSupportederr_ins)
   )
 
   override def getSemanticMap(): Map[String, SemanticFun] = {
-    Map(
-/*      ("tizen.listActivatedFeatures" -> ()),
-      ("tizen.listAvailableFeatures" -> ())  */
-    )
+    Map()
   }
 
   override def getPreSemanticMap(): Map[String, SemanticFun] = {Map()}

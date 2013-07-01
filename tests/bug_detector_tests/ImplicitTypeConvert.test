@@ -13,9 +13,9 @@ bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
 ImplicitTypeConvert.js:4:1~4:18: [Warning] Implicit type-conversion in equality comparison 'null == undefined'. \n\
-ImplicitTypeConvert.js:9:10~9:19: [Warning] Trying to convert undefined to number. 'undefined' can be undefined. \n\
+ImplicitTypeConvert.js:9:10~9:19: [Warning] Trying to convert undefined to number. \n\
 ImplicitTypeConvert.js:13:1~13:18: [Warning] Implicit type-conversion in equality comparison 'boolean(true) == undefined'. \n\
-ImplicitTypeConvert.js:13:9~13:18: [Warning] Trying to convert undefined to number. 'undefined' can be undefined. \n\
+ImplicitTypeConvert.js:13:9~13:18: [Warning] Trying to convert undefined to number. \n\
 ImplicitTypeConvert.js:14:1~14:13: [Warning] Implicit type-conversion in equality comparison 'boolean(true) == null'. \n\
 ImplicitTypeConvert.js:15:1~15:12: [Warning] Implicit type-conversion in equality comparison 'boolean(true) == number(100)'. \n\
 ImplicitTypeConvert.js:16:1~16:14: [Warning] Implicit type-conversion in equality comparison 'boolean(true) == string("str")'. \n\

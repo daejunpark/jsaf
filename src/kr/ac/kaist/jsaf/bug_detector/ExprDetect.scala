@@ -34,63 +34,69 @@ class ExprDetect(bugDetector: BugDetector) {
   // ConvertToNumber Check
   ////////////////////////////////////////////////////////////////
 
-  def convertToNumberCheck(inst: CFGInst, expr1: CFGExpr, expr2: CFGExpr, doToPrimitive: Boolean, conditionFunction: (PValue, PValue) => Boolean): Unit = {
-    val node = cfg.findEnclosingNode(inst)
-    val bugCheckInstance = new BugCheckInstance()
-    val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(CallNonFunction))
+  def convertToNumberCheck(node: Node, inst: CFGInst, expr1: CFGExpr, expr2: CFGExpr, doToPrimitive: Boolean, conditionFunction: (PValue, PValue) => Boolean): Unit = {
+    // Get spans
+    val expr1Span = expr1.getInfo match {
+      case Some(info) => info.getSpan
+      case None => inst.getInfo.get.getSpan
+    }
+    val expr2Span = if(expr2 == null) null else expr2.getInfo match {
+      case Some(info) => info.getSpan
+      case None => inst.getInfo.get.getSpan
+    }
+
+    // Get variable names
+    val varId1: String = varManager.getUserVarAssign(expr1) match {
+      case bv: BugVar0 if(bv.toString != "undefined") => " '" + bv.toString + "' can be undefined."
+      case _ => ""
+    }
+    val varId2: String = {
+      if(expr2 != null) {
+        varManager.getUserVarAssign(expr2) match {
+          case bv: BugVar0 if(bv.toString != "undefined") => " '" + bv.toString + "' can be undefined."
+          case _ => ""
+        }
+      }
+      else null
+    }
 
     // Check for each CState
-    for ((callContext, state) <- mergedCState) {
+    val bugCheckInstance = new BugCheckInstance()
+    val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(CallNonFunction))
+    for((callContext, state) <- mergedCState) {
+      // For expr1
       val value1: Value = SE.V(expr1, state.heap, state.context)._1
-      val value2: Value = if (expr2 != null) SE.V(expr2, state.heap, state.context)._1 else null
-      val pvalue1: PValue = if (doToPrimitive) Helper.toPrimitive(value1) else value1.pvalue
-      val pvalue2: PValue = if (expr2 != null) {if (doToPrimitive) Helper.toPrimitive(value2) else value2.pvalue} else null
+      val pvalue1: PValue = if(doToPrimitive) Helper.toPrimitive(value1) else value1.pvalue
 
-      if (conditionFunction == null || conditionFunction(pvalue1, pvalue2)) {
-        if (!bugOption.ConvertUndefToNum_VariableMustHaveUndefinedOnly || pvalue1.typeCount == 1 && value1.locset.isEmpty) {
-          val exprSpan = expr1.getInfo match {
-            case Some(info) => info.getSpan
-            case None => inst.getInfo.get.getSpan
-          }
-          val varId: String = varManager.getUserVarAssign(expr1) match {
-            case bv: BugVar0 => " '" + bv.toString + "' can be undefined."
-            case _ => ""
-          }
+      // For expr2 (this can be null)
+      val value2: Value = if(expr2 != null) SE.V(expr2, state.heap, state.context)._1 else null
+      val pvalue2: PValue = if(expr2 != null) {if(doToPrimitive) Helper.toPrimitive(value2) else value2.pvalue} else null
 
+      if(conditionFunction == null || conditionFunction(pvalue1, pvalue2)) {
+        if(!bugOption.ConvertUndefToNum_VariableMustHaveUndefinedOnly || pvalue1.typeCount == 1 && value1.locset.isEmpty) {
           // Check possibility of being undefined
-          val checkInstance = bugCheckInstance.insert(pvalue1.undefval == UndefTop, exprSpan, callContext, state)
+          val checkInstance = bugCheckInstance.insert(pvalue1.undefval == UndefTop, expr1Span, callContext, state)
           checkInstance.pValue = pvalue1
-          checkInstance.string1 = varId
+          checkInstance.string1 = varId1
         }
-        if (expr2 != null) {
-          if (!bugOption.ConvertUndefToNum_VariableMustHaveUndefinedOnly || pvalue2.typeCount == 1 && value2.locset.isEmpty) {
-            val exprSpan = if (expr2 == null) null else expr2.getInfo match {
-              case Some(info) => info.getSpan
-              case None => inst.getInfo.get.getSpan
-            }
-            val varId: String = if (expr2 != null) {
-              varManager.getUserVarAssign(expr2) match {
-                case bv: BugVar0 => " '" + bv.toString + "' can be undefined."
-                case _ => ""
-              }
-            } else null
-
+        if(expr2 != null) {
+          if(!bugOption.ConvertUndefToNum_VariableMustHaveUndefinedOnly || pvalue2.typeCount == 1 && value2.locset.isEmpty) {
             // Check possibility of being undefined
-            val checkInstance = bugCheckInstance.insert(pvalue2.undefval == UndefTop, exprSpan, callContext, state)
+            val checkInstance = bugCheckInstance.insert(pvalue2.undefval == UndefTop, expr2Span, callContext, state)
             checkInstance.pValue = pvalue2
-            checkInstance.string1 = varId
+            checkInstance.string1 = varId2
           }
         }
       }
     }
 
     // Filter out bugs depending on options
-    if (!bugOption.ConvertUndefToNum_UndefMustBeConvertedInEveryState) {
+    if(!bugOption.ConvertUndefToNum_UndefMustBeConvertedInEveryState) {
       bugCheckInstance.filter((bug, notBug) => (bug.pValue == notBug.pValue))
     }
 
     // Report bugs
-    bugCheckInstance.bugList.foreach((e) => bugStorage.addMessage(e.span, ConvertUndefToNum, inst, e.callContext, e.string1))
+    for(checkInstance <- bugCheckInstance.bugList) bugStorage.addMessage(checkInstance.span, ConvertUndefToNum, inst, checkInstance.callContext, checkInstance.string1)
   }
 
 
@@ -265,11 +271,11 @@ class ExprDetect(bugDetector: BugDetector) {
             // 11.4.7 Unary - Operator
             case "+" | "-" => 
               defaultValueCheck(inst, expr, "Number")
-              convertToNumberCheck(inst, expr, null, true, null)
+              convertToNumberCheck(node, inst, expr, null, true, null)
               //convertToNumberCheck1(expr)
             // 11.4.8 Bitwise NOT Operator ( ~ )
             case "~" => 
-              convertToNumberCheck(inst, expr, null, true, null)
+              convertToNumberCheck(node, inst, expr, null, true, null)
               //convertToNumberCheck1(expr)
             case  _  => Unit
           }
@@ -463,11 +469,11 @@ class ExprDetect(bugDetector: BugDetector) {
         // 11.6.2 The Subtraction Operator ( - )
         // 11.7 Bitwise Shift Operators
         case "*" | "/" | "%" | "-" | "<<" | ">>" | ">>>" | "&" | "^" | "|" =>
-          convertToNumberCheck(inst, expr1, expr2, false, null)
+          convertToNumberCheck(node, inst, expr1, expr2, false, null)
 
         // 11.6.1 The Addition operator ( + )
         case "+" =>
-          convertToNumberCheck(inst, expr1, expr2, true, (pvalue1: PValue, pvalue2: PValue) => {
+          convertToNumberCheck(node, inst, expr1, expr2, true, (pvalue1: PValue, pvalue2: PValue) => {
             // "7. If Type(lprim) is String or Type(rprim) is String," does not call ToNumber function.
             if (bugOption.ConvertUndefToNum_ToNumberMustBeCalledDefinitely) {
               pvalue1.strval == StrBot && pvalue2.strval == StrBot
@@ -480,7 +486,7 @@ class ExprDetect(bugDetector: BugDetector) {
 
         // 11.8 Relational Operators
         case "<" | ">" | "<=" | ">=" =>
-          convertToNumberCheck(inst, expr1, expr2, true, (pvalue1: PValue, pvalue2: PValue) => {
+          convertToNumberCheck(node, inst, expr1, expr2, true, (pvalue1: PValue, pvalue2: PValue) => {
             var conditionResult = false
             // 11.8.5 The Abstract Relational Comparison Algorithm
             // "4. Else, both px and py are Strings" does not call ToNumber function.
@@ -495,7 +501,7 @@ class ExprDetect(bugDetector: BugDetector) {
 
         // 11.9 Equality Operators
         case "==" | "!=" =>
-          convertToNumberCheck(inst, expr1, expr2, false, (pvalue1: PValue, pvalue2: PValue) => {
+          convertToNumberCheck(node, inst, expr1, expr2, false, (pvalue1: PValue, pvalue2: PValue) => {
             // 11.9.3 The Abstract Equality Comparison Algorithm
             if (bugOption.ConvertUndefToNum_ToNumberMustBeCalledDefinitely) {
               val pvalue1TypeCount = pvalue1.typeCount

@@ -50,16 +50,7 @@ object TIZENContactName extends Tizen {
     ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
     ("@construct",               AbsInternalFunc("tizen.ContactName.constructor")),
     ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
-    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
-    ("prefix", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("suffix", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("firstName", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("middleName", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("lastName", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("nicknames", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("phoneticFirstName", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("phoneticLastName", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("displayName", AbsConstValue(PropValue(Value(UndefTop))))
+    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F))))
   )
 
   /* prototype */
@@ -77,24 +68,20 @@ object TIZENContactName extends Tizen {
     Map(
       ("tizen.ContactName.constructor" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
           val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
           if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
           val addr_env = set_addr.head
           val addr1 = cfg.getAPIAddress(addr_env, 0)
-          val addr2 = cfg.getAPIAddress(addr_env, 1)
           val l_r1 = addrToLoc(addr1, Recent)
-          val l_r2 = addrToLoc(addr2, Recent)
-          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
-          val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
+          val (h_2, ctx_2) = Helper.Oldify(h, ctx, addr1)
           val n_arglen = Operator.ToUInt32(getArgValue(h_2, ctx_2, args, "length"))
 
           val o_new = ObjEmpty.
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENContactName.loc_proto), F, F, F))).
             update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop))).
             update("displayName", PropValue(ObjectValue(Value(NullTop), F, T, T)))
 
           val (h_3, es_1) = n_arglen match {
@@ -110,7 +97,7 @@ object TIZENContactName extends Tizen {
                 update("nicknames", PropValue(ObjectValue(Value(l_r1), T, T, T))).
                 update("phoneticFirstName", PropValue(ObjectValue(Value(NullTop), T, T, T))).
                 update("phoneticLastName", PropValue(ObjectValue(Value(NullTop), T, T, T)))
-              val h_4 = h_3.update(l_r2, o_new2)
+              val h_4 = lset_this.foldLeft(h_3)((_h, l) => _h.update(l, o_new2))
               (h_4, TizenHelper.TizenExceptionBot)
             case UIntSingle(n) if n == 1 =>
               val v_1 = getArgValue(h_2, ctx_2, args, "0")
@@ -216,13 +203,13 @@ object TIZENContactName extends Tizen {
                 (o_1 + o_2 + o_3 + o_4 + o_5 + o_6 + o_7 + o_8,
                   _o._2 ++ es_1 ++ es_2 ++ es_3 ++ es_4 ++ es_5 ++ es_6 ++ es_7 ++ es_8)
               })
-              val h_3 = h_2.update(l_r2, obj)
+              val h_3 = lset_this.foldLeft(h_2)((_h, l) => _h.update(l, obj))
               (h_3, es ++ es_1)
             case _ =>
               (h_2, TizenHelper.TizenExceptionBot)
           }
           val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es_1)
-          ((Helper.ReturnStore(h_3, Value(l_r2)), ctx_2), (he + h_e, ctxe + ctx_e))
+          ((Helper.ReturnStore(h_3, Value(lset_this)), ctx_2), (he + h_e, ctxe + ctx_e))
         }
         ))
 

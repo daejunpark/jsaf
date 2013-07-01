@@ -41,6 +41,9 @@ object ModelManager {
     /* tizen model */
     if (Config.tizenMode)
       model_map = model_map + ("Tizen" -> new TizenModel(cfg))
+    /* jQuery model */
+    if (Config.jqMode)
+      model_map = model_map + ("jQuery" -> new JQueryModel(cfg))
   }
 
   def initialize(cfg: CFG, heap: Heap): Heap = {

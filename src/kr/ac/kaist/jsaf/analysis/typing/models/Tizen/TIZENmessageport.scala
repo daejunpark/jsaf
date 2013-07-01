@@ -26,6 +26,12 @@ import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
@@ -44,9 +50,7 @@ object TIZENmessageport extends Tizen {
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
-    ("@extensible",                 AbsConstValue(PropValue(T))),
-    ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
-    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop))))
+    ("@extensible",                 AbsConstValue(PropValue(T)))
   )
 
   /* prototype */
@@ -85,12 +89,11 @@ object TIZENmessageport extends Tizen {
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENLocalMessagePort.loc_proto), F, F, F))).
             update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop))).
             update("messagePortName", PropValue(ObjectValue(Value(v._1._5), F, T, T))).
             update("isTrusted", PropValue(ObjectValue(Value(BoolTop), F, T, T)))
           val h_2 = h_1.update(l_r1, o_new)
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1)
+          val est = Set[WebAPIException](UnknownError, NotSupportedError, InvalidValuesError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ est)
           ((Helper.ReturnStore(h_2, Value(l_r1)), ctx_1), (he + h_e, ctxe + ctx_e))
         }
         )),
@@ -117,12 +120,11 @@ object TIZENmessageport extends Tizen {
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENLocalMessagePort.loc_proto), F, F, F))).
             update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop))).
             update("messagePortName", PropValue(ObjectValue(Value(v._1._5), F, T, T))).
             update("isTrusted", PropValue(ObjectValue(Value(T), F, T, T)))
           val h_2 = h_1.update(l_r1, o_new)
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1)
+          val est = Set[WebAPIException](UnknownError, NotSupportedError, InvalidValuesError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ est)
           ((Helper.ReturnStore(h_2, Value(l_r1)), ctx_1), (he + h_e, ctxe + ctx_e))
         }
         )),
@@ -154,13 +156,12 @@ object TIZENmessageport extends Tizen {
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENRemoteMessagePort.loc_proto), F, F, F))).
             update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop))).
             update("messagePortName", PropValue(ObjectValue(Value(v_2._1._5), F, T, T))).
             update("appId", PropValue(ObjectValue(Value(v_1._1._5), F, T, T))).
             update("isTrusted", PropValue(ObjectValue(Value(BoolTop), F, T, T)))
           val h_2 = h_1.update(l_r1, o_new)
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2)
+          val est = Set[WebAPIException](UnknownError, NotSupportedError, InvalidValuesError, NotFoundError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2 ++ est)
           ((Helper.ReturnStore(h_2, Value(l_r1)), ctx_1), (he + h_e, ctxe + ctx_e))
         }
         )),
@@ -192,13 +193,12 @@ object TIZENmessageport extends Tizen {
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENRemoteMessagePort.loc_proto), F, F, F))).
             update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop))).
             update("messagePortName", PropValue(ObjectValue(Value(v_2._1._5), F, T, T))).
             update("appId", PropValue(ObjectValue(Value(v_1._1._5), F, T, T))).
             update("isTrusted", PropValue(ObjectValue(Value(T), F, T, T)))
           val h_2 = h_1.update(l_r1, o_new)
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2)
+          val est = Set[WebAPIException](UnknownError, NotSupportedError, InvalidValuesError, NotFoundError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2 ++ est)
           ((Helper.ReturnStore(h_2, Value(l_r1)), ctx_1), (he + h_e, ctxe + ctx_e))
         }
         ))
@@ -229,8 +229,64 @@ object TIZENLocalMessagePort extends Tizen {
 
   override def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
-    /*  ("tizen.LocalMessagePort.addMessagePortListener" -> ()),
-      ("tizen.LocalMessagePort.removeMessagePortListener" -> ())*/
+      ("tizen.LocalMessagePort.addMessagePortListener" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+          val addr2 = cfg.getAPIAddress(addr_env, 1)
+          val addr3 = cfg.getAPIAddress(addr_env, 2)
+          val addr4 = cfg.getAPIAddress(addr_env, 3)
+          val l_r1 = addrToLoc(addr1, Recent)
+          val l_r2 = addrToLoc(addr2, Recent)
+          val l_r3 = addrToLoc(addr3, Recent)
+          val l_r4 = addrToLoc(addr4, Recent)
+          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+          val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
+          val (h_3, ctx_3) = Helper.Oldify(h_2, ctx_2, addr3)
+          val (h_4, ctx_4) = Helper.Oldify(h_3, ctx_3, addr4)
+          val v_1 = getArgValue(h_4, ctx_4, args, "0")
+          val es =
+            if (v_1._2.exists((l) => Helper.IsCallable(h_4, l) <= F))
+              Set[WebAPIException](TypeMismatchError)
+            else TizenHelper.TizenExceptionBot
+          val o_new = Helper.NewObject(ObjProtoLoc).
+            update("key", PropValue(ObjectValue(Value(StrTop), T, T, T))).
+            update("value", PropValue(ObjectValue(Value(StrTop), T, T, T)))
+          val h_5 = h_4.update(l_r1, o_new)
+          val o_arr = Helper.NewArrayObject(UInt).update("@default_number", PropValue(ObjectValue(Value(l_r1), T, T, T)))
+          val o_new2 = ObjEmpty.
+            update("@class", PropValue(AbsString.alpha("Object"))).
+            update("@proto", PropValue(ObjectValue(Value(TIZENRemoteMessagePort.loc_proto), F, F, F))).
+            update("@extensible", PropValue(T)).
+            update("messagePortName", PropValue(ObjectValue(Value(StrTop), F, T, T))).
+            update("appId", PropValue(ObjectValue(Value(StrTop), F, T, T))).
+            update("isTrusted", PropValue(ObjectValue(Value(BoolTop), F, T, T)))
+          val h_6 = h_5.update(l_r2, o_arr).update(l_r3, o_new2)
+          val o_arr2 = Helper.NewArrayObject(AbsNumber.alpha(2)).
+            update("0", PropValue(ObjectValue(Value(l_r2), T, T, T))).
+            update("1", PropValue(ObjectValue(Value(l_r3), T, T, T)))
+          val h_7 = h_6.update(l_r4, o_arr2)
+          val h_8 = TizenHelper.addCallbackHandler(h_7, AbsString.alpha("MsgPortCB"), Value(v_1._2), Value(l_r4))
+          val est = Set[WebAPIException](UnknownError, NotSupportedError, InvalidValuesError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ est)
+          ((Helper.ReturnStore(h_8, Value(NumTop)), ctx_4), (he + h_e, ctxe + ctx_e))
+        }
+        )),
+      ("tizen.LocalMessagePort.removeMessagePortListener" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val v_1 = getArgValue(h, ctx, args, "0")
+          val es =
+            if (v_1._1._4 </ NumTop)
+              Set[WebAPIException](TypeMismatchError)
+            else TizenHelper.TizenExceptionBot
+          val est = Set[WebAPIException](UnknownError, NotSupportedError, InvalidValuesError, NotFoundError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ est)
+          ((h, ctx), (he + h_e, ctxe + ctx_e))
+        }
+        ))
     )
   }
 
@@ -306,8 +362,8 @@ object TIZENRemoteMessagePort extends Tizen {
               (h, es_4 ++ es_5)
             case _ => (h, TizenHelper.TizenExceptionBot)
           }
-
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2 ++ es_3)
+          val est = Set[WebAPIException](UnknownError, NotSupportedError, InvalidValuesError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2 ++ es_3 ++ est)
           ((h_1, ctx), (he + h_e, ctxe + ctx_e))
         }
         ))

@@ -45,15 +45,12 @@ object TIZENdatasync extends Tizen {
   val loc_syncservinfo: Loc = newPreDefLoc("SyncServiceInfo", Old)
   val loc_syncservinfoarr: Loc = newPreDefLoc("SyncServiceInfoArr", Old)
   val loc_syncstats: Loc = newPreDefLoc("SyncStatistics", Old)
-  val loc_lastsynctime: Loc = newPreDefLoc("LastSyncTime", Old)
 
   /* constructor or object*/
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
-    ("@extensible",                 AbsConstValue(PropValue(T))),
-    ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
-    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop))))
+    ("@extensible",                 AbsConstValue(PropValue(T)))
   )
 
   /* prototype */
@@ -75,7 +72,7 @@ object TIZENdatasync extends Tizen {
 
   private val prop_syncinfo_ins: List[(String, AbsProperty)] = List(
     ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
-    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENSyncServiceInfo.loc_proto, F, F, F)))),
+    ("@proto",               AbsConstValue(PropValue(ObjectValue(TIZENSyncInfo.loc_proto, F, F, F)))),
     ("@extensible",          AbsConstValue(PropValue(T))),
     ("url", AbsConstValue(PropValue(ObjectValue(Value(StrTop), T, T, T)))),
     ("id", AbsConstValue(PropValue(ObjectValue(Value(StrTop), T, T, T)))),
@@ -119,7 +116,7 @@ object TIZENdatasync extends Tizen {
     ("syncStatus", AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("SUCCESS") + AbsString.alpha("FAIL") +
                                                              AbsString.alpha("STOP") + AbsString.alpha("NONE")), F, T, T)))),
     ("serviceType", AbsConstValue(PropValue(ObjectValue(Value(AbsString.alpha("CONTACT") + AbsString.alpha("EVENT")), F, T, T)))),
-    ("lastSyncTime", AbsConstValue(PropValue(ObjectValue(Value(loc_lastsynctime), F, T, T)))),
+    ("lastSyncTime", AbsConstValue(PropValue(ObjectValue(Value(TIZENtizen.loc_date), F, T, T)))),
     ("serverToClientTotal", AbsConstValue(PropValue(ObjectValue(Value(NumTop), F, T, T)))),
     ("serverToClientAdded", AbsConstValue(PropValue(ObjectValue(Value(NumTop), F, T, T)))),
     ("serverToClientUpdated", AbsConstValue(PropValue(ObjectValue(Value(NumTop), F, T, T)))),
@@ -130,15 +127,9 @@ object TIZENdatasync extends Tizen {
     ("clientToServerRemoved", AbsConstValue(PropValue(ObjectValue(Value(NumTop), F, T, T))))
   )
 
-  private val prop_lastsynctime_ins: List[(String, AbsProperty)] = List(
-    ("@class",               AbsConstValue(PropValue(AbsString.alpha("Object")))),
-    ("@proto",               AbsConstValue(PropValue(ObjectValue(BuiltinDate.ProtoLoc, F, F, F)))),
-    ("@extensible",          AbsConstValue(PropValue(T)))
-  )
-
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_syncinfo, prop_syncinfo_ins), (loc_syncservinfo, prop_syncservinfo_ins),
-    (loc_syncservinfoarr, prop_syncservinfoarr_ins), (loc_lastsynctime, prop_lastsynctime_ins), (loc_syncstats, prop_syncstats_ins)
+    (loc_syncservinfoarr, prop_syncservinfoarr_ins), (loc_syncstats, prop_syncstats_ins)
   )
 
   override def getSemanticMap(): Map[String, SemanticFun] = {
@@ -159,7 +150,8 @@ object TIZENdatasync extends Tizen {
           val h_1 = v._2.foldLeft(h)((_h, l) => {
             Helper.PropStore(_h, l, AbsString.alpha("profileId"), Value(StrTop))
           })
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2)
+          val est = Set[WebAPIException](SecurityError, UnknownError, InvalidValuesError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2 ++ est)
           ((h_1, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
@@ -176,8 +168,8 @@ object TIZENdatasync extends Tizen {
             if (b_1._1._3 <= F)
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
-
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2)
+          val est = Set[WebAPIException](SecurityError, UnknownError, InvalidValuesError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ es_2 ++ est)
           ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
@@ -193,19 +185,23 @@ object TIZENdatasync extends Tizen {
             if (v._1._5 </ StrTop)
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
-
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1)
+          val est = Set[WebAPIException](SecurityError, UnknownError, InvalidValuesError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ est)
           ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.datasync.getMaxProfilesNum" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((Helper.ReturnStore(h, Value(NumTop)), ctx), (he, ctxe))
+          val est = Set[WebAPIException](SecurityError, UnknownError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((Helper.ReturnStore(h, Value(NumTop)), ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.datasync.getProfilesNum" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((Helper.ReturnStore(h, Value(NumTop)), ctx), (he, ctxe))
+          val est = Set[WebAPIException](SecurityError, UnknownError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((Helper.ReturnStore(h, Value(NumTop)), ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
       ("tizen.datasync.get" -> (
@@ -231,14 +227,13 @@ object TIZENdatasync extends Tizen {
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENSyncProfileInfo.loc_proto), F, F, F))).
             update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop))).
             update("profileId", PropValue(ObjectValue(Value(v._1._5), F, T, T))).
             update("profileName", PropValue(ObjectValue(Value(StrTop), F, T, T))).
             update("syncInfo", PropValue(ObjectValue(Value(TIZENdatasync.loc_syncinfo), F, T, T))).
             update("serviceInfo", PropValue(ObjectValue(Value(TIZENdatasync.loc_syncservinfoarr), F, T, T)))
           val h_2 = h_1.update(l_r1, o_new)
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1)
+          val est = Set[WebAPIException](SecurityError, UnknownError, NotSupportedError, NotFoundError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ est)
           ((Helper.ReturnStore(h_2, Value(l_r1)), ctx_1), (he + h_e, ctxe + ctx_e))
         }
         )),
@@ -259,8 +254,6 @@ object TIZENdatasync extends Tizen {
             update("@class", PropValue(AbsString.alpha("Object"))).
             update("@proto", PropValue(ObjectValue(Value(TIZENSyncProfileInfo.loc_proto), F, F, F))).
             update("@extensible", PropValue(T)).
-            update("@scope", PropValue(Value(NullTop))).
-            update("@hasinstance", PropValue(Value(NullTop))).
             update("profileId", PropValue(ObjectValue(Value(StrTop), F, T, T))).
             update("profileName", PropValue(ObjectValue(Value(StrTop), F, T, T))).
             update("syncInfo", PropValue(ObjectValue(Value(TIZENdatasync.loc_syncinfo), F, T, T))).
@@ -269,10 +262,93 @@ object TIZENdatasync extends Tizen {
           val o_arr = Helper.NewArrayObject(UInt)
           val o_arr2 = o_arr.update("@default_number", PropValue(ObjectValue(Value(l_r1), T, T, T)))
           val h_4 = h_3.update(l_r2, o_arr2)
-          ((Helper.ReturnStore(h_4, Value(l_r2)), ctx_2), (he, ctxe))
+          val est = Set[WebAPIException](SecurityError, UnknownError, NotSupportedError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, est)
+          ((Helper.ReturnStore(h_4, Value(l_r2)), ctx_2), (he + h_e, ctxe + ctx_e))
         }
         )),
-     /* ("tizen.datasync.startSync" -> ()),*/
+      ("tizen.datasync.startSync" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+          val addr2 = cfg.getAPIAddress(addr_env, 1)
+          val addr3 = cfg.getAPIAddress(addr_env, 2)
+          val addr4 = cfg.getAPIAddress(addr_env, 3)
+          val l_r1 = addrToLoc(addr1, Recent)
+          val l_r2 = addrToLoc(addr2, Recent)
+          val l_r3 = addrToLoc(addr3, Recent)
+          val l_r4 = addrToLoc(addr4, Recent)
+          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+          val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
+          val (h_3, ctx_3) = Helper.Oldify(h_2, ctx_2, addr3)
+          val (h_4, ctx_4) = Helper.Oldify(h_3, ctx_3, addr4)
+          val v_1 = getArgValue(h_4, ctx_4, args, "0")
+          val n_arglen = Operator.ToUInt32(getArgValue(h_4, ctx_4, args, "length"))
+          val es_1 =
+            if (v_1._1._5 </ StrTop)
+              Set[WebAPIException](TypeMismatchError)
+            else TizenHelper.TizenExceptionBot
+          val (h_5, es_2) = n_arglen match {
+            case UIntSingle(n) if n == 1 =>
+              (h_4, TizenHelper.TizenExceptionBot)
+            case UIntSingle(n) if n >= 2 =>
+              val v_2 = getArgValue(h_4, ctx_4, args, "1")
+              val (h_5, es) = v_2._2.foldLeft((h_4, TizenHelper.TizenExceptionBot))((_he, l) => {
+                val v1 = Helper.Proto(_he._1, l, AbsString.alpha("onprogress"))
+                val v2 = Helper.Proto(_he._1, l, AbsString.alpha("oncompleted"))
+                val v3 = Helper.Proto(_he._1, l, AbsString.alpha("onstopped"))
+                val v4 = Helper.Proto(_he._1, l, AbsString.alpha("onfailed"))
+                val es1 =
+                  if (v1._2.exists((l) => Helper.IsCallable(_he._1, l) <= F))
+                    Set[WebAPIException](TypeMismatchError)
+                  else TizenHelper.TizenExceptionBot
+                val es2 =
+                  if (v2._2.exists((l) => Helper.IsCallable(_he._1, l) <= F))
+                    Set[WebAPIException](TypeMismatchError)
+                  else TizenHelper.TizenExceptionBot
+                val es3 =
+                  if (v3._2.exists((l) => Helper.IsCallable(_he._1, l) <= F))
+                    Set[WebAPIException](TypeMismatchError)
+                  else TizenHelper.TizenExceptionBot
+                val es4 =
+                  if (v4._2.exists((l) => Helper.IsCallable(_he._1, l) <= F))
+                    Set[WebAPIException](TypeMismatchError)
+                  else TizenHelper.TizenExceptionBot
+                val o_arr1 = Helper.NewArrayObject(AbsNumber.alpha(5)).
+                  update("0", PropValue(ObjectValue(Value(v_1._1._5), T, T, T))).
+                  update("1", PropValue(ObjectValue(Value(AbsString.alpha("CONTACT") + AbsString.alpha("EVENT")), T, T, T))).
+                  update("2", PropValue(ObjectValue(Value(BoolTop), T, T, T))).
+                  update("3", PropValue(ObjectValue(Value(UInt), T, T, T))).
+                  update("4", PropValue(ObjectValue(Value(UInt), T, T, T)))
+                val o_arr2 = Helper.NewArrayObject(AbsNumber.alpha(1)).
+                  update("0", PropValue(ObjectValue(Value(v_1._1._5), T, T, T)))
+                val o_arr3 = Helper.NewArrayObject(AbsNumber.alpha(1)).
+                  update("0", PropValue(ObjectValue(Value(v_1._1._5), T, T, T)))
+                val o_arr4 = Helper.NewArrayObject(AbsNumber.alpha(2)).
+                  update("0", PropValue(ObjectValue(Value(v_1._1._5), T, T, T))).
+                  update("1", PropValue(ObjectValue(Value(LocSet(TIZENtizen.loc_invalidValueserr) ++ LocSet(TIZENtizen.loc_unknownerr)), T, T, T)))
+                val h_5 = _he._1.
+                  update(l_r1, o_arr1).
+                  update(l_r2, o_arr2).
+                  update(l_r3, o_arr3).
+                  update(l_r4, o_arr4)
+                val h_6 = TizenHelper.addCallbackHandler(h_5, AbsString.alpha("SyncProgressCB.onprogress"), Value(v1._2), Value(l_r1))
+                val h_7 = TizenHelper.addCallbackHandler(h_6, AbsString.alpha("SyncProgressCB.oncompleted"), Value(v2._2), Value(l_r2))
+                val h_8 = TizenHelper.addCallbackHandler(h_7, AbsString.alpha("SyncProgressCB.onstopped"), Value(v3._2), Value(l_r3))
+                val h_9 = TizenHelper.addCallbackHandler(h_8, AbsString.alpha("SyncProgressCB.onfailed"), Value(v4._2), Value(l_r4))
+                (h_9, _he._2 ++ es1 ++ es2 ++ es3 ++ es4)
+              })
+              (h_5, es)
+            case _ => (HeapBot, TizenHelper.TizenExceptionBot)
+          }
+          val est = Set[WebAPIException](SecurityError, UnknownError, NotSupportedError, NotFoundError, InvalidValuesError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es_1 ++ es_2 ++ est)
+          ((h_5, ctx_4), (he + h_e, ctxe + ctx_e))
+        }
+        )),
       ("tizen.datasync.stopSync" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val v = getArgValue(h, ctx, args, "0")
@@ -285,8 +361,8 @@ object TIZENdatasync extends Tizen {
             if (v._1._5 </ StrTop)
               Set[WebAPIException](TypeMismatchError)
             else TizenHelper.TizenExceptionBot
-
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1)
+          val est = Set[WebAPIException](SecurityError, UnknownError, NotSupportedError, NotFoundError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ est)
           ((h, ctx), (he + h_e, ctxe + ctx_e))
         }
         )),
@@ -312,7 +388,8 @@ object TIZENdatasync extends Tizen {
           val o_arr = Helper.NewArrayObject(UInt)
           val o_arr2 = o_arr.update("@default_number", PropValue(ObjectValue(Value(TIZENdatasync.loc_syncstats), T, T, T)))
           val h_2 = h_1.update(l_r1, o_arr2)
-          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1)
+          val est = Set[WebAPIException](SecurityError, UnknownError, NotSupportedError, NotFoundError)
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es ++ es_1 ++ est)
           ((Helper.ReturnStore(h_2, Value(l_r1)), ctx_1), (he + h_e, ctxe + ctx_e))
         }
         ))

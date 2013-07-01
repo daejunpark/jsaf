@@ -20,7 +20,7 @@ import kr.ac.kaist.jsaf.nodes_util.IRFactory
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 
-class Typing(_cfg: CFG, locclone: Boolean) extends TypingInterface {
+class Typing(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingInterface {
   override def env: Environment = null
   def cfg = _cfg
   var programNodes = _cfg.getNodes // without built-ins
@@ -68,8 +68,8 @@ class Typing(_cfg: CFG, locclone: Boolean) extends TypingInterface {
     //   })
     // })
 
-    val worklist = Worklist.computes(cfg)
-    val fixpoint = new Fixpoint(cfg, worklist, inTable, locclone)
+    val worklist = Worklist.computes(cfg, quiet)
+    val fixpoint = new Fixpoint(cfg, worklist, inTable, quiet, locclone)
     if(compareOption && preState != null) {
       fixpoint.getSemantics.setCompare(preState, preCFG)
     }
@@ -77,9 +77,9 @@ class Typing(_cfg: CFG, locclone: Boolean) extends TypingInterface {
     sem = Some(fixpoint.getSemantics)
     
     numIter = fixpoint.count
-    System.out.println("# Fixpoint iteration(#): "+numIter)
+    if (!quiet) System.out.println("# Fixpoint iteration(#): "+numIter)
     elapsedTime = (System.nanoTime - s) / 1000000000.0;
-    System.out.format("# Time for analysis(s): %.2f\n", new java.lang.Double(elapsedTime))
+    if (!quiet) System.out.format("# Time for analysis(s): %.2f\n", new java.lang.Double(elapsedTime))
     
   }
   

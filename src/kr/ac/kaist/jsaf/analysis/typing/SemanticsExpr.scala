@@ -93,12 +93,19 @@ object SemanticsExpr {
             }
           }
       case CFGUn(info, op, expr) =>
-        // If the return value is a bottom, the return value of 'typeof' operator must be "undefined"(implementation dependent),
-        // but now, it returns undefined.(instead of "undefined" string).
         val (v,es) = V(expr,h,ctx)
         op.getText match {
           case "void" => (uVoid(v),es)
-          case "typeof" => (Value(Helper.TypeTag(h, v)),es)
+          case "typeof" => expr match {
+            case _: CFGVarRef =>
+              val s_1 = Helper.TypeTag(h, v)
+              val s_2 = 
+                if (es.contains(ReferenceError)) AbsString.alpha("undefined")
+                else StrBot
+              (Value(s_1 + s_2), ExceptionBot)
+            case _ =>
+              (Value(Helper.TypeTag(h, v)), es)
+          }
           case "+" => (uopPlus(v),es)
           case "-" => (uopMinus(v),es)
           case "~" => (uopBitNeg(v),es)

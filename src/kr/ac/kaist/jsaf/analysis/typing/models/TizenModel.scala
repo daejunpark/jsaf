@@ -27,15 +27,15 @@ import kr.ac.kaist.jsaf.analysis.cfg.CFGAsyncCall
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 
 object TizenModel {
-  val async_calls : List[String] = List("#NOARGCB", "#STRCB", "#NUMCB", "#APPINFOCB", "#BTDEVCB", "#BTDEVARRCB", "#CALITEMARRCB",
+  val async_calls : List[String] = List("#NOARGCB", "#STRCB", "#NUMCB", "#ERRCB", "#APPINFOCB", "#BTDEVCB", "#BTDEVARRCB", "#CALITEMARRCB",
     "#CHENTRYARRCB", "#CONTACTARRCB", "#PERSONARRCB", "#CONTENTCB", "#MSGARRCB", "#MSGCONVARRCB", "#MSGFOLDERARRCB",
     "#PKGINFOCB", "#READERCB", "#APPINFOARRSUCCESSCB", "#FINDAPPCTRLSUCCESSCB", "#APPCONTEXTARRAYSUCCESSCB",
-    "#APPCTRLDATAARRAYREPLYCB.onsuccess", "#BTSOCKETSUCCESSCB", "#BTSERVSUCCESSCB", "#CALEVENTARRAYSUCCESSCB", "#CALARRAYSUCCESSCB",
-    "#CALCHANGECB.onitemsremoved", "#ADDRBOOKARRAYSUCCESSCB", "#ADDRBOOKCHANGECB.oncontactsremoved", "#PERSONSCHANGECB.onpersonsremoved",
-    "#CONTENTARRAYSUCESSCB", "#CONTENTDIRARRAYSUCCESSCB", "#DATACTRLERRCB", "#DATACTRLINSERTSUCCESSCB", "#DATACTRLSELECTSUCCESSCB",
+    "#APPCTRLDATAARRAYREPLYCB.onsuccess", "#BTSOCKETSUCCESSCB", "#BTSERVSUCCESSCB", "#CALEVENTARRSUCCESSCB", "#CALARRSUCCESSCB",
+    "#CALCHANGECB.onitemsremoved", "#ADDRBOOKARRSUCCESSCB", "#ADDRBOOKCHANGECB.oncontactsremoved", "#PERSONSCHANGECB.onpersonsremoved",
+    "#CONTENTARRSUCESSCB", "#CONTENTDIRARRSUCCESSCB", "#DATACTRLERRCB", "#DATACTRLINSERTSUCCESSCB", "#DATACTRLSELECTSUCCESSCB",
     "#DATACTRLGETVALSUCCESSCB", "#SYNCPROGRESSCB.onprogress", "#SYNCPROGRESSCB.onfailed", "#DOWNLOADCB.onprogress", "#DOWNLOADCB.oncompleted",
-    "#DOWNLOADCB.onfailed", "#FILESUCCESSCB", "#FILESYSSTORAGEARRAYSUCCESSCB", "#FILESTREAMSUCCESSCB", "#FILEARRAYSUCCESSCB", "#MSGPORTCB",
-    "#MSGRECIPIENTSCB", "#MSGBODYSUCCESSCB", "#MSGATTACHMENTSUCCESSCB", "#MSGSERVARRSUCCESSCB", "#NFCTAGDETECTCB.onattach", "#NFCPEERDETECTCB.onattach",
+    "#DOWNLOADCB.onfailed", "#FILESUCCESSCB", "#FILESYSSTORARRSUCCESSCB", "#FILESTREAMSUCCESSCB", "#FILEARRSUCCESSCB", "#MSGPORTCB",
+    "#MSGRECIPIENTSCB", "#MSGBODYSUCCESSCB", "#MSGATTACHMENTSUCCESSCB", "#MSGSERVARRSUCCESSCB", "#MSGFOLDARRSUCCESSCB", "#NFCTAGDETECTCB.onattach", "#NFCPEERDETECTCB.onattach",
     "#NDEFMSGREADCB", "#BYTEARRSUCCESSCB", "#SETYPECHANGECB", "#PKGINFOARRSUCCESSCB", "#PKGPROGRESSCB.onprogress", "#SCREENSTATECHANGECB",
     "#PUSHNOTICB", "#READERARRSUCCESSCB", "#SESSIONSUCCESSCB", "#CHANNELSUCCESSCB", "#TRANSMITSUCCESSCB", "#SYSINFOPROPSUCCESSCB")
 }
@@ -44,21 +44,24 @@ class TizenModel(cfg: CFG) extends Model(cfg) {
 
   private val list_tizen = List[Tizen](
     TIZENtizen, TIZENalarm, TIZENAlarmAbsolute, TIZENAlarmRelative, TIZENApplication, TIZENapplicationObj, TIZENApplicationInformation,
-    TIZENApplicationControl, TIZENApplicationControlData, TIZENAttributeFilter, TIZENAttributeRangeFilter, TIZENbluetooth,
+    TIZENApplicationControl, TIZENApplicationControlData, TIZENApplicationContext, TIZENApplicationCertificate, TIZENAttributeFilter, TIZENAttributeRangeFilter, TIZENbluetooth,
     TIZENBluetoothClassDeviceMajor, TIZENBluetoothClassDeviceMinor, TIZENBluetoothClassDeviceService, TIZENBluetoothAdapter,
-    TIZENBluetoothDevice, TIZENBluetoothClass, TIZENbookmark, TIZENBookmarkFolder, TIZENBookmarkItem, TIZENcalendarObj, TIZENCalendar,
+    TIZENBluetoothDevice, TIZENBluetoothClass, TIZENBluetoothSocket, TIZENBluetoothServiceHandler, TIZENbookmark, TIZENBookmarkFolder, TIZENBookmarkItem, TIZENcalendarObj, TIZENCalendar,
     TIZENCalendarAlarm, TIZENCalendarAttendee, TIZENCalendarItem, TIZENCalendarEvent, TIZENCalendarEventId, TIZENCalendarRecurrenceRule,
-    TIZENCalendarTask, TIZENcallhistory, TIZENCompositeFilter, TIZENcontactObj, TIZENAddressBook, TIZENContact,
-    TIZENContactAddress, TIZENContactAnniversary, TIZENPerson,
+    TIZENCalendarTask, TIZENcallhistory, TIZENRemoteParty, TIZENCompositeFilter, TIZENcontactObj, TIZENAddressBook, TIZENContact,
+    TIZENContactAddress, TIZENContactAnniversary, TIZENPerson, TIZENRequestedApplicationControl,
     TIZENContactEmailAddress, TIZENContactGroup, TIZENContactName, TIZENContactOrganization, TIZENContactPhoneNumber,
     TIZENContactRef, TIZENContactWebSite, TIZENcontentObj, TIZENdatacontrol, TIZENDataControlConsumerObject,
     TIZENSQLDataControlConsumer, TIZENMappedDataControlConsumer, TIZENdatasync, TIZENdownload, TIZENDownloadRequest,
-    TIZENfilesystem, TIZENMessage, TIZENMessageAttachment, TIZENmessageport, TIZENLocalMessagePort, TIZENRemoteMessagePort, TIZENmessaging,
+    TIZENfilesystem, TIZENFile, TIZENFileSystemStorage, TIZENFileFilter, TIZENFileStream, TIZENMessage, TIZENMessageBody, TIZENMessageFolder, TIZENMessageConversation, TIZENMessageAttachment,
+    TIZENmessageport, TIZENLocalMessagePort, TIZENRemoteMessagePort, TIZENmessaging,
     TIZENMessageStorage, TIZENMessageService, TIZENNDEFMessage, TIZENNDEFRecord,
     TIZENNDEFRecordMedia, TIZENNDEFRecordText, TIZENNDEFRecordURI, TIZENnetworkbearerselection, TIZENnfc, TIZENNFCAdapter,
-    TIZENNFCPeer, TIZENNFCTag, TIZENnotificationObj, TIZENNotification, TIZENNotificationDetailInfo, TIZENpackage, TIZENpower, TIZENpush, TIZENseService,
-    TIZENSimpleCoordinates, TIZENSortMode, TIZENStatusNotification, TIZENSyncInfo, TIZENSyncProfileInfo, TIZENSyncServiceInfo,
-    TIZENsysteminfo, TIZENSystemInfoDeviceCapability, TIZENsystemsetting, TIZENtime, TIZENTimeDuration, TIZENTZDate, TIZENWebAPIError
+    TIZENNFCPeer, TIZENNFCTag, TIZENnotificationObj, TIZENNotification, TIZENNotificationDetailInfo, TIZENpackage, TIZENPackageInformation,
+    TIZENpower, TIZENpush, TIZENseService, TIZENReader, TIZENSession, TIZENChannel, TIZENSimpleCoordinates,
+    TIZENSortMode, TIZENStatusNotification, TIZENSyncInfo, TIZENSyncProfileInfo,
+    TIZENSyncServiceInfo, TIZENsysteminfo, TIZENSystemInfoDeviceCapability, TIZENsystemsetting, TIZENtime, TIZENTimeDuration,
+    TIZENTZDate, TIZENWebAPIError
   )
 
   private var map_fid = Map[FunctionId, String]()
@@ -187,7 +190,6 @@ class TizenModel(cfg: CFG) extends Model(cfg) {
         lset_fun.foreach {l_f:Loc => {
           val o_f = h_3(l_f)
           val fids = o_f("@function")._1._3
-          System.err.println(fids)
           fids.foreach {fid => {
             val ccset = cc_caller.NewCallContext(cfg, fid, l_r, lset_this)
             ccset.foreach {case (cc_new, o_new) => {

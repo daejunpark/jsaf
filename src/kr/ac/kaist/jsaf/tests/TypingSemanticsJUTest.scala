@@ -33,7 +33,7 @@ object TypingSemanticsJUTest {
     val testcases = collectTestcase(TESTS_DIR)
     for (tc <- testcases) {
       //$JUnit-BEGIN$
-      suite.addTest(new SemanticsTest(TESTS_DIR, tc))
+      suite.addTest(new SemanticsTest(TESTS_DIR, tc, "sparse"))
       //$JUnit-END$
     }
     suite

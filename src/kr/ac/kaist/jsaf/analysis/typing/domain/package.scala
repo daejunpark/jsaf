@@ -285,10 +285,6 @@ package object domain {
   val LPBot = LPSet(HashMap[Loc,Set[String]]())
   val LBot = LocSetBot
 
-  /* Tizen Error instance */
-  val TizenUnknownErrorLoc: Loc = newPreDefLoc("UnknownErr", Old)
-  val TizenTypeMismatchErrorLoc: Loc = newPreDefLoc("TypeMismatchErr", Old)
-  val TizenInvalidValuesErrorLoc: Loc = newPreDefLoc("InvalidValuesErr", Old)
   /* Tizen Callback table */
   val TizenCallbackTableLoc: Loc = newPreDefLoc("TizenCallbackTable", Recent)
   val TizenCallbackArgTableLoc: Loc = newPreDefLoc("TizenCallbackArgTable", Recent)

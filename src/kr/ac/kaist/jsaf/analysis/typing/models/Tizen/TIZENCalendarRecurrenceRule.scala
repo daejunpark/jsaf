@@ -34,14 +34,7 @@ object TIZENCalendarRecurrenceRule extends Tizen {
     ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
     ("@construct",               AbsInternalFunc("tizen.CalendarRecurrenceRule.constructor")),
     ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
-    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
-    ("frequency", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("interval", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("untilDate", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("occurrenceCount", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("daysOfTheWeek", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("setPositions", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("exceptions", AbsConstValue(PropValue(Value(UndefTop))))
+    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F))))
   )
 
   /* prototype */
@@ -59,6 +52,7 @@ object TIZENCalendarRecurrenceRule extends Tizen {
     Map(
        ("tizen.CalendarRecurrenceRule.constructor" -> (
          (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
            val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
            val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
            if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
@@ -66,23 +60,18 @@ object TIZENCalendarRecurrenceRule extends Tizen {
            val addr1 = cfg.getAPIAddress(addr_env, 0)
            val addr2 = cfg.getAPIAddress(addr_env, 1)
            val addr3 = cfg.getAPIAddress(addr_env, 2)
-           val addr4 = cfg.getAPIAddress(addr_env, 3)
            val l_r1 = addrToLoc(addr1, Recent)
            val l_r2 = addrToLoc(addr2, Recent)
            val l_r3 = addrToLoc(addr3, Recent)
-           val l_r4 = addrToLoc(addr4, Recent)
            val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
            val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
-           val (h_3, ctx_3) = Helper.Oldify(h_2, ctx_2, addr3)
-           val (h_4, ctx_4) = Helper.Oldify(h_3, ctx_3, addr4)
+           val (h_4, ctx_4) = Helper.Oldify(h_2, ctx_2, addr3)
            val n_arglen = Operator.ToUInt32(getArgValue(h_4, ctx_4, args, "length"))
 
            val o_new = ObjEmpty.
              update("@class", PropValue(AbsString.alpha("Object"))).
              update("@proto", PropValue(ObjectValue(Value(TIZENCalendarRecurrenceRule.loc_proto), F, F, F))).
-             update("@extensible", PropValue(T)).
-             update("@scope", PropValue(Value(NullTop))).
-             update("@hasinstance", PropValue(Value(NullTop)))
+             update("@extensible", PropValue(T))
 
            val (h_5, es) = n_arglen match {
              case UIntSingle(n) if n == 1 =>
@@ -104,7 +93,7 @@ object TIZENCalendarRecurrenceRule extends Tizen {
                  update("daysOfTheWeek", PropValue(ObjectValue(Value(l_r1), F, T, T))).
                  update("setPositions", PropValue(ObjectValue(Value(l_r2), F, T, T))).
                  update("exceptions", PropValue(ObjectValue(Value(l_r3), F, T, T)))
-               val h_6 = h_5.update(l_r4, o_new2)
+               val h_6 = lset_this.foldLeft(h_5)((_h, l) => _h.update(l, o_new2))
                (h_6, es)
              case UIntSingle(n) if n == 2 =>
                val v_1 = getArgValue(h_4, ctx_4, args, "0")
@@ -166,14 +155,14 @@ object TIZENCalendarRecurrenceRule extends Tizen {
                  update("setPositions", PropValue(ObjectValue(Value(l_r2), F, T, T))).
                  update("exceptions", PropValue(ObjectValue(Value(l_r3), F, T, T)))
                val o_new3 = o_new2 + obj
-               val h_6 = h_5.update(l_r4, o_new3)
+               val h_6 = lset_this.foldLeft(h_5)((_h, l) => _h.update(l, o_new3))
                (h_6, es ++ es_1)
              case _ => {
                (h_4, TizenHelper.TizenExceptionBot)
              }
            }
            val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es)
-           ((Helper.ReturnStore(h_5, Value(l_r4)), ctx_4), (he + h_e, ctxe + ctx_e))
+           ((Helper.ReturnStore(h_5, Value(lset_this)), ctx_4), (he + h_e, ctxe + ctx_e))
          }
          ))
     )

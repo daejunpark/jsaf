@@ -14,7 +14,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import scala.collection.mutable.{HashMap => MHashMap}
 import scala.collection.immutable.HashMap
 
-class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, locclone: Boolean) {
+class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, locclone: Boolean) {
   private val sem = new Semantics(cfg, worklist, locclone)
   def getSemantics = sem
   var count = 0
@@ -30,8 +30,10 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, locclone: Boolean) 
 
   private def loop(): Unit = {
     while (!worklist.isEmpty) {
-      System.out.print("\r  Dense Iteration: "+count+"   ")
-      worklist.dump()
+      if (!quiet) {
+        System.out.print("\r  Dense Iteration: "+count+"   ")
+        worklist.dump()
+      }
       count = count+1
 
       val cp = worklist.getHead()

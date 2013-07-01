@@ -213,43 +213,8 @@ object DOMNode extends DOM {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           /* arguments */
           val lset_child = getArgValue(h, ctx, args, "0")._2
-          if (!lset_child.isEmpty) {
-            /* location for clone node */
-            val h_1 = lset_this.foldLeft(h)((hh, l_node) => {
-              val lset_ns = Helper.Proto(h, l_node, AbsString.alpha("childNodes"))._2
-              lset_ns.foldLeft(hh)((hhh, l_ns) => {
-                val n_len = Operator.ToUInt32(Helper.Proto(h, l_ns, AbsString.alpha("length")))
-                n_len match {
-                  case UIntSingle(n) =>
-                    val n_index = (0 until n.toInt).indexWhere((i) => {
-                      BoolTrue <= Operator.bopSEq(Helper.Proto(hhh, l_ns, AbsString.alpha(i.toString)), Value(lset_child))._1._3
-                    })
-                    if (n_index < 0)
-                      hhh
-                    else {
-                      val hhh_1 = Helper.Delete(hhh, l_ns, AbsString.alpha(n_index.toString))._1
-                      val hhh_2 = (n_index+1 until n.toInt).foldLeft(hhh_1)((_h, i) => {
-                        val v_next = Helper.Proto(_h, l_ns,  AbsString.alpha(i.toString))
-                        val _h1 = Helper.Delete(_h, l_ns, AbsString.alpha(i.toString))._1
-                        Helper.PropStore(_h1, l_ns, AbsString.alpha((i-1).toString), v_next)
-                      })
-                      // decrease the length of childNodes by 1
-                      Helper.PropStore(hhh_2, l_ns, AbsString.alpha("length"), Value(AbsNumber.alpha(n - 1)))
-                    }
-
-                  case NumTop | UInt =>
-                    val b_eq = Operator.bopSEq(Helper.Proto(hhh, l_ns, NumStr), Value(lset_child))._1._3
-                    val hhh_1 =
-                      if (BoolTrue <= b_eq) Helper.Delete(hhh, l_ns, NumStr)._1
-                      else HeapBot
-                    val hhh_2 =
-                      if (BoolFalse <= b_eq) hhh
-                      else HeapBot
-                    hhh_1 + hhh_2
-                  case _ => hhh /* exception ?? */
-                }
-              })
-            })
+          if (!lset_this.isEmpty && !lset_child.isEmpty) {
+            val h_1 = DOMHelper.removeChild(h, lset_this, lset_child)
             ((Helper.ReturnStore(h_1, Value(lset_child)), ctx), (he, ctxe))
           }
           else
@@ -258,26 +223,10 @@ object DOMNode extends DOM {
       ("DOMNode.appendChild" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          /* arguments */
           val lset_child = getArgValue(h, ctx, args, "0")._2
-          if (!lset_child.isEmpty) {
-            /* location for clone node */
-            val h_1 = lset_this.foldLeft(h)((hh, l_node) => {
-              val lset_ns = Helper.Proto(hh, l_node, AbsString.alpha("childNodes"))._2
-              lset_ns.foldLeft(hh)((hhh, l_ns) => {
-                val n_len = Operator.ToUInt32(Helper.Proto(hhh, l_ns, AbsString.alpha("length")))
-                n_len match {
-                  case UIntSingle(n) =>
-                    val hhh_1 = Helper.PropStore(hhh, l_ns, AbsString.alpha(n.toInt.toString), Value(lset_child))
-                    Helper.PropStore(hhh_1, l_ns, AbsString.alpha("length"), Value(AbsNumber.alpha(n+1)))
-                  case NumTop | UInt =>
-                    Helper.PropStore(hhh, l_ns, NumStr, Value(lset_child))
-                  case _ => hhh /* exception ?? */
-                }
-              })
-            })
+          val h_1 = DOMHelper.appendChild(h, lset_this, lset_child)
+          if (!lset_child.isEmpty && !lset_child.isEmpty)
             ((Helper.ReturnStore(h_1, Value(lset_child)), ctx), (he, ctxe))
-          }
           else
             ((HeapBot, ContextBot), (he, ctxe))
         })),

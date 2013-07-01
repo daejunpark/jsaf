@@ -9,11 +9,21 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.CFGExpr
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing._
+import java.lang.InternalError
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsInternalFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.domain.Context
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsInternalFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 
 object TIZENSortMode extends Tizen {
   private val name = "SortMode"
@@ -26,11 +36,9 @@ object TIZENSortMode extends Tizen {
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
     ("@extensible",                 AbsConstValue(PropValue(T))),
     ("@scope",                      AbsConstValue(PropValue(Value(NullTop)))),
-    ("@construct",               AbsInternalFunc("TIZENtizen.TIZENSortMode.constructor")),
+    ("@construct",               AbsInternalFunc("tizen.SortMode.constructor")),
     ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
-    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
-    ("attributeName", AbsConstValue(PropValue(Value(UndefTop)))),
-    ("order", AbsConstValue(PropValue(Value(UndefTop))))
+    ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F))))
   )
 
   /* prototype */
@@ -46,7 +54,43 @@ object TIZENSortMode extends Tizen {
 
   override def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
-/*      ("TIZENtizen.TIZENSortMode.constructor" -> ())  */
+      ("tizen.SortMode.constructor" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          val v_1 = getArgValue(h, ctx, args, "0")
+          val n_arglen = Operator.ToUInt32(getArgValue(h, ctx, args, "length"))
+          val es_1 =
+            if (v_1._1._5 </ StrTop)
+              Set[WebAPIException](TypeMismatchError)
+            else TizenHelper.TizenExceptionBot
+          val o_new = ObjEmpty.
+            update("@class", PropValue(AbsString.alpha("Object"))).
+            update("@proto", PropValue(ObjectValue(Value(TIZENSortMode.loc_proto), F, F, F))).
+            update("@extensible", PropValue(T)).
+            update("attributeName", PropValue(ObjectValue(Value(v_1._1._5), F, T, T)))
+
+          val (h_2, es_2) = n_arglen match {
+            case UIntSingle(n) if n == 1 =>
+              val o_new2 = o_new.
+                update("order", PropValue(ObjectValue(Value(AbsString.alpha("ASC")), T, T, T)))
+              val h_2 = lset_this.foldLeft(h)((_h, l) => _h.update(l, o_new2))
+              (h_2, TizenHelper.TizenExceptionBot)
+            case UIntSingle(n) if n >= 2 =>
+              val v_2 = getArgValue(h, ctx, args, "1")
+              val es_2 =
+                if (v_2._1._5 != AbsString.alpha("ASC") && v_2._1._5 != AbsString.alpha("DESC"))
+                  Set[WebAPIException](TypeMismatchError)
+                else TizenHelper.TizenExceptionBot
+              val o_new2 = o_new.
+                update("order", PropValue(ObjectValue(Value(v_2._1._5), T, T, T)))
+              val h_2 = lset_this.foldLeft(h)((_h, l) => _h.update(l, o_new2))
+              (h_2, es_2)
+            case _ => (HeapBot, TizenHelper.TizenExceptionBot)
+          }
+          val (h_e, ctx_e) = TizenHelper.TizenRaiseException(h, ctx, es_1 ++ es_2)
+          ((Helper.ReturnStore(h_2, Value(lset_this)), ctx), (he + h_e, ctxe + ctx_e))
+        }
+        ))
     )
   }
 
