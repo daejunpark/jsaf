@@ -19,4 +19,4 @@ if [ -f "$ANTRC" ] ; then
   . "$ANTRC"
 fi
 
-export ANT_OPTS=-Xmx1g
+export ANT_OPTS="-Xmx1g -Xss32m"
