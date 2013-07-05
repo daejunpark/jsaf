@@ -21,7 +21,7 @@ import edu.rice.cs.plt.tuple.Option
 
 /* Converts an IR to a string which is the concrete version of that IR
  */
-class JSIRUnparser(program: IRRoot) extends Walker {
+class JSIRUnparser(program: IRNode) extends Walker {
 
   def doit() = walk(program)
   val width = 50
@@ -188,16 +188,16 @@ class JSIRUnparser(program: IRRoot) extends Walker {
       s.append(walk(prop)).append(" : ").append(walk(expr))
       s.toString
     case SIRNumber(_, text, num) => text
-    case SIRFunDecl(_, SIRFunctional(_, _, name, params, args, fds, vds, body)) =>
+    case SIRFunDecl(_, SIRFunctional(_, name, params, args, fds, vds, body)) =>
       val s: StringBuilder = new StringBuilder
       printFun(s, "function ", name, params, args, fds, vds, body)
       s.toString
-    case SIRFunExpr(_, lhs, SIRFunctional(_, _, name, params, args, fds, vds, body)) =>
+    case SIRFunExpr(_, lhs, SIRFunctional(_, name, params, args, fds, vds, body)) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(lhs)).append(" = ")
       printFun(s, "function ", name, params, args, fds, vds, body)
       s.toString
-    case SIRGetProp(_, SIRFunctional(_, _, name, params, args, fds, vds, body)) =>
+    case SIRGetProp(_, SIRFunctional(_, name, params, args, fds, vds, body)) =>
       val s: StringBuilder = new StringBuilder
       printFun(s, "get ", name, params, args, fds, vds, body)
       s.toString
@@ -259,7 +259,7 @@ class JSIRUnparser(program: IRRoot) extends Walker {
       decreaseIndent
       s.append("\n").append(getIndent).append("}")
       s.toString
-    case SIRSetProp(_, SIRFunctional(_, _, name, params, args, fds, vds, body)) =>
+    case SIRSetProp(_, SIRFunctional(_, name, params, args, fds, vds, body)) =>
       val s: StringBuilder = new StringBuilder
       printFun(s, "set ", name, params, args, fds, vds, body)
       s.toString

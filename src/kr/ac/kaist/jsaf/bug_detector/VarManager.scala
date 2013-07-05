@@ -34,7 +34,7 @@ class VarManager(bugDetector: BugDetector) {
   // Use only when we cannot get any meaningful source locations
   val sourceLoc                                 = new SourceLocRats(NodeUtil.freshFile("bug_detector"), 0, 0, 0)
   val defSpan                                   = new Span(sourceLoc, sourceLoc)
-  val defInfo                                   = IRFactory.makeSpanInfo(false, IRFactory.dummyAst, defSpan)
+  val defInfo                                   = IRFactory.makeSpanInfo(false, defSpan)
   val defId                                     = IRFactory.dummyIRId("bug_detector")
 
   ////////////////////////////////////////////////////////////////////////////////

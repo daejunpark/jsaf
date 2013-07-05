@@ -15,7 +15,7 @@ class BugOption(defaultForUser: Boolean = true) {
   ////////////////////////////////////////////////////////////////////////////////
   // Settings
   ////////////////////////////////////////////////////////////////////////////////
-  val soundnessLevel:                           Array[SoundnessLevel] = new Array(MAX_BUG_COUNT)
+  //val soundnessLevel:                           Array[SoundnessLevel] = new Array(MAX_BUG_COUNT)
   val contextSensitive:                         Array[CallContext.sensitivityFlagType] = new Array(MAX_BUG_COUNT)
 
   var AbsentReadProperty_PropertyMustExistInEveryState          = false
@@ -30,14 +30,18 @@ class BugOption(defaultForUser: Boolean = true) {
   var BinaryOpSecondType_OperandMustBeCorrectInEveryLocation    = false
   var BinaryOpSecondType_OperandMustBeCorrectDefinitely         = false
 
-  var BuiltinWrongType_TypeMustBeCorrectInEveryState            = false
-  var BuiltinWrongType_TypeMustBeCorrectDefinitely              = false
-  var BuiltinWrongType_CheckObjectType                          = true
-  var BuiltinWrongType_CheckFunctionType                        = true
+  var BuiltinWrongArgType_TypeMustBeCorrectInEveryState         = false
+  var BuiltinWrongArgType_TypeMustBeCorrectDefinitely           = false
+  var BuiltinWrongArgType_CheckObjectType                       = true
+  var BuiltinWrongArgType_CheckFunctionType                     = true
 
-  var CallNonFunction_FunctionMustBeCallableInEveryState        = false
-  var CallNonFunction_FunctionMustBeCallableForEveryLocation    = false
-  var CallNonFunction_FunctionMustBeCallableDefinitely          = false
+  var CallNonConstructor_MustBeConstructableInEveryState        = false
+  var CallNonConstructor_MustBeConstructableForEveryLocation    = false
+  var CallNonConstructor_MustBeConstructableDefinitely          = false
+
+  var CallNonFunction_MustBeCallableInEveryState                = false
+  var CallNonFunction_MustBeCallableForEveryLocation            = false
+  var CallNonFunction_MustBeCallableDefinitely                  = false
 
   var CondBranch_ConditionMustBeTrueOrFalseInEveryState         = false
   var CondBranch_ConditionMustBeTrueOrFalseDefinitely           = false
@@ -82,7 +86,7 @@ class BugOption(defaultForUser: Boolean = true) {
   // For user
   def setToDefaultForUser(): Unit = {
     for(i <- 0 until MAX_BUG_COUNT) {
-      soundnessLevel(i) = SOUNDNESS_LEVEL_LOW
+      //soundnessLevel(i) = SOUNDNESS_LEVEL_LOW
       contextSensitive(i) = CallContext._MOST_SENSITIVE
     }
 
@@ -101,16 +105,21 @@ class BugOption(defaultForUser: Boolean = true) {
     BinaryOpSecondType_OperandMustBeCorrectInEveryLocation = false
     BinaryOpSecondType_OperandMustBeCorrectDefinitely = false
 
-    // BuiltinWrongType
-    BuiltinWrongType_TypeMustBeCorrectInEveryState = false
-    BuiltinWrongType_TypeMustBeCorrectDefinitely = false
-    BuiltinWrongType_CheckObjectType = true
-    BuiltinWrongType_CheckFunctionType = true
+    // BuiltinWrongArgType
+    BuiltinWrongArgType_TypeMustBeCorrectInEveryState = false
+    BuiltinWrongArgType_TypeMustBeCorrectDefinitely = false
+    BuiltinWrongArgType_CheckObjectType = true
+    BuiltinWrongArgType_CheckFunctionType = true
+
+    // CallNonConstructor
+    CallNonConstructor_MustBeConstructableInEveryState = false
+    CallNonConstructor_MustBeConstructableForEveryLocation = false
+    CallNonConstructor_MustBeConstructableDefinitely = false
 
     // CallNonFunction
-    CallNonFunction_FunctionMustBeCallableInEveryState = false
-    CallNonFunction_FunctionMustBeCallableForEveryLocation = false
-    CallNonFunction_FunctionMustBeCallableDefinitely = false
+    CallNonFunction_MustBeCallableInEveryState = false
+    CallNonFunction_MustBeCallableForEveryLocation = false
+    CallNonFunction_MustBeCallableDefinitely = false
 
     // CondBranch
     CondBranch_ConditionMustBeTrueOrFalseInEveryState = false
@@ -135,10 +144,6 @@ class BugOption(defaultForUser: Boolean = true) {
     ImplicitTypeConvert_CheckObjectAndBoolean = false
 
     // NullOrUndefined
-    val nullOrUndefinedSoundness = SOUNDNESS_LEVEL_LOW
-    soundnessLevel(ObjectNull) = nullOrUndefinedSoundness
-    soundnessLevel(ObjectNullOrUndef) = nullOrUndefinedSoundness
-    soundnessLevel(ObjectUndef) = nullOrUndefinedSoundness
     NullOrUndefined_BugMustExistInEveryState = false
     NullOrUndefined_OnlyWhenPrimitive = true
     NullOrUndefined_OnlyNullOrUndefined = true
@@ -155,7 +160,7 @@ class BugOption(defaultForUser: Boolean = true) {
   // For SAFE developer
   def setToDefaultForDeveloper(): Unit = {
     for(i <- 0 until MAX_BUG_COUNT) {
-      soundnessLevel(i) = SOUNDNESS_LEVEL_HIGH
+      //soundnessLevel(i) = SOUNDNESS_LEVEL_HIGH
       contextSensitive(i) = CallContext._MOST_SENSITIVE
     }
 
@@ -174,16 +179,21 @@ class BugOption(defaultForUser: Boolean = true) {
     BinaryOpSecondType_OperandMustBeCorrectInEveryLocation = true
     BinaryOpSecondType_OperandMustBeCorrectDefinitely = true
 
-    // BuiltinWrongType
-    BuiltinWrongType_TypeMustBeCorrectInEveryState = true
-    BuiltinWrongType_TypeMustBeCorrectDefinitely = true
-    BuiltinWrongType_CheckObjectType = true
-    BuiltinWrongType_CheckFunctionType = true
+    // BuiltinWrongArgType
+    BuiltinWrongArgType_TypeMustBeCorrectInEveryState = true
+    BuiltinWrongArgType_TypeMustBeCorrectDefinitely = true
+    BuiltinWrongArgType_CheckObjectType = true
+    BuiltinWrongArgType_CheckFunctionType = true
+
+    // CallNonConstructor
+    CallNonConstructor_MustBeConstructableInEveryState = true
+    CallNonConstructor_MustBeConstructableForEveryLocation = true
+    CallNonConstructor_MustBeConstructableDefinitely = true
 
     // CallNonFunction
-    CallNonFunction_FunctionMustBeCallableInEveryState = true
-    CallNonFunction_FunctionMustBeCallableForEveryLocation = true
-    CallNonFunction_FunctionMustBeCallableDefinitely = true
+    CallNonFunction_MustBeCallableInEveryState = true
+    CallNonFunction_MustBeCallableForEveryLocation = true
+    CallNonFunction_MustBeCallableDefinitely = true
 
     // CondBranch
     CondBranch_ConditionMustBeTrueOrFalseInEveryState = true

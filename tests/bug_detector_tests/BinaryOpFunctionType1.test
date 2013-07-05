@@ -22,14 +22,14 @@ BinaryOpFunctionType1.js:5:1~5:18: [TypeError] Right-hand side operand 'o' of 'i
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
 |  BinaryOperator          :      1 | \n\
-|  BuiltinArgSize          :      0 | \n\
-|  BuiltinWrongType        :      0 | \n\
+|  BuiltinWrongArgType     :      0 | \n\
 |  CallConstFunc           :      0 | \n\
 |  CallNonConstructor      :      0 | \n\
 |  CallNonFunction         :      0 | \n\
 |  ConditionalBranch       :      0 | \n\
 |  ConvertToNumber         :      0 | \n\
 |  DefaultValueTypeError   :      0 | \n\
+|  FunctionArgSize         :      0 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\
 |  AccessingNullOrUndef    :      0 | \n\

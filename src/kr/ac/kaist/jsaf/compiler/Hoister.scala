@@ -14,6 +14,7 @@ import kr.ac.kaist.jsaf.ShellParameters
 import kr.ac.kaist.jsaf.bug_detector._
 import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.nodes._
+import kr.ac.kaist.jsaf.nodes_util.SpanInfo
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.scala_src.nodes._
@@ -42,8 +43,8 @@ class Hoister(program: Program) extends Walker {
   }
 
   // Utility functions
-  def assignOp(info: ASTNodeInfo) = SOp(info, "=")
-  def assignS(i: ASTNodeInfo, name: Id, expr: Expr) =
+  def assignOp(info: SpanInfo) = SOp(info, "=")
+  def assignS(i: SpanInfo, name: Id, expr: Expr) =
     SExprStmt(i, walk(SAssignOpApp(i, SVarRef(i, name), assignOp(i), expr)).asInstanceOf[Expr], true)
   def hoistVds(vds: List[VarDecl]) =
     vds.foldRight(List[Stmt]())((vd, res) => vd match {

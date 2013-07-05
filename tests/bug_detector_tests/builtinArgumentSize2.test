@@ -22,14 +22,14 @@ builtinArgumentSize2.js:10:1~10:14: [Warning] Too few arguments to function 'Arr
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
 |  BinaryOperator          :      0 | \n\
-|  BuiltinArgSize          :      1 | \n\
-|  BuiltinWrongType        :      0 | \n\
+|  BuiltinWrongArgType     :      0 | \n\
 |  CallConstFunc           :      0 | \n\
 |  CallNonConstructor      :      0 | \n\
 |  CallNonFunction         :      0 | \n\
 |  ConditionalBranch       :      0 | \n\
 |  ConvertToNumber         :      0 | \n\
 |  DefaultValueTypeError   :      0 | \n\
+|  FunctionArgSize         :      1 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\
 |  AccessingNullOrUndef    :      0 | \n\

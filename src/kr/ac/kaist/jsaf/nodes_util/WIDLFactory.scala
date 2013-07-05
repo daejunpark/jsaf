@@ -38,7 +38,7 @@ object WIDLFactory {
     new Span(sl,sl)
   }
 
-  def makeSpanInfo(span: Span): WSpanInfo = new WSpanInfo(span)
+  def makeSpanInfo(span: Span): SpanInfo = new SpanInfo(span)
 
   def addAttrs(attrs: JList[WEAttribute], dfn: WDefinition): WDefinition = dfn match {
     case SWInterface(info, as, name, parent, members) =>

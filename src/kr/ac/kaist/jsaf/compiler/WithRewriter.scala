@@ -13,6 +13,7 @@ import _root_.java.util.{List => JList}
 import kr.ac.kaist.jsaf.exceptions.JSAFError.error
 import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.nodes._
+import kr.ac.kaist.jsaf.nodes_util.SpanInfo
 import kr.ac.kaist.jsaf.nodes_util.{ NodeFactory => NF }
 import kr.ac.kaist.jsaf.nodes_util.{ NodeUtil => NU }
 import kr.ac.kaist.jsaf.scala_src.nodes._
@@ -74,15 +75,15 @@ class WithRewriter(program: Program, forTest: Boolean) extends Walker {
 
   // For SAFE
   val internalSymbol = NU.internalSymbol
-  def freshName(info: ASTNodeInfo) = {
+  def freshName(info: SpanInfo) = {
     val name = NU.freshName("alpha")
     SId(info, name, Some(name), true)
   }
   val toObjectName = NU.toObjectName
-  def toObjectId(info: ASTNodeInfo) = SId(info, toObjectName, Some(toObjectName), false)
+  def toObjectId(info: SpanInfo) = SId(info, toObjectName, Some(toObjectName), false)
 
-  def assignOp(info: ASTNodeInfo) = SOp(info, "=")
-  def inOp(info: ASTNodeInfo) = SOp(info, "in")
+  def assignOp(info: SpanInfo) = SOp(info, "=")
+  def inOp(info: SpanInfo) = SOp(info, "in")
   def paren(expr: Expr) = SParenthesized(NU.getInfo(expr), expr)
   def splitNames(names: List[List[String]]) = names match {
     case hd::tl => (hd, tl)

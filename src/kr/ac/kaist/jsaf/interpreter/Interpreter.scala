@@ -291,12 +291,12 @@ class Interpreter extends IRWalker {
             case e: JSError => IS.comp.setThrow(e, info.getSpan)
           }
 
-        case SIRGetProp(info, ftn @ SIRFunctional(_, _, id, params, args, vds, fds, body)) =>
+        case SIRGetProp(info, ftn @ SIRFunctional(_, id, params, args, vds, fds, body)) =>
           IS.span = info.getSpan
           val o = IH.createFunctionObject(ftn, IS.env, IS.strict)
           (id.getOriginalName, IH.mkAccessorProp(Some(o), None, true, true))
 
-        case SIRSetProp(info, ftn @ SIRFunctional(_, _, id, params, args, vds, fds, body)) =>
+        case SIRSetProp(info, ftn @ SIRFunctional(_, id, params, args, vds, fds, body)) =>
           IS.span = info.getSpan
           val o = IH.createFunctionObject(ftn, IS.env, IS.strict)
           (id.getOriginalName, IH.mkAccessorProp(None, Some(o), true, true))
@@ -731,7 +731,7 @@ class Interpreter extends IRWalker {
      * 13 Function Definition
      * 10.5 Declaration Binding Instantiation - Step 5
      */
-      case SIRFunDecl(info, ftn @ SIRFunctional(_, _, id: IRId, params, args, vds, fds, body)) =>
+      case SIRFunDecl(info, ftn @ SIRFunctional(_, id: IRId, params, args, vds, fds, body)) =>
         IS.span = info.getSpan
         val f = id.getOriginalName
         val o = IH.createFunctionObject(ftn, IS.env, IS.strict)
@@ -1038,7 +1038,7 @@ class Interpreter extends IRWalker {
        * 11.2.5 Function Expressions
        * 13 Function Definition
        */
-      case SIRFunExpr(info, lhs, ftn @ SIRFunctional(_, _, id, params, args, vds, fds, body)) =>
+      case SIRFunExpr(info, lhs, ftn @ SIRFunctional(_, id, params, args, vds, fds, body)) =>
         IS.span = info.getSpan
         IH.newDeclEnv()
         val o = IH.createFunctionObject(ftn, IS.env, IS.strict)

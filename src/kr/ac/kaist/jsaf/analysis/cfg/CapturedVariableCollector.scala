@@ -57,7 +57,7 @@ class CapturedVariableCollector {
   }
 
   private def checkFunctional(func: IRFunctional): Unit = func match {
-    case SIRFunctional(_,_,name,params,args,fds,vds,body) =>
+    case SIRFunctional(_,name,params,args,fds,vds,body) =>
       val locals = namesOfArgs(args) ++ namesOfFunDecls(fds) ++ namesOfVars(vds)
       fds.foreach(checkFunDecl)
       checkStmts(body, locals)

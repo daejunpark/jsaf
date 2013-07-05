@@ -10,6 +10,7 @@
 package kr.ac.kaist.jsaf.clone_detector.util
 
 import kr.ac.kaist.jsaf.nodes._
+import kr.ac.kaist.jsaf.nodes_util.SpanInfo
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 
@@ -160,7 +161,7 @@ object Util {
       DebugPrint("SSetProp")
       46
     case _:SpanInfo =>
-      DebugPrint("SSpanInfo")
+      DebugPrint("SpanInfo")
       47
     case SStringLiteral(_, _, txt) =>
       val str = NU.unescapeJava(txt)
@@ -347,7 +348,7 @@ object Util {
       DebugPrint("SSetProp")
       true
     case _:SpanInfo =>
-      DebugPrint("SSpanInfo")
+      DebugPrint("SpanInfo")
       false
     case SStringLiteral(_, _, txt) =>
       val str = NU.unescapeJava(txt)
@@ -531,7 +532,7 @@ object Util {
       DebugPrint("SSetProp")
       false
     case _:SpanInfo =>
-      DebugPrint("SSpanInfo")
+      DebugPrint("SpanInfo")
       false
     case SStringLiteral(_, _, txt) =>
       val str = NU.unescapeJava(txt)

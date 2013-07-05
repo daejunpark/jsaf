@@ -10,11 +10,10 @@
 package kr.ac.kaist.jsaf.nodes_util;
 
 import kr.ac.kaist.jsaf.nodes.ASTNode;
-import kr.ac.kaist.jsaf.nodes.ASTNodeInfo;
-import kr.ac.kaist.jsaf.nodes.SpanInfo;
 import kr.ac.kaist.jsaf.nodes.AbstractNode;
 import kr.ac.kaist.jsaf.nodes.Node;
-import kr.ac.kaist.jsaf.nodes.InfoNode;
+import kr.ac.kaist.jsaf.nodes.ScopeBody;
+import kr.ac.kaist.jsaf.nodes_util.SpanInfo;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -210,10 +209,8 @@ abstract public class NodeReflection {
         Field[] fields;
         ArrayList<Field> fal = new ArrayList<Field>();
         Class icl = cl;
-        while (icl != ASTNodeInfo.class &&
-               icl != Object.class &&
-               icl != SpanInfo.class &&
-               icl != InfoNode.class) {
+        while (icl != SpanInfo.class &&
+               icl != Object.class) {
             fields = icl.getDeclaredFields();
             handleFields(fields, fal);
             icl = icl.getSuperclass();

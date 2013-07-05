@@ -105,6 +105,7 @@ class CFG {
     State(heap, s._2)
   }
 
+  // successor node
   private var succMap: Map[Node, Set[Node]] = HashMap()
   def getSucc(node: Node) = succMap(node)
 
@@ -160,7 +161,6 @@ class CFG {
     }
   }
 
-
   // normal successor + exception successor + aftercallFromCall successor + aftercatchFromCall successor
   def getAllSucc(node: Node): Set[Node] = {
     val succs = getSet(succMap, node)
@@ -177,6 +177,24 @@ class CFG {
       case None => succs_exc_ac
     }
     succs_exc_ac_ac
+  }
+
+  // normal predecessor + exception predecessor + aftercallFromCall predecessor + aftercatchFromCall predecessor
+  def getAllPred(node: Node): Set[Node] = {
+    val preds = getSet(predMap, node)
+    val preds_exc = excPredMap.get(node) match {
+      case Some(n) => preds ++ n
+      case None => preds
+    }
+    val preds_exc_ac = callFromAftercallMap.get(node) match {
+      case Some(n) => preds_exc + n
+      case None => preds_exc
+    }
+    val preds_exc_ac_ac = callFromAftercatchMap.get(node) match {
+      case Some(n) => preds_exc_ac + n
+      case None => preds_exc_ac
+    }
+    preds_exc_ac_ac
   }
 
   private var callBlock: Set[Node] = HashSet()

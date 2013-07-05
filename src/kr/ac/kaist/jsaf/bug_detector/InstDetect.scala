@@ -18,6 +18,7 @@ import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.nodes_util.EJSType
+import scala.util.control.Breaks._
 
 class InstDetect(bugDetector: BugDetector) {
   val cfg           = bugDetector.cfg
@@ -48,29 +49,6 @@ class InstDetect(bugDetector: BugDetector) {
       }
     }
   }
-
-
-
-  ////////////////////////////////////////////////////////////////
-  // Check whether given arg has suitable type
-  ////////////////////////////////////////////////////////////////
-
-  /* Previous code
-  private def isCorrectType(foflag: Boolean, heap: Heap, arg: LocSet): Boolean = {
-    if (foflag) {
-      val argObj = arg.foldLeft(ObjBot)((obj, loc) => obj + heap(loc))
-      if (argObj("0")._1._1._1._1 </ PValueBot) true else false
-    } else {
-      val argObj = arg.foldLeft(ObjBot)((obj, loc) => obj + heap(loc))
-      val objVal = argObj("0")._1._1._1
-      if (objVal._1 </ PValueBot) true
-      else {
-        val nonFuncLocSet = objVal._2.filter((loc) => BoolTrue <= heap(loc).domIn("@function"))
-        if (nonFuncLocSet.isEmpty) true else false
-      }
-    }
-  }
-  */
 
 
 
@@ -109,7 +87,7 @@ class InstDetect(bugDetector: BugDetector) {
     val heap    = state._1
     val context = state._2
 
-    if (heap <= HeapBot) unreachableCodeCheck(inst.getInfo)
+    if (heap <= HeapBot) unreachableCodeCheck(inst)
     else {
       inst match {
         case CFGAlloc(_,info,id,_,_) =>
@@ -121,20 +99,20 @@ class InstDetect(bugDetector: BugDetector) {
         case CFGAssert(_, info, expr, isOriginalCondExpr) =>
           conditionalBranchCheck(info, expr, isOriginalCondExpr)
         case CFGCall(_, info, fun, thisArg, args, _) =>
-          builtinCheck(info.getSpan, CALL_NORMAL, fun, args)
           callNonFunctionCheck(info.getSpan, fun)
           defaultValueCheck(CALL_NORMAL, fun, thisArg, args)
+          functionCheck(info.getSpan, CALL_NORMAL, fun, args)
           if (libMode) unreferencedFunctionCheck(info.getSpan, args)
           unusedFunctionCheck(info.getSpan, fun)
           varyingTypeArgumentsCheck(info.getSpan, CALL_NORMAL, fun, args)
           wrongThisTypeCheck(info.getSpan, fun, thisArg)
-        case CFGConstruct(_, info, cons, thisArg, args, _) => 
-          builtinCheck(info.getSpan, CALL_CONST, cons, args)
-          callNonConstructorCheck(info.getSpan, cons)
-          defaultValueCheck(CALL_CONST, cons, thisArg, args)
+        case CFGConstruct(_, info, const, thisArg, args, _) => 
+          callNonConstructorCheck(info.getSpan, const)
+          defaultValueCheck(CALL_CONST, const, thisArg, args)
+          functionCheck(info.getSpan, CALL_CONST, const, args)
           if (libMode) unreferencedFunctionCheck(info.getSpan, args)
-          unusedFunctionCheck(info.getSpan, cons)
-          varyingTypeArgumentsCheck(info.getSpan, CALL_CONST, cons, args)
+          unusedFunctionCheck(info.getSpan, const)
+          varyingTypeArgumentsCheck(info.getSpan, CALL_CONST, const, args)
         case CFGDelete(_,info,id,_) => 
           unusedVarPropCheck2(inst, id, write, variable)
         case CFGDeleteProp(_,info,id,_,_) =>
@@ -163,190 +141,42 @@ class InstDetect(bugDetector: BugDetector) {
     ////////////////////////////////////////////////////////////////
 
     def accessingNullOrUndefCheck(span: Span, expr: CFGExpr): Unit = {
-      val bugCheckInstance = new BugCheckInstance
-      val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(ObjectNull))
-      val soundnessLevel = bugOption.soundnessLevel(ObjectNullOrUndef)
-
-      mergedCState.foreach((cstate) => {
-        val (callContext, state) = cstate
-        val heap = state._1
-        val context = state._2
-        val ov = SE.V(expr, heap, context)._1
-        val pv = ov._1
-        val isNotObject = ov._2.isEmpty
-
-        val isBug1 = !bugOption.NullOrUndefined_OnlyWhenPrimitive || isNotObject 
-        val isBug2 = bugOption.NullOrUndefined_OnlyNullOrUndefined && isOnlyNullUndef(pv)
-        val isBug3 = !bugOption.NullOrUndefined_OnlyNullOrUndefined && !isNotNullUndef(pv)
-        val checkInstance = bugCheckInstance.insert(isBug1 && (isBug2 || isBug3), span, callContext, state)
-        checkInstance.pValue = pv
-      })
-
-      if (!bugOption.NullOrUndefined_BugMustExistInEveryState) bugCheckInstance.filter((bug, notBug) => (bug.pValue == notBug.pValue))
-      bugCheckInstance.bugList.foreach((bugEntry) => bugCheck(bugEntry.pValue, bugEntry.callContext, bugEntry.state))
-
-      def isOnlyNullUndef(pv: PValue): Boolean = if (pv._3 <= BoolBot && pv._4 <= NumBot && pv._5 <= StrBot) true else false
-      def isNotNullUndef(pv: PValue): Boolean = if (pv._1 <= UndefBot && pv._2 <= NullBot) true else false
-
-      def bugCheck(pv: PValue, callContext: CallContext, state: State): Unit = {
-        val objName = varManager.getUserVarAssign(expr) match {
-          case name: BugVar0 => "'" + name.toString + "'"
-          case _ => "an object"
-        }
-        (pv._1, pv._2) match {
-          case (UndefTop, NullTop)  => bugStorage.addMessage(span, ObjectNullOrUndef, inst, if (soundnessLevel == SOUNDNESS_LEVEL_HIGH) callContext else null, objName)
-          case (_, NullTop)         => bugStorage.addMessage(span, ObjectNull, inst, if (soundnessLevel == SOUNDNESS_LEVEL_HIGH) callContext else null, objName)
-          case (UndefTop, _)        => bugStorage.addMessage(span, ObjectUndef, inst, if (soundnessLevel == SOUNDNESS_LEVEL_HIGH) callContext else null, objName)
-          case _ => Unit
-        }
+      // Get the object name
+      val objName = varManager.getUserVarAssign(expr) match {
+        case name: BugVar0 => "'" + name.toString + "'"
+        case _ => "an object"
       }
-    }
 
-
-
-    ////////////////////////////////////////////////////////////////
-    //  BuiltinArgSize & BuiltinWrongType Check
-    ////////////////////////////////////////////////////////////////
-
-    def builtinCheck(span: Span, isCall: Boolean, fun: CFGExpr, args: CFGExpr): Unit = {
       // Check for each CState
-      val bugCheckInstance = new BugCheckInstance()
-      val mergedCState = stateManager.getCState(node, inst.getInstId, CallContext._MOST_SENSITIVE)
+      val bugCheckInstance = new BugCheckInstance
+      val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(ObjectNullOrUndef))
       for((callContext, state) <- mergedCState) {
-        val funLocSet = SE.V(fun, state.heap, state.context)._1.locset
-        val argLocSet = SE.V(args, state.heap, state.context)._1.locset
+        val objValue = SE.V(expr, state.heap, state.context)._1
+        val pValue = objValue.pvalue
 
-        // Check for each function location set
-        funLocSet.foreach(funLoc => {
-          // Function must have [[Function]] or [[Construct]] property
-          var propertyName: String = getFuncOrConstPropName(state.heap, funLoc, isCall)
-          if(propertyName != null) {
-            // Check for each function id set
-            state.heap(funLoc)(propertyName)._1.funid.foreach(fid => {
-              ModelManager.getFIdMap("Builtin").get(fid) match {
-                case Some(funName) =>
-                  // BuiltinArgSize
-                  // Check for each argument location set
-                  argLocSet.foreach(argLoc => {
-                    state.heap(argLoc)("length")._1.objval.value.pvalue.numval match {
-                      case UIntSingle(n) =>
-                        val argSize = argSizeMap(funName)
-                        val comp: String = (if(n < argSize._1) "few" else if(n > argSize._2) "many" else null)
-                        val checkInstance = bugCheckInstance.insert(comp != null, span, callContext, state)
-                        checkInstance.bugKind = BuiltinArgSize
-                        checkInstance.fid = fid
-                        checkInstance.string1 = comp
-                      case _ =>
-                    }
-                  })
+        val isBug1 = !bugOption.NullOrUndefined_OnlyWhenPrimitive || objValue.locset.isEmpty
+        val isBug2 = if(bugOption.NullOrUndefined_OnlyNullOrUndefined) isOnlyNullUndef(pValue) else !isNotNullUndef(pValue)
+        val checkInstance = bugCheckInstance.insert(isBug1 && isBug2, span, callContext, state)
+        checkInstance.pValue = pValue
 
-                  // BuiltinWrongType
-                  argTypeMap.get(funName) match {
-                    case Some((argIndex, jsType)) =>
-                      // Check bug options
-                      var checkType = true
-                      if(jsType == EJSType.OBJECT && !bugOption.BuiltinWrongType_CheckObjectType) checkType = false
-                      if(jsType == EJSType.OBJECT_FUNCTION && !bugOption.BuiltinWrongType_CheckFunctionType) checkType = false
-
-                      if(checkType) {
-                        // Check for each argument location set
-                        argLocSet.foreach(argLoc => {
-                          val arg = state.heap(argLoc)
-                          val obj = arg(argIndex.toString)._1.objval.value
-                          val isBug = jsType match {
-                            case EJSType.OBJECT =>
-                              bugOption.BuiltinWrongType_TypeMustBeCorrectDefinitely match {
-                                case true => obj.locset.isEmpty || obj.pvalue </ PValueBot
-                                case false => obj.locset.isEmpty
-                              }
-                            case EJSType.OBJECT_FUNCTION =>
-                              bugOption.BuiltinWrongType_TypeMustBeCorrectDefinitely match {
-                                case true => obj.locset.isEmpty || obj.locset.exists(loc => BoolTrue != state.heap(loc).domIn("@function")) || obj.pvalue </ PValueBot
-                                case false => obj.locset.isEmpty || obj.locset.exists(loc => BoolFalse <= state.heap(loc).domIn("@function"))
-                            }
-                          }
-                          val checkInstance = bugCheckInstance.insert(isBug, span, callContext, state)
-                          checkInstance.bugKind = BuiltinWrongType
-                          checkInstance.fid = fid
-                          checkInstance.string1 = if(argIndex == 0) "First" else "Second"
-                          checkInstance.string2 = jsType match {
-                            case EJSType.OBJECT => "an object type"
-                            case EJSType.OBJECT_FUNCTION => "a function type"
-                          }
-                        })
-                      }
-                    case None =>
-                  }
-                case None => 
-              }
-            })
-          }
-        })
+        //println(objName + " = " + objValue + " => " + isBug1 + " && " + isBug2 + ")")
       }
 
       // Filter out bugs depending on options
-      if(!bugOption.BuiltinWrongType_TypeMustBeCorrectInEveryState) {
-        bugCheckInstance.filter((bug, notBug) => (bug.bugKind == BuiltinWrongType && bug.bugKind == notBug.bugKind && bug.fid == notBug.fid && bug.string1 == notBug.string1 && bug.string2 == notBug.string2))
-      }
+      if (!bugOption.NullOrUndefined_BugMustExistInEveryState) bugCheckInstance.filter((bug, notBug) => (bug.pValue == notBug.pValue))
 
       // Report bugs
       for(b <- bugCheckInstance.bugList) {
-        b.bugKind match {
-          case BuiltinArgSize =>
-            bugStorage.addMessage(span, b.bugKind, inst, b.callContext, b.string1, getFuncName(cfg.getFuncName(b.fid)))
-          case BuiltinWrongType =>
-            bugStorage.addMessage(span, b.bugKind, inst, b.callContext, b.string1, getFuncName(cfg.getFuncName(b.fid)), b.string2)
+        (b.pValue.undefval, b.pValue.nullval) match {
+          case (UndefTop, NullTop) => bugStorage.addMessage(span, ObjectNullOrUndef, inst, b.callContext, objName, "null (or undefined)")
+          case (_, NullTop)        => bugStorage.addMessage(span, ObjectNullOrUndef, inst, b.callContext, objName, "null")
+          case (UndefTop, _)       => bugStorage.addMessage(span, ObjectNullOrUndef, inst, b.callContext, objName, "undefined")
+          case _ =>
         }
       }
-    }
 
-
-
-    ////////////////////////////////////////////////////////////////
-    //  BuiltinArgumentSize Check
-    ////////////////////////////////////////////////////////////////
-
-    def builtinArgumentSizeCheck(span: Span, isCall: Boolean, fun: CFGExpr, args: CFGExpr): Unit = {
-      // Check for each CState
-      val bugCheckInstance = new BugCheckInstance()
-      val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(BuiltinArgSize))
-      for((callContext, state) <- mergedCState) {
-        val funLocSet = SE.V(fun, state.heap, state.context)._1.locset
-        val argLocSet = SE.V(args, state.heap, state.context)._1.locset
-
-        // Check for each function location set
-        funLocSet.foreach(funLoc => {
-          // Function must have [[Function]] or [[Construct]] property
-          var propertyName: String = getFuncOrConstPropName(state.heap, funLoc, isCall)
-          if(propertyName != null) {
-            // Check for each function id set
-            state.heap(funLoc)(propertyName)._1.funid.foreach(fid => {
-              ModelManager.getFIdMap("Builtin").get(fid) match {
-                case Some(funName) =>
-                  // Check for each argument location set
-                  argLocSet.foreach(argLoc => {
-                    state.heap(argLoc)("length")._1.objval.value.pvalue.numval match {
-                      case UIntSingle(n) =>
-                        val argSize = argSizeMap(funName)
-                        val comp: String = (if(n < argSize._1) "few" else if(n > argSize._2) "many" else null)
-                        val checkInstance = bugCheckInstance.insert(comp != null, span, callContext, state)
-                        checkInstance.bugKind = BuiltinArgSize
-                        checkInstance.fid = fid
-                        checkInstance.string1 = comp
-                      case _ =>
-                    }
-                  })
-                case None =>
-              }
-            })
-          }
-        })
-      }
-
-      // Report bugs
-      for(b <- bugCheckInstance.bugList) {
-        bugStorage.addMessage(span, BuiltinArgSize, inst, b.callContext, b.string1, getFuncName(cfg.getFuncName(b.fid)))
-      }
+      def isOnlyNullUndef(pv: PValue): Boolean = (pv.boolval <= BoolBot && pv.numval <= NumBot && pv.strval <= StrBot)
+      def isNotNullUndef(pv: PValue): Boolean = (pv.undefval <= UndefBot && pv.nullval <= NullBot)
     }
 
 
@@ -365,33 +195,34 @@ class InstDetect(bugDetector: BugDetector) {
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance()
       val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(CallNonFunction))
-      for ((callContext, state) <- mergedCState) {
+      for((callContext, state) <- mergedCState) {
         val funLocSet = SE.V(fun, state.heap, state.context)._1.locset
 
         // Check for each CState
-        funLocSet.foreach(funLoc => {
+        for(funLoc <- funLocSet) {
           val isCallable = Helper.IsCallable(state.heap, funLoc)
+          //println(funId + " #" + funLoc + ": isCallable = " + isCallable)
 
           // Collect function's callablility
-          val isBug = bugOption.CallNonFunction_FunctionMustBeCallableDefinitely match {
+          val isBug = bugOption.CallNonFunction_MustBeCallableDefinitely match {
             case true => isCallable != BoolTrue
             case false => isCallable <= BoolFalse
           }
           val checkInstance = bugCheckInstance.insert(isBug, span, callContext, state)
           checkInstance.loc = funLoc
-        })
+        }
       }
 
       // Filter out bugs depending on options
-      if (!bugOption.CallNonFunction_FunctionMustBeCallableInEveryState) {
+      if(!bugOption.CallNonFunction_MustBeCallableInEveryState) {
         bugCheckInstance.filter((bug, notBug) => (bug.loc == notBug.loc))
       }
-      if (!bugOption.CallNonFunction_FunctionMustBeCallableForEveryLocation) {
+      if(!bugOption.CallNonFunction_MustBeCallableForEveryLocation) {
         bugCheckInstance.filter((bug, notBug) => (bug.callContext == notBug.callContext && bug.state == notBug.state))
       }
 
       // Report bugs
-      bugCheckInstance.bugList.foreach((e) => bugStorage.addMessage(span, CallNonFunction, inst, e.callContext, funId))
+      for(b <- bugCheckInstance.bugList) bugStorage.addMessage(span, CallNonFunction, inst, b.callContext, funId)
     }
 
 
@@ -400,8 +231,47 @@ class InstDetect(bugDetector: BugDetector) {
     //  CallNonConstructor Check
     ////////////////////////////////////////////////////////////////
 
-    def callNonConstructorCheck(span: Span, cons: CFGExpr): Unit = {
-      val originalLocSet = SE.V(cons, heap, context)._1._2
+    def callNonConstructorCheck(span: Span, const: CFGExpr): Unit = {
+      // Get the function name
+      var funId: String = varManager.getUserVarAssign(const) match {
+        case bv: BugVar0 => "the non-constructor '" + bv.toString + "'"
+        case _ => "a non-constructor"
+      }
+
+      // Check for each CState
+      val bugCheckInstance = new BugCheckInstance()
+      val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(CallNonConstructor))
+      for((callContext, state) <- mergedCState) {
+        val funLocSet = SE.V(const, state.heap, state.context)._1.locset
+
+        // Check for each CState
+        for(funLoc <- funLocSet) {
+          val hasConstruct = Helper.HasConstruct(state.heap, funLoc)
+          //println(funId + " #" + funLoc + ": hasConstruct = " + hasConstruct)
+
+          // Collect function's cunstructability
+          val isBug = bugOption.CallNonConstructor_MustBeConstructableDefinitely match {
+            case true => hasConstruct != BoolTrue
+            case false => hasConstruct <= BoolFalse
+          }
+          val checkInstance = bugCheckInstance.insert(isBug, span, callContext, state)
+          checkInstance.loc = funLoc
+        }
+      }
+
+      // Filter out bugs depending on options
+      if(!bugOption.CallNonConstructor_MustBeConstructableInEveryState) {
+        bugCheckInstance.filter((bug, notBug) => (bug.loc == notBug.loc))
+      }
+      if(!bugOption.CallNonConstructor_MustBeConstructableForEveryLocation) {
+        bugCheckInstance.filter((bug, notBug) => (bug.callContext == notBug.callContext && bug.state == notBug.state))
+      }
+
+      // Report bugs
+      for(b <- bugCheckInstance.bugList) bugStorage.addMessage(span, CallNonConstructor, inst, b.callContext, funId)
+
+      // Previous code
+      /*val originalLocSet = SE.V(const, heap, context)._1._2
       val filteredLocSet = originalLocSet.filter((loc) => BoolTrue <= Helper.HasConstruct(heap, loc))
       originalLocSet.foreach((loc) => heap(loc)("@function")._1._3.foreach((fid) =>
           typing.builtinFset.get(fid) match {
@@ -409,7 +279,7 @@ class InstDetect(bugDetector: BugDetector) {
               if ((nonConsSet contains builtinName) || (filteredLocSet.size < originalLocSet.size)) 
                 bugStorage.addMessage(span, CallNonConstructor, inst, null, filterUnnamedFunction(cfg.getFuncName(fid)))
             case None => Unit
-      }))
+      }))*/
     }
 
 
@@ -556,6 +426,121 @@ class InstDetect(bugDetector: BugDetector) {
 
 
     ////////////////////////////////////////////////////////////////
+    //  BuiltinWrongArgType & FunctionArgSize
+    ////////////////////////////////////////////////////////////////
+
+    def functionCheck(span: Span, isCall: Boolean, fun: CFGExpr, args: CFGExpr): Unit = {
+      // Check for each CState
+      val bugCheckInstance = new BugCheckInstance()
+      val mergedCState = stateManager.getCState(node, inst.getInstId, CallContext._MOST_SENSITIVE)
+      for((callContext, state) <- mergedCState) {
+        val funLocSet = SE.V(fun, state.heap, state.context)._1.locset
+        val argLocSet = SE.V(args, state.heap, state.context)._1.locset
+
+        // Check for each function location set
+        for(funLoc <- funLocSet) {
+          // Function must have [[Function]] or [[Construct]] property
+          var propertyName: String = getFuncOrConstPropName(state.heap, funLoc, isCall)
+          if(propertyName != null) {
+            // Check for each function id set
+            for(fid <- state.heap(funLoc)(propertyName)._1.funid) {
+              // BuiltinWrongArgType
+              ModelManager.getFIdMap("Builtin").get(fid) match {
+                case Some(funName) =>
+                  argTypeMap.get(funName) match {
+                    case Some((argIndex, jsType)) =>
+                      // Check bug options
+                      var checkType = true
+                      if(jsType == EJSType.OBJECT && !bugOption.BuiltinWrongArgType_CheckObjectType) checkType = false
+                      if(jsType == EJSType.OBJECT_FUNCTION && !bugOption.BuiltinWrongArgType_CheckFunctionType) checkType = false
+
+                      if(checkType) {
+                        // Check for each argument location set
+                        for(argLoc <- argLocSet) {
+                          val arg = state.heap(argLoc)
+                          val obj = arg(argIndex.toString)._1.objval.value
+                          val isBug = jsType match {
+                            case EJSType.OBJECT =>
+                              bugOption.BuiltinWrongArgType_TypeMustBeCorrectDefinitely match {
+                                case true => obj.locset.isEmpty || obj.pvalue </ PValueBot
+                                case false => obj.locset.isEmpty
+                              }
+                            case EJSType.OBJECT_FUNCTION =>
+                              bugOption.BuiltinWrongArgType_TypeMustBeCorrectDefinitely match {
+                                case true => obj.locset.isEmpty || obj.locset.exists(loc => BoolTrue != state.heap(loc).domIn("@function")) || obj.pvalue </ PValueBot
+                                case false => obj.locset.isEmpty || obj.locset.exists(loc => BoolFalse <= state.heap(loc).domIn("@function"))
+                            }
+                          }
+                          val checkInstance = bugCheckInstance.insert(isBug, span, callContext, state)
+                          checkInstance.bugKind = BuiltinWrongArgType
+                          checkInstance.fid = fid
+                          checkInstance.string1 = if(argIndex == 0) "First" else "Second"
+                          checkInstance.string2 = jsType match {
+                            case EJSType.OBJECT => "an object type"
+                            case EJSType.OBJECT_FUNCTION => "a function type"
+                          }
+                        }
+                      }
+                    case None =>
+                  }
+                case None =>
+              }
+
+              // FunctionArgSize
+              // Check for each argument location set
+              for(argLoc <- argLocSet) {
+                state.heap(argLoc)("length")._1.objval.value.pvalue.numval match {
+                  case UIntSingle(n) =>
+                    // Get argument size range
+                    var argSize: (Int, Int) = (-1, -1)
+                    ModelManager.getFuncName(fid) match {
+                      case null =>
+                        // User function
+                        val userFuncArgSize = cfg.getArgVars(fid).length
+                        argSize = (userFuncArgSize, userFuncArgSize)
+                      case funcName =>
+                        // Model function
+                        argSizeMap.get(funcName) match {
+                          case Some(as) => argSize = as
+                          case None => println("* Unknown argument size of \"" + funcName + "\".")
+                        }
+                    }
+
+                    if(argSize != (-1, -1)) {
+                      cfg.getFuncInfo(fid)
+                      val comp: String = (if(n < argSize._1) "few" else if(n > argSize._2) "many" else null)
+                      val checkInstance = bugCheckInstance.insert(comp != null, span, callContext, state)
+                      checkInstance.bugKind = FunctionArgSize
+                      checkInstance.fid = fid
+                      checkInstance.string1 = comp
+                    }
+                  case _ =>
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Filter out bugs depending on options
+      if(!bugOption.BuiltinWrongArgType_TypeMustBeCorrectInEveryState) {
+        bugCheckInstance.filter((bug, notBug) => (bug.bugKind == BuiltinWrongArgType && bug.bugKind == notBug.bugKind && bug.fid == notBug.fid && bug.string1 == notBug.string1 && bug.string2 == notBug.string2))
+      }
+
+      // Report bugs
+      for(b <- bugCheckInstance.bugList) {
+        b.bugKind match {
+          case BuiltinWrongArgType =>
+            bugStorage.addMessage(span, b.bugKind, inst, b.callContext, b.string1, getFuncName(cfg.getFuncName(b.fid)), b.string2)
+          case FunctionArgSize =>
+            bugStorage.addMessage(span, b.bugKind, inst, b.callContext, b.string1, getFuncName(cfg.getFuncName(b.fid)))
+        }
+      }
+    }
+
+
+
+    ////////////////////////////////////////////////////////////////
     //  PrimitiveToObject Check
     ////////////////////////////////////////////////////////////////
 
@@ -614,10 +599,21 @@ class InstDetect(bugDetector: BugDetector) {
     //  UnreachableCode Check
     ////////////////////////////////////////////////////////////////
 
-    def unreachableCodeCheck(rawInfo: Option[Info]): Unit = rawInfo match {
-      case Some(info) => if (info.isFromSource) bugStorage.appendUnreachableInstruction(info.getSpan)
-      case None => System.out.println("Warning, InstDetect@bugDetector. No Info in unreachableCode.")
+    def unreachableCodeCheck(inst: CFGInst): Unit = {
+      inst.getInfo match {
+        case Some(info) =>
+          //val ast = info.getAst
+          //val ir = inst.getIR
+          //println(info.getSpan)
+          //println("    isFromSource: " + info.isFromSource)
+          //println("    AST(" + ast.getClass + "): " + kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete(ast))
+          //println("    IR(" + ir.getClass + "):" + new kr.ac.kaist.jsaf.nodes_util.JSIRUnparser(ir).doit)
+          //println("    CFG(" + inst.getClass + "): [" + inst.getInstId + "] " + inst)
+          if (info.isFromSource) bugStorage.appendUnreachableInstruction(info.getSpan)
+        case None => System.out.println("Warning, InstDetect@bugDetector. No Info in unreachableCode.")
+      }
     }
+
 
 
     ////////////////////////////////////////////////////////////////

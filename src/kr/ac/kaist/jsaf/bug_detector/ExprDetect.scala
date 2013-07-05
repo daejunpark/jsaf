@@ -293,6 +293,10 @@ class ExprDetect(bugDetector: BugDetector) {
     ////////////////////////////////////////////////////////////////
 
     def absentReadPropertyCheck(span: Span, obj: CFGExpr, index: CFGExpr): Unit = {
+      // Don't check if this instruction is "LHS = <>fun<>["prototype"]".
+      if(obj.isInstanceOf[CFGVarRef] && obj.asInstanceOf[CFGVarRef].id.contains("<>fun<>") &&
+        index.isInstanceOf[CFGString] && index.asInstanceOf[CFGString].str == "prototype") return
+
       // Get the object name and property name
       var objId: String = varManager.getUserVarAssign(obj) match {
         case bv: BugVar0 => "'" + bv.toString + "'"
@@ -391,7 +395,7 @@ class ExprDetect(bugDetector: BugDetector) {
       if (!bugOption.AbsentReadVariable_VariableMustExistInEveryState) bugCheckInstance.filter((bug, notBug) => true)
 
       // Report bugs
-      bugCheckInstance.bugList.foreach((e) => bugStorage.addMessage(e.span, AbsentReadVariable, inst, e.callContext, id.getText))
+      for(b <- bugCheckInstance.bugList) bugStorage.addMessage(b.span, AbsentReadVariable, inst, b.callContext, id.getText)
     }
 
 

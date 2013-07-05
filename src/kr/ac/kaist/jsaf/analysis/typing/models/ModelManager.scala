@@ -86,6 +86,16 @@ object ModelManager {
     model_map(model).getFIdMap().contains(fid)
   }
 
+  def getFuncName(fid: FunctionId): String = {
+    for((_, model) <- model_map) {
+      model.getFIdMap.get(fid) match {
+        case Some(funcName) => return funcName
+        case None =>
+      }
+    }
+    null
+  }
+
   // TODO
   def isModelLoc(loc : Loc) = {
     true

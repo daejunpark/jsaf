@@ -207,11 +207,11 @@ interface IRNode() extends HasAt;
     /**
      * Expression
      */
-    abstract IRExpr(IRInfoNode info) extends UIDObject;
+    abstract IRExpr(IRSpanInfo info) extends UIDObject;
         /**
          * Side-effect free expressions
          */
-        abstract IROpApp(IRSpanInfo info);
+        abstract IROpApp();
             /**
              * Binary expression
              * Expr ::= e binop e
@@ -230,7 +230,7 @@ interface IRNode() extends HasAt;
         /**
          * Variable
          */
-        abstract IRId(IRSpanInfo info, String originalName, String uniqueName, boolean global);
+        abstract IRId(String originalName, String uniqueName, boolean global);
             /**
              * Variable
              * Expr ::= x
@@ -244,7 +244,7 @@ interface IRNode() extends HasAt;
         /**
          * this
          */
-        IRThis(IRSpanInfo info);
+        IRThis();
         /**
          * Value
          */
@@ -280,7 +280,7 @@ interface IRNode() extends HasAt;
     /**
      * top-level information interface
      */
-    abstract IRInfoNode(boolean fromSource, ASTNode ast) extends UIDObject;
+    abstract IRInfoNode(boolean fromSource) extends UIDObject;
         /**
          * Common shape for functions
          */
@@ -290,8 +290,4 @@ interface IRNode() extends HasAt;
          * Source location
          */
         IRSpanInfo(ignoreForEquals Span span);
-        /**
-         * Whether the node is from the JavaScript source
-         */
-        IRSourceInfo();
 end;

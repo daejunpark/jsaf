@@ -62,28 +62,28 @@ class Instrumentor(program: IRRoot) extends IRWalker {
   val dummyId = IF.dummyIRId(NU.freshConcolicName("Instrumentor"))
   def storeEnvironment(info: IRSpanInfo, v: IRId, env: IRId) = 
     SIRInternalCall(info, dummyId, 
-                    IF.makeTId(IF.dummyAst, info.getSpan, NU.freshConcolicName("StoreEnvironment")), v, Some(env))
+                    IF.makeTId(info.getSpan, NU.freshConcolicName("StoreEnvironment")), v, Some(env))
 
   def executeAssignment(info: IRSpanInfo, e: IRExpr, v: IRId, env: IRId) =
     SIRSeq(info, List(storeEnvironment(info, v, env), 
         SIRInternalCall(info, dummyId,
-                    IF.makeTId(IF.dummyAst, info.getSpan, NU.freshConcolicName("ExecuteAssignment")), e, Some(v))))
+                    IF.makeTId(info.getSpan, NU.freshConcolicName("ExecuteAssignment")), e, Some(v))))
   def getInput(info: IRSpanInfo, v: IRId, env: IRId) =
     SIRInternalCall(info, dummyId,
-                    IF.makeTId(IF.dummyAst, info.getSpan, NU.freshConcolicName("GetInput")), v, Some(env))
+                    IF.makeTId(info.getSpan, NU.freshConcolicName("GetInput")), v, Some(env))
   def executeCondition(info: IRSpanInfo, e: IRExpr, env: IRId) =
     SIRInternalCall(info, dummyId,
-                    IF.makeTId(IF.dummyAst, info.getSpan, NU.freshConcolicName("ExecuteCondition")), e, Some(env))
+                    IF.makeTId(info.getSpan, NU.freshConcolicName("ExecuteCondition")), e, Some(env))
   def addFunction(info: IRSpanInfo, id: IRId) =
     SIRInternalCall(info, dummyId, 
-                    IF.makeTId(IF.dummyAst, info.getSpan, NU.freshConcolicName("AddFunction")), id, None)
+                    IF.makeTId(info.getSpan, NU.freshConcolicName("AddFunction")), id, None)
 
   def walkVarStmt(info: IRSpanInfo, v: IRId, env: IRId) =
     SIRInternalCall(info, dummyId,
-                    IF.makeTId(IF.dummyAst, info.getSpan, NU.freshConcolicName("WalkVarStmt")), v, Some(env))
+                    IF.makeTId(info.getSpan, NU.freshConcolicName("WalkVarStmt")), v, Some(env))
   def walkFunctional(info: IRSpanInfo, node: IRFunctional): IRFunctional = node match {
-    case SIRFunctional(j, i, name, params, args, fds, vds, body) =>
-      SIRFunctional(j, i, name, params,
+    case SIRFunctional(i, name, params, args, fds, vds, body) =>
+      SIRFunctional(i, name, params,
         args.map(walk(_, name).asInstanceOf[IRStmt]),
         fds.map(walk(_, name).asInstanceOf[IRFunDecl]),
         vds,
@@ -153,7 +153,7 @@ class Instrumentor(program: IRRoot) extends IRWalker {
      */
     case SIRFunDecl(info, ftn) => SIRFunDecl(info, walkFunctional(info, ftn).asInstanceOf[IRFunctional])
 
-    case SIRFunctional(j, i, name, params, args, fds, vds, body) => node
+    case SIRFunctional(i, name, params, args, fds, vds, body) => node
 
     /* return e?
      * ==>

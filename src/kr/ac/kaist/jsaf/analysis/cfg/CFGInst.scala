@@ -12,7 +12,7 @@ package kr.ac.kaist.jsaf.analysis.cfg
 import kr.ac.kaist.jsaf.nodes.IROp
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 
-abstract class CFGInst {
+abstract class CFGInst extends CFGNode {
   def getInstId: InstId
   def getInfo: Option[Info] = None
 }

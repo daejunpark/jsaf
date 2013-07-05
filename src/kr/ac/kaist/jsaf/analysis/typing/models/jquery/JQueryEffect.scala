@@ -22,7 +22,7 @@ object JQueryEffect extends ModelData {
   private val prop_proto: List[(String, AbsProperty)] = List(
     ("animate",     AbsBuiltinFunc("jQuery.prototype.animate", 4)),
     ("delay",       AbsBuiltinFunc("jQuery.prototype.delay", 2)),
-    ("fadeIn",      AbsBuiltinFunc("jQuery.prototype.fadeOut", 3)),
+    ("fadeIn",      AbsBuiltinFunc("jQuery.prototype.fadeIn", 3)),
     ("fadeOut",     AbsBuiltinFunc("jQuery.prototype.fadeOut", 3)),
     ("fadeTo",      AbsBuiltinFunc("jQuery.prototype.fadeTo", 4)),
     ("fadeToggle",  AbsBuiltinFunc("jQuery.prototype.fadeToggle", 3)),

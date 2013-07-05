@@ -10,6 +10,7 @@
 package kr.ac.kaist.jsaf.clone_detector.vgen
 
 import kr.ac.kaist.jsaf.nodes._
+import kr.ac.kaist.jsaf.nodes_util.SpanInfo
 import kr.ac.kaist.jsaf.nodes_util.CharVector
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.scala_src.nodes._
@@ -327,8 +328,9 @@ class JSAstSerializer (program: Program, st: java.util.Vector[ASTNode], minT: In
       st.add(node.asInstanceOf[ASTNode])
       walk(prop)
       walk(ftn)
-    case SSpanInfo(span) =>
-      DebugPrint("SSpanInfo")
+    case i:SpanInfo =>
+      val span = i.getSpan
+      DebugPrint("SpanInfo")
       DebugPrint(span.getCharVector.toString + span.getCharVector.isMergeable)
       span.getCharVector.setNodeKind(Util.name2id(node))
       st.add(node.asInstanceOf[ASTNode])

@@ -51,8 +51,8 @@ import edu.rice.cs.plt.tuple.Option;
 begin ast;
 
 interface Node() extends HasAt;
-    interface ASTNode(ASTNodeInfo info);
-        root abstract AbstractNode(ASTNodeInfo info) extends UIDObject;
+    interface ASTNode(SpanInfo info);
+        root abstract AbstractNode(SpanInfo info) extends UIDObject;
             /**
              * Program ::= SourceElement*
              */
@@ -413,28 +413,15 @@ interface Node() extends HasAt;
              */
             Comment(String comment);
     /**
-     * top-level information interface
+     * Common body for program and functions
      */
-    interface Info();
-        abstract InfoNode() extends UIDObject;
-            /**
-             * Common body for program and functions
-             */
-            abstract ScopeBody(List<FunDecl> fds, List<VarDecl> vds, List<SourceElement> stmts);
-                /**
-                 * Program top level
-                 */
-                TopLevel();
-                /**
-                 * Common shape for functions
-                 */
-                Functional(Id name, List<Id> params);
-            /**
-             * Information about an AST node
-             */
-            abstract ASTNodeInfo(ignoreForEquals Span span);
-                /**
-                 * Source location
-                 */
-                SpanInfo();
+    abstract ScopeBody(List<FunDecl> fds, List<VarDecl> vds, List<SourceElement> stmts) extends UIDObject;
+        /**
+         * Program top level
+         */
+        TopLevel();
+        /**
+         * Common shape for functions
+         */
+        Functional(Id name, List<Id> params);
 end;

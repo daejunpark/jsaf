@@ -186,15 +186,17 @@ public class ScalaWIDLGenerator extends CodeGenerator {
                 if (t.className().equals("Map")) {
                     name.append("_root_.java.util.Map");
                 } else if (t.className().equals("BigInteger")) {
-                    name.append("_root_.java.math." + t.className());
+                    name.append("_root_.java.math.BigInteger");
                 } else if (t.className().equals("Double")) {
-                    name.append("_root_.java.lang." + t.className());
+                    name.append("_root_.java.lang.Double");
                 } else if (t.className().equals("Object")) {
-                    name.append("_root_.java.lang." + t.className());
+                    name.append("_root_.java.lang.Object");
                 } else if (t.className().equals("Span")) {
-                    name.append("kr.ac.kaist.jsaf.nodes_util." + t.className());
+                    name.append("kr.ac.kaist.jsaf.nodes_util.Span");
+                } else if (t.className().equals("SpanInfo")) {
+                    name.append("kr.ac.kaist.jsaf.nodes_util.SpanInfo");
                 } else if (t.className().equals("Integer")) {
-                    name.append("_root_.java.lang." + t.className());
+                    name.append("_root_.java.lang.Integer");
                 } else {
                     name.append("kr.ac.kaist.jsaf.nodes." + t.className());
                 }
@@ -215,6 +217,8 @@ public class ScalaWIDLGenerator extends CodeGenerator {
                         name.append(arg.name());
                     } else if (arg.name().equals("Integer")) {
                         name.append("_root_.java.lang.Integer");
+                    } else if (arg.name().equals("SpanInfo")) {
+                        name.append("kr.ac.kaist.jsaf.nodes_util.SpanInfo");
                     } else {
                         name.append("kr.ac.kaist.jsaf.nodes." + arg.name());
                     }
@@ -294,13 +298,15 @@ public class ScalaWIDLGenerator extends CodeGenerator {
                 if (t.className().equals("Map")) {
                     name.append("Map");
                 } else if (t.className().equals("BigInteger")) {
-                    name.append("_root_.java.math." + t.className());
+                    name.append("_root_.java.math.BigInteger");
                 } else if (t.className().equals("Double")) {
-                    name.append("_root_.java.lang." + t.className());
+                    name.append("_root_.java.lang.Double");
                 } else if (t.className().equals("Object")) {
-                    name.append("_root_.java.lang." + t.className());
+                    name.append("_root_.java.lang.Object");
                 } else if (t.className().equals("Span")) {
-                    name.append("kr.ac.kaist.jsaf.nodes_util." + t.className());
+                    name.append("kr.ac.kaist.jsaf.nodes_util.Span");
+                } else if (t.className().equals("SpanInfo")) {
+                    name.append("kr.ac.kaist.jsaf.nodes_util.SpanInfo");
                 } else if (t.className().equals("Integer")) {
                     name.append("Int");
                 } else {
@@ -323,6 +329,8 @@ public class ScalaWIDLGenerator extends CodeGenerator {
                         name.append(arg.name());
                     } else if (arg.name().equals("Integer")) {
                         name.append("Int");
+                    } else if (arg.name().equals("SpanInfo")) {
+                        name.append("kr.ac.kaist.jsaf.nodes_util.SpanInfo");
                     } else {
                         name.append("kr.ac.kaist.jsaf.nodes." + arg.name());
                     }

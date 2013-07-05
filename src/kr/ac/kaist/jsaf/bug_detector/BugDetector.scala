@@ -10,8 +10,8 @@
 package kr.ac.kaist.jsaf.bug_detector
 
 import java.text.Format
-import _root_.java.util.{HashMap=>JHashMap}
-import _root_.java.util.{List => JList}
+import java.util.{HashMap=>JHashMap}
+import java.util.{List => JList}
 import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import scala.collection.immutable.HashMap
 import kr.ac.kaist.jsaf.ShellParameters

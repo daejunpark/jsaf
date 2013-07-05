@@ -18,9 +18,13 @@ import kr.ac.kaist.jsaf.analysis.typing.CallContext
 import kr.ac.kaist.jsaf.analysis.typing.ControlPoint
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.nodes.ASTNode
+import kr.ac.kaist.jsaf.nodes_util.NodeFactory
+import kr.ac.kaist.jsaf.nodes_util.NodeRelation
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.nodes_util.SourceLoc
 import kr.ac.kaist.jsaf.bug_detector._
+import kr.ac.kaist.jsaf.nodes.Cond
+import kr.ac.kaist.jsaf.nodes.If
 
 class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   val cfg          = bugDetector.cfg
@@ -252,44 +256,35 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   def recordStartTime(time: Long): Unit = bugStat.setStartTime(time)
   def recordEndTime(time: Long): Unit = bugStat.setEndTime(time)
 
-  
-  
+
+
   ////////////////////////////////////////////////////////////////
   //  Conditional expression(CFGAssert) result collection
   ////////////////////////////////////////////////////////////////
 
   val conditionMap = new MHashMap[ASTNode, MHashMap[(Node, CFGAssert), AbsBool]]()
-  val remappedASTNodeMap = new MHashMap[ASTNode, ASTNode]()
 
   def insertConditionMap(node: Node, assert: CFGAssert, result: AbsBool, change: Boolean = true): Unit = {
-    val astNode: ASTNode = assert.info.getAst
-    val resultMap = conditionMap.get(astNode) match {
-      case Some(s) => s
-      case None =>
-        val s = new MHashMap[(Node, CFGAssert), AbsBool]()
-        conditionMap.put(astNode, s)
-        s
+    val astStmt = getASTNodefromCFGAssert(assert) match {
+      case astStmt: Cond => astStmt
+      case astStmt: If => astStmt
+      case _ => return
     }
+    val resultMap = conditionMap.getOrElseUpdate(astStmt, new MHashMap)
     if(!change && resultMap.get((node, assert)).isDefined) return
     resultMap.put((node, assert), result)
   }
 
-  def remapConditionMap(from: ASTNode, to: ASTNode): Unit = {
-    (conditionMap.get(from), conditionMap.get(to)) match {
-      case (Some(fromResultSet), Some(toResultSet)) =>
-        toResultSet.++=(fromResultSet)
-        conditionMap.remove(from)
-        remappedASTNodeMap.put(from, to)
-      case (Some(fromResultSet), None) =>
-        conditionMap.put(to, fromResultSet)
-        conditionMap.remove(from)
-        remappedASTNodeMap.put(from, to)
-      case _ =>
+  def getASTNodefromCFGAssert(assert: CFGAssert): ASTNode = {
+    NodeRelation.cfg2astMap.get(assert) match {
+      case Some(astNode) =>
+        NodeRelation.getParentASTStmtOrCond(astNode) match {
+          case astStmt: ASTNode => return astStmt
+          case _ =>
+        }
+      case None =>
     }
-  }
-
-  def getRemappedASTNode(from: ASTNode): ASTNode = {
-    remappedASTNodeMap.getOrElse(from, from)
+    null
   }
 }
 

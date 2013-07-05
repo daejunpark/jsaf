@@ -147,14 +147,35 @@ private transient Expr BitwiseAND =
  * | Equality w !== w Relational
  */
 private transient Expr Equality =
+     a1:Relational a2s:RelationalR*
+     { Span span = NodeUtil.getSpan(a1);
+       yyValue = a1;
+       for (kr.ac.kaist.jsaf.useful.Pair<Op, Expr> pair: a2s.list()) {
+           Op op = pair.getA();
+           Expr right = pair.getB();
+           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(right)),
+                                                yyValue, op, right);
+       }
+     };
+
+private transient kr.ac.kaist.jsaf.useful.Pair<Op, Expr> RelationalR =
+     w a1:EqualityOp w a2:Relational
+     { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Op, Expr>(a1, a2); };
+
+/*
+private transient Expr Equality =
      a1s:RelationalL+ a2:Relational
      { List<kr.ac.kaist.jsaf.useful.Pair<Expr, Op>> ps = a1s.list();
        kr.ac.kaist.jsaf.useful.Pair<Expr, Op> first = ps.remove(0);
        Expr left = first.getA();
        Op op = first.getB();
+System.out.println("left="+NodeUtil.getSpan(left)+" "+JSAstToConcrete.doit(left));
+System.out.println("op="+NodeUtil.getSpan(op)+" "+JSAstToConcrete.doit(op)+"\n");
        Span span = NodeUtil.getSpan(left);
        for (kr.ac.kaist.jsaf.useful.Pair<Expr, Op> pair: ps) {
            Expr e = pair.getA();
+System.out.println("l="+NodeUtil.getSpan(left)+" "+JSAstToConcrete.doit(left));
+System.out.println("r="+NodeUtil.getSpan(e)+" "+JSAstToConcrete.doit(e)+"\n");
            left = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(e)),
                                              left, op, e);
            op = pair.getB();
@@ -166,6 +187,7 @@ private transient Expr Equality =
 private transient kr.ac.kaist.jsaf.useful.Pair<Expr, Op> RelationalL =
      a1:Relational w a2:EqualityOp w
      { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Expr, Op>(a1, a2); };
+*/
 
 /*
  * Relational ::=

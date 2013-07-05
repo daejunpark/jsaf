@@ -13,8 +13,8 @@ bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
 builtinArgumentSize5.js:10:1~10:21: [Warning] Too many arguments to function 'Object.freeze'. \n\
-builtinArgumentSize5.js:12:1~12:16: [Warning] Too few arguments to function 'Object.freeze'. \n\
 builtinArgumentSize5.js:12:1~12:16: [Warning] First argument of 'Object.freeze' should be an object type. \n\
+builtinArgumentSize5.js:12:1~12:16: [Warning] Too few arguments to function 'Object.freeze'. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
@@ -24,14 +24,14 @@ builtinArgumentSize5.js:12:1~12:16: [Warning] First argument of 'Object.freeze' 
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
 |  BinaryOperator          :      0 | \n\
-|  BuiltinArgSize          :      2 | \n\
-|  BuiltinWrongType        :      1 | \n\
+|  BuiltinWrongArgType     :      1 | \n\
 |  CallConstFunc           :      0 | \n\
 |  CallNonConstructor      :      0 | \n\
 |  CallNonFunction         :      0 | \n\
 |  ConditionalBranch       :      0 | \n\
 |  ConvertToNumber         :      0 | \n\
 |  DefaultValueTypeError   :      0 | \n\
+|  FunctionArgSize         :      2 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\
 |  AccessingNullOrUndef    :      0 | \n\

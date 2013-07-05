@@ -72,7 +72,7 @@ package object bug_detector {
   val property      = false
   val CALL_NORMAL   = true
   val CALL_CONST    = false
-  val MAX_BUG_COUNT = 32
+  val MAX_BUG_COUNT = 30
 
   /* Options */
   val SOUNDNESS_LEVEL_LOW     = 0 
@@ -97,27 +97,25 @@ package object bug_detector {
   val AbsentReadProperty    :BugKind = addBugMsgFormat(newBugKind, Warning, "Reading absent property '%s' of object %s%s", 3)
   val AbsentReadVariable    :BugKind = addBugMsgFormat(newBugKind, ReferenceError, "Reading absent variable '%s'.", 1)
   val BinaryOpSecondType    :BugKind = addBugMsgFormat(newBugKind, TypeError, "Right-hand side operand '%s' of '%s' operator is %s%s", 4)
-  val BuiltinArgSize        :BugKind = addBugMsgFormat(newBugKind, Warning, "Too %s arguments to function '%s'.", 2)
-  val BuiltinWrongType      :BugKind = addBugMsgFormat(newBugKind, Warning, "%s argument of '%s' should be %s.", 3)
+  val BuiltinWrongArgType   :BugKind = addBugMsgFormat(newBugKind, Warning, "%s argument of '%s' should be %s.", 3)
   val CallConstFunc         :BugKind = addBugMsgFormat(newBugKind, Warning, "Calling function '%s' both as a function and a constructor.", 1)
-  val CallNonConstructor    :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling non-constructor '%s' as a constructor.", 1)
-  val CallNonFunction       :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling '%s' as a function.", 1)
+  val CallNonConstructor    :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling %s as a constructor.", 1)
+  val CallNonFunction       :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling %s as a function.", 1)
   val CondBranch            :BugKind = addBugMsgFormat(newBugKind, Warning, "Conditional expression, '%s', is always %s.", 2)
   val ConvertUndefToNum     :BugKind = addBugMsgFormat(newBugKind, Warning, "Trying to convert undefined to number.%s", 1)
-  /* BugKind : 10 ~ 19 */
   val DefaultValueTypeError :BugKind = addBugMsgFormat(newBugKind, TypeError, "Computing default value (toString, valueOf) of %s yields TypeError.", 1)
+  /* BugKind : 10 ~ 19 */
+  val FunctionArgSize       :BugKind = addBugMsgFormat(newBugKind, Warning, "Too %s arguments to function '%s'.", 2)
   val GlobalThisDefinite    :BugKind = addBugMsgFormat(newBugKind, Warning, "'this' refers the global object.", 0)
   val GlobalThisMaybe       :BugKind = addBugMsgFormat(newBugKind, Warning, "'this' may refer the global object.", 0)
   val ImplicitCalltoString  :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit toString type-conversion to object '%s' by non-builtin toString method.", 1)
   val ImplicitCallvalueOf   :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit valueOf type-conversion to object '%s' by non-builtin valueOf method.", 1)
   val ImplicitTypeConvert   :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit type-conversion in equality comparison '%s%s %s %s%s'.", 5)
-  val ObjectNull            :BugKind = addBugMsgFormat(newBugKind, TypeError, "Property is trying to access %s, whose value is null.", 1)
-  val ObjectNullOrUndef     :BugKind = addBugMsgFormat(newBugKind, TypeError, "Property is trying to access %s, whose value is null (or undefined).", 1)
-  val ObjectUndef           :BugKind = addBugMsgFormat(newBugKind, TypeError, "Property is trying to access %s, whose value is undefined.", 1)
+  val ObjectNullOrUndef     :BugKind = addBugMsgFormat(newBugKind, TypeError, "Property is trying to access %s, whose value is %s.", 2)
   val PrimitiveToObject     :BugKind = addBugMsgFormat(newBugKind, Warning, "Trying to convert primitive value(%s) to object.", 1)
-  /* BugKind : 20 ~ 29 */
   val ShadowedFuncByFunc    :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is shadowed by a function at '%s'.", 2)
   val ShadowedParamByFunc   :BugKind = addBugMsgFormat(newBugKind, Warning, "Parameter '%s' is shadowed by a function at '%s'.", 2)
+  /* BugKind : 20 ~ 29 */
   val ShadowedVarByFunc     :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a function at '%s'.", 2)
   val ShadowedVarByParam    :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a parameter at '%s'.", 2)
   val ShadowedVarByVar      :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a variable at '%s'.", 2)
@@ -126,7 +124,6 @@ package object bug_detector {
   val UnusedFunction        :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is never used.", 1)
   val UnusedProperty        :BugKind = addBugMsgFormat(newBugKind, Warning, "Property '%s' is never used.", 1)
   val UnusedVariable        :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is never used.", 1)
-  /* BugKind : 30 ~ 31 */
   val VaryingTypeArguments  :BugKind = addBugMsgFormat(newBugKind, Warning, "Calling a function '%s' with the %sargument %sof varying types (%s).", 4)
   val WrongThisType         :BugKind = addBugMsgFormat(newBugKind, TypeError, "Native function '%s' is called when its 'this' value is not of the expected object type.", 1)
 
@@ -168,10 +165,10 @@ package object bug_detector {
   
   /* Map each builtin methods to its argument size (min, max)  */ 
   val argSizeMap: Map[String, (Int, Int)] = Map(
+    // Built-in
     "Global.eval" -> (1,1), "Global.parseInt" -> (1,2), "Global.parseFloat" -> (1,1),	
     "Global.isNaN" -> (1,1), "Global.isFinite" -> (1,1), "Global.decodeURI" -> (1,1),
     "Global.decodeURIComponent" -> (1,1), "Global.encodeURI" -> (1,1), "Global.encodeURIComponent" -> (1,1),
-    "Global.alert" -> (0,1),
     "Object" -> (0,1), "Object.constructor" -> (0,1), "Object.getPrototypeOf" -> (1,1),
     "Object.getOwnPropertyDescriptor" -> (2,2), "Object.getOwnPropertyNames" -> (1,1), "Object.create" -> (1,2),
     "Object.defineProperty" -> (3,3), "Object.defineProperties" -> (2,2), "Object.seal" -> (1,1),
@@ -226,7 +223,12 @@ package object bug_detector {
     "Error" -> (0,1), "Error.constructor" -> (0,1), "Error.prototype.toString" -> (0,0), "EvalError.constructor" -> (0,1),
     "RangeError.constructor	" -> (0,1), "ReferenceError.constructor" -> (0,1), "SyntaxError.constructor" -> (0,1),
     "TypeError.constructor" -> (0,1), "URIError.constructor" -> (0,1),
-    "JSON.parse" -> (1,2), "JSON.stringify" -> (1,3))
+    "JSON.parse" -> (1,2), "JSON.stringify" -> (1,3),
+    // DOM
+    "DOMWindow.alert" -> (1,1)
+    // Tizen
+    // jQuery
+  )
 
   /* Map each builtin methods to its argument type */ 
   val argTypeMap: Map[String, (Int, Int)] = Map(
@@ -255,12 +257,12 @@ package object bug_detector {
   )
 
   /* Set of builtin methods that cannot be used as a constructor */
-  val nonConsSet: Set[String] = Set(
+  /*val nonConsSet: Set[String] = Set(
     "Global.eval", "Global.parseInt", "Global.parseFloat", "Global.isNaN", "Global.isFinite",
     "Global.decodeURI", "Global.decodeURIComponent", "Global.encodeURI", "Global.encodeURIComponent",
     "Math.abs", "Math.acos", "Math.asin", "Math.atan", "Math.atan2", "Math.ceil", "Math.cos", 
     "Math.exp", "Math.floor", "Math.log", "Math.max", "Math.min", "Math.pow", "Math.random", 
-    "Math.round", "Math.sin", "Math.sqrt", "Math.tan", "JSON.parse", "JSON.stringify")
+    "Math.round", "Math.sin", "Math.sqrt", "Math.tan", "JSON.parse", "JSON.stringify")*/
 
   /* Map each builtin methods with its proper type of 'this' */
   val thisTypeMap: Map[String, String] = Map(

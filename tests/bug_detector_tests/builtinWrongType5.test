@@ -22,14 +22,14 @@ builtinWrongType5.js:10:1~10:15: [Warning] First argument of 'Object.keys' shoul
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
 |  BinaryOperator          :      0 | \n\
-|  BuiltinArgSize          :      0 | \n\
-|  BuiltinWrongType        :      1 | \n\
+|  BuiltinWrongArgType     :      1 | \n\
 |  CallConstFunc           :      0 | \n\
 |  CallNonConstructor      :      0 | \n\
 |  CallNonFunction         :      0 | \n\
 |  ConditionalBranch       :      0 | \n\
 |  ConvertToNumber         :      0 | \n\
 |  DefaultValueTypeError   :      0 | \n\
+|  FunctionArgSize         :      0 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\
 |  AccessingNullOrUndef    :      0 | \n\

@@ -123,7 +123,7 @@ class CFGBuilder (ir: IRRoot) {
   /* fd rule : IRFunDecl x CFG x Node list x FunctionId -> Node list */
   private def translateFunDecl(fd: IRFunDecl, cfg: CFG, nodes: List[Node], fid: FunctionId): List[Node] = {
     fd match {
-      case SIRFunDecl(irinfo, SIRFunctional(_,_,name,params,args,fds,vds,body)) =>
+      case SIRFunDecl(irinfo, SIRFunctional(_,name,params,args,fds,vds,body)) =>
         val arg_vars = namesOfArgs(args)
         val local_vars = (namesOfFunDecls(fds) ++ namesOfVars(vds)).filterNot(arg_vars.contains)
         val fid_new = cfg.newFunction(id2cfgId(params(1)).toString, arg_vars, local_vars, name.getOriginalName, irinfo)
@@ -175,7 +175,7 @@ class CFGBuilder (ir: IRRoot) {
       case fd:IRFunDecl =>
         signal("IRFunDecl should have been hoisted.", fd)
         (nodes, lmap)
-      case SIRFunExpr(irinfo, lhs, SIRFunctional(_,_,name,params,args,fds,vds,body)) =>
+      case SIRFunExpr(irinfo, lhs, SIRFunctional(_,name,params,args,fds,vds,body)) =>
         val arg_vars = namesOfArgs(args)
         val local_vars = (namesOfFunDecls(fds) ++ namesOfVars(vds)).filterNot(arg_vars.contains)
         val fid_new = cfg.newFunction(id2cfgId(params(1)).toString, arg_vars, local_vars, name.getOriginalName, irinfo)
@@ -444,18 +444,18 @@ class CFGBuilder (ir: IRRoot) {
         val n2 = cfg.newBlock(fid)
         cfg.addEdge(nodes, n2)
         /* Insert assert instructions */
-        val condinfo = NU.getCondInfo(irinfo, trueblock.getInfo)
+        val condinfo = cond.getInfo
         cfg.addInst(n1, CFGAssert(cfg.newInstId, condinfo, ir2cfgExpr(cond), true))
         cond match {
           case SIRBin(_, first, op, second) if AH.isAssertOperator(op) =>
             cfg.addInst(n2,
               CFGAssert(cfg.newInstId, condinfo,
-                CFGBin(irinfo,
+                CFGBin(condinfo,
                   ir2cfgExpr(first), AH.transIROp(op), ir2cfgExpr(second)), false))
           case _ =>
             cfg.addInst(n2,
               CFGAssert(cfg.newInstId, condinfo,
-                CFGUn(irinfo, IRFactory.makeOp("!"), ir2cfgExpr(cond)), false))
+                CFGUn(condinfo, IRFactory.makeOp("!"), ir2cfgExpr(cond)), false))
         }
         /* true block */
         val (ns1, lmap1) = translateStmt(trueblock, cfg, List(n1), lmap, fid)
@@ -503,18 +503,18 @@ class CFGBuilder (ir: IRRoot) {
         /* loop out */
         val n3 = cfg.newBlock(fid)
         /* Insert assert instruction */
-        val condinfo = NU.getCondInfo(irinfo, body.getInfo)
+        val condinfo = cond.getInfo
         cfg.addInst(n2, CFGAssert(cfg.newInstId, condinfo, ir2cfgExpr(cond), true))
         cond match {
           case SIRBin(_, first, op, second) if AH.isAssertOperator(op) =>
             cfg.addInst(n3,
               CFGAssert(cfg.newInstId, condinfo,
-                CFGBin(irinfo,
+                CFGBin(condinfo,
                   ir2cfgExpr(first), AH.transIROp(op), ir2cfgExpr(second)), false))
           case _ =>
             cfg.addInst(n3,
               CFGAssert(cfg.newInstId, condinfo,
-                CFGUn(irinfo, IRFactory.makeOp("!"), ir2cfgExpr(cond)), false))
+                CFGUn(condinfo, IRFactory.makeOp("!"), ir2cfgExpr(cond)), false))
         }
         /* add edge from tail to loop head */
         cfg.addEdge(n1, n_head)

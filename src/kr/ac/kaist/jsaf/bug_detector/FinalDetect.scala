@@ -20,6 +20,8 @@ import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
 import kr.ac.kaist.jsaf.nodes.AbstractNode
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete
+import kr.ac.kaist.jsaf.nodes_util.NodeFactory
+import kr.ac.kaist.jsaf.nodes_util.NodeRelation
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.nodes_util.SourceLoc
 import kr.ac.kaist.jsaf.nodes.Cond
@@ -62,13 +64,26 @@ class FinalDetect(bugDetector: BugDetector) {
   private def callConstFuncCheck(): Unit = {
     // callSet   : set of fids used as a function
     // constSet  : set of fids used as a constructor
-    val (callSet, constSet) = callGraph.foldLeft[(FidSet, FidSet)]((Set(), Set()))((fidSetPair, calledFunction) => 
+    val callSet = new MHashSet[FunctionId]
+    val constSet = new MHashSet[FunctionId]
+    for((inst, fidSet) <- callGraph) {
+      inst match {
+        case _: CFGCall => callSet++= fidSet
+        case _: CFGConstruct => constSet++= fidSet
+      }
+    }
+    for(fid <- callSet & constSet) {
+      bugStorage.addMessage(cfg.getFuncInfo(fid).getSpan, CallConstFunc, null, null, getFuncName(cfg.getFuncName(fid)))
+    }
+
+    // Privous code
+    /*val (callSet, constSet) = callGraph.foldLeft[(FidSet, FidSet)]((Set(), Set()))((fidSetPair, calledFunction) => 
       calledFunction._1 match {
         case CFGCall(_,_,_,_,_,_) => (fidSetPair._1 ++ calledFunction._2, fidSetPair._2)
         case CFGConstruct(_,_,_,_,_,_) => (fidSetPair._1, fidSetPair._2 ++ calledFunction._2)
       })
     val bothUsed = callSet & constSet 
-    if (!bothUsed.isEmpty) bothUsed.foreach((fid) => bugStorage.addMessage(cfg.getFuncInfo(fid).getSpan, CallConstFunc, null, null, getFuncName(cfg.getFuncName(fid))))
+    if (!bothUsed.isEmpty) bothUsed.foreach((fid) => bugStorage.addMessage(cfg.getFuncInfo(fid).getSpan, CallConstFunc, null, null, getFuncName(cfg.getFuncName(fid))))*/
   }
 
 
@@ -86,51 +101,21 @@ class FinalDetect(bugDetector: BugDetector) {
       }
     })
 
-    // Remap ASTExpr to ASTStmt
-    bugDetector.traverseInsts((node, inst) => {
-      // Get CFGInfo
-      inst.getInfo match {
-        case Some(info) =>
-          // Get ASTStmt and ASTExpr
-          val astStmt = info.getAst
-          val condExpr = astStmt match {
-            case SCond(_, condExpr, _, _) => condExpr
-            case SIf(_, condExpr, _, _) => condExpr
-            case _ => null
-          }
-          if(condExpr != null) {
-            // Walk ASTExpr
-            def walkExpr(expr: Expr): Unit = {
-              bugStorage.remapConditionMap(expr, astStmt)
-              expr match {
-                case SExprList(_, exprList) => for(expr <- exprList) walkExpr(expr)
-                case SCond(_, condExpr, trueBranchExpr, falseBranchExpr) => walkExpr(condExpr); walkExpr(trueBranchExpr); walkExpr(falseBranchExpr)
-                case SInfixOpApp(_, leftExpr, _, rightExpr) => walkExpr(leftExpr); walkExpr(rightExpr)
-                case SPrefixOpApp(_, _, expr) => walkExpr(expr)
-                case SAssignOpApp(_, _, _, expr) => walkExpr(expr)
-                case _ =>
-              }
-            }
-            walkExpr(condExpr)
-          }
-        case None =>
-      }
-    })
-
-    for((stmt, resultSet) <- bugStorage.conditionMap) {
-      val condExpr = stmt match {
+    for((astStmt, resultSet) <- bugStorage.conditionMap) {
+      val condExpr = astStmt match {
         case SCond(_, condExpr, _, _) => condExpr
         case SIf(_, condExpr, _, _) => condExpr
         case _ => null
       }
       if(condExpr != null) {
-        //System.out.println(stmt + ", (" + JSAstToConcrete.doit(condExpr) + ")")
+        //System.out.println(astStmt + ", (" + JSAstToConcrete.doit(condExpr) + ")")
         for(((node, assert), result) <- resultSet) {
           // Get a CFGAssert instruction in node
           def getAssertInst(node: Node): CFGAssert = {
             cfg.getCmd(node) match {
-              case Block(insts) if(insts.length > 0 && insts.head.isInstanceOf[CFGAssert] &&
-                bugStorage.getRemappedASTNode(insts.head.asInstanceOf[CFGAssert].info.getAst) == stmt) => insts.head.asInstanceOf[CFGAssert]
+              case Block(insts) if(insts.length > 0 && insts.head.isInstanceOf[CFGAssert]) =>
+                val assert = insts.head.asInstanceOf[CFGAssert]
+                if(bugStorage.getASTNodefromCFGAssert(assert) == astStmt) assert else null
               case _ => null
             }
           }
@@ -146,10 +131,12 @@ class FinalDetect(bugDetector: BugDetector) {
 
           if(isLeaf) {
             var rootAssertInst: CFGAssert = null
-            def followUp(node: Node): Unit = {
+            def followUp(node: Node, level: Int): Unit = {
               val assertInst = getAssertInst(node)
               if(assertInst == null) {
-                bugStorage.addMessage(condExpr.getInfo.getSpan, CondBranch, rootAssertInst, null, JSAstToConcrete.doit(condExpr), rootAssertInst.flag.toString)
+                val predNodes = cfg.getAllPred(node)
+                if(level == 1 && predNodes.size > 0) for(predNode <- predNodes) followUp(predNode, 2)
+                else bugStorage.addMessage(condExpr.getInfo.getSpan, CondBranch, rootAssertInst, null, JSAstToConcrete.doit(condExpr), rootAssertInst.flag.toString)
                 return
               }
               else rootAssertInst = assertInst
@@ -160,9 +147,9 @@ class FinalDetect(bugDetector: BugDetector) {
                 case None => return
               }
 
-              for(predNode <- cfg.getPred(node)) followUp(predNode)
+              for(predNode <- cfg.getAllPred(node)) followUp(predNode, 1)
             }
-            followUp(node)
+            followUp(node, 1)
           }
         }
       }

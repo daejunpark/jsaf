@@ -10,6 +10,7 @@
 package kr.ac.kaist.jsaf.clone_detector.vgen
 
 import kr.ac.kaist.jsaf.nodes._
+import kr.ac.kaist.jsaf.nodes_util.SpanInfo
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
@@ -474,13 +475,14 @@ class JSAstVectorGenerator(program: Program, minT: Int) extends Walker {
       DebugPrint(info.getSpan.getCharVector.toString + "SSetProp" + " " + info.getSpan.getCharVector.getNumOfTokens + " " + info.getSpan.getCharVector.isMergeable)
       info.getSpan.getCharVector.getVector
 
-    case SSpanInfo(span) =>
-      DebugPrint("SSpanInfo")
+    case i:SpanInfo =>
+      val span = i.getSpan
+      DebugPrint("SpanInfo")
       span.getCharVector.merge(walk(span))
       if (isRelevant(node)) span.getCharVector.addAt(Util.name2id(node))
       if (isSignificant(node) && span.getCharVector.containsEnoughTokens(minT))
         span.getCharVector.setMergeable
-      DebugPrint(span.getCharVector.toString + "SSpanInfo" + " " + span.getCharVector.isMergeable)
+      DebugPrint(span.getCharVector.toString + "SpanInfo" + " " + span.getCharVector.isMergeable)
       span.getCharVector.getVector
       
     case SStringLiteral(info, quote, txt) =>

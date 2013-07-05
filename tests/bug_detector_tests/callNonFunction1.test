@@ -12,7 +12,7 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-callNonFunction1.js:12:1~12:4: [TypeError] Calling 'the non-function 'x'' as a function. \n\
+callNonFunction1.js:12:1~12:4: [TypeError] Calling the non-function 'x' as a function. \n\
 callNonFunction1.js:12:1~12:2: [Warning] Trying to convert primitive value(number) to object. \n\
  \n\
 ============== Total Count ============== \n\
@@ -23,14 +23,14 @@ callNonFunction1.js:12:1~12:2: [Warning] Trying to convert primitive value(numbe
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
 |  BinaryOperator          :      0 | \n\
-|  BuiltinArgSize          :      0 | \n\
-|  BuiltinWrongType        :      0 | \n\
+|  BuiltinWrongArgType     :      0 | \n\
 |  CallConstFunc           :      0 | \n\
 |  CallNonConstructor      :      0 | \n\
 |  CallNonFunction         :      1 | \n\
 |  ConditionalBranch       :      0 | \n\
 |  ConvertToNumber         :      0 | \n\
 |  DefaultValueTypeError   :      0 | \n\
+|  FunctionArgSize         :      0 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\
 |  AccessingNullOrUndef    :      0 | \n\

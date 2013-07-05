@@ -23,14 +23,14 @@ undefToNumber1.js:12:1~12:2: [Warning] Variable 'x' is never used. \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
 |  BinaryOperator          :      0 | \n\
-|  BuiltinArgSize          :      0 | \n\
-|  BuiltinWrongType        :      0 | \n\
+|  BuiltinWrongArgType     :      0 | \n\
 |  CallConstFunc           :      0 | \n\
 |  CallNonConstructor      :      0 | \n\
 |  CallNonFunction         :      0 | \n\
 |  ConditionalBranch       :      0 | \n\
 |  ConvertToNumber         :      1 | \n\
 |  DefaultValueTypeError   :      0 | \n\
+|  FunctionArgSize         :      0 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\
 |  AccessingNullOrUndef    :      0 | \n\

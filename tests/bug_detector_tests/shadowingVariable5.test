@@ -12,29 +12,31 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-shadowingVariable5.js:7:15~7:18: [TypeError] Calling 'the non-function 'h'' as a function. \n\
+shadowingVariable5.js:7:15~7:18: [TypeError] Calling the non-function 'h' as a function. \n\
 shadowingVariable5.js:2:12~2:13: [Warning] Parameter 'g' is shadowed by a function at '3:3-8:3'. \n\
 shadowingVariable5.js:3:14~3:15: [Warning] Parameter 'h' is shadowed by a function at '5:5-7:5'. \n\
 shadowingVariable5.js:4:9~4:14: [Warning] Variable 'h' is shadowed by a function at '5:5-7:5'. \n\
 shadowingVariable5.js:5:5~7:5: [Warning] Function 'h' is never used. \n\
 shadowingVariable5.js:7:15~7:16: [Warning] Trying to convert primitive value(number) to object. \n\
+shadowingVariable5.js:9:10~9:14: [Warning] Too many arguments to function 'g'. \n\
+shadowingVariable5.js:10:3~10:10: [Warning] Too many arguments to function 'f'. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
-|  TypeErrors        :      1 ( 16.67%) | \n\
-|  Warnings          :      5 ( 83.33%) | \n\
+|  TypeErrors        :      1 ( 12.50%) | \n\
+|  Warnings          :      7 ( 87.50%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
 |  BinaryOperator          :      0 | \n\
-|  BuiltinArgSize          :      0 | \n\
-|  BuiltinWrongType        :      0 | \n\
+|  BuiltinWrongArgType     :      0 | \n\
 |  CallConstFunc           :      0 | \n\
 |  CallNonConstructor      :      0 | \n\
 |  CallNonFunction         :      1 | \n\
 |  ConditionalBranch       :      0 | \n\
 |  ConvertToNumber         :      0 | \n\
 |  DefaultValueTypeError   :      0 | \n\
+|  FunctionArgSize         :      2 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\
 |  AccessingNullOrUndef    :      0 | \n\

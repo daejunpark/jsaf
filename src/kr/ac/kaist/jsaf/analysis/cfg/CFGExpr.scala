@@ -13,7 +13,7 @@ import kr.ac.kaist.jsaf.nodes.IROp
 import scala.runtime.RichLong
 import scala.runtime.RichDouble
 
-abstract class CFGExpr {
+abstract class CFGExpr extends CFGNode {
     def getInfo: Option[Info] = None
 }
 

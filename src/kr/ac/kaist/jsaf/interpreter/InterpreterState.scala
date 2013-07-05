@@ -92,7 +92,7 @@ class InterpreterState(val I: Interpreter) {
     }
   }
 
-  def info(): IRSpanInfo = IF.makeSpanInfo(false, IF.dummyAst, span)
+  def info(): IRSpanInfo = IF.makeSpanInfo(false, span)
 
   def dummyFtnObj(length: Int, builtin: JSObject): JSFunction = {
     val fv: IRFunctional = I.IH.dummyFtn(length)

@@ -20,7 +20,7 @@ class ModExpWalker(env: Env, var path: Path, program: Any) extends Walker {
     walk(program).asInstanceOf[List[SourceElement]]
   }
 
-  def export(info: ASTNodeInfo, name: String, getset: String, ftn: Functional): Stmt = {
+  def export(info: SpanInfo, name: String, getset: String, ftn: Functional): Stmt = {
     val s1 = SVarStmt(info, List(SVarDecl(info, SId(info, "<>desc", None, false), Some(SFunApp(info, SDot(info, SVarRef(info, SId(info, "<>Object", None, false)), SId(info, "getOwnPropertyDescriptor", None, false)), List(SVarRef(info, SId(info, "<>this", None, false)), SStringLiteral(info, "\"", name)))))))
     val ss = SExprStmt(info, SFunApp(info, SVarRef(info, SId(info, "_<>_print", None, false)), List(SDot(info, SVarRef(info, SId(info, "<>desc", None, false)), SId(info, "get", None, false)))), false)
     val s2 = SExprStmt(info, SPrefixOpApp(info, SOp(info, "delete"), SDot(info, SVarRef(info, SId(info, "<>this", None, false)), SId(info, name, None, false))), false)
@@ -29,7 +29,7 @@ class ModExpWalker(env: Env, var path: Path, program: Any) extends Walker {
     val s5 = SExprStmt(info, SFunApp(info, SDot(info, SVarRef(info, SId(info, "<>Object", None, false)), SId(info, "defineProperty", None, false)), List(SVarRef(info, SId(info, "<>this", None, false)), SStringLiteral(info, "\"", name), SVarRef(info, SId(info, "<>desc", None, false)))), false)
     SExprStmt(info, SFunApp(info, SFunExpr(info, SFunctional(Nil, Nil, List(s1, s2, s3, s4, s5), SId(info, "", None, false), List(SId(info, "<>this", None, false)))), List(SThis(info))), false)
   }
-  def export(info: ASTNodeInfo, name: Identifier, alias: Path): Stmt = {
+  def export(info: SpanInfo, name: Identifier, alias: Path): Stmt = {
     val e = MH.lookup(env, path, alias) match {
       case (_, QualIntName(p, x)) => MH.intmod(x :: p)
       case (_, QualExtName(p, x)) => SDot(info, MH.extmod(p), SId(info, x, None, false))

@@ -315,7 +315,7 @@ object WIDLToString extends WIDLWalker {
       val s: StringBuilder = new StringBuilder
       s.append(join(names, "::", new StringBuilder("")))
       s.toString
-    case SWSpanInfo(span) => ""
+    case _:SpanInfo => ""
     case xs:JList[_] =>
       val s: StringBuilder = new StringBuilder
       s.append(join(toList(xs), "\n"+getIndent, new StringBuilder("")))

@@ -138,7 +138,7 @@ object HTMLAnchorElement extends DOM {
           // origin: readonly
         ("origin", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("origin")), F, T, T))),
         ("host", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("host")), F, T, T))),
-        ("hostname", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("hostname")), T, T, T))),
+        ("hostname", PropValue(ObjectValue(OtherStr, T, T, T))),
         ("port", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("port")), T, T, T))),
         ("pathname", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("pathname")), T, T, T))),
         ("search", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("search")), T, T, T))),

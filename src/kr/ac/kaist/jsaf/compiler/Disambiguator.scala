@@ -479,6 +479,11 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
       val result = super.walk(node)
       resetLEnv(oldLEnv)
       result
+    case SRegularExpression(info, body, flags) =>
+      val regexp = "RegExp"
+      SNew(info, SFunApp(info, SVarRef(info, SId(info, regexp, Some(regexp), false)),
+                         List(SStringLiteral(info, "\"", body),
+                              SStringLiteral(info, "\"", flags))))
     case _: AbstractNode =>
       val oldLEnv = setLEnv(node.asInstanceOf[AbstractNode])
       val result = super.walk(node)

@@ -58,6 +58,8 @@ import kr.ac.kaist.jsaf.nodes_util.JSFromUrl;
 import kr.ac.kaist.jsaf.nodes_util.JSFromHTML;
 import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete;
 import kr.ac.kaist.jsaf.nodes_util.JSIRUnparser;
+import kr.ac.kaist.jsaf.nodes_util.NodeFactory;
+import kr.ac.kaist.jsaf.nodes_util.NodeRelation;
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil;
 import kr.ac.kaist.jsaf.nodes_util.WIDLChecker;
 import kr.ac.kaist.jsaf.nodes_util.WIDLToDB;
@@ -260,7 +262,7 @@ public final class Shell {
             " parse [-out file] [-time] somefile.js ...\n" +
             " unparse [-out file] somefile.tjs\n" +
             " widlparse [-db] somefile.widl\n" +
-            " widlcheck somefile.js api1 ...\n" +
+            " widlcheck somefile.js api1.db ...\n" +
             " strict [-out file] somefile.js\n" +
             " clone-detector\n" +
             " coverage somefile.js\n" +
@@ -401,6 +403,7 @@ public final class Shell {
 
         int return_code = 0;
         try {
+            NodeFactory.initIr2ast();
             Pair<Program, HashMap<String, String>> pair = Parser.fileToAST(fileNames);
             Program pgm = pair.first();
             System.out.println("Ok");
@@ -1008,8 +1011,9 @@ public final class Shell {
             pair = Parser.fileToAST(fileNames);
         Program program = pair.first();
         HashMap<String,String> fileMap = pair.second();
-        Pair<Option<IRRoot>, List<BugInfo>> irErrors = ASTtoIR(fileName, program, Option.<String>none(), Option.<Coverage>none());
+        Triple<Option<IRRoot>, List<BugInfo>, Program> irErrors = ASTtoIR(fileName, program, Option.<String>none(), Option.<Coverage>none());
         Option<IRRoot> irOpt = irErrors.first();
+        Program program2 = irErrors.third(); // Disambiguated and hoisted and with written 
 
         double irTranslationTime = (System.nanoTime() - start) / 1000000000.0;
         if (!quiet)
@@ -1191,6 +1195,7 @@ public final class Shell {
 
         // Execute Bug Detector
         System.out.println("\n* Bug Detector *");
+        NodeRelation.set(program2, ir, cfg);
         BugDetector detector = new BugDetector(params, cfg, typingInterface, fileMap, quiet, irErrors.second());
         detector.detectBug();
 
@@ -1323,7 +1328,7 @@ public final class Shell {
         return new Pair<Option<IRRoot>, HashMap<String, String>>(ASTtoIR(files.get(0), program, out, coverage).first(), fileMap);
     }
 
-    public static Pair<Option<IRRoot>, List<BugInfo>> ASTtoIR(String file, Program pgm, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {
+    public static Triple<Option<IRRoot>, List<BugInfo>, Program> ASTtoIR(String file, Program pgm, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {
         try {
             Program program = pgm;
 
@@ -1376,10 +1381,12 @@ public final class Shell {
                              flattenErrors(errors),
                              Option.<Pair<FileWriter,BufferedWriter>>none());
                 if (opt_DisambiguateOnly && errors.isEmpty())
-                  return new Pair<Option<IRRoot>, List<BugInfo>>(Option.some(IRFactory.makeRoot()),
-                                                                  Useful.<BugInfo>list());
-                return new Pair<Option<IRRoot>, List<BugInfo>>(Option.<IRRoot>none(),
-                                                                Useful.<BugInfo>list());
+                    return new Triple<Option<IRRoot>, List<BugInfo>, Program>(Option.some(IRFactory.makeRoot()),
+                                                                              Useful.<BugInfo>list(),
+                                                                              program);
+                return new Triple<Option<IRRoot>, List<BugInfo>, Program>(Option.<IRRoot>none(),
+                                                                          Useful.<BugInfo>list(),
+                                                                          program);
             } else {
                 WithRewriter withRewriter = new WithRewriter(program, false);
                 program = (Program)withRewriter.doit();
@@ -1388,14 +1395,16 @@ public final class Shell {
                 IRRoot ir = (IRRoot)translator.doit();
                 errors.addAll(translator.getErrors());
                 if (errors.isEmpty()) {
-                    return new Pair<Option<IRRoot>, List<BugInfo>>(Option.some(ir),
-                                                                    shadowingErrors);
+                    return new Triple<Option<IRRoot>, List<BugInfo>, Program>(Option.some(ir),
+                                                                              shadowingErrors,
+                                                                              program);
                 } else {
                     reportErrors(NodeUtil.getFileName(program),
                                  flattenErrors(errors),
                                  Option.<Pair<FileWriter,BufferedWriter>>none());
-                    return new Pair<Option<IRRoot>, List<BugInfo>>((params.opt_IgnoreErrorOnAST ? Option.some(ir) : Option.<IRRoot>none()),
-                                                                    Useful.<BugInfo>list());
+                    return new Triple<Option<IRRoot>, List<BugInfo>, Program>((params.opt_IgnoreErrorOnAST ? Option.some(ir) : Option.<IRRoot>none()),
+                                                                              Useful.<BugInfo>list(),
+                                                                              program);
                 }
             }
         } catch (FileNotFoundException f) {

@@ -31,8 +31,26 @@ import _root_.java.util.Arrays
 import _root_.java.util.Collections
 import _root_.java.util.Set
 import _root_.java.util.StringTokenizer
+import scala.collection.mutable.{HashMap => MHashMap}
 
 object NodeFactory {
+  // Maps the unique ids for IR nodes to their corresponding AST nodes
+  private var ir2astMap = new MHashMap[Long, ASTNode] // IRNode.uid -> ASTNode
+  private var irinfo2irMap = new MHashMap[Long, IRNode] // IRInfoNode.uid -> IRNode
+  def initIr2ast: Unit = {ir2astMap = new MHashMap; irinfo2irMap = new MHashMap}
+  def ir2ast(ir: IRNode): Option[ASTNode] = ir2astMap.get(ir.asInstanceOf[UIDObject].getUID)
+  def irinfo2ir(info: IRInfoNode): Option[IRNode] = irinfo2irMap.get(info.getUID)
+  def putIr2ast[A <: IRNode](ir: A, ast: ASTNode): A = {
+    ir2astMap.put(ir.asInstanceOf[UIDObject].getUID, ast)
+    ir match {
+      case ir: IRAbstractNode => irinfo2irMap.put(ir.getInfo.getUID, ir)
+      case ir: IRExpr => irinfo2irMap.put(ir.getInfo.getUID, ir)
+      case ir: IRInfoNode => irinfo2irMap.put(ir.getUID, ir)
+      case _ =>
+    }
+    ir
+  }
+
   // For use only when there is no hope of attaching a true span.
   def makeSpan(villain: String): Span = {
     val sl = new SourceLocRats(villain,0,0,0)
@@ -87,7 +105,6 @@ object NodeFactory {
    *
    */
   def makeSetSpan(ifEmpty: String, l: JList[ASTNode]): Span = makeSpan(ifEmpty, l)
-  def makeASTNodeInfo(span: Span) = new SpanInfo(span)
   def makeSpanInfo(span: Span): SpanInfo = new SpanInfo(span)
   def makeSpanInfo(info: SpanInfo, span: Span): SpanInfo = new SpanInfo(span)
 
@@ -102,11 +119,11 @@ object NodeFactory {
                   comments: JList[Comment]): Program =
     makeProgram(makeSpanInfo(span), makeTopLevel(elements), comments)
 
-  def makeProgram(info: ASTNodeInfo, body: List[SourceElement],
+  def makeProgram(info: SpanInfo, body: List[SourceElement],
                   comments: List[Comment]): Program =
     makeProgram(info, makeTopLevel(toJavaList(body)), toJavaList(comments))
 
-  def makeProgram(info: ASTNodeInfo, toplevel: TopLevel,
+  def makeProgram(info: SpanInfo, toplevel: TopLevel,
                   comments: JList[Comment]): Program =
     new Program(info, toplevel, comments)
 
@@ -445,6 +462,6 @@ object NodeFactory {
   def makePath(span: Span, ids: JList[Id]): Path =
     new Path(makeSpanInfo(span), ids)
 
-  def makeNoOp(info: ASTNodeInfo, desc: String) =
+  def makeNoOp(info: SpanInfo, desc: String) =
     new NoOp(info, desc)
 }

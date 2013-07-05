@@ -218,7 +218,7 @@ object WIDLToDB extends WIDLWalker {
     case SWQId(info, exns) =>
       bw.write(QID+"\n"+exns.length+"\n")
       join(exns)
-    case SWSpanInfo(span) =>
+    case _:SpanInfo =>
     case _ => walkUnitJavaNode(node)
   }
 

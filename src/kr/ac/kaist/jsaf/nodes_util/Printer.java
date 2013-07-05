@@ -187,8 +187,8 @@ public class Printer extends NodeReflection {
             dumpFields(w, indent, x, oneLiner, fields, true);
             w.append(")");
             oneLinerNesting -= oneLinerNestingInc;
-        } else if (o instanceof ASTNodeInfo) {
-            ASTNodeInfo x = (ASTNodeInfo) o;
+        } else if (o instanceof SpanInfo) {
+            SpanInfo x = (SpanInfo) o;
             Class cl = x.getClass();
             String clname = cl.getSimpleName();
             Field[] fields = getCachedPrintableFields(cl, clname);
@@ -245,21 +245,6 @@ public class Printer extends NodeReflection {
             dumpFields(w, indent, x, oneLiner, fields, true);
             w.append(")");
             oneLinerNesting -= oneLinerNestingInc;
-        } else if (o instanceof InfoNode) {
-            InfoNode x = (InfoNode) o;
-            Class cl = x.getClass();
-            String clname = cl.getSimpleName();
-            int oneLinerNestingInc = (o instanceof VarRef || o instanceof Op) ? 1 : 0;
-            oneLinerNesting += oneLinerNestingInc;
-
-            boolean oneLiner = oneLineVarRef
-                    && (oneLinerNesting > 0 || o instanceof Op || o instanceof Id);
-            Field[] fields = getCachedPrintableFields(cl, clname);
-            w.append("(");
-            w.append(clname);
-            dumpFields(w, indent, x, oneLiner, fields, true);
-            w.append(")");
-            oneLinerNesting -= oneLinerNestingInc;
         } else if (o instanceof IRId) {
             IRId x = (IRId) o;
             Class cl = x.getClass();
@@ -301,6 +286,21 @@ public class Printer extends NodeReflection {
             w.append("(");
             w.append(clname);
             dumpSpan(x.getSpan(), w);
+            w.append(")");
+            oneLinerNesting -= oneLinerNestingInc;
+        } else if (o instanceof ScopeBody) {
+            ScopeBody x = (ScopeBody) o;
+            Class cl = x.getClass();
+            String clname = cl.getSimpleName();
+            int oneLinerNestingInc = (o instanceof VarRef || o instanceof Op) ? 1 : 0;
+            oneLinerNesting += oneLinerNestingInc;
+
+            boolean oneLiner = oneLineVarRef
+                    && (oneLinerNesting > 0 || o instanceof Op || o instanceof Id);
+            Field[] fields = getCachedPrintableFields(cl, clname);
+            w.append("(");
+            w.append(clname);
+            dumpFields(w, indent, x, oneLiner, fields, true);
             w.append(")");
             oneLinerNesting -= oneLinerNestingInc;
         } else if (o instanceof IRInfoNode) {

@@ -54,7 +54,7 @@ interface WNode() extends HasAt;
     /**
      * top-level node interface
      */
-    interface WIDLNode(WSpanInfo info);
+    interface WIDLNode(SpanInfo info);
         root abstract WIDL() extends UIDObject;
             abstract WDefinition(List<WEAttribute> attrs = Collections.<WEAttribute>emptyList());
                 WModule(String name, List<WDefinition> defs);
@@ -96,7 +96,6 @@ interface WNode() extends HasAt;
      * top-level information interface
      */
     abstract WIDLNodeInfo() extends UIDObject;
-        WSpanInfo(ignoreForEquals Span span);
         abstract WTypeSuffix();
             WTSArray();
             WTSQuestion();

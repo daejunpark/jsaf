@@ -40,11 +40,11 @@ object InterpreterPredefine {
   // Use only when we cannot get any meaningful source locations
   val sourceLoc = new SourceLocRats(NU.freshFile("interpreter"), 0, 0, 0)
   val defSpan = new Span(sourceLoc, sourceLoc)
-  val defInfo = IF.makeSpanInfo(false, IF.dummyAst, defSpan)
+  val defInfo = IF.makeSpanInfo(false, defSpan)
   val defId = IF.dummyIRId("interpreter")
 
   // Constant values
-  val undefined = IF.makeUndef
+  val undefined = IF.makeUndef(IF.dummyAst)
   val NaN = IF.makeNumber(false, "NaN", Double.NaN)
   val plusZero = IF.makeNumber(false, "+0.0", +0.0)
   val minusZero = IF.makeNumber(false, "-0.0", -0.0)
@@ -52,21 +52,21 @@ object InterpreterPredefine {
   val minusOne = IF.makeNumber(false, "-1.0", -1.0)
   val plusInfinity = IF.makeNumber(false, "Infinity", Double.PositiveInfinity)
   val minusInfinity = IF.makeNumber(false, "-Infinity", Double.NegativeInfinity)
-  val undefVar = IF.makeTId(IF.dummyAst, IF.dummySpan("undefVar"), NU.freshGlobalName("undefVar"))
+  val undefVar = IF.makeTId(IF.dummySpan("undefVar"), NU.freshGlobalName("undefVar"))
   val falseV = IF.falseV
   val trueV = IF.trueV
   val falsePV = PVal(falseV)
   val truePV = PVal(trueV)
   val undefV = PVal(undefined)
-  val nullV = PVal(IF.makeNull)
+  val nullV = PVal(IF.makeNull(IF.dummyAst))
   val plusZeroV = PVal(plusZero)
   val minusZeroV = PVal(minusZero)
   val plusOneV = PVal(plusOne)
   val minusOneV = PVal(minusOne)
   val thisName = NU.freshGlobalName("this")
   val argumentsName = NU.freshGlobalName("arguments")
-  val thisTId = SIRTmpId(IF.dummySpanInfo("this"), thisName, thisName, false)
-  val argumentsTId = SIRTmpId(IF.dummySpanInfo("arguments"), argumentsName, argumentsName, false)
+  val thisTId = IF.makeTId(IF.dummySpan("this"), thisName)
+  val argumentsTId = IF.makeTId(IF.dummySpan("arguments"), argumentsName)
   //val resUndef = Normal(Some(undefV))
   val undefFtn =
     IF.makeFunctional(false, IF.dummyAst, defId,

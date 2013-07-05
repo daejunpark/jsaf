@@ -9,7 +9,7 @@
 
 package kr.ac.kaist.jsaf.analysis.cfg
 
-abstract class CFGId {
+abstract class CFGId extends CFGNode {
   def getText: String
   def getVarKind: VarKind
   override def toString : String

@@ -40,13 +40,14 @@ object NodeUtil {
     }
     var map = new HashMap[String, Span]
     override def walk(node:Any):Any = node match {
-      case SSpanInfo(span) =>
+      case i:SpanInfo =>
+        val span = i.getSpan
         val key = span.at
-        if (map.containsKey(key)) SSpanInfo(map.get(key))
+        if (map.containsKey(key)) new SpanInfo(map.get(key))
         else {
           val newSpan = span.addLines(line)
           map.put(key, newSpan)
-          SSpanInfo(newSpan)
+          new SpanInfo(newSpan)
         }
       case _ => super.walk(node)
     }
@@ -117,8 +118,8 @@ object NodeUtil {
         SIRRoot(info, super.walk(fds).asInstanceOf[List[IRFunDecl]], vds,
                 simplify(irs.map(walk).asInstanceOf[List[IRStmt]]))
 
-      case SIRFunctional(j, i, n, params, args, fds, vds, body) =>
-        SIRFunctional(j, i, n, params, args.map(walk).asInstanceOf[List[IRStmt]],
+      case SIRFunctional(i, n, params, args, fds, vds, body) =>
+        SIRFunctional(i, n, params, args.map(walk).asInstanceOf[List[IRStmt]],
                       super.walk(fds).asInstanceOf[List[IRFunDecl]], vds,
                       simplify(body.map(walk).asInstanceOf[List[IRStmt]]))
 
@@ -374,7 +375,7 @@ object NodeUtil {
 
   def getSpan(n: IRAbstractNode): Span = n.getInfo.getSpan
 
-  def getSpan(n: WSpanInfo): Span = n.getSpan
+  def getSpan(n: SpanInfo): Span = n.getSpan
 
   def getFileName(n: ASTNode): String = getSpan(n).getFileName
   def getBegin(n: ASTNode) = getSpan(n).getBegin
@@ -396,15 +397,6 @@ object NodeUtil {
 
   def jspanAll(nodes: JList[Expr]): Span =
     spanAll(toList(nodes).asInstanceOf[List[ASTNode]])
-
-  def getCondInfo(stmtinfo: IRSpanInfo, nextinfo: IRSpanInfo) = {
-    val begin = stmtinfo.getSpan.getBegin
-    val end = nextinfo.getSpan.getBegin
-    new IRSpanInfo(stmtinfo.isFromSource,
-                   stmtinfo.getAst,
-                   new Span(new SourceLocRats(begin.getFileName, begin.getLine, begin.column+3, begin.getOffset),
-                            new SourceLocRats(end.getFileName, end.getLine, end.column-1, end.getOffset)))
-  }
 
   def getFileName(n: IRAbstractNode): String = n.getInfo.getSpan.getFileName
 
