@@ -466,7 +466,8 @@ object Access {
             AH.VarStore_def(h,h(SinglePureLocalLoc)("@env")._1._2._2,lhs)
           }
           case _ => {
-            System.out.println(fun.toString)
+            if (!Config.quietMode)
+              System.out.println(fun.toString)
             throw new NotYetImplemented()
           }
         }
@@ -477,7 +478,8 @@ object Access {
           case Some(f) =>
             f(h, ctx, cfg, fun, args)
           case None =>
-            System.err.println("* Warning: def. info. of the API function '"+fun+"' are not defined.")
+            if (!Config.quietMode)
+              System.err.println("* Warning: def. info. of the API function '"+fun+"' are not defined.")
             LPBot
         }
       }
@@ -800,7 +802,8 @@ object Access {
             AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, x) + ((SinglePureLocalLoc, "@env"))
           }
           case _ => {
-            System.out.println(fun.toString)
+            if (!Config.quietMode)
+              System.out.println(fun.toString)
             throw new NotYetImplemented()
           }
         }
@@ -811,7 +814,8 @@ object Access {
           case Some(f) =>
             f(h, ctx, cfg, fun, args)
           case None =>
-            System.err.println("* Warning: use. info. of the API function '"+fun+"' are not defined.")
+            if (!Config.quietMode)
+              System.err.println("* Warning: use. info. of the API function '"+fun+"' are not defined.")
             LPBot
         }
       }

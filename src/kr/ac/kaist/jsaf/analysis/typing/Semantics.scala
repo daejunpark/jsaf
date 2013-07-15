@@ -191,7 +191,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                 val _obj = h_new(SinglePureLocalLoc)
                 val _h_new = h_new.remove(SinglePureLocalLoc).update(preCFG.getMergedPureLocal(cp._1._1), _obj) 
                 
-                if (!(_h_new <= preState._1)) { // && ctx_new <= preState._2)) {
+                if (!(_h_new <= preState._1) && !Config.quietMode) { // && ctx_new <= preState._2)) {
                 System.err.println("\n\n *** PreAnalyzed Heap should include analyzed heap using current option ***")
                 System.err.println("   = Instruction : " + inst)
                 /*
@@ -216,12 +216,12 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                           // dense <= pre && pre <= dense which means that equals...
                           // dense <= pre && pre </ dense which means that pre is greater than dense OK!
                     } else {
-                      if (pv_2._1 <= pv_1._1 && pv_2._2 <= pv_1._2) {
+                      if (pv_2._1 <= pv_1._1 && pv_2._2 <= pv_1._2 && !Config.quietMode) {
                         // dense </ pre && pre <= dense
                         System.err.println("more imprecise result for ("+DomainPrinter.printLoc(l)+"("+l+"),"+prop+")")
                         System.err.println("dense   : "+ DomainPrinter.printObj(0, o1.restrict_(Set(prop))))
                         System.err.println("pre     : "+ DomainPrinter.printObj(0, o2.restrict_(Set(prop))))
-                      } else {
+                      } else if (!Config.quietMode) {
                         // dense </ pre && pre </ dense
                         System.err.println("different result for ("+DomainPrinter.printLoc(l)+"("+l+"),"+prop+")")
                         System.err.println("dense   : "+ DomainPrinter.printObj(0, o1.restrict_(Set(prop))))
@@ -231,7 +231,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                   })
                 }
                 case None => {
-                  System.err.println("location "+DomainPrinter.printLoc(l)+" is missing in sparse-ddg result.")
+                  if (!Config.quietMode)
+                    System.err.println("location "+DomainPrinter.printLoc(l)+" is missing in sparse-ddg result.")
                 }
                   }
                 })
@@ -830,7 +831,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
               ((Helper.VarStore(h, lhs, Value(PValue(StrTop))), ctx), (he, ctxe))
             }
             case _ => {
-              System.out.println(fun.toString)
+              if (!Config.quietMode)
+                System.out.println(fun.toString)
               throw new NotYetImplemented()
             }
           }
@@ -844,7 +846,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
             case Some(f) =>
               f(this, h, ctx, he, ctxe, cp, cfg, fun, args)
             case None =>
-              System.err.println("* Warning: Semantics of the API function '"+fun+"' are not defined.")
+              if (!Config.quietMode)
+                System.err.println("* Warning: Semantics of the API function '"+fun+"' are not defined.")
               ((h,ctx), (he, ctxe))
           }
         }
@@ -1793,6 +1796,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
             (PreHelper.VarStore(h, PureLocalLoc, lhs, Value(PValue(StrTop))), ctx)
           }
           case _ => {
+            if (!Config.quietMode)
               System.out.println(fun.toString)
             throw new NotYetImplemented()
           }
@@ -1807,7 +1811,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
           case Some(f) =>
             f(this, h, ctx, h, ctx, cp, cfg, fun, args)
           case None =>
-            System.err.println("* Warning: Pre-semantics of the API function '"+fun+"' are not defined.")
+            if (!Config.quietMode)
+              System.err.println("* Warning: Pre-semantics of the API function '"+fun+"' are not defined.")
             ((h,ctx), (h, ctx))
         }
         (result._1._1 + result._2._1, result._1._2 + result._2._2)
