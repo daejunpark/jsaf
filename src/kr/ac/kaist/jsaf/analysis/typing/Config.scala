@@ -18,6 +18,12 @@ import kr.ac.kaist.jsaf.analysis.typing.models.builtin.{BuiltinError, BuiltinObj
 
 object Config {
   /**
+   * Quiet mode.
+   */
+  var quietMode = false
+  def setQuietMode = quietMode = true
+
+  /**
    * Verbose output.
    * If turned on, all built-in objects and predefined properties of #global will be
    * included when printing analysis results.
