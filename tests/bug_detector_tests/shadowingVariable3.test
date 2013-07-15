@@ -35,8 +35,9 @@ shadowingVariable3.js:1:22~1:25: [Warning] Variable 'mon' is shadowed by a param
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
 |  Shadowing               :      1 | \n\
+|  UncalledFuction         :      0 | \n\
 |  UnreachableCode         :      0 | \n\
-|  Unused                  :      0 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

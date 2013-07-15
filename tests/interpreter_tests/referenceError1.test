@@ -10,5 +10,5 @@ tests=referenceError1
 INTERPRETER_TESTS_DIR=${JS_HOME}/tests/interpreter_tests
 interpret
 interpret_out_WCIequals=\
-Throw(ReferenceError:x from getBindingValue) @ ${JS_HOME}/tests/interpreter_tests/referenceError1.js:1:1-2\n
+Throw(ReferenceError:x from getBindingValue) @ ${JS_HOME}/tests/interpreter_tests/referenceError1.js:1:1-4\n
 interpret_err_equals=

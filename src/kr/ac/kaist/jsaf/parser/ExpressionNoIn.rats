@@ -39,11 +39,9 @@ public Expr ExpressionNoIn =
  * | LeftHandSide w AssignmentOp w AssignmentNoIn
  */
 Expr AssignmentNoIn =
-     a1:LeftHandSide w equals w a2:AssignmentNoIn
+     a1:LeftHandSide w a2:equals w a3:AssignmentNoIn
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makeAssignOpApp(span, a1,
-                                             NodeFactory.makeOp(span, "="),
-                                             a2);
+       yyValue = NodeFactory.makeAssignOpApp(span, a1, a2, a3);
      }
    / a1:LeftHandSide w a2:AssignmentOp w a3:AssignmentNoIn
      { Span span = createSpan(yyStart,yyCount);
@@ -69,14 +67,20 @@ private transient Expr ConditionalNoIn =
  * | LogicalORNoIn w || w LogicalANDNoIn
  */
 private transient Expr LogicalORNoIn =
-     a1:LogicalANDNoIn a2s:(w bars w LogicalANDNoIn)*
-     { Span span = createSpan(yyStart,yyCount);
-       Op op = NodeFactory.makeOp(span, "||");
-       List<Expr> es = Useful.cons(a1, a2s.list());
-       Collections.reverse(es);
-       yyValue = es.remove(0);
-       for (Expr e: es) yyValue = NodeFactory.makeInfixOpApp(span, e, op, yyValue);
+     a1:LogicalANDNoIn a2s:LogicalANDNoInR*
+     { Span span = NodeUtil.getSpan(a1);
+       yyValue = a1;
+       for (kr.ac.kaist.jsaf.useful.Pair<Op, Expr> pair: a2s.list()) {
+           Op op = pair.getA();
+           Expr right = pair.getB();
+           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(right)),
+                                                yyValue, op, right);
+       }
      };
+
+private transient kr.ac.kaist.jsaf.useful.Pair<Op, Expr> LogicalANDNoInR =
+     w a1:bars w a2:LogicalANDNoIn
+     { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Op, Expr>(a1, a2); };
 
 /*
  * LogicalANDNoIn ::=
@@ -84,14 +88,20 @@ private transient Expr LogicalORNoIn =
  * | LogicalANDNoIn w && w BitwiseORNoIn
  */
 private transient Expr LogicalANDNoIn =
-     a1:BitwiseORNoIn a2s:(w ands w BitwiseORNoIn)*
-     { Span span = createSpan(yyStart,yyCount);
-       Op op = NodeFactory.makeOp(span, "&&");
-       List<Expr> es = Useful.cons(a1, a2s.list());
-       Collections.reverse(es);
-       yyValue = es.remove(0);
-       for (Expr e: es) yyValue = NodeFactory.makeInfixOpApp(span, e, op, yyValue);
+     a1:BitwiseORNoIn a2s:BitwiseORNoInR*
+     { Span span = NodeUtil.getSpan(a1);
+       yyValue = a1;
+       for (kr.ac.kaist.jsaf.useful.Pair<Op, Expr> pair: a2s.list()) {
+           Op op = pair.getA();
+           Expr right = pair.getB();
+           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(right)),
+                                                yyValue, op, right);
+       }
      };
+
+private transient kr.ac.kaist.jsaf.useful.Pair<Op, Expr> BitwiseORNoInR =
+     w a1:ands w a2:BitwiseORNoIn
+     { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Op, Expr>(a1, a2); };
 
 /*
  * BitwiseORNoIn ::=
@@ -99,14 +109,20 @@ private transient Expr LogicalANDNoIn =
  * | BitwiseORNoIn w | w BitwiseXORNoIn
  */
 private transient Expr BitwiseORNoIn =
-     a1:BitwiseXORNoIn a2s:(w bar w BitwiseXORNoIn)*
-     { Span span = createSpan(yyStart,yyCount);
-       Op op = NodeFactory.makeOp(span, "|");
-       List<Expr> es = Useful.cons(a1, a2s.list());
-       Collections.reverse(es);
-       yyValue = es.remove(0);
-       for (Expr e: es) yyValue = NodeFactory.makeInfixOpApp(span, e, op, yyValue);
+     a1:BitwiseXORNoIn a2s:BitwiseXORNoInR*
+     { Span span = NodeUtil.getSpan(a1);
+       yyValue = a1;
+       for (kr.ac.kaist.jsaf.useful.Pair<Op, Expr> pair: a2s.list()) {
+           Op op = pair.getA();
+           Expr right = pair.getB();
+           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(right)),
+                                                yyValue, op, right);
+       }
      };
+
+private transient kr.ac.kaist.jsaf.useful.Pair<Op, Expr> BitwiseXORNoInR =
+     w a1:bar w a2:BitwiseXORNoIn
+     { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Op, Expr>(a1, a2); };
 
 /*
  * BitwiseXORNoIn ::=
@@ -114,14 +130,20 @@ private transient Expr BitwiseORNoIn =
  * | BitwiseXORNoIn w ^ w BitwiseANDNoIn
  */
 private transient Expr BitwiseXORNoIn =
-     a1:BitwiseANDNoIn a2s:(w caret w BitwiseANDNoIn)*
-     { Span span = createSpan(yyStart,yyCount);
-       Op op = NodeFactory.makeOp(span, "^");
-       List<Expr> es = Useful.cons(a1, a2s.list());
-       Collections.reverse(es);
-       yyValue = es.remove(0);
-       for (Expr e: es) yyValue = NodeFactory.makeInfixOpApp(span, e, op, yyValue);
+     a1:BitwiseANDNoIn a2s:BitwiseANDNoInR*
+     { Span span = NodeUtil.getSpan(a1);
+       yyValue = a1;
+       for (kr.ac.kaist.jsaf.useful.Pair<Op, Expr> pair: a2s.list()) {
+           Op op = pair.getA();
+           Expr right = pair.getB();
+           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(right)),
+                                                yyValue, op, right);
+       }
      };
+
+private transient kr.ac.kaist.jsaf.useful.Pair<Op, Expr> BitwiseANDNoInR =
+     w a1:caret w a2:BitwiseANDNoIn
+     { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Op, Expr>(a1, a2); };
 
 /*
  * BitwiseANDNoIn ::=
@@ -129,14 +151,20 @@ private transient Expr BitwiseXORNoIn =
  * | BitwiseANDNoIn w & w EqualityNoIn
  */
 private transient Expr BitwiseANDNoIn =
-     a1:EqualityNoIn a2s:(w and w EqualityNoIn)*
-     { Span span = createSpan(yyStart,yyCount);
-       Op op = NodeFactory.makeOp(span, "&");
-       List<Expr> es = Useful.cons(a1, a2s.list());
-       Collections.reverse(es);
-       yyValue = es.remove(0);
-       for (Expr e: es) yyValue = NodeFactory.makeInfixOpApp(span, e, op, yyValue);
+     a1:EqualityNoIn a2s:EqualityNoInR*
+     { Span span = NodeUtil.getSpan(a1);
+       yyValue = a1;
+       for (kr.ac.kaist.jsaf.useful.Pair<Op, Expr> pair: a2s.list()) {
+           Op op = pair.getA();
+           Expr right = pair.getB();
+           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(right)),
+                                                yyValue, op, right);
+       }
      };
+
+private transient kr.ac.kaist.jsaf.useful.Pair<Op, Expr> EqualityNoInR =
+     w a1:and w a2:EqualityNoIn
+     { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Op, Expr>(a1, a2); };
 
 /*
  * EqualityNoIn ::=

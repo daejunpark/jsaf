@@ -36,8 +36,9 @@ BinaryOpObjectType1.js:12:8~12:24: [TypeError] Right-hand side operand 'o' of 'i
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
 |  Shadowing               :      0 | \n\
+|  UncalledFuction         :      0 | \n\
 |  UnreachableCode         :      0 | \n\
-|  Unused                  :      0 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

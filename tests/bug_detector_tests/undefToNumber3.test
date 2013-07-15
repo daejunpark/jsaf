@@ -14,12 +14,11 @@ bug-detector_out_WCIequals=\
 * Bug Detector * \n\
 undefToNumber3.js:12:1~12:4: [Warning] Reading absent property 'p' of object 'x'. \n\
 undefToNumber3.js:12:1~12:4: [Warning] Trying to convert undefined to number. 'x["p"]' can be undefined. \n\
-undefToNumber3.js:12:1~12:4: [Warning] Property 'p' is never used. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      3 (100.00%) | \n\
+|  Warnings          :      2 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      1 | \n\
@@ -37,8 +36,9 @@ undefToNumber3.js:12:1~12:4: [Warning] Property 'p' is never used. \n\
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
 |  Shadowing               :      0 | \n\
+|  UncalledFuction         :      0 | \n\
 |  UnreachableCode         :      0 | \n\
-|  Unused                  :      1 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

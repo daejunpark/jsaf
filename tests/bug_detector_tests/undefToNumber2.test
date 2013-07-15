@@ -12,12 +12,11 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-undefToNumber2.js:14:1~14:2: [Warning] Variable 'x' is never used. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      1 (100.00%) | \n\
+|  Warnings          :      0 (  0.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -35,8 +34,9 @@ undefToNumber2.js:14:1~14:2: [Warning] Variable 'x' is never used. \n\
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
 |  Shadowing               :      0 | \n\
+|  UncalledFuction         :      0 | \n\
 |  UnreachableCode         :      0 | \n\
-|  Unused                  :      1 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

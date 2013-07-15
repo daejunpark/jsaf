@@ -1,9 +1,7 @@
 ################################################################################
 #    Copyright (c) 2013, KAIST.
-#    All rights reserved.
-#
-#    Use is subject to license terms.
-#
+#    All rights reserved.\n#
+#    Use is subject to license terms.\n#
 #    This distribution may include materials developed by third parties.
 ################################################################################
 tests=shadowingVariable4
@@ -14,17 +12,19 @@ bug-detector_out_WCIequals=\
 * Bug Detector * \n\
 shadowingVariable4.js:9:3~9:10: [TypeError] Calling the non-function 'f' as a function. \n\
 shadowingVariable4.js:1:5~1:10: [Warning] Variable 'f' is shadowed by a function at '2:1-9:1'. \n\
-shadowingVariable4.js:2:1~9:1: [Warning] Function 'f' is never used. \n\
+shadowingVariable4.js:2:1~9:1: [Warning] Function 'f' is never called. \n\
 shadowingVariable4.js:2:12~2:13: [Warning] Parameter 'g' is shadowed by a function at '3:3-8:3'. \n\
-shadowingVariable4.js:3:3~8:3: [Warning] Function 'g' is never used. \n\
+shadowingVariable4.js:3:3~8:3: [Warning] Unreachable code 'function g(h) { function h() { return f; } var f ...' is found. \n\
+shadowingVariable4.js:3:3~8:3: [Warning] Function 'g' is never called. \n\
 shadowingVariable4.js:3:14~3:15: [Warning] Parameter 'h' is shadowed by a function at '5:5-7:5'. \n\
-shadowingVariable4.js:5:5~7:5: [Warning] Function 'h' is never used. \n\
+shadowingVariable4.js:5:5~7:5: [Warning] Function 'h' is never called. \n\
+shadowingVariable4.js:8:6~8:17: [Warning] Unreachable code 'return g(g);' is found. \n\
 shadowingVariable4.js:9:3~9:4: [Warning] Trying to convert primitive value(number) to object. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
-|  TypeErrors        :      1 ( 12.50%) | \n\
-|  Warnings          :      7 ( 87.50%) | \n\
+|  TypeErrors        :      1 ( 10.00%) | \n\
+|  Warnings          :      9 ( 90.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -42,8 +42,9 @@ shadowingVariable4.js:9:3~9:4: [Warning] Trying to convert primitive value(numbe
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      1 | \n\
 |  Shadowing               :      3 | \n\
-|  UnreachableCode         :      0 | \n\
-|  Unused                  :      3 | \n\
+|  UncalledFuction         :      3 | \n\
+|  UnreachableCode         :      2 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

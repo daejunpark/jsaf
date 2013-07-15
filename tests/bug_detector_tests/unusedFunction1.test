@@ -1,9 +1,7 @@
 ################################################################################
 #    Copyright (c) 2013, KAIST.
-#    All rights reserved.
-#
-#    Use is subject to license terms.
-#
+#    All rights reserved.\n#
+#    Use is subject to license terms.\n#
 #    This distribution may include materials developed by third parties.
 ################################################################################
 tests=unusedFunction1
@@ -12,17 +10,24 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-unusedFunction1.js:1:5~1:14: [Warning] Variable 'count' is never used. \n\
-unusedFunction1.js:4:1~6:1: [Warning] Function 'unused' is never used. \n\
-unusedFunction1.js:8:1~12:1: [Warning] Function 'constructor' is never used. \n\
-unusedFunction1.js:14:1~17:1: [Warning] Function 'test' is never used. \n\
-unusedFunction1.js:19:1~22:1: [Warning] Function 'counter' is never used. \n\
-unusedFunction1.js:24:1~26:1: [Warning] Function 'call' is never used. \n\
+unusedFunction1.js:4:1~6:1: [Warning] Function 'unused' is never called. \n\
+unusedFunction1.js:5:3~5:13: [Warning] Unreachable code 'return a + b;' is found. \n\
+unusedFunction1.js:8:1~12:1: [Warning] Function 'constructor' is never called. \n\
+unusedFunction1.js:9:3~9:25: [Warning] Unreachable code 'this.index = counter();' is found. \n\
+unusedFunction1.js:10:3~10:19: [Warning] Unreachable code 'test(this.index);' is found. \n\
+unusedFunction1.js:14:1~17:1: [Warning] Function 'test' is never called. \n\
+unusedFunction1.js:15:3~15:22: [Warning] Unreachable code '{ arg = index + 5; }' is found. \n\
+unusedFunction1.js:16:3~16:27: [Warning] Unreachable code 'call(arg, index, unused);' is found. \n\
+unusedFunction1.js:19:1~22:1: [Warning] Function 'counter' is never called. \n\
+unusedFunction1.js:20:3~20:20: [Warning] Unreachable code 'count = count + 1;' is found. \n\
+unusedFunction1.js:21:3~21:15: [Warning] Unreachable code 'return count;' is found. \n\
+unusedFunction1.js:24:1~26:1: [Warning] Function 'call' is never called. \n\
+unusedFunction1.js:25:3~25:18: [Warning] Unreachable code 'fun(arg1, arg2);' is found. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      6 (100.00%) | \n\
+|  Warnings          :     13 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -40,8 +45,9 @@ unusedFunction1.js:24:1~26:1: [Warning] Function 'call' is never used. \n\
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
 |  Shadowing               :      0 | \n\
-|  UnreachableCode         :      0 | \n\
-|  Unused                  :      6 | \n\
+|  UncalledFuction         :      5 | \n\
+|  UnreachableCode         :      8 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

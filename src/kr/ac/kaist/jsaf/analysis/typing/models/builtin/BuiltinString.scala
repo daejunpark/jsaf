@@ -54,6 +54,8 @@ object BuiltinString extends ModelData {
     ("slice",          AbsBuiltinFunc("String.prototype.slice", 2)),
     ("split",          AbsBuiltinFunc("String.prototype.split", 2)),
     ("substring",      AbsBuiltinFunc("String.prototype.substring", 2)),
+    // ECMASCript 5 Appendix B.2.3 String.prototype.substr(start, length)
+    ("substr",      AbsBuiltinFunc("String.prototype.substr", 2)),
     ("toLowerCase",    AbsBuiltinFunc("String.prototype.toLowerCase", 0)),
     ("toLocaleLowerCase", AbsBuiltinFunc("String.prototype.toLocaleLowerCase", 0)),
     ("toUpperCase",       AbsBuiltinFunc("String.prototype.toUpperCase", 0)),
@@ -511,6 +513,66 @@ object BuiltinString extends ModelData {
           else
             ((HeapBot, ContextBot), (he, ctxe))
         })),
+
+      ("String.prototype.substr" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          // [[default Value]] ??
+          val lset_prim = lset_this.filter((l) => BoolTrue <= h(l).domIn("@primitive"))
+          // TODO: v_this must be the result of [[DefaultValue]](string)
+          val v_this = lset_prim.foldLeft(ValueBot)((_v, l) => _v + h(l)("@primitive")._1._2)
+          // 1. Call ToString, giving it the this value as its argument.
+          val s_this = Helper.toString(Helper.toPrimitive(v_this))
+          // 2. Call ToInteger(start).
+          val n_start = Operator.ToInteger(getArgValue(h, ctx, args, "0"))
+          val v_length = getArgValue(h, ctx, args, "1")
+          // 3. If length is undefined, use +∞; otherwise call ToInteger(length).
+          val n_length =
+            if (v_length._1._1 </ UndefBot) {
+              PosInf             
+            }
+            else
+              Operator.ToInteger(v_length)
+          // 4. Compute the number of characters in Result(1).
+          val n_len = s_this match {
+                case NumStrSingle(s) => AbsNumber.alpha(s.length)
+                case OtherStrSingle(s) => AbsNumber.alpha(s.length)
+                case StrBot => NumBot
+                case _ => UInt
+              }
+
+          val s = (AbsString.concretize(s_this),
+            AbsNumber.concretize(n_start),
+            AbsNumber.concretize(n_length), AbsNumber.concretize(n_len)) match {
+            case (Some(_s), Some(start), Some(length), Some(len)) =>
+              // 5. If Result(2) is positive or zero, use Result(2); else use max(Result(4)+Result(2),0).
+              val finalStart =
+                if (start < 0) max(len+start, 0)
+                else start
+              // 6. Compute min(max(Result(3),0), Result(4)–Result(5)).
+              val finalLength = min(max(length, 0), len-finalStart)
+              // 7. If Result(6) ≤ 0, return the empty String “”.
+              if(finalLength <= 0) AbsString.alpha("")
+              // 8. Return a String containing Result(6) consecutive characters from Result(1) beginning with the character at
+              //   position Result(5).
+              else {               
+                val from = finalStart.toInt
+                val to = (finalStart + finalLength).toInt
+                AbsString.alpha(_s.substring(from, to))
+              }
+            case _ =>
+              if (s_this <= StrBot || n_start <= NumBot || n_length <= NumBot || n_len <= NumBot)
+                StrBot
+              else
+                StrTop
+          }
+
+          if (s </ StrBot)
+            ((Helper.ReturnStore(h, Value(s)), ctx), (he, ctxe))
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        })),
+
       ("String.prototype.toLowerCase" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2

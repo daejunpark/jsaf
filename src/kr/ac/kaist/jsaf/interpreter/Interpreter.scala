@@ -847,72 +847,72 @@ class Interpreter extends IRWalker {
         }
 
       // Internal Function Calls
-      case SIRInternalCall(info, lhs: IRId, fun: IRId, thisB, args) =>
+      case SIRInternalCall(info, lhs: IRId, fun: IRId, arg1, arg2) =>
         IS.span = info.getSpan
         fun.getOriginalName match {
-          case "<>Concolic<>StoreEnvironment" => 
-            SH.storeEnvironment(thisB.asInstanceOf[IRId], args.get)
-          case "<>Concolic<>ExecuteAssignment" => 
-            val env = SH.getEnvironment(args.get)
-            var bs = IH.lookup(args.get)
+          case "<>Concolic<>StoreEnvironment" =>
+            SH.storeEnvironment(arg1.asInstanceOf[IRId], arg2.get)
+          case "<>Concolic<>ExecuteAssignment" =>
+            val env = SH.getEnvironment(arg2.get)
+            var bs = IH.lookup(arg2.get)
             var loc = "Variable"
             bs match {
               case der: DeclEnvRec => loc = "LocalVariable"
               case _ =>
             }
-            thisB match {
+            arg1 match {
               case SIRBin(_, first, op, second) => first match {
                 case v1:IRId => second match {
                   case v2:IRId =>
-                    val c1 = IH.getBindingValue(IH.lookup(v1), v1.getOriginalName) match { 
-                      case v:Val => Some(IH.toString(v))
-                      case _:JSError => None 
-                    }
-                    val c2 = IH.getBindingValue(IH.lookup(v2), v2.getOriginalName) match { 
+                    val c1 = IH.getBindingValue(IH.lookup(v1), v1.getOriginalName) match {
                       case v:Val => Some(IH.toString(v))
                       case _:JSError => None
                     }
-                    SH.executeAssignment(loc, args.get, thisB, c1, c2, env)
+                    val c2 = IH.getBindingValue(IH.lookup(v2), v2.getOriginalName) match {
+                      case v:Val => Some(IH.toString(v))
+                      case _:JSError => None
+                    }
+                    SH.executeAssignment(loc, arg2.get, arg1, c1, c2, env)
                 }
               }
-              case _ => SH.executeAssignment(loc, args.get, thisB, None, None, env)
+              case _ => SH.executeAssignment(loc, arg2.get, arg1, None, None, env)
             }
           case "<>Concolic<>GetInput" =>
             var cov = IS.coverage.get
             cov.inputNum = cov.inputNum + 1
             IS.span = info.getSpan
-            SH.getInput(thisB.asInstanceOf[IRId], args.get) match {
-              case Some(v) => IH.putValue(thisB.asInstanceOf[IRId], PVal(IH.mkIRNum(v)), IS.strict)
+            SH.getInput(arg1.asInstanceOf[IRId], arg2.get) match {
+              case Some(v) => IH.putValue(arg1.asInstanceOf[IRId], PVal(IH.mkIRNum(v)), IS.strict)
               case None =>
             }
-          case "<>Concolic<>ExecuteCondition" => { 
-            val branchTaken = walkExpr(thisB) match 
+          case "<>Concolic<>ExecuteCondition" => {
+            val branchTaken = walkExpr(arg1) match
                              { case v:Val => Some(IH.toBoolean(v))
                                case _:JSError => None }
-            thisB match {
+            arg1 match {
               case SIRBin(_, first, op, second) => first match {
                 case v1:IRId => second match {
                   case v2:IRId =>
-                    val c1 = IH.getBindingValue(IH.lookup(v1), v1.getOriginalName) match 
+                    val c1 = IH.getBindingValue(IH.lookup(v1), v1.getOriginalName) match
                             { case v:Val => Some(IH.toString(v))
                               case _:JSError => None }
-                    val c2 = IH.getBindingValue(IH.lookup(v2), v2.getOriginalName) match 
+                    val c2 = IH.getBindingValue(IH.lookup(v2), v2.getOriginalName) match
                             { case v:Val => Some(IH.toString(v))
                               case _:JSError => None}
-                    
-                    SH.executeCondition(thisB, branchTaken, c1, c2, args.get)
+
+                    SH.executeCondition(arg1, branchTaken, c1, c2, arg2.get)
                 }
               }
-              case v:IRId => SH.executeCondition(thisB, branchTaken, None, None, args.get)
-              case _ => SH.executeCondition(thisB, None, None, None, args.get)
+              case v:IRId => SH.executeCondition(arg1, branchTaken, None, None, arg2.get)
+              case _ => SH.executeCondition(arg1, None, None, None, arg2.get)
             }
           }
           case "<>Concolic<>AddFunction" =>
-            SH.addFunction(thisB.asInstanceOf[IRId])
+            SH.addFunction(arg1.asInstanceOf[IRId])
           case "<>Concolic<>WalkVarStmt" =>
-            SH.walkVarStmt(thisB.asInstanceOf[IRId], args.get) 
-            
-          case "<>Global<>toObject" => walkExpr(thisB) match {
+            SH.walkVarStmt(arg1.asInstanceOf[IRId], arg2.get)
+
+          case "<>Global<>toObject" => walkExpr(arg1) match {
             case v: Val => IH.toObject(v) match {
               // (H', A, tb), x = l
               case o: JSObject => IH.valError2NormalCompletion(IH.putValue(lhs, o, IS.strict))
@@ -920,26 +920,26 @@ class Interpreter extends IRWalker {
             }
             case err: JSError => IS.comp.setThrow(err, info.getSpan)
           }
-          case "<>Global<>isObject" => walkExpr(thisB) match {
+          case "<>Global<>isObject" => walkExpr(arg1) match {
             // (H, A, tb), x = true
             case o: JSObject => IH.valError2NormalCompletion(IH.putValue(lhs, PVal(IH.getIRBool(true)), IS.strict))
             // (H, A, tb), x = false
             case pv: PVal => IH.valError2NormalCompletion(IH.putValue(lhs, PVal(IH.getIRBool(false)), IS.strict))
             case err: JSError => IS.comp.setThrow(err, info.getSpan)
           }
-          case "<>Global<>toNumber" => walkExpr(thisB) match {
+          case "<>Global<>toNumber" => walkExpr(arg1) match {
             // (H, A, tb), x = ToNumber(H, v)
             case v: Val => IH.valError2NormalCompletion(IH.putValue(lhs, PVal(IH.toNumber(v)), IS.strict))
             case err: JSError => IS.comp.setThrow(err, info.getSpan)
           }
           case "<>Global<>getBase" =>
-            val bs = IH.lookup(thisB.asInstanceOf[IRId])
+            val bs = IH.lookup(arg1.asInstanceOf[IRId])
             // (H, A, tb), x = bs
             bs match {
               case oer: ObjEnvRec => IH.valError2NormalCompletion(IH.putValue(lhs, oer.o, IS.strict))
               case _: DeclEnvRec => IH.valError2NormalCompletion(IH.putValue(lhs, IS.GlobalObject, IS.strict))
             }
-          case "<>Global<>print" => walkExpr(thisB) match {
+          case "<>Global<>print" => walkExpr(arg1) match {
             case v: Val =>
               System.out.println(IH.toString(v))
               IS.comp.setNormal(null)
@@ -952,7 +952,7 @@ class Interpreter extends IRWalker {
           case "<>Global<>getTickCount" => {
             IH.valError2NormalCompletion(IH.putValue(lhs, PVal(IH.mkIRNum(System.currentTimeMillis())), IS.strict))
           }
-          case "<>Global<>iteratorInit" => walkExpr(thisB) match {
+          case "<>Global<>iteratorInit" => walkExpr(arg1) match {
             case v: JSObject =>
               // (H', A, tb), x = l
               IH.valError2NormalCompletion(IH.putValue(lhs, IH.iteratorInit(IH.collectProps(v)), IS.strict))
@@ -960,7 +960,7 @@ class Interpreter extends IRWalker {
             case _ => IS.comp.setThrow(IP.typeError, info.getSpan)
           }
           case "<>Global<>iteratorHasNext" =>
-            val (e1, e2) = (thisB, args)
+            val (e1, e2) = (arg1, arg2)
             walkExpr(e1) match {
               case v1: JSObject => walkId(e2.get) match {
                 case v2: JSObject => v2.__isInDomO(IH.next(v2, IH.toInt(v2.property.get("@i")), v1).toString) match {
@@ -976,7 +976,7 @@ class Interpreter extends IRWalker {
               case _ => IS.comp.setThrow(IP.typeError, info.getSpan)
             }
           case "<>Global<>iteratorNext" =>
-            val (e1, e2) = (thisB, args)
+            val (e1, e2) = (arg1, arg2)
             walkExpr(e1) match {
               case v1: JSObject => walkId(e2.get) match {
                 case v2: JSObject =>

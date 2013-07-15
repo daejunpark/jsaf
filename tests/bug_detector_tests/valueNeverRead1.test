@@ -6,18 +6,17 @@
 #
 #    This distribution may include materials developed by third parties.
 ################################################################################
-tests=unusedVarProp1
+tests=valueNeverRead1
 BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
 bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-unusedVarProp1.js:2:17~2:23: [Warning] Property 'p' is never used. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      1 (100.00%) | \n\
+|  Warnings          :      0 (  0.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -35,8 +34,9 @@ unusedVarProp1.js:2:17~2:23: [Warning] Property 'p' is never used. \n\
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
 |  Shadowing               :      0 | \n\
+|  UncalledFuction         :      0 | \n\
 |  UnreachableCode         :      0 | \n\
-|  Unused                  :      1 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

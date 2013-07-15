@@ -54,6 +54,93 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
     heap + (loc_ins -> obj_ins)
   }
 
+  // Initialize named properties in Document
+  // WHATWG HTML Living Standard - Section 3.1.4 DOM tree accessors
+  private def initDocomentNamedProps(h: HeapMap, node: Node, ins_loc: Loc) : HeapMap = {
+    val nodeName = node.getNodeName
+    node match {
+      // Element node
+      case e: Element => 
+        // document object
+        val docobj = h(HTMLDocument.GlobalDocumentLoc)
+        val id = e.getAttribute("id")
+        val name = e.getAttribute("name")
+        nodeName match {
+          // TODO: HTMLEmbedElement(not modeled yet), name propertis for HTMLIFrameElement
+          case "APPLET" | "OBJECT" | "IMG" if id != "" && (nodeName!="IMG" || name!="") => 
+            val propval = docobj(id)
+            // in case that the 'id' property does not exist
+            if(propval._2 </ AbsentBot) {
+               val new_docobj = docobj.update(AbsString.alpha(id), PropValue(ObjectValue(ins_loc, T, T, T)))
+               h + (HTMLDocument.GlobalDocumentLoc -> new_docobj)
+            }
+            // in case that the 'id' property already exists
+            else {
+               // we know only a single location can be mapped for 'id' in the initial heap
+               val loc_existing = propval._1._1._1._2.head
+               val obj_existing = h(loc_existing)
+               // length value
+               val tagName = obj_existing("tagName")
+               // in case that the 'tagName' property exists: DOM element
+               if(tagName._2 <= AbsentBot) {
+                 // HTMLCollection
+                 val loc_collection = HTMLCollection.getInstance(cfg).get
+                 val collection_proplist = HTMLCollection.getInsList(2) ::: 
+                   List(("0", PropValue(ObjectValue(loc_existing, T, T, T))), ("1", PropValue(ObjectValue(ins_loc, T, T, T))))
+                 val new_docobj = docobj.update(AbsString.alpha(id), PropValue(ObjectValue(loc_collection, T, T, T)))
+                 addInstance(h, loc_collection, collection_proplist) + (HTMLDocument.GlobalDocumentLoc -> new_docobj)
+               }
+               // in case that the 'tagName' property does not exist: HTMLCollection
+               else {
+                 // we know a concrete value for the property value is always present in the initial heap
+                 val collection_length: Int = AbsNumber.concretize(obj_existing("length")._1._1._1._1._4).get.toInt
+                 val new_collection = obj_existing.update(
+                   AbsString.alpha(collection_length.toString), PropValue(ObjectValue(ins_loc, T, T, T))).update(
+                   AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(collection_length+1), T, T, T)))
+                 h + (loc_existing -> new_collection)
+               }
+            }
+
+          case "APPLET" | "FORM" | "IFRAME" | "IMG" | "OBJECT" if name != "" =>
+            val propval = docobj(name)
+            // in case that the 'name' property does not exist
+            if(propval._2 </ AbsentBot) {
+               val new_docobj = docobj.update(AbsString.alpha(name), PropValue(ObjectValue(ins_loc, T, T, T)))
+               h + (HTMLDocument.GlobalDocumentLoc -> new_docobj)
+            }
+            // in case that the 'name' property already exists
+            else {
+               // we know only a single location can be mapped for 'name' in the initial heap
+               val loc_existing = propval._1._1._1._2.head
+               val obj_existing = h(loc_existing)
+               // length value
+               val tagName = obj_existing("tagName")
+               // in case that the 'tagName' property exists: DOM element
+               if(tagName._2 <= AbsentBot) {
+                 // HTMLCollection
+                 val loc_collection = HTMLCollection.getInstance(cfg).get
+                 val collection_proplist = HTMLCollection.getInsList(2) ::: 
+                   List(("0", PropValue(ObjectValue(loc_existing, T, T, T))), ("1", PropValue(ObjectValue(ins_loc, T, T, T))))
+                 val new_docobj = docobj.update(AbsString.alpha(name), PropValue(ObjectValue(loc_collection, T, T, T)))
+                 addInstance(h, loc_collection, collection_proplist) + (HTMLDocument.GlobalDocumentLoc -> new_docobj)
+               }
+               // in case that the 'tagName' property does not exists: HTMLCollection
+               else {
+                 // we know a concrete value for the property value is always present in the initial heap
+                 val collection_length: Int = AbsNumber.concretize(obj_existing("length")._1._1._1._1._4).get.toInt
+                 val new_collection = obj_existing.update(
+                   AbsString.alpha(collection_length.toString), PropValue(ObjectValue(ins_loc, T, T, T))).update(
+                   AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(collection_length+1), T, T, T)))
+                 h + (loc_existing -> new_collection)
+               }
+            }
+          case _ => h
+      }
+      // Non-element node
+      case _ => h
+    }
+  }
+
   // Initialize the id lookup table, name lookup table, tag lookup table 
   // for getElementById, getElementsByName, getElementsByTagName,
   // also initialize the event target table
@@ -576,7 +663,9 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
     
     // initialize id, name, tag, and event look-up tables
     val newmap2 = initLookupTables((newmap1 + (ins_loc -> ins_obj_new)), node, ins_loc)
-    (newmap2, ins_loc)
+    // initialize named properites in Document
+    val newmap3 = initDocomentNamedProps(newmap2, node, ins_loc)
+    (newmap3, ins_loc)
   }
 
   // Construct a DOM tree for the html source

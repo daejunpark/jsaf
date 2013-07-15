@@ -1,9 +1,7 @@
 ################################################################################
 #    Copyright (c) 2013, KAIST.
-#    All rights reserved.
-#
-#    Use is subject to license terms.
-#
+#    All rights reserved.\n#
+#    Use is subject to license terms.\n#
 #    This distribution may include materials developed by third parties.
 ################################################################################
 tests=nullOrUndef1
@@ -13,12 +11,11 @@ bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
 nullOrUndef1.js:12:1~12:2: [TypeError] Property is trying to access 'x', whose value is undefined. \n\
-nullOrUndef1.js:12:1~12:4: [Warning] Unreachable code is found. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
-|  TypeErrors        :      1 ( 50.00%) | \n\
-|  Warnings          :      1 ( 50.00%) | \n\
+|  TypeErrors        :      1 (100.00%) | \n\
+|  Warnings          :      0 (  0.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -36,8 +33,9 @@ nullOrUndef1.js:12:1~12:4: [Warning] Unreachable code is found. \n\
 |  AccessingNullOrUndef    :      1 | \n\
 |  PrimitiveToObject       :      0 | \n\
 |  Shadowing               :      0 | \n\
-|  UnreachableCode         :      1 | \n\
-|  Unused                  :      0 | \n\
+|  UncalledFuction         :      0 | \n\
+|  UnreachableCode         :      0 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

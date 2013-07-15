@@ -10,15 +10,17 @@
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml
 
 import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
+import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import org.w3c.dom.Node
 import org.w3c.dom.Element
 import kr.ac.kaist.jsaf.analysis.typing.Helper
-import kr.ac.kaist.jsaf.analysis.cfg.CFG
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.{DOMElement, DOMNodeList}
 
 object HTMLImageElement extends DOM {
   private val name = "HTMLImageElement"
@@ -33,6 +35,8 @@ object HTMLImageElement extends DOM {
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(ObjProtoLoc), F, F, F)))),
     ("@extensible", AbsConstValue(PropValue(BoolTrue))),
     ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
+    // HTML 5 HTMLElement.Image() constructor
+    ("@construct", AbsInternalFunc("HTMLImageElement.Image")),
     ("length", AbsConstValue(PropValue(ObjectValue(Value(AbsNumber.alpha(0)), F, F, F)))),
     ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F))))
   )
@@ -46,7 +50,9 @@ object HTMLImageElement extends DOM {
 
   /* global */
   private val prop_global: List[(String, AbsProperty)] = List(
-      (name, AbsConstValue(PropValue(ObjectValue(loc_cons, T, F, T))))
+      (name, AbsConstValue(PropValue(ObjectValue(loc_cons, T, F, T)))),
+      // HTML 5 HTMLElement.Image() constructor
+      ("Image", AbsConstValue(PropValue(ObjectValue(loc_cons, T, F, T))))
     )
 
   def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
@@ -54,7 +60,66 @@ object HTMLImageElement extends DOM {
   )
 
   def getSemanticMap(): Map[String, SemanticFun] = {
-    Map()
+    Map(
+      // HTML 5 HTMLElement.Image() constructor
+      // WHATWG HTML Living Standard - Section 4.8.1 The Img Element
+      // http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#dom-image
+      ("HTMLImageElement.Image" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          
+          // location for childNodes property of a new created element
+          val l_childNodes = addrToLoc(addr1, Recent)
+          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+          
+          /* arguments */
+          // argument length
+          val arglen = Operator.ToUInt32(getArgValue(h_1, ctx, args, "length"))
+          // optional arguments for width and height
+          val (width, height) = arglen match {
+            // no arguments 
+            case UIntSingle(n) if n == 0 =>
+              (AbsNumber.alpha(0), AbsNumber.alpha(0))
+            // one argument for width 
+            case UIntSingle(n) if n ==1 =>
+              (Helper.toNumber(Helper.toPrimitive(getArgValue(h_1, ctx, args, "0"))), AbsNumber.alpha(0))
+            // two arguments for width and height 
+            case UIntSingle(n) if n > 1 =>
+              (Helper.toNumber(Helper.toPrimitive(getArgValue(h_1, ctx, args, "0"))), 
+               Helper.toNumber(Helper.toPrimitive(getArgValue(h_1, ctx, args, "1"))))
+            case NumBot => (NumBot, NumBot)
+            case _ => (NumTop, NumTop)
+          }
+          // create a new HTMLImageElement
+          if(width </ NumBot && height </ NumBot) {
+            val h_2 = lset_this.foldLeft(h_1)((_h, l) => {
+              val newimgobj_list = default_getInsList:::DOMElement.getInsList(PropValue(ObjectValue(AbsString.alpha("IMG"), F, T, T)))
+              val newimgobj = newimgobj_list.foldLeft(ObjEmpty)((obj, prop) => 
+                if(prop._1=="width") 
+                  obj.update("width", PropValue(ObjectValue(width, T, T, T)))
+                else if(prop._1=="height")
+                  obj.update("height", PropValue(ObjectValue(height, T, T, T)))
+                else
+                  obj.update(prop._1, prop._2)
+              )
+              // 'childNodes' update
+              val childNodes_list = DOMNodeList.getInsList(0)
+              val childNodes = childNodes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+              val newimgobj_up = newimgobj.update("childNodes", PropValue(ObjectValue(l_childNodes, F, T, T)))
+              _h.update(l_childNodes, childNodes).update(l, newimgobj_up)
+            })
+            ((Helper.ReturnStore(h_2, Value(lset_this)), ctx_1), (he, ctxe))
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        }))
+    )
   }
 
   def getPreSemanticMap(): Map[String, SemanticFun] = {
@@ -133,10 +198,10 @@ object HTMLImageElement extends DOM {
     val longDesc = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
     val src = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
     val useMap = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
-    val height = PropValue(ObjectValue(UInt, T, T, T))
+    val height = PropValue(ObjectValue(AbsNumber.alpha(0), T, T, T))
     val hspace = PropValue(ObjectValue(NumTop, T, T, T))
     val vspace = PropValue(ObjectValue(NumTop, T, T, T))
-    val width = PropValue(ObjectValue(UInt, T, T, T))
+    val width = PropValue(ObjectValue(AbsNumber.alpha(0), T, T, T))
     // This object has all properties of the HTMLElement object 
     HTMLElement.default_getInsList ::: 
       getInsList(name, align, alt, border, isMap, longDesc, src, useMap, height, hspace, vspace, width)

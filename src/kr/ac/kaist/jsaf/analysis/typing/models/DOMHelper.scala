@@ -366,7 +366,7 @@ object DOMHelper {
         // next elements
         val lset_children = Helper.Proto(h, l_this, AbsString.alpha("childNodes"))._2.foldLeft(LocSetBot)((lset, l_n) =>
           lset ++ Helper.Proto(h, l_n, NumStr)._2)
-        if ((!contain && v_attr._1._5 <= s) || (contain && BoolTrue <= v_attr._1._5.contains(s)))
+        if ((!contain && v_attr._1._5 </ StrBot && v_attr._1._5 <= s) || (contain && BoolTrue <= v_attr._1._5.contains(s)))
           lset_children.foldLeft(LocSet(l_this))((lset, l_child) => lset ++ search(lset_visited + l_this, l_child))
         else
           lset_children.foldLeft(LocSetBot)((lset, l_child) => lset ++ search(lset_visited + l_this, l_child))
@@ -381,11 +381,11 @@ object DOMHelper {
     def search(lset_visited: LocSet, l_this: Loc): LocSet = {
       if (!lset_visited.contains(l_this)) {
         // get property value
-        val v_attr = Helper.Proto(h, l_this, AbsString.alpha(prop_name))
+        val v_prop = Helper.Proto(h, l_this, AbsString.alpha(prop_name))
         // next elements
         val lset_children = Helper.Proto(h, l_this, AbsString.alpha("childNodes"))._2.foldLeft(LocSetBot)((lset, l_n) =>
           lset ++ Helper.Proto(h, l_n, NumStr)._2)
-        if (v_attr._1._5 <= s || (tag && AbsString.alpha("*") <= s))
+        if (BoolTrue <= (v_prop._1._5 === s) || (tag && AbsString.alpha("*") <= s))
           lset_children.foldLeft(LocSet(l_this))((lset, l_child) => lset ++ search(lset_visited + l_this, l_child))
         else
           lset_children.foldLeft(LocSetBot)((lset, l_child) => lset ++ search(lset_visited + l_this, l_child))
@@ -447,7 +447,7 @@ object DOMHelper {
         val v_attr = Helper.Proto(h, l_this, AbsString.alpha(prop_name))
         // next elements
         val lset_children = Helper.Proto(h, l_this, AbsString.alpha("nextSibling"))._2
-        if (v_attr._1._5 <= s || (tag && AbsString.alpha("*") <= s))
+        if (BoolTrue <= (v_attr._1._5 === s) || (tag && AbsString.alpha("*") <= s))
           lset_children.foldLeft(LocSet(l_this))((lset, l_child) => lset ++ search(lset_visited + l_this, l_child))
         else
           lset_children.foldLeft(LocSetBot)((lset, l_child) => lset ++ search(lset_visited + l_this, l_child))

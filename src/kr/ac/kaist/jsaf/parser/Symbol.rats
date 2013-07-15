@@ -22,17 +22,7 @@ transient void commaOrNot = "," / w ;
 transient void semicolon = ";";
 transient void colon = ":";
 transient void underscore = "_";
-transient void equals = "=" !("=");
 transient void question = "?";
-transient void bar = "|" !("|" / "=");
-transient void bars = "||";
-transient void and = "&" !("&" / "=");
-transient void ands = "&&";
-transient void caret = "^" !("=");
-transient void doubleplus = "++";
-transient void doubleminus = "--";
-transient void tilde = "~";
-transient void bang = "!";
 
 transient void openparen = "(";
 transient void closeparen = ")";
@@ -41,11 +31,35 @@ transient void closecurly = "}";
 transient void opensquare = "[";
 transient void closesquare = "]";
 
-transient String plus = "+" !("+" / "=");
-transient String minus = "-" !("-" / "=");
 transient String dot   = ".";
 transient String comma = ",";
 transient String star = "*";
+
+Op and = "&" !("&" / "=")
+     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), "&"); };
+Op ands = "&&"
+     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), "&&"); };
+Op bar = "|" !("|" / "=")
+     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), "|"); };
+Op bars = "||"
+     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), "||"); };
+Op caret = "^" !("=")
+     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), "^"); };
+
+Op equals = "=" !("=")
+     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), "="); };
+Op doubleplus = "++"
+     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), "++"); };
+Op doubleminus = "--"
+     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), "--"); };
+Op plus = "+" !("+" / "=")
+     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), "+"); };
+Op minus = "-" !("-" / "=")
+     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), "-"); };
+Op tilde = "~"
+     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), "~"); };
+Op bang = "!"
+     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), "!"); };
 
 /*
  * AssignmentOp ::= *= | /= | %= | += | -= | <<= | >>= | >>>= | &= | ^= | |=
@@ -86,8 +100,7 @@ Op ShiftOp =
  * AdditiveOp ::= + | -
  */
 Op AdditiveOp =
-     a1:(plus / minus)
-     { yyValue = NodeFactory.makeOp(createSpan(yyStart, yyCount), a1); };
+     yyValue:(plus / minus);
 
 /*
  * MultiplicativeOp ::= * | / | %

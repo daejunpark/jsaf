@@ -1,9 +1,7 @@
 ################################################################################
 #    Copyright (c) 2013, KAIST.
-#    All rights reserved.
-#
-#    Use is subject to license terms.
-#
+#    All rights reserved.\n#
+#    Use is subject to license terms.\n#
 #    This distribution may include materials developed by third parties.
 ################################################################################
 tests=conditionalBranch3
@@ -12,15 +10,18 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-conditionalBranch3.js:1:1~1:2: [Warning] Conditional expression, '1', is always true. \n\
-conditionalBranch3.js:2:5~2:6: [Warning] Conditional expression, '4', is always true. \n\
-conditionalBranch3.js:3:5~3:6: [Warning] Conditional expression, '7', is always true. \n\
-conditionalBranch3.js:4:5~4:21: [Warning] Conditional expression, '8 != 8 && 9 != 9', is always false. \n\
+conditionalBranch3.js:1:1~1:2: [Warning] Conditional expression '1' is always true. \n\
+conditionalBranch3.js:1:9~1:10: [Warning] Unreachable code '3' is found. \n\
+conditionalBranch3.js:2:5~2:6: [Warning] Conditional expression '4' is always true. \n\
+conditionalBranch3.js:2:16~2:17: [Warning] Unreachable code '6;' is found. \n\
+conditionalBranch3.js:3:5~3:6: [Warning] Conditional expression '7' is always true. \n\
+conditionalBranch3.js:4:5~4:21: [Warning] Conditional expression '8 != 8 && 9 != 9' is always false. \n\
+conditionalBranch3.js:4:15~4:21: [Warning] Unreachable code '9 != 9' is found. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      4 (100.00%) | \n\
+|  Warnings          :      7 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -38,8 +39,9 @@ conditionalBranch3.js:4:5~4:21: [Warning] Conditional expression, '8 != 8 && 9 !
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
 |  Shadowing               :      0 | \n\
-|  UnreachableCode         :      0 | \n\
-|  Unused                  :      0 | \n\
+|  UncalledFuction         :      0 | \n\
+|  UnreachableCode         :      3 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

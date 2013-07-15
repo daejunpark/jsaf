@@ -40,20 +40,20 @@ class ExprDetect(bugDetector: BugDetector) {
       case Some(info) => info.getSpan
       case None => inst.getInfo.get.getSpan
     }
-    val expr2Span = if(expr2 == null) null else expr2.getInfo match {
+    val expr2Span = if (expr2 == null) null else expr2.getInfo match {
       case Some(info) => info.getSpan
       case None => inst.getInfo.get.getSpan
     }
 
     // Get variable names
     val varId1: String = varManager.getUserVarAssign(expr1) match {
-      case bv: BugVar0 if(bv.toString != "undefined") => " '" + bv.toString + "' can be undefined."
+      case bv: BugVar0 if (bv.toString != "undefined") => " '" + bv.toString + "' can be undefined."
       case _ => ""
     }
     val varId2: String = {
-      if(expr2 != null) {
+      if (expr2 != null) {
         varManager.getUserVarAssign(expr2) match {
-          case bv: BugVar0 if(bv.toString != "undefined") => " '" + bv.toString + "' can be undefined."
+          case bv: BugVar0 if (bv.toString != "undefined") => " '" + bv.toString + "' can be undefined."
           case _ => ""
         }
       }
@@ -63,24 +63,24 @@ class ExprDetect(bugDetector: BugDetector) {
     // Check for each CState
     val bugCheckInstance = new BugCheckInstance()
     val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(CallNonFunction))
-    for((callContext, state) <- mergedCState) {
+    for ((callContext, state) <- mergedCState) {
       // For expr1
       val value1: Value = SE.V(expr1, state.heap, state.context)._1
-      val pvalue1: PValue = if(doToPrimitive) Helper.toPrimitive(value1) else value1.pvalue
+      val pvalue1: PValue = if (doToPrimitive) Helper.toPrimitive(value1) else value1.pvalue
 
       // For expr2 (this can be null)
-      val value2: Value = if(expr2 != null) SE.V(expr2, state.heap, state.context)._1 else null
-      val pvalue2: PValue = if(expr2 != null) {if(doToPrimitive) Helper.toPrimitive(value2) else value2.pvalue} else null
+      val value2: Value = if (expr2 != null) SE.V(expr2, state.heap, state.context)._1 else null
+      val pvalue2: PValue = if (expr2 != null) {if (doToPrimitive) Helper.toPrimitive(value2) else value2.pvalue} else null
 
-      if(conditionFunction == null || conditionFunction(pvalue1, pvalue2)) {
-        if(!bugOption.ConvertUndefToNum_VariableMustHaveUndefinedOnly || pvalue1.typeCount == 1 && value1.locset.isEmpty) {
+      if (conditionFunction == null || conditionFunction(pvalue1, pvalue2)) {
+        if (!bugOption.ConvertUndefToNum_VariableMustHaveUndefinedOnly || pvalue1.typeCount == 1 && value1.locset.isEmpty) {
           // Check possibility of being undefined
           val checkInstance = bugCheckInstance.insert(pvalue1.undefval == UndefTop, expr1Span, callContext, state)
           checkInstance.pValue = pvalue1
           checkInstance.string1 = varId1
         }
-        if(expr2 != null) {
-          if(!bugOption.ConvertUndefToNum_VariableMustHaveUndefinedOnly || pvalue2.typeCount == 1 && value2.locset.isEmpty) {
+        if (expr2 != null) {
+          if (!bugOption.ConvertUndefToNum_VariableMustHaveUndefinedOnly || pvalue2.typeCount == 1 && value2.locset.isEmpty) {
             // Check possibility of being undefined
             val checkInstance = bugCheckInstance.insert(pvalue2.undefval == UndefTop, expr2Span, callContext, state)
             checkInstance.pValue = pvalue2
@@ -91,12 +91,12 @@ class ExprDetect(bugDetector: BugDetector) {
     }
 
     // Filter out bugs depending on options
-    if(!bugOption.ConvertUndefToNum_UndefMustBeConvertedInEveryState) {
+    if (!bugOption.ConvertUndefToNum_UndefMustBeConvertedInEveryState) {
       bugCheckInstance.filter((bug, notBug) => (bug.pValue == notBug.pValue))
     }
 
     // Report bugs
-    for(checkInstance <- bugCheckInstance.bugList) bugStorage.addMessage(checkInstance.span, ConvertUndefToNum, inst, checkInstance.callContext, checkInstance.string1)
+    for (checkInstance <- bugCheckInstance.bugList) bugStorage.addMessage(checkInstance.span, ConvertUndefToNum, inst, checkInstance.callContext, checkInstance.string1)
   }
 
 
@@ -203,31 +203,11 @@ class ExprDetect(bugDetector: BugDetector) {
 
 
   ////////////////////////////////////////////////////////////////
-  // Get a set of property names (String) from an AbsString
-  ////////////////////////////////////////////////////////////////
-
-  private def props(heap: Heap, loc: Loc, absString: AbsString): Set[String] = {
-    if (!heap.domIn(loc)) Set()
-    else {
-      absString match {
-        // ignore @default
-        case StrTop => heap(loc).map.keySet.filter(s => !s.take(1).equals("@"))
-        case NumStr => heap(loc).map.keySet.filter(s => !s.take(1).equals("@") && AbsString.alpha(s) <= NumStr)
-        case OtherStr => heap(loc).map.keySet.filter(s => !s.take(1).equals("@") && AbsString.alpha(s) <= OtherStr)
-        case NumStrSingle(s) => Set(s)
-        case OtherStrSingle(s) => Set(s)
-        case StrBot => Set()
-      }
-    }
-  }
-
-
-
-  ////////////////////////////////////////////////////////////////
   // Bug Detection Main (check CFGExpr)
   ////////////////////////////////////////////////////////////////
 
-  def check(node: Node, inst: CFGInst, expr: CFGExpr, cstate: CState): Unit = {
+  def check(inst: CFGInst, expr: CFGExpr, cstate: CState): Unit = {
+    val node    = cfg.findEnclosingNode(inst)
     val state   = typing.mergeState(cstate)
     val heap    = state._1
     val context = state._2
@@ -261,9 +241,8 @@ class ExprDetect(bugDetector: BugDetector) {
           }
         case CFGLoad(info, obj, index) => 
           absentReadPropertyCheck(info.getSpan, obj, index)
-          unusedVarPropCheck(inst, expr, read, property)
         case CFGThis(info) => 
-          globalThisCheck(info.getSpan, cfg.findEnclosingNode(inst)._1) 
+          globalThisCheck(info.getSpan, node._1) 
         case CFGUn(info, op, expr) =>
           val opStr = op.getText
           opStr match {
@@ -281,7 +260,6 @@ class ExprDetect(bugDetector: BugDetector) {
           }
         case CFGVarRef(info, id) => 
           absentReadVariableCheck(info.getSpan, id)
-          unusedVarPropCheck(inst, expr, read, variable)
         case _ => Unit
       }
     }
@@ -298,7 +276,7 @@ class ExprDetect(bugDetector: BugDetector) {
         index.isInstanceOf[CFGString] && index.asInstanceOf[CFGString].str == "prototype") return
 
       // Get the object name and property name
-      var objId: String = varManager.getUserVarAssign(obj) match {
+      val objId: String = varManager.getUserVarAssign(obj) match {
         case bv: BugVar0 => "'" + bv.toString + "'"
         case _ => "an object"
       }
@@ -315,9 +293,9 @@ class ExprDetect(bugDetector: BugDetector) {
         val propValue = SE.V(index, state.heap, state.context)._1.pvalue
 
         // Check for each object location
-        objLocSet.foreach(objLoc => {
+        for(objLoc <- objLocSet) {
           // Check for each primitive value
-          propValue.foreach(absValue => {
+          for(absValue <- propValue) {
             if (absValue.isConcrete || (!absValue.isBottom && bugOption.AbsentReadProperty_CheckAbstractIndexValue)) {
               val propStr = absValue.toAbsString
               val propExist = Helper.HasProperty(state.heap, objLoc, propStr)
@@ -329,16 +307,16 @@ class ExprDetect(bugDetector: BugDetector) {
               }
 
               val checkInstance = bugCheckInstance.insert(isBug, span, callContext, state)
-              checkInstance.loc = objLoc
+              checkInstance.loc1 = objLoc
               checkInstance.absValue = absValue
             }
-          })
-        })
+          }
+        }
       }
   
       // Filter out bugs depending on options
       if (!bugOption.AbsentReadProperty_PropertyMustExistInEveryState) {
-        bugCheckInstance.filter((bug, notBug) => (bug.loc == notBug.loc && bug.absValue == notBug.absValue))
+        bugCheckInstance.filter((bug, notBug) => (bug.loc1 == notBug.loc1 && bug.absValue == notBug.absValue))
       }
       if (!bugOption.AbsentReadProperty_PropertyMustExistInEveryLocation) {
         bugCheckInstance.filter((bug, notBug) => (bug.callContext == notBug.callContext && bug.state == notBug.state && bug.absValue == notBug.absValue))
@@ -395,7 +373,7 @@ class ExprDetect(bugDetector: BugDetector) {
       if (!bugOption.AbsentReadVariable_VariableMustExistInEveryState) bugCheckInstance.filter((bug, notBug) => true)
 
       // Report bugs
-      for(b <- bugCheckInstance.bugList) bugStorage.addMessage(b.span, AbsentReadVariable, inst, b.callContext, id.getText)
+      for (b <- bugCheckInstance.bugList) bugStorage.addMessage(b.span, AbsentReadVariable, inst, b.callContext, id.getText)
     }
 
 
@@ -408,7 +386,7 @@ class ExprDetect(bugDetector: BugDetector) {
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance()
       val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(BinaryOpSecondType))
-      for((callContext, state) <- mergedCState) {
+      for ((callContext, state) <- mergedCState) {
         val value = SE.V(second, state.heap, state.context)._1
         val pvalue = value.pvalue
 
@@ -421,7 +399,7 @@ class ExprDetect(bugDetector: BugDetector) {
           case false => value.locset.isEmpty
         }
         val checkInstance = bugCheckInstance.insertWithStrings(isBug, span, callContext, state, "non-object")
-        checkInstance.loc = Integer.MIN_VALUE
+        checkInstance.loc1 = Integer.MIN_VALUE
         checkInstance.pValue = pvalue
 
         // Check function type (instanceof)
@@ -436,7 +414,7 @@ class ExprDetect(bugDetector: BugDetector) {
                 Helper.IsCallable(state.heap, loc) == BoolFalse
             }
             val checkInstance = bugCheckInstance.insertWithStrings(isBug, span, callContext, state, "non-function object")
-            checkInstance.loc = loc
+            checkInstance.loc1 = loc
             checkInstance.pValue = pvalue
           })
         }
@@ -444,14 +422,14 @@ class ExprDetect(bugDetector: BugDetector) {
 
       // Filter out bugs depending on options
       if (!bugOption.BinaryOpSecondType_OperandMustBeCorrectInEveryState) {
-        bugCheckInstance.filter((bug, notBug) => bug.loc == notBug.loc && bug.string1 == notBug.string1)
+        bugCheckInstance.filter((bug, notBug) => bug.loc1 == notBug.loc1 && bug.string1 == notBug.string1)
       }
       if (!bugOption.BinaryOpSecondType_OperandMustBeCorrectInEveryLocation) {
         bugCheckInstance.filter((bug, notBug) => bug.callContext == notBug.callContext && bug.state == notBug.state && bug.string1 == notBug.string1)
       }
 
       // Report bugs
-      for(checkInstance <- bugCheckInstance.bugList) {
+      for (checkInstance <- bugCheckInstance.bugList) {
         var string = "."
         if (second.isInstanceOf[CFGVarRef]) {
           val concreteValue = pvalueToString(checkInstance.pValue)
@@ -566,6 +544,39 @@ class ExprDetect(bugDetector: BugDetector) {
     ////////////////////////////////////////////////////////////////
 
     def globalThisCheck(span: Span, fid: Int): Unit = {
+      // Check for each CState
+      var isDefinite = true
+      val bugCheckInstance = new BugCheckInstance()
+      val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(GlobalThis))
+      for((callContext, state) <- mergedCState) {
+        val thisLocSet = state.heap(SinglePureLocalLoc)("@this")._1.value.locset
+
+        val isGlobalCode = (fid == cfg.getGlobalFId) // Is current instruction in the global code?
+        val referGlobal = bugOption.GlobalThis_MustReferDefinitely match { // Does 'this' refer global object?
+          case true => thisLocSet.contains(GlobalLoc) && thisLocSet.size == 1
+          case false => thisLocSet.contains(GlobalLoc)
+        }
+        val isBug = !isGlobalCode && referGlobal
+        bugCheckInstance.insert(isBug, span, callContext, state)
+        if(thisLocSet.size > 1) isDefinite = false
+
+        // Debug
+        //println("fid = " + fid + ", isGlobalCode = " + isGlobalCode + ", referGlobal = " + referGlobal + ", thisLocSet.size = " + thisLocSet.size)
+      }
+
+      if(bugCheckInstance.notBugList.size > 0) isDefinite = false
+
+      // Filter out bugs depending on options
+      if(bugOption.GlobalThis_MustReferInEveryState) {
+        bugCheckInstance.filter((bug, notBug) => true)
+      }
+
+      // Report bugs
+      for(b <- bugCheckInstance.bugList) {
+        bugStorage.addMessage(b.span, GlobalThis, inst, b.callContext, if(isDefinite) "refers" else "may refer")
+      }
+
+      /* Previous code
       val lset_this = heap(SinglePureLocalLoc)("@this")._1._2._2
       val notGlobal = (fid != cfg.getGlobalFId)     // true: current function is not the global object.
       val mayGlobal = lset_this.contains(GlobalLoc) // true: "MAYBE" this refers the global object.
@@ -573,6 +584,7 @@ class ExprDetect(bugDetector: BugDetector) {
       /* bug check */
       if (!definite_only && !defGlobal) Unit        // maybe
       else if (notGlobal && mayGlobal) bugStorage.addMessage(span, (if (defGlobal) GlobalThisDefinite else GlobalThisMaybe), inst, null)
+      */
     }
 
 
@@ -582,7 +594,7 @@ class ExprDetect(bugDetector: BugDetector) {
     ////////////////////////////////////////////////////////////////
 
     def implicitTypeConversionEqualityComparison(span: Span, op: String, expr1: CFGExpr, expr2: CFGExpr): Unit = {
-      if(inst.isInstanceOf[CFGAssert] && !inst.asInstanceOf[CFGAssert].flag) return
+      if (inst.isInstanceOf[CFGAssert] && !inst.asInstanceOf[CFGAssert].flag) return
 
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance()
@@ -757,32 +769,6 @@ class ExprDetect(bugDetector: BugDetector) {
 
       // Report bugs
       bugCheckInstance.bugList.foreach((e) => bugStorage.addMessage(e.span, ImplicitTypeConvert, inst, e.callContext, e.string1, e.string2, op, e.string3, e.string4))
-    }
-
-
-
-    ////////////////////////////////////////////////////////////////
-    // UnusedVarProp Check (store read entries to RWMap)
-    ////////////////////////////////////////////////////////////////
-
-    def unusedVarPropCheck(inst: CFGInst, expr: CFGExpr, rwflag: Boolean, pvflag: Boolean): Unit = {
-      expr match {
-        case CFGLoad(info, obj, index) => 
-          val s = SE.V(index, heap, context)._1._1._5
-          val locSet = SE.V(obj, heap, context)._1._2
-          val locSetBase = locSet.foldLeft(LocSetBot)((locset, loc) => locset ++ Helper.ProtoBase(heap, loc, s))
-          locSetBase.foreach((loc: Loc) => props(heap, loc, s).foreach((name) => 
-            bugStorage.updateRWMap(cfg.findEnclosingNode(inst), rwflag, pvflag, name, loc, info.getSpan)))
-        case CFGVarRef(info, id) => 
-          id match {
-            case CFGUserId(_, name, _, originalName, _) =>
-              val locSet = Helper.LookupBase(heap, id)
-              locSet.foreach((loc: Loc) => bugStorage.updateRWMap(cfg.findEnclosingNode(inst), rwflag, pvflag, name, loc, info.getSpan))
-              if (bugStorage.isInternalName(name)) bugStorage.updateNameMap(name, originalName)
-            case CFGTempId(_, _) => Unit
-          }
-        case _ => Unit
-      }
     }
   }
 }

@@ -130,8 +130,8 @@ class StateManager(bugDetector: BugDetector) {
                 //exceptionState = StateBot
                 for((callContext, state) <- previousNormalCState) {
                   val (newNormalState, newExceptionState) = semantics.I((node, callContext), inst, state.heap, state.context, HeapBot, ContextBot)
-                  normalCState+= (callContext -> State(newNormalState._1, newNormalState._2))
-                  //exceptionState+= State(newExceptionState._1, newExceptionState._2)
+                  if(newNormalState._1 != HeapBot) normalCState+= (callContext -> State(newNormalState._1, newNormalState._2))
+                  //if(exceptionState._1 != HeapBot) exceptionState+= State(newExceptionState._1, newExceptionState._2)
 
                   // Insert variable info
                   varManager.insertInfo(node, inst, state)

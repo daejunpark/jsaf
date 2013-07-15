@@ -10,13 +10,14 @@
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml
 
 import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
+import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.ControlPoint
 import org.w3c.dom.Node
 import org.w3c.dom.Element
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMDocument
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.{DOMDocument, DOMNodeList}
 import org.w3c.dom.html.{HTMLDocument => HTMLDoc}
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
@@ -71,7 +72,34 @@ object HTMLDocument extends DOM {
       //case "HTMLDocument.close" => ((h,ctx),(he,ctxe))
       //case "HTMLDocument.write" => ((h,ctx),(he,ctxe))
       //case "HTMLDocument.writeln" => ((h,ctx),(he,ctxe))
-      //case "HTMLDocument.getElementsByName" => ((h,ctx),(he,ctxe))
+      ("HTMLDocument.getElementsByName" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+          /* arguments */
+          val s_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          if (s_name </ StrBot) {
+            val obj_table = h(NameTableLoc)
+            val propv_element = obj_table(s_name)
+            val (h_1, ctx_1, v_empty) =
+              if (propv_element._2 </ AbsentBot) {
+                val l_r = addrToLoc(addr1, Recent)
+                val (_h, _ctx)  = Helper.Oldify(h, ctx, addr1)
+                /* empty NodeList */
+                val o_empty = Obj(DOMNodeList.getInsList(0).foldLeft(ObjEmpty.map)((o,pv) =>
+                  o.updated(pv._1, (pv._2, AbsentBot))))
+                val _h1 = _h.update(l_r, o_empty)
+                (_h1, _ctx, Value(l_r))
+              } else (h, ctx, ValueBot)
+            /* imprecise semantic */
+            ((Helper.ReturnStore(h_1, propv_element._1._1._1 + v_empty), ctx_1), (he, ctxe))
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        }))
     )
   }
 
@@ -137,7 +165,9 @@ object HTMLDocument extends DOM {
       ("domain",   PropValue(ObjectValue(AbsString.alpha(if(domain!=null) domain else ""), F, T, T))),
       ("URL",   PropValue(ObjectValue(AbsString.alpha(if(URL!=null) URL else ""), F, T, T))),
       ("cookie",   PropValue(ObjectValue(AbsString.alpha(if(cookie!=null) cookie else ""), T, T, T))),
-      ("body",   PropValue(ObjectValue(HTMLBodyElement.getInstance.get, T, T, T))))
+      ("body",   PropValue(ObjectValue(HTMLBodyElement.getInstance.get, T, T, T))),
+      // 'compatMode' in WHATWG DOM Living Standard 
+      ("compatMode",   PropValue(ObjectValue(OtherStr, T, T, T))))
       // TODO: 'images', 'applets', 'links', 'forms', 'anchors' in DOM Level 1
     case _ => {
       System.err.println("* Warning: " + node.getNodeName + " cannot be an instance of HTMLDocument.")

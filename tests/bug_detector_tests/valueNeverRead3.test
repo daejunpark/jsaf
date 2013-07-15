@@ -1,0 +1,46 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.\n#
+#    Use is subject to license terms.\n#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=valueNeverRead3
+BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
+bug-detector
+bug-detector_out_WCIequals=\
+ \n\
+* Bug Detector * \n\
+valueNeverRead3.js:12:1~14:1: [Warning] Function 'f' is never called. \n\
+valueNeverRead3.js:13:3~13:8: [Warning] Unreachable code 'x = 7;' is found. \n\
+valueNeverRead3.js:16:9~18:1: [Warning] Function 'g' is never called. \n\
+valueNeverRead3.js:17:3~17:12: [Warning] Unreachable code '{ t = x; }' is found. \n\
+ \n\
+============== Total Count ============== \n\
+|  ReferenceErrors   :      0 (  0.00%) | \n\
+|  TypeErrors        :      0 (  0.00%) | \n\
+|  Warnings          :      4 (100.00%) | \n\
+========================================= \n\
+============ Statistics ============= \n\
+|  AbsentRead              :      0 | \n\
+|  BinaryOperator          :      0 | \n\
+|  BuiltinWrongArgType     :      0 | \n\
+|  CallConstFunc           :      0 | \n\
+|  CallNonConstructor      :      0 | \n\
+|  CallNonFunction         :      0 | \n\
+|  ConditionalBranch       :      0 | \n\
+|  ConvertToNumber         :      0 | \n\
+|  DefaultValueTypeError   :      0 | \n\
+|  FunctionArgSize         :      0 | \n\
+|  GlobalThis              :      0 | \n\
+|  ImplicitTypeConversion  :      0 | \n\
+|  AccessingNullOrUndef    :      0 | \n\
+|  PrimitiveToObject       :      0 | \n\
+|  Shadowing               :      0 | \n\
+|  UncalledFuction         :      2 | \n\
+|  UnreachableCode         :      2 | \n\
+|  ValueNeverRead          :      0 | \n\
+|  VaryingTypeArguments    :      0 | \n\
+|  WrongThisType           :      0 | \n\
+===================================== \n\
+\n
+bug-detector_err_equals=

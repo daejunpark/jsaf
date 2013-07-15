@@ -462,6 +462,9 @@ object NodeFactory {
   def makePath(span: Span, ids: JList[Id]): Path =
     new Path(makeSpanInfo(span), ids)
 
-  def makeNoOp(info: SpanInfo, desc: String) =
+  def makeNoOp(span: Span, desc: String): NoOp =
+    makeNoOp(makeSpanInfo(span), desc)
+
+  def makeNoOp(info: SpanInfo, desc: String): NoOp =
     new NoOp(info, desc)
 }

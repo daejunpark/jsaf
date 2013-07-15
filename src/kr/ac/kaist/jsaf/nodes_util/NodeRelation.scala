@@ -14,8 +14,8 @@ import scala.collection.mutable.{HashSet => MHashSet}
 import scala.collection.mutable.{ListBuffer => MList}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.cfg.{Block => CFGCmdBlock}
-import kr.ac.kaist.jsaf.nodes.Node
 import kr.ac.kaist.jsaf.nodes._
+import kr.ac.kaist.jsaf.nodes.{Node => ASTRootNode}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 
 object NodeRelation {
@@ -23,7 +23,7 @@ object NodeRelation {
   // Custom HashMap
   ////////////////////////////////////////////////////////////////////////////////
   class MHashMapEx[KeyType, ValueType] extends MHashMap[KeyType, ValueType] {
-    // Custom hash function to use uid as a hash value
+    // Custom hash function uses the uid as a hash value
     override def elemHashCode(key: KeyType): Int = {
       key match {
         case ast: AbstractNode => ast.getUID.toInt
@@ -53,11 +53,18 @@ object NodeRelation {
   }
 
   ////////////////////////////////////////////////////////////////////////////////
+  // Root nodes
+  ////////////////////////////////////////////////////////////////////////////////
+  var astRoot:                                  Program = null
+  var irRoot:                                   IRRoot = null
+  var cfgRoot:                                  CFGNode = null
+
+  ////////////////////////////////////////////////////////////////////////////////
   // Parent & Children relation
   ////////////////////////////////////////////////////////////////////////////////
   // AST's parent & children
-  type ASTParentMap =                           MHashMapEx[Node, Node]
-  type ASTChildMap =                            MHashMapEx[Node, MList[Node]]
+  type ASTParentMap =                           MHashMapEx[ASTRootNode, ASTRootNode]
+  type ASTChildMap =                            MHashMapEx[ASTRootNode, MList[ASTRootNode]]
   var astParentMap:                             ASTParentMap = null
   var astChildMap:                              ASTChildMap = null
 
@@ -77,19 +84,19 @@ object NodeRelation {
   // AST <-> IR <-> CFG relation
   ////////////////////////////////////////////////////////////////////////////////
   // For AST -> (Set[IR], Set[CFG])
-  type AST2IRMap =                              MHashMap[Node, MList[IRNode]]
-  type AST2CFGMap =                             MHashMap[Node, MList[CFGNode]]
+  type AST2IRMap =                              MHashMap[ASTRootNode, MList[IRNode]]
+  type AST2CFGMap =                             MHashMap[ASTRootNode, MList[CFGNode]]
   var ast2irMap:                                AST2IRMap = null
   var ast2cfgMap:                               AST2CFGMap = null
 
   // For IR -> (AST, Set[CFG])
-  type IR2ASTMap =                              MHashMap[IRNode, Node]
+  type IR2ASTMap =                              MHashMap[IRNode, ASTRootNode]
   type IR2CFGMap =                              MHashMap[IRNode, MList[CFGNode]]
   var ir2astMap:                                IR2ASTMap = null
   var ir2cfgMap:                                IR2CFGMap = null
 
   // For CFG -> (AST, IR)
-  type CFG2ASTMap =                             MHashMap[CFGNode, Node]
+  type CFG2ASTMap =                             MHashMap[CFGNode, ASTRootNode]
   type CFG2IRMap =                              MHashMap[CFGNode, IRNode]
   var cfg2astMap:                               CFG2ASTMap = null
   var cfg2irMap:                                CFG2IRMap = null
@@ -99,6 +106,11 @@ object NodeRelation {
   ////////////////////////////////////////////////////////////////////////////////
   // Reset
   def reset(): Unit = {
+    // Root node
+    astRoot = null
+    irRoot = null
+    cfgRoot = null
+
     // Parent & Child
     astParentMap = null
     astChildMap = null
@@ -117,7 +129,12 @@ object NodeRelation {
   }
 
   // Set
-  def set(ast: Program, ir: IRRoot, cfg: CFG): Unit = {
+  def set(ast: Program, ir: IRRoot, cfg: CFG, quiet: Boolean): Unit = {
+    // Root node
+    astRoot = ast
+    irRoot = ir
+    // cfgRoot = ?
+
     // Parent & Children
     astParentMap = new ASTParentMap
     astChildMap = new ASTChildMap
@@ -136,9 +153,9 @@ object NodeRelation {
 
     // Put AST's parent & children
     def putAST_AST(parent: Any, child: Any): Unit = {
-      if(parent != null && !parent.isInstanceOf[Node] || !child.isInstanceOf[Node]) return
-      val parentNode = if(parent.isInstanceOf[Node]) parent.asInstanceOf[Node] else null
-      val childNode = child.asInstanceOf[Node]
+      if(parent != null && !parent.isInstanceOf[ASTRootNode] || !child.isInstanceOf[ASTRootNode]) return
+      val parentNode = if(parent.isInstanceOf[ASTRootNode]) parent.asInstanceOf[ASTRootNode] else null
+      val childNode = child.asInstanceOf[ASTRootNode]
       astParentMap.put(childNode, parentNode)
       astChildMap.getOrElseUpdate(parentNode, new MList).append(childNode)
     }
@@ -166,7 +183,8 @@ object NodeRelation {
       val irNode = ir.asInstanceOf[IRNode]
       NodeFactory.ir2ast(irNode) match {
         case Some(ast) =>
-          ast2irMap.getOrElseUpdate(ast, new MList).append(irNode)
+          val irList = ast2irMap.getOrElseUpdate(ast, new MList)
+          if(!irList.contains(irNode)) irList.append(irNode)
           ir2astMap.get(irNode) match {
             case Some(_) => //throw new RuntimeException("Error!")
             case None => ir2astMap.put(irNode, ast)
@@ -183,7 +201,8 @@ object NodeRelation {
           putIR_CFG(irNode, cfgNode)
           NodeFactory.ir2ast(irNode) match {
             case Some(ast) =>
-              ast2cfgMap.getOrElseUpdate(ast, new MList).append(cfgNode)
+              val cfgList = ast2cfgMap.getOrElseUpdate(ast, new MList)
+              if(!cfgList.contains(cfgNode)) cfgList.append(cfgNode)
               cfg2astMap.get(cfgNode) match {
                 case Some(_) => //throw new RuntimeException("Error!")
                 case None => cfg2astMap.put(cfgNode, ast)
@@ -196,7 +215,8 @@ object NodeRelation {
 
     // Put IR <-> CFG
     def putIR_CFG(irNode: IRNode, cfgNode: CFGNode): Unit = {
-      ir2cfgMap.getOrElseUpdate(irNode, new MList).append(cfgNode)
+      val cfgList = ir2cfgMap.getOrElseUpdate(irNode, new MList)
+      if(!cfgList.contains(cfgNode)) cfgList.append(cfgNode)
       cfg2irMap.get(cfgNode) match {
         case Some(_) => //throw new RuntimeException("Error!")
         case None => cfg2irMap.put(cfgNode, irNode)
@@ -385,6 +405,9 @@ object NodeRelation {
       }
     }
 
+    // Start time
+    val startTime = System.nanoTime;
+
     // AST's parent & children
     walkAST(null, ast)
 
@@ -400,6 +423,12 @@ object NodeRelation {
         case CFGCmdBlock(insts) => for(inst <- insts) walkCFG(null, inst)
         case _ =>
       }
+    }
+
+    // Elapsed time
+    if(!quiet) {
+      val elapsedTime = (System.nanoTime - startTime) / 1000000000.0;
+      System.out.format("# Time for node relation computation(s): %.2f\n", new java.lang.Double(elapsedTime))
     }
 
     //dump
@@ -422,7 +451,7 @@ object NodeRelation {
   }
 
   // AST to String
-  def astToString(ast: Node): String = {
+  def astToString(ast: ASTRootNode): String = {
     ast match {
       case ast: ASTNode => JSAstToConcrete.doit(ast).replace('\n', ' ')
       case ast: ScopeBody => ""
@@ -432,14 +461,57 @@ object NodeRelation {
   // IR to String
   def irToString(ir: IRNode): String = new JSIRUnparser(ir).doit.replace('\n', ' ')
 
+  // CFG to String
+  def cfgToString(cfg: CFGNode): String = cfg match {
+    case inst: CFGInst => "[" + inst.getInstId + "] " + inst
+    case _ => cfg.toString
+  }
+
   // Used in BugStorage
-  def getParentASTStmtOrCond(ast: Node): Node = {
+  def getParentASTStmtOrCond(ast: ASTRootNode): ASTNode = {
     var node = ast
     while(true) {
-      if(node == null || node.isInstanceOf[Stmt] || node.isInstanceOf[Cond]) return node
+      if(node == null) return null
+      if(node.isInstanceOf[Stmt] || node.isInstanceOf[Cond]) return node.asInstanceOf[ASTNode]
+      //println("AST" + node.getClass().getSimpleName() + '[' + getUID(node) + "] : " + astToString(node))
       node = astParentMap(node)
     }
     null
+  }
+
+  // Is ancestor
+  def isAncestor(ancestor: ASTRootNode, child: ASTRootNode): Boolean = {
+    var node = child
+    while(true) {
+      if(node == null) return false
+      astParentMap.get(node) match {
+        case Some(parent) => if(parent == ancestor) return true else node = parent
+        case None => return false
+      }
+    }
+    false
+  }
+  def isAncestor(ancestor: IRNode, child: IRNode): Boolean = {
+    var node = child
+    while(true) {
+      if(node == null) return false
+      irParentMap.get(node) match {
+        case Some(parent) => if(parent == ancestor) return true else node = parent
+        case None => return false
+      }
+    }
+    false
+  }
+  def isAncestor(ancestor: CFGNode, child: CFGNode): Boolean = {
+    var node = child
+    while(true) {
+      if(node == null) return false
+      cfgParentMap.get(node) match {
+        case Some(parent) => if(parent == ancestor) return true else node = parent
+        case None => return false
+      }
+    }
+    false
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -495,8 +567,8 @@ object NodeRelation {
     /*println("*** CFG's parent ***")
     for((child, parent) <- cfgParentMap) {
       if(parent == null) println("CFG no parent. (Root)")
-      else println(parent.getClass().getSimpleName() + " : " + parent)
-      println("    " + child.getClass().getSimpleName() + " : " + child)
+      else println(parent.getClass().getSimpleName() + " : " + cfgToString(parent))
+      println("    " + child.getClass().getSimpleName() + " : " + cfgToString(child))
     }
     println*/
 
@@ -504,8 +576,8 @@ object NodeRelation {
     /*println("*** CFG's children ***")
     for((parent, childList) <- cfgChildMap) {
       if(parent == null) println("CFG no parent. (Root)")
-      else println(parent.getClass().getSimpleName() + " : " + parent)
-      for(child <- childList) println("    " + child.getClass().getSimpleName() + " : " + child)
+      else println(parent.getClass().getSimpleName() + " : " + cfgToString(parent))
+      for(child <- childList) println("    " + child.getClass().getSimpleName() + " : " + cfgToString(child))
     }
     println*/
 
@@ -538,14 +610,14 @@ object NodeRelation {
     /*println("*** AST -> CFG ***")
     for((ast, cfgList)<- ast2cfgMap) {
       println("AST" + ast.getClass().getSimpleName() + '[' + getUID(ast) + "] : " + astToString(ast))
-      for(cfg <- cfgList) println("    " + cfg.getClass().getSimpleName() + " : " + cfg)
+      for(cfg <- cfgList) println("    " + cfg.getClass().getSimpleName() + " : " + cfgToString(cfg))
     }
-    println
+    println*/
 
     // CFG -> AST
-    println("*** CFG -> AST ***")
+    /*println("*** CFG -> AST ***")
     for((cfg, ast)<- cfg2astMap) {
-      println(cfg.getClass().getSimpleName() + " : " + cfg)
+      println(cfg.getClass().getSimpleName() + " : " + cfgToString(cfg))
       println("    AST" + ast.getClass().getSimpleName() + '[' + getUID(ast) + "] : " + astToString(ast))
     }
     println*/
@@ -554,14 +626,14 @@ object NodeRelation {
     /*println("*** IR -> CFG ***")
     for((ir, cfgList)<- ir2cfgMap) {
       println(ir.getClass().getSimpleName() + '[' + getUID(ir) + "] : " + irToString(ir))
-      for(cfg <- cfgList) println("    " + cfg.getClass().getSimpleName() + " : " + cfg)
+      for(cfg <- cfgList) println("    " + cfg.getClass().getSimpleName() + " : " + cfgToString(cfg))
     }
     println*/
 
     // CFG -> IR
     /*println("*** CFG -> IR ***")
     for((cfg, ir)<- cfg2irMap) {
-      println(cfg.getClass().getSimpleName() + " : " + cfg)
+      println(cfg.getClass().getSimpleName() + " : " + cfgToString(cfg))
       println("    " + ir.getClass().getSimpleName() + '[' + getUID(ir) + "] : " + irToString(ir))
     }
     println*/

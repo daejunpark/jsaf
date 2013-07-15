@@ -1,0 +1,24 @@
+<!-- test for 'Image' constructor in HTMLImageElement -->
+<body>
+  <script>
+    var imgelem1 = new Image();  // HTMLImageElement
+    var __result1 = imgelem1.tagName; 
+    var __expect1 = "IMG";
+    var __result2 = imgelem1.name; 
+    var __expect2 = "";
+    var __result3 = imgelem1.width;
+    var __expect3 = 0;
+
+    var imgelem2 = new Image(2);  // HTMLImageElement with the width 2
+    var __result4 = imgelem2.width;
+    var __expect4 = 2;
+    var __result5 = imgelem2.height;
+    var __expect5 = 0;
+
+    var imgelem3 = new Image(3, 4);  // HTMLImageElement with the width 3 and the height 4
+    var __result6 = imgelem3.width;
+    var __expect6 = 3;
+    var __result7 = imgelem3.height;
+    var __expect7 = 4;
+  </script>
+</body>

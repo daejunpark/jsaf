@@ -1,0 +1,15 @@
+<!-- test for HTMLUnknownElement -->
+<body>
+  <img id="brick1" name="aaa" for="aaa" type="text"> test </img>
+  <div name=ccc for="bbb" type="submit"> ttt </div>
+  <FORM name="aaa"> </FORM>
+  <A id="A1" href="http://news.naver.com/">www.naver.com </A>
+  <script>
+    var x=document.createElement("a111");
+    var __result1 = x.tagName; 
+    var __expect1 = "A111";
+  </script>
+  <div> </div>
+  <script> 
+  </script>
+</body>

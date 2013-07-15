@@ -26,7 +26,8 @@ class BugCheckInstance() {
     var state:                                  State = null
     var bugKind:                                BugKind = 0
     var fid:                                    FunctionId = 0
-    var loc:                                    Loc = 0
+    var loc1:                                   Loc = 0
+    var loc2:                                   Loc = 0
     var value1:                                 Value = null
     var value2:                                 Value = null
     var pValue:                                 PValue = null
@@ -63,13 +64,10 @@ class BugCheckInstance() {
 
   def insertWithStrings(isBug: Boolean, span: Span, callContext: CallContext, state: State, strings: String*): CheckInstance = {
     val checkInstance = insert(isBug, span, callContext, state)
-    strings.length match {
-      case 1 => checkInstance.string1 = strings(0)
-      case 2 => checkInstance.string1 = strings(1)
-      case 3 => checkInstance.string1 = strings(2)
-      case 4 => checkInstance.string1 = strings(3)
-      case _ =>
-    }
+    if(strings.length >= 1) checkInstance.string1 = strings(0)
+    if(strings.length >= 2) checkInstance.string2 = strings(1)
+    if(strings.length >= 3) checkInstance.string3 = strings(2)
+    if(strings.length >= 4) checkInstance.string4 = strings(3)
     checkInstance
   }
 

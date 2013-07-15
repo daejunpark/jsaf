@@ -1,9 +1,7 @@
 ################################################################################
 #    Copyright (c) 2013, KAIST.
-#    All rights reserved.
-#
-#    Use is subject to license terms.
-#
+#    All rights reserved.\n#
+#    Use is subject to license terms.\n#
 #    This distribution may include materials developed by third parties.
 ################################################################################
 tests=unreachableCode1
@@ -12,18 +10,16 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-unreachableCode1.js:3:5~3:18: [Warning] Variable 'z' is never used. \n\
-unreachableCode1.js:4:5~4:6: [Warning] Conditional expression, 'y', is always false. \n\
-unreachableCode1.js:5:11~7:3: [Warning] Unreachable code is found. \n\
-unreachableCode1.js:5:11~7:3: [Warning] Function 'anonymous_function' is never used. \n\
-unreachableCode1.js:8:3~8:6: [Warning] Unreachable code is found. \n\
-unreachableCode1.js:9:12~9:17: [Warning] Conditional expression, 'x < 2', is always false. \n\
-unreachableCode1.js:16:7~16:16: [Warning] Variable 'test' is never used. \n\
+unreachableCode1.js:4:5~4:6: [Warning] Conditional expression 'y' is always false. \n\
+unreachableCode1.js:4:8~9:2: [Warning] Unreachable code '{ { f = (function () { return x; }); } f(); }' is found. \n\
+unreachableCode1.js:5:11~7:3: [Warning] Function 'anonymous_function' is never called. \n\
+unreachableCode1.js:9:12~9:17: [Warning] Conditional expression 'x < 2' is always false. \n\
+unreachableCode1.js:9:19~15:2: [Warning] Unreachable code '{ { tmp = 0; } for(i in z) { tmp += i; } tmp + 1 ...' is found. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      7 (100.00%) | \n\
+|  Warnings          :      5 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -41,8 +37,9 @@ unreachableCode1.js:16:7~16:16: [Warning] Variable 'test' is never used. \n\
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
 |  Shadowing               :      0 | \n\
+|  UncalledFuction         :      1 | \n\
 |  UnreachableCode         :      2 | \n\
-|  Unused                  :      3 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

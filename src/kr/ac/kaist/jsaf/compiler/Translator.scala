@@ -185,7 +185,10 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       new_arg = freshId(name, paramsspan, argName)
       if (debug) System.out.println(" arg="+new_arg.getUniqueName)
     }
-    val params_vds = params.map(p => IF.makeVarStmt(false, p, getSpan(p), id2ir(new_env, p), true))
+    val fd_names = fds.map(_.getFtn.getName.getText)
+    // nested functions shadow parameters with the same names
+    val params_vds = params.filterNot(p => fd_names contains p.getText).
+                            map(p => IF.makeVarStmt(false, p, getSpan(p), id2ir(new_env, p), true))
     // x_i = arguments["i"]
     val new_params = params.zipWithIndex.map(p => IF.makeLoadStmt(false, name, getSpan(p._1),
                                                                   id2ir(new_env, p._1),
@@ -201,7 +204,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
     locals = oldLocals
     (new_name, List(IF.makeTId(name, paramsspan, thisName), new_arg),
      // nested functions shadow parameters with the same names
-     new_params filterNot (p => fds.map(_.getFtn.getName.getText) contains p.getLhs.getOriginalName),
+     new_params, /*filterNot (p => fd_names contains p.getLhs.getOriginalName),*/
      new_fds, params_vds++new_vds, new_body)
   }
 
@@ -511,12 +514,12 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val bodyspan = getSpan(body)
       val new_body = IF.makeSeq(s, bodyspan,
                                 List(iteratorKey(s, bodyspan, key, obj, iterator))++
-                                walkLval(lhs, addE(env, oldName, freshId(lhs, getSpan(lhs), oldName)),
+                                walkLval(lhs, lhs, addE(env, oldName, freshId(lhs, getSpan(lhs), oldName)),
                                          List(), key, false)._1++
                                 List(IF.makeLabelStmt(false, s, bodyspan, cont, walkStmt(body, new_env)),
                                      IF.makeSeq(s, bodyspan, iteratorCheck)))
       val stmt = IF.makeSeq(s, span,
-                            List(IF.makeSeq(s, span, ss++List(toObject(s, objspan, obj, r),
+                            List(IF.makeSeq(s, span, ss++List(toObject(expr, objspan, obj, r),
                                                               iteratorInit(s, span, iterator, obj),
                                                               iteratorCheck)),
                                  IF.makeWhile(true, s, bodyspan, condone, new_body)))
@@ -564,7 +567,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val new2 = freshId(expr, objspan, "new2")
       val (ss, r) = walkExpr(expr, env, new1)
       makeStmtUnit(s, span,
-                   ss++List(toObject(s, objspan, new2, r),
+                   ss++List(toObject(expr, objspan, new2, r),
                             IF.makeWith(true, s, span, new2, walkStmt(stmt, env))))
 
     case SLabelStmt(info, label, stmt) =>
@@ -645,10 +648,10 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val ifStmt = IF.makeIf(true, e, span, if(ssb.isEmpty) ra else newa,
                              IF.makeSeq(e, span, ssb:+
                                               IF.makeIf(true, e, span, rb,
-                                                        IF.makeSeq(e, span, makeList(e, ss2, r2, res):+
+                                                        IF.makeSeq(e, span, makeList(trueB, ss2, r2, res):+
                                                                    IF.makeBreak(false, e, span, lab)), None)),
                              None)
-      val body = IF.makeSeq(e, span, List(ifStmt)++makeList(e, ss3, r3, res))
+      val body = IF.makeSeq(e, span, List(ifStmt)++makeList(falseB, ss3, r3, res))
       (ssa++(if(!ssb.isEmpty) List(mkExprS(e, span, newa, ra)) else Nil):+
        IF.makeLabelStmt(false, e, span, lab, body), res)
 
@@ -664,8 +667,8 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val ifStmts = ((IF.makeIf(true, e, span, if(ssb.isEmpty) ra else newa,
                                 IF.makeBreak(false, e, span, lab1), None))::ssb):+
                     IF.makeIf(true, e, span, rb, IF.makeBreak(false, e, span, lab1), None)
-      val body1 = IF.makeSeq(e, span, ifStmts++makeList(e, ss3, r3, res):+IF.makeBreak(false, e, span, lab2))
-      val body2 = IF.makeSeq(e, span, IF.makeLabelStmt(false, e, span, lab1, body1), makeSeq(e, info, ss2, r2, res))
+      val body1 = IF.makeSeq(e, span, ifStmts++makeList(falseB, ss3, r3, res):+IF.makeBreak(false, e, span, lab2))
+      val body2 = IF.makeSeq(e, span, IF.makeLabelStmt(false, e, span, lab1, body1), makeSeq(trueB, trueB.getInfo, ss2, r2, res))
       (ssa++(if(!ssb.isEmpty) List(mkExprS(e, span, newa, ra)) else Nil):+
        IF.makeLabelStmt(false, e, span, lab2, body2), res)
 
@@ -678,32 +681,32 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val (ss1, r1) = walkExpr(cond, env, new1)
       val (ss2, r2) = walkExpr(trueBranch, env, res)
       val (ss3, r3) = walkExpr(falseBranch, env, res)
-      (ss1:+IF.makeIf(true, e, span, r1, makeSeq(e, info, ss2, r2, res),
-                      Some(makeSeq(e, info, ss3, r3, res))), res)
+      (ss1:+IF.makeIf(true, e, span, r1, makeSeq(trueBranch, trueBranch.getInfo, ss2, r2, res),
+                      Some(makeSeq(falseBranch, falseBranch.getInfo, ss3, r3, res))), res)
 
     case SAssignOpApp(info, lhs, SOp(_, text), right:FunExpr)
          if text.equals("=") && NU.isName(lhs) =>
       val name = NU.getName(lhs)
       val (ss, r) = walkFunExpr(right, env, res, Some(name))
       if (containsLhs(r, lhs, env))
-        walkLval(lhs, env, ss, r, false)
+        walkLval(e, lhs, env, ss, r, false)
       else
-        (walkLval(lhs, env, ss, r, false)._1, r)
+        (walkLval(e, lhs, env, ss, r, false)._1, r)
 
     case SAssignOpApp(info, lhs, op, right) =>
       val span = getSpan(info)
       if (op.getText.equals("=")) {
         val (ss, r) = walkExpr(right, env, res)
         if (containsLhs(r, lhs, env))
-          walkLval(lhs, env, ss, r, false)
+          walkLval(e, lhs, env, ss, r, false)
         else
-          (walkLval(lhs, env, ss, r, false)._1, r)
+          (walkLval(e, lhs, env, ss, r, false)._1, r)
       } else {
         val y = freshId(right, getSpan(right), "y")
         val oldVal = freshId(lhs, getSpan(lhs), oldName)
         val (ss, r) = walkExpr(right, env, y)
         val bin = IF.makeBin(true, e, span, oldVal, IF.makeOp(op.getText.substring(0,op.getText.length-1)), r)
-        (walkLval(lhs, addE(env, oldName, oldVal), ss, bin, true)._1, bin)
+        (walkLval(e, lhs, addE(env, oldName, oldVal), ss, bin, true)._1, bin)
       }
 
     case SUnaryAssignOpApp(info, lhs, op) =>
@@ -711,7 +714,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
         val lhsspan = getSpan(lhs)
         val oldVal = freshId(lhs, lhsspan, oldName)
         val newVal = freshId(lhs, lhsspan, "new")
-        (walkLval(lhs, addE(env, oldName, oldVal), List(toNumber(lhs, lhsspan, newVal, oldVal)),
+        (walkLval(e, lhs, addE(env, oldName, oldVal), List(toNumber(lhs, lhsspan, newVal, oldVal)),
                   IF.makeBin(true, e, getSpan(info), newVal, IF.makeOp(if (op.getText.equals("++")) "+" else "-"), IF.oneV), true)._1,
          newVal)
       } else {
@@ -727,7 +730,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
         val oldVal = freshId(right, rightspan, oldName)
         val newVal = freshId(right, rightspan, "new")
         val bin = IF.makeBin(true, e, span, newVal, IF.makeOp(if (opText.equals("++")) "+" else "-"), IF.oneV)
-        (walkLval(right, addE(env, oldName, oldVal),
+        (walkLval(e, right, addE(env, oldName, oldVal),
                   List(toNumber(right, rightspan, newVal, oldVal)),
                   bin, true)._1, bin)
       } else if (opText.equals("delete")) {
@@ -860,10 +863,10 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val objspan = getSpan(lhs)
       val fun = freshId(lhs, objspan, "fun")
       val fun1 = freshId(lhs, objspan, "fun1")
-      val arg = freshId(lhs, objspan, argName)
-      val obj = freshId(lhs, objspan, "obj")
-      val newObj = freshId(lhs, objspan, "newObj")
-      val cond = freshId(lhs, objspan, "cond")
+      val arg = freshId(e, span, argName)
+      val obj = freshId(e, span, "obj")
+      val newObj = freshId(e, span, "newObj")
+      val cond = freshId(e, span, "cond")
       val proto = freshId(lhs, objspan, "proto")
       val (ftn, args) = lhs match {
           case SFunApp(_, f, as) =>
@@ -1085,20 +1088,20 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
   /*
    * AST2IR_LVAL : Expr -> Env -> List[IRStmt] -> IRExpr -> boolean -> List[IRStmt] * IRExpr
    */
-  def walkLval(lhs:Expr, env:Env, stmts:List[IRStmt], e:IRExpr,
+  def walkLval(ast:ASTNode, lhs:Expr, env:Env, stmts:List[IRStmt], e:IRExpr,
                keepOld:Boolean): (List[IRStmt], IRExpr) = lhs match {
     case SParenthesized(_, expr) =>
-      walkLval(expr, env, stmts, e, keepOld)
+      walkLval(ast, expr, env, stmts, e, keepOld)
     case SVarRef(info, id) =>
       if (debug) System.out.println("  id="+id.getText+" "+id.getUniqueName)
       val irid = id2ir(env, id)
       if (debug) System.out.println("VarRef: irid="+irid.getUniqueName)
       if (keepOld)
-        (List(mkExprS(lhs, getE(env, oldName), irid))++stmts:+mkExprS(lhs, irid, e), irid)
+        (List(mkExprS(ast, getE(env, oldName), irid))++stmts:+mkExprS(ast, irid, e), irid)
       else
-        (stmts:+mkExprS(lhs, irid, e), irid)
+        (stmts:+mkExprS(ast, irid, e), irid)
     case SDot(info, obj, member) =>
-      walkLval(SBracket(info, obj, NF.makeStringLiteral(getSpan(member), member.getText, "\"")),
+      walkLval(ast, SBracket(info, obj, NF.makeStringLiteral(getSpan(member), member.getText, "\"")),
                env, stmts, e, keepOld)
     case SBracket(info, first, index) =>
       val span = getSpan(info)
@@ -1109,7 +1112,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val (ss1, r1) = walkExpr(first, env, obj1)
       val (ss2, r2) = walkExpr(index, env, field1)
       val front = (ss1:+toObject(first, firstspan, obj, r1))++ss2
-      val back = stmts:+IF.makeStore(true, lhs, span, obj, r2, e)
+      val back = stmts:+IF.makeStore(true, ast, span, obj, r2, e)
       if (keepOld)
         ((front:+IF.makeLoadStmt(true, lhs, span, getE(env, oldName), obj, r2))++back,
          IF.makeLoad(true, lhs, span, obj, r2))

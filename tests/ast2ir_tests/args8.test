@@ -18,7 +18,6 @@ function f111(this, <>arguments<>1) \n\
     <>z<>4 = <>arguments<>3["0"]\n\
   }\n\
   var <>x<>5\n\
-  var <>arguments<>2\n\
   var <>y<>6\n\
   <>x<>5 = <>arguments<>1["0"]\n\
   <>arguments<>2 = <>arguments<>1["1"]\n\

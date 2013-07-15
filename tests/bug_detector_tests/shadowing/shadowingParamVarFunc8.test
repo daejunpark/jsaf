@@ -6,24 +6,18 @@
 #
 #    This distribution may include materials developed by third parties.
 ################################################################################
-tests=ImplicitTypeConvert
+tests=shadowingParamVarFunc8
 BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
 bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-ImplicitTypeConvert.js:4:1~4:18: [Warning] Implicit type-conversion in equality comparison 'null == undefined'. \n\
-ImplicitTypeConvert.js:9:10~9:19: [Warning] Trying to convert undefined to number. \n\
-ImplicitTypeConvert.js:13:1~13:18: [Warning] Implicit type-conversion in equality comparison 'boolean(true) == undefined'. \n\
-ImplicitTypeConvert.js:13:9~13:18: [Warning] Trying to convert undefined to number. \n\
-ImplicitTypeConvert.js:14:1~14:13: [Warning] Implicit type-conversion in equality comparison 'boolean(true) == null'. \n\
-ImplicitTypeConvert.js:15:1~15:12: [Warning] Implicit type-conversion in equality comparison 'boolean(true) == number(100)'. \n\
-ImplicitTypeConvert.js:16:1~16:14: [Warning] Implicit type-conversion in equality comparison 'boolean(true) == string("str")'. \n\
+shadowingParamVarFunc8.js:1:12~1:13: [Warning] Parameter 'p' is shadowed by a function at '3:18-19'. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      7 (100.00%) | \n\
+|  Warnings          :      1 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -33,16 +27,17 @@ ImplicitTypeConvert.js:16:1~16:14: [Warning] Implicit type-conversion in equalit
 |  CallNonConstructor      :      0 | \n\
 |  CallNonFunction         :      0 | \n\
 |  ConditionalBranch       :      0 | \n\
-|  ConvertToNumber         :      2 | \n\
+|  ConvertToNumber         :      0 | \n\
 |  DefaultValueTypeError   :      0 | \n\
 |  FunctionArgSize         :      0 | \n\
 |  GlobalThis              :      0 | \n\
-|  ImplicitTypeConversion  :      5 | \n\
+|  ImplicitTypeConversion  :      0 | \n\
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
-|  Shadowing               :      0 | \n\
+|  Shadowing               :      1 | \n\
+|  UncalledFuction         :      0 | \n\
 |  UnreachableCode         :      0 | \n\
-|  Unused                  :      0 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

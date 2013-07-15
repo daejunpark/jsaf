@@ -68,7 +68,13 @@ class BuiltinModel(cfg: CFG) extends Model(cfg)  {
       })
     )
 
-    h_1
+    // Date.prototype.toGMTString : ECMAScript 5 Appendix B.2.6
+    // Date.prototype.toGMTString has the same function object as the one of Date.prototype.toUTCString
+    val date_protoobj = h_1(BuiltinDate.ProtoLoc)
+    val new_protoobj = date_protoobj.update(AbsString.alpha("toGMTString"), date_protoobj("toUTCString")._1)
+    val h_2 = h_1.update(BuiltinDate.ProtoLoc, new_protoobj)
+
+    h_2
   }
   def addAsyncCall(cfg: CFG, loop_head: Node): List[Node] = List()
   def isModelFid(fid: FunctionId) = map_fid.contains(fid)

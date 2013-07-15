@@ -120,6 +120,7 @@ class Predefined(params: ShellParameters) {
     "HTMLTextAreaElement",
     "HTMLTitleElement",
     "HTMLUListElement",
+    "HTMLUnknownElement",
     "KeyboardEvent",
     "MouseEvent",
     "MutationEvent",
@@ -166,7 +167,8 @@ class Predefined(params: ShellParameters) {
     "setInterval",
     "setTimeout",
     "stop",
-    "unescape"
+    "unescape",
+    "Image"
   )
 
   val vars = List(

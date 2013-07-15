@@ -48,7 +48,33 @@ object BuiltinRegExp extends ModelData {
   )
 
   def getSemanticMap(): Map[String, SemanticFun] = {
-    Map()
+    Map(
+     // imprecise semantics
+     ("RegExp.prototype.exec" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          // allocate new location 
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+          val l_r = addrToLoc(addr1, Recent)
+          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+ 
+          // argument value
+          val argVal = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          if(argVal </ StrBot) {
+            val newobj = Helper.NewArrayObject(UInt)
+              .update("index", PropValue(ObjectValue(UInt, T, T, T)))
+              .update("input", PropValue(ObjectValue(argVal, T, T, T)))
+              .update("@default_number", PropValue(ObjectValue(StrTop, T, T, T)))
+            val h_2 = h_1.update(l_r, newobj)
+            ((Helper.ReturnStore(h_2, Value(NullTop) + Value(l_r)), ctx_1), (he, ctxe))
+          }
+          else 
+            ((HeapBot, ContextBot), (he, ctxe)) 
+        }))
+    )
   }
 
   def getPreSemanticMap(): Map[String, SemanticFun] = {

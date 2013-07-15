@@ -153,7 +153,13 @@ object HTMLCollection extends DOM {
   }
 
   /* instance */
-  //def instantiate() = Unit // not yet implemented
-  // intance of HTMLCollection should have 'length' property
-
+  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  /* list of properties in the instance object */
+  def getInsList(length: Int): List[(String, PropValue)] = List(
+    ("@class",  PropValue(AbsString.alpha("Object"))),
+    ("@proto",  PropValue(ObjectValue(loc_proto, F, F, F))),
+    ("@extensible", PropValue(BoolTrue)),
+    // DOM Level 1
+    ("length",   PropValue(ObjectValue(AbsNumber.alpha(length), F, T, T)))
+  )
 }

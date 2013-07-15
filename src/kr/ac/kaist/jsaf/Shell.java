@@ -9,71 +9,39 @@
 
 package kr.ac.kaist.jsaf;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.*;
-
-import edu.rice.cs.plt.tuple.Option;
 import edu.rice.cs.plt.iter.IterUtil;
-
-import xtc.parser.SemanticValue;
-import xtc.parser.ParseError;
-import xtc.parser.Result;
-
-import kr.ac.kaist.jsaf.analysis.cfg.CFGBuilder;
+import edu.rice.cs.plt.tuple.Option;
 import kr.ac.kaist.jsaf.analysis.cfg.CFG;
+import kr.ac.kaist.jsaf.analysis.cfg.CFGBuilder;
 import kr.ac.kaist.jsaf.analysis.cfg.DotWriter;
 import kr.ac.kaist.jsaf.analysis.typing.*;
 import kr.ac.kaist.jsaf.analysis.typing.domain.State;
-import kr.ac.kaist.jsaf.analysis.typing.models.BuiltinModel;
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMBuilder;
-import kr.ac.kaist.jsaf.analysis.visualization.*;
+import kr.ac.kaist.jsaf.analysis.visualization.Visualization;
 import kr.ac.kaist.jsaf.bug_detector.BugDetector;
 import kr.ac.kaist.jsaf.bug_detector.BugInfo;
 import kr.ac.kaist.jsaf.clone_detector.CloneDetector;
-import kr.ac.kaist.jsaf.compiler.Disambiguator;
-import kr.ac.kaist.jsaf.compiler.Hoister;
+import kr.ac.kaist.jsaf.compiler.*;
 import kr.ac.kaist.jsaf.compiler.module.ModuleRewriter;
-import kr.ac.kaist.jsaf.compiler.Parser;
-import kr.ac.kaist.jsaf.compiler.Predefined;
-import kr.ac.kaist.jsaf.compiler.StrictModeChecker;
-import kr.ac.kaist.jsaf.compiler.Translator;
-import kr.ac.kaist.jsaf.compiler.WithRewriter;
 import kr.ac.kaist.jsaf.concolic.Instrumentor;
 import kr.ac.kaist.jsaf.concolic.Z3;
-import kr.ac.kaist.jsaf.exceptions.MultipleStaticError;
-import kr.ac.kaist.jsaf.exceptions.ParserError;
-import kr.ac.kaist.jsaf.exceptions.StaticError;
-import kr.ac.kaist.jsaf.exceptions.UserError;
-import kr.ac.kaist.jsaf.exceptions.WrappedException;
+import kr.ac.kaist.jsaf.exceptions.*;
 import kr.ac.kaist.jsaf.interpreter.Interpreter;
-
-import kr.ac.kaist.jsaf.nodes.Program;
 import kr.ac.kaist.jsaf.nodes.IRRoot;
+import kr.ac.kaist.jsaf.nodes.Program;
 import kr.ac.kaist.jsaf.nodes.WDefinition;
-import kr.ac.kaist.jsaf.nodes_util.ASTIO;
-import kr.ac.kaist.jsaf.nodes_util.Coverage;
-import kr.ac.kaist.jsaf.nodes_util.IRFactory;
-import kr.ac.kaist.jsaf.nodes_util.JSFromUrl;
-import kr.ac.kaist.jsaf.nodes_util.JSFromHTML;
-import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete;
-import kr.ac.kaist.jsaf.nodes_util.JSIRUnparser;
-import kr.ac.kaist.jsaf.nodes_util.NodeFactory;
-import kr.ac.kaist.jsaf.nodes_util.NodeRelation;
-import kr.ac.kaist.jsaf.nodes_util.NodeUtil;
-import kr.ac.kaist.jsaf.nodes_util.WIDLChecker;
-import kr.ac.kaist.jsaf.nodes_util.WIDLToDB;
-import kr.ac.kaist.jsaf.nodes_util.WIDLToString;
+import kr.ac.kaist.jsaf.nodes_util.*;
 import kr.ac.kaist.jsaf.parser.WIDL;
+import kr.ac.kaist.jsaf.scala_src.useful.WorkManager;
 import kr.ac.kaist.jsaf.tests.FileTests;
 import kr.ac.kaist.jsaf.tests.SemanticsTest;
-import kr.ac.kaist.jsaf.useful.Files;
-import kr.ac.kaist.jsaf.useful.Pair;
-import kr.ac.kaist.jsaf.useful.Triple;
-import kr.ac.kaist.jsaf.useful.Useful;
-import kr.ac.kaist.jsaf.useful.MemoryMeasurer;
-import kr.ac.kaist.jsaf.scala_src.useful.WorkManager;
-import org.w3c.dom.Node;
+import kr.ac.kaist.jsaf.useful.*;
+import xtc.parser.ParseError;
+import xtc.parser.SemanticValue;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.*;
 
 public final class Shell {
     ////////////////////////////////////////////////////////////////////////////////
@@ -1195,7 +1163,7 @@ public final class Shell {
 
         // Execute Bug Detector
         System.out.println("\n* Bug Detector *");
-        NodeRelation.set(program2, ir, cfg);
+        NodeRelation.set(program2, ir, cfg, quiet);
         BugDetector detector = new BugDetector(params, cfg, typingInterface, fileMap, quiet, irErrors.second());
         detector.detectBug();
 

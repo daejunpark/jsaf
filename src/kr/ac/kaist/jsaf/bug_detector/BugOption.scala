@@ -50,6 +50,9 @@ class BugOption(defaultForUser: Boolean = true) {
   var ConvertUndefToNum_VariableMustHaveUndefinedOnly           = true
   var ConvertUndefToNum_ToNumberMustBeCalledDefinitely          = true
 
+  var GlobalThis_MustReferInEveryState                          = false
+  var GlobalThis_MustReferDefinitely                            = true
+
   var ImplicitTypeConvert_MustBeConvertedInEveryState           = false
   var ImplicitTypeConvert_MustBeConvertedDefinitely             = true
   var ImplicitTypeConvert_CheckNullAndUndefined                 = true
@@ -71,6 +74,11 @@ class BugOption(defaultForUser: Boolean = true) {
   var PrimitiveToObject_CheckEvenThoughPrimitiveIsString        = false
 
   var VaryingTypeArguments_CheckUndefined                       = false
+
+  var WrongThisType_TypeMustBeWrongInEveryState                 = false
+  var WrongThisType_TypeMustBeWrongInEveryFunctionId            = false
+  var WrongThisType_TypeMustBeWrongInEveryFunctionLocation      = false
+  var WrongThisType_TypeMustBeWrongInEveryThisLocation          = false
 
   ////////////////////////////////////////////////////////////////////////////////
   // Constructor
@@ -130,6 +138,10 @@ class BugOption(defaultForUser: Boolean = true) {
     ConvertUndefToNum_VariableMustHaveUndefinedOnly = true
     ConvertUndefToNum_ToNumberMustBeCalledDefinitely = true
 
+    // GlobalThis
+    GlobalThis_MustReferInEveryState = false
+    GlobalThis_MustReferDefinitely = true
+
     // ImplicitTypeConvert
     ImplicitTypeConvert_MustBeConvertedInEveryState = false
     ImplicitTypeConvert_MustBeConvertedDefinitely = true
@@ -155,6 +167,12 @@ class BugOption(defaultForUser: Boolean = true) {
 
     // VaryingTypeArguments
     VaryingTypeArguments_CheckUndefined = false
+
+    // WrongThisType
+    WrongThisType_TypeMustBeWrongInEveryState = false
+    WrongThisType_TypeMustBeWrongInEveryFunctionId = false
+    WrongThisType_TypeMustBeWrongInEveryFunctionLocation = false
+    WrongThisType_TypeMustBeWrongInEveryThisLocation = false
   }
 
   // For SAFE developer
@@ -204,6 +222,10 @@ class BugOption(defaultForUser: Boolean = true) {
     ConvertUndefToNum_VariableMustHaveUndefinedOnly = false
     ConvertUndefToNum_ToNumberMustBeCalledDefinitely = false
 
+    // GlobalThis
+    GlobalThis_MustReferInEveryState = false
+    GlobalThis_MustReferDefinitely = false
+
     // ImplicitTypeConvert
     ImplicitTypeConvert_MustBeConvertedInEveryState = true
     ImplicitTypeConvert_MustBeConvertedDefinitely = false
@@ -229,5 +251,11 @@ class BugOption(defaultForUser: Boolean = true) {
 
     // VaryingTypeArguments
     VaryingTypeArguments_CheckUndefined = true
+
+    // WrongThisType
+    WrongThisType_TypeMustBeWrongInEveryState = true
+    WrongThisType_TypeMustBeWrongInEveryFunctionId = true
+    WrongThisType_TypeMustBeWrongInEveryFunctionLocation = true
+    WrongThisType_TypeMustBeWrongInEveryThisLocation = true
   }
 }

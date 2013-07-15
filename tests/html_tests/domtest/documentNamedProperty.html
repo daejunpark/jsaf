@@ -1,0 +1,38 @@
+<!-- Test for named properties in Document -->
+<body>
+  <img id="brick1" name="aaa" for="aaa" type="text"> test </img>
+  <div name=ccc for="bbb" type="submit"> ttt </div>
+  <FORM name="aaa"> </FORM>
+  <object name="ccc"> </object>
+  <object id="aaa"> </object>
+  <applet name="aaa"> </applet>
+  <A id="A1" href="http://news.naver.com/">www.naver.com </A>
+  <script>
+    var elem1 = document.brick1;   // HTMLImageElement
+    var __result1 = elem1.tagName; 
+    var __expect1 = "IMG";
+    
+    var elem2 = document.ccc;  // HTMLObjectElement
+    var __result2 = elem2.tagName;
+    var __expect2 = "OBJECT"
+    
+    var elems = document.aaa;  // HTMLCollection
+    var __result3 = elems.length; 
+    var __expect3 = 3;
+
+    var elems_1 = elems[0];    // HTMLFormElement
+    var __result4 = elems_1.tagName; 
+    var __expect4 = "FORM";
+
+    var elems_2 = elems[1];   // HTMLObjectElement
+    var __result5 = elems_2.tagName;
+    var __expect5 = "OBJECT";
+    
+    var elems_3 = elems[2];   // HTMLAppletElement
+    var __result6 = elems_3.tagName;
+    var __expect6 = "APPLET";
+  </script>
+  <div> </div>
+  <script> 
+  </script>
+</body>

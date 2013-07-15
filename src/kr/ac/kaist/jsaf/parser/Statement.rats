@@ -234,7 +234,7 @@ private transient List<VarDecl> VariableDeclarationListNoIn =
  *   Id (w = w Assignment)?
  */
 private transient VarDecl VariableDeclaration =
-     a1:Id a2:(w equals w Assignment)?
+     a1:Id a2:(w void:equals w Assignment)?
      { Span span = createSpan(yyStart,yyCount);
        Option<Expr> expr;
        if (a2 == null) expr = Option.<Expr>none();
@@ -247,7 +247,7 @@ private transient VarDecl VariableDeclaration =
  *   Id (w = w AssignmentNoIn)?
  */
 private transient VarDecl VariableDeclarationNoIn =
-     a1:Id a2:(w equals w AssignmentNoIn)?
+     a1:Id a2:(w void:equals w AssignmentNoIn)?
      { Span span = createSpan(yyStart,yyCount);
        Option<Expr> expr;
        if (a2 == null) expr = Option.<Expr>none();

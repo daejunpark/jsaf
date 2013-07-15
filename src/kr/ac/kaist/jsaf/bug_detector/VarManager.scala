@@ -11,6 +11,7 @@ package kr.ac.kaist.jsaf.bug_detector
 
 import scala.collection.mutable.{HashMap => MHashMap}
 import scala.collection.mutable.{HashSet => MHashSet}
+import scala.collection.mutable.Queue
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.SemanticsExpr
@@ -42,6 +43,7 @@ class VarManager(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////////////////////
   val locInfoMap                                = new MHashMap[Loc, LocInfo]()
   val varAssignStack                            = new MHashMap[BugVar0, BugVar0]
+  val varAssignStackR                           = new MHashMap[BugVar0, MHashSet[BugVar0]] // Reverse
 
   def insertInfo(node: Node, inst: CFGInst, state: State): Unit = {
     inst match {
@@ -154,15 +156,18 @@ class VarManager(bugDetector: BugDetector) {
         if(prevRHSVar != null && (rhsVar == null || prevRHSVar.id != rhsVar.id || prevRHSVar.index != rhsVar.index)) varAssignStack.put(lhsVar, null)
       case None => varAssignStack.put(lhsVar, rhsVar)
     }
+    val lhsVarSet = varAssignStackR.getOrElseUpdate(rhsVar, new MHashSet)
+    lhsVarSet.add(lhsVar)
   }
 
+  def getUserVarAssign(id: CFGId): BugVar0 = getUserVarAssign(CFGVarRef(null, id))
   def getUserVarAssign(expr: CFGExpr): BugVar0 = {
     var name: BugVar0 = CFGExprToBugVar0(expr)
     while(true) {
       if(name == null) return null
       if(name.id.isInstanceOf[CFGUserId]) return name
       else if(name.index != null) {
-        val objName = getUserVarAssign(CFGVarRef(null, name.id))
+        val objName = getUserVarAssign(name.id)
         if(objName != null) {
           if(objName.index != null) {
             val index: String = objName.index.toString.replaceAll("\"", "")
@@ -177,6 +182,39 @@ class VarManager(bugDetector: BugDetector) {
       }
     }
     null
+  }
+
+  def getUserVarAssignR(id: CFGId): MHashSet[BugVar0] = getUserVarAssignR(CFGVarRef(null, id))
+  def getUserVarAssignR(expr: CFGExpr): MHashSet[BugVar0] = {
+    val varSet = new MHashSet[BugVar0]
+    val checkedSet = new MHashSet[BugVar0]
+    val checkList = new Queue[BugVar0]
+    checkList.enqueue(CFGExprToBugVar0(expr))
+    while(!checkList.isEmpty) {
+      val name: BugVar0 = checkList.dequeue
+      val objName: BugVar0 = if(!name.id.isInstanceOf[CFGUserId] && name.index != null) getUserVarAssign(name.id) else null
+      name match {
+        case _ if name.id.isInstanceOf[CFGUserId] => varSet.add(name)
+        case _ if objName != null =>
+          if(objName.index != null) {
+            val index: String = objName.index.toString.replaceAll("\"", "")
+            varSet.add(BugVar0(CFGUserId(null, index, GlobalVar, index, false), name.index))
+          }
+          else varSet.add(BugVar0(objName.id, name.index))
+        case _ =>
+          varAssignStackR.get(name) match {
+            case Some(lhsVarSet) =>
+              for(lhsVar <- lhsVarSet) {
+                if(lhsVar != null && !checkedSet.contains(lhsVar)) {
+                  checkedSet.add(lhsVar)
+                  checkList.enqueue(lhsVar)
+                }
+              }
+            case None =>
+          }
+      }
+    }
+    varSet
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -199,17 +237,34 @@ class VarManager(bugDetector: BugDetector) {
       }
       println("}")
     }
-    println();
+    println
 
     // Variable assignment stack dump
     println("**********************************")
     println("* Variable assignment stack Dump *");
     println("**********************************")
     for((lhsVar, rhsVar) <- varAssignStack) {
-      print(lhsVar + " = ")
+      print(lhsVar + " <= ")
       if(rhsVar == null) println("?")
       else println(rhsVar)
     }
+    println
+
+    // Variable assignment stack reverse dump
+    println("******************************************")
+    println("* Variable assignment stack reverse Dump *");
+    println("******************************************")
+    for((rhsVar, lhsVarSet) <- varAssignStackR) {
+      if(rhsVar == null) print("? => ")
+      else print(rhsVar + " => ")
+
+      var isFirst = true
+      for(lhsVar <- lhsVarSet) {
+        if(isFirst) isFirst = false else print(", ")
+        println(lhsVar)
+      }
+    }
+    println
   }
 
   ////////////////////////////////////////////////////////////////////////////////

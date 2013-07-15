@@ -14,10 +14,12 @@ import scala.collection.mutable.{HashMap => MHashMap}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
+import kr.ac.kaist.jsaf.nodes.ASTNode
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.nodes_util.SourceLoc
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.nodes_util.EJSType
+import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete
 
 package object bug_detector {
   /************************* TYPE DEFINITION ***************************
@@ -72,7 +74,7 @@ package object bug_detector {
   val property      = false
   val CALL_NORMAL   = true
   val CALL_CONST    = false
-  val MAX_BUG_COUNT = 30
+  val MAX_BUG_COUNT = 28
 
   /* Options */
   val SOUNDNESS_LEVEL_LOW     = 0 
@@ -101,13 +103,12 @@ package object bug_detector {
   val CallConstFunc         :BugKind = addBugMsgFormat(newBugKind, Warning, "Calling function '%s' both as a function and a constructor.", 1)
   val CallNonConstructor    :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling %s as a constructor.", 1)
   val CallNonFunction       :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling %s as a function.", 1)
-  val CondBranch            :BugKind = addBugMsgFormat(newBugKind, Warning, "Conditional expression, '%s', is always %s.", 2)
+  val CondBranch            :BugKind = addBugMsgFormat(newBugKind, Warning, "Conditional expression '%s' is always %s.", 2)
   val ConvertUndefToNum     :BugKind = addBugMsgFormat(newBugKind, Warning, "Trying to convert undefined to number.%s", 1)
   val DefaultValueTypeError :BugKind = addBugMsgFormat(newBugKind, TypeError, "Computing default value (toString, valueOf) of %s yields TypeError.", 1)
   /* BugKind : 10 ~ 19 */
   val FunctionArgSize       :BugKind = addBugMsgFormat(newBugKind, Warning, "Too %s arguments to function '%s'.", 2)
-  val GlobalThisDefinite    :BugKind = addBugMsgFormat(newBugKind, Warning, "'this' refers the global object.", 0)
-  val GlobalThisMaybe       :BugKind = addBugMsgFormat(newBugKind, Warning, "'this' may refer the global object.", 0)
+  val GlobalThis            :BugKind = addBugMsgFormat(newBugKind, Warning, "'this' %s the global object.", 1)
   val ImplicitCalltoString  :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit toString type-conversion to object '%s' by non-builtin toString method.", 1)
   val ImplicitCallvalueOf   :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit valueOf type-conversion to object '%s' by non-builtin valueOf method.", 1)
   val ImplicitTypeConvert   :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit type-conversion in equality comparison '%s%s %s %s%s'.", 5)
@@ -115,25 +116,58 @@ package object bug_detector {
   val PrimitiveToObject     :BugKind = addBugMsgFormat(newBugKind, Warning, "Trying to convert primitive value(%s) to object.", 1)
   val ShadowedFuncByFunc    :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is shadowed by a function at '%s'.", 2)
   val ShadowedParamByFunc   :BugKind = addBugMsgFormat(newBugKind, Warning, "Parameter '%s' is shadowed by a function at '%s'.", 2)
-  /* BugKind : 20 ~ 29 */
   val ShadowedVarByFunc     :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a function at '%s'.", 2)
+  /* BugKind : 20 ~ 27 */
   val ShadowedVarByParam    :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a parameter at '%s'.", 2)
   val ShadowedVarByVar      :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a variable at '%s'.", 2)
-  val UnreachableCode       :BugKind = addBugMsgFormat(newBugKind, Warning, "Unreachable code is found.", 0)
+  val UnreachableCode       :BugKind = addBugMsgFormat(newBugKind, Warning, "Unreachable code '%s' is found.", 1)
   val UnreferencedFunction  :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is neither called nor referenced.", 1)
-  val UnusedFunction        :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is never used.", 1)
-  val UnusedProperty        :BugKind = addBugMsgFormat(newBugKind, Warning, "Property '%s' is never used.", 1)
-  val UnusedVariable        :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is never used.", 1)
+  val UncalledFunction      :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is never called.", 1)
+  val UnusedVarProp         :BugKind = addBugMsgFormat(newBugKind, Warning, "Value assigned to %s is never read.", 1)
   val VaryingTypeArguments  :BugKind = addBugMsgFormat(newBugKind, Warning, "Calling a function '%s' with the %sargument %sof varying types (%s).", 4)
   val WrongThisType         :BugKind = addBugMsgFormat(newBugKind, TypeError, "Native function '%s' is called when its 'this' value is not of the expected object type.", 1)
 
-  def getFuncName(name: String) = if (NU.isFunExprName(name)) "anonymous_function" else name
+  def getOmittedCode(ast: ASTNode, maxLength: Int = 48): String = {
+    val originalCode = JSAstToConcrete.doit(ast)
+    var newCode = ""
+    var isFirst = true
+    for(line <- originalCode.split('\n')) {
+      if(newCode.length < maxLength) {
+        if(isFirst) isFirst = false else newCode+= ' '
+        newCode+= line.replace('\t', ' ').trim
+      }
+    }
+    if(newCode.length > maxLength) newCode = newCode.substring(0, maxLength) + " ..."
+    newCode
+  }
+
+  //def getFuncName(name: String) = if (NU.isFunExprName(name)) "anonymous_function" else name
+  def getFuncName(funcName: String, varManager: VarManager = null, expr: CFGNode = null): String = {
+    if (!NU.isFunExprName(funcName)) return funcName
+    if (varManager != null && expr != null) {
+      expr match {
+        case expr: CFGExpr =>
+          val bugVar0 = varManager.getUserVarAssign(expr)
+          if (bugVar0 != null) return bugVar0.toString
+        case expr: CFGFunExpr =>
+          var isFirst = true
+          val funcName = new StringBuilder
+          for (rhs <- varManager.getUserVarAssignR(expr.lhs)) {
+            if (isFirst) isFirst = false else funcName.append(", ")
+            funcName.append(rhs.toString)
+          }
+          if (funcName.length > 0) return funcName.toString
+        case _ =>
+      }
+    }
+    "anonymous_function"
+  }
 
   def pvalueToString(pvalue: PValue, concreteOnly: Boolean = true): String = {
     var result = ""
     pvalue.foreach(absValue => {
-      if(!absValue.isBottom && (!concreteOnly || absValue.isConcrete)) {
-        if(result.length == 0) result+= absValue.toString
+      if (!absValue.isBottom && (!concreteOnly || absValue.isConcrete)) {
+        if (result.length == 0) result+= absValue.toString
         else result+= ", " + absValue.toString
       }
     })
@@ -193,8 +227,8 @@ package object bug_detector {
     "String.prototype.replace" -> (2,2), "String.prototype.search" -> (1,1), "String.prototype.slice" -> (1,2),
     "String.prototype.split" -> (0,2), "String.prototype.substring" -> (1,2), "String.prototype.toLowerCase" -> (0,0),
     "String.prototype.toLocaleLowerCase" -> (0,0), "String.prototype.toUpperCase" -> (0,0), "String.prototype.toLocaleUpperCase" -> (0,0),
-    "String.prototype.trim" -> (0,0),
-    "Boolean" -> (1,1),	 "Boolean.constructor" -> (1,1), "Boolean.prototype.toString" -> (1,1), "Boolean.prototype.valueOf" -> (0,0),
+    "String.prototype.trim" -> (0,0), "String.prototype.substr" -> (1,2),
+    "Boolean" -> (1,1),	 "Boolean.constructor" -> (1,1), "Boolean.prototype.toString" -> (0,0), "Boolean.prototype.valueOf" -> (0,0),
     "Number" -> (0,1), "Number.constructor" -> (0,1), "Number.prototype.toString" -> (0,1), "Number.prototype.toLocaleString" -> (0,0),
     "Number.prototype.valueOf" -> (0,0), "Number.prototype.toFixed" -> (0,1), "Number.prototype.toExponential" -> (0,1),
     "Number.prototype.toPrecision" -> (0,1), 

@@ -127,7 +127,7 @@ object DOMDocument extends DOM {
               ((HeapBot, ContextBot), (he + he_1, ctxe + ctxe_1))
             case OtherStrSingle(s) =>
               val tag_name = s.toUpperCase
-              if(DOMHelper.isValidHtmlTag(tag_name)) {
+              // if(DOMHelper.isValidHtmlTag(tag_name)) {
                 val element_obj_proplist = DOMElement.getInsList(PropValue(ObjectValue(AbsString.alpha(tag_name), F, T, T))):::DOMHelper.getInsList(tag_name)
                 val element_obj = element_obj_proplist.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
                 // 'childNodes' update
@@ -136,10 +136,10 @@ object DOMDocument extends DOM {
                 val element_obj_up = element_obj.update("childNodes", PropValue(ObjectValue(l_nodes, F, T, T)))
                 val h_3= h_2.update(l_nodes, childNodes).update(l_r, element_obj_up)
                 ((Helper.ReturnStore(h_3, Value(l_r)), ctx_2), (he, ctxe))
-              }
+              //}
               // An invalid tag name causes the INVALID_CHARACTER_ERR exception
-              else
-                ((HeapBot, ContextBot), (he + he_1, ctxe + ctxe_1))
+              //else
+              //  ((HeapBot, ContextBot), (he + he_1, ctxe + ctxe_1))
             case StrBot =>
               ((HeapBot, ContextBot), (he, ctxe))
           }

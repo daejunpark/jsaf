@@ -39,11 +39,9 @@ public Expr Expression =
  * | LeftHandSide w AssignmentOp w Assignment
  */
 Expr Assignment =
-     a1:LeftHandSide w equals w a2:Assignment
+     a1:LeftHandSide w a2:equals w a3:Assignment
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makeAssignOpApp(span, a1,
-                                             NodeFactory.makeOp(span, "="),
-                                             a2);
+       yyValue = NodeFactory.makeAssignOpApp(span, a1, a2, a3);
      }
    / a1:LeftHandSide w a2:AssignmentOp w a3:Assignment
      { Span span = createSpan(yyStart,yyCount);
@@ -69,14 +67,20 @@ private transient Expr Conditional =
  * | LogicalOR w || w LogicalAND
  */
 private transient Expr LogicalOR =
-     a1:LogicalAND a2s:(w bars w LogicalAND)*
+     a1:LogicalAND a2s:LogicalANDR*
      { Span span = NodeUtil.getSpan(a1);
-       Op op = NodeFactory.makeOp(span, "||");
        yyValue = a1;
-       for (Expr e: a2s.list())
-           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(e)),
-                                                yyValue, op, e);
+       for (kr.ac.kaist.jsaf.useful.Pair<Op, Expr> pair: a2s.list()) {
+           Op op = pair.getA();
+           Expr right = pair.getB();
+           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(right)),
+                                                yyValue, op, right);
+       }
      };
+
+private transient kr.ac.kaist.jsaf.useful.Pair<Op, Expr> LogicalANDR =
+     w a1:bars w a2:LogicalAND
+     { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Op, Expr>(a1, a2); };
 
 /*
  * LogicalAND ::=
@@ -84,14 +88,20 @@ private transient Expr LogicalOR =
  * | LogicalAND w && w BitwiseOR
  */
 private transient Expr LogicalAND =
-     a1:BitwiseOR a2s:(w ands w BitwiseOR)*
+     a1:BitwiseOR a2s:BitwiseORR*
      { Span span = NodeUtil.getSpan(a1);
-       Op op = NodeFactory.makeOp(span, "&&");
        yyValue = a1;
-       for (Expr e: a2s.list())
-           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(e)),
-                                                yyValue, op, e);
+       for (kr.ac.kaist.jsaf.useful.Pair<Op, Expr> pair: a2s.list()) {
+           Op op = pair.getA();
+           Expr right = pair.getB();
+           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(right)),
+                                                yyValue, op, right);
+       }
      };
+
+private transient kr.ac.kaist.jsaf.useful.Pair<Op, Expr> BitwiseORR =
+     w a1:ands w a2:BitwiseOR
+     { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Op, Expr>(a1, a2); };
 
 /*
  * BitwiseOR ::=
@@ -99,14 +109,20 @@ private transient Expr LogicalAND =
  * | BitwiseOR w | w BitwiseXOR
  */
 private transient Expr BitwiseOR =
-     a1:BitwiseXOR a2s:(w bar w BitwiseXOR)*
+     a1:BitwiseXOR a2s:BitwiseXORR*
      { Span span = NodeUtil.getSpan(a1);
-       Op op = NodeFactory.makeOp(span, "|");
        yyValue = a1;
-       for (Expr e: a2s.list())
-           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(e)),
-                                                yyValue, op, e);
+       for (kr.ac.kaist.jsaf.useful.Pair<Op, Expr> pair: a2s.list()) {
+           Op op = pair.getA();
+           Expr right = pair.getB();
+           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(right)),
+                                                yyValue, op, right);
+       }
      };
+
+private transient kr.ac.kaist.jsaf.useful.Pair<Op, Expr> BitwiseXORR =
+     w a1:bar w a2:BitwiseXOR
+     { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Op, Expr>(a1, a2); };
 
 /*
  * BitwiseXOR ::=
@@ -114,14 +130,20 @@ private transient Expr BitwiseOR =
  * | BitwiseXOR w ^ w BitwiseAND
  */
 private transient Expr BitwiseXOR =
-     a1:BitwiseAND a2s:(w caret w BitwiseAND)*
+     a1:BitwiseAND a2s:BitwiseANDR*
      { Span span = NodeUtil.getSpan(a1);
-       Op op = NodeFactory.makeOp(span, "^");
        yyValue = a1;
-       for (Expr e: a2s.list())
-           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(e)),
-                                                yyValue, op, e);
+       for (kr.ac.kaist.jsaf.useful.Pair<Op, Expr> pair: a2s.list()) {
+           Op op = pair.getA();
+           Expr right = pair.getB();
+           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(right)),
+                                                yyValue, op, right);
+       }
      };
+
+private transient kr.ac.kaist.jsaf.useful.Pair<Op, Expr> BitwiseANDR =
+     w a1:caret w a2:BitwiseAND
+     { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Op, Expr>(a1, a2); };
 
 /*
  * BitwiseAND ::=
@@ -129,14 +151,20 @@ private transient Expr BitwiseXOR =
  * | BitwiseAND w & w Equality
  */
 private transient Expr BitwiseAND =
-     a1:Equality a2s:(w and w Equality)*
+     a1:Equality a2s:EqualityR*
      { Span span = NodeUtil.getSpan(a1);
-       Op op = NodeFactory.makeOp(span, "&");
        yyValue = a1;
-       for (Expr e: a2s.list())
-           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(e)),
-                                                yyValue, op, e);
+       for (kr.ac.kaist.jsaf.useful.Pair<Op, Expr> pair: a2s.list()) {
+           Op op = pair.getA();
+           Expr right = pair.getB();
+           yyValue = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(right)),
+                                                yyValue, op, right);
+       }
      };
+
+private transient kr.ac.kaist.jsaf.useful.Pair<Op, Expr> EqualityR =
+     w a1:and w a2:Equality
+     { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Op, Expr>(a1, a2); };
 
 /*
  * Equality ::=
@@ -161,33 +189,6 @@ private transient Expr Equality =
 private transient kr.ac.kaist.jsaf.useful.Pair<Op, Expr> RelationalR =
      w a1:EqualityOp w a2:Relational
      { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Op, Expr>(a1, a2); };
-
-/*
-private transient Expr Equality =
-     a1s:RelationalL+ a2:Relational
-     { List<kr.ac.kaist.jsaf.useful.Pair<Expr, Op>> ps = a1s.list();
-       kr.ac.kaist.jsaf.useful.Pair<Expr, Op> first = ps.remove(0);
-       Expr left = first.getA();
-       Op op = first.getB();
-System.out.println("left="+NodeUtil.getSpan(left)+" "+JSAstToConcrete.doit(left));
-System.out.println("op="+NodeUtil.getSpan(op)+" "+JSAstToConcrete.doit(op)+"\n");
-       Span span = NodeUtil.getSpan(left);
-       for (kr.ac.kaist.jsaf.useful.Pair<Expr, Op> pair: ps) {
-           Expr e = pair.getA();
-System.out.println("l="+NodeUtil.getSpan(left)+" "+JSAstToConcrete.doit(left));
-System.out.println("r="+NodeUtil.getSpan(e)+" "+JSAstToConcrete.doit(e)+"\n");
-           left = NodeFactory.makeInfixOpApp(NodeFactory.makeSpan(span, NodeUtil.getSpan(e)),
-                                             left, op, e);
-           op = pair.getB();
-       }
-       yyValue = NodeFactory.makeInfixOpApp(createSpan(yyStart,yyCount), left, op, a2);
-     }
-   / Relational ;
-
-private transient kr.ac.kaist.jsaf.useful.Pair<Expr, Op> RelationalL =
-     a1:Relational w a2:EqualityOp w
-     { yyValue = new kr.ac.kaist.jsaf.useful.Pair<Expr, Op>(a1, a2); };
-*/
 
 /*
  * Relational ::=
@@ -317,41 +318,41 @@ private transient kr.ac.kaist.jsaf.useful.Pair<Expr, Op> UnaryL =
  * | ! Unary
  */
 private transient Expr Unary =
-     delete w a1:Unary
+     a1:delete w a2:Unary
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makePrefixOpApp(span, NodeFactory.makeOp(span, "delete"), a1);
+       yyValue = NodeFactory.makePrefixOpApp(span, a1, a2);
      }
-   / void w a1:Unary
+   / a1:void w a2:Unary
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makePrefixOpApp(span, NodeFactory.makeOp(span, "void"), a1);
+       yyValue = NodeFactory.makePrefixOpApp(span, a1, a2);
      }
-   / typeof w a1:Unary
+   / a1:typeof w a2:Unary
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makePrefixOpApp(span, NodeFactory.makeOp(span, "typeof"), a1);
+       yyValue = NodeFactory.makePrefixOpApp(span, a1, a2);
      }
-   / doubleplus w a1:Unary
+   / a1:doubleplus w a2:Unary
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makePrefixOpApp(span, NodeFactory.makeOp(span, "++"), a1);
+       yyValue = NodeFactory.makePrefixOpApp(span, a1, a2);
      }
-   / doubleminus w a1:Unary
+   / a1:doubleminus w a2:Unary
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makePrefixOpApp(span, NodeFactory.makeOp(span, "--"), a1);
+       yyValue = NodeFactory.makePrefixOpApp(span, a1, a2);
      }
-   / plus w a1:Unary
+   / a1:plus w a2:Unary
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makePrefixOpApp(span, NodeFactory.makeOp(span, "+"), a1);
+       yyValue = NodeFactory.makePrefixOpApp(span, a1, a2);
      }
-   / minus w a1:Unary
+   / a1:minus w a2:Unary
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makePrefixOpApp(span, NodeFactory.makeOp(span, "-"), a1);
+       yyValue = NodeFactory.makePrefixOpApp(span, a1, a2);
      }
-   / tilde w a1:Unary
+   / a1:tilde w a2:Unary
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makePrefixOpApp(span, NodeFactory.makeOp(span, "~"), a1);
+       yyValue = NodeFactory.makePrefixOpApp(span, a1, a2);
      }
-   / bang w a1:Unary
+   / a1:bang w a2:Unary
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makePrefixOpApp(span, NodeFactory.makeOp(span, "!"), a1);
+       yyValue = NodeFactory.makePrefixOpApp(span, a1, a2);
      }
    / Postfix;
 
@@ -362,13 +363,13 @@ private transient Expr Unary =
  * | LeftHandSide s --
  */
 private transient Expr Postfix =
-     a1:LeftHandSide s doubleplus
+     a1:LeftHandSide s a2:doubleplus
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makeUnaryAssignOpApp(span, a1, NodeFactory.makeOp(span, "++"));
+       yyValue = NodeFactory.makeUnaryAssignOpApp(span, a1, a2);
      }
-   / a1:LeftHandSide s doubleminus
+   / a1:LeftHandSide s a2:doubleminus
      { Span span = createSpan(yyStart,yyCount);
-         yyValue = NodeFactory.makeUnaryAssignOpApp(span, a1, NodeFactory.makeOp(span, "--"));
+         yyValue = NodeFactory.makeUnaryAssignOpApp(span, a1, a2);
      }
    / LeftHandSide;
 

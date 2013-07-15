@@ -1,9 +1,7 @@
 ################################################################################
 #    Copyright (c) 2013, KAIST.
-#    All rights reserved.
-#
-#    Use is subject to license terms.
-#
+#    All rights reserved.\n#
+#    Use is subject to license terms.\n#
 #    This distribution may include materials developed by third parties.
 ################################################################################
 tests=unusedFunction3
@@ -12,14 +10,15 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-unusedFunction3.js:1:1~1:19: [Warning] Function 'funcA' is never used. \n\
-unusedFunction3.js:2:1~2:26: [Warning] Function 'funcB' is never used. \n\
-unusedFunction3.js:3:1~5:1: [Warning] Function 'libTest1' is never used. \n\
+unusedFunction3.js:1:1~1:19: [Warning] Function 'funcA' is never called. \n\
+unusedFunction3.js:2:1~2:26: [Warning] Function 'funcB' is never called. \n\
+unusedFunction3.js:3:1~5:1: [Warning] Function 'libTest1' is never called. \n\
+unusedFunction3.js:4:3~5:1: [Warning] Unreachable code 'testFunc1(testFunc2);' is found. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      3 (100.00%) | \n\
+|  Warnings          :      4 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -37,8 +36,9 @@ unusedFunction3.js:3:1~5:1: [Warning] Function 'libTest1' is never used. \n\
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
 |  Shadowing               :      0 | \n\
-|  UnreachableCode         :      0 | \n\
-|  Unused                  :      3 | \n\
+|  UncalledFuction         :      3 | \n\
+|  UnreachableCode         :      1 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\
