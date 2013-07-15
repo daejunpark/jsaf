@@ -975,6 +975,15 @@ public class Useful {
     }
 
     /**
+     * Returns a BufferedReader for the file f, with encoding assumed to be UTF-8.
+     *
+     * @throws FileNotFoundException
+     */
+    static public BufferedReader utf8BufferedFileReader(File f) throws FileNotFoundException {
+        return new BufferedReader(new InputStreamReader(new FileInputStream(f), Charset.forName("UTF-8")));
+    }
+
+    /**
      * Returns a BufferedWriter for a file with name filename, creating
      * directories as necessary to Make It So.
      * 
