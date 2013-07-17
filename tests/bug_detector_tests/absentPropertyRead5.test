@@ -13,12 +13,13 @@ bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
 absentPropertyRead5.js:2:2~2:6: [Warning] Reading absent property '1' of object 'o'. \n\
+absentPropertyRead5.js:4:5~4:10: [Warning] Value assigned to variable 'a' is never read. \n\
 absentPropertyRead5.js:7:2~7:6: [Warning] Reading absent property 'a' of object 'o', where property 'a' can be null, 1, "test". \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      2 (100.00%) | \n\
+|  Warnings          :      3 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      2 | \n\
@@ -38,7 +39,7 @@ absentPropertyRead5.js:7:2~7:6: [Warning] Reading absent property 'a' of object 
 |  Shadowing               :      0 | \n\
 |  UncalledFuction         :      0 | \n\
 |  UnreachableCode         :      0 | \n\
-|  ValueNeverRead          :      0 | \n\
+|  ValueNeverRead          :      1 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

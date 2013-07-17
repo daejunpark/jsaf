@@ -29,7 +29,7 @@ import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 object HTMLDocument extends DOM {
   private val name = "HTMLDocument"
 
-  /* predefined locatoins */
+  /* predefined locations */
   val loc_cons = newPredefLoc(name + "Cons")
   val loc_proto = newPredefLoc(name + "Proto")
   val GlobalDocumentLoc = newPredefLoc(name + "Global")

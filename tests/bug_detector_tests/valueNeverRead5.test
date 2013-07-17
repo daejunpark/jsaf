@@ -6,18 +6,20 @@
 #
 #    This distribution may include materials developed by third parties.
 ################################################################################
-tests=varyingArgumentsType3
+tests=valueNeverRead5
 BUGDETECTOR_TESTS_DIR=${JS_HOME}/tests/bug_detector_tests
 bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-varyingArgumentsType3.js:14:1~14:9: [Warning] Calling a function 'foo' with the parameter 'x' of varying types (Number, String). \n\
+valueNeverRead5.js:12:1~14:1: [Warning] Function 'f' is never called. \n\
+valueNeverRead5.js:13:3~13:8: [Warning] Unreachable code 'x = 7;' is found. \n\
+valueNeverRead5.js:20:7~20:13: [Warning] Conditional expression 't == x' is always true. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      1 (100.00%) | \n\
+|  Warnings          :      3 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -26,7 +28,7 @@ varyingArgumentsType3.js:14:1~14:9: [Warning] Calling a function 'foo' with the 
 |  CallConstFunc           :      0 | \n\
 |  CallNonConstructor      :      0 | \n\
 |  CallNonFunction         :      0 | \n\
-|  ConditionalBranch       :      0 | \n\
+|  ConditionalBranch       :      1 | \n\
 |  ConvertToNumber         :      0 | \n\
 |  DefaultValueTypeError   :      0 | \n\
 |  FunctionArgSize         :      0 | \n\
@@ -35,10 +37,10 @@ varyingArgumentsType3.js:14:1~14:9: [Warning] Calling a function 'foo' with the 
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
 |  Shadowing               :      0 | \n\
-|  UncalledFuction         :      0 | \n\
-|  UnreachableCode         :      0 | \n\
+|  UncalledFuction         :      1 | \n\
+|  UnreachableCode         :      1 | \n\
 |  ValueNeverRead          :      0 | \n\
-|  VaryingTypeArguments    :      1 | \n\
+|  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\
 \n

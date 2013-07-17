@@ -59,15 +59,16 @@ object ModelManager {
     val ns_calls = model_map.foldLeft(List[Node]())((nodes, kv) =>
       nodes ++ kv._2.addAsyncCall(cfg, n_head)
     )
-    // last node -> loop head
-    cfg.addEdge(ns_last.toList, n_head)
-    // loop head -> exit
-    cfg.addEdge(n_head, ((cfg.getGlobalFId, LExit)))
-    // async after call -> exit
-    cfg.addEdge(ns_calls, ((cfg.getGlobalFId, LExit)))
-    // async after call -> exc-exit */
-    cfg.addExcEdge(ns_calls,(cfg.getGlobalFId,LExitExc))
-
+    if (!ns_calls.isEmpty) {
+      // last node -> loop head
+      cfg.addEdge(ns_last.toList, n_head)
+      // loop head -> exit
+      cfg.addEdge(n_head, ((cfg.getGlobalFId, LExit)))
+      // async after call -> exit
+      cfg.addEdge(ns_calls, ((cfg.getGlobalFId, LExit)))
+      // async after call -> exc-exit */
+      cfg.addExcEdge(ns_calls,(cfg.getGlobalFId,LExitExc))
+    }
     /* init heap*/
     model_map.foldLeft(heap)((_h, kv) => kv._2.initialize(_h))
   }

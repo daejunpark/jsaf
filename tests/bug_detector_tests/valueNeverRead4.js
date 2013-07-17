@@ -10,7 +10,7 @@
 var x = 10;
 
 function f() {
-  x = 7;
+  x = x - 7;
 }
 
 f();

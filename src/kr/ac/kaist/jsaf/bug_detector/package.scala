@@ -14,12 +14,9 @@ import scala.collection.mutable.{HashMap => MHashMap}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.nodes.ASTNode
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.nodes_util.SourceLoc
-import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.nodes_util.EJSType
-import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete
 
 package object bug_detector {
   /************************* TYPE DEFINITION ***************************
@@ -109,8 +106,8 @@ package object bug_detector {
   /* BugKind : 10 ~ 19 */
   val FunctionArgSize       :BugKind = addBugMsgFormat(newBugKind, Warning, "Too %s arguments to function '%s'.", 2)
   val GlobalThis            :BugKind = addBugMsgFormat(newBugKind, Warning, "'this' %s the global object.", 1)
-  val ImplicitCalltoString  :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit toString type-conversion to object '%s' by non-builtin toString method.", 1)
-  val ImplicitCallvalueOf   :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit valueOf type-conversion to object '%s' by non-builtin valueOf method.", 1)
+  val ImplicitCallToString  :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit toString type-conversion to object '%s' by non-builtin toString method.", 1)
+  val ImplicitCallValueOf   :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit valueOf type-conversion to object '%s' by non-builtin valueOf method.", 1)
   val ImplicitTypeConvert   :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit type-conversion in equality comparison '%s%s %s %s%s'.", 5)
   val ObjectNullOrUndef     :BugKind = addBugMsgFormat(newBugKind, TypeError, "Property is trying to access %s, whose value is %s.", 2)
   val PrimitiveToObject     :BugKind = addBugMsgFormat(newBugKind, Warning, "Trying to convert primitive value(%s) to object.", 1)
@@ -124,67 +121,20 @@ package object bug_detector {
   val UnreferencedFunction  :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is neither called nor referenced.", 1)
   val UncalledFunction      :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is never called.", 1)
   val UnusedVarProp         :BugKind = addBugMsgFormat(newBugKind, Warning, "Value assigned to %s is never read.", 1)
-  val VaryingTypeArguments  :BugKind = addBugMsgFormat(newBugKind, Warning, "Calling a function '%s' with the %sargument %sof varying types (%s).", 4)
+  val VaryingTypeArguments  :BugKind = addBugMsgFormat(newBugKind, Warning, "Calling a function '%s' with the %sparameter %sof varying types (%s).", 4)
   val WrongThisType         :BugKind = addBugMsgFormat(newBugKind, TypeError, "Native function '%s' is called when its 'this' value is not of the expected object type.", 1)
 
-  def getOmittedCode(ast: ASTNode, maxLength: Int = 48): String = {
-    val originalCode = JSAstToConcrete.doit(ast)
-    var newCode = ""
-    var isFirst = true
-    for(line <- originalCode.split('\n')) {
-      if(newCode.length < maxLength) {
-        if(isFirst) isFirst = false else newCode+= ' '
-        newCode+= line.replace('\t', ' ').trim
-      }
-    }
-    if(newCode.length > maxLength) newCode = newCode.substring(0, maxLength) + " ..."
-    newCode
-  }
-
-  //def getFuncName(name: String) = if (NU.isFunExprName(name)) "anonymous_function" else name
-  def getFuncName(funcName: String, varManager: VarManager = null, expr: CFGNode = null): String = {
-    if (!NU.isFunExprName(funcName)) return funcName
-    if (varManager != null && expr != null) {
-      expr match {
-        case expr: CFGExpr =>
-          val bugVar0 = varManager.getUserVarAssign(expr)
-          if (bugVar0 != null) return bugVar0.toString
-        case expr: CFGFunExpr =>
-          var isFirst = true
-          val funcName = new StringBuilder
-          for (rhs <- varManager.getUserVarAssignR(expr.lhs)) {
-            if (isFirst) isFirst = false else funcName.append(", ")
-            funcName.append(rhs.toString)
-          }
-          if (funcName.length > 0) return funcName.toString
-        case _ =>
-      }
-    }
-    "anonymous_function"
-  }
-
-  def pvalueToString(pvalue: PValue, concreteOnly: Boolean = true): String = {
-    var result = ""
-    pvalue.foreach(absValue => {
-      if (!absValue.isBottom && (!concreteOnly || absValue.isConcrete)) {
-        if (result.length == 0) result+= absValue.toString
-        else result+= ", " + absValue.toString
-      }
-    })
-    result
-  }
-
   /* 
-  * ToStringSet: Set of builtin methods that use ToString internally 
-  * ToNumberSet: Set of builtin methods that use ToNumber internally 
+  * toStringSet: Set of builtin methods that use ToString internally
+  * toNumberSet: Set of builtin methods that use ToNumber internally
   * (Optional) distinguish different arguments in built-in Methods?
   */
-  val ToStringSet: Set[String] = Set("String.prototype.charAt", "String.prototype.charCodeAt", "String.prototype.concat", 
+  val toStringSet: Set[String] = Set("String.prototype.charAt", "String.prototype.charCodeAt", "String.prototype.concat",
     "String.prototype.indexOf", "String.prototype.lastIndexOf", "String.prototype.localeCompare", "String.prototype.match", 
     "String.prototype.replace", "String.prototype.search", "String.prototype.slice", "String.prototype.slice", 
     "String.prototype.split", "String.prototype.substring", "String.prototype.toLowerCase", "String.prototype.trim")
 
-  val ToNumberSet: Set[String] = Set("Global.isNaN", "Global.isFinite", "Date.prototype.setTime", "Date.prototype.setMilliseconds",
+  val toNumberSet: Set[String] = Set("Global.isNaN", "Global.isFinite", "Date.prototype.setTime", "Date.prototype.setMilliseconds",
     "Date.prototype.setUTCMilliseconds", "Date.prototype.setSeconds", "Date.prototype.setUTCSeconds", "Date.prototype.setMinutes", 
     "Date.prototype.setUTCMinutes", "Date.prototype.setHours", "Date.prototype.setUTCHours", "Date.prototype.setDate", "Date.prototype.setUTCDate",
     "Date.prototype.setMonth", "Date.prototype.setUTCMonth", "Date.prototype.setFullYear", "Date.prototype.setUTCFullYear")

@@ -15,8 +15,7 @@ class BugOption(defaultForUser: Boolean = true) {
   ////////////////////////////////////////////////////////////////////////////////
   // Settings
   ////////////////////////////////////////////////////////////////////////////////
-  //val soundnessLevel:                           Array[SoundnessLevel] = new Array(MAX_BUG_COUNT)
-  val contextSensitive:                         Array[CallContext.sensitivityFlagType] = new Array(MAX_BUG_COUNT)
+  val contextSensitive:                         Array[CallContext.SensitivityFlagType] = new Array(MAX_BUG_COUNT)
 
   var AbsentReadProperty_PropertyMustExistInEveryState          = false
   var AbsentReadProperty_PropertyMustExistInEveryLocation       = false

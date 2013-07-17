@@ -12,11 +12,13 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
+undefToNumber2.js:10:5~10:18: [Warning] Value assigned to variable 'x' is never read. \n\
+undefToNumber2.js:14:1~14:4: [Warning] Value assigned to variable 'x' is never read. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      0 (  0.00%) | \n\
+|  Warnings          :      2 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -36,7 +38,7 @@ bug-detector_out_WCIequals=\
 |  Shadowing               :      0 | \n\
 |  UncalledFuction         :      0 | \n\
 |  UnreachableCode         :      0 | \n\
-|  ValueNeverRead          :      0 | \n\
+|  ValueNeverRead          :      2 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\

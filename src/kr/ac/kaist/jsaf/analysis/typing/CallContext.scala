@@ -44,12 +44,12 @@ object CallContext {
   ////////////////////////////////////////////////////////////////////////////////
   // Context sensitivity mode flags
   ////////////////////////////////////////////////////////////////////////////////
-  type sensitivityFlagType =                    Int
+  type SensitivityFlagType =                    Int
 
-  val _INSENSITIVE:                             sensitivityFlagType = 0x00000000
-  val _1_CALLSITE:                              sensitivityFlagType = 0x00000001
-  val _1_OBJECT:                                sensitivityFlagType = 0x00000002
-  val _MOST_SENSITIVE:                          sensitivityFlagType = 0xFFFFFFFF
+  val _INSENSITIVE:                             SensitivityFlagType = 0x00000000
+  val _1_CALLSITE:                              SensitivityFlagType = 0x00000001
+  val _1_OBJECT:                                SensitivityFlagType = 0x00000002
+  val _MOST_SENSITIVE:                          SensitivityFlagType = 0xFFFFFFFF
 }
 
 abstract class CallContext {
@@ -59,7 +59,7 @@ abstract class CallContext {
   // lset: this value of callee
   def NewCallContext(cfg: CFG, fid: FunctionId, l: Loc, lset_this: LocSet): Set[(CallContext, Obj)]
   def compare(that: CallContext): Int
-  def filterSensitivity(flag: CallContext.sensitivityFlagType): CallContext
+  def filterSensitivity(flag: CallContext.SensitivityFlagType): CallContext
   def toString2(): String = {""}
 }
 
@@ -96,7 +96,7 @@ private case class Insensitive(builtin: Address) extends CallContext {
     }
   }
 
-  def filterSensitivity(flag: CallContext.sensitivityFlagType): CallContext = this
+  def filterSensitivity(flag: CallContext.SensitivityFlagType): CallContext = this
 
   override def toString = builtin.toString
 }
@@ -137,7 +137,7 @@ private case class OneCallsite(addr: Address, builtin: Address) extends CallCont
     }
   }
 
-  def filterSensitivity(flag: CallContext.sensitivityFlagType): CallContext = {
+  def filterSensitivity(flag: CallContext.SensitivityFlagType): CallContext = {
     if ((flag & CallContext._1_CALLSITE) != 0) this
     else new OneCallsite(GlobalCallsite, builtin)
   }
@@ -186,7 +186,7 @@ private case class OneObject(loc: Loc, builtin: Address) extends CallContext {
     }
   }
 
-  def filterSensitivity(flag: CallContext.sensitivityFlagType): CallContext = {
+  def filterSensitivity(flag: CallContext.SensitivityFlagType): CallContext = {
     if ((flag & CallContext._1_OBJECT) != 0) this
     else new OneObject(GlobalLoc, builtin)
   }
@@ -230,7 +230,7 @@ private case class OneObjectTAJS(lset: LocSet, builtin: Address) extends CallCon
     }
   }
 
-  def filterSensitivity(flag: CallContext.sensitivityFlagType): CallContext = {
+  def filterSensitivity(flag: CallContext.SensitivityFlagType): CallContext = {
     if ((flag & CallContext._1_OBJECT) != 0) this
     else new OneObjectTAJS(LocSet(GlobalLoc), builtin)
   }
@@ -282,7 +282,7 @@ private case class OneCallsiteAndObject(addr: Address, loc: Loc, builtin: Addres
     }
   }
 
-  def filterSensitivity(flag: CallContext.sensitivityFlagType): CallContext = {
+  def filterSensitivity(flag: CallContext.SensitivityFlagType): CallContext = {
     if ((flag & CallContext._1_CALLSITE) != 0 && (flag & CallContext._1_OBJECT) != 0) this
     else {
       var addr: Address = GlobalCallsite
@@ -355,7 +355,7 @@ private case class OneCallsiteOrObject(addr: Address, loc: Loc, builtin: Address
     }
   }
 
-  def filterSensitivity(flag: CallContext.sensitivityFlagType): CallContext = {
+  def filterSensitivity(flag: CallContext.SensitivityFlagType): CallContext = {
     if ((flag & CallContext._1_CALLSITE) != 0 && (flag & CallContext._1_OBJECT) != 0) this
     else {
       var addr: Address = GlobalCallsite
@@ -415,7 +415,7 @@ private case class KCallsite(callsiteList: List[Address]) extends CallContext {
   }
 
   // TODO: apply appropriate filtering if necessary
-  def filterSensitivity(flag: CallContext.sensitivityFlagType): CallContext = this
+  def filterSensitivity(flag: CallContext.SensitivityFlagType): CallContext = this
 
   override def toString = callsiteList.toString
 }
@@ -460,7 +460,7 @@ private case class KCallsiteAndObject(callsiteList: List[Address], thisLoc: Loc)
   }
 
   // TODO: apply appropriate filtering if necessary
-  def filterSensitivity(flag: CallContext.sensitivityFlagType): CallContext = this
+  def filterSensitivity(flag: CallContext.SensitivityFlagType): CallContext = this
 
   override def toString = "(" + callsiteList.toString + ", " + DomainPrinter.printLoc(thisLoc) + ")"
 }
@@ -489,7 +489,7 @@ private case class CallsiteSet(callsiteSet: LocSet) extends CallContext {
   }
 
   // TODO: apply appropriate filtering if necessary
-  def filterSensitivity(flag: CallContext.sensitivityFlagType): CallContext = this
+  def filterSensitivity(flag: CallContext.SensitivityFlagType): CallContext = this
 
   override def toString = callsiteSet.toString
 }

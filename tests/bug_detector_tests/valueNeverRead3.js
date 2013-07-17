@@ -13,7 +13,10 @@ function f() {
   x = 7;
 }
 
-var g = function () {
+var g = 20;
+
+g = function () {
   var t = x;
 }
 
+g = 30;

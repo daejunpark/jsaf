@@ -15,7 +15,6 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.nodes_util.NodeRelation
-import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.nodes_util.EJSType
 
@@ -26,56 +25,8 @@ class InstDetect(bugDetector: BugDetector) {
   val bugOption     = bugDetector.bugOption
   val varManager    = bugDetector.varManager
   val stateManager  = bugDetector.stateManager
+  val CommonDetect  = bugDetector.CommonDetect
   val libMode       = bugDetector.libMode
-
-
-
-  ////////////////////////////////////////////////////////////////
-  // Get a set of property names (String) from an AbsString
-  ////////////////////////////////////////////////////////////////
-
-  private def props(heap: Heap, loc: Loc, absString: AbsString): Set[String] = {
-    if (!heap.domIn(loc)) Set()
-    else {
-      absString match {
-        // ignore @default
-        case StrTop => heap(loc).map.keySet.filter(s => !s.take(1).equals("@"))
-        case NumStr => heap(loc).map.keySet.filter(s => !s.take(1).equals("@") && AbsString.alpha(s) <= NumStr)
-        case OtherStr => heap(loc).map.keySet.filter(s => !s.take(1).equals("@") && AbsString.alpha(s) <= OtherStr)
-        case NumStrSingle(s) => Set(s)
-        case OtherStrSingle(s) => Set(s)
-        case StrBot => Set()
-      }
-    }
-  }
-
-
-
-  ////////////////////////////////////////////////////////////////
-  // Filter real function name ("anonymous_function" if unnamed)
-  ////////////////////////////////////////////////////////////////
-
-  /* Previous code
-  def filterUnnamedFunction(name: String): String =
-    if (NU.isFunExprName(name)) "anonymous_function" else name
-  */
-
-
-
-  ////////////////////////////////////////////////////////////////
-  // Get
-  ////////////////////////////////////////////////////////////////
-
-  def getFuncOrConstPropName(heap: Heap, funLoc: Loc, isCall: Boolean): String = {
-    // Function must have [[Function]] or [[Construct]] property
-    if (isCall) {
-      if (BoolTrue <= Helper.IsCallable(heap, funLoc)) return "@function"
-    }
-    else {
-      if (BoolTrue <= Helper.HasConstruct(heap, funLoc)) return "@construct"
-    }
-    return null
-  }
 
 
 
@@ -95,6 +46,7 @@ class InstDetect(bugDetector: BugDetector) {
     unreachableCodeCheck(node, inst, cstate)
     if (cstate.size == 0) return
 
+    //println("NODE: " + node + "\tINSTRUNCTION := " + inst)
     inst match {
       case CFGAlloc(_, info, id, proto, _) =>
         readSet = proto match {
@@ -112,33 +64,33 @@ class InstDetect(bugDetector: BugDetector) {
       case CFGCatch(_, info, name) =>
       case CFGCall(_, info, fun, thisArg, args, _) =>
         callNonFunctionCheck(info.getSpan, fun)
-        defaultValueCheck(CALL_NORMAL, fun, thisArg, args)
+        //defaultValueCheck(CALL_NORMAL, fun, thisArg, args)
         functionCheck(info.getSpan, CALL_NORMAL, fun, args)
         if (libMode) unreferencedFunctionCheck(info.getSpan, args)
         unusedFunctionCheck(info.getSpan, fun)
-        readSet = List(fun, thisArg, args).foldLeft[List[RWEntry]](List())((list, e) => list ++ unreadExprCheck(info.getSpan, e))   
+        readSet = List(fun, thisArg, args).foldLeft[List[RWEntry]](List())((list, e) => list ++ unreadExprCheck(info.getSpan, e))
         varyingTypeArgumentsCheck(info.getSpan, CALL_NORMAL, fun, args)
         wrongThisTypeCheck(info.getSpan, fun, thisArg)
-      case CFGConstruct(_, info, cons, thisArg, args, _) => 
+      case CFGConstruct(_, info, cons, thisArg, args, _) =>
         callNonConstructorCheck(info.getSpan, cons)
-        defaultValueCheck(CALL_CONST, cons, thisArg, args)
+        //defaultValueCheck(CALL_CONST, cons, thisArg, args)
         functionCheck(info.getSpan, CALL_CONST, cons, args)
         if (libMode) unreferencedFunctionCheck(info.getSpan, args)
         unusedFunctionCheck(info.getSpan, cons)
-        readSet = List(cons, thisArg, args).foldLeft[List[RWEntry]](List())((list, e) => list ++ unreadExprCheck(info.getSpan, e))   
+        readSet = List(cons, thisArg, args).foldLeft[List[RWEntry]](List())((list, e) => list ++ unreadExprCheck(info.getSpan, e))
         varyingTypeArgumentsCheck(info.getSpan, CALL_CONST, cons, args)
-      case CFGDelete(_, info, id, expr) => 
-        readSet = unreadExprCheck(info.getSpan, expr)   
+      case CFGDelete(_, info, id, expr) =>
+        readSet = unreadExprCheck(info.getSpan, expr)
         writeSet = unreadVariableCheck(info.getSpan, id, write)
       case CFGDeleteProp(_, info, id, obj, index) =>
-        readSet = unreadExprCheck(info.getSpan, obj) ++ unreadExprCheck(info.getSpan, index)   
+        readSet = unreadExprCheck(info.getSpan, obj) ++ unreadExprCheck(info.getSpan, index)
         writeSet = unreadVariableCheck(info.getSpan, id, write)
         unreadPropertyReadCheck(info.getSpan, obj, index)
-      case CFGExprStmt(_, info, id, expr) =>        
-        readSet = unreadExprCheck(info.getSpan, expr)   
+      case CFGExprStmt(_, info, id, expr) =>
+        unreadExprFuncCheck(id, expr)
+        readSet = unreadExprCheck(info.getSpan, expr)
         writeSet = unreadVariableCheck(info.getSpan, id, write)
       case CFGFunExpr(_, info, id, name, fid, _, _, _) =>
-        writeSet = unreadVariableFunExprCheck(info.getSpan, id, write)
         bugStorage.insertFunExpr(fid, inst.asInstanceOf[CFGFunExpr])
       case CFGInternalCall(_, info, id, fun, args, loc) =>
         (fun.toString, args, loc) match {
@@ -146,23 +98,25 @@ class InstDetect(bugDetector: BugDetector) {
             if (!id.getText.contains("<>fun<>")) accessingNullOrUndefCheck(info.getSpan, expr)
             primitiveToObjectCheck(info.getSpan, expr)
           case ("<>Global<>toNumber", List(expr), None) =>
-            bugDetector.ExprDetect.convertToNumberCheck(node, inst, expr, null, false, null)
+            CommonDetect.convertToNumberCheck(node, inst, expr, null, false, null)
           case _ => Unit
         }
-        readSet = args.foldLeft[List[RWEntry]](List())((list, arg) => list ++ unreadExprCheck(info.getSpan, arg))   
+        readSet = args.foldLeft[List[RWEntry]](List())((list, arg) => list ++ unreadExprCheck(info.getSpan, arg))
         writeSet = unreadVariableCheck(info.getSpan, id, write)
       case CFGReturn(_, info, optExpr) =>
         readSet = optExpr match {
-          case Some(expr) => unreadExprCheck(info.getSpan, expr) 
+          case Some(expr) => unreadExprCheck(info.getSpan, expr)
           case None => List[RWEntry]() // pass
         }
       case CFGStore(_, info, obj, index, expr) =>
-        readSet = unreadExprCheck(info.getSpan, expr)   
+        readSet = unreadExprCheck(info.getSpan, expr)
         writeSet = unreadPropertyWriteCheck(info.getSpan, obj, index)
       case CFGThrow(_, info, expr) =>
-        readSet = unreadExprCheck(info.getSpan, expr)   
+        readSet = unreadExprCheck(info.getSpan, expr)
       case _ => Unit
     }
+    //println("READ SET := " + readSet)
+    //println("WRITESET := " + writeSet)
     bugStorage.updateRWMap(node, readSet, writeSet)
 
 
@@ -180,7 +134,7 @@ class InstDetect(bugDetector: BugDetector) {
 
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance
-      val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(ObjectNullOrUndef))
+      val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(ObjectNullOrUndef))
       for ((callContext, state) <- mergedCState) {
         val objValue = SE.V(expr, state.heap, state.context)._1
         val pValue = objValue.pvalue
@@ -225,7 +179,7 @@ class InstDetect(bugDetector: BugDetector) {
 
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance()
-      val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(CallNonFunction))
+      val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(CallNonFunction))
       for ((callContext, state) <- mergedCState) {
         val funLocSet = SE.V(fun, state.heap, state.context)._1.locset
 
@@ -271,7 +225,7 @@ class InstDetect(bugDetector: BugDetector) {
 
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance()
-      val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(CallNonConstructor))
+      val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(CallNonConstructor))
       for ((callContext, state) <- mergedCState) {
         val funLocSet = SE.V(const, state.heap, state.context)._1.locset
 
@@ -307,7 +261,7 @@ class InstDetect(bugDetector: BugDetector) {
       originalLocSet.foreach((loc) => heap(loc)("@function")._1._3.foreach((fid) =>
           typing.builtinFset.get(fid) match {
             case Some(builtinName) =>
-              if ((nonConsSet contains builtinName) || (filteredLocSet.size < originalLocSet.size)) 
+              if ((nonConsSet contains builtinName) || (filteredLocSet.size < originalLocSet.size))
                 bugStorage.addMessage(span, CallNonConstructor, inst, null, filterUnnamedFunction(cfg.getFuncName(fid)))
             case None => Unit
       }))*/
@@ -322,7 +276,7 @@ class InstDetect(bugDetector: BugDetector) {
     def conditionalBranchCheck(info: Info, expr: CFGExpr, isOriginalCondExpr: Boolean): Unit = {
       //if (!isOriginalCondExpr) return
       val bugCheckInstance = new BugCheckInstance()
-      val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(CondBranch))
+      val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(CondBranch))
 
       // Check for each CState
       for ((callContext, state) <- mergedCState) {
@@ -416,7 +370,7 @@ class InstDetect(bugDetector: BugDetector) {
       /*if (result == BoolBot || result == BoolTop) return
 
       // Report bugs
-      bugCheckInstance.bugList.foreach((e) => bugStorage.addMessage(e.span, CondBranch, inst, e.callContext, e.string2, 
+      bugCheckInstance.bugList.foreach((e) => bugStorage.addMessage(e.span, CondBranch, inst, e.callContext, e.string2,
         (if (e.string2 != "false" && e.string2 != "true") ", where its value is " + e.string1 else "") + "."))*/
     }
 
@@ -426,34 +380,46 @@ class InstDetect(bugDetector: BugDetector) {
     //  DefaultValue (called by main function)
     ////////////////////////////////////////////////////////////////
 
+    /*
     def defaultValueCheck(isCall: Boolean, fun: CFGExpr, thisArg: CFGExpr, args: CFGExpr): Unit = {
-      val objLocSet = SE.V(fun, heap, context)._1._2
-      objLocSet.foreach((loc) =>
-        heap(loc)("@function")._1._3.foreach((fid) =>
-          typing.builtinFset.get(fid) match {
-            case Some(builtinName) =>
-              if (isCall) {
-                // ToString
-                if (builtinName == "String") bugDetector.ExprDetect.defaultValueCheck(inst, args, "String")
-                else if (ToStringSet contains builtinName) bugDetector.ExprDetect.defaultValueCheck(inst, thisArg, "String")
-                // ToString:  JSON.stringify check when replacer, space or value is Object and its [[Class]] is String 
-                //            or when replacer is Object and its [[Class]] is Number (what's replacer ??)
-                else if (builtinName == "JSON.strinify" && !SE.V(args, heap, context)._1._2.subsetOf(LocSetBot)) 
-                  SE.V(args, heap, context)._1._2.foreach((loc) => 
-                    if (AbsString.alpha("String") == heap(loc)("@class")._1._2._1._5) bugDetector.ExprDetect.defaultValueCheck(inst, args, "String")
-                    else if (AbsString.alpha("Number") == heap(loc)("@class")._1._2._1._5) bugDetector.ExprDetect.defaultValueCheck(inst, args, "Number")) 
-                // ToNumber
-                else if (builtinName == "Number") bugDetector.ExprDetect.defaultValueCheck(inst, args, "Number")
-                else if (ToNumberSet contains builtinName) bugDetector.ExprDetect.defaultValueCheck(inst, args, "Number")
-              } else {
-                if (builtinName == "String")      bugDetector.ExprDetect.defaultValueCheck(inst, args, "String")
-                else if (builtinName == "Number") bugDetector.ExprDetect.defaultValueCheck(inst, args, "Number")
-                else if (builtinName == "Date")   bugDetector.ExprDetect.defaultValueCheck(inst, args, "Number")
-              }
-            case None => Unit
-      }))
+      // For each function location
+      for(funLoc <- SE.V(fun, heap, context)._1.locset) {
+        // Function must have [[Function]] or [[Construct]] property
+        val propertyName: String = BugHelper.getFuncOrConstPropName(state.heap, funLoc, isCall)
+        if(propertyName != null) {
+          // For each function id
+          for(fid <- heap(funLoc)(propertyName)._1.funid) {
+            typing.builtinFset.get(fid) match {
+              case Some(builtinName) =>
+                if (isCall) {
+                  // ToString
+                  if (builtinName == "String") CommonDetect.defaultValueCheck(inst, args, "String")
+                  else if (toStringSet contains builtinName) CommonDetect.defaultValueCheck(inst, thisArg, "String")
+                  // ToString:  JSON.stringify check when replacer, space or value is Object and its [[Class]] is String
+                  //            or when replacer is Object and its [[Class]] is Number (what's replacer ??)
+                  else if (builtinName == "JSON.strinify" && !SE.V(args, heap, context)._1.locset.subsetOf(LocSetBot)) {
+                    for(loc <- SE.V(args, heap, context)._1.locset) {
+                      val classProperty = heap(loc)("@class")._1.value.pvalue.strval
+                      if (AbsString.alpha("String") == classProperty) CommonDetect.defaultValueCheck(inst, args, "String")
+                      else if (AbsString.alpha("Number") == classProperty) CommonDetect.defaultValueCheck(inst, args, "Number")
+                    }
+                  }
+                  // ToNumber
+                  else if (builtinName == "Number") CommonDetect.defaultValueCheck(inst, args, "Number")
+                  else if (toNumberSet contains builtinName) CommonDetect.defaultValueCheck(inst, args, "Number")
+                }
+                else {
+                  if (builtinName == "String")      CommonDetect.defaultValueCheck(inst, args, "String")
+                  else if (builtinName == "Number") CommonDetect.defaultValueCheck(inst, args, "Number")
+                  else if (builtinName == "Date")   CommonDetect.defaultValueCheck(inst, args, "Number")
+                }
+              case None => Unit
+            }
+          }
+        }
+      }
     }
-
+    */
 
 
     ////////////////////////////////////////////////////////////////
@@ -463,7 +429,7 @@ class InstDetect(bugDetector: BugDetector) {
     def functionCheck(span: Span, isCall: Boolean, fun: CFGExpr, args: CFGExpr): Unit = {
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance()
-      val mergedCState = stateManager.getCState(node, inst.getInstId, CallContext._MOST_SENSITIVE)
+      val mergedCState = stateManager.getInputCState(node, inst.getInstId, CallContext._MOST_SENSITIVE)
       for ((callContext, state) <- mergedCState) {
         val funLocSet = SE.V(fun, state.heap, state.context)._1.locset
         val argLocSet = SE.V(args, state.heap, state.context)._1.locset
@@ -471,7 +437,7 @@ class InstDetect(bugDetector: BugDetector) {
         // Check for each function location set
         for (funLoc <- funLocSet) {
           // Function must have [[Function]] or [[Construct]] property
-          val propertyName: String = getFuncOrConstPropName(state.heap, funLoc, isCall)
+          val propertyName: String = BugHelper.getFuncOrConstPropName(state.heap, funLoc, isCall)
           if (propertyName != null) {
             // Check for each function id set
             for (fid <- state.heap(funLoc)(propertyName)._1.funid) {
@@ -561,9 +527,9 @@ class InstDetect(bugDetector: BugDetector) {
       for (b <- bugCheckInstance.bugList) {
         b.bugKind match {
           case BuiltinWrongArgType =>
-            bugStorage.addMessage(span, b.bugKind, inst, b.callContext, b.string1, getFuncName(cfg.getFuncName(b.fid), varManager, fun), b.string2)
+            bugStorage.addMessage(span, b.bugKind, inst, b.callContext, b.string1, BugHelper.getFuncName(cfg.getFuncName(b.fid), varManager, fun), b.string2)
           case FunctionArgSize =>
-            bugStorage.addMessage(span, b.bugKind, inst, b.callContext, b.string1, getFuncName(cfg.getFuncName(b.fid), varManager, fun))
+            bugStorage.addMessage(span, b.bugKind, inst, b.callContext, b.string1, BugHelper.getFuncName(cfg.getFuncName(b.fid), varManager, fun))
         }
       }
     }
@@ -577,7 +543,7 @@ class InstDetect(bugDetector: BugDetector) {
     def primitiveToObjectCheck(span: Span, expr: CFGExpr): Unit = {
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance()
-      val mergedCState = stateManager.getCState(node, inst.getInstId, bugOption.contextSensitive(PrimitiveToObject))
+      val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(PrimitiveToObject))
       for ((callContext, state) <- mergedCState) {
         // expr value
         val value: Value = SE.V(expr, state.heap, state.context)._1
@@ -682,6 +648,24 @@ class InstDetect(bugDetector: BugDetector) {
 
 
     ////////////////////////////////////////////////////////////////
+    //  UnreadExpr Check (only Function Expression)
+    ////////////////////////////////////////////////////////////////
+
+    def unreadExprFuncCheck(id: CFGId, expr: CFGExpr): Unit = {
+      val name = id match { case CFGUserId(_,n,_,_,_) => n  case CFGTempId(t,_) => t }
+      expr match {
+        case CFGVarRef(info, id) => id match {
+          case CFGTempId(text,_) => 
+            Helper.LookupBase(heap, id).foreach((l1) => heap(l1)(text)._1._1._1._2.foreach((l2) => 
+              if (BoolTrue == heap(l2).domIn("@function")) heap(l1)("@this")._1._2._2.foreach((loc) => bugStorage.updateFuncSet(loc, name))))
+          case _ => // pass 
+        } case _ => // pass
+      }
+    }
+
+
+
+    ////////////////////////////////////////////////////////////////
     //  UnreadVarProp Check (Expression Check)
     ////////////////////////////////////////////////////////////////
 
@@ -693,22 +677,6 @@ class InstDetect(bugDetector: BugDetector) {
         case CFGVarRef(info, id) => unreadVariableCheck(span, id, read)
         case _ => List() // pass
       }
-    }
-
-
-
-    ////////////////////////////////////////////////////////////////
-    //  UnreadVariable Check for CFGFunExpr (Store Read or Write)
-    ////////////////////////////////////////////////////////////////
-
-    def unreadVariableFunExprCheck(span: Span, id: CFGId, rwflag: Boolean): List[RWEntry] = id match {
-      case CFGUserId(_, name, _, originalName, _) => 
-        if (bugStorage.isInternalName(name)) bugStorage.updateNameMap(name, originalName)
-        Helper.LookupBase(heap, id).foldLeft[List[RWEntry]](List())((list, loc) => { 
-          bugStorage.updateFuncSet(loc, name)
-          list :+ (rwflag, variable, loc, name, span)
-        })
-      case CFGTempId(_, _) => List() // pass
     }
 
 
@@ -731,11 +699,12 @@ class InstDetect(bugDetector: BugDetector) {
     ////////////////////////////////////////////////////////////////
 
     def unreadPropertyReadCheck(span: Span, obj: CFGExpr, index: CFGExpr): List[RWEntry] = {
+      if (obj.isInstanceOf[CFGVarRef] && obj.asInstanceOf[CFGVarRef].id.isInstanceOf[CFGTempId]) return List()
       val s = SE.V(index, heap, context)._1._1._5
       val locSet = SE.V(obj, heap, context)._1._2
       val locSetBase = locSet.foldLeft(LocSetBot)((locset, loc) => locset ++ Helper.ProtoBase(heap, loc, s))
       locSetBase.foldLeft[List[RWEntry]](List())((list, loc) => 
-        props(heap, loc, s).foldLeft[List[RWEntry]](list)((l, name) => l :+ (read, property, loc, name, span))
+        BugHelper.props(heap, loc, s).foldLeft[List[RWEntry]](list)((l, name) => l :+ (read, property, loc, name, span))
       )
     }
 
@@ -746,6 +715,7 @@ class InstDetect(bugDetector: BugDetector) {
     ////////////////////////////////////////////////////////////////
 
     def unreadPropertyWriteCheck(span: Span, obj: CFGExpr, index: CFGExpr): List[RWEntry] = {
+      if (obj.isInstanceOf[CFGVarRef] && obj.asInstanceOf[CFGVarRef].id.isInstanceOf[CFGTempId]) return List()
       val s = SE.V(index, heap, context)._1._1._5
       val locSet = SE.V(obj, heap, context)._1._2
       locSet.foldLeft[List[RWEntry]](List())((list, loc) => AbsString.concretize(s) match {
@@ -762,19 +732,19 @@ class InstDetect(bugDetector: BugDetector) {
 
     def varyingTypeArgumentsCheck(span: Span, isCall: Boolean, fun: CFGExpr, args: CFGExpr): Unit = {
       // Check for each CState
-      val mergedCState = stateManager.getCState(node, inst.getInstId, CallContext._MOST_SENSITIVE)
-      for((callContext, state) <- mergedCState) {
+      val mergedCState = stateManager.getInputCState(node, inst.getInstId, CallContext._MOST_SENSITIVE)
+      for ((callContext, state) <- mergedCState) {
         val funLocSet = SE.V(fun, state.heap, state.context)._1.locset
         val argLocSet = SE.V(args, state.heap, state.context)._1.locset
 
         // Check for each function location set
-        for(funLoc <- funLocSet) {
+        for (funLoc <- funLocSet) {
           // Function must have [[Function]] or [[Construct]] property
-          val propertyName: String = getFuncOrConstPropName(state.heap, funLoc, isCall)
-          if(propertyName != null) {
+          val propertyName: String = BugHelper.getFuncOrConstPropName(state.heap, funLoc, isCall)
+          if (propertyName != null) {
             val fidSet = state.heap(funLoc)(propertyName)._1.funid
-            for(fid <- fidSet) {
-              for(argLoc <- argLocSet) {
+            for (fid <- fidSet) {
+              for (argLoc <- argLocSet) {
                 val argObj = state.heap(argLoc)
                 bugStorage.updateDetectedFuncMap(fid, fun, argObj, span)
               }
@@ -795,7 +765,7 @@ class InstDetect(bugDetector: BugDetector) {
 
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance
-      val mergedCState = stateManager.getCState(node, inst.getInstId, CallContext._MOST_SENSITIVE)
+      val mergedCState = stateManager.getInputCState(node, inst.getInstId, CallContext._MOST_SENSITIVE)
       for((callContext, state) <- mergedCState) {
         // For each function loc
         for(funLoc <- SE.V(fun, state.heap, state.context)._1.locset) {

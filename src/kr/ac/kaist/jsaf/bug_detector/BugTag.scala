@@ -9,8 +9,6 @@
 
 package kr.ac.kaist.jsaf.bug_detector
 
-import kr.ac.kaist.jsaf.bug_detector._
-
 class BugTag {
     
 }

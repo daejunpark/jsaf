@@ -12,12 +12,18 @@ package kr.ac.kaist.jsaf.bug_detector
 import scala.collection.mutable.SynchronizedMap
 import scala.collection.mutable.{HashMap => MHashMap}
 import scala.collection.mutable.{HashSet => MHashSet}
+import scala.collection.mutable.{ListBuffer => MList}
 import scala.collection.immutable.{HashMap => IHashMap}
+import kr.ac.kaist.jsaf.analysis.cfg.{Node => CNode}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.CallContext._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
+import kr.ac.kaist.jsaf.nodes.{Node => ANode}
+import kr.ac.kaist.jsaf.nodes_util.NodeRelation
 
+class StateManager(cfg: CFG, typing: TypingInterface, semantics: Semantics, varManager: VarManager = null) {
+/*
 class StateManager(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////////////////////
   // From BugDetector
@@ -26,18 +32,28 @@ class StateManager(bugDetector: BugDetector) {
   val typing                                    = bugDetector.typing
   val semantics                                 = bugDetector.semantics
   val varManager                                = bugDetector.varManager
+*/
 
   ////////////////////////////////////////////////////////////////////////////////
   // Types
   ////////////////////////////////////////////////////////////////////////////////
-  type cacheKeyType =                           (Node, InstId, sensitivityFlagType)
+  type cacheKeyType =                           (CNode, InstId, SensitivityFlagType)
+  type cacheType =                              MHashMap[cacheKeyType, CState]
 
   ////////////////////////////////////////////////////////////////////////////////
   // States
   ////////////////////////////////////////////////////////////////////////////////
-  val cache =                                   new MHashMap[cacheKeyType, CState]()// with SynchronizedMap[cacheKeyType, CState]
+  val inCache =                                 new cacheType // with SynchronizedMap[cacheKeyType, CState]
+  val outCache =                                new cacheType // with SynchronizedMap[cacheKeyType, CState]
+  val cstateBot =                               new IHashMap[CallContext, State]
 
-  def getCState(node: Node, instId: InstId = -1, sensitivityFlag: sensitivityFlagType = _MOST_SENSITIVE): CState = {
+  private def getCState(inOut: Int, node: CNode, instId: InstId, sensitivityFlag: SensitivityFlagType): CState = {
+    // Select cache
+    val cache = inOut match {
+      case 0 => inCache
+      case 1 => outCache
+    }
+
     // This is a condition key value.
     val cacheKey: cacheKeyType = (node, instId, sensitivityFlag)
 
@@ -59,12 +75,6 @@ class StateManager(bugDetector: BugDetector) {
             case None => state
           }
           result+= (filteredCallContext -> mergedState)
-
-          // Insert ControlPoint relation
-          /*val succControlPointSet = controlPointSuccMap.get((node, callContext)).get
-          for(succControlPoint <- succControlPointSet)  insertControlPointRelation((node, filteredCallContext), succControlPoint)
-          val predControlPointSet = controlPointPredMap.get((node, callContext)).get
-          for(predControlPoint <- predControlPointSet)  insertControlPointRelation(predControlPoint, (node, filteredCallContext))*/
         }
       case None =>
     }
@@ -75,6 +85,43 @@ class StateManager(bugDetector: BugDetector) {
     // Return the result.
     result
   }
+  def getInputCState(node: CNode, instId: InstId = -1, sensitivityFlag: SensitivityFlagType = _MOST_SENSITIVE): CState = getCState(0, node, instId, sensitivityFlag)
+  def getOutputCState(node: CNode, instId: InstId = -1, sensitivityFlag: SensitivityFlagType = _MOST_SENSITIVE): CState = getCState(1, node, instId, sensitivityFlag)
+
+  private def getCState(inOut: Int, anode: ANode, sensitivityFlag: SensitivityFlagType): CState = {
+    // Check NodeRelation's initialization
+    if(!NodeRelation.isSet) throw new RuntimeException("NodeRelation is not set.")
+
+    // Get the first corresponding CFGInst
+    val inst: CFGInst = NodeRelation.ast2cfgMap.get(anode) match {
+      case Some(cfgList) =>
+        var insts = new MList[CFGInst]
+        for(cfg <- cfgList) if(cfg.isInstanceOf[CFGInst]) insts.append(cfg.asInstanceOf[CFGInst])
+        if(insts.length == 0) return cstateBot
+        insts = insts.sortBy(inst => inst.getInstId)
+        inOut match {
+          case 0 => insts.head
+          case 1 => insts.last
+        }
+      case None => return cstateBot
+    }
+
+    getCState(inOut, cfg.findEnclosingNode(inst), inst.getInstId, sensitivityFlag)
+  }
+  def getInputCState(anode: ANode, sensitivityFlag: SensitivityFlagType): CState = getCState(0, anode, sensitivityFlag)
+  def getOutputCState(anode: ANode, sensitivityFlag: SensitivityFlagType): CState = getCState(1, anode, sensitivityFlag)
+
+  private def getState(inOut: Int, anode: ANode): State = {
+    val cstate = inOut match {
+      case 0 => getInputCState(anode, _INSENSITIVE)
+      case 1 => getOutputCState(anode, _INSENSITIVE)
+    }
+    if(cstate.size > 1) throw new RuntimeException("ASSERT(cstate.size <= 1)")
+    else if(cstate.size == 0) StateBot
+    else cstate.head._2
+  }
+  def getInputState(anode: ANode): State = getState(0, anode)
+  def getOutputState(anode: ANode): State = getState(1, anode)
 
   ////////////////////////////////////////////////////////////////////////////////
   // ControlPoint
@@ -113,17 +160,19 @@ class StateManager(bugDetector: BugDetector) {
         case Some(cstate) =>
           // Insert the input CState of the node into the cache
           var cacheKey: cacheKeyType = (node, -1, _MOST_SENSITIVE)
-          cache.put(cacheKey, cstate)
+          inCache.put(cacheKey, cstate)
+
+          // Init CState
+          var normalCState: CState = cstate
+          //var exceptionState: State = StateBot
 
           cfg.getCmd(node) match {
             case Block(insts) =>
               // Analyze each instruction
-              var normalCState: CState = cstate
-              //var exceptionState: State = StateBot
               for(inst <- insts) {
                 // Insert the instruction input CState into the cache
                 cacheKey = (node, inst.getInstId, _MOST_SENSITIVE)
-                cache.put(cacheKey, normalCState)
+                inCache.put(cacheKey, normalCState)
 
                 val previousNormalCState = normalCState
                 normalCState = new IHashMap[CallContext, State]
@@ -134,11 +183,18 @@ class StateManager(bugDetector: BugDetector) {
                   //if(exceptionState._1 != HeapBot) exceptionState+= State(newExceptionState._1, newExceptionState._2)
 
                   // Insert variable info
-                  varManager.insertInfo(node, inst, state)
+                  if(varManager != null) varManager.insertInfo(node, inst, state)
                 }
+
+                // Insert the instruction output CState into the cache
+                outCache.put(cacheKey, normalCState)
               }
             case _ =>
           }
+
+          // Insert the instruction output CState into the cache
+          cacheKey = (node, -1, _MOST_SENSITIVE)
+          outCache.put(cacheKey, normalCState)
         case None =>
       }
     }
@@ -149,6 +205,28 @@ class StateManager(bugDetector: BugDetector) {
         insertControlPointRelation(predControlPoint, succControlPoint)
       }
     }
+
+    // Debug
+    /*println("*** AST's CStates ***")
+    var indent = 0
+    def printAST(ast: ANode): Unit = {
+      val inState = getInputState(ast)
+      val outState = getOutputState(ast)
+      for(i <- 0 until indent) print(' ')
+      print("AST" + ast.getClass.getSimpleName + '[' + NodeRelation.getUID(ast) + ']')
+      print(" : inState = " + (if(inState.heap.map.size == 0) "Bot" else inState.heap.map.size))
+      println(", outState = " + (if(outState.heap.map.size == 0) "Bot" else outState.heap.map.size))
+      NodeRelation.ast2cfgMap.get(ast) match {
+        case Some(cfgList) => for(cfg <- cfgList) println(cfg.getClass().getSimpleName() + ": " + NodeRelation.cfgToString(cfg))
+        case None =>
+      }
+      NodeRelation.astChildMap.get(ast) match {
+        case Some(children) => indent+= 2; for(child <- children) printAST(child); indent-= 2
+        case None =>
+      }
+    }
+    printAST(NodeRelation.astRoot)
+    println*/
   }
 
   ////////////////////////////////////////////////////////////////////////////////

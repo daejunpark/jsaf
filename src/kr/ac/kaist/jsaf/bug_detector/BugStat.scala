@@ -60,7 +60,7 @@ class BugStat(bugDetector: BugDetector) {
     System.out.println("|  DefaultValueTypeError   : %6d |".format(BugCount(DefaultValueTypeError)))
     System.out.println("|  FunctionArgSize         : %6d |".format(BugCount(FunctionArgSize)))
     System.out.println("|  GlobalThis              : %6d |".format(BugCount(GlobalThis)))
-    System.out.println("|  ImplicitTypeConversion  : %6d |".format(BugCount(ImplicitCalltoString) + BugCount(ImplicitCallvalueOf) + BugCount(ImplicitTypeConvert)))
+    System.out.println("|  ImplicitTypeConversion  : %6d |".format(/*BugCount(ImplicitCallToString) + BugCount(ImplicitCallValueOf) +*/ BugCount(ImplicitTypeConvert)))
     System.out.println("|  AccessingNullOrUndef    : %6d |".format(BugCount(ObjectNullOrUndef)))
     System.out.println("|  PrimitiveToObject       : %6d |".format(BugCount(PrimitiveToObject)))
     System.out.println("|  Shadowing               : %6d |".format(BugCount(ShadowedFuncByFunc) + BugCount(ShadowedParamByFunc) + BugCount(ShadowedVarByFunc) + BugCount(ShadowedVarByParam) + BugCount(ShadowedVarByVar)))

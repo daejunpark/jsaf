@@ -10,13 +10,7 @@
 
 package kr.ac.kaist.jsaf.nodes_util;
 
-import java.io.IOException;
-
-import kr.ac.kaist.jsaf.nodes.AbstractNode;
-import kr.ac.kaist.jsaf.nodes.Node;
-import kr.ac.kaist.jsaf.nodes.IRAbstractNode;
-import kr.ac.kaist.jsaf.nodes.IRId;
-import kr.ac.kaist.jsaf.nodes.IRNode;
+import kr.ac.kaist.jsaf.nodes.*;
 import kr.ac.kaist.jsaf.useful.HasAt;
 
 public class UIDObject implements HasAt {
@@ -90,7 +84,7 @@ public class UIDObject implements HasAt {
     static private Object lock = new Object();
     static private long seedUID = 0x7b546b0e12fd2559L;
     static private long prevUID = seedUID;
-    private transient final long uid;
+    private transient long uid;
 
     public UIDObject() {
         uid = next();
@@ -98,6 +92,10 @@ public class UIDObject implements HasAt {
 
     public final long getUID() {
         return uid;
+    }
+
+    public final void setUID(long uid) {
+        this.uid = uid;
     }
 
     /* LFSR generating 63-bit residues */

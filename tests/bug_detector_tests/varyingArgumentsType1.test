@@ -12,7 +12,7 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-varyingArgumentsType1.js:13:1~13:9: [Warning] Calling a function 'foo' with the argument 'x' of varying types (Number, String). \n\
+varyingArgumentsType1.js:13:1~13:9: [Warning] Calling a function 'foo' with the parameter 'x' of varying types (Number, String). \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\

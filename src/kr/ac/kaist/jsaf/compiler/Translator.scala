@@ -95,6 +95,8 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
   def getSpan(n: AbstractNode) = n.getInfo.getSpan
   def getSpan(n: SpanInfo) = n.getSpan
 
+  def setUID[A <: AbstractNode](n: A, uid: Long): A = {n.setUID(uid); n}
+
   /* Environment for renaming fresh labels and variables
    * created during the AST->IR translation.
    * Only the following identifiers are bound in the environment:
@@ -413,7 +415,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
                                        IF.makeLabelStmt(false, s, span, lab2, body2)))
 
     case SIf(info, SParenthesized(_, expr), trueBranch, falseBranch) =>
-      walkStmt(SIf(info, expr, trueBranch, falseBranch), env)
+      walkStmt(setUID(SIf(info, expr, trueBranch, falseBranch), s.getUID), env)
 
     case SIf(info, cond, trueBranch, falseBranch) =>
       val span = getSpan(info)
@@ -673,7 +675,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
        IF.makeLabelStmt(false, e, span, lab2, body2), res)
 
     case SCond(info, SParenthesized(_, expr), trueBranch, falseBranch) =>
-      walkExpr(SCond(info, expr, trueBranch, falseBranch), env, res)
+      walkExpr(setUID(SCond(info, expr, trueBranch, falseBranch), e.getUID), env, res)
 
     case SCond(info, cond, trueBranch, falseBranch) =>
       val span = getSpan(info)
@@ -737,10 +739,10 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
         NU.unwrapParen(right) match {
           case SVarRef(_, name) =>
             (List(IF.makeDelete(true, e, span, res, id2ir(env, name))), res)
-          case SDot(sinfo, obj, member) =>
-            walkExpr(SPrefixOpApp(info, op,
-                                  SBracket(sinfo, obj, NF.makeStringLiteral(getSpan(member), member.getText, "\""))),
-                     env, res)
+          case dot@SDot(sinfo, obj, member) =>
+            val tmpBracket = setUID(SBracket(sinfo, obj, NF.makeStringLiteral(getSpan(member), member.getText, "\"")), dot.getUID)
+            val tmpPrefixOpApp = setUID(SPrefixOpApp(info, op, tmpBracket), e.getUID)
+            walkExpr(tmpPrefixOpApp, env, res)
           case SBracket(_, lhs, e) =>
             val objspan = getSpan(lhs)
             val obj1 = freshId(lhs, objspan, "obj1")
@@ -856,7 +858,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
        IF.makeLoad(true, e, getSpan(info), obj, r2))
 
     case n@SNew(info, SParenthesized(_, e)) if e.isInstanceOf[LHS] =>
-      walkExpr(SNew(info, e.asInstanceOf[LHS]), env, res)
+      walkExpr(setUID(SNew(info, e.asInstanceOf[LHS]), n.getUID), env, res)
 
     case n@SNew(info, lhs) =>
       val span = getSpan(info)
@@ -922,12 +924,14 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
                                 IF.makeGId(e, NU.freshGlobalName("getTickCount")), res)), res)
 
     case SFunApp(info, SParenthesized(_,e), args) if e.isInstanceOf[LHS] =>
-      walkExpr(SFunApp(info, e.asInstanceOf[LHS], args), env, res)
+      walkExpr(setUID(SFunApp(info, e.asInstanceOf[LHS], args), e.getUID), env, res)
 
-    case SFunApp(info, SDot(i,obj,member), args) =>
-      walkExpr(SFunApp(info,
-                       SBracket(i, obj, NF.makeStringLiteral(getSpan(member), member.getText, "\"")),
-                       args), env, res)
+    case SFunApp(info, dot@SDot(i,obj,member), args) =>
+      walkExpr(setUID(SFunApp(info,
+                              setUID(SBracket(i, obj, NF.makeStringLiteral(getSpan(member), member.getText, "\"")), dot.getUID),
+                              args),
+                      e.getUID),
+               env, res)
 
     case SFunApp(info, v@SVarRef(_, fid), args) =>
       val fspan = getSpan(v)
@@ -961,7 +965,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       (((ssl:+toObject(first, firstspan, obj, rl))++ssr)++
        results.foldLeft(List[IRStmt]())((l,tp) => l++tp._2._1:+(mkExprS(e, tp._1, tp._2._2)))++
        List(IF.makeArgs(e, argsspan, arg, newargs.map(p => Some(p))),
-            toObject(first, firstspan, fun, IF.makeLoad(true, e, firstspan, obj, rr)),
+            toObject(b, b.getInfo.getSpan, fun, IF.makeLoad(true, e, firstspan, obj, rr)),
             IF.makeCall(true, e, getSpan(info), res, fun, obj, arg)), res)
 
     case SFunApp(info, fun, args) =>

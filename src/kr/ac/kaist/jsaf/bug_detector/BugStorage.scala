@@ -181,7 +181,7 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   //  nameMap : Map internal name to its original name
   ////////////////////////////////////////////////////////////////
 
-  var RWMap: RWMap = Map()
+  private var RWMap: RWMap = Map()
   private var funcSet: Set[(String, Loc)] = Set()
   private var nameMap: Map[String, String] = Map() 
 
@@ -191,11 +191,47 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   }  
   def isInternalName(name: String): Boolean = if (name.size > 2 && name.take(2) == "<>") true else false
   def getOriginalName(name: String): String = if (isInternalName(name)) nameMap(name) else name
-  def unreadReport(span: Span, isVar: Boolean, name: String, loc: Loc): Unit = if (!(funcSet contains (name, loc))) {
-    addMessage(span, UnusedVarProp, null, null, (if (isVar) "variable '" else "property '") + getOriginalName(name) + "'")
+  def unreadReport(span: Span, isVar: Boolean, name: String, loc: Loc): Unit = {
+    if (funcSet contains (name, loc)) funcSet = funcSet - ((name, loc))
+    else addMessage(span, UnusedVarProp, null, null, (if (isVar) "variable '" else "property '") + getOriginalName(name) + "'")
   }
   def updateFuncSet(loc: Loc, name: String): Unit = funcSet += ((name, loc))
   def updateNameMap(internalName: String, originalName: String): Unit = nameMap = nameMap + (internalName -> originalName) 
+  def updateRWMap(node: Node, readSet: List[RWEntry], writeSet: List[RWEntry]): Unit = RWMap.get(node) match {
+    case Some(e) => RWMap += (node -> (e ++ readSet ++ writeSet))
+    case None => RWMap += (node -> (readSet ++ writeSet))
+  }
+
+/*
+  // version 2
+  def updateRWMap(node: Node, readSet: List[RWEntry], writeSet: List[RWEntry]): Unit = {
+    var newEntries: List[RWEntry] = RWMap.get(node) match {
+      case Some(entries) => entries
+      case None => List()
+    }
+    readSet.foreach((e) => check(e._1, e._2, e._3, e._4, e._5))
+    writeSet.foreach((e) => check(e._1, e._2, e._3, e._4, e._5))
+    RWMap += (node -> newEntries)
+
+    def check(rwflag: Boolean, pvflag: Boolean, loc: Loc, name: String, span: Span) = {
+      val newEntry = (rwflag, pvflag, loc, name, span)
+      val matchSet = newEntries.filter((e) => (e._2 == pvflag) && (e._3 == loc) && (e._4 == name))
+      if (!matchSet.isEmpty) {
+        val entry = matchSet.last
+        (entry._1, rwflag) match {
+          case (true, true) => unreadReport(entry._5, entry._2, entry._4, entry._3)
+          case _ => // pass 
+        }
+        if (matchSet.size > 1) newEntries = newEntries.filterNot(_ == entry)
+      }
+      newEntries = newEntries :+ newEntry
+    }
+    //println("RESULT := " + RWMap(node))
+  } 
+*/
+
+/*
+  // version 1
   def updateRWMap(node: Node, readSet: List[RWEntry], writeSet: List[RWEntry]): Unit = {
     var newEntries: List[RWEntry] = RWMap.get(node) match {
       case Some(entries) => entries
@@ -214,8 +250,9 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
         case None => newEntries = newEntries :+ (rwflag, pvflag, loc, name, span) 
       }
     }
+    println("rwmap := " + RWMap(node))
   } 
-
+*/
 
   
   ////////////////////////////////////////////////////////////////
@@ -333,7 +370,7 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
     def printAST(ast: kr.ac.kaist.jsaf.nodes.Node): Unit = {
       for(i <- 0 until indent) print(' ')
       print("AST(" + ast.getClass.getSimpleName + "): \"")
-      if(ast.isInstanceOf[ASTNode]) print(getOmittedCode(ast.asInstanceOf[ASTNode], 32))
+      if(ast.isInstanceOf[ASTNode]) print(BugHelper.getOmittedCode(ast.asInstanceOf[ASTNode], 32))
       print("\", rCFG =")
       reachableAST.get(ast) match {
         case Some(rCFGNodeSet) => for (node <- rCFGNodeSet) print(" " + node._2.asInstanceOf[LBlock].id)
@@ -433,10 +470,10 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   //  Function expressions
   ////////////////////////////////////////////////////////////////
 
-  val funExprMap = new MHashMap[FunctionId, CFGFunExpr]
+  private val funExprMap = new MHashMap[FunctionId, CFGFunExpr]
 
   def insertFunExpr(fid: FunctionId, funExpr: CFGFunExpr): Unit = funExprMap.put(fid, funExpr)
-  def getFunExpr(fid: FunctionId): Option[CFGFunExpr] = funExprMap.get(fid)
+  def getFunExpr(fid: FunctionId): CFGFunExpr = funExprMap.getOrElse(fid, null)
 }
 
 class BugInfo(val span: Span, val bugKind: Int, val arg1: String, val arg2: String) {}

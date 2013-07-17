@@ -84,14 +84,14 @@ object NodeRelation {
   // AST <-> IR <-> CFG relation
   ////////////////////////////////////////////////////////////////////////////////
   // For AST -> (Set[IR], Set[CFG])
-  type AST2IRMap =                              MHashMap[ASTRootNode, MList[IRNode]]
-  type AST2CFGMap =                             MHashMap[ASTRootNode, MList[CFGNode]]
+  type AST2IRMap =                              MHashMapEx[ASTRootNode, MList[IRNode]]
+  type AST2CFGMap =                             MHashMapEx[ASTRootNode, MList[CFGNode]]
   var ast2irMap:                                AST2IRMap = null
   var ast2cfgMap:                               AST2CFGMap = null
 
   // For IR -> (AST, Set[CFG])
-  type IR2ASTMap =                              MHashMap[IRNode, ASTRootNode]
-  type IR2CFGMap =                              MHashMap[IRNode, MList[CFGNode]]
+  type IR2ASTMap =                              MHashMapEx[IRNode, ASTRootNode]
+  type IR2CFGMap =                              MHashMapEx[IRNode, MList[CFGNode]]
   var ir2astMap:                                IR2ASTMap = null
   var ir2cfgMap:                                IR2CFGMap = null
 
@@ -104,8 +104,12 @@ object NodeRelation {
   ////////////////////////////////////////////////////////////////////////////////
   // Reset & Set
   ////////////////////////////////////////////////////////////////////////////////
+  var isSet                                     = false
+
   // Reset
   def reset(): Unit = {
+    isSet = false
+
     // Root node
     astRoot = null
     irRoot = null
@@ -425,6 +429,8 @@ object NodeRelation {
       }
     }
 
+    isSet = true
+
     // Elapsed time
     if(!quiet) {
       val elapsedTime = (System.nanoTime - startTime) / 1000000000.0;
@@ -440,7 +446,7 @@ object NodeRelation {
   // Get UID
   def getUID(node: Any): Long = {
     node match {
-      case ast: AbstractNode => ast.getInfo.getUID
+      case ast: AbstractNode => ast.getUID
       case ast: ScopeBody => ast.getUID
       case ir: IRAbstractNode => ir.getUID
       case ir: IRExpr => ir.getUID
@@ -544,6 +550,22 @@ object NodeRelation {
       for(child <- childList) println("    AST" + child.getClass().getSimpleName() + '[' + getUID(child) + "] : " + astToString(child))
     }
     println*/
+
+    // AST's parent & children
+    /*{
+      println("*** AST's parent & children ***")
+      var indent = 0
+      def printAST(ast: ASTRootNode): Unit = {
+        for(i <- 0 until indent) print(' ')
+        println("AST" + ast.getClass.getSimpleName + '[' + getUID(ast) + ']')
+        astChildMap.get(ast) match {
+          case Some(children) => indent+= 2; for(child <- children) printAST(child); indent-= 2
+          case None =>
+        }
+      }
+      printAST(astRoot)
+      println
+    }*/
 
     // IR's parent
     /*println("*** IR's parent ***")

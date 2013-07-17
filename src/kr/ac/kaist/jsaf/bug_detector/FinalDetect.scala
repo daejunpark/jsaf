@@ -11,22 +11,11 @@ package kr.ac.kaist.jsaf.bug_detector
 
 import scala.collection.mutable.{HashMap => MHashMap}
 import scala.collection.mutable.{HashSet => MHashSet}
-import kr.ac.kaist.jsaf.bug_detector._
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.analysis.typing._
-import kr.ac.kaist.jsaf.analysis.typing.Typing
 import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
-import kr.ac.kaist.jsaf.nodes.ASTNode
-import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete
-import kr.ac.kaist.jsaf.nodes_util.NodeFactory
-import kr.ac.kaist.jsaf.nodes_util.NodeRelation
 import kr.ac.kaist.jsaf.nodes_util.Span
-import kr.ac.kaist.jsaf.nodes_util.SourceLoc
-import kr.ac.kaist.jsaf.nodes.Cond
-import kr.ac.kaist.jsaf.nodes.If
-import kr.ac.kaist.jsaf.nodes.Expr
 import kr.ac.kaist.jsaf.scala_src.nodes._
 
 class FinalDetect(bugDetector: BugDetector) {
@@ -39,6 +28,10 @@ class FinalDetect(bugDetector: BugDetector) {
   val bugOption     = bugDetector.bugOption
   val varManager    = bugDetector.varManager
   val libMode       = bugDetector.libMode
+  val locclone      = bugDetector.locclone
+  val analyzeMode   = bugDetector.analyzeMode
+  val env           = bugDetector.env
+  val quiet         = bugDetector.quietFlag
 
 
 
@@ -52,7 +45,7 @@ class FinalDetect(bugDetector: BugDetector) {
     shadowingCheck
     unreachableCodeCheck
     unusedFunctionCheck
-    //unusedVarPropCheck
+    unusedVarPropCheck
     varyingTypeArgumentsCheck
   }
 
@@ -74,7 +67,7 @@ class FinalDetect(bugDetector: BugDetector) {
       }
     }
     val commonFidSet = callMap.keySet & constMap.keySet
-    commonFidSet.foreach((fid) => bugStorage.addMessage(cfg.getFuncInfo(fid).getSpan, CallConstFunc, null, null, getFuncName(cfg.getFuncName(fid), varManager, callMap(fid))))
+    commonFidSet.foreach((fid) => bugStorage.addMessage(cfg.getFuncInfo(fid).getSpan, CallConstFunc, null, null, BugHelper.getFuncName(cfg.getFuncName(fid), varManager, callMap(fid))))
   }
 
 
@@ -167,7 +160,7 @@ class FinalDetect(bugDetector: BugDetector) {
     for (ast <- astList) {
       // Span, Code
       val span = ast.getInfo.getSpan
-      val code = getOmittedCode(ast)
+      val code = BugHelper.getOmittedCode(ast)
 
       // Debug
       //println(span + " : " + code)
@@ -176,13 +169,15 @@ class FinalDetect(bugDetector: BugDetector) {
       else if(equals(prevSpan, span)) {if(prevCode.length < code.length) {prevSpan = span; prevCode = code}}
       else if(contains(prevSpan, span)) Unit
       else if(contains(span, prevSpan)) {prevSpan = span; prevCode = code}
+      else if(overlaps(prevSpan, span)) {prevSpan = new Span(prevSpan.begin, span.end)}
+      else if(overlaps(span, prevSpan)) {prevSpan = new Span(span.begin, prevSpan.end); prevCode = code}
       // else TODO: continuous ASTs!
       else {report; prevSpan = span; prevCode = code}
     }
     report
 
     def report(): Unit = {
-      if (prevSpan == null || prevCode == null) return
+      if(prevSpan == null || prevCode == null) return
       bugStorage.addMessage(prevSpan, UnreachableCode, null, null, prevCode)
       prevSpan = null; prevCode = null
     }
@@ -192,6 +187,12 @@ class FinalDetect(bugDetector: BugDetector) {
       val (aSL, aSC, aEL, aEC) = (aS.getLine, aS.column, aE.getLine, aE.column) // Start(Line, Column) ~ End(Line ,Column)
       val (bSL, bSC, bEL, bEC) = (bS.getLine, bS.column, bE.getLine, bE.column) // Start(Line, Column) ~ End(Line ,Column)
       (aSL < bSL || aSL == bSL && aSC <= bSC) && (aEL > bEL || aEL == bEL && aEC >= bEC) // a contains b
+    }
+    def overlaps(a: Span, b: Span): Boolean = {
+      val (aS, aE, bS) = (a.getBegin, a.getEnd, b.getBegin)
+      val (aSL, aSC, aEL, aEC) = (aS.getLine, aS.column, aE.getLine, aE.column) // Start(Line, Column) ~ End(Line ,Column)
+      val (bSL, bSC) = (bS.getLine, bS.column) // Start(Line, Column)
+      (aSL < bSL || aSL == bSL && aSC <= bSC) && (aEL > bSL || aEL == bSL && aEC >= bSC) // a ... [b ... a] ...  b
     }
   }
 
@@ -205,9 +206,9 @@ class FinalDetect(bugDetector: BugDetector) {
     val fidSet = cfg.getFunctionIds.filterNot(fid => typing.builtinFset.contains(fid))
     for (fid <- bugStorage.filterUsedFunctions(fidSet.toList)) {
       if (typing.getStateAtFunctionEntry(fid).isEmpty) {
-        val funExpr: CFGFunExpr = bugStorage.funExprMap.getOrElse(fid, null)
+        val funExpr: CFGFunExpr = bugStorage.getFunExpr(fid)
         val bugKind = if (libMode) UnreferencedFunction else UncalledFunction
-        bugStorage.addMessage(cfg.getFuncInfo(fid).getSpan, bugKind, null, null, getFuncName(cfg.getFuncName(fid), varManager, funExpr))
+        bugStorage.addMessage(cfg.getFuncInfo(fid).getSpan, bugKind, null, null, BugHelper.getFuncName(cfg.getFuncName(fid), varManager, funExpr))
         bugStorage.appendUnusedFunction(fid)
       }
     }
@@ -232,41 +233,145 @@ class FinalDetect(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////
 
   private def unusedVarPropCheck(): Unit = {
-    val startNode: Node = (cfg.getGlobalFId, LEntry)
     var worklist: List[Node] = List()
     var fixpoint: RWMap = Map()
     var count = 0
 
-    worklist = getSuccs(startNode)
+    worklist = getSuccs((cfg.getGlobalFId, LEntry)) 
     while (!worklist.isEmpty) {
       count = count + 1
       val curr = worklist.head
       worklist = worklist.tail
       val curStat = getStat(curr)
       val newStat = findUnread(curStat, curr)
-      val succ = getSuccs(curr)
-      succ.foreach((node) => {
+      getSuccs(curr).foreach((node) => {
         if (newStat != getStat(node)) {
-          worklist = worklist :+ node
+          if (!(worklist contains node)) worklist = worklist :+ node
           addStat(node, newStat)
         }
       })
     }
-
     getStat((cfg.getGlobalFId, LExit)).foreach((e) => if (e._1) bugStorage.unreadReport(e._5, e._2, e._4, e._3))
-
-    def addStat(node: Node, list: List[RWEntry]) = fixpoint += (node -> list)
+    
+    def addStat(node: Node, list: List[RWEntry]) = fixpoint.get(node) match {
+      case Some(entries) => fixpoint += (node -> (entries intersect list))
+      case None => fixpoint += (node -> list)
+    }
     def getStat(node: Node): List[RWEntry] = fixpoint.get(node) match {
       case Some(entry) => entry
       case None => List()
     }
 
     def findUnread(curStat: List[RWEntry], current: Node): List[RWEntry] = {
+      val currRW: List[RWEntry]  = bugStorage.getRWEntry(current)
+      if (currRW.isEmpty) return curStat
+
+      var rwSeq: List[RWEntry]   = curStat ++ currRW
+      var retStat: List[RWEntry] = List()
+      for (rw <- rwSeq) {
+        rwSeq = rwSeq.tail
+        rwSeq.find((e) => (e._2 == rw._2) && (e._3 == rw._3) && (e._4 == rw._4)) match {
+          case Some(matched) => (matched._1, rw._1) match {
+            case (true, true) => bugStorage.unreadReport(rw._5, rw._2, rw._4, rw._3)
+            case _ => // pass
+          }
+          case None => if (rw._1) retStat = retStat :+ rw
+        }
+      }
+      retStat
+    }
+
+    def getSuccs(current: Node): List[Node] = {
+      typing.getStateAfterNode(current).keys.foldLeft[List[Node]](cfg.getSucc(current) toList)((list, callContext) =>
+        semantics.getIPSucc((current, callContext)) match {
+          case Some(ccMap) => list ++ ccMap.keys.map(e => e._1)
+          case None => list
+    })}
+  }
+
+/*
+    // version 2 Using existing Worklist
+    println("succMap := " + semantics.ipSuccMap)
+    var fixpoint: RWMap = Map()
+    var count = 0
+    val worklist: Worklist = analyzeMode match {
+      case 17 => Worklist.computesSparse(env.asInstanceOf[SparseEnv].getInterDDG, quiet)
+      case 20 => Worklist.computesSparse(env.asInstanceOf[GSparseEnv].getInterDDG, quiet)
+      case 19 | 21 | 25 => Worklist.computesSparse(env.asInstanceOf[DSparseEnv].getInterDDG, quiet)
+      case _ => Worklist.computes(cfg, quiet)
+    }
+
+    cfg.getSucc((cfg.getGlobalFId, LEntry)).foreach((node) => worklist.add((node, CallContext.globalCallContext)))
+    while (!worklist.isEmpty) {
+      System.out.print("\r  Unused Iteration: "+count+"   ")
+      worklist.dump()
+      count = count + 1
+
+      val cp = worklist.getHead
+      println("current := " + cp + "\tcommands := " + cfg.getCmd(cp._1))
+
+      val curStat = getStat(cp._1)
+      println("cur state :"); printer(curStat)
+      val newStat = findUnread(curStat, cp._1)
+      println("new state :"); printer(newStat)
+
+      val succs = cfg.getSucc(cp._1)
+      val esucc = cfg.getExcSucc.get(cp._1)
+      
+      //println("succ := " + succs)
+      succs.foreach(node => if (newStat != getStat(node)) {
+        worklist.add((node, cp._2))
+        addStat(node, newStat)
+      })
+
+      esucc match {
+        case Some(node) =>
+          if (newStat != getStat(node)) {
+            worklist.add((node, cp._2))
+            addStat(node, newStat)
+          }
+        case None => ()
+      } 
+
+      //println("ipsucc := " + semantics.getIPSucc(cp))
+      semantics.getIPSucc(cp) match {
+        case None => ()
+        case Some(succMap) => 
+          succMap.foreach(kv => {
+          // bypassing if IP edge is exception flow.
+          val cp_succ = kv._1
+          if (newStat != getStat(cp_succ._1)) {
+            worklist.add(cp_succ)
+            addStat(cp_succ._1, newStat)
+          }
+        })
+      }
+      if (!worklist.isEmpty) {
+        print("\tleft := ")
+        print(worklist.head._2._1)
+        worklist.tail.foreach(e => print(", " + e._2._1))
+      }
+      println()
+    }
+*/
+
+/*
+      // version 1
+      retStat = rwList.foldLeft(List())((unread, rw) => list.find((e) => (e._2 == rw._2) && (e._3 == rw._3) && (e._4 == rw._4)) match {
+        case Some(entry) => (entry._1, rw._1) match {
+          case (true, true) => bugStorage.unreadReport(entry._5, entry._2, entry._4, entry._3)
+          case _ => // pass 
+        }; list.filterNot(_ == entry) :+ rw
+        case None => list :+ rw
+      })
+      retStat  
+
+    def findUnread(curStat: List[RWEntry], current: Node): List[RWEntry] = {
       val currRW = bugStorage.getRWEntry(current)
       val retStat = currRW.foldLeft[List[RWEntry]](curStat)((list, rw) => list.find((e) => (e._2 == rw._2) && (e._3 == rw._3) && (e._4 == rw._4)) match {
         case Some(entry) => (entry._1, rw._1) match {
           case (true, true) => bugStorage.unreadReport(entry._5, entry._2, entry._4, entry._3)
-          case _ => 
+          case _ => // pass 
         }; list.filterNot(_ == entry) :+ rw
         case None => list :+ rw
       })
@@ -279,7 +384,7 @@ class FinalDetect(bugDetector: BugDetector) {
           case Some(ccMap) => ccMap.keys.foldLeft(list)((l, k) => l :+ k._1)
           case None => list
     })}
-  }
+*/
 
 
 
@@ -339,7 +444,7 @@ class FinalDetect(bugDetector: BugDetector) {
               case 2 => "2nd"
               case _ => i + "th"
             }
-            bugStorage.addMessage(span, VaryingTypeArguments, null, null, getFuncName(funcName, varManager, funExpr), ordinal + " ", "", typeKinds)
+            bugStorage.addMessage(span, VaryingTypeArguments, null, null, BugHelper.getFuncName(funcName, varManager, funExpr), ordinal + " ", "", typeKinds)
           }
           else {
             // User function
@@ -347,7 +452,7 @@ class FinalDetect(bugDetector: BugDetector) {
               case CFGUserId(_, _, _, originalName, _) => originalName
               case CFGTempId(text, _) => text
             }
-            bugStorage.addMessage(span, VaryingTypeArguments, null, null, getFuncName(funcName, varManager, funExpr), "", "'" + argName + "' ", typeKinds)
+            bugStorage.addMessage(span, VaryingTypeArguments, null, null, BugHelper.getFuncName(funcName, varManager, funExpr), "", "'" + argName + "' ", typeKinds)
           }
           //println("    joined argObj[" + i + "] = " + joinedValue + ", isBug = " + isBug)
         }

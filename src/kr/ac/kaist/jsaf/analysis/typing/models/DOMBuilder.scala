@@ -56,7 +56,7 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
 
   // Initialize named properties in Document
   // WHATWG HTML Living Standard - Section 3.1.4 DOM tree accessors
-  private def initDocomentNamedProps(h: HeapMap, node: Node, ins_loc: Loc) : HeapMap = {
+  private def initDocumentNamedProps(h: HeapMap, node: Node, ins_loc: Loc) : HeapMap = {
     val nodeName = node.getNodeName
     node match {
       // Element node
@@ -336,17 +336,24 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
       case d: Document =>
         val loc= HTMLDocument.getInstance(cfg).get
         val newheap=addInstance(map, loc, HTMLDocument.getInsList(node))
+
+        // 'forms' property
+        val loc_forms = HTMLCollection.getInstance(cfg).get
+        val newheap2 = addInstance(newheap, loc_forms, HTMLCollection.getInsList(0))
+
         // the root element does not have any siblings and parent
-        val newElementObj=newheap(loc).
+        val newElementObj=newheap2(loc).
                         update(OtherStrSingle("previousSibling"),
                                 PropValue(ObjectValue(PValue(NullTop), F, T, T))).
                         update(OtherStrSingle("nextSibling"),
                                 PropValue(ObjectValue(PValue(NullTop), F, T, T))).
                         update(OtherStrSingle("parentNode"),
-                                PropValue(ObjectValue(PValue(NullTop), F, T, T)))
-          // for test
+                                PropValue(ObjectValue(PValue(NullTop), F, T, T))).
+                        update(OtherStrSingle("forms"),
+                                PropValue(ObjectValue(Value(loc_forms), F, T, T)))
+          // 'document' property
           val global_object = map(GlobalLoc).update(AbsString.alpha("document"), PropValue(ObjectValue(loc, T, F, T)))
-          (newheap + (loc -> newElementObj) + (GlobalLoc -> global_object), loc)
+          (newheap2 + (loc -> newElementObj) + (GlobalLoc -> global_object), loc)
       // Element
       case e: Element => 
         val (_newheap, _insloc) = nodeName match {
@@ -393,7 +400,22 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
           case "FORM" =>
             val loc= HTMLFormElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLFormElement.getInsList(node))
-            (newheap, loc)
+            /* 'document.forms' update */
+            // 'document' object
+            val docobj = newheap(HTMLDocument.GlobalDocumentLoc)
+            // we know only a single location can be mapped for 'forms' in the initial heap
+            val forms_loc = docobj("forms")._1._1._1._2.head
+            val forms_obj = newheap(forms_loc)
+            // we know a concrete value for the property value is always present in the initial heap
+            val collection_length: Int = AbsNumber.concretize(forms_obj("length")._1._1._1._1._4).get.toInt
+            val new_forms1 = forms_obj.update(
+                   AbsString.alpha(collection_length.toString), PropValue(ObjectValue(loc, T, T, T))).update(
+                   AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(collection_length+1), T, T, T)))
+            val name = e.getAttribute("name")
+            val new_forms2 = if(name!="") new_forms1.update(AbsString.alpha(name), PropValue(ObjectValue(loc, T, T, T)))
+                             else new_forms1
+
+            (newheap + (forms_loc -> new_forms2), loc)
           case "SELECT" =>
             val loc= HTMLSelectElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLSelectElement.getInsList(node))
@@ -568,7 +590,7 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
             val newheap=addInstance(map, loc, HTMLIFrameElement.getInsList(node))
             (newheap, loc)
           // Special tags
-          case "SUB" | "SUP" | "SPAN" | "BDO" =>
+          case "SUB" | "SUP" | "SPAN" | "BDO" | "BDI" =>
             val loc = HTMLElement.getInstance(cfg).get
             val prop_list = HTMLElement.getInsList(node)++List(
               ("@class",   PropValue(AbsString.alpha("Object"))),
@@ -664,7 +686,7 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
     // initialize id, name, tag, and event look-up tables
     val newmap2 = initLookupTables((newmap1 + (ins_loc -> ins_obj_new)), node, ins_loc)
     // initialize named properites in Document
-    val newmap3 = initDocomentNamedProps(newmap2, node, ins_loc)
+    val newmap3 = initDocumentNamedProps(newmap2, node, ins_loc)
     (newmap3, ins_loc)
   }
 

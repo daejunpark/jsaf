@@ -1,7 +1,9 @@
 ################################################################################
 #    Copyright (c) 2013, KAIST.
-#    All rights reserved.\n#
-#    Use is subject to license terms.\n#
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
 #    This distribution may include materials developed by third parties.
 ################################################################################
 tests=unreachableCode1
@@ -10,6 +12,7 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
+unreachableCode1.js:3:5~3:18: [Warning] Value assigned to variable 'z' is never read. \n\
 unreachableCode1.js:4:5~4:6: [Warning] Conditional expression 'y' is always false. \n\
 unreachableCode1.js:4:8~9:2: [Warning] Unreachable code '{ { f = (function () { return x; }); } f(); }' is found. \n\
 unreachableCode1.js:5:11~7:3: [Warning] Function 'anonymous_function' is never called. \n\
@@ -19,7 +22,7 @@ unreachableCode1.js:9:19~15:2: [Warning] Unreachable code '{ { tmp = 0; } for(i 
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      5 (100.00%) | \n\
+|  Warnings          :      6 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -39,7 +42,7 @@ unreachableCode1.js:9:19~15:2: [Warning] Unreachable code '{ { tmp = 0; } for(i 
 |  Shadowing               :      0 | \n\
 |  UncalledFuction         :      1 | \n\
 |  UnreachableCode         :      2 | \n\
-|  ValueNeverRead          :      0 | \n\
+|  ValueNeverRead          :      1 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
 ===================================== \n\
