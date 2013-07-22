@@ -9,16 +9,16 @@
 
 package kr.ac.kaist.jsaf.nodes_util;
 
+import edu.rice.cs.plt.tuple.Null;
+import edu.rice.cs.plt.tuple.Wrapper;
+import kr.ac.kaist.jsaf.nodes.*;
+import kr.ac.kaist.jsaf.useful.Pair;
+
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import edu.rice.cs.plt.tuple.Null;
-import edu.rice.cs.plt.tuple.Wrapper;
-
-import kr.ac.kaist.jsaf.nodes.*;
-import kr.ac.kaist.jsaf.useful.Pair;
 
 public class Printer extends NodeReflection {
     boolean firstFieldOnNewLine;
@@ -101,6 +101,7 @@ public class Printer extends NodeReflection {
         dump(o, w, 0);
     }
 
+    @SuppressWarnings("unchecked")
     public void dump(Object o, Appendable w, int indent) throws IOException {
         if (o == null) {
             w.append("_");

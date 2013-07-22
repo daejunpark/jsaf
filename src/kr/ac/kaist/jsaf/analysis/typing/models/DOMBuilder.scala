@@ -298,9 +298,34 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
     case _ => heap
   }
 
+  // update the 'form' property of target object and 'elements' property in HTMLFormElement
+  private def updateFormProps(heap: HeapMap, name: String, id: String, formloc : Option[Loc], targetloc : Loc): HeapMap = {
+    formloc match {
+      // update the 'elements' property in HTMLFormElement
+      case Some(l) =>
+        // HTMLFormElement object
+        val form_obj = heap(l)
+        // we know only a single location can be mapped to 'elements' in the initial heap
+        val elements_loc = form_obj("elements")._1._1._1._2.head
+        val elements_obj = heap(elements_loc)
+        // we know the concrete value of a  property value is always present in the initial heap
+        val collection_length: Int = AbsNumber.concretize(elements_obj("length")._1._1._1._1._4).get.toInt
+          val new_elements1 = elements_obj.update(
+            AbsString.alpha(collection_length.toString), PropValue(ObjectValue(targetloc, T, T, T))).update(
+            AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(collection_length+1), T, T, T)))
+          val new_elements2 = if(name!="") new_elements1.update(AbsString.alpha(name), PropValue(ObjectValue(targetloc, T, T, T)))
+                              else new_elements1
+          val new_elements3 = if(id!="") new_elements2.update(AbsString.alpha(id), PropValue(ObjectValue(targetloc, T, T, T)))
+                              else new_elements2
+          // update the 'form' property 
+          val new_obj = heap(targetloc).update(AbsString.alpha("form"), PropValue(ObjectValue(l, F, T, T)))
+          heap + (elements_loc -> new_elements3) + (targetloc -> new_obj)
+       case None => heap
+    }
+  }
     
   // Model a node in a dom tree
-  def modelNode(map: HeapMap, node : Node) : (HeapMap, Loc) = {
+  def modelNode(map: HeapMap, node : Node, form : Option[Loc]) : (HeapMap, Loc) = {
     val nodeName = node.getNodeName
     val (newmap, ins_loc) = node match {
       // Attr
@@ -415,11 +440,19 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
             val new_forms2 = if(name!="") new_forms1.update(AbsString.alpha(name), PropValue(ObjectValue(loc, T, T, T)))
                              else new_forms1
 
-            (newheap + (forms_loc -> new_forms2), loc)
+            // 'elements' property
+            val loc_elements = HTMLCollection.getInstance(cfg).get
+            val newheap2 = addInstance(newheap, loc_elements, HTMLCollection.getInsList(0))
+
+            val new_formobj = newheap2(loc).
+                        update(OtherStrSingle("elements"),
+                                PropValue(ObjectValue(Value(loc_elements), F, T, T)))
+
+            (newheap2 + (forms_loc -> new_forms2) + (loc -> new_formobj), loc)
           case "SELECT" =>
             val loc= HTMLSelectElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLSelectElement.getInsList(node))
-            (newheap, loc)
+            (updateFormProps(newheap, e.getAttribute("name"), e.getAttribute("id"), form, loc), loc)
           case "OPTGROUP" =>
             val loc= HTMLOptGroupElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLOptGroupElement.getInsList(node))
@@ -431,15 +464,15 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
           case "INPUT" =>
             val loc= HTMLInputElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLInputElement.getInsList(node))
-            (newheap, loc)
+            (updateFormProps(newheap, e.getAttribute("name"), e.getAttribute("id"), form, loc), loc)
           case "TEXTAREA" =>
             val loc= HTMLTextAreaElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLTextAreaElement.getInsList(node))
-            (newheap, loc)
+            (updateFormProps(newheap, e.getAttribute("name"), e.getAttribute("id"), form, loc), loc)
           case "BUTTON" =>
             val loc= HTMLButtonElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLButtonElement.getInsList(node))
-            (newheap, loc)
+            (updateFormProps(newheap, e.getAttribute("name"), e.getAttribute("id"), form, loc), loc)
           case "LABEL" =>
             val loc= HTMLLabelElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLLabelElement.getInsList(node))
@@ -447,7 +480,7 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
           case "FIELDSET" =>
             val loc= HTMLFieldSetElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLFieldSetElement.getInsList(node))
-            (newheap, loc)
+            (updateFormProps(newheap, e.getAttribute("name"), e.getAttribute("id"), form, loc), loc)
           case "LEGEND" =>
             val loc= HTMLLegendElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLLegendElement.getInsList(node))
@@ -531,7 +564,7 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
           case "OBJECT" =>
             val loc= HTMLObjectElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLObjectElement.getInsList(node))
-            (newheap, loc)
+            (updateFormProps(newheap, e.getAttribute("name"), e.getAttribute("id"), form, loc), loc)
           case "PARAM" =>
             val loc= HTMLParamElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLParamElement.getInsList(node))
@@ -670,7 +703,7 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
         for(i <- 0 until length) {
           val attr = attributes.item(i)
           // get abstract location for each attributes object
-          val (newheap, attr_loc) = modelSource(newmap1, attr)
+          val (newheap, attr_loc) = modelSource(newmap1, attr, None)
           newmap1=newheap
           attributes_objlist = attributes_objlist ++ List(
             (i.toString, PropValue(ObjectValue(attr_loc, T, T, T))),
@@ -691,12 +724,13 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
   }
 
   // Construct a DOM tree for the html source
-  def modelSource(map: HeapMap, node : Node) : (HeapMap, Loc) = {
+  // 'form' : keeps a location of HTMLFormElement if any.
+  def modelSource(map: HeapMap, node : Node, form : Option[Loc]) : (HeapMap, Loc) = {
     
     val children : NodeList = node.getChildNodes
     val num_children = children.getLength
         
-    val (newmap1, absloc1) = modelNode(map, node)     
+    val (newmap1, absloc1) = modelNode(map, node, form)     
 
     if(num_children == 0) {
       val absloc2 = DOMNodeList.getInstance(cfg).get
@@ -711,8 +745,9 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
     else {
       var absloc_list : List[Loc]  = List()
       var newmap : HeapMap = newmap1
+      val formelement = if(node.getNodeName == "FORM") Some(absloc1) else form
       for(i <- 0 until num_children) {
-        val (newmap2, absloc2) = modelSource(newmap, children.item(i))
+        val (newmap2, absloc2) = modelSource(newmap, children.item(i), formelement)
         absloc_list = absloc_list ++ List(absloc2)
         newmap = newmap2
       }
@@ -784,8 +819,8 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
   def initHtml(map: HeapMap): HeapMap = {
     // printDom(document, "")
     val map_1 = initEventTables(map)
-    val (newmap, absloc) = modelSource(map_1, document)
-    //printDom(document, "")
+    val (newmap, absloc) = modelSource(map_1, document, None)
+    // printDom(document, "")
     //modelSource(toList(source.getChildElements)(0))
     //System.out.println("start")
     //toList(toList(source.getChildElements)(0).getChildElements).foreach((x:Element) => System.out.println(x.getName))

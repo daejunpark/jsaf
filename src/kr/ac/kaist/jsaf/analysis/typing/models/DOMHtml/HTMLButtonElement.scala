@@ -88,8 +88,8 @@ object HTMLButtonElement extends DOM {
       ("name", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("name")), T, T, T))),
       ("tabIndex",  PropValue(ObjectValue(Helper.toNumber(PValue(AbsString.alpha(e.getAttribute("tabIndex")))), T, T, T))),
       ("type", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("type")), F, T, T))),
-      ("value", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("value")), T, T, T))))
-      // TODO: 'form' in DOM Level 1
+      ("value", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("value")), T, T, T))),
+      ("form", PropValue(ObjectValue(NullTop, F, T, T))))
     case _ => {
       System.err.println("* Warning: " + node.getNodeName + " cannot have instance objects.")
       List()
@@ -97,7 +97,7 @@ object HTMLButtonElement extends DOM {
   }
    
   def getInsList(accessKey: PropValue, disabled: PropValue, name: PropValue, 
-                 tabIndex: PropValue, ttype: PropValue, value: PropValue): List[(String, PropValue)] = List(
+                 tabIndex: PropValue, ttype: PropValue, value: PropValue, form: PropValue): List[(String, PropValue)] = List(
     ("@class",    PropValue(AbsString.alpha("Object"))),
     ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
     ("@extensible", PropValue(BoolTrue)),
@@ -107,7 +107,8 @@ object HTMLButtonElement extends DOM {
     ("name", name),
     ("tabIndex", tabIndex),
     ("type", ttype),
-    ("value", value)
+    ("value", value),
+    ("form", form)
   )
   
   override def default_getInsList(): List[(String, PropValue)] = { 
@@ -117,9 +118,10 @@ object HTMLButtonElement extends DOM {
     val tabIndex = PropValue(ObjectValue(NumTop, T, T, T))
     val ttype = PropValue(ObjectValue(AbsString.alpha(""), F, T, T))
     val value = PropValue(ObjectValue(AbsString.alpha(""), F, T, T))
+    val form = PropValue(ObjectValue(NullTop, F, T, T))
     // This object has all properties of the HTMLElement object 
     HTMLElement.default_getInsList ::: 
-      getInsList(accessKey, disabled, name,tabIndex, ttype, value)
+      getInsList(accessKey, disabled, name,tabIndex, ttype, value, form)
   }
 
 

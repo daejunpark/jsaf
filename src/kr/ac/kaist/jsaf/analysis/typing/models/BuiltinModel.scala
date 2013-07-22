@@ -76,7 +76,7 @@ class BuiltinModel(cfg: CFG) extends Model(cfg)  {
 
     h_2
   }
-  def addAsyncCall(cfg: CFG, loop_head: Node): List[Node] = List()
+  def addAsyncCall(cfg: CFG, loop_head: Node): (List[Node],List[Node]) = (List(),List())
   def isModelFid(fid: FunctionId) = map_fid.contains(fid)
   def getFIdMap(): Map[FunctionId, String] = map_fid
   def getSemanticMap(): Map[String, SemanticFun] = map_semantic

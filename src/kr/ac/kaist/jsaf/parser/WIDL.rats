@@ -29,6 +29,8 @@ import java.util.List;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import static kr.ac.kaist.jsaf.exceptions.JSAFError.error;
+
+@SuppressWarnings("unchecked")
 }
 
 body {
@@ -529,8 +531,7 @@ private WQId ScopedName =
  */
 private WAttribute Attribute =
      a1:inherit? a2:(w readonly)? w attribute a3:(w ExtendedAttributeList)? w a4:Type w a5:id
-     w semicolon
-    // a6:(w AttributeRaises)? w semicolon
+     a6:(w AttributeRaises)? w semicolon
      { Span span = createSpan(yyStart,yyCount);
        List<WEAttribute> attrs = new ArrayList<WEAttribute>();
        if (a1 != null && a2 != null) {
@@ -538,8 +539,39 @@ private WAttribute Attribute =
            attrs.add(WIDLFactory.eaReadonly());
        } else if (a1 != null) attrs.add(WIDLFactory.eaInherit());
        else if (a2 != null) attrs.add(WIDLFactory.eaReadonly());
-       yyValue = WIDLFactory.mkAttribute(span, attrs, a4, a5);
+       if (a6 == null) yyValue = WIDLFactory.mkAttribute(span, attrs, a4, a5);
+       else yyValue = WIDLFactory.mkAttribute(span, attrs, a4, a5, a6);
      };
+
+/*
+ * // WebKitIDL
+ * AttributeRaises ::= ("getraises" w ExceptionList)? ("setraises" w ExceptionList)?
+ *                   | GetterRaises
+ *                   | SetterRaises
+ *                   | GetterRaises w "," w SetterRaises
+ *                   | SetterRaises w "," w GetterRaises
+ * GetterRaises ::= "getter" w "raises" w ExceptionList
+ * SetterRaises ::= "setter" w "raises" w ExceptionList
+ */
+private List<WQId> AttributeRaises =
+     getraises w a1:ExceptionList w setraises w a2:ExceptionList
+     { yyValue = a1;
+       yyValue.addAll(a2);
+     }
+   / getraises w yyValue:ExceptionList
+   / setraises w yyValue:ExceptionList
+   / GetterRaises
+   / SetterRaises
+   / a1:GetterRaises w comma w a2:SetterRaises
+     { yyValue = a1;
+       yyValue.addAll(a2);
+     }
+   / a1:SetterRaises w comma w a2:GetterRaises
+     { yyValue = a1;
+       yyValue.addAll(a2);
+     };
+private List<WQId> GetterRaises = getter w raises w yyValue:ExceptionList ;
+private List<WQId> SetterRaises = setter w raises w yyValue:ExceptionList ;
 
 /*
  * Qualifiers ::= "static" | Specials
@@ -1048,7 +1080,7 @@ a1:IdText w equals w a2:IdText w openparen w a3:ArgumentList? w closeparen ;
  *
  * Any single leading U+005F LOW LINE ("_") character (underscore) is removed.
  * A leading "_" is used to escape an identifier from looking like a reserved word
- * so that, for example, an interface named ?œinterface??can be defined. The leading
+ * so that, for example, an interface named "interface" can be defined. The leading
  * "_" is dropped to unescape the identifier.
  */
 transient String id      = s:(idstart idrest*) &{ !JAVASCRIPT_RESERVED.contains(s) &&
@@ -1319,13 +1351,4 @@ literals += '&|'
 # Used in WebKitIDL InterfaceUUID/ImplementationUUID attribute
 literals += '-'
    'Other : ... | in'
-
-   'AttributeRaises : (getraises ExceptionList)? (setraises ExceptionList)?
-                    | GetterRaises
-                    | SetterRaises
-                    | GetterRaises "," SetterRaises
-                    | SetterRaises "," GetterRaises'
-
-    'GetterRaises : getter raises ExceptionList'
-    'SetterRaises : setter raises ExceptionList'
  */

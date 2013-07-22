@@ -21,8 +21,8 @@ import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
 
-// Modeled based on the HTML5 specification - W3C Candidate Recommendation 17 December 2012, Section 6.5.1.
-// http://www.w3.org/TR/html5/webappapis.html#the-navigator-object  
+// Modeled based on WHATWG HTML Living Standard 
+// Section 7.5.1 The Navigator object.
 object Navigator extends DOM {
   private val name = "Navigator"
 
@@ -39,13 +39,21 @@ object Navigator extends DOM {
     ("length", AbsConstValue(PropValue(ObjectValue(Value(AbsNumber.alpha(0)), F, F, F)))),
     ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
     // property
-    // Navigator implements NavigatorID (Section 6.5.1.1)
+    // Navigator implements NavigatorID (Section 7.5.1.1)
+    ("appCodeName", AbsConstValue(PropValue(ObjectValue(AbsString.alpha("Mozilla"), F, T, T)))),
     ("appName", AbsConstValue(PropValue(ObjectValue(StrTop, F, T, T)))),
     ("appVersion", AbsConstValue(PropValue(ObjectValue(StrTop, F, T, T)))),
     ("platform", AbsConstValue(PropValue(ObjectValue(StrTop, F, T, T)))),
+    ("product", AbsConstValue(PropValue(ObjectValue(AbsString.alpha("Gecko"), F, T, T)))),
     ("userAgent", AbsConstValue(PropValue(ObjectValue(StrTop, F, T, T)))),
-    // Navigator implements NavigatorOnLine (Section 6.5.1, Section 5.7.10)
-    ("onLine", AbsConstValue(PropValue(ObjectValue(BoolTop, F, T, T))))
+    // Navigator implements NavigatorLanguage (Section 7.5.1.2)
+    ("language", AbsConstValue(PropValue(ObjectValue(StrTop, F, T, T)))),
+    // Navigator implements NavigatorOnLine (Section 6.7.10)
+    ("onLine", AbsConstValue(PropValue(ObjectValue(BoolTop, F, T, T)))),
+    // Navigator implements NavigatorStorageUtils (Section 7.5.1.4)
+    ("cookieEnabled", AbsConstValue(PropValue(ObjectValue(BoolTop, F, T, T)))),
+    // Navigator implements NavigatorPlugins (Section 7.5.1.5)
+    ("javaEnabled", AbsConstValue(PropValue(ObjectValue(BoolTop, F, T, T))))
   )
 
   /* prorotype */
@@ -54,14 +62,14 @@ object Navigator extends DOM {
     ("@proto", AbsConstValue(PropValue(ObjectValue(ObjProtoLoc, F, F, F)))),
     ("@extensible", AbsConstValue(PropValue(BoolTrue))),
     // API
-    // Navigator implements NavigatorContentUtils (Section 6.5.1.2)
+    // Navigator implements NavigatorContentUtils (Section 7.5.1.3)
     ("registerProtocolHandler",   AbsBuiltinFunc("Navigator.registerProtocolHandler", 3)),
     ("registerContentHandler",   AbsBuiltinFunc("Navigator.registerContentHandler", 3)),
     ("isProtocolHandlerRegistered",   AbsBuiltinFunc("Navigator.isProtocolHandlerRegistered", 2)),
     ("isContentHandlerRegistered",   AbsBuiltinFunc("Navigator.isContentHandlerRegistered", 2)),
     ("unregisterProtocolHandler",   AbsBuiltinFunc("Navigator.unregisterProtocolHandler", 2)),
     ("unregisterContentHandler",   AbsBuiltinFunc("Navigator.unregisterContentHandler", 2)),
-    // Navigator implements NavigatorStorageUtils (Section 6.5.1.5)
+    // Navigator implements NavigatorStorageUtils (Section 7.5.1.4)
     ("yieldForStorageUpdates",   AbsBuiltinFunc("Navigator.yieldForStorageUpdates", 0))
   )
 

@@ -151,4 +151,10 @@ object Config {
    */
   var compareMode = false
   def setCompareMode = compareMode = true
+
+  /**
+   * Loop unrolling count
+   */
+  var defaultUnrollingCount = 0
+  def setDefaultUnrollingCount(unrollingCount: Int) = defaultUnrollingCount = unrollingCount
 }

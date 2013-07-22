@@ -118,24 +118,25 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
       (DOMEventTimeLoc -> Helper.NewDate(Value(UInt))))
   }
 
-  def addAsyncCall(cfg: CFG, loop_head: Node): List[Node] = {
+  def addAsyncCall(cfg: CFG, loop_head: Node): (List[Node],List[Node]) = {
     val fid_global = cfg.getGlobalFId
     /* dummy info for EventDispatch instruction */
     val dummy_info = IRFactory.makeInfo(IRFactory.dummySpan("DOMEvent"))
     /* dummy var for after call */
     val dummy_id = CFGTempId(NU.ignoreName+"#AsyncCall#", PureLocalVar)
     /* add async call */
-    DOMModel.async_calls.foldLeft(List[Node]())((nodes, ev) => {
+    DOMModel.async_calls.foldLeft((List[Node](),List[Node]()))((nodes, ev) => {
       /* event call */
       val event_call = cfg.newBlock(fid_global)
       cfg.addInst(event_call,
         CFGAsyncCall(cfg.newInstId, dummy_info, "DOM", ev, cfg.newProgramAddr, cfg.newProgramAddr, cfg.newProgramAddr))
       /* event after call */
       val event_after = cfg.newAfterCallBlock(fid_global, dummy_id)
+      val event_catch = cfg.newAfterCatchBlock(fid_global)
       cfg.addEdge(loop_head, event_call)
-      cfg.addCall(event_call, event_after)
+      cfg.addCall(event_call, event_after, event_catch)
       cfg.addEdge(event_after, loop_head)
-      event_after::nodes
+      (event_after::nodes._1,event_catch::nodes._2)
     })
   }
 
@@ -265,6 +266,8 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
     val cc_caller = cp._2
     val n_aftercall = cfg.getAftercallFromCall(cp._1)
     val cp_aftercall = (n_aftercall, cc_caller)
+    val n_aftercatch = cfg.getAftercatchFromCall(cp._1)
+    val cp_aftercatch = (n_aftercatch, cc_caller)
     lset_fun.foreach {l_f:Loc => {
       val o_f = h_5(l_f)
       val fids = o_f("@function")._1._3
@@ -278,7 +281,7 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
               update("@scope", o_f("@scope")._1)
           sem.addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
           sem.addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_3, o_old)
-          sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercall, ctx_3, o_old)
+          sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_3, o_old)
         }}
       }}
     }}
@@ -386,6 +389,8 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
     val cc_caller = cp._2
     val n_aftercall = cfg.getAftercallFromCall(cp._1)
     val cp_aftercall = (n_aftercall, cc_caller)
+    val n_aftercatch = cfg.getAftercatchFromCall(cp._1)
+    val cp_aftercatch = (n_aftercatch, cc_caller)
     lset_fun.foreach {l_f:Loc => {
       val o_f = h_5(l_f)
       val fids = o_f("@function")._1._3
@@ -399,7 +404,7 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
               update("@scope", o_f("@scope")._1)
           sem.addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
           sem.addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_3, o_old)
-          sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercall, ctx_3, o_old)
+          sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_3, o_old)
         }}
       }}
     }}

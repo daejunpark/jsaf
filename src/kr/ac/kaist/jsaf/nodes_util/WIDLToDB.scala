@@ -105,7 +105,7 @@ object WIDLToDB extends WIDLWalker {
   var bw : BufferedWriter = null
   val span = WF.makeSpan("from WIDL DB")
 
-  def join(all: List[Any]): Unit = all.distinct.foreach(walkUnit)
+  def join(all: List[Any]): Unit = all.foreach(walkUnit)
 
   //////////////////////////////////////////////////////////
   // store WIDL to DB
@@ -177,9 +177,10 @@ object WIDLToDB extends WIDLWalker {
       bw.write(STRING+"\n"+str+"\n")
     case SWNull(info) =>
       bw.write(NULL+"\n")
-    case SWAttribute(info, attrs, typ, name) =>
+    case SWAttribute(info, attrs, typ, name, exns) =>
       bw.write(ATTRIBUTE+"\n"+name+"\n"+attrs.length+"\n")
       join(attrs); walkUnit(typ)
+      bw.write(exns.length+"\n"); join(exns)
     case SWExceptionField(info, attrs, typ, name) =>
       bw.write(EXCEPTIONFIELD+"\n"+name+"\n"+attrs.length+"\n")
       join(attrs); walkUnit(typ)
@@ -383,7 +384,10 @@ object WIDLToDB extends WIDLWalker {
       var attrs = new ArrayList[WEAttribute](attrsNum)
       for (i <- 0 until attrsNum) attrs.add(readAttribute)
       val typ = readType
-      WF.addAttrs(attrs, WF.mkAttribute(span, attrs, typ, name)).asInstanceOf[WAttribute]
+      val exnsNum = readInt
+      var exns = new ArrayList[WQId](exnsNum)
+      for (i <- 0 until exnsNum) exns.add(readExn)
+      WF.addAttrs(attrs, WF.mkAttribute(span, attrs, typ, name, exns)).asInstanceOf[WAttribute]
     }
     def readOperation(): WOperation = {
       val nameOpt = readLine

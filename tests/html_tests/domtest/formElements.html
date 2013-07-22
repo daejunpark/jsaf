@@ -1,0 +1,59 @@
+<!-- test for HTMLFormElement.elements -->
+
+<head> 
+    <title> aaa </title>
+</head>
+<body>
+    <div id="div1" aa="222" name="ccc" class="aaa"> ttt1
+      <div id="div2" name="ccc"> ttt2 </div>
+  </div>
+  <FORM name="searchwiki" action="//incubator.wikimedia.org/w/index.php" method="get">
+      <INPUT name="title" type="hidden" value="Special:SearchWiki"> 
+      <LABEL for="langsearch-input">Find Wikipedia in a language:</LABEL> 
+      <INPUT name="searchlanguage" id="langsearch-input" type="search"> 
+      <Object name="oooo"> </object>
+  </FORM>
+
+  <FORM id="form2">
+    <INPUT name="input1"> </INPUT>
+    <div name="divv"> </div>
+    <button id="button1" name="bb"> </button> 
+    <fieldset id="fieldset1" name="ff"> </fieldset>
+    <textarea id="textarea1">> </textarea> 
+  </FORM>
+  
+  <script>
+     var formelements1 =  document.searchwiki.elements;
+     var __result1 = formelements1.length;
+     var __expect1 = 3;
+     
+     var __result2 = formelements1[0].getAttribute("name");
+     var __expect2 = "title";
+     
+     var __result3 = formelements1[1].id;
+     var __expect3 = "langsearch-input";
+     
+     var __result4 = formelements1[2].getAttribute("name");
+     var __expect4 = "oooo";
+
+     var formelements2 =  document.getElementById("form2").elements;
+     var __result5 = formelements2.length;
+     var __expect5 = 4;
+     
+     var __result6 = formelements2[0].getAttribute("name");
+     var __expect6 = "input1";
+     
+     var __result7 = formelements2[1].id;
+     var __expect7 = "button1";
+     
+     var __result8 = formelements2[2].getAttribute("name");
+     var __expect8 = "ff";
+
+     var __result9 = formelements2[3].id;
+     var __expect9 = "textarea1";
+     
+     var __result10 = formelements2.bb.id;
+     var __expect10 = "button1";
+  </script>
+</body>
+

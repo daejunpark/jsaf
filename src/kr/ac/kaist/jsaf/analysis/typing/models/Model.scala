@@ -19,7 +19,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 
 abstract class Model(cfg: CFG) {
   def initialize(h: Heap): Heap
-  def addAsyncCall(cfg: CFG, loop_head: Node): List[Node]
+  def addAsyncCall(cfg: CFG, loop_head: Node): (List[Node],List[Node])
   def isModelFid(fid: FunctionId): Boolean
   def getSemanticMap(): Map[String, SemanticFun]
   def getPreSemanticMap(): Map[String, SemanticFun]

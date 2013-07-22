@@ -30,6 +30,9 @@ import kr.ac.kaist.jsaf.useful.Useful
 import kr.ac.kaist.jsaf.useful.WireTappedPrintStream
 
 object FileTests {
+  /* Import Note!
+   * Do not use Scala's println.  Use System.out.println.
+   */
 
   def makeTestFileName(name: String) =
     if (name.endsWith(".js") || name.endsWith(".widl")) name else name + ".js"
@@ -106,7 +109,7 @@ object FileTests {
         if (s.endsWith(".test")) { // need to define the test of tests.
           val propFileName = join(dir_name_canonical, s)
           //var props = new StringMap.FromFileProps(propFileName)
-          var props = new StringMap.ComposedMaps(new StringMap.FromFileProps(propFileName),
+          val props = new StringMap.ComposedMaps(new StringMap.FromFileProps(propFileName),
                                                  new StringMap.FromPair("JS_HOME", ProjectProperties.JS_HOME),
                                                  new StringMap.FromEnv)
           if (props.isEmpty)
@@ -154,7 +157,7 @@ object FileTests {
                             failsOnly: Boolean): List[Test] = {
     var cTests = List[Test]()
     val commands = List("strict","compile","disambiguate","interpret","interpret_mozilla","cfg",
-                        "concolic","bug-detector","widlparse")
+                        "concolic","bug-detector","widlparse","widlcheck")
     var found = false
     for (c <- commands)
       if (props.get(c) != null) {
@@ -186,8 +189,11 @@ object FileTests {
                                                                 knownFailure,
                                                                 shouldFail) {
     override def justTheTest = {
-      val tokens = Array[String](command, join(dir, makeTestFileName(name)))
-
+      val tokens = if (command.equals("widlcheck"))
+                     Array[String](command, join(dir, makeTestFileName(name)),
+                                   "tests/widlchecker_tests/webapis.tv.channel.db")
+                   else
+                     Array[String](command, join(dir, makeTestFileName(name)))
       /*
 System.out.print("[[ ")
 for (s <- tokens) System.out.print(s+ " ")

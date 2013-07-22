@@ -10,25 +10,18 @@
 
 package kr.ac.kaist.jsaf.nodes_util;
 
+import edu.rice.cs.plt.tuple.Option;
+import kr.ac.kaist.jsaf.nodes.*;
+import kr.ac.kaist.jsaf.useful.Pair;
+import kr.ac.kaist.jsaf.useful.Useful;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.Double;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-import edu.rice.cs.plt.tuple.Option;
-
-import kr.ac.kaist.jsaf.nodes.*;
-import kr.ac.kaist.jsaf.nodes_util.Lex;
-import kr.ac.kaist.jsaf.useful.Pair;
-import kr.ac.kaist.jsaf.useful.Useful;
+import java.util.*;
 
 import static kr.ac.kaist.jsaf.exceptions.JSAFError.error;
 
@@ -160,9 +153,9 @@ public class Unprinter extends NodeReflection {
         return next;
     }
 
-    @SuppressWarnings("unchecked")
     static Class[] oneSpanArg = { Span.class };
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Constructor defaultConstructorFor(Class cl) {
         try {

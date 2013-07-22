@@ -19,6 +19,7 @@ class BugOption(defaultForUser: Boolean = true) {
 
   var AbsentReadProperty_PropertyMustExistInEveryState          = false
   var AbsentReadProperty_PropertyMustExistInEveryLocation       = false
+  var AbsentReadProperty_PropertyMustExistForAllValue           = false
   var AbsentReadProperty_PropertyMustExistDefinitely            = false
   var AbsentReadProperty_CheckAbstractIndexValue                = false
 
@@ -27,10 +28,10 @@ class BugOption(defaultForUser: Boolean = true) {
 
   var BinaryOpSecondType_OperandMustBeCorrectInEveryState       = false
   var BinaryOpSecondType_OperandMustBeCorrectInEveryLocation    = false
-  var BinaryOpSecondType_OperandMustBeCorrectDefinitely         = false
+  var BinaryOpSecondType_OperandMustBeCorrectForAllValue        = false
 
   var BuiltinWrongArgType_TypeMustBeCorrectInEveryState         = false
-  var BuiltinWrongArgType_TypeMustBeCorrectDefinitely           = false
+  var BuiltinWrongArgType_TypeMustBeCorrectForAllValue          = false
   var BuiltinWrongArgType_CheckObjectType                       = true
   var BuiltinWrongArgType_CheckFunctionType                     = true
 
@@ -43,17 +44,17 @@ class BugOption(defaultForUser: Boolean = true) {
   var CallNonFunction_MustBeCallableDefinitely                  = false
 
   var CondBranch_ConditionMustBeTrueOrFalseInEveryState         = false
-  var CondBranch_ConditionMustBeTrueOrFalseDefinitely           = false
+  var CondBranch_ConditionMustBeTrueOrFalseForAllValue          = false
 
   var ConvertUndefToNum_UndefMustBeConvertedInEveryState        = false
   var ConvertUndefToNum_VariableMustHaveUndefinedOnly           = true
-  var ConvertUndefToNum_ToNumberMustBeCalledDefinitely          = true
+  var ConvertUndefToNum_ToNumberMustBeCalledForExactValue       = true
 
   var GlobalThis_MustReferInEveryState                          = false
-  var GlobalThis_MustReferDefinitely                            = true
+  var GlobalThis_MustReferExactly                               = true
 
   var ImplicitTypeConvert_MustBeConvertedInEveryState           = false
-  var ImplicitTypeConvert_MustBeConvertedDefinitely             = true
+  var ImplicitTypeConvert_MustBeConvertedForAllValue            = true
   var ImplicitTypeConvert_CheckNullAndUndefined                 = true
   var ImplicitTypeConvert_CheckStringAndNumber                  = false
   var ImplicitTypeConvert_CheckBooleanAndUndefined              = true
@@ -69,7 +70,7 @@ class BugOption(defaultForUser: Boolean = true) {
   var NullOrUndefined_OnlyNullOrUndefined                       = true
 
   var PrimitiveToObject_PrimitiveMustBeConvertedInEveryState    = false
-  var PrimitiveToObject_PrimitiveMustBeConvertedDefinitely      = false
+  var PrimitiveToObject_PrimitiveMustBeConvertedForAllValue     = false
   var PrimitiveToObject_CheckEvenThoughPrimitiveIsString        = false
 
   var VaryingTypeArguments_CheckUndefined                       = false
@@ -100,6 +101,7 @@ class BugOption(defaultForUser: Boolean = true) {
     // AbsentReadProperty
     AbsentReadProperty_PropertyMustExistInEveryState = false
     AbsentReadProperty_PropertyMustExistInEveryLocation = false
+    AbsentReadProperty_PropertyMustExistForAllValue = false
     AbsentReadProperty_PropertyMustExistDefinitely = false
     AbsentReadProperty_CheckAbstractIndexValue = false
 
@@ -110,11 +112,11 @@ class BugOption(defaultForUser: Boolean = true) {
     // BinaryOpSecondType
     BinaryOpSecondType_OperandMustBeCorrectInEveryState = false
     BinaryOpSecondType_OperandMustBeCorrectInEveryLocation = false
-    BinaryOpSecondType_OperandMustBeCorrectDefinitely = false
+    BinaryOpSecondType_OperandMustBeCorrectForAllValue = false
 
     // BuiltinWrongArgType
     BuiltinWrongArgType_TypeMustBeCorrectInEveryState = false
-    BuiltinWrongArgType_TypeMustBeCorrectDefinitely = false
+    BuiltinWrongArgType_TypeMustBeCorrectForAllValue = false
     BuiltinWrongArgType_CheckObjectType = true
     BuiltinWrongArgType_CheckFunctionType = true
 
@@ -130,20 +132,20 @@ class BugOption(defaultForUser: Boolean = true) {
 
     // CondBranch
     CondBranch_ConditionMustBeTrueOrFalseInEveryState = false
-    CondBranch_ConditionMustBeTrueOrFalseDefinitely = false
+    CondBranch_ConditionMustBeTrueOrFalseForAllValue = false
 
     // ConvertUndefToNum
     ConvertUndefToNum_UndefMustBeConvertedInEveryState = false
     ConvertUndefToNum_VariableMustHaveUndefinedOnly = true
-    ConvertUndefToNum_ToNumberMustBeCalledDefinitely = true
+    ConvertUndefToNum_ToNumberMustBeCalledForExactValue = true
 
     // GlobalThis
     GlobalThis_MustReferInEveryState = false
-    GlobalThis_MustReferDefinitely = true
+    GlobalThis_MustReferExactly = true
 
     // ImplicitTypeConvert
     ImplicitTypeConvert_MustBeConvertedInEveryState = false
-    ImplicitTypeConvert_MustBeConvertedDefinitely = true
+    ImplicitTypeConvert_MustBeConvertedForAllValue = true
     ImplicitTypeConvert_CheckNullAndUndefined = true
     ImplicitTypeConvert_CheckStringAndNumber = false
     ImplicitTypeConvert_CheckBooleanAndUndefined = true
@@ -161,7 +163,7 @@ class BugOption(defaultForUser: Boolean = true) {
 
     // PrimitiveToObject
     PrimitiveToObject_PrimitiveMustBeConvertedInEveryState = false
-    PrimitiveToObject_PrimitiveMustBeConvertedDefinitely = false
+    PrimitiveToObject_PrimitiveMustBeConvertedForAllValue = false
     PrimitiveToObject_CheckEvenThoughPrimitiveIsString = false
 
     // VaryingTypeArguments
@@ -184,6 +186,7 @@ class BugOption(defaultForUser: Boolean = true) {
     // AbsentReadProperty
     AbsentReadProperty_PropertyMustExistInEveryState = true
     AbsentReadProperty_PropertyMustExistInEveryLocation = true
+    AbsentReadProperty_PropertyMustExistForAllValue = true
     AbsentReadProperty_PropertyMustExistDefinitely = true
     AbsentReadProperty_CheckAbstractIndexValue = true
 
@@ -194,11 +197,11 @@ class BugOption(defaultForUser: Boolean = true) {
     // BinaryOpSecondType
     BinaryOpSecondType_OperandMustBeCorrectInEveryState = true
     BinaryOpSecondType_OperandMustBeCorrectInEveryLocation = true
-    BinaryOpSecondType_OperandMustBeCorrectDefinitely = true
+    BinaryOpSecondType_OperandMustBeCorrectForAllValue = true
 
     // BuiltinWrongArgType
     BuiltinWrongArgType_TypeMustBeCorrectInEveryState = true
-    BuiltinWrongArgType_TypeMustBeCorrectDefinitely = true
+    BuiltinWrongArgType_TypeMustBeCorrectForAllValue = true
     BuiltinWrongArgType_CheckObjectType = true
     BuiltinWrongArgType_CheckFunctionType = true
 
@@ -214,20 +217,20 @@ class BugOption(defaultForUser: Boolean = true) {
 
     // CondBranch
     CondBranch_ConditionMustBeTrueOrFalseInEveryState = true
-    CondBranch_ConditionMustBeTrueOrFalseDefinitely = true
+    CondBranch_ConditionMustBeTrueOrFalseForAllValue = true
 
     // ConvertUndefToNum
     ConvertUndefToNum_UndefMustBeConvertedInEveryState = true
     ConvertUndefToNum_VariableMustHaveUndefinedOnly = false
-    ConvertUndefToNum_ToNumberMustBeCalledDefinitely = false
+    ConvertUndefToNum_ToNumberMustBeCalledForExactValue = false
 
     // GlobalThis
-    GlobalThis_MustReferInEveryState = false
-    GlobalThis_MustReferDefinitely = false
+    GlobalThis_MustReferInEveryState = true
+    GlobalThis_MustReferExactly = false
 
     // ImplicitTypeConvert
     ImplicitTypeConvert_MustBeConvertedInEveryState = true
-    ImplicitTypeConvert_MustBeConvertedDefinitely = false
+    ImplicitTypeConvert_MustBeConvertedForAllValue = false
     ImplicitTypeConvert_CheckNullAndUndefined = true
     ImplicitTypeConvert_CheckStringAndNumber = true
     ImplicitTypeConvert_CheckBooleanAndUndefined = true
@@ -245,7 +248,7 @@ class BugOption(defaultForUser: Boolean = true) {
 
     // PrimitiveToObject
     PrimitiveToObject_PrimitiveMustBeConvertedInEveryState = true
-    PrimitiveToObject_PrimitiveMustBeConvertedDefinitely = true
+    PrimitiveToObject_PrimitiveMustBeConvertedForAllValue = true
     PrimitiveToObject_CheckEvenThoughPrimitiveIsString = true
 
     // VaryingTypeArguments

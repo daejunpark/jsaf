@@ -183,7 +183,7 @@ object SSA {
     search(fg.entry)
   }
 
-  def computeDominanceFrontier[Node](g: Graph[Node], dt: DomTree[Node], isEntry: Node=>Boolean): Map[Node, Set[Node]] = {
+  def computeDominanceFrontier[Node](g: Graph[Node], dt: DomTree[Node]): Map[Node, Set[Node]] = {
     var df = HashMap[Node, Set[Node]]()
 
     def rec_computeDF(n: Node): Unit = {
@@ -202,11 +202,8 @@ object SSA {
     df
   }
 
-  private def isEntry(node: ENode): Boolean = {
-    node._1._2 == LEntry && node._2 == KindI
-  }
   def computesJoinpoints(g: EGraph, du: Map[Node, (LocSet, LocSet)], variables: LocSet, dt: DomTree[ENode]): Map[ENode, LocSet] = {
-    val domfront = computeDominanceFrontier[ENode](g, dt, isEntry)
+    val domfront = computeDominanceFrontier[ENode](g, dt)
     val nodes = g.reachable
     def getDU(node: ENode): (LocSet, LocSet) = {
       val locsets = du.get(node._1) match {

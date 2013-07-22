@@ -65,8 +65,8 @@ object WIDLFactory {
   def addAttrs(attrs: JList[WEAttribute], m: WInterfaceMember): WInterfaceMember = m match {
     case SWConst(info, as, typ, name, value) =>
       SWConst(info, toList(attrs)++as, typ, name, value)
-    case SWAttribute(info, as, typ, name) =>
-      SWAttribute(info, toList(attrs)++as, typ, name)
+    case SWAttribute(info, as, typ, name, exns) =>
+      SWAttribute(info, toList(attrs)++as, typ, name, exns)
     case SWOperation(info, as, quals, typ, name, args, exns) =>
       SWOperation(info, toList(attrs)++as, quals, typ, name, args, exns)
   }
@@ -97,8 +97,8 @@ object WIDLFactory {
   }       
 
   def addStringifier(attr: WAttribute): WAttribute = attr match {
-    case SWAttribute(info, attrs, typ, name) =>
-      SWAttribute(info, attrs++List(eaStringifier), typ, name)
+    case SWAttribute(info, attrs, typ, name, exns) =>
+      SWAttribute(info, attrs++List(eaStringifier), typ, name, exns)
   }        
 
   def addPartial(dfn: WDefinition): WDefinition = dfn match {
@@ -199,7 +199,10 @@ object WIDLFactory {
     mkOperation(span, attrs, qualifiers, typ, some(name), args, exns)
 
   def mkAttribute(span: Span, attrs: JList[WEAttribute], typ: WType, name: String): WAttribute =
-    new WAttribute(makeSpanInfo(span), attrs, typ, name)
+    mkAttribute(span, attrs, typ, name, toJavaList(List[WQId]()))
+
+  def mkAttribute(span: Span, attrs: JList[WEAttribute], typ: WType, name: String, exns: JList[WQId]): WAttribute =
+    new WAttribute(makeSpanInfo(span), attrs, typ, name, exns)
 
   def mkArgument(span: Span, attrs: JList[WEAttribute], typ: WType, name: String,
                  default: Option[WLiteral]): WArgument =

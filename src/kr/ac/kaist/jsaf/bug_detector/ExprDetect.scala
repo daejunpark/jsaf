@@ -123,15 +123,18 @@ class ExprDetect(bugDetector: BugDetector) {
         for (objLoc <- objLocSet) {
           // Check for each primitive value
           for (absValue <- propValue) {
-            if (absValue.isConcrete || (!absValue.isBottom && bugOption.AbsentReadProperty_CheckAbstractIndexValue)) {
-              val propStr = absValue.toAbsString
-              val propExist = Helper.HasProperty(state.heap, objLoc, propStr)
+            if(!absValue.isBottom) {
+              val isBug = if(absValue.isConcrete || bugOption.AbsentReadProperty_CheckAbstractIndexValue) {
+                val propStr = absValue.toAbsString
+                val propExist = Helper.HasProperty(state.heap, objLoc, propStr)
 
-              // Collect property's existence
-              val isBug = bugOption.AbsentReadProperty_PropertyMustExistDefinitely match {
-                case true => propExist != BoolTrue
-                case false => propExist <= BoolFalse
+                // Collect property's existence
+                bugOption.AbsentReadProperty_PropertyMustExistDefinitely match {
+                  case true => propExist != BoolTrue
+                  case false => propExist <= BoolFalse
+                }
               }
+              else false
 
               val checkInstance = bugCheckInstance.insert(isBug, span, callContext, state)
               checkInstance.loc1 = objLoc
@@ -147,6 +150,9 @@ class ExprDetect(bugDetector: BugDetector) {
       }
       if (!bugOption.AbsentReadProperty_PropertyMustExistInEveryLocation) {
         bugCheckInstance.filter((bug, notBug) => (bug.callContext == notBug.callContext && bug.state == notBug.state && bug.absValue == notBug.absValue))
+      }
+      if( !bugOption.AbsentReadProperty_PropertyMustExistForAllValue) {
+        bugCheckInstance.filter((bug, notBug) => (bug.callContext == notBug.callContext && bug.state == notBug.state && bug.loc1 == notBug.loc1))
       }
 
       // Report bugs
@@ -218,7 +224,7 @@ class ExprDetect(bugDetector: BugDetector) {
         val pvalue = value.pvalue
 
         // Check object type (in & instanceof)
-        val isBug = bugOption.BinaryOpSecondType_OperandMustBeCorrectDefinitely match {
+        val isBug = bugOption.BinaryOpSecondType_OperandMustBeCorrectForAllValue match {
           case true => 
             value.locset.isEmpty || !pvalue.undefval.isBottom ||
             !pvalue.nullval.isBottom || !pvalue.boolval.isBottom ||
@@ -232,7 +238,7 @@ class ExprDetect(bugDetector: BugDetector) {
         // Check function type (instanceof)
         if (op.getKind == EJSOp.BIN_COMP_REL_INSTANCEOF) {
           value.locset.foreach(loc => {
-            val isBug = bugOption.BinaryOpSecondType_OperandMustBeCorrectDefinitely match {
+            val isBug = bugOption.BinaryOpSecondType_OperandMustBeCorrectForAllValue match {
               case true =>
                 Helper.IsCallable(state.heap, loc) != BoolTrue ||
                 !pvalue.undefval.isBottom || !pvalue.nullval.isBottom || !pvalue.boolval.isBottom ||
@@ -284,7 +290,7 @@ class ExprDetect(bugDetector: BugDetector) {
         case "+" =>
           CommonDetect.convertToNumberCheck(node, inst, expr1, expr2, true, (pvalue1: PValue, pvalue2: PValue) => {
             // "7. If Type(lprim) is String or Type(rprim) is String," does not call ToNumber function.
-            if (bugOption.ConvertUndefToNum_ToNumberMustBeCalledDefinitely) {
+            if (bugOption.ConvertUndefToNum_ToNumberMustBeCalledForExactValue) {
               pvalue1.strval == StrBot && pvalue2.strval == StrBot
             }
             else {
@@ -299,7 +305,7 @@ class ExprDetect(bugDetector: BugDetector) {
             var conditionResult = false
             // 11.8.5 The Abstract Relational Comparison Algorithm
             // "4. Else, both px and py are Strings" does not call ToNumber function.
-            if (bugOption.ConvertUndefToNum_ToNumberMustBeCalledDefinitely) {
+            if (bugOption.ConvertUndefToNum_ToNumberMustBeCalledForExactValue) {
               pvalue1.strval == StrBot && pvalue2.strval == StrBot
             }
             else {
@@ -312,7 +318,7 @@ class ExprDetect(bugDetector: BugDetector) {
         case "==" | "!=" =>
           CommonDetect.convertToNumberCheck(node, inst, expr1, expr2, false, (pvalue1: PValue, pvalue2: PValue) => {
             // 11.9.3 The Abstract Equality Comparison Algorithm
-            if (bugOption.ConvertUndefToNum_ToNumberMustBeCalledDefinitely) {
+            if (bugOption.ConvertUndefToNum_ToNumberMustBeCalledForExactValue) {
               val pvalue1TypeCount = pvalue1.typeCount
               val pvalue2TypeCount = pvalue2.typeCount
 
@@ -374,36 +380,28 @@ class ExprDetect(bugDetector: BugDetector) {
 
     def globalThisCheck(span: Span, fid: Int): Unit = {
       // Check for each CState
-      var isDefinite = true
       val bugCheckInstance = new BugCheckInstance()
       val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(GlobalThis))
       for((callContext, state) <- mergedCState) {
         val thisLocSet = state.heap(SinglePureLocalLoc)("@this")._1.value.locset
 
         val isGlobalCode = (fid == cfg.getGlobalFId) // Is current instruction in the global code?
-        val referGlobal = bugOption.GlobalThis_MustReferDefinitely match { // Does 'this' refer global object?
+        val referGlobal = bugOption.GlobalThis_MustReferExactly match { // Does 'this' refer global object?
           case true => thisLocSet.contains(GlobalLoc) && thisLocSet.size == 1
           case false => thisLocSet.contains(GlobalLoc)
         }
         val isBug = !isGlobalCode && referGlobal
         bugCheckInstance.insert(isBug, span, callContext, state)
-        if(thisLocSet.size > 1) isDefinite = false
 
         // Debug
         //println("fid = " + fid + ", isGlobalCode = " + isGlobalCode + ", referGlobal = " + referGlobal + ", thisLocSet.size = " + thisLocSet.size)
       }
 
-      if(bugCheckInstance.notBugList.size > 0) isDefinite = false
-
       // Filter out bugs depending on options
-      if(bugOption.GlobalThis_MustReferInEveryState) {
-        bugCheckInstance.filter((bug, notBug) => true)
-      }
+      if(!bugOption.GlobalThis_MustReferInEveryState) bugCheckInstance.filter((bug, notBug) => true)
 
       // Report bugs
-      for(b <- bugCheckInstance.bugList) {
-        bugStorage.addMessage(b.span, GlobalThis, inst, b.callContext, if(isDefinite) "refers" else "may refer")
-      }
+      for(b <- bugCheckInstance.bugList) bugStorage.addMessage(b.span, GlobalThis, inst, b.callContext)
 
       /* Previous code
       val lset_this = heap(SinglePureLocalLoc)("@this")._1._2._2
@@ -485,7 +483,7 @@ class ExprDetect(bugDetector: BugDetector) {
         if (bugOption.ImplicitTypeConvert_CheckNullAndUndefined) {
           if (pvalue1.nullval != NullBot && pvalue2.undefval != UndefBot ||
             pvalue1.undefval != UndefBot && pvalue2.nullval != NullBot) {
-            if (!bugOption.ImplicitTypeConvert_MustBeConvertedDefinitely || !nonBugCase) {
+            if (!bugOption.ImplicitTypeConvert_MustBeConvertedForAllValue || !nonBugCase) {
               isBug = true
               if (pvalue1.nullval != NullBot) insertBugCheckInstance(isBug, "null", "undefined", "", "")
               else insertBugCheckInstance(isBug, "undefined", "null", "", "")
@@ -497,7 +495,7 @@ class ExprDetect(bugDetector: BugDetector) {
         if (bugOption.ImplicitTypeConvert_CheckStringAndNumber) {
           if (pvalue1.strval != StrBot && pvalue2.numval != NumBot ||
             pvalue1.numval != NumBot && pvalue2.strval != StrBot) {
-            if (!bugOption.ImplicitTypeConvert_MustBeConvertedDefinitely || !nonBugCase) {
+            if (!bugOption.ImplicitTypeConvert_MustBeConvertedForAllValue || !nonBugCase) {
               isBug = true
               if (pvalue1.strval != StrBot) insertBugCheckInstance(isBug, "string", "number", pvalue1.strval.getConcreteValueAsString(), pvalue2.numval.getConcreteValueAsString())
               else insertBugCheckInstance(isBug, "number", "string", pvalue1.numval.getConcreteValueAsString(), pvalue2.strval.getConcreteValueAsString())
@@ -509,7 +507,7 @@ class ExprDetect(bugDetector: BugDetector) {
         if (bugOption.ImplicitTypeConvert_CheckBooleanAndUndefined) {
           if (pvalue1.boolval != BoolBot && pvalue2.undefval != UndefBot ||
             pvalue1.numval != NumBot && pvalue2.boolval != BoolBot) {
-            if (!bugOption.ImplicitTypeConvert_MustBeConvertedDefinitely || !nonBugCase) {
+            if (!bugOption.ImplicitTypeConvert_MustBeConvertedForAllValue || !nonBugCase) {
               isBug = true
               if (pvalue1.boolval != BoolBot) insertBugCheckInstance(isBug, "boolean", "undefined", pvalue1.boolval.getConcreteValueAsString(), "")
               else insertBugCheckInstance(isBug, "undefined", "boolean", "", pvalue2.boolval.getConcreteValueAsString())
@@ -521,7 +519,7 @@ class ExprDetect(bugDetector: BugDetector) {
         if (bugOption.ImplicitTypeConvert_CheckBooleanAndNull) {
           if (pvalue1.boolval != BoolBot && pvalue2.nullval != NullBot ||
             pvalue1.nullval != NullBot && pvalue2.boolval != BoolBot) {
-            if (!bugOption.ImplicitTypeConvert_MustBeConvertedDefinitely || !nonBugCase) {
+            if (!bugOption.ImplicitTypeConvert_MustBeConvertedForAllValue || !nonBugCase) {
               isBug = true
               if (pvalue1.boolval != BoolBot) insertBugCheckInstance(isBug, "boolean", "null", pvalue1.boolval.getConcreteValueAsString(), "")
               else insertBugCheckInstance(isBug, "null", "boolean", "", pvalue2.boolval.getConcreteValueAsString())
@@ -533,7 +531,7 @@ class ExprDetect(bugDetector: BugDetector) {
         if (bugOption.ImplicitTypeConvert_CheckBooleanAndNumber) {
           if (pvalue1.boolval != BoolBot && pvalue2.numval != NumBot ||
             pvalue1.numval != NumBot && pvalue2.boolval != BoolBot) {
-            if (!bugOption.ImplicitTypeConvert_MustBeConvertedDefinitely || !nonBugCase) {
+            if (!bugOption.ImplicitTypeConvert_MustBeConvertedForAllValue || !nonBugCase) {
               isBug = true
               if (pvalue1.boolval != BoolBot) insertBugCheckInstance(isBug, "boolean", "number", pvalue1.boolval.getConcreteValueAsString(), pvalue2.numval.getConcreteValueAsString())
               else insertBugCheckInstance(isBug, "number", "boolean", pvalue1.numval.getConcreteValueAsString(), pvalue2.boolval.getConcreteValueAsString())
@@ -545,7 +543,7 @@ class ExprDetect(bugDetector: BugDetector) {
         if (bugOption.ImplicitTypeConvert_CheckBooleanAndString) {
           if (pvalue1.boolval != BoolBot && pvalue2.strval != StrBot ||
             pvalue1.strval != StrBot && pvalue2.boolval != BoolBot) {
-            if (!bugOption.ImplicitTypeConvert_MustBeConvertedDefinitely || !nonBugCase) {
+            if (!bugOption.ImplicitTypeConvert_MustBeConvertedForAllValue || !nonBugCase) {
               isBug = true
               if (pvalue1.boolval != BoolBot) insertBugCheckInstance(isBug, "boolean", "string", pvalue1.boolval.getConcreteValueAsString(), pvalue2.strval.getConcreteValueAsString())
               else insertBugCheckInstance(isBug, "string", "boolean", pvalue1.strval.getConcreteValueAsString(), pvalue2.boolval.getConcreteValueAsString())
@@ -557,7 +555,7 @@ class ExprDetect(bugDetector: BugDetector) {
         if (bugOption.ImplicitTypeConvert_CheckObjectAndNumber) {
           if (!value1.locset.isEmpty && pvalue2.numval != NumBot ||
             pvalue1.numval != NumBot && !value2.locset.isEmpty) {
-            if (!bugOption.ImplicitTypeConvert_MustBeConvertedDefinitely || !nonBugCase) {
+            if (!bugOption.ImplicitTypeConvert_MustBeConvertedForAllValue || !nonBugCase) {
               isBug = true
               if (!value1.locset.isEmpty) insertBugCheckInstance(isBug, "object", "number", "", pvalue2.numval.getConcreteValueAsString())
               else insertBugCheckInstance(isBug, "number", "object", pvalue1.numval.getConcreteValueAsString(), "")
@@ -569,7 +567,7 @@ class ExprDetect(bugDetector: BugDetector) {
         if (bugOption.ImplicitTypeConvert_CheckObjectAndString) {
           if (!value1.locset.isEmpty && pvalue2.strval != StrBot ||
             pvalue1.strval != StrBot && !value2.locset.isEmpty) {
-            if (!bugOption.ImplicitTypeConvert_MustBeConvertedDefinitely || !nonBugCase) {
+            if (!bugOption.ImplicitTypeConvert_MustBeConvertedForAllValue || !nonBugCase) {
               isBug = true
               if (!value1.locset.isEmpty) insertBugCheckInstance(isBug, "object", "string", "", pvalue2.strval.getConcreteValueAsString())
               else insertBugCheckInstance(isBug, "string", "object", pvalue1.strval.getConcreteValueAsString(), "")
@@ -581,7 +579,7 @@ class ExprDetect(bugDetector: BugDetector) {
         if (bugOption.ImplicitTypeConvert_CheckObjectAndBoolean) {
           if (!value1.locset.isEmpty && pvalue2.boolval != BoolBot ||
             pvalue1.boolval != BoolBot && !value2.locset.isEmpty) {
-            if (!bugOption.ImplicitTypeConvert_MustBeConvertedDefinitely || !nonBugCase) {
+            if (!bugOption.ImplicitTypeConvert_MustBeConvertedForAllValue || !nonBugCase) {
               isBug = true
               if (!value1.locset.isEmpty) insertBugCheckInstance(isBug, "object", "boolean", "", pvalue2.boolval.getConcreteValueAsString())
               else insertBugCheckInstance(isBug, "boolean", "object", pvalue1.boolval.getConcreteValueAsString(), "")

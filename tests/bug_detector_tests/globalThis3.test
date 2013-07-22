@@ -12,13 +12,12 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-globalThis3.js:11:32~11:36: [Warning] 'this' may refer the global object. \n\
 globalThis3.js:11:32~11:38: [Warning] Reading absent property 'p' of object 'this'. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      2 (100.00%) | \n\
+|  Warnings          :      1 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      1 | \n\
@@ -31,7 +30,7 @@ globalThis3.js:11:32~11:38: [Warning] Reading absent property 'p' of object 'thi
 |  ConvertToNumber         :      0 | \n\
 |  DefaultValueTypeError   :      0 | \n\
 |  FunctionArgSize         :      0 | \n\
-|  GlobalThis              :      1 | \n\
+|  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\

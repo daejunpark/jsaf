@@ -80,8 +80,8 @@ object HTMLFieldSetElement extends DOM {
       HTMLElement.getInsList(node) ++ List(
       ("@class",    PropValue(AbsString.alpha("Object"))),
       ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
-      ("@extensible", PropValue(BoolTrue)))
-      // DOM Level 1
+      ("@extensible", PropValue(BoolTrue)),
+      ("form", PropValue(ObjectValue(NullTop, F, T, T))))
       // TODO: 'form' in DOM Level 1
     case _ => {
       System.err.println("* Warning: " + node.getNodeName + " cannot have instance objects.")
@@ -89,15 +89,17 @@ object HTMLFieldSetElement extends DOM {
     }
   }
  
-  def getInsList(): List[(String, PropValue)] = List(
+  def getInsList(form: PropValue): List[(String, PropValue)] = List(
     ("@class",    PropValue(AbsString.alpha("Object"))),
     ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
-    ("@extensible", PropValue(BoolTrue))
+    ("@extensible", PropValue(BoolTrue)),
+    ("form",   form)
    )
   
   override def default_getInsList(): List[(String, PropValue)] = { 
+    val form = PropValue(ObjectValue(NullTop, F, T, T))
     // This object has all properties of the HTMLElement object 
-    HTMLElement.default_getInsList ::: getInsList()
+    HTMLElement.default_getInsList ::: getInsList(form)
   }
 
 }

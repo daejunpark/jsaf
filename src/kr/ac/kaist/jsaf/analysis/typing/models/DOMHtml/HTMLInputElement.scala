@@ -174,6 +174,7 @@ object HTMLInputElement extends DOM {
         ("tabIndex",  PropValue(ObjectValue(Helper.toNumber(PValue(AbsString.alpha(e.getAttribute("tabIndex")))), T, T, T))),
         ("useMap", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("useMap")), T, T, T))),
         ("value", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("value")), T, T, T))),
+        ("form", PropValue(ObjectValue(NullTop, F, T, T))),
         // Modified in DOM Level 2
         ("size",  PropValue(ObjectValue(Helper.toNumber(PValue(AbsString.alpha(e.getAttribute("size")))), T, T, T))),
         ("type", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("type")), T, T, T))))
@@ -186,7 +187,8 @@ object HTMLInputElement extends DOM {
 
   def getInsList(defaultValue: PropValue, defaultChecked: PropValue, accept: PropValue, accessKey: PropValue, align: PropValue,
                  alt: PropValue, checked: PropValue, disabled: PropValue, maxLength: PropValue, name: PropValue, readOnly: PropValue,
-                 src: PropValue, tabIndex: PropValue, useMap: PropValue, value: PropValue, size: PropValue, typee: PropValue ): List[(String, PropValue)] = List(
+                 src: PropValue, tabIndex: PropValue, useMap: PropValue, value: PropValue, 
+                 form: PropValue, size: PropValue, typee: PropValue ): List[(String, PropValue)] = List(
     ("@class",    PropValue(AbsString.alpha("Object"))),
     ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
     ("@extensible", PropValue(BoolTrue)),
@@ -205,6 +207,7 @@ object HTMLInputElement extends DOM {
     ("tabIndex", tabIndex),
     ("useMap", useMap),
     ("value", value),
+    ("form", form),
     ("size", size),
     ("type", typee)
   )
@@ -227,6 +230,7 @@ object HTMLInputElement extends DOM {
       PropValue(ObjectValue(AbsNumber.alpha(0), T, T, T)),
       PropValue(ObjectValue(AbsString.alpha(""), T, T, T)),
       PropValue(ObjectValue(AbsString.alpha(""), T, T, T)),
+      PropValue(ObjectValue(NullTop, F, T, T)),
       PropValue(ObjectValue(UInt, T, T, T)),
       PropValue(ObjectValue(AbsString.alpha("text"), T, T, T)))
 }

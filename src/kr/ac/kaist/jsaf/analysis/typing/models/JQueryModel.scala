@@ -86,24 +86,25 @@ class JQueryModel(cfg: CFG) extends Model(cfg) {
     Heap(h_1.map + (EventSelectorTableLoc -> ObjEmpty))
   }
 
-  def addAsyncCall(cfg: CFG, loop_head: Node): List[Node] = {
+  def addAsyncCall(cfg: CFG, loop_head: Node): (List[Node],List[Node]) = {
     val fid_global = cfg.getGlobalFId
     /* dummy info for EventDispatch instruction */
     val dummy_info = IRFactory.makeInfo(IRFactory.dummySpan("jQueryEvent"))
     /* dummy var for after call */
     val dummy_id = CFGTempId(NU.ignoreName+"#AsyncCall#", PureLocalVar)
     /* add aysnc call */
-    JQueryModel.aysnc_calls.foldLeft(List[Node]())((nodes, ev) => {
+    JQueryModel.aysnc_calls.foldLeft((List[Node](),List[Node]()))((nodes, ev) => {
       /* event call */
       val event_call = cfg.newBlock(fid_global)
       cfg.addInst(event_call,
         CFGAsyncCall(cfg.newInstId, dummy_info, "jQuery", ev, cfg.newProgramAddr, cfg.newProgramAddr, cfg.newProgramAddr))
       /* event after call */
       val event_after = cfg.newAfterCallBlock(fid_global, dummy_id)
+      val event_catch = cfg.newAfterCatchBlock(fid_global)
       cfg.addEdge(loop_head, event_call)
-      cfg.addCall(event_call, event_after)
+      cfg.addCall(event_call, event_after, event_catch)
       cfg.addEdge(event_after, loop_head)
-      event_after::nodes
+      (event_after::nodes._1,event_catch::nodes._2)
     })
   }
 

@@ -1,0 +1,16 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=ss3
+WIDLCHECKER_TESTS_DIR=${JS_HOME}/tests/widlchecker_tests
+widlcheck
+widlcheck_out_WCIequals=\
+${WIDLCHECKER_TESTS_DIR}/ss3.js:9:1-88:\n\
+    Warning : Function webapis.tv.channel.tuneUp may raise an exception;\n\
+              call the function inside the try statement.\n
+widlcheck_err_equals=

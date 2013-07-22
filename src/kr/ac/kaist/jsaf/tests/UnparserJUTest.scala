@@ -23,6 +23,7 @@ import _root_.java.util.Collections
 
 import kr.ac.kaist.jsaf.ProjectProperties
 import kr.ac.kaist.jsaf.Shell
+import kr.ac.kaist.jsaf.shell._
 import kr.ac.kaist.jsaf.useful.TestCaseWrapper
 import kr.ac.kaist.jsaf.useful.Useful
 import kr.ac.kaist.jsaf.useful.WireTappedPrintStream
@@ -101,13 +102,13 @@ object UnparserJUTest extends TestCaseWrapper {
         try {
           var diff=true
           //first parse
-          Shell.parse(f.getPath, temp_tjs)
+          ParseMain.parse(f.getPath, temp_tjs)
           //first unparse
-          Shell.unparse(new String(temp_tjs), temp_js)
+          UnparseMain.unparse(new String(temp_tjs), temp_js)
           //second parse
-          Shell.parse(new String(temp_js), temp2_tjs)
+          ParseMain.parse(new String(temp_js), temp2_tjs)
           //second unparse
-          Shell.unparse(new String(temp2_tjs), temp2_js)
+          UnparseMain.unparse(new String(temp2_tjs), temp2_js)
           //compare temp.js, temp2.js
           val is: InputStream = new java.io.FileInputStream(file1)
           val br: BufferedReader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")))

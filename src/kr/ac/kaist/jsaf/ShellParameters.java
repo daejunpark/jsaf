@@ -38,8 +38,8 @@ public class ShellParameters
     public static final int                        CMD_NEW_SPARSE = 19; // This command should be inserted into CMD_ANALYZE as an option.
     public static final int                        CMD_BUG_DETECTOR = 21;
     public static final int                        CMD_WIDLPARSE = 22;
-    public static final int                        CMD_HTML_SPARSE= 25;
-    public static final int                        CMD_WIDLCHECK = 26;
+    public static final int                        CMD_HTML_SPARSE= 23;
+    public static final int                        CMD_WIDLCHECK = 24;
     public static final int                        CMD_HELP = 99;
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -86,9 +86,10 @@ public class ShellParameters
     public boolean                                 opt_PreContextSensitive;
     public boolean                                 opt_Unsound;
     public boolean                                 opt_Dom;
-    public boolean                                 opt_Tizen;
+	public boolean                                 opt_Tizen;
     public boolean                                 opt_jQuery;
     public boolean                                 opt_MultiThread;
+    public int                                     opt_unrollingCount;
     public String                                  opt_DDGFileName;
     public String                                  opt_DDG0FileName;
     public String                                  opt_FGFileName;
@@ -151,6 +152,7 @@ public class ShellParameters
         opt_Tizen = false;
         opt_jQuery = false;
         opt_MultiThread = false;
+        opt_unrollingCount = 0;
         opt_DDGFileName = null;
         opt_DDG0FileName = null;
         opt_FGFileName = null;
@@ -262,10 +264,11 @@ public class ShellParameters
             command = CMD_CFG;
             feasibleOptions.add("-out");
             feasibleOptions.add("-dom");
-            feasibleOptions.add("-tizen");
+			feasibleOptions.add("-tizen");
             feasibleOptions.add("-test");
             feasibleOptions.add("-model");
             feasibleOptions.add("-library");
+            feasibleOptions.add("-unroll");
         }
         else if(cmd.compareTo("interpret") == 0)
         {
@@ -325,10 +328,11 @@ public class ShellParameters
             feasibleOptions.add("-pre-context-sensitive");
             feasibleOptions.add("-unsound");
             feasibleOptions.add("-multi-thread");
+            feasibleOptions.add("-unroll");
             feasibleOptions.add("-ddgout");
             feasibleOptions.add("-ddg0out");
             feasibleOptions.add("-fgout");
-            feasibleOptions.add("-tizen");
+			feasibleOptions.add("-tizen");
             feasibleOptions.add("-jq");
         }
         else if(cmd.compareTo("bug-detector") == 0)
@@ -353,6 +357,7 @@ public class ShellParameters
             feasibleOptions.add("-context-4-callsite-and-object");
             feasibleOptions.add("-context-5-callsite-and-object");
             feasibleOptions.add("-context-1-callsite-or-object");
+            feasibleOptions.add("-unroll");
         }
         else if(cmd.compareTo("help") == 0)
         {
@@ -396,13 +401,18 @@ public class ShellParameters
         int ConsumedParameterCount = 0;
 
         String opt = args[index];
-        if(opt.compareTo("-out") == 0 || opt.compareTo("-ddgout") == 0 || opt.compareTo("-ddg0out") == 0 || opt.compareTo("-fgout") == 0)
+        if(opt.compareTo("-out") == 0 ||
+           opt.compareTo("-unroll") == 0 ||
+           opt.compareTo("-ddgout") == 0 ||
+           opt.compareTo("-ddg0out") == 0 ||
+           opt.compareTo("-fgout") == 0)
         {
             if(index + 1 >= args.length)
             {
                 ErrorMessage = "`" + opt + "` parameter needs an output filename. See help.";
             } else {
                 if(opt.compareTo("-out") == 0) opt_OutFileName = args[index + 1];
+                else if(opt.compareTo("-unroll") == 0) opt_unrollingCount = Integer.parseInt(args[index + 1]);
                 else if(opt.compareTo("-ddgout") == 0) opt_DDGFileName = args[index + 1];
                 else if(opt.compareTo("-ddg0out") == 0) opt_DDG0FileName = args[index + 1];
                 else if(opt.compareTo("-fgout") == 0) opt_FGFileName = args[index + 1];
@@ -448,7 +458,7 @@ public class ShellParameters
         else if(opt.compareTo("-pre-context-sensitive") == 0) opt_PreContextSensitive = true;
         else if(opt.compareTo("-unsound") == 0) opt_Unsound = true;
         else if(opt.compareTo("-dom") == 0) opt_Dom = true;
-        else if(opt.compareTo("-tizen") == 0) opt_Tizen = true;
+		else if(opt.compareTo("-tizen") == 0) opt_Tizen = true;
         else if(opt.compareTo("-jq") == 0) opt_jQuery = true;
         else if(opt.compareTo("-multi-thread") == 0) opt_MultiThread = true;
         else

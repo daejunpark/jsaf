@@ -494,39 +494,101 @@ class CFGBuilder (ir: IRRoot) {
         cfg.addInst(n, CFGThrow(cfg.newInstId, irinfo, ir2cfgExpr(expr)))
         (Nil, lmap.updated("#throw", lmap("#throw") + n))
       case SIRWhile(irinfo, cond, body) =>
-        /* tail node */
-        val n1 = getTail(cfg, nodes, fid)
-        /* while loop head */
-        val n_head = cfg.newBlock(fid)
-        /* loop body */
-        val n2 = cfg.newBlock(fid)
-        /* loop out */
-        val n3 = cfg.newBlock(fid)
-        /* Insert assert instruction */
-        val condinfo = cond.getInfo
-        cfg.addInst(n2, CFGAssert(cfg.newInstId, condinfo, ir2cfgExpr(cond), true))
-        cond match {
-          case SIRBin(_, first, op, second) if AH.isAssertOperator(op) =>
-            cfg.addInst(n3,
-              CFGAssert(cfg.newInstId, condinfo,
-                CFGBin(condinfo,
-                  ir2cfgExpr(first), AH.transIROp(op), ir2cfgExpr(second)), false))
-          case _ =>
-            cfg.addInst(n3,
-              CFGAssert(cfg.newInstId, condinfo,
-                CFGUn(condinfo, IRFactory.makeOp("!"), ir2cfgExpr(cond)), false))
+        if(Config.defaultUnrollingCount == 0) {
+          /* tail node */
+          val n1 = getTail(cfg, nodes, fid)
+          /* while loop head */
+          val n_head = cfg.newBlock(fid)
+          /* loop body */
+          val n2 = cfg.newBlock(fid)
+          /* loop out */
+          val n3 = cfg.newBlock(fid)
+          /* Insert assert instruction */
+          val condinfo = cond.getInfo
+          cfg.addInst(n2, CFGAssert(cfg.newInstId, condinfo, ir2cfgExpr(cond), true))
+          cond match {
+            case SIRBin(_, first, op, second) if AH.isAssertOperator(op) =>
+              cfg.addInst(n3,
+                CFGAssert(cfg.newInstId, condinfo,
+                  CFGBin(condinfo,
+                    ir2cfgExpr(first), AH.transIROp(op), ir2cfgExpr(second)), false))
+            case _ =>
+              cfg.addInst(n3,
+                CFGAssert(cfg.newInstId, condinfo,
+                  CFGUn(condinfo, IRFactory.makeOp("!"), ir2cfgExpr(cond)), false))
+          }
+          /* add edge from tail to loop head */
+          cfg.addEdge(n1, n_head)
+          /* add edge from loop head to loop body */
+          cfg.addEdge(n_head, n2)
+          /* add edge from loop head to out*/
+          cfg.addEdge(n_head, n3)
+          /* build loop body */
+          val (ns1, lmap1) = translateStmt(body, cfg, List(n2), lmap, fid)
+          /* add edge from tails of loop body to loop head */
+          cfg.addEdge(ns1, n_head)
+          (List(n3), lmap1.updated("#throw", lmap1("#throw") + n2 + n3))
         }
-        /* add edge from tail to loop head */
-        cfg.addEdge(n1, n_head)
-        /* add edge from loop head to loop body */
-        cfg.addEdge(n_head, n2)
-        /* add edge from loop head to out*/
-        cfg.addEdge(n_head, n3)
-        /* build loop body */
-        val (ns1, lmap1) = translateStmt(body, cfg, List(n2), lmap, fid)
-        /* add edge from tails of loop body to loop head */
-        cfg.addEdge(ns1, n_head)
-        (List(n3), lmap1.updated("#throw", lmap1("#throw") + n2 + n3))
+        else {
+          var updatedlmap = lmap
+          def newBranchBlocks(headNode: Node): (BlockNode, BlockNode, List[Node]) = {
+            val trueNode = cfg.newBlock(fid) // loop body
+            val falseNode = cfg.newBlock(fid) // loop out
+
+            /* Insert assert instruction */
+            val condinfo = cond.getInfo
+            cfg.addInst(trueNode, CFGAssert(cfg.newInstId, condinfo, ir2cfgExpr(cond), true))
+            cond match {
+              case SIRBin(_, first, op, second) if AH.isAssertOperator(op) =>
+                cfg.addInst(falseNode,
+                  CFGAssert(cfg.newInstId, condinfo,
+                    CFGBin(condinfo,
+                      ir2cfgExpr(first), AH.transIROp(op), ir2cfgExpr(second)), false))
+              case _ =>
+                cfg.addInst(falseNode,
+                  CFGAssert(cfg.newInstId, condinfo,
+                    CFGUn(condinfo, IRFactory.makeOp("!"), ir2cfgExpr(cond)), false))
+            }
+
+            /* build loop body */
+            val (leafNodes, newlmap) = translateStmt(body, cfg, List(trueNode), updatedlmap, fid)
+            updatedlmap = newlmap.updated("#throw", newlmap("#throw") + trueNode + falseNode)
+
+            /* add edge from loop head to loop body */
+            cfg.addEdge(headNode, trueNode)
+            /* add edge from loop head to out*/
+            cfg.addEdge(headNode, falseNode)
+
+            (trueNode, falseNode, leafNodes)
+          }
+
+          /* while loop head */
+          val headNode = cfg.newBlock(fid)
+          /* (loop body, loop out, loop body's leaf nodes) */
+          var (lastBodyNode, lastOutNode, lastLeafNodes) = newBranchBlocks(headNode)
+          /* add edge from tails of loop body to loop head */
+          cfg.addEdge(lastLeafNodes, headNode)
+
+          /* tail node */
+          var tailNode: Node = getTail(cfg, nodes, fid)
+          /* unrolling */
+          val unrollingCount = Config.defaultUnrollingCount // Set this value dynamically
+          for(i <- 0 until unrollingCount) {
+            /* (loop body, loop out, loop body's leaf nodes) */
+            val (bodyNode, outNode, leafNodes) = newBranchBlocks(tailNode)
+            /* add edge from unrolling out to last out*/
+            cfg.addEdge(outNode, lastOutNode)
+            if(leafNodes.length > 1) {
+              tailNode = cfg.newBlock(fid)
+              cfg.addEdge(leafNodes, tailNode)
+            }
+            else tailNode = leafNodes.head
+          }
+          /* add edge from unrolled tail to loop head */
+          cfg.addEdge(tailNode, headNode)
+
+          (List(lastOutNode), updatedlmap)
+        }
       case _ => {
         System.err.println("* Warning: following IR statement is ignored: "+ stmt)
         (nodes, lmap)

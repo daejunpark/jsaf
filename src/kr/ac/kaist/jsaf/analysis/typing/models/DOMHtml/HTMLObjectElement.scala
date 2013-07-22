@@ -99,8 +99,9 @@ object HTMLObjectElement extends DOM {
       ("type", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("type")), T, T, T))),
       ("useMap", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("useMap")), T, T, T))),
       ("vspace",     PropValue(ObjectValue(Helper.toNumber(PValue(AbsString.alpha(e.getAttribute("vspace")))), T, T, T))),
-      ("width", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("width")), T, T, T))))
-      // TODO: 'form' in DOM Level 1, 'contentDocument' in DOM Level 2
+      ("width", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("width")), T, T, T))),
+      ("form", PropValue(ObjectValue(NullTop, F, T, T))))
+      // TODO: 'contentDocument' in DOM Level 2
     case _ => {
       System.err.println("* Warning: " + node.getNodeName + " cannot have instance objects.")
       List()
@@ -110,7 +111,7 @@ object HTMLObjectElement extends DOM {
   def getInsList(code: PropValue, align: PropValue, archive: PropValue, border: PropValue, codeBase: PropValue, 
                  codeType: PropValue, data: PropValue, declare: PropValue, height: PropValue, hspace: PropValue, 
                  name: PropValue, standby: PropValue, tabIndex: PropValue, ttype: PropValue, useMap: PropValue, 
-                 vspace: PropValue, width: PropValue): List[(String, PropValue)] = List(
+                 vspace: PropValue, width: PropValue, form: PropValue): List[(String, PropValue)] = List(
     ("@class",    PropValue(AbsString.alpha("Object"))),
     ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
     ("@extensible", PropValue(BoolTrue)),
@@ -131,7 +132,8 @@ object HTMLObjectElement extends DOM {
     ("type", ttype),
     ("useMap", useMap),
     ("vspace",  vspace),
-    ("width", width)
+    ("width", width),
+    ("form", form)
   )
   
   override def default_getInsList(): List[(String, PropValue)] = {    
@@ -152,10 +154,11 @@ object HTMLObjectElement extends DOM {
     val useMap = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
     val vspace = PropValue(ObjectValue(NumTop, T, T, T))
     val width = PropValue(ObjectValue(UInt, T, T, T))
+    val form = PropValue(ObjectValue(NullTop, F, T, T))
     // This object has all properties of the HTMLElement object 
     HTMLElement.default_getInsList ::: 
       getInsList(code, align, archive, border, codeBase, codeType, data, declare, height, hspace, name, 
-                 standby, tabIndex, ttype, useMap, vspace, width)
+                 standby, tabIndex, ttype, useMap, vspace, width, form)
   }
 
 }

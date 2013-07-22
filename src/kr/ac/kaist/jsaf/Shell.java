@@ -11,37 +11,27 @@ package kr.ac.kaist.jsaf;
 
 import edu.rice.cs.plt.iter.IterUtil;
 import edu.rice.cs.plt.tuple.Option;
-import kr.ac.kaist.jsaf.analysis.cfg.CFG;
-import kr.ac.kaist.jsaf.analysis.cfg.CFGBuilder;
-import kr.ac.kaist.jsaf.analysis.cfg.DotWriter;
-import kr.ac.kaist.jsaf.analysis.typing.*;
-import kr.ac.kaist.jsaf.analysis.typing.domain.State;
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMBuilder;
-import kr.ac.kaist.jsaf.analysis.visualization.Visualization;
-import kr.ac.kaist.jsaf.bug_detector.BugDetector;
+import kr.ac.kaist.jsaf.analysis.typing.Config;
 import kr.ac.kaist.jsaf.bug_detector.BugInfo;
-import kr.ac.kaist.jsaf.clone_detector.CloneDetector;
 import kr.ac.kaist.jsaf.compiler.*;
 import kr.ac.kaist.jsaf.compiler.module.ModuleRewriter;
-import kr.ac.kaist.jsaf.concolic.Instrumentor;
-import kr.ac.kaist.jsaf.concolic.Z3;
 import kr.ac.kaist.jsaf.exceptions.*;
-import kr.ac.kaist.jsaf.interpreter.Interpreter;
 import kr.ac.kaist.jsaf.nodes.IRRoot;
 import kr.ac.kaist.jsaf.nodes.Program;
-import kr.ac.kaist.jsaf.nodes.WDefinition;
 import kr.ac.kaist.jsaf.nodes_util.*;
-import kr.ac.kaist.jsaf.parser.WIDL;
 import kr.ac.kaist.jsaf.scala_src.useful.WorkManager;
-import kr.ac.kaist.jsaf.tests.FileTests;
-import kr.ac.kaist.jsaf.tests.SemanticsTest;
-import kr.ac.kaist.jsaf.useful.*;
-import xtc.parser.ParseError;
-import xtc.parser.SemanticValue;
+import kr.ac.kaist.jsaf.shell.*;
+import kr.ac.kaist.jsaf.useful.Pair;
+import kr.ac.kaist.jsaf.useful.Triple;
+import kr.ac.kaist.jsaf.useful.Useful;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public final class Shell {
     ////////////////////////////////////////////////////////////////////////////////
@@ -50,8 +40,8 @@ public final class Shell {
     public static boolean                       debug = false;
 
     public static ShellParameters               params = new ShellParameters();
-    private static boolean                      opt_DisambiguateOnly = false;
-    private static String                       printTimeTitle = null;
+    public static boolean                       opt_DisambiguateOnly = false;
+    public static String                        printTimeTitle = null;
     private static long                         startTime;
 
     public static WorkManager                   workManager = new WorkManager();
@@ -61,19 +51,6 @@ public final class Shell {
     // Main Entry point
     ////////////////////////////////////////////////////////////////////////////////
     /**
-     * Create the program parameters for runtime debugging. (Ex: Eclipse)
-     */
-    private static String[] createDebugParameter(String[] originalTokens) {
-        if(!debug) return originalTokens;
-
-        ArrayList<String> tokens = new ArrayList<String>();
-        tokens.add("interpret");
-        tokens.add("tests/interpreter_tests/arith.js");
-
-        return tokens.toArray(new String[tokens.size()]);
-    }
-
-    /**
      * Main entry point for the jsaf shell.
      * In order to support accurate testing of error messages, this method immediately
      * forwards to its two parameter helper method.
@@ -82,12 +59,6 @@ public final class Shell {
      * *** Instead, add code to its helper method.
      */
     public static void main(String[] tokens) throws Throwable {
-        tokens = createDebugParameter(tokens);
-        /*
-        for (String token : tokens) {
-            System.out.println(token);
-        }
-        */
         // Call the internal main function
         main(false, tokens);
     }
@@ -126,72 +97,64 @@ public final class Shell {
                 printUsageMessage();
                 break;
             case ShellParameters.CMD_PARSE :
-                return_code = parse();
+                return_code = ParseMain.parse();
                 break;
             case ShellParameters.CMD_UNPARSE :
-                unparse();
+                return_code = UnparseMain.unparse();
                 break;
             case ShellParameters.CMD_WIDLPARSE :
-                return_code = widlparse();
+                return_code = WIDLMain.widlparse();
                 break;
             case ShellParameters.CMD_WIDLCHECK :
-                return_code = widlcheck();
+                return_code = WIDLMain.widlcheck();
                 break;
             case ShellParameters.CMD_STRICT :
-                return_code = strict();
+                return_code = StrictMain.strict();
                 break;
             case ShellParameters.CMD_CLONE_DETECTOR :
-                return_code = cloneDetector();
+                return_code = CloneDetectorMain.cloneDetector();
                 break;
             case ShellParameters.CMD_COVERAGE :
-                return_code = coverage();
+                return_code = CoverageMain.coverage();
                 break;
             case ShellParameters.CMD_CONCOLIC :
-                return_code = concolic();
+                return_code = ConcolicMain.concolic();
                 break;
             case ShellParameters.CMD_URL :
-                return_code = url();
+                return_code = URLMain.url();
                 break;
             case ShellParameters.CMD_WITH :
-                return_code = with();
+                return_code = withMain.withRewriter();
                 break;
             case ShellParameters.CMD_MODULE :
-                return_code = module();
+                return_code = ModuleMain.module();
                 break;
             case ShellParameters.CMD_JUNIT :
-                return_code = junit();
+                return_code = JUnitMain.junit();
                 break;
             case ShellParameters.CMD_DISAMBIGUATE :
                 opt_DisambiguateOnly = true;
-                return_code = compile();
+                return_code = CompileMain.compile();
                 break;
             case ShellParameters.CMD_COMPILE :
-                compile();
+                CompileMain.compile();
                 break;
             case ShellParameters.CMD_CFG :
-                return_code = cfgBuilder();
+                return_code = CFGMain.cfgBuilder();
                 break;
             case ShellParameters.CMD_INTERPRET :
-                return_code = interpret();
+                return_code = InterpreterMain.interpret();
                 break;
             case ShellParameters.CMD_ANALYZE :
-                return_code = analyze();
-                break;
             case ShellParameters.CMD_PREANALYZE :
-                return_code = analyze();
-                break;
             case ShellParameters.CMD_SPARSE :
-                return_code = analyze();
-                break;
             case ShellParameters.CMD_NEW_SPARSE :
-                return_code = analyze();
-                break;
             case ShellParameters.CMD_HTML :
             case ShellParameters.CMD_HTML_SPARSE :
-                return_code = analyze();
+                return_code = AnalyzeMain.analyze();
                 break;
             case ShellParameters.CMD_BUG_DETECTOR :
-                return_code = analyze();
+                return_code = AnalyzeMain.analyze();
                 break;
             case ShellParameters.CMD_HELP :
                 printHelpMessage();
@@ -206,10 +169,10 @@ public final class Shell {
         } catch (UserError e) {
             System.err.println(e);
             return_code = -1;
-        } catch (IOException error) {
+        } /*catch (IOException error) {
             System.err.println(error.getMessage());
             return_code = -2;
-        }
+        }*/
 
         // Print elapsed time.
         if(printTimeTitle != null)
@@ -274,7 +237,7 @@ public final class Shell {
          "  Parses a Web IDL file.\n"+
          "  If -out file is given, the parsed AST will be written to the file.\n"+
          "\n"+
-         "jsaf widlcheck somefile.js api1.db ..."+
+         "jsaf widlcheck somefile.js api1 ..."+
          "  Checks uses of APIS in Web IDL.\n"+
          "\n"+
          "jsaf strict [-out file] somefile.js\n"+
@@ -359,925 +322,28 @@ public final class Shell {
     }
 
     ////////////////////////////////////////////////////////////////////////////////
-    // 1. Parse
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Parse a file. If the file parses ok it will say "Ok".
-     * If you want a dump then give -out somefile.
-     */
-    private static int parse() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("Need a file to parse");
-        List<String> fileNames = Arrays.asList(params.FileNames);
-
-        int return_code = 0;
-        try {
-            NodeFactory.initIr2ast();
-            Pair<Program, HashMap<String, String>> pair = Parser.fileToAST(fileNames);
-            Program pgm = pair.first();
-            System.out.println("Ok");
-            if (params.opt_OutFileName != null){
-                try{
-                    ASTIO.writeJavaAst(pgm, params.opt_OutFileName);
-                    System.out.println("Dumped parse tree to " + params.opt_OutFileName);
-                } catch (IOException e){
-                    throw new IOException("IOException " + e +
-                            "while writing " + params.opt_OutFileName);
-                }
-            }
-        } catch (FileNotFoundException f) {
-            throw new UserError(f + " not found");
-        }
-        if (params.opt_Time) printTimeTitle = "Parsing";
-        return return_code;
-    }
-
-    public static int parse(String fileName, String outFileName) throws UserError, InterruptedException, IOException {
-        params.Clear();
-        params.opt_OutFileName = outFileName;
-        params.FileNames = new String[1];
-        params.FileNames[0] = fileName;
-        return parse();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 2. UnParse
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * UnParse a file.
-     * If you want a dump then give -out somefile.
-     */
-    private static void unparse() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("The unparse command needs a file to unparse.");
-        String fileName = params.FileNames[0];
-
-        Option<Program> result = ASTIO.readJavaAst(fileName);
-        if (result.isSome()) {
-            String code = JSAstToConcrete.doit(result.unwrap());
-            if (params.opt_OutFileName != null){
-                try{
-                    Pair<FileWriter, BufferedWriter> pair = Useful.filenameToBufferedWriter(params.opt_OutFileName);
-                    FileWriter fw = pair.first();
-                    BufferedWriter writer = pair.second();
-                    writer.write(code);
-                    writer.close();
-                    fw.close();
-                } catch (IOException e){
-                    throw new IOException("IOException " + e +
-                                          "while writing " + params.opt_OutFileName);
-                }
-            } else {
-                System.out.println(code);
-            }
-        } else {
-            System.out.println("Error! Reading the " + fileName + " file failed!");
-        }
-    }
-
-    public static void unparse(String fileName, String outFileName) throws UserError, InterruptedException, IOException {
-        params.Clear();
-        params.opt_OutFileName = outFileName;
-        params.FileNames = new String[1];
-        params.FileNames[0] = fileName;
-        unparse();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 3. Strict Mode Checker
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Check whether a given program satisfies
-     * the ECMAScript 5 strict mode restrictions.
-     * If you want to dump what restrictions are not satisfied,
-     * then give -out somefile.
-     * Not yet fully implemented.
-     */
-    private static int strict() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("The unparse command needs a file to unparse.");
-        List<String> fileNames = Arrays.asList(params.FileNames);
-
-        Pair<Program,HashMap<String, String>> pair = Parser.fileToAST(fileNames);
-        Program pgm = pair.first();
-        List<StaticError> errors = new StrictModeChecker(pgm).doit();
-        if (params.opt_OutFileName != null){
-            try {
-                Pair<FileWriter, BufferedWriter> ppair = Useful.filenameToBufferedWriter(params.opt_OutFileName);
-                return reportErrors(NodeUtil.getFileName(pgm),
-                                    flattenErrors(errors), Option.<Pair<FileWriter, BufferedWriter>>some(ppair));
-            } catch (IOException e){
-                throw new IOException("IOException " + e +
-                                      "while writing " + params.opt_OutFileName);
-                }
-        } else {
-            return reportErrors(NodeUtil.getFileName(pgm),
-                                flattenErrors(errors), Option.<Pair<FileWriter, BufferedWriter>>none());
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 4. Clone Detector
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Reports detected clones in the file.
-     */
-    private static int cloneDetector() throws UserError, InterruptedException, IOException {
-        CloneDetector.doit();
-        return 0;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 5. Code Coverage
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Calculates a very simple statement coverage.
-     */
-    private static int coverage() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("The coverage command needs a file to calculate code coverage.");
-        List<String> fileNames = Arrays.asList(params.FileNames);
-
-        int return_code = 0;
-        Coverage coverage = new Coverage();
-        Option<IRRoot> irOpt = fileToIR(fileNames, Option.<String>none(), Option.<Coverage>some(coverage)).first();
-        if (irOpt.isSome()) {
-            IRRoot ir = irOpt.unwrap();
-            /*
-             * The following 2 lines are to print IR program for debug.
-             * Check getE method in nodes_util/JSIRUnparser.scala to get unsimplified name.
-             */
-            /*
-            String ircode = new JSIRUnparser(ir).doit();
-            System.out.println(ircode);
-            */
-            // Interpret ir...
-            new Interpreter().doit(ir, Option.<Coverage>some(coverage), true);
-            // Calculate the coverage!
-            System.out.println("Total statements: " + coverage.total());
-            System.out.println("Executed statements: " + coverage.executed());
-            //System.out.println("Coverage percentage: " + coverage.executed/coverage.total);
-            return return_code;
-        } else return -2;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 6. Concolic Test
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Working on a very simple concolic testing...
-     */
-    private static int concolic() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("The concolic command needs a file to perform concolic testing.");
-        List<String> fileNames = Arrays.asList(params.FileNames);
-
-        int return_code = 0;
-        Coverage coverage = new Coverage();
-        Option<IRRoot> irOpt = fileToIR(fileNames, Option.<String>none(), Option.<Coverage>some(coverage)).first();
-        if (irOpt.isSome()) {
-            IRRoot ir = irOpt.unwrap();
-            ir = new Instrumentor(ir).doit();
-            //ASTIO.writeJavaAst(ir, "System.out", System.out);
-
-            //TODO: Rotate until reaching the coverage or having limited depth
-            //Temporarily execute two round
-            Z3 z3 = new Z3();
-            Interpreter interpreter = new Interpreter();
-			do {
-				do {
-					System.out.println();
-					Option<List<Integer>> result = z3.solve(coverage.getConstraints(), coverage.inputNum());
-					if (result.isSome())
-						coverage.setInput(result.unwrap());
-					interpreter.doit(ir, Option.<Coverage>some(coverage), true);
-				} while (coverage.cont());
-				coverage.removeTarget();	
-			} while (coverage.existCandidate());
-            return return_code;
-        } else return -2;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 7. JavaScript from URL
-    ////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Extracts JavaScript source code from a url, if any.
-     * If -out file is given, the extracted source code will be written to the file.
-     */
-    private static int url() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("The url command needs a url of html page.");
-
-        new JSFromUrl(params.FileNames[0], params.opt_OutFileName).doit();
-        return 0;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 8. with Rewriter
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Rewrite a JavaScript source code using the with statement
-     * to another one without using the with statement.
-     * If you want to dump the rewritten code,
-     * then give -out somefile.
-     * Not yet fully implemented.
-     */
-    private static int with() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("The with command needs a file to rewrite.");
-        List<String> fileNames = Arrays.asList(params.FileNames);
-
-        Pair<Program, HashMap<String, String>> pair = Parser.fileToAST(fileNames);
-        Program program = pair.first();
-        program = (Program)new Hoister(program).doit();
-        program = (Program)new Disambiguator(program, opt_DisambiguateOnly).doit();
-        program = (Program)new WithRewriter(program, false).doit();
-        String rewritten = JSAstToConcrete.doit(program);
-        if (params.opt_OutFileName != null){
-            try{
-                Pair<FileWriter, BufferedWriter> ppair = Useful.filenameToBufferedWriter(params.opt_OutFileName);
-                FileWriter fw = ppair.first();
-                BufferedWriter writer = ppair.second();
-                writer.write(rewritten);
-                writer.close();
-                fw.close();
-            } catch (IOException e){
-                throw new IOException("IOException " + e +
-                                      "while writing " + params.opt_OutFileName);
-            }
-        } else {
-            System.out.println(rewritten);
-        }
-        return 0;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 9. Module Rewriter
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Rewrite a JavaScript source code using the module syntax
-     * to another one without using the module syntax.
-     * If you want to dump the rewritten code,
-     * then give -out somefile.
-     * Not yet fully implemented.
-     */
-    private static int module() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("The module command needs a file to rewrite.");
-        List<String> fileNames = Arrays.asList(params.FileNames);
-
-        params.opt_Module = true;
-        params.opt_IgnoreErrorOnAST = true;
-
-        Pair<Program, HashMap<String, String>> pair = Parser.fileToAST(fileNames);
-        Program program = pair.first();
-        program = (Program)new ModuleRewriter(program).doit();
-        String rewritten = JSAstToConcrete.doit(program);
-        if (params.opt_OutFileName != null){
-            try{
-                Pair<FileWriter, BufferedWriter> ppair = Useful.filenameToBufferedWriter(params.opt_OutFileName);
-                FileWriter fw = ppair.first();
-                BufferedWriter writer = ppair.second();
-                writer.write(rewritten);
-                writer.close();
-                fw.close();
-            } catch (IOException e){
-                throw new IOException("IOException " + e +
-                                      "while writing " + params.opt_OutFileName);
-            }
-        } else {
-            System.out.println(rewritten);
-        }
-        return 0;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 10. junit Test
-    ////////////////////////////////////////////////////////////////////////////////
-    private static int junit() throws UserError, IOException {
-        if (params.FileNames.length == 0) throw new UserError("Need a file to run junit tests.");
-        List<String> fileNames = Arrays.asList(params.FileNames);
-        junit.textui.TestRunner.run(FileTests.suiteFromListOfFiles(fileNames, "", "", "", true, false));
-        return 0;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 11. Disambiguate and
-    // 12. Compile
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Compile a file. If the file compiles ok it will say "Ok".
-     * If you want a dump then give -out somefile.
-     */
-    private static int compile() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("Need a file to compile.");
-        List<String> fileNames = Arrays.asList(params.FileNames);
-
-        int return_code = 0;
-        Option<IRRoot> irOpt = fileToIR(fileNames, toOption(params.opt_OutFileName));
-        if (irOpt.isSome()) {
-            if (opt_DisambiguateOnly) return 0;
-            IRRoot ir = irOpt.unwrap();
-            String ircode = new JSIRUnparser(ir).doit();
-            if (params.opt_OutFileName != null){
-                String outfile = params.opt_OutFileName;
-                try{
-                    Pair<FileWriter, BufferedWriter> pair = Useful.filenameToBufferedWriter(outfile);
-                    FileWriter fw = pair.first();
-                    BufferedWriter writer = pair.second();
-                    // IR dumping
-                    ASTIO.writeJavaAst(ir, outfile);
-                    //writer.write(ircode);
-                    writer.close();
-                    fw.close();
-                    System.out.println("Dumped IR to " + outfile);
-                } catch (IOException e){
-                    throw new IOException("IOException " + e +
-                                          "while writing " + outfile);
-                }
-            } else System.out.println(ircode);
-        } else return -2;
-        if (params.opt_Time) printTimeTitle = "Compilation";
-        return return_code;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 13. CFG Builder
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Build a control flow graph.
-     * If you want a dump then give -out somefile.
-     */
-    private static int cfgBuilder() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("Need a file to build a control flow graph.");
-        List<String> fileNames = Arrays.asList(params.FileNames);
-
-        if (params.opt_Test) {
-            Config.setTestMode(new Boolean(params.opt_Test));
-            System.out.println("Test mode enabled.");
-        }
-
-        if(params.opt_Dom) {
-            Config.setDomMode();
-            System.out.println("DOM mode enabled.");
-        }
-
-		if(params.opt_Tizen) {
-            Config.setTizenMode();
-            System.out.println("Tizen mode enabled.");
-        }
-
-        if(params.opt_Library) {
-            Config.setLibMode(new Boolean(params.opt_Library));
-            System.out.println("Library mode enabled.");
-        }
-
-        int return_code = 0;
-        Option<IRRoot> irOpt = fileToIR(fileNames, toOption(params.opt_OutFileName));
-        if (irOpt.isSome()) {
-            IRRoot ir = irOpt.unwrap();
-            CFGBuilder builder = new CFGBuilder(ir);
-            CFG cfg = builder.build();
-            List<StaticError> errors = builder.getErrors();
-            if (!(errors.isEmpty())) {
-                reportErrors(NodeUtil.getFileName(ir),
-                             flattenErrors(errors),
-                             Option.<Pair<FileWriter,BufferedWriter>>none());
-            }
-            if (params.opt_Model) {
-                //BuiltinModel builtinmodel = new BuiltinModel(cfg);
-                //builtinmodel.initialize();
-                InitHeap init = new InitHeap(cfg);
-                init.initialize();
-            }
-            if (params.opt_OutFileName != null){
-                String outfile = params.opt_OutFileName;
-                DotWriter.write(cfg, outfile+".dot", outfile+".svg", "dot");
-            } else {
-                cfg.dump();
-            }
-        } else return -2;
-        return return_code;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 14. Interpreter
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Interpret a JavaScript file. (Work in progress)
-     * If the file interprets ok it will print the result.
-     */
-    private static int interpret() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("Need a file to interpret.");
-        List<String> fileNames = Arrays.asList(params.FileNames);
-        boolean printComp;
-        if (!params.opt_Mozilla) printComp = true;
-        else {
-            printComp = false;
-            File f1 = new File(fileNames.get(0));
-            String safe = "";
-            fileNames = new ArrayList<String>();
-            List<String> tmp = new ArrayList<String>();
-            if (f1.canRead()) {
-                tmp.add(f1.getCanonicalPath());
-                f1 = f1.getParentFile();
-                while (f1 != null) {
-                    String[] list = f1.list();
-                    boolean done = true;
-                    for (int i = list.length-1; i >= 0; i--) {
-                        if (list[i].equals("shell.js")) {
-                            done = false;
-                            break;
-                        }
-                    }
-                    if (done) {
-                        if (safe != "") tmp.add(safe);
-                        break;
-                    }
-                    tmp.add(f1.getCanonicalPath() + "/shell.js");
-                    safe = f1.getCanonicalPath() + "/safe.js";
-                    f1 = f1.getParentFile();
-                }
-            }
-            for (int i = tmp.size()-1; i >= 0; i--)
-                fileNames.add(tmp.get(i));
-        }
-
-        int return_code = 0;
-        Option<IRRoot> irOpt = fileToIR(fileNames, toOption(params.opt_OutFileName));
-        if (irOpt.isSome()) {
-            IRRoot ir = irOpt.unwrap();
-            /*
-             * The following 2 lines are to print IR program for debug.
-             * Check getE method in nodes_util/JSIRUnparser.scala to get unsimplified name.
-             */
-            /*
-            String ircode = new JSIRUnparser(ir).doit();
-            System.out.println(ircode);
-            */
-            // Interpret ir...
-            new Interpreter().doit(ir, Option.<Coverage>none(), printComp);
-            if (params.opt_Time) printTimeTitle = "Interpretation";
-        }
-        return return_code;
-    }
-
-        /*
-         * for debugging IR itself using the IR parser
-         *
-        BufferedReader in = Useful.utf8BufferedFileReader(new File(file));
-        try {
-            IR parser = new IR(in, file);
-            xtc.parser.Result parseResult = parser.pFile(0);
-            if (parseResult.hasValue()) {
-                IRRoot root = (IRRoot)((SemanticValue) parseResult).value;
-                // Interpret irs...
-                new Interpreter(root).doit();
-
-                if (out.isSome()){
-                    String outfile = out.unwrap();
-                    try{
-                        for (IRStmt ir : root.getIrs())
-                            ASTIO.writeJavaAst(ir, outfile);
-                        System.out.println("Dumped IR to " + outfile);
-                    } catch (IOException e){
-                        throw new IOException("IOException " + e +
-                                              "while writing " + outfile);
-                    }
-                }
-            } else throw new ParserError((ParseError)parseResult, parser);
-        } finally {
-            try {
-                in.close();
-            } catch (IOException e) {}
-        }
-        */
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 15. Analyze
-    //     - PreAnalyze
-    //     - Sparse
-    //     - HTML
-    //     - BugDetector
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Analyze a JavaScript file. (Work in progress)
-     */
-    private static int analyze() throws UserError, InterruptedException, IOException {
-        boolean quiet = params.command == ShellParameters.CMD_BUG_DETECTOR;
-        boolean locclone = params.opt_LocClone;
-
-        if (params.FileNames.length == 0) throw new UserError("Need a file to analyze");
-        String fileName = params.FileNames[0];
-        List<String> fileNames = Arrays.asList(params.FileNames);
-
-        if(params.opt_Verbose1) Config.setVerbose(1);
-        if(params.opt_Verbose2) Config.setVerbose(2);
-        if(params.opt_Verbose3) Config.setVerbose(3);
-
-        if(params.opt_Test) {
-            Config.setTestMode(new Boolean(params.opt_Test));
-            System.out.println("Test mode enabled.");
-        }
-
-        if(params.opt_Library) {
-            Config.setLibMode(new Boolean(params.opt_Library));
-            System.out.println("Library mode enabled.");
-        }
-
-        if(params.opt_NoAssert) {
-            Config.setAssertMode(new Boolean(!params.opt_NoAssert));
-            System.out.println("Assert mode disabled.");
-        }
-
-        if(params.opt_Compare) Config.setCompareMode(true);
-
-        // Context-sensitivity for main analysis
-        int context = -1;
-        context = Config.contextSensitivityMode();
-
-        // Temporary parameter setting for bug-detector
-        if(params.command == ShellParameters.CMD_BUG_DETECTOR) {
-            context = Config.Context_OneCallsiteAndObject();
-            params.opt_MultiThread = true;
-        }
-
-        if(params.opt_ContextInsensitive) context = Config.Context_Insensitive();
-        else if(params.opt_Context1Callsite) context = Config.Context_OneCallsite();
-        else if(params.opt_Context2Callsite) context = Config.Context_KCallsite();
-        else if(params.opt_Context3Callsite) context = Config.Context_KCallsite();
-        else if(params.opt_Context4Callsite) context = Config.Context_KCallsite();
-        else if(params.opt_Context5Callsite) context = Config.Context_KCallsite();
-        else if(params.opt_ContextCallsiteSet) context = Config.Context_CallsiteSet();
-        else if(params.opt_Context1Object) context = Config.Context_OneObject();
-        else if(params.opt_ContextTAJS) context = Config.Context_OneObjectTAJS();
-        else if(params.opt_Context1CallsiteAndObject) context = Config.Context_OneCallsiteAndObject();
-        else if(params.opt_Context2CallsiteAndObject) context = Config.Context_KCallsiteAndObject();
-        else if(params.opt_Context3CallsiteAndObject) context = Config.Context_KCallsiteAndObject();
-        else if(params.opt_Context4CallsiteAndObject) context = Config.Context_KCallsiteAndObject();
-        else if(params.opt_Context5CallsiteAndObject) context = Config.Context_KCallsiteAndObject();
-        else if(params.opt_Context1CallsiteOrObject) context = Config.Context_OneCallsiteOrObject();
-
-        Config.setContextSensitivityMode(new Integer(context));
-
-        // Context-sensitivity depth for k-callsite sensitivity
-        if (params.opt_Context2Callsite) Config.setContextSensitivityDepth(new Integer(2));
-        else if (params.opt_Context3Callsite) Config.setContextSensitivityDepth(new Integer(3));
-        else if (params.opt_Context4Callsite) Config.setContextSensitivityDepth(new Integer(4));
-        else if (params.opt_Context5Callsite) Config.setContextSensitivityDepth(new Integer(5));
-        else if (params.opt_Context2CallsiteAndObject) Config.setContextSensitivityDepth(new Integer(2));
-        else if (params.opt_Context3CallsiteAndObject) Config.setContextSensitivityDepth(new Integer(3));
-        else if (params.opt_Context4CallsiteAndObject) Config.setContextSensitivityDepth(new Integer(4));
-        else if (params.opt_Context5CallsiteAndObject) Config.setContextSensitivityDepth(new Integer(5));
-        
-        
-        // Context-sensitivity for pre-analysis
-        if (params.opt_PreContextSensitive || params.command == ShellParameters.CMD_PREANALYZE) {
-            if (!quiet) System.out.println("Context-sensitivity is turned on for pre-analysis.");
-            Config.setPreContextSensitiveMode(true);
-        }
-
-        if(params.opt_Unsound) {
-          Config.setUnsoundMode(new Boolean(params.opt_Unsound));
-          System.out.println("Unsound mode enabled.");
-        }
-        
-        // for HTML
-        if(params.command == ShellParameters.CMD_HTML || params.command == ShellParameters.CMD_HTML_SPARSE) {
-            if(params.FileNames.length > 1) throw new UserError("Only one HTML file supported at a time.");
-            String low = fileName.toLowerCase();
-            if(!(low.endsWith(".html") || low.endsWith(".xhtml") || low.endsWith(".htm")))
-                throw new UserError("Not an HTML file.");
-            // DOM mode
-            Config.setDomMode();
-        }
-
-		// for Tizen
-        if(params.opt_Tizen) {
-            Config.setTizenMode();
-            System.out.println("Tizen mode enabled.");
-        }
-
-        if (!quiet)
-            System.out.println("Context-sensitivity mode is \"" + kr.ac.kaist.jsaf.analysis.typing.CallContext.getModeName() + "\".");
-
-        // Initialize
-        int return_code = 0;
-        long analyzeStartTime = System.nanoTime();
-        if (!quiet)
-            System.out.println("\n* Initialize *");
-
-        // Initialize AbsString cache
-        kr.ac.kaist.jsaf.analysis.typing.domain.AbsString.initCache();
-
-        // Read a JavaScript file and translate to IR
-        long start = System.nanoTime();
-        Pair<Program, HashMap<String, String>> pair;
-
-        // for HTML
-        JSFromHTML jshtml = null;
-        if (params.command == ShellParameters.CMD_HTML || params.command == ShellParameters.CMD_HTML_SPARSE) {
-            jshtml = new JSFromHTML(fileName);
-            // Parse JavaScript code in the target html file
-            pair = jshtml.parseScripts();
-        }
-        else
-            pair = Parser.fileToAST(fileNames);
-        Program program = pair.first();
-        HashMap<String,String> fileMap = pair.second();
-        Triple<Option<IRRoot>, List<BugInfo>, Program> irErrors = ASTtoIR(fileName, program, Option.<String>none(), Option.<Coverage>none());
-        Option<IRRoot> irOpt = irErrors.first();
-        Program program2 = irErrors.third(); // Disambiguated and hoisted and with written 
-
-        double irTranslationTime = (System.nanoTime() - start) / 1000000000.0;
-        if (!quiet)
-            System.out.format("# Time for IR translation(s): %.2f\n", irTranslationTime);
-
-        // Check the translation result
-        if(irOpt.isNone()) return -2;
-        IRRoot ir = irOpt.unwrap();
-
-        // Build a CFG
-        start = System.nanoTime();
-        CFGBuilder builder = new CFGBuilder(ir);
-        CFG cfg = builder.build();
-        double cfgBuildingTime = (System.nanoTime() - start) / 1000000000.0;
-        if (!quiet) {
-            System.out.format("# Time for CFG building(s): %.2f\n", cfgBuildingTime);
-            System.out.format("# Time for front end(s): %.2f\n", (irTranslationTime + cfgBuildingTime));
-        }
-        List<StaticError> errors = builder.getErrors();
-        if (!(errors.isEmpty())) {
-            reportErrors(NodeUtil.getFileName(ir),
-                         flattenErrors(errors),
-                         Option.<Pair<FileWriter,BufferedWriter>>none());
-        }
-
-        if (!quiet) {
-            System.out.println("\n* Analyze *");
-            System.out.format("# Initial peak memory(mb): %.2f\n", MemoryMeasurer.peakMemory());
-        }
-        // compare mode to test the html pre-analysis
-        if(params.opt_Compare) 
-          Config.setCompareMode();
-
-        // Initialize bulit-in models
-        int previousBasicBlocks = cfg.getNodes().size();
-        start = System.nanoTime();
-        //BuiltinModel model = new BuiltinModel(cfg);
-        //model.initialize();
-        InitHeap init = new InitHeap(cfg);
-        init.initialize();
-
-        double builtinModelInitializationTime = (System.nanoTime() - start) / 1000000000.0;
-        int presentBasicBlocks = cfg.getNodes().size();
-        if (!quiet) {
-            System.out.println("# Basic block(#): " + previousBasicBlocks + "(source) + " + (presentBasicBlocks - previousBasicBlocks) + "(bulit-in) = " + presentBasicBlocks);
-            System.out.format("# Time for initial heap(s): %.2f\n", builtinModelInitializationTime);
-        }
-
-        // Set the initial state with DOM objects
-        if(Config.domMode() && jshtml != null) {
-            (new DOMBuilder(cfg, init, jshtml.getDocument())).initialize();
-        }
-
-        if(params.command == ShellParameters.CMD_PREANALYZE ||
-            params.command == ShellParameters.CMD_SPARSE ||
-            params.command == ShellParameters.CMD_NEW_SPARSE ||
-            params.command == ShellParameters.CMD_BUG_DETECTOR ||
-            params.command == ShellParameters.CMD_HTML_SPARSE
-           ) {
-            // computes reachable nodes for each function(including built-in functions)
-            cfg.computeReachableNodes(quiet);
-        }
-
-        // Create Typing
-        TypingInterface typingInterface = null;
-        switch(params.command)
-        {
-        case ShellParameters.CMD_ANALYZE :
-        case ShellParameters.CMD_HTML :
-            typingInterface = new Typing(cfg, quiet, locclone);
-            break;
-        case ShellParameters.CMD_PREANALYZE :
-            typingInterface = new PreTyping(cfg, quiet, true);
-            break;
-        case ShellParameters.CMD_SPARSE :
-            typingInterface = new SparseTyping(cfg, quiet, locclone);
-            break;
-        case ShellParameters.CMD_NEW_SPARSE :
-        case ShellParameters.CMD_BUG_DETECTOR :
-        case ShellParameters.CMD_HTML_SPARSE :
-            typingInterface = new DSparseTyping(cfg, quiet, locclone);
-            break;
-        default :
-            throw new UserError("Cannot create the Typing. The command is unknown.");
-        }
-
-        // Compare with Pre Analysis
-        /*
-        if(Config.compare() && params.command != ShellParameters.CMD_PREANALYZE) {
-            Config.setContextSensitivityMode(new Integer(Config.Context_Insensitive()));
-            PreTyping preTyping = new PreTyping(cfg, quiet);
-            preTyping.analyze(model);
-            Config.setPreTyping(preTyping.state());
-            preTyping.dump();
-        }
-        */
-
-        // Check global variables in initial heap against list of predefined variables.
-        init.checkPredefined();
-        
-        // Analyze
-        switch(params.command)
-        {
-        case ShellParameters.CMD_ANALYZE :
-        case ShellParameters.CMD_PREANALYZE :
-        case ShellParameters.CMD_HTML :
-        	if(params.opt_Compare) {
-                // compare mode 
-                CFG preCFG = builder.build();
-                //BuiltinModel preModel = new BuiltinModel(preCFG);
-                //preModel.initialize();
-                InitHeap pre_init = new InitHeap(preCFG);
-                pre_init.initialize();
-
-                // Set the initial state with DOM objects
-                if(Config.domMode() && jshtml != null) {
-                    (new DOMBuilder(preCFG, pre_init, jshtml.getDocument())).initialize();
-                }
-
-                PreTyping preTyping = new PreTyping(preCFG, true, false);
-                preTyping.analyze(pre_init);
-                System.out.println("**PreAnalysis dump**");
-                preTyping.dump();
-        		typingInterface.setCompare(preTyping.getMergedState(), preTyping.cfg());
-        	}
-            // Analyze
-            typingInterface.analyze(init);
-            break;
-        case ShellParameters.CMD_SPARSE :
-        case ShellParameters.CMD_NEW_SPARSE :
-        case ShellParameters.CMD_BUG_DETECTOR :
-        case ShellParameters.CMD_HTML_SPARSE:
-            PreTyping preTyping = new PreTyping(cfg, quiet, false);
-            preTyping.analyze(init);
-
-            // unsound because states among instructions are omitted.
-            State pre_result = preTyping.getMergedState();
-            // computes def/use set
-            long access_start = System.nanoTime();
-            Access duanalysis = new Access(cfg, preTyping.computeCallGraph(), pre_result);
-            duanalysis.process(quiet);
-            double accessTime = (System.nanoTime() - access_start) / 1000000000.0;
-            if (!quiet)
-                System.out.format("# Time for access analysis(s): %.2f\n", accessTime);
-
-            // computes def/use graph
-            if (typingInterface.env() != null)
-                typingInterface.env().drawDDG(preTyping.computeCallGraph(), duanalysis.result(), quiet);
-
-            // Analyze
-            typingInterface.analyze(init, duanalysis.result());
-        }
-
-        // Report a result
-        if (!quiet) {
-          System.out.format("# Peak memory(mb): %.2f\n", MemoryMeasurer.peakMemory());
-          System.out.format("# Result heap memory(mb): %.2f\n", MemoryMeasurer.measureHeap());
-        }
-        if (params.opt_MemDump) {
-            System.out.println("\n* Dump *");
-            typingInterface.dump();
-            if(params.command == ShellParameters.CMD_PREANALYZE) typingInterface.dump_callgraph();
-        }
-        if (params.opt_Visual && typingInterface instanceof Typing) {
-            System.out.println("\n* Visualization *");
-            Visualization vs = new Visualization((Typing)typingInterface, fileMap, NodeUtil.getFileName(ir), toOption(params.opt_OutFileName));
-            vs.run();
-        }
-
-        if (!quiet) {
-            System.out.println("\n* Statistics *");
-            System.out.println("# Total state count: " + typingInterface.getStateCount());
-            typingInterface.statistics(params.opt_StatDump);
-        }
-        if (params.opt_CheckResult) {
-            SemanticsTest.checkResult(typingInterface);
-            System.out.println("Test pass");
-        }
-
-        // Execute Bug Detector
-        System.out.println("\n* Bug Detector *");
-        NodeRelation.set(program2, ir, cfg, quiet);
-        BugDetector detector = new BugDetector(params, cfg, typingInterface, fileMap, quiet, irErrors.second());
-        detector.detectBug();
-
-        if (!quiet)
-            System.out.format("\nAnalysis took %.2fs\n", (System.nanoTime() - analyzeStartTime) / 1000000000.0);
-
-        boolean isGlobalSparse = false;
-        if(params.opt_DDGFileName != null) {
-          DotWriter.ddgwrite(cfg, typingInterface.env(), params.opt_DDGFileName+".dot", params.opt_DDGFileName+".svg", "dot", false, isGlobalSparse);
-        }
-        if(params.opt_DDG0FileName != null) {
-          DotWriter.ddgwrite(cfg, typingInterface.env(), params.opt_DDG0FileName+".dot", params.opt_DDG0FileName+".svg", "dot", true, isGlobalSparse);
-        }
-        if(params.opt_FGFileName != null) {
-          DotWriter.fgwrite(cfg, typingInterface.env(), params.opt_FGFileName+".dot", params.opt_FGFileName+".svg", "dot", isGlobalSparse);
-        }
-        if (!quiet)
-            System.out.println("Ok");
-
-        return return_code;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 16. Web IDL Parse
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Parse a Web IDL file.
-     * If you want a dump then give -out somefile.
-     */
-    private static int widlparse() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("The widlparse command needs a file to parse.");
-        String fileName = params.FileNames[0];
-
-        int return_code = 0;
-        try {
-            FileInputStream fs = new FileInputStream(new File(fileName));
-            InputStreamReader sr = new InputStreamReader(fs, Charset.forName("UTF-8"));
-            BufferedReader in = new BufferedReader(sr);
-            WIDL parser = new WIDL(in, fileName);
-            xtc.parser.Result parseResult = parser.pWIDL(0);
-            in.close(); sr.close(); fs.close();
-            if (parseResult.hasValue()) {
-                List<WDefinition> widl = (List<WDefinition>)(((SemanticValue)parseResult).value);
-                String code = WIDLToString.doit(widl);
-                if (params.opt_DB){
-                    // store WIDL information into a DB
-                    WIDLToDB.storeToDB(fileName, widl);
-                } else {
-                    System.out.println(code);
-                }
-            } else {
-                System.out.println("WIDL parsing failed.");
-                throw new ParserError((ParseError)parseResult, parser, 0);
-            }
-        } catch (FileNotFoundException f) {
-            throw new UserError(fileName + " not found");
-        } finally {
-            Files.rm(fileName + ".db");
-            Files.rm(fileName + ".test");
-        }
-        return return_code;
-    }
-
-    public static int widlparse(String fileName) throws UserError, InterruptedException, IOException {
-        params.Clear();
-        params.FileNames = new String[1];
-        params.FileNames[0] = fileName;
-
-        return widlparse();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // 17. Web IDL Use Check
-    ////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Check the uses of APIs in Web IDL.
-     */
-    private static int widlcheck() throws UserError, InterruptedException, IOException {
-        if (params.FileNames.length == 0) throw new UserError("The widlcheck command needs a file to parse.");
-        String fileName = params.FileNames[0];
-        List<String> fileNames = Arrays.asList(Arrays.copyOfRange(params.FileNames, 1, params.FileNames.length));
-
-        int return_code = 0;
-        List<String> file = new ArrayList();
-        file.add(fileName);
-        Pair<Program, HashMap<String, String>> pair = Parser.fileToAST(file);
-        Program pgm = pair.first();
-        new WIDLChecker(pgm, fileNames).doit();
-        return return_code;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
     // Compile to IR
     ////////////////////////////////////////////////////////////////////////////////
     // Triple<String, Integer, String> : filename, starting line number, JavaScript source
-    private static Option<IRRoot> scriptToIR(List<Triple<String, Integer, String>> scripts, Option<String> out) throws UserError, IOException {
+    public static Option<IRRoot> scriptToIR(List<Triple<String, Integer, String>> scripts, Option<String> out) throws UserError, IOException {
         return scriptToIR(scripts, out, Option.<Coverage>none());
     }
 
-    private static Option<IRRoot> scriptToIR(List<Triple<String, Integer, String>> scripts, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {
+    public static Option<IRRoot> scriptToIR(List<Triple<String, Integer, String>> scripts, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {
         Program program = Parser.scriptToAST(scripts).first();
         return ASTtoIR(scripts.get(0).first(), program, out, coverage).first();
     }
 
-    private static Option<IRRoot> fileToIR(List<String> files, Option<String> out) throws UserError, IOException {
+    public static Option<IRRoot> fileToIR(List<String> files, Option<String> out) throws UserError, IOException {
         return fileToIR(files, out, Option.<Coverage>none()).first();
     }
 
-    private static Pair<Option<IRRoot>, HashMap<String, String>> fileToIR(List<String> files, Option<String> out, boolean getFileMap) throws UserError, IOException {
+    public static Pair<Option<IRRoot>, HashMap<String, String>> fileToIR(List<String> files, Option<String> out, boolean getFileMap) throws UserError, IOException {
         if (getFileMap) return fileToIR(files, out, Option.<Coverage>none());
         else return new Pair<Option<IRRoot>, HashMap<String, String>>(fileToIR(files, out, Option.<Coverage>none()).first(), new HashMap<String, String>());
     }
 
-    private static Pair<Option<IRRoot>, HashMap<String, String>> fileToIR(List<String> files, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {
+    public static Pair<Option<IRRoot>, HashMap<String, String>> fileToIR(List<String> files, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {
         Pair<Program, HashMap<String, String>> pair;
         // html file support 
         if(files.size() == 1 && (files.get(0).toLowerCase().endsWith(".html") || files.get(0).toLowerCase().endsWith(".xhtml") || files.get(0).toLowerCase().endsWith(".htm"))) { 
@@ -1349,9 +415,9 @@ public final class Shell {
                              flattenErrors(errors),
                              Option.<Pair<FileWriter,BufferedWriter>>none());
                 if (opt_DisambiguateOnly && errors.isEmpty())
-                    return new Triple<Option<IRRoot>, List<BugInfo>, Program>(Option.some(IRFactory.makeRoot()),
-                                                                              Useful.<BugInfo>list(),
-                                                                              program);
+                  return new Triple<Option<IRRoot>, List<BugInfo>, Program>(Option.some(IRFactory.makeRoot()),
+                                                                            Useful.<BugInfo>list(),
+                                                                            program);
                 return new Triple<Option<IRRoot>, List<BugInfo>, Program>(Option.<IRRoot>none(),
                                                                           Useful.<BugInfo>list(),
                                                                           program);
@@ -1391,7 +457,7 @@ public final class Shell {
         return result;
     }
 
-    private static List<? extends StaticError> flattenErrors(StaticError ex) {
+    public static List<? extends StaticError> flattenErrors(StaticError ex) {
         List<StaticError> result = new LinkedList<StaticError>();
         if (ex instanceof MultipleStaticError) {
             for (StaticError err : ((MultipleStaticError)ex).toJList())

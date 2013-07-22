@@ -1,0 +1,17 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=ss2
+WIDLCHECKER_TESTS_DIR=${JS_HOME}/tests/widlchecker_tests
+widlcheck
+widlcheck_out_WCIequals=\
+${WIDLCHECKER_TESTS_DIR}/ss2.js:9:1-11:\n\
+    Error : Name tuneUp is not found in the API webapis.tv.\n\
+${WIDLCHECKER_TESTS_DIR}/ss2.js:9:39-57:\n\
+    Error : Name NAVIGATOR_MODE_ALL_ERROR is not found in the API webapis.tv.channel.\n
+widlcheck_err_equals=

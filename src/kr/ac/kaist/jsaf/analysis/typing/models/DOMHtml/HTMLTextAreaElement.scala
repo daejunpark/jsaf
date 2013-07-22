@@ -150,6 +150,7 @@ object HTMLTextAreaElement extends DOM {
         ("tabIndex",  PropValue(ObjectValue(Helper.toNumber(PValue(AbsString.alpha(e.getAttribute("tabIndex")))), T, T, T))),
         ("type", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("type")), F, T, T))),
         ("value", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("value")), F, T, T))),
+        ("form", PropValue(ObjectValue(NullTop, F, T, T))),
         // Modified in DOM Level 2
         ("defaultValue", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("defaultValue")), T, T, T))))
     // TODO: 'form' in DOM Level 1
@@ -160,7 +161,8 @@ object HTMLTextAreaElement extends DOM {
   }
 
   def getInsList(accessKey: PropValue, cols: PropValue, disabled: PropValue, name: PropValue, readOnly: PropValue,
-                 rows: PropValue, tabIndex: PropValue, ttype: PropValue, value: PropValue, defaultValue: PropValue): List[(String, PropValue)] = List(
+                 rows: PropValue, tabIndex: PropValue, ttype: PropValue, value: PropValue, 
+                 form: PropValue, defaultValue: PropValue): List[(String, PropValue)] = List(
     ("@class",    PropValue(AbsString.alpha("Object"))),
     ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
     ("@extensible", PropValue(BoolTrue)),
@@ -174,6 +176,7 @@ object HTMLTextAreaElement extends DOM {
     ("tabIndex", tabIndex),
     ("type", ttype),
     ("value", value),
+    ("form", form),
     // Modified in DOM Level 2
     ("defaultValue", defaultValue)
   )
@@ -188,10 +191,11 @@ object HTMLTextAreaElement extends DOM {
     val tabIndex = PropValue(ObjectValue(NumTop, T, T, T))
     val ttype = PropValue(ObjectValue(AbsString.alpha(""), F, T, T))
     val value = PropValue(ObjectValue(AbsString.alpha(""), F, T, T))
+    val form = PropValue(ObjectValue(NullTop, F, T, T))
     val defaultValue = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
     // This object has all properties of the HTMLElement object 
     HTMLElement.default_getInsList :::
-      getInsList(accessKey, cols, disabled, name, readOnly, rows, tabIndex, ttype, value, defaultValue)
+      getInsList(accessKey, cols, disabled, name, readOnly, rows, tabIndex, ttype, value, form, defaultValue)
   }
 
 }

@@ -68,7 +68,8 @@ interface WNode() extends HasAt;
             abstract WMember(List<WEAttribute> attrs = Collections.<WEAttribute>emptyList());
                 WConst(WType typ, String name, WLiteral value)
                     implements WInterfaceMember, WExceptionMember;
-                WAttribute(WType typ, String name) implements WInterfaceMember;
+                WAttribute(WType typ, String name, List<WQId> exns = Collections.<WQId>emptyList())
+                          implements WInterfaceMember;
                 WOperation(List<WQualifier> qualifiers, WType typ, Option<String> name,
                            List<WArgument> args, List<WQId> exns = Collections.<WQId>emptyList())
                           implements WInterfaceMember;

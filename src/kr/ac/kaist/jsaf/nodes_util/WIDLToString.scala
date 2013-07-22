@@ -222,7 +222,7 @@ object WIDLToString extends WIDLWalker {
     case SWInteger(info, value) => value
     case SWString(info, str) => str
     case SWNull(info) => "null" 
-    case SWAttribute(info, attrs, typ, name) =>
+    case SWAttribute(info, attrs, typ, name, exns) =>
       val s: StringBuilder = new StringBuilder
       if (!attrs.isEmpty) {
         s.append("[")
@@ -232,7 +232,13 @@ object WIDLToString extends WIDLWalker {
     /*
       if (isStringifier(attrs)) s.append("stringifier ")
     */
-      s.append("attribute ").append(walk(typ)).append(" ").append(name).append(";")
+      s.append("attribute ").append(walk(typ)).append(" ").append(name)
+      if (!exns.isEmpty) {
+        s.append(" raises (")
+        s.append(join(exns, ", ", new StringBuilder("")))
+        s.append(")")
+      }
+      s.append(";")
       s.toString
     case SWExceptionField(info, attrs, typ, name) =>
       val s: StringBuilder = new StringBuilder

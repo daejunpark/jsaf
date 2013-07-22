@@ -354,7 +354,7 @@ class InstDetect(bugDetector: BugDetector) {
       if (!bugOption.CondBranch_ConditionMustBeTrueOrFalseInEveryState) {
         bugCheckInstance.filter((bug, notBug) => bug.valueType == notBug.valueType)
       }
-      if (!bugOption.CondBranch_ConditionMustBeTrueOrFalseDefinitely) {
+      if (!bugOption.CondBranch_ConditionMustBeTrueOrFalseForAllValue) {
         bugCheckInstance.filter((bug, notBug) => (bug.callContext == notBug.callContext && bug.state == notBug.state))
       }
 
@@ -458,12 +458,12 @@ class InstDetect(bugDetector: BugDetector) {
                           val obj = arg(argIndex.toString)._1.objval.value
                           val isBug = jsType match {
                             case EJSType.OBJECT =>
-                              bugOption.BuiltinWrongArgType_TypeMustBeCorrectDefinitely match {
+                              bugOption.BuiltinWrongArgType_TypeMustBeCorrectForAllValue match {
                                 case true => obj.locset.isEmpty || obj.pvalue </ PValueBot
                                 case false => obj.locset.isEmpty
                               }
                             case EJSType.OBJECT_FUNCTION =>
-                              bugOption.BuiltinWrongArgType_TypeMustBeCorrectDefinitely match {
+                              bugOption.BuiltinWrongArgType_TypeMustBeCorrectForAllValue match {
                                 case true => obj.locset.isEmpty || obj.locset.exists(loc => BoolTrue != state.heap(loc).domIn("@function")) || obj.pvalue </ PValueBot
                                 case false => obj.locset.isEmpty || obj.locset.exists(loc => BoolFalse <= state.heap(loc).domIn("@function"))
                             }
@@ -570,7 +570,7 @@ class InstDetect(bugDetector: BugDetector) {
       if (!bugOption.PrimitiveToObject_PrimitiveMustBeConvertedInEveryState) {
         bugCheckInstance.filter((bug, notBug) => true)
       }
-      if (!bugOption.PrimitiveToObject_PrimitiveMustBeConvertedDefinitely) {
+      if (!bugOption.PrimitiveToObject_PrimitiveMustBeConvertedForAllValue) {
         bugCheckInstance.filter((bug, notBug) => (bug.callContext == notBug.callContext && bug.state == notBug.state))
       }
 

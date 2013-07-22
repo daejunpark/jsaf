@@ -442,14 +442,14 @@ class CFG {
       case None => ()
     }
   }
-  
+  /*
   def addCall(call: BlockNode, aftercall: BlockNode): Unit = {
     callFromAftercallMap += (aftercall -> call)
     aftercallFromCallMap += (call -> aftercall)
     callBlock += call
     aftercallBlock += aftercall
   }
-
+  */
   def addCall(call: BlockNode, aftercall: BlockNode, aftercatch: BlockNode): Unit = {
     callFromAftercallMap += (aftercall -> call)
     aftercallFromCallMap += (call -> aftercall)

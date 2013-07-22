@@ -145,9 +145,10 @@ object HTMLSelectElement extends DOM {
         ("name", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("name")), T, T, T))),
         ("size",  PropValue(ObjectValue(Helper.toNumber(PValue(AbsString.alpha(e.getAttribute("size")))), T, T, T))),
         ("tabIndex",  PropValue(ObjectValue(Helper.toNumber(PValue(AbsString.alpha(e.getAttribute("tabIndex")))), T, T, T))),
+        ("form", PropValue(ObjectValue(NullTop, F, T, T))),
         // Modified in DOM Level 2
         ("length",     PropValue(ObjectValue(Helper.toNumber(PValue(AbsString.alpha(e.getAttribute("length")))), T, T, T))))
-    // TODO: 'form' in DOM Level 1, 'options' in DOM Level 2
+    // TODO: 'options' in DOM Level 2
     case _ => {
       System.err.println("* Warning: " + node.getNodeName + " cannot have instance objects.")
       List()
@@ -155,7 +156,8 @@ object HTMLSelectElement extends DOM {
   }
 
   def getInsList(ttype: PropValue, selectedIndex: PropValue, value: PropValue, disabled: PropValue,
-                 multiple: PropValue, name: PropValue, size: PropValue, tabIndex: PropValue, length: PropValue): List[(String, PropValue)] = List(
+                 multiple: PropValue, name: PropValue, size: PropValue, tabIndex: PropValue, 
+                 form: PropValue, length: PropValue): List[(String, PropValue)] = List(
     ("@class",    PropValue(AbsString.alpha("Object"))),
     ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
     ("@extensible", PropValue(BoolTrue)),
@@ -168,6 +170,7 @@ object HTMLSelectElement extends DOM {
     ("name", name),
     ("size",   size),
     ("tabIndex",   tabIndex),
+    ("form",   form),
     // DOM Level 2
     ("length",  length)
   )
@@ -181,10 +184,11 @@ object HTMLSelectElement extends DOM {
     val name = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
     val size = PropValue(ObjectValue(NumTop, T, T, T))
     val tabIndex = PropValue(ObjectValue(NumTop, T, T, T))
+    val form = PropValue(ObjectValue(NullTop, F, T, T))
     val length = PropValue(ObjectValue(NumTop, T, T, T))
     // This object has all properties of the HTMLElement object 
     HTMLElement.default_getInsList :::
-      getInsList(ttype, selectedIndex, value, disabled, multiple, name, size, tabIndex, length)
+      getInsList(ttype, selectedIndex, value, disabled, multiple, name, size, tabIndex, form, length)
   }
 
 }
