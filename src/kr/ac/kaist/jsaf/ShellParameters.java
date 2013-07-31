@@ -40,6 +40,8 @@ public class ShellParameters
     public static final int                        CMD_WIDLPARSE = 22;
     public static final int                        CMD_HTML_SPARSE= 23;
     public static final int                        CMD_WIDLCHECK = 24;
+    public static final int                        CMD_WEBAPP_CONVERT= 97;
+    public static final int                        CMD_DTV_APP= 98;
     public static final int                        CMD_HELP = 99;
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -86,7 +88,7 @@ public class ShellParameters
     public boolean                                 opt_PreContextSensitive;
     public boolean                                 opt_Unsound;
     public boolean                                 opt_Dom;
-	public boolean                                 opt_Tizen;
+    public boolean                                 opt_Tizen;
     public boolean                                 opt_jQuery;
     public boolean                                 opt_MultiThread;
     public int                                     opt_unrollingCount;
@@ -94,6 +96,8 @@ public class ShellParameters
     public String                                  opt_DDG0FileName;
     public String                                  opt_FGFileName;
     public String[]                                FileNames;
+    public boolean                                 opt_Loud; // for dtv mode, show all progress messages (opposite to quiet)
+    public boolean                                 opt_ShowAll; // for dtv mode, show all reported bug messages
 
     ////////////////////////////////////////////////////////////////////////////////
     // Constructor and Initialize
@@ -157,6 +161,8 @@ public class ShellParameters
         opt_DDG0FileName = null;
         opt_FGFileName = null;
         FileNames = new String[0];
+        opt_Loud = false;
+        opt_ShowAll = true;
     }
 
     /**
@@ -264,7 +270,7 @@ public class ShellParameters
             command = CMD_CFG;
             feasibleOptions.add("-out");
             feasibleOptions.add("-dom");
-			feasibleOptions.add("-tizen");
+            feasibleOptions.add("-tizen");
             feasibleOptions.add("-test");
             feasibleOptions.add("-model");
             feasibleOptions.add("-library");
@@ -332,7 +338,7 @@ public class ShellParameters
             feasibleOptions.add("-ddgout");
             feasibleOptions.add("-ddg0out");
             feasibleOptions.add("-fgout");
-			feasibleOptions.add("-tizen");
+            feasibleOptions.add("-tizen");
             feasibleOptions.add("-jq");
         }
         else if(cmd.compareTo("bug-detector") == 0)
@@ -358,6 +364,38 @@ public class ShellParameters
             feasibleOptions.add("-context-5-callsite-and-object");
             feasibleOptions.add("-context-1-callsite-or-object");
             feasibleOptions.add("-unroll");
+        }
+        else if(cmd.compareTo("dtv-app") == 0)
+        {
+            command = CMD_DTV_APP;
+            opt_ShowAll = false;
+            feasibleOptions.add("-dev");
+            feasibleOptions.add("-erroronly");
+            feasibleOptions.add("-locclone");
+            feasibleOptions.add("-test");
+            feasibleOptions.add("-library");
+            feasibleOptions.add("-context-trace");
+            feasibleOptions.add("-context-insensitive");
+            feasibleOptions.add("-context-1-callsite");
+            feasibleOptions.add("-context-2-callsite");
+            feasibleOptions.add("-context-3-callsite");
+            feasibleOptions.add("-context-4-callsite");
+            feasibleOptions.add("-context-5-callsite");
+            feasibleOptions.add("-context-callsite-set");
+            feasibleOptions.add("-context-1-object");
+            feasibleOptions.add("-context-1-callsite-and-object");
+            feasibleOptions.add("-context-2-callsite-and-object");
+            feasibleOptions.add("-context-3-callsite-and-object");
+            feasibleOptions.add("-context-4-callsite-and-object");
+            feasibleOptions.add("-context-5-callsite-and-object");
+            feasibleOptions.add("-context-1-callsite-or-object");
+            feasibleOptions.add("-loud");
+            feasibleOptions.add("-showall");
+        }
+        else if(cmd.compareTo("webapp-convert") == 0)
+        {
+            command = CMD_WEBAPP_CONVERT;
+            opt_ShowAll = false;
         }
         else if(cmd.compareTo("help") == 0)
         {
@@ -458,9 +496,11 @@ public class ShellParameters
         else if(opt.compareTo("-pre-context-sensitive") == 0) opt_PreContextSensitive = true;
         else if(opt.compareTo("-unsound") == 0) opt_Unsound = true;
         else if(opt.compareTo("-dom") == 0) opt_Dom = true;
-		else if(opt.compareTo("-tizen") == 0) opt_Tizen = true;
+        else if(opt.compareTo("-tizen") == 0) opt_Tizen = true;
         else if(opt.compareTo("-jq") == 0) opt_jQuery = true;
         else if(opt.compareTo("-multi-thread") == 0) opt_MultiThread = true;
+        else if(opt.compareTo("-loud") == 0) opt_Loud = true;
+        else if(opt.compareTo("-showall") == 0) opt_ShowAll = true;
         else
         {
             ErrorMessage = "`" + opt + "` is no match for option parameter.";

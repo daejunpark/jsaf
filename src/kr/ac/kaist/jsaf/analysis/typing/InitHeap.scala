@@ -12,7 +12,7 @@ package kr.ac.kaist.jsaf.analysis.typing
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolTrue => T, BoolFalse => F}
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, LEntry}
-import kr.ac.kaist.jsaf.{ShellParameters, Shell}
+import kr.ac.kaist.jsaf.{ShellParameters, Shell, Samsung}
 import kr.ac.kaist.jsaf.compiler.Predefined
 import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
 
@@ -39,11 +39,18 @@ class InitHeap(cfg: CFG) {
         Config.testModeProp.foldLeft(ObjEmpty)((obj, kv) =>
           obj.update(AbsString.alpha(kv._1), PropValue(ObjectValue(kv._2, F, F, F))))
     }
-    // predefined global values for library mode
-    val global1 = Config.libMode match {
+    // predefined global values for dtv mode
+    val global2 = Config.dtvMode match {
       case false => global0
       case true =>
-        Config.libModeProp.foldLeft(global0)((obj, kv) =>
+        Config.dtvModeProp.foldLeft(global0)((obj, kv) =>
+          obj.update(AbsString.alpha(kv._1), PropValue(ObjectValue(kv._2, F, F, F))))
+    }
+    // predefined global values for library mode
+    val global1 = Config.libMode match {
+      case false => global2
+      case true =>
+        Config.libModeProp.foldLeft(global2)((obj, kv) =>
           obj.update(AbsString.alpha(kv._1), PropValue(ObjectValue(kv._2, F, F, F))))
     }
 
@@ -79,12 +86,18 @@ class InitHeap(cfg: CFG) {
     val notYetImplemented = Set[String]()
 
     val predef = if (Shell.pred != null) Shell.pred.all.toSet
-    else (new Predefined(new ShellParameters())).all.toSet
+                 else if (Samsung.pred != null) Samsung.pred.all.toSet
+                 else (new Predefined(new ShellParameters())).all.toSet
     var global = initHeap(GlobalLoc).getProps
 
     // ignore test mode variables
     if (Config.testMode) {
       global = global -- Config.testModeProp.keySet
+    }
+
+    //ignore dtv mode variables
+    if (Config.dtvMode) {
+      global = global -- Config.dtvModeProp.keySet
     }
 
     // check that all modeled variables are include in the list

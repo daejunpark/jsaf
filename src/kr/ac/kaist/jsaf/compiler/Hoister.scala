@@ -10,6 +10,7 @@
 package kr.ac.kaist.jsaf.compiler
 
 import _root_.java.util.{List => JList}
+import kr.ac.kaist.jsaf.Samsung
 import kr.ac.kaist.jsaf.ShellParameters
 import kr.ac.kaist.jsaf.bug_detector._
 import kr.ac.kaist.jsaf.exceptions.StaticError
@@ -24,6 +25,10 @@ import kr.ac.kaist.jsaf.useful.HasAt
 import kr.ac.kaist.jsaf.Shell
 
 class Hoister(program: Program) extends Walker {
+  val pred = if (Shell.pred != null) Shell.pred
+             else if (Samsung.pred != null) Samsung.pred
+             else (new Predefined(new ShellParameters()))
+
   /* Error handling
    * The signal function collects errors during the Hoister phase.
    * To collect multiple errors,
@@ -61,8 +66,7 @@ class Hoister(program: Program) extends Walker {
     override def walk(node: Any) = node match {
       case fd:FunDecl => funDecls ++= List(fd); fd
       case vd@SVarDecl(i, n, _) =>
-        if (isTopLevel && Shell.pred != null && Shell.pred.contains(n.getText)) vd
-        else if (isTopLevel && Shell.pred == null && (new Predefined(new ShellParameters())).contains(n.getText)) vd
+        if (isTopLevel && pred.contains(n.getText)) vd
         else {
           val vds = List(SVarDecl(i, n, None))
           varDecls ++= vds

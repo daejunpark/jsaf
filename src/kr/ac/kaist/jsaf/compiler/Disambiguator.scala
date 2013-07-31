@@ -10,6 +10,8 @@
 package kr.ac.kaist.jsaf.compiler
 
 import _root_.java.util.{List => JList}
+import kr.ac.kaist.jsaf.Samsung
+import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.ShellParameters
 import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.nodes._
@@ -21,7 +23,6 @@ import kr.ac.kaist.jsaf.scala_src.useful.ErrorLog
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
 import kr.ac.kaist.jsaf.useful.HasAt
-import kr.ac.kaist.jsaf.Shell
 
 /**
  * Eliminates ambiguities in an AST that can be resolved solely by knowing what
@@ -49,8 +50,9 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
   /* Environment for renaming identifiers. */
   type Env = List[(String, String)]
   val emptyLabel = ("empty", "empty")
-  val pred = if (Shell.pred == null) new Predefined(new ShellParameters())
-             else Shell.pred
+  val pred = if (Shell.pred != null) Shell.pred
+             else if (Samsung.pred != null) Samsung.pred
+             else new Predefined(new ShellParameters())
   var env: Env = pred.vars.map(v => (v,v)) ++
                  pred.funs.map(f => (f,f)) ++ List(("alert", "alert"), // alert???
                                                    (NU.internalPrint, NU.internalPrint))

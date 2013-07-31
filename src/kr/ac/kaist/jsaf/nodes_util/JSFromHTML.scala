@@ -9,18 +9,19 @@
 
 package kr.ac.kaist.jsaf.nodes_util
 
-import _root_.java.io._
-import _root_.java.net._
-import _root_.java.util.{List => JList, HashMap}
-import _root_.java.lang.{Integer => JInteger}
+import java.io._
+import java.net._
+import java.nio.charset.CodingErrorAction
+import java.util.{List => JList, HashMap}
+import java.lang.{Integer => JInteger}
+import scala.io.Codec
 import edu.rice.cs.plt.tuple.{Option => JOption}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 import net.htmlparser.jericho._
 import kr.ac.kaist.jsaf.nodes.Program
 import kr.ac.kaist.jsaf.compiler.Parser
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
-import kr.ac.kaist.jsaf.useful.Triple
-import kr.ac.kaist.jsaf.useful.Pair
+import kr.ac.kaist.jsaf.useful.{Useful, Triple, Pair}
 import kr.ac.kaist.jsaf.analysis.typing.Config
 import org.cyberneko.html.parsers._
 import org.apache.html.dom.HTMLDocumentImpl
@@ -44,7 +45,8 @@ class JSFromHTML(filename: String) extends Walker {
   /*
    * Parse all code in the <script> tags, and return an AST
    */
-  def parseScripts(): Pair[Program, HashMap[String, String]] = {
+  def parseScripts(): Pair[Program, HashMap[String, String]] = parseScripts(List())
+  def parseScripts(files: JList[String]): Pair[Program, HashMap[String, String]] = {
     //System.out.println(source);
     // filter out script elements that have non-JavaScript code
     val filtered_scriptelements = toList(scriptelements).filter(x =>
@@ -66,18 +68,26 @@ class JSFromHTML(filename: String) extends Walker {
         true
     })
 
+    implicit val codec = Codec("UTF-8")
+    codec.onMalformedInput(CodingErrorAction.REPLACE)
+    codec.onUnmappableCharacter(CodingErrorAction.REPLACE)
+
     // get a list of JavaScript code in script elements
-    val codecontents: JList[Triple[String, JInteger, String]] = nonmodeled_scriptelements.map(x =>
+    val codecontents: JList[Triple[String, JInteger, String]] =
+      nonmodeled_scriptelements.foldLeft[JList[Triple[String, JInteger, String]]](List())((l, x) =>
       { 
-        val srcname = x.getAttributeValue("src")
+        var srcname = x.getAttributeValue("src")
         // embedded script code
         if(srcname == null) {
           val s:Segment = x.getContent
           //System.out.println(s.getRowColumnVector().getRow() + " : " + s.toString)
-          new Triple(filename, new JInteger(s.getRowColumnVector().getRow()), s.toString())
+          l.add(new Triple(filename, new JInteger(s.getRowColumnVector().getRow()), s.toString()))
         }
         // code from external source
         else {
+          // extract a JavaScript file name from a string such as "main.js?135895164373817"
+          if (!srcname.endsWith(".js"))
+            srcname = srcname.take(srcname.replaceAll(".js", "<>").indexOf('<')).concat(".js")
           val srcsource = new File(srcname)
           val path = if(srcsource.isAbsolute()) srcname 
                      else {
@@ -85,10 +95,31 @@ class JSFromHTML(filename: String) extends Walker {
                        if(parentpath == null) srcname
                        else parentpath + "/" + srcname
                      }
-          val source = scala.io.Source.fromFile(path).mkString
-          new Triple(path, new JInteger(1), source)
+          val pathf = new File(path)
+          if (pathf.exists()){
+            val source = scala.io.Source.fromFile(path)
+            l.add(new Triple(path, new JInteger(1), source.mkString))
+            source.close
+          } else {
+            System.out.println("WARNING: Cannot find " + srcname)
+          }
         }
+        l
       })
+
+    codecontents.addAll( // append given files
+      toList(files).map(x => {
+        val file: File = new File(x)
+        val in: BufferedReader = Useful.utf8BufferedFileReader(file)
+        var code: String = ""
+        var line: String = in.readLine
+        while (line != null){
+          code = code + line + "\n"
+          line = in.readLine
+        }
+        in.close()
+        new Triple(x, new JInteger(1), code)
+    }))
 
     // Collect event handler code on the event attributes
     var loadevent_count = 1
@@ -97,6 +128,7 @@ class JSFromHTML(filename: String) extends Walker {
     var mouseevent_count = 1
     var otherevent_count = 1
     val elementsList = toList(source.getAllElements)
+
     val eventsources: JList[Triple[String, JInteger, String]] =
       elementsList.foldLeft(List[Triple[String, JInteger, String]]())((event_list, e) => {
         val attributes = e.getAttributes
@@ -144,11 +176,12 @@ class JSFromHTML(filename: String) extends Walker {
         else event_list
       })
       codecontents.addAll(eventsources)
-      Parser.scriptToAST(codecontents)
+    Parser.scriptToAST(codecontents)
   }
 
   private val regex_jquery = """.*jquery[^/]*\.js""".r
   private val regex_mobile = """.*mobile[^/]*\.js""".r
+  private val regex_dtv = """.*af/2\.0\.0/loader[^/]*\.js""".r
 
   /* eable model */
   def enableModel(srcname: String): Unit = {
@@ -162,6 +195,7 @@ class JSFromHTML(filename: String) extends Walker {
   /* check library */
   def isModeledLibrary(srcname: String): Boolean = {
     list_regex_lib.exists((regex) =>
-      regex_jquery.findFirstIn(srcname).nonEmpty && regex_mobile.findFirstIn(srcname).isEmpty)
+      ((regex_jquery.findFirstIn(srcname).nonEmpty && regex_mobile.findFirstIn(srcname).isEmpty) ||
+      (Config.dtvMode && regex_dtv.findFirstIn(srcname).nonEmpty)))
   }
 }
