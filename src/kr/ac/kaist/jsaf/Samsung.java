@@ -112,6 +112,7 @@ public final class Samsung {
                 return_code = StrictMain.strict();
                 break;
             case ShellParameters.CMD_CLONE_DETECTOR :
+                NodeUtil.setKeepComments(true);
                 return_code = CloneDetectorMain.cloneDetector();
                 break;
             case ShellParameters.CMD_COVERAGE :
@@ -162,6 +163,7 @@ public final class Samsung {
                 return_code = SamsungAnalyzeMain.analyze();
                 break;
             case ShellParameters.CMD_WEBAPP_CONVERT :
+                NodeUtil.setKeepComments(true);
                 return_code = SamsungWebappConvertMain.convert();
                 break;
             case ShellParameters.CMD_HELP :

@@ -45,8 +45,13 @@ class JSFromHTML(filename: String) extends Walker {
   /*
    * Parse all code in the <script> tags, and return an AST
    */
-  def parseScripts(): Pair[Program, HashMap[String, String]] = parseScripts(List())
-  def parseScripts(files: JList[String]): Pair[Program, HashMap[String, String]] = {
+  def parseNoSrcEventScripts(): Pair[Program, HashMap[String, String]] =
+    parseScripts(true, List())
+  def parseScripts(): Pair[Program, HashMap[String, String]] =
+    parseScripts(false, List())
+  def parseScripts(files: JList[String]): Pair[Program, HashMap[String, String]] =
+    parseScripts(false, files)
+  def parseScripts(noSrcEvent: Boolean, files: JList[String]): Pair[Program, HashMap[String, String]] = {
     //System.out.println(source);
     // filter out script elements that have non-JavaScript code
     val filtered_scriptelements = toList(scriptelements).filter(x =>
@@ -60,9 +65,13 @@ class JSFromHTML(filename: String) extends Walker {
     // filter out modeled library and enable model
     val nonmodeled_scriptelements = filtered_scriptelements.filter((e) => {
       val srcname = e.getAttributeValue("src")
-      if (srcname != null && isModeledLibrary(srcname)) {
-        enableModel(srcname); // side-effect
-        false
+      if (srcname != null) {
+        if (noSrcEvent) false
+        else if (isModeledLibrary(srcname)) {
+          enableModel(srcname); // side-effect
+          false
+        }
+        else true
       }
       else
         true
@@ -129,6 +138,7 @@ class JSFromHTML(filename: String) extends Walker {
     var otherevent_count = 1
     val elementsList = toList(source.getAllElements)
 
+    if (!noSrcEvent) {
     val eventsources: JList[Triple[String, JInteger, String]] =
       elementsList.foldLeft(List[Triple[String, JInteger, String]]())((event_list, e) => {
         val attributes = e.getAttributes
@@ -176,6 +186,7 @@ class JSFromHTML(filename: String) extends Walker {
         else event_list
       })
       codecontents.addAll(eventsources)
+    }
     Parser.scriptToAST(codecontents)
   }
 

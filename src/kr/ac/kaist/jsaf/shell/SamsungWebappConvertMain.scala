@@ -15,14 +15,13 @@ import java.lang.{Integer => JInteger}
 import java.util.HashMap
 import scala.collection.JavaConversions
 import kr.ac.kaist.jsaf.exceptions.UserError
-import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete
+import kr.ac.kaist.jsaf.nodes_util.{JSAstToConcrete, JSFromHTML}
 import kr.ac.kaist.jsaf.compiler.Parser
 import kr.ac.kaist.jsaf.nodes.Program
 import kr.ac.kaist.jsaf.scala_src.useful.Arrays._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
-import kr.ac.kaist.jsaf.nodes_util.JSFromHTML
 import kr.ac.kaist.jsaf.Samsung
-import kr.ac.kaist.jsaf.useful.{Useful, Pair}
+import kr.ac.kaist.jsaf.useful.{Useful, Pair, Files}
 import kr.ac.kaist.jsaf.webapp_converter.{ConvertingResultStorage, ConversionInfo, ConvertingResult, WebappConverter}
 import java.util
 
@@ -80,10 +79,10 @@ object SamsungWebappConvertMain {
   /* Convert a .js file.
    */
   def convertJs(f: String) = {
-    System.out.println("Converting "+f)
+    System.out.println("File "+f)
     val file = new File(f)
     try {
-      convertAST(Parser.parsePgm(file, file.getCanonicalPath, new JInteger(0), false), f+".converted")
+      convertAST(Parser.parsePgm(file, file.getCanonicalPath, new JInteger(0), false), f, false)
     } catch {
       case fnfe:FileNotFoundException =>
         throw Parser.convertExn(fnfe, f)
@@ -92,32 +91,38 @@ object SamsungWebappConvertMain {
     }
   }
 
-  def convertAST(_program: Program, outfile: String) = {
+  def convertAST(_program: Program, infile: String, isHTML: Boolean) = {
     val converter: WebappConverter = new WebappConverter
     val program = converter.doit(_program).asInstanceOf[Program]
-    convertingResult.appendConversionInfoList(converter.logList)
-    val converted = JSAstToConcrete.doit(program)
-    try {
-      val pair: Pair[FileWriter, BufferedWriter] = Useful.filenameToBufferedWriter(outfile)
-      val (fw, writer) = (pair.first, pair.second)
-      writer.write(converted)
-      writer.close
-      fw.close
-    }
-    catch {
-      case e: IOException => {
-        throw new IOException("IOException " + e + "while writing " + outfile)
+    if (!converter.logList.isEmpty) {
+      convertingResult.appendConversionInfoList(converter.logList)
+      val converted = JSAstToConcrete.doit(program)
+      val outfile = if (isHTML) infile+".converted"
+                    else { Files.mv(infile, infile+".org"); infile }
+      try {
+        val pair: Pair[FileWriter, BufferedWriter] = Useful.filenameToBufferedWriter(outfile)
+        val (fw, writer) = (pair.first, pair.second)
+        writer.write(converted)
+        writer.close
+        fw.close
       }
-    }
-    System.out.println(" Done.")
+      catch {
+        case e: IOException => {
+          throw new IOException("IOException " + e + "while writing " + outfile)
+        }
+      }
+      if (isHTML)
+        System.out.println("Scripts embedded in " + infile + " are converted and saved to " + outfile)
+      else System.out.println(" is converted.")
+    } else
+      System.out.println(" is not converted.")
   }
 
   /* Convert an .html file.
    */
   def convertHtml(f: String) = {
-    System.out.println("Converting "+f)
     val file = new File(f)
     val jshtml = new JSFromHTML(file.getCanonicalPath)
-    convertAST(jshtml.parseScripts.first, f+".converted")
+    convertAST(jshtml.parseNoSrcEventScripts.first, f, true)
   }
 }

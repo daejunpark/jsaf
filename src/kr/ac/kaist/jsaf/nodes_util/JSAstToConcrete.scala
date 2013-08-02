@@ -19,14 +19,6 @@ import kr.ac.kaist.jsaf.scala_src.useful.Sets._
 import edu.rice.cs.plt.iter.IterUtil
 import edu.rice.cs.plt.tuple.Option
 
-/* Converts a Node to a string which is the concrete version of that node
- *
- * Caveats:
- * 1. Comments are not preserved.
- *
- * Possible improvements:
- * 1. We may want to keep comments.
- */
 object JSAstToConcrete extends Walker {
 
   val width = 50
@@ -334,7 +326,6 @@ object JSAstToConcrete extends Walker {
       s.append("\n").append(getIndent).append("})")
       s.toString
     }
-    //TODO: test
     case SGetProp(info, prop, SFunctional(fds, vds, body, _, _)) => {
       val s: StringBuilder = new StringBuilder
       s.append("get ").append(walk(prop)).append("()\n").append(getIndent).append("{\n")
@@ -379,7 +370,6 @@ object JSAstToConcrete extends Walker {
       s.toString
     }
     case SNew(info, lhs) => {
-      //TODO: check parsing?
       val s: StringBuilder = new StringBuilder
       s.append("new ").append(walk(lhs))
       s.toString
@@ -423,7 +413,6 @@ object JSAstToConcrete extends Walker {
       s.append(";")
       s.toString
     }
-    //TODO: test
     case SSetProp(info, prop, SFunctional(fds, vds, body, _, List(id))) => {
       val s: StringBuilder = new StringBuilder
       s.append("set ").append(walk(prop)).append("(")
@@ -435,7 +424,8 @@ object JSAstToConcrete extends Walker {
     case SStringLiteral(info, quote, txt) => {
       val s: StringBuilder = new StringBuilder
       s.append(quote)
-      pp(s, NU.unescapeJava(txt))
+      if (NU.getKeepComments) pp(s, txt)
+      else pp(s, NU.unescapeJava(txt))
       s.append(quote)
       s.toString
     }
@@ -592,7 +582,8 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(join(names, ".", new StringBuilder("")))
       s.toString
-    case SComment(info, comment) => comment
+    case SComment(info, comment) =>
+      "// " + info.getSpan + "\n    " + comment
     case _:NoOp => ""
 
     case Some(in) => walk(in)

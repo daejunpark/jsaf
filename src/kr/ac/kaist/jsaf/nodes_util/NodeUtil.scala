@@ -26,6 +26,10 @@ object NodeUtil {
   def setCloneDetector(flag: Boolean) = { isCloneDetector = flag }
   def getCloneDetector() = isCloneDetector
 
+  var keepComments = false
+  def setKeepComments(flag: Boolean) = { keepComments = flag }
+  def getKeepComments() = keepComments
+
   def unwrapParen(expr: Expr) = expr match {
     case SParenthesized(info, body) => body
     case _ => expr

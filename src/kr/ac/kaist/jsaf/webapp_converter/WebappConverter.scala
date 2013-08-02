@@ -94,7 +94,7 @@ class WebappConverter extends Walker {
     elem.blockNum = _block
     elem.originalSECAPI = _org
     elem.convetedTizenAPI = _conv
-    logList.add(elem)
+    logList ++= List(elem)
   }
 
   override def walk(node: Any): Any = node match {
