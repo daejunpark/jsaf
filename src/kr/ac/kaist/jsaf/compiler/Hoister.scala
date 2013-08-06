@@ -10,7 +10,6 @@
 package kr.ac.kaist.jsaf.compiler
 
 import _root_.java.util.{List => JList}
-import kr.ac.kaist.jsaf.Samsung
 import kr.ac.kaist.jsaf.ShellParameters
 import kr.ac.kaist.jsaf.bug_detector._
 import kr.ac.kaist.jsaf.exceptions.StaticError
@@ -26,7 +25,6 @@ import kr.ac.kaist.jsaf.Shell
 
 class Hoister(program: Program) extends Walker {
   val pred = if (Shell.pred != null) Shell.pred
-             else if (Samsung.pred != null) Samsung.pred
              else (new Predefined(new ShellParameters()))
 
   /* Error handling

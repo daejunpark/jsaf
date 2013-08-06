@@ -10,7 +10,6 @@
 package kr.ac.kaist.jsaf.compiler
 
 import _root_.java.util.{List => JList}
-import kr.ac.kaist.jsaf.Samsung
 import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.ShellParameters
 import kr.ac.kaist.jsaf.exceptions.StaticError
@@ -51,7 +50,6 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
   type Env = List[(String, String)]
   val emptyLabel = ("empty", "empty")
   val pred = if (Shell.pred != null) Shell.pred
-             else if (Samsung.pred != null) Samsung.pred
              else new Predefined(new ShellParameters())
   var env: Env = pred.vars.map(v => (v,v)) ++
                  pred.funs.map(f => (f,f)) ++ List(("alert", "alert"), // alert???

@@ -17,7 +17,6 @@ import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.nodes_util.NodeRelation
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.nodes_util.EJSType
-import kr.ac.kaist.jsaf.ShellParameters
 
 class InstDetect(bugDetector: BugDetector) {
   val cfg           = bugDetector.cfg
@@ -28,9 +27,6 @@ class InstDetect(bugDetector: BugDetector) {
   val stateManager  = bugDetector.stateManager
   val CommonDetect  = bugDetector.CommonDetect
   val libMode       = bugDetector.libMode
-  val dtv           = bugDetector.params.command == ShellParameters.CMD_DTV_APP
-
-
 
   ////////////////////////////////////////////////////////////////
   // Bug Detection Main (check CFGInst)
@@ -127,7 +123,7 @@ class InstDetect(bugDetector: BugDetector) {
     //  AccessingNullOrUndef Check
     ////////////////////////////////////////////////////////////////
 
-    def accessingNullOrUndefCheck(span: Span, expr: CFGExpr): Unit = if (!dtv) {
+    def accessingNullOrUndefCheck(span: Span, expr: CFGExpr): Unit = {
       // Get the object name
       val objName = varManager.getUserVarAssign(expr) match {
         case name: BugVar0 => "'" + name.toString + "'"
@@ -487,7 +483,6 @@ class InstDetect(bugDetector: BugDetector) {
 
               // FunctionArgSize
               // Check for each argument location set
-            if (!dtv)
               for (argLoc <- argLocSet) {
                 state.heap(argLoc)("length")._1.objval.value.pvalue.numval match {
                   case UIntSingle(n) =>

@@ -129,15 +129,6 @@ object Config {
   def setPreDebug(flag: Boolean) = preDebug = flag
 
   /**
-   * DTV App mode flag
-   */
-  var dtvMode = false
-  def setDtvMode = dtvMode = true
-  val dtvModeProp = HashMap[String, Value](
-    ("__TOP", Value(PValueTop))
-  )
-
-  /**
    * DOM mode flag
    */
   var domMode = false

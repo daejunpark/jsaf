@@ -202,7 +202,6 @@ class Predefined(params: ShellParameters) {
   val varsAll = params.command match {
     case ShellParameters.CMD_HTML => vars ++ doms
     case ShellParameters.CMD_HTML_SPARSE => vars ++ doms
-    case ShellParameters.CMD_DTV_APP => vars ++ doms
     case _ => vars
   }
 

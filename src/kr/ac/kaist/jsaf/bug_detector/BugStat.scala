@@ -12,11 +12,9 @@ package kr.ac.kaist.jsaf.bug_detector
 import java.util.{HashMap => JMap}
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.bug_detector._
-import kr.ac.kaist.jsaf.ShellParameters
 
 class BugStat(bugDetector: BugDetector) {
   val lib : Boolean = bugDetector.libMode
-  val dtv : Boolean = bugDetector.params.command == ShellParameters.CMD_DTV_APP
   private var startTime : Long = 0L
   private var endTime   : Long = 0L
 
@@ -52,32 +50,23 @@ class BugStat(bugDetector: BugDetector) {
   private def printBugStatistics: Unit = {
     System.out.println("============ Statistics =============")
     System.out.println("|  AbsentRead              : %6d |".format(BugCount(AbsentReadProperty) + BugCount(AbsentReadVariable)))
-    if (!dtv)
-      System.out.println("|  BinaryOperator          : %6d |".format(BugCount(BinaryOpSecondType)))
+    System.out.println("|  BinaryOperator          : %6d |".format(BugCount(BinaryOpSecondType)))
     System.out.println("|  BuiltinWrongArgType     : %6d |".format(BugCount(BuiltinWrongArgType)))
-    if (!dtv)
-      System.out.println("|  CallConstFunc           : %6d |".format(BugCount(CallConstFunc)))
+    System.out.println("|  CallConstFunc           : %6d |".format(BugCount(CallConstFunc)))
     System.out.println("|  CallNonConstructor      : %6d |".format(BugCount(CallNonConstructor)))
     System.out.println("|  CallNonFunction         : %6d |".format(BugCount(CallNonFunction)))
-    if (!dtv)
-      System.out.println("|  ConditionalBranch       : %6d |".format(BugCount(CondBranch)))
+    System.out.println("|  ConditionalBranch       : %6d |".format(BugCount(CondBranch)))
     System.out.println("|  ConvertToNumber         : %6d |".format(BugCount(ConvertUndefToNum)))
     System.out.println("|  DefaultValueTypeError   : %6d |".format(BugCount(DefaultValueTypeError)))
-    if (!dtv) {
-      System.out.println("|  FunctionArgSize         : %6d |".format(BugCount(FunctionArgSize)))
-      System.out.println("|  GlobalThis              : %6d |".format(BugCount(GlobalThis)))
-    }
+    System.out.println("|  FunctionArgSize         : %6d |".format(BugCount(FunctionArgSize)))
+    System.out.println("|  GlobalThis              : %6d |".format(BugCount(GlobalThis)))
     System.out.println("|  ImplicitTypeConversion  : %6d |".format(/*BugCount(ImplicitCallToString) + BugCount(ImplicitCallValueOf) +*/ BugCount(ImplicitTypeConvert)))
-    if (!dtv)
-      System.out.println("|  AccessingNullOrUndef    : %6d |".format(BugCount(ObjectNullOrUndef)))
+    System.out.println("|  AccessingNullOrUndef    : %6d |".format(BugCount(ObjectNullOrUndef)))
     System.out.println("|  PrimitiveToObject       : %6d |".format(BugCount(PrimitiveToObject)))
-    if (!dtv)
-      System.out.println("|  Shadowing               : %6d |".format(BugCount(ShadowedFuncByFunc) + BugCount(ShadowedParamByFunc) + BugCount(ShadowedVarByFunc) + BugCount(ShadowedVarByParam) + BugCount(ShadowedVarByVar)))
-    if (!dtv && !bugDetector.params.opt_jQuery) {
-      System.out.println("|  UncalledFuction         : %6d |".format(getUnusedFunctionCount))
-      System.out.println("|  UnreachableCode         : %6d |".format(BugCount(UnreachableCode)))
-      System.out.println("|  ValueNeverRead          : %6d |".format(BugCount(UnusedVarProp)))
-    }
+    System.out.println("|  Shadowing               : %6d |".format(BugCount(ShadowedFuncByFunc) + BugCount(ShadowedParamByFunc) + BugCount(ShadowedVarByFunc) + BugCount(ShadowedVarByParam) + BugCount(ShadowedVarByVar)))
+    System.out.println("|  UncalledFuction         : %6d |".format(getUnusedFunctionCount))
+    System.out.println("|  UnreachableCode         : %6d |".format(BugCount(UnreachableCode)))
+    System.out.println("|  ValueNeverRead          : %6d |".format(BugCount(UnusedVarProp)))
     System.out.println("|  VaryingTypeArguments    : %6d |".format(BugCount(VaryingTypeArguments)))
     System.out.println("|  WrongThisType           : %6d |".format(BugCount(WrongThisType)))
     System.out.println("=====================================")

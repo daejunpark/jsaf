@@ -17,7 +17,6 @@ import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.nodes_util.EJSOp
 import kr.ac.kaist.jsaf.analysis.typing.CState
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
-import kr.ac.kaist.jsaf.ShellParameters
 
 class ExprDetect(bugDetector: BugDetector) {
   val cfg           = bugDetector.cfg
@@ -27,8 +26,6 @@ class ExprDetect(bugDetector: BugDetector) {
   val varManager    = bugDetector.varManager
   val stateManager  = bugDetector.stateManager
   val CommonDetect  = bugDetector.CommonDetect
-  val dtv           = bugDetector.params.command == ShellParameters.CMD_DTV_APP
-
 
   ////////////////////////////////////////////////////////////////
   // Bug Detection Main (check CFGExpr)
@@ -216,7 +213,7 @@ class ExprDetect(bugDetector: BugDetector) {
     // BinaryOpSecondType Check (in & instanceof)
     ////////////////////////////////////////////////////////////////
 
-    def binaryOpSecondTypeCheck(span: Span, op: IROp, second: CFGExpr): Unit = if (!dtv) {
+    def binaryOpSecondTypeCheck(span: Span, op: IROp, second: CFGExpr): Unit = {
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance()
       val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(BinaryOpSecondType))

@@ -11,13 +11,13 @@ package kr.ac.kaist.jsaf.bug_detector
 
 import java.util.{HashMap=>JHashMap}
 import java.util.{List => JList}
-import kr.ac.kaist.jsaf.Samsung
+import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 
 class BugDetector(_cfg: CFG, _typing: TypingInterface, fileMap: JHashMap[String, String], quiet: Boolean, _shadowings: JList[BugInfo]) {
-  val params        = Samsung.params
+  val params        = Shell.params
   val cfg           = _cfg
   val typing        = _typing
   val callGraph     = typing.computeCallGraph

@@ -17,7 +17,6 @@ import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
 import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.scala_src.nodes._
-import kr.ac.kaist.jsaf.ShellParameters
 
 class FinalDetect(bugDetector: BugDetector) {
   val cfg           = bugDetector.cfg
@@ -33,25 +32,18 @@ class FinalDetect(bugDetector: BugDetector) {
   val analyzeMode   = bugDetector.analyzeMode
   val env           = bugDetector.env
   val quiet         = bugDetector.quietFlag
-  val dtv           = bugDetector.params.command == ShellParameters.CMD_DTV_APP
-
-
 
   ////////////////////////////////////////////////////////////////
   // Bug Detection Main (final check)
   ////////////////////////////////////////////////////////////////
 
   def check(): Unit = {
-    if (!dtv) {
-      callConstFuncCheck
-      conditionalBranchCheck
-      shadowingCheck
-    }
-    if (!dtv && !bugDetector.params.opt_jQuery) {
-      unreachableCodeCheck
-      unusedFunctionCheck
-      unusedVarPropCheck
-    }
+    callConstFuncCheck
+    conditionalBranchCheck
+    shadowingCheck
+    unreachableCodeCheck
+    unusedFunctionCheck
+    unusedVarPropCheck
     varyingTypeArgumentsCheck
   }
 
