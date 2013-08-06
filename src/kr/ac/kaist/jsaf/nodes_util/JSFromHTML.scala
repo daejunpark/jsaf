@@ -192,7 +192,6 @@ class JSFromHTML(filename: String) extends Walker {
 
   private val regex_jquery = """.*jquery[^/]*\.js""".r
   private val regex_mobile = """.*mobile[^/]*\.js""".r
-  private val regex_dtv = """.*af/2\.0\.0/loader[^/]*\.js""".r
 
   /* eable model */
   def enableModel(srcname: String): Unit = {
@@ -206,7 +205,6 @@ class JSFromHTML(filename: String) extends Walker {
   /* check library */
   def isModeledLibrary(srcname: String): Boolean = {
     list_regex_lib.exists((regex) =>
-      ((regex_jquery.findFirstIn(srcname).nonEmpty && regex_mobile.findFirstIn(srcname).isEmpty) ||
-      (Config.dtvMode && regex_dtv.findFirstIn(srcname).nonEmpty)))
+      (regex_jquery.findFirstIn(srcname).nonEmpty && regex_mobile.findFirstIn(srcname).isEmpty))
   }
 }
