@@ -35,10 +35,10 @@ public class ShellParameters
     public static final int                        CMD_PREANALYZE = 16; // This command should be inserted into CMD_ANALYZE as an option.
     public static final int                        CMD_SPARSE = 17; // This command should be inserted into CMD_ANALYZE as an option.
     public static final int                        CMD_HTML = 18; // This command should be inserted into CMD_ANALYZE as an option.
-    public static final int                        CMD_NEW_SPARSE = 19; // This command should be inserted into CMD_ANALYZE as an option.
-    public static final int                        CMD_BUG_DETECTOR = 21;
-    public static final int                        CMD_WIDLPARSE = 22;
-    public static final int                        CMD_HTML_SPARSE= 23;
+    public static final int                        CMD_HTML_SPARSE= 19; // This command should be inserted into CMD_ANALYZE as an option.
+    public static final int                        CMD_NEW_SPARSE = 20; // This command should be inserted into CMD_ANALYZE as an option.
+    public static final int                        CMD_BUG_DETECTOR = 22;
+    public static final int                        CMD_WIDLPARSE = 23;
     public static final int                        CMD_WIDLCHECK = 24;
     public static final int                        CMD_HELP = 99;
 
@@ -47,7 +47,7 @@ public class ShellParameters
     ////////////////////////////////////////////////////////////////////////////////
     public int                                     command;
     public String                                  opt_OutFileName;
-    public boolean                                 opt_DB;
+    public String                                  opt_DB;
     public boolean                                 opt_Time;
     public boolean                                 opt_Module;
     public boolean                                 opt_IgnoreErrorOnAST;
@@ -86,7 +86,7 @@ public class ShellParameters
     public boolean                                 opt_PreContextSensitive;
     public boolean                                 opt_Unsound;
     public boolean                                 opt_Dom;
-    public boolean                                 opt_Tizen;
+	public boolean                                 opt_Tizen;
     public boolean                                 opt_jQuery;
     public boolean                                 opt_MultiThread;
     public int                                     opt_unrollingCount;
@@ -110,7 +110,7 @@ public class ShellParameters
     {
         command = CMD_USAGE;
         opt_OutFileName = null;
-        opt_DB = false;
+        opt_DB = null;
         opt_Time = false;
         opt_Module = false;
         opt_IgnoreErrorOnAST = false;
@@ -332,7 +332,7 @@ public class ShellParameters
             feasibleOptions.add("-ddgout");
             feasibleOptions.add("-ddg0out");
             feasibleOptions.add("-fgout");
-            feasibleOptions.add("-tizen");
+			feasibleOptions.add("-tizen");
             feasibleOptions.add("-jq");
         }
         else if(cmd.compareTo("bug-detector") == 0)
@@ -419,7 +419,16 @@ public class ShellParameters
                 ConsumedParameterCount = 1;
             }
         }
-        else if(opt.compareTo("-db") == 0) opt_DB = true;
+        else if(opt.compareTo("-db") == 0)
+        {
+            if(index + 1 >= args.length)
+            {
+                ErrorMessage = "`" + opt + "` parameter needs an output filename. See help.";
+            } else {
+                opt_DB = args[index + 1];
+                ConsumedParameterCount = 1;
+            }
+        }
         else if(opt.compareTo("-time") == 0) opt_Time = true;
         else if(opt.compareTo("-module") == 0) opt_Module = true;
         else if(opt.compareTo("-ignoreErrorOnAST") == 0) opt_IgnoreErrorOnAST = true;
@@ -458,7 +467,7 @@ public class ShellParameters
         else if(opt.compareTo("-pre-context-sensitive") == 0) opt_PreContextSensitive = true;
         else if(opt.compareTo("-unsound") == 0) opt_Unsound = true;
         else if(opt.compareTo("-dom") == 0) opt_Dom = true;
-        else if(opt.compareTo("-tizen") == 0) opt_Tizen = true;
+		else if(opt.compareTo("-tizen") == 0) opt_Tizen = true;
         else if(opt.compareTo("-jq") == 0) opt_jQuery = true;
         else if(opt.compareTo("-multi-thread") == 0) opt_MultiThread = true;
         else

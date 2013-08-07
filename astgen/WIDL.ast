@@ -102,6 +102,8 @@ interface WNode() extends HasAt;
             WTSQuestion();
         abstract WEAttribute();
             WEAArray();
+            WEANoInterfaceObject();
+            WEACallbackFunctionOnly();
             WEAString(String str);
             WEAQuestion();
             WEAEllipsis();

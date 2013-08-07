@@ -1,0 +1,61 @@
+module Window {    
+    [NoInterfaceObject] interface WebAPIsTVWindowManager {
+        readonly attribute TVWindowManager window;
+    };
+    TV implements WebAPIsTVWindowManager;
+    
+    [NoInterfaceObject] interface TVWindowManager {  
+
+        const unsigned long SOURCE_MODE_TV = 0;
+
+        const unsigned long SOURCE_MODE_AV = 1;
+
+        const unsigned long SOURCE_MODE_SVIDEO  = 2;
+
+        const unsigned long SOURCE_MODE_COMP = 3;
+
+        const unsigned long SOURCE_MODE_PC = 4;
+
+        const unsigned long SOURCE_MODE_HDMI = 5;
+
+        const unsigned long SOURCE_MODE_SCART= 6;
+
+        const unsigned long SOURCE_MODE_DVI = 7;
+
+        const unsigned long SOURCE_MODE_MEDIA = 8;
+
+        const unsigned long SOURCE_MODE_IPTV = 9;
+               
+        void getAvailableWindow(in AvailableWindowListCallback successCallback,  
+                                       in optional ErrorCallback errorCallback) raises(WebAPIException);
+                
+        void setSource(in SourceInfo sourceInfo, 
+                          in SourceChangedSuccessCallback sourceChangedSuccessCallback,  
+                          in optional ErrorCallback? errorCallback,  
+                          in optional unsigned short windowID) raises (WebAPIException);
+ 
+        SourceInfo getSource(in optional unsigned short windowID) raises(WebAPIException);      
+                              
+        boolean setRect(in SRect rect, in optional unsigned short windowID) raises(WebAPIException);
+                        
+        boolean show(in optional unsigned short windowID) raises(WebAPIException);
+        
+        boolean hide(in optional unsigned short windowID) raises(WebAPIException);       
+
+    };
+    
+    dictionary SourceInfo {
+        unsigned short type;
+
+        unsigned long number;
+    };
+    
+    [Callback=FuntionOnly, NoInterfaceObject] interface AvailableWindowListCallback {
+        void onsuccess(UnsignedShortArray windowArray);
+    };
+    
+    [Callback=FuntionOnly, NoInterfaceObject] interface SourceChangedSuccessCallback {
+
+        void onsuccess(SourceInfo info, unsigned short windowID);
+    };
+};

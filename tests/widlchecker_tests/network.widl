@@ -1,0 +1,77 @@
+module Network {
+
+
+    typedef sequence<Network> NetworkArray;
+
+
+    [NoInterfaceObject] interface WebAPIsNetworkManager {
+        readonly attribute NetworkManager network;
+    };
+    WebAPIs implements WebAPIsNetworkManager;
+
+
+    enum NetworkSettingMode { "Auto", "Manual", "NotSupported" };
+
+
+    enum InterfaceType { "Wi-Fi", "Cellular", "Wired" };
+
+
+    [NoInterfaceObject] interface NetworkManager {
+
+        void getAvailableNetworks(in NetworkListSuccessCallback successCallback,
+                                         in optional ErrorCallback? errorCallback) raises (WebAPIException);
+    };
+
+
+    [NoInterfaceObject] interface Network {
+
+         readonly attribute DOMString dns;
+         
+
+         readonly attribute NetworkSettingMode dnsMode;
+
+
+         readonly attribute DOMString gateway; 
+
+
+         readonly attribute DOMString subnetMask; 
+
+
+         readonly attribute DOMString ip; 
+
+
+         readonly attribute NetworkSettingMode ipMode; 
+
+
+         readonly attribute DOMString mac;
+         
+
+         readonly attribute InterfaceType interfaceType;
+
+
+         boolean isActive() raises (WebAPIException);
+
+
+         void setWatchListener(in NetworkConnectionWatchCallback successCallback, 
+                                    in optional ErrorCallback? errorCallback) raises (WebAPIException);
+
+
+         void unsetWatchListener() raises (WebAPIException);
+
+    };
+
+
+     [Callback, NoInterfaceObject] interface NetworkConnectionWatchCallback {
+
+         void onconnect(in InterfaceType type);
+
+
+         void ondisconnect(in InterfaceType type);
+     };
+
+
+    [Callback=FunctionOnly, NoInterfaceObject] interface NetworkListSuccessCallback {
+
+        void onsuccess(in NetworkArray networks);
+    };
+};

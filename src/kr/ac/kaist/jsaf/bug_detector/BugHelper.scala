@@ -14,8 +14,27 @@ import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.nodes.ASTNode
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU, JSAstToConcrete}
+import kr.ac.kaist.jsaf.widl.WIDLChecker
 
 object BugHelper {
+  ////////////////////////////////////////////////////////////////
+  // Get function argument size
+  ////////////////////////////////////////////////////////////////
+  def getBuiltinArgumentSize(funcName: String): (Int, Int) = {
+    // Built-in function
+    argSizeMap.get(funcName) match {
+      case Some(as) => return as
+      case None =>
+    }
+    // WIDL function
+    WIDLChecker.argSizeMap.get(funcName) match {
+      case Some(as) => return as
+      case None =>
+    }
+    println("* Unknown argument size of \"" + funcName + "\".")
+    (-1, -1)
+  }
+
   ////////////////////////////////////////////////////////////////
   // Get function name
   ////////////////////////////////////////////////////////////////
@@ -64,18 +83,19 @@ object BugHelper {
   // Get omitted code from a AST node
   ////////////////////////////////////////////////////////////////
 
-  def getOmittedCode(ast: ASTNode, maxLength: Int = 48): String = {
-    val originalCode = JSAstToConcrete.doit(ast)
+  def getOmittedCode(ast: ASTNode, maxLength: Int): (String, Boolean) = getOmittedCode(JSAstToConcrete.doit(ast), maxLength)
+  def getOmittedCode(code: String, maxLength: Int): (String, Boolean) = {
     var newCode = ""
     var isFirst = true
-    for (line <- originalCode.split('\n')) {
-      if (newCode.length < maxLength) {
+    for (line <- code.split('\n')) {
+      val trimedLine = line.replace('\t', ' ').trim
+      if (newCode.length < maxLength && trimedLine.length > 0) {
         if (isFirst) isFirst = false else newCode+= ' '
-        newCode+= line.replace('\t', ' ').trim
+        newCode+= trimedLine
       }
     }
-    if (newCode.length > maxLength) newCode = newCode.substring(0, maxLength) + " ..."
-    newCode
+    if (newCode.length > maxLength) (newCode.substring(0, maxLength), true)
+    else (newCode, false)
   }
 
 

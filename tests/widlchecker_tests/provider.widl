@@ -1,0 +1,84 @@
+module Provider {
+
+    typedef sequence<Item> ItemList;
+   
+    [Callback=FunctionOnly, NoInterfaceObject] interface MediaProviderSuccessCallback {
+    
+        void onsuccess(in ItemList itemList, 
+                       in boolean endOfItems, 
+                       in DeviceId providerId);
+    };
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface MediaProviderErrorCallback {
+        
+        void onerror(in WebAPIError error, 
+                     in DeviceId providerId);
+    }; 
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface MediaProviderEventCallback {
+        
+        void oncontentupdated();
+    };
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface MediaReceiverSuccessCallback {
+        
+        void onsuccess(in long sessionId);
+    };
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface MediaReceiverErrorCallback {
+        
+        void onerror(in WebAPIError error, in long sessionId);
+    };
+
+    [Callback, NoInterfaceObject] interface MediaReceiverEventCallback {
+        
+        void oncompleted(in long sessionId);
+        
+        void onprogressupdated(in long sessionId, in long receivedSize, in long totalSize);
+    
+    };
+
+    [NoInterfaceObject] interface MediaProvider : Device {
+        
+        readonly attribute boolean isSearchable;
+        
+        readonly attribute Item rootFolder;
+        
+        MediaReceiver getMediaReceiver() raises(WebAPIException);
+    
+        void browse(in Item folderItem, 
+                    in unsigned long startIndex,
+                    in unsigned long requestCount, 
+                    in MediaProviderSuccessCallback browseCallback,
+                    in optional MediaProviderErrorCallback? errorCallback,
+                    in optional AbstractFilter? browseFilter, 
+                    in optional SortMode? sortMode
+                    ) raises(WebAPIException);
+        
+        void search(in DOMString keyword,
+                    in unsigned long startIndex,
+                    in unsigned long requestCount,
+                    in MediaProviderSuccessCallback successCallback,
+                    in optional MediaProviderErrorCallback? errorCallback,
+                    in optional AbstractFilter searchFilter) raises(WebAPIException);
+        
+        long addMediaProviderEventListener(in MediaProviderEventCallback eventCallback) raises(WebAPIException);
+        
+        void removeMediaProviderEventListener(in long eventCallbackId) raises(WebAPIException);
+    
+    };
+    
+    [NoInterfaceObject] interface MediaReceiver {
+
+        readonly attribute DeviceId id;
+
+        long receive(in Item item, 
+                          in MediaReceiverSuccessCallback successCallback, 
+                          in optional MediaReceiverErrorCallback? errorCallback,
+                          in optional MediaReceiverEventCallback? eventCallback) raises(WebAPIException);
+        
+        void cancel(in long sessionId, 
+                         in MediaReceiverSuccessCallback successCallback, 
+                         in optional MediaReceiverErrorCallback? errorCallback) raises(WebAPIException);
+    };
+};

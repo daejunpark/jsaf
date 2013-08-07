@@ -252,7 +252,9 @@ object SSA {
             hasAlready += (y -> iterCount)
             if (work(y) < iterCount) {
               work += (y -> iterCount)
-              w += y
+              // y is always KindI node for joinpoints
+              // which means KindO and KindOE nodes have defsite
+              w ++= HashSet((y._1, KindO), (y._1, KindOE))
             }
           }
         })

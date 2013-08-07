@@ -13,8 +13,8 @@ import _root_.java.util.{List => JList}
 import kr.ac.kaist.jsaf.interpreter.Interpreter
 import kr.ac.kaist.jsaf.nodes._
 import kr.ac.kaist.jsaf.nodes_util.EJSOp
-import kr.ac.kaist.jsaf.nodes_util.{ IRFactory => IF }
-import kr.ac.kaist.jsaf.nodes_util.{ NodeUtil => NU }
+import kr.ac.kaist.jsaf.nodes_util.{IRFactory => IF}
+import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
@@ -301,7 +301,7 @@ class SymbolicHelper(I: Interpreter) {
   //TODO: Don't need to be option type
   //TODO: need rewriter to modify the expressions syntatically accepted to the expressions supported by symbolic helper
     System.out.println("EXECUTE_CONDITION()")
-    System.out.println(env.getUniqueName, function_info.contains(env.getUniqueName), checkFocus(env))
+    //System.out.println(env.getUniqueName, function_info.contains(env.getUniqueName), checkFocus(env))
     if (checkFocus(env)) {
       expr match {
         case SIRBin(_, first, op, second) => first match {
@@ -318,8 +318,6 @@ class SymbolicHelper(I: Interpreter) {
               case EJSOp.BIN_BIT_SHIFT_LEFT => 
               case EJSOp.BIN_BIT_SHIFT_SRIGHT => 
               case EJSOp.BIN_BIT_SHIFT_USRIGHT => 
-              case EJSOp.BIN_COMP_EQ_SEQUAL => 
-              case EJSOp.BIN_COMP_EQ_SNEQUAL => 
               case EJSOp.BIN_BIT_BIT_AND => 
               case EJSOp.BIN_BIT_BIT_XOR => 
               case EJSOp.BIN_BIT_BIT_OR => 

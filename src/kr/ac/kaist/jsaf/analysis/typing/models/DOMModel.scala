@@ -52,7 +52,9 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
     HTMLTableSectionElement, HTMLTextAreaElement, HTMLTitleElement, HTMLUListElement,
     DOMWindow,
     // HTML 5
-    HTMLCanvasElement, HTMLUnknownElement, CanvasRenderingContext2D, Navigator, CanvasGradient, DOMLocation 
+    HTMLCanvasElement, HTMLUnknownElement, CanvasRenderingContext2D, Navigator, CanvasGradient, DOMLocation,
+    // non-standard
+    Console
   )
 
   private var map_fid = Map[FunctionId, String]()

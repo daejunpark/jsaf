@@ -69,7 +69,7 @@ class SemanticsDOMTest(dir: String, tc: String, typing_mode: String) extends Sem
     init.initialize()
 
     val dom_model = new DOMBuilder(cfg, init, jshtml.getDocument())
-    dom_model.initialize();
+    dom_model.initialize(false);
 
     // typing
     val typing =

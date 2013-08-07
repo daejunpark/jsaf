@@ -63,7 +63,7 @@ class BuiltinModel(cfg: CFG) extends Model(cfg)  {
           case None => h3
         })
 
-        /* added api obejct to heap */
+        /* added api object to heap */
         Heap(heap.map.updated(lp._1, obj))
       })
     )

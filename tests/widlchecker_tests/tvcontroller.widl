@@ -1,0 +1,135 @@
+module TVController {
+
+    enum RemoteKey {
+        "KEY_0", "KEY_1", "KEY_2", "KEY_3", "KEY_4", "KEY_5", "KEY_6", "KEY_7", "KEY_8", "KEY_9", 
+        "KEY_BLUE", "KEY_CH_LIST", "KEY_CHDOWN", "KEY_CHUP", "KEY_CONTENTS", 
+        "KEY_DASH", "KEY_DOWN", "KEY_ENTER", "KEY_EXIT", "KEY_FF", "KEY_GREEN", "KEY_INFO", "KEY_LEFT", 
+        "KEY_MENU", "KEY_MUTE", "KEY_PAUSE", "KEY_PLAY", "KEY_POWEROFF", "KEY_PRECH", "KEY_REC", 
+        "KEY_RED", "KEY_RETURN", "KEY_REWIND", "KEY_RIGHT", "KEY_SOURCE", "KEY_STOP", "KEY_TOOLS", 
+        "KEY_UP", "KEY_VOLDOWN", "KEY_VOLUP", "KEY_YELLOW"
+   };
+    
+    
+    enum TVControllerBrowserMode {
+        "POINT_BROWSING", 
+        "LINK_BROWSING",
+        "UNKNOWN"
+    };
+
+    enum BrowserScrollMode {
+        "SCROLL_UP", 
+        "SCROLL_DOWN"
+    };
+
+    enum BrowserZoomMode {
+        "ZOOM_IN", 
+        "ZOOM_OUT", 
+        "ZOOM_DEFAULT"
+    };
+
+    [Callback=FunctionOnly, NoInterfaceObject] interface TVControllerSuccessCallback {
+    
+        void onsuccess(in DeviceId controllerId);
+    };    
+  
+    [Callback=FunctionOnly, NoInterfaceObject] interface TVControllerGetBrowserModeSuccessCallback {
+    
+        void onsuccess(in TVControllerBrowserMode mode, 
+                       in DeviceId controllerId);
+    };
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface TVControllGetBrowserUrlSuccessCallback {
+        
+        void onsuccess(in DOMString url, 
+                       in DeviceId controllerId);
+    };
+
+    [Callback=FunctionOnly, NoInterfaceObject] interface TVControllerErrorCallback {
+    
+        void onerror(in WebAPIError error, 
+                     in DeviceId controllerId);
+    };
+      
+    [Callback, NoInterfaceObject] interface TVControllerEventCallback {
+        
+        void ondisconnected (in DeviceId controllerId);
+        
+        void onstringchanged (in DOMString text, 
+                              in DeviceId controllerId);
+    };
+    
+    [NoInterfaceObject] interface TVController : Device {
+    
+        readonly attribute DOMString version;
+        
+        readonly attribute boolean isWebSharingSupported;
+        
+        readonly attribute boolean isConnected;
+        
+        void connect(in TVControllerSuccessCallback successCallback, 
+                     in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void disconnect(in TVControllerSuccessCallback successCallback, 
+                        in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        long addTVControllerEventListener (in TVControllerEventCallback eventCallback) raises (WebAPIException);
+        
+        void removeTVControllerEventListener (in long eventListener) raises (WebAPIException);
+
+        void sendRemoteKey(in RemoteKey key) raises (WebAPIException);
+        
+        void sendKeyboardString(in DOMString text) raises (WebAPIException);
+        
+        void sendKeyboardEnd() raises (WebAPIException); 
+
+        
+        void sendTouchClick() raises (WebAPIException);
+        
+        void sendTouchDown() raises (WebAPIException);
+        
+        void sendTouchMove(in long long dx,
+                           in long long dy) raises (WebAPIException);
+        
+        void sendTouchUp() raises (WebAPIException);
+
+        void setBrowserMode(in TVControllerBrowserMode mode, 
+                            in TVControllerSuccessCallback successCallback, 
+                            in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void getBrowserMode(in TVControllerGetBrowserModeSuccessCallback successCallback, 
+                            in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+
+        void scrollWebPage(in BrowserScrollMode mode, in TVControllerSuccessCallback successCallback, 
+                               in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void zoomWebPage(in BrowserZoomMode mode, 
+                                in TVControllerSuccessCallback successCallback, 
+                                in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void getBrowserUrl(in TVControllGetBrowserUrlSuccessCallback successCallback, 
+                           in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void goHomePage(in TVControllerSuccessCallback successCallback, 
+                        in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void goNextWebPage(in TVControllerSuccessCallback successCallback, 
+                                       in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void goPreviousWebPage(in TVControllerSuccessCallback successCallback, 
+                                            in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void openWebPage(in DOMString url, 
+                         in TVControllerSuccessCallback successCallback, 
+                         in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+
+        void closeWebPage(in TVControllerSuccessCallback successCallback, 
+                          in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void refreshWebPage(in TVControllerSuccessCallback successCallback, 
+                                       in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);
+
+        
+        void stopWebPageLoading(in TVControllerSuccessCallback successCallback, 
+                                in optional TVControllerErrorCallback? errorCallback) raises (WebAPIException);    
+    };
+};

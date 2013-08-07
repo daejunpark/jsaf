@@ -15,7 +15,7 @@ bug-detector_out_WCIequals=\
 unusedFunction3.js:1:1~1:19: [Warning] Function 'funcA' is never called. \n\
 unusedFunction3.js:2:1~2:26: [Warning] Function 'funcB' is never called. \n\
 unusedFunction3.js:3:1~5:1: [Warning] Function 'libTest1' is never called. \n\
-unusedFunction3.js:4:3~5:1: [Warning] Unreachable code 'testFunc1(testFunc2);' is found. \n\
+unusedFunction3.js:4:3~5:1: [Warning] Unreachable code '{ testFunc1(testFunc2); }' is found. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\

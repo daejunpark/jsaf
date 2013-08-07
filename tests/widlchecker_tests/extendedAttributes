@@ -1,0 +1,23 @@
+* webapis.widl
+  [Constructor(CompositeFilterType type, optional AbstractFilter[]? filters)]
+  [Constructor(DOMString attributeName, optional FilterMatchFlag? matchFlag, optional any matchValue)]
+  [Constructor(DOMString attributeName, optional any initialValue, optional any endValue)]
+ [Constructor(DOMString attributeName, optional SortModeOrder? order)] 
+[Constructor(double latitude, double longitude)]  
+
+* time.widl
+  [Constructor(optional Date? datetime, optional DOMString? timezone),
+   Constructor(long year, long month, long day, optional long? hours, optional long? minutes, optional long? seconds, optional long? milliseconds, optional DOMString? timezone)]
+  [Constructor(long long length, optional TimeDurationUnit? unit)]
+
+* nfc.widl
+  [Constructor(),
+   Constructor(NDEFRecord[] ndefRecords),
+   Constructor(byte[] rawData)]
+  [Constructor(short tnf, byte[] type, byte[] payload, optional byte[]? id),
+   Constructor(byte[] raw_data)]
+  [Constructor(DOMString text, DOMString languageCode, optional DOMString? encoding)]
+  [Constructor(DOMString uri)]
+  [Constructor(DOMString mimeType, byte[] data)]
+
+        [TreatNonCallableAsNull] attribute SuccessCallback? onclose;

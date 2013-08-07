@@ -17,42 +17,63 @@ class BugOption(defaultForUser: Boolean = true) {
   ////////////////////////////////////////////////////////////////////////////////
   val contextSensitive:                         Array[CallContext.SensitivityFlagType] = new Array(MAX_BUG_COUNT)
 
+  var AbsentReadProperty_Check                                  = true
   var AbsentReadProperty_PropertyMustExistInEveryState          = false
   var AbsentReadProperty_PropertyMustExistInEveryLocation       = false
   var AbsentReadProperty_PropertyMustExistForAllValue           = false
   var AbsentReadProperty_PropertyMustExistDefinitely            = false
   var AbsentReadProperty_CheckAbstractIndexValue                = false
 
+  var AbsentReadVariable_Check                                  = true
   var AbsentReadVariable_VariableMustExistInEveryState          = false
   var AbsentReadVariable_VariableMustExistDefinitely            = false
 
+  var BinaryOpSecondType_Check                                  = true
   var BinaryOpSecondType_OperandMustBeCorrectInEveryState       = false
   var BinaryOpSecondType_OperandMustBeCorrectInEveryLocation    = false
   var BinaryOpSecondType_OperandMustBeCorrectForAllValue        = false
 
+  var BuiltinWrongArgType_Check                                 = true
   var BuiltinWrongArgType_TypeMustBeCorrectInEveryState         = false
   var BuiltinWrongArgType_TypeMustBeCorrectForAllValue          = false
   var BuiltinWrongArgType_CheckObjectType                       = true
   var BuiltinWrongArgType_CheckFunctionType                     = true
 
+  var CallConstFunc_Check                                       = true
+
+  var CallNonConstructor_Check                                  = true
   var CallNonConstructor_MustBeConstructableInEveryState        = false
   var CallNonConstructor_MustBeConstructableForEveryLocation    = false
   var CallNonConstructor_MustBeConstructableDefinitely          = false
 
+  var CallNonFunction_Check                                     = true
   var CallNonFunction_MustBeCallableInEveryState                = false
   var CallNonFunction_MustBeCallableForEveryLocation            = false
   var CallNonFunction_MustBeCallableDefinitely                  = false
 
+  var CondBranch_Check                                          = true
   var CondBranch_ConditionMustBeTrueOrFalseInEveryState         = false
   var CondBranch_ConditionMustBeTrueOrFalseForAllValue          = false
+  var CondBranch_CheckIf                                        = true
+  var CondBranch_CheckLoop                                      = false
+  var CondBranch_CheckTernary                                   = true
 
+  var ConvertUndefToNum_Check                                   = true
   var ConvertUndefToNum_UndefMustBeConvertedInEveryState        = false
   var ConvertUndefToNum_VariableMustHaveUndefinedOnly           = true
   var ConvertUndefToNum_ToNumberMustBeCalledForExactValue       = true
 
+  var FunctionArgSize_Check                                     = true
+  var FunctionArgSize_CheckNativeFunction                       = true
+  var FunctionArgSize_CheckUserFunction                         = true
+  var FunctionArgSize_CheckTooFew                               = true
+  var FunctionArgSize_CheckTooMany                              = true
+
+  var GlobalThis_Check                                          = true
   var GlobalThis_MustReferInEveryState                          = false
   var GlobalThis_MustReferExactly                               = true
 
+  var ImplicitTypeConvert_Check                                 = true
   var ImplicitTypeConvert_MustBeConvertedInEveryState           = false
   var ImplicitTypeConvert_MustBeConvertedForAllValue            = true
   var ImplicitTypeConvert_CheckNullAndUndefined                 = true
@@ -65,16 +86,24 @@ class BugOption(defaultForUser: Boolean = true) {
   var ImplicitTypeConvert_CheckObjectAndString                  = false
   var ImplicitTypeConvert_CheckObjectAndBoolean                 = false
 
+  var NullOrUndefined_Check                                     = true
   var NullOrUndefined_BugMustExistInEveryState                  = false
   var NullOrUndefined_OnlyWhenPrimitive                         = true
   var NullOrUndefined_OnlyNullOrUndefined                       = true
 
+  var PrimitiveToObject_Check                                   = true
   var PrimitiveToObject_PrimitiveMustBeConvertedInEveryState    = false
   var PrimitiveToObject_PrimitiveMustBeConvertedForAllValue     = false
   var PrimitiveToObject_CheckEvenThoughPrimitiveIsString        = false
 
+  var Shadowing_Check                                           = true
+
+  var UnreachableCode_Check                                     = true
+
+  var VaryingTypeArguments_Check                                = true
   var VaryingTypeArguments_CheckUndefined                       = false
 
+  var WrongThisType_Check                                       = true
   var WrongThisType_TypeMustBeWrongInEveryState                 = false
   var WrongThisType_TypeMustBeWrongInEveryFunctionId            = false
   var WrongThisType_TypeMustBeWrongInEveryFunctionLocation      = false
@@ -133,11 +162,18 @@ class BugOption(defaultForUser: Boolean = true) {
     // CondBranch
     CondBranch_ConditionMustBeTrueOrFalseInEveryState = false
     CondBranch_ConditionMustBeTrueOrFalseForAllValue = false
+    CondBranch_CheckIf = true
+    CondBranch_CheckLoop = false
+    CondBranch_CheckTernary = true
 
     // ConvertUndefToNum
     ConvertUndefToNum_UndefMustBeConvertedInEveryState = false
     ConvertUndefToNum_VariableMustHaveUndefinedOnly = true
     ConvertUndefToNum_ToNumberMustBeCalledForExactValue = true
+
+    // FunctionArgSize
+    FunctionArgSize_CheckNativeFunction = true
+    FunctionArgSize_CheckUserFunction = true
 
     // GlobalThis
     GlobalThis_MustReferInEveryState = false
@@ -218,11 +254,18 @@ class BugOption(defaultForUser: Boolean = true) {
     // CondBranch
     CondBranch_ConditionMustBeTrueOrFalseInEveryState = true
     CondBranch_ConditionMustBeTrueOrFalseForAllValue = true
+    CondBranch_CheckIf = true
+    CondBranch_CheckLoop = false
+    CondBranch_CheckTernary = true
 
     // ConvertUndefToNum
     ConvertUndefToNum_UndefMustBeConvertedInEveryState = true
     ConvertUndefToNum_VariableMustHaveUndefinedOnly = false
     ConvertUndefToNum_ToNumberMustBeCalledForExactValue = false
+
+    // FunctionArgSize
+    FunctionArgSize_CheckNativeFunction = true
+    FunctionArgSize_CheckUserFunction = true
 
     // GlobalThis
     GlobalThis_MustReferInEveryState = true

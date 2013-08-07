@@ -10,14 +10,13 @@
 
 package kr.ac.kaist.jsaf.nodes_util;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-
-import kr.ac.kaist.jsaf.nodes_util.CharVector;
 import kr.ac.kaist.jsaf.useful.HasAt;
 import kr.ac.kaist.jsaf.useful.MagicNumbers;
 import kr.ac.kaist.jsaf.useful.NI;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
 
 public class Span implements Serializable, HasAt {
     public SourceLoc begin;
@@ -49,16 +48,16 @@ public class Span implements Serializable, HasAt {
         return new Span(begin.addLines(line), end.addLines(line));
     }
 
-    private static boolean beginsEarlierThan(Span a, Span b) {
-    	return (a.getBegin().getLine() < b.getBegin().getLine() ||
-    			 (a.getBegin().getLine() == b.getBegin().getLine() &&
-    			  a.getBegin().column() < b.getBegin().column()));
+    public static boolean beginsEarlierThan(Span a, Span b) {
+        return (a.getBegin().getLine() < b.getBegin().getLine() ||
+               (a.getBegin().getLine() == b.getBegin().getLine() &&
+                a.getBegin().column() < b.getBegin().column()));
     }
 
-    private static boolean endsLaterThan(Span a, Span b) {
-    	return (a.getEnd().getLine() > b.getEnd().getLine() ||
-    			(a.getEnd().getLine() == b.getEnd().getLine() &&
-    			 a.getEnd().column() > b.getEnd().column()));
+    public static boolean endsLaterThan(Span a, Span b) {
+        return (a.getEnd().getLine() > b.getEnd().getLine() ||
+               (a.getEnd().getLine() == b.getEnd().getLine() &&
+                a.getEnd().column() > b.getEnd().column()));
     }
 
     /** Span which includes both the given spans.  Assumption: they're

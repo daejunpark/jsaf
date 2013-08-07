@@ -6,4 +6,4 @@ function errorCB(error) {
     alert(error.name);
 }
 
-webapis.tv.channel.tuneUp(successCB, errorCB, webapis.tv.channel.NAVIGATOR_MODE_ALL, 0);
+webapis.tv.channel.tuneUp(successCB, errorCB, webapis.tv.channel.NAVIGATOR_MODE_ALL);

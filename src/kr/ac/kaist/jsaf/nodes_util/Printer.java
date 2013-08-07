@@ -126,6 +126,8 @@ public class Printer extends NodeReflection {
             indent(indent + 1, w);
             dump(b, w, indent + 1);
             w.append(")");
+        } else if (o instanceof Double) {
+            w.append(Double.toString(((Double)o).doubleValue()));
         } else if (o instanceof Number) {
             w.append(o.toString());
         } else if (o instanceof Boolean) {

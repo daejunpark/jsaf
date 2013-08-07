@@ -887,23 +887,39 @@ class Interpreter extends IRWalker {
             }
           case "<>Concolic<>ExecuteCondition" => {
             val branchTaken = walkExpr(arg1) match
-                             { case v:Val => Some(IH.toBoolean(v))
-                               case _:JSError => None }
+                             { case v: Val => Some(IH.toBoolean(v))
+                               case _: JSError => None }
+            System.out.println(arg1)
             arg1 match {
-              case SIRBin(_, first, op, second) => first match {
-                case v1:IRId => second match {
-                  case v2:IRId =>
+              case SIRBin(_, first, op, second) => /*first match {
+                case v1: IRId => second match {
+                  case v2: IRId =>
                     val c1 = IH.getBindingValue(IH.lookup(v1), v1.getOriginalName) match
-                            { case v:Val => Some(IH.toString(v))
-                              case _:JSError => None }
+                            { case v: Val => Some(IH.toString(v))
+                              case _: JSError => None }
                     val c2 = IH.getBindingValue(IH.lookup(v2), v2.getOriginalName) match
-                            { case v:Val => Some(IH.toString(v))
-                              case _:JSError => None}
+                            { case v: Val => Some(IH.toString(v))
+                              case _: JSError => None}
 
                     SH.executeCondition(arg1, branchTaken, c1, c2, arg2.get)
+                }*/
+                var c1, c2: Option[String] = None 
+                System.out.println(first, op, second)
+                first match {
+                  case SIRLoad(_, obj, index) => System.out.println("SIRLoadddddddddd", obj, walkExpr(index)) 
+                  case id: IRId => c1 = IH.getBindingValue(IH.lookup(id), id.getOriginalName) match {
+                    case v: Val => Some(IH.toString(v))
+                    case _: JSError => None}
+                  case v: IRPVal => c1 = Some(IH.toString(PVal(v)))
                 }
-              }
-              case v:IRId => SH.executeCondition(arg1, branchTaken, None, None, arg2.get)
+                second match {
+                  case id: IRId => c2 = IH.getBindingValue(IH.lookup(id), id.getOriginalName) match {
+                    case v: Val => Some(IH.toString(v))
+                    case _: JSError => None}
+                  case v: IRPVal => c2 = Some(IH.toString(PVal(v)))
+                }
+                SH.executeCondition(arg1, branchTaken, c1, c2, arg2.get)
+              case v: IRId => SH.executeCondition(arg1, branchTaken, None, None, arg2.get)
               case _ => SH.executeCondition(arg1, None, None, None, arg2.get)
             }
           }

@@ -1,0 +1,10 @@
+module TV {
+    [NoInterfaceObject] interface WebAPIsTVObject {
+        readonly attribute TV tv;
+    };
+        
+    WebAPIs implements WebAPIsTVObject;
+    
+    [NoInterfaceObject] interface TV {
+    };
+};

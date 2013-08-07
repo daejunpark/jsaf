@@ -13,7 +13,7 @@ bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
 valueNeverRead5.js:12:1~14:1: [Warning] Function 'f' is never called. \n\
-valueNeverRead5.js:13:3~13:8: [Warning] Unreachable code 'x = 7;' is found. \n\
+valueNeverRead5.js:13:3~13:8: [Warning] Unreachable code '{ x = 7; }' is found. \n\
 valueNeverRead5.js:20:7~20:13: [Warning] Conditional expression 't == x' is always true. \n\
  \n\
 ============== Total Count ============== \n\

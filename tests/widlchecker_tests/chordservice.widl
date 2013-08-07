@@ -1,0 +1,176 @@
+module ChordService {
+
+    
+
+    enum ChordServiceState {"STARTED", "STOPPED", " RECONNECTED ", " DISCONNECTED", "FORCTOESTOP", "FAILSTOTART"};
+    
+
+    enum FileTransferState {"FAILTOSEND", "REJECTED", "CANCELED", "FAILTOCREATE", "NORESOURCE", "TIMEOUT" };
+
+
+    enum NetworkType {"WIFI", "WIFI_AP", "WIFI_DIRECT" };
+   
+
+    typedef sequence<NetworkType> AvailableNetworkTypeArray;
+
+
+    typedef sequence<ChordChannel> ChordChannelArray;
+
+
+    typedef DOMString ChordChannelName;
+
+
+    typedef sequence<ChordChannelName> ChordChannelNameArray;
+    
+
+    typedef sequence<DOMString> ChordNodeNameArray;
+
+
+    typedef DOMString TransferID;
+
+
+    [NoInterfaceObject] interface WebAPIsChordObject {
+          readonly attribute Chord chord;
+    };
+    WebAPIs implements WebAPIsChordObject;
+    
+
+    [NoInterfaceObject] interface Chord {
+    };
+    
+
+    [NoInterfaceObject] interface ChordServiceConnectorObject {
+        readonly attribute ChordServiceConnector serviceconnector;
+    };
+    Chord implements ChordServiceConnectorObject;
+
+
+
+    [NoInterfaceObject] interface ChordServiceConnector {
+        
+
+        ChordServiceProvider startServiceProvider(in NetworkType type, 
+            in ChordServiceStatusChangeCallback changeCallback, 
+            in DOMString fileDirectory, 
+            in optional unsigned long? keepAliveTime) raises(WebAPIException);
+
+
+        void stopServiceProvider() raises(WebAPIException);
+
+
+        AvailableNetworkTypeArray  getAvailableInterfaceTypes() raises(WebAPIException);        
+    };
+    
+
+
+    [Callback=FunctionOnly, NoInterfaceObject] interface ChordServiceStatusChangeCallback {
+       void onstatechanged(ChordServiceState serviceState);
+    };
+
+    
+
+    [NoInterfaceObject] interface ChordServiceProvider {
+
+
+        ChordChannel? joinChannel(in DOMString channelName, in ChordChannelStatusChangeCallback changeCallback) raises(WebAPIException);
+
+
+        void leaveChannel(in DOMString channelName) raises(WebAPIException);
+
+
+        ChordChannel? getJoinedChannel(in DOMString channelName) raises(WebAPIException);
+
+
+        ChordChannelArray getJoinedChannelList() raises(WebAPIException);
+
+
+        ChordChannel? getPublicChannel() raises(WebAPIException);
+
+
+        ChordNode? getLocalNode() raises(WebAPIException);
+    };
+
+
+    [NoInterfaceObject] interface ChordNode {
+
+        readonly attribute ChordChannelNameArray channelList;
+
+        readonly attribute DOMString nodeName;
+    };
+    
+    
+
+    [NoInterfaceObject] interface ChordChannel {
+
+        TransferID sendFile(in DOMString dstNodeName, in DOMString filePath, in DOMString fileType, in optional unsigned long timeout) raises(WebAPIException);
+        
+
+        boolean cancelFile(TransferID id) raises(WebAPIException);
+        
+
+        boolean acceptFile(in TransferID id, 
+                                   in optional unsigned long timeout, 
+                                   in optional unsigned short retry, 
+                                   in optional unsigned long chunkSize) raises(WebAPIException);
+                
+
+        boolean rejectFile(TransferID id) raises(WebAPIException);
+
+
+        boolean sendData(in DOMString dstNodeName, in byte[][] data, in DOMString dataInfo) raises(WebAPIException);
+        
+
+        boolean sendDataAll(in byte[][] data, in DOMString dataInfo) raises(WebAPIException);
+                
+
+        DOMString getChannelName() raises(WebAPIException);
+        
+
+        ChordNodeNameArray getJoinedNodeList() raises(WebAPIException);
+
+    };
+    
+
+    [Callback, NoInterfaceObject] interface ChordChannelStatusChangeCallback {
+    
+
+        void onnodejoined(in ChordChannelName channelName, in ChordNode node);        
+        
+
+        void onnodeleft(in ChordChannelName channelName, in ChordNode node);    
+
+
+        void ondatareceived(in ChordChannelName channelName, in ChordNode srcNode, in byte[][] data, in DOMString dataInfo);
+        
+
+        void onfilewillreceive(in ChordChannelName channelName, in ChordNode srcNode, in TransferID id, in TransferFile file);
+        
+
+        void onfilechunkreceived(in ChordChannelName channelName, in ChordNode srcNode, in TransferID id, in TransferFile file, in unsigned long offset); 
+        
+
+        void onfilereceived(in ChordChannelName channelName, in ChordNode srcNode, in TransferID id, in TransferFile file, in DOMString tmpFilePath);
+        
+
+        void onfilechunksent(in ChordChannelName channelName, in ChordNode dstNode, in TransferID id, in TransferFile file, in unsigned long offset, in unsigned long chunkSize);
+        
+
+        void onfilesent(in ChordChannelName channelName, in ChordNode dstNode, in TransferID id, in TransferFile file);
+
+
+        void onfiletransfererror(in ChordChannelName channelName, in ChordNode dstNode, in TransferID id, in TransferFile file, in FileTransferState state);
+        
+    };
+
+
+    [NoInterfaceObject] interface TransferFile {
+
+        readonly attribute DOMString fileName;
+
+        readonly attribute DOMString fileInfo;
+
+        readonly attribute DOMString hash;
+
+        readonly attribute unsigned long fileSize;
+    };
+};

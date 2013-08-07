@@ -10,10 +10,10 @@
 package kr.ac.kaist.jsaf.analysis.typing.models
 
 import kr.ac.kaist.jsaf.analysis.cfg._
+import kr.ac.kaist.jsaf.analysis.typing.Config
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.analysis.typing.{CallContext, Helper, Config}
-import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinGlobal
 import kr.ac.kaist.jsaf.{Shell, ShellParameters}
+import kr.ac.kaist.jsaf.widl.WIDLModel
 
 object ModelManager {
   private var model_map = Map[String, Model]()
@@ -28,22 +28,23 @@ object ModelManager {
     model_map = Map[String, Model](("Builtin" -> new BuiltinModel(cfg)))
 
     /* dom model */
-    Shell.params.command match {
-      case ShellParameters.CMD_HTML | ShellParameters.CMD_HTML_SPARSE =>
-        model_map = model_map + ("DOM" -> new DOMModel(cfg))
-      case _ =>
-        if (Config.domMode)
-          model_map = model_map + ("DOM" -> new DOMModel(cfg))
-        else
-          ()
+    if (Config.domMode ||
+        Shell.params.command == ShellParameters.CMD_HTML ||
+        Shell.params.command == ShellParameters.CMD_HTML_SPARSE) {
+      model_map = model_map + ("DOM" -> new DOMModel(cfg))
     }
 
     /* tizen model */
     if (Config.tizenMode)
       model_map = model_map + ("Tizen" -> new TizenModel(cfg))
+
     /* jQuery model */
     if (Config.jqMode)
       model_map = model_map + ("jQuery" -> new JQueryModel(cfg))
+
+    /* WIDL model */
+    if (Config.widlMode)
+      model_map = model_map + ("WIDL" -> new WIDLModel(cfg))
   }
 
   def initialize(cfg: CFG, heap: Heap): Heap = {

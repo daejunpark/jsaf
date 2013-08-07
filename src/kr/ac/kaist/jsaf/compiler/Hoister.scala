@@ -24,9 +24,6 @@ import kr.ac.kaist.jsaf.useful.HasAt
 import kr.ac.kaist.jsaf.Shell
 
 class Hoister(program: Program) extends Walker {
-  val pred = if (Shell.pred != null) Shell.pred
-             else (new Predefined(new ShellParameters()))
-
   /* Error handling
    * The signal function collects errors during the Hoister phase.
    * To collect multiple errors,
@@ -36,13 +33,21 @@ class Hoister(program: Program) extends Walker {
   def signal(span: Span, bugKind: Int, arg1: String, arg2: String): Unit =
     errors ++= List(new BugInfo(span, bugKind, arg1, arg2))
   def getErrors(): JList[BugInfo] = toJavaList(errors)
+
+  // getters
+  def toSpan(node: ASTNode): Span = node.getInfo.getSpan
+  def toSpan(info: SpanInfo): Span = info.getSpan
+  def vd2Str(vd: VarDecl): String = vd.getName.getText
+  def fd2Str(fd: FunDecl): String = fd.getFtn.getName.getText
+  def id2Str(id: Id): String = id.getText
+
   // Variable declarations in for statements
   var fvds = List[VarDecl]()
   var inFor = false
   def contains(vds: List[VarDecl], vd: VarDecl) = {
-    val name = vd.getName.getText
-    val span = vd.getInfo.getSpan    
-    vds.find(v => v.getName.getText.equals(name) && v.getInfo.getSpan.equals(span)).isDefined
+    val name = vd2Str(vd)
+    val span = toSpan(vd)
+    vds.find(v => vd2Str(v).equals(name) && toSpan(v).equals(span)).isDefined
   }
 
   // Utility functions
@@ -54,6 +59,10 @@ class Hoister(program: Program) extends Walker {
                                 case SVarDecl(_,_,None) => res
                                 case SVarDecl(i,n,Some(e)) => List(assignS(i,n,e))++res
                                })
+  def stmtUnit(info: SpanInfo, stmtList: List[Stmt]): Stmt = {
+    if(stmtList.length == 1) stmtList.head
+    else SStmtUnit(info, stmtList)
+  }
   // Get the declared variable and function names and the names on lhs of assignments
   // in the current lexical scope
   class hoistWalker(node: Any, isTopLevel: Boolean) extends Walker {
@@ -64,7 +73,8 @@ class Hoister(program: Program) extends Walker {
     override def walk(node: Any) = node match {
       case fd:FunDecl => funDecls ++= List(fd); fd
       case vd@SVarDecl(i, n, _) =>
-        if (isTopLevel && pred.contains(n.getText)) vd
+        if (isTopLevel && Shell.pred != null && Shell.pred.contains(id2Str(n))) vd
+        else if (isTopLevel && Shell.pred == null && (new Predefined(new ShellParameters())).contains(id2Str(n))) vd
         else {
           val vds = List(SVarDecl(i, n, None))
           varDecls ++= vds
@@ -91,7 +101,7 @@ class Hoister(program: Program) extends Walker {
       case gp:GetProp => gp
       case sp:SetProp => sp
       case ae@SAssignOpApp(_, SVarRef(i, name), _, _) =>
-        varNames ++= List((i.getSpan, name.getText))
+        varNames ++= List((toSpan(i), id2Str(name)))
         ae
       case _ => super.walk(node)
     }
@@ -109,19 +119,13 @@ class Hoister(program: Program) extends Walker {
   }
 
   /* The main entry function */
-  def doit() = NU.simplifyWalker.walk(walk(program).asInstanceOf[Program])
-
-  def checkUseStrictDirective(body: List[SourceElement]) = body match {
-    case (e@SExprStmt(_,SStringLiteral(_,_,txt),_))::_ =>
-      val s = NU.unescapeJava(txt)
-      if (!NU.removeEscapeSeqLineCont(s).equals(s))
-        throw new StaticError("A Use Strict Directive may not contain an EscapeSequence or LineContinuation.",
-                              Some(e))
-    case _ =>
+  def doit() = {
+    walkUnit(program)
+    NU.simplifyWalker.walk(walk(program).asInstanceOf[Program])
   }
 
-  def isInVd(vd: VarDecl, ds: List[VarDecl], vars: List[(Span, String)]) = {
-    val name = vd.getName.getText
+  ////////////////////////////////////////////////////////////////////////
+  /*
     if (!contains(fvds, vd))
       vars.find(p => name.equals(p._2) &&
                      p._1.getBegin.getLine <= vd.getInfo.getSpan.getBegin.getLine &&
@@ -130,22 +134,8 @@ class Hoister(program: Program) extends Walker {
              signal(span, ShadowedVarByVar, name, vd.getInfo.getSpan.toStringWithoutFiles)
            case _ =>
       }
-    ds.exists(d => d.getName.getText.equals(name))
-  }
-  def isInFd(fd: FunDecl, ds: List[FunDecl]) = {
-    val name = fd.getFtn.getName.getText
-    ds.exists(d => if (d.getFtn.getName.getText.equals(name)) {
-                     signal(d.getInfo.getSpan, ShadowedFuncByFunc, name, fd.getInfo.getSpan.toStringWithoutFiles)
-                     true
-                   } else false)
-  }
-  def isVdInFd(vd: VarDecl, ds: List[FunDecl]) = {
-    val name = vd.getName.getText
-    ds.exists(d => if (d.getFtn.getName.getText.equals(name)) {
-                     signal(vd.getInfo.getSpan, ShadowedVarByFunc, name, d.getInfo.getSpan.toStringWithoutFiles)
-                     true
-                   } else false)
-  }
+    signal(d.getInfo.getSpan, ShadowedFuncByFunc, name, fd.getInfo.getSpan.toStringWithoutFiles)
+    signal(vd.getInfo.getSpan, ShadowedVarByFunc, name, d.getInfo.getSpan.toStringWithoutFiles)
   def fdShadowParam(fd: FunDecl, params: List[Id]) = {
     val name = fd.getFtn.getName.getText
     signal(params.find(p => p.getText.equals(name)).get.getInfo.getSpan, ShadowedParamByFunc, name,
@@ -156,8 +146,342 @@ class Hoister(program: Program) extends Walker {
     signal(params.find(p => p.getText.equals(name)).get.getInfo.getSpan, ShadowedVarByParam, name,
            vd.getInfo.getSpan.toStringWithoutFiles)
   }
+    // functions shadowing parameters
+    fdsUniq.filter(fd => param_names contains fd.getFtn.getName.getText).foreach(fdShadowParam(_,params))
+    // variables shadowing parameters
+    vdsUniq2.filter(vd => param_names contains vd.getName.getText).foreach(vdShadowParam(_,params))
+  */
+  ////////////////////////////////////////////////////////////////////////
+
+  class LocalBlock(_outer: LocalBlock) {
+    val outer: LocalBlock = _outer
+    var vds: List[VarDecl] = List[VarDecl]()
+    var fds: List[FunDecl] = List[FunDecl]()
+    var blocks: List[LocalBlock] = List[LocalBlock]()
+    var assigns:List[(Span, String)] = List[(Span, String)]()
+  }
+  class VarBlock(_outer: LocalBlock) extends LocalBlock(_outer)
+  class FunBlock(_name: String, _span: Span, _params: List[Id], _outer: LocalBlock)
+        extends LocalBlock(_outer) {
+    val name: String = _name
+    val span: Span = _span
+    val params: List[Id] = _params
+  }
+
+  var currentBlock: LocalBlock = new VarBlock(null)
+  def addVds(vds: List[VarDecl]): Unit = currentBlock.vds ++= vds
+  def addFd(fd: FunDecl): Unit = currentBlock.fds ++= List(fd)
+  def declareV(bl: LocalBlock, name: String): Option[Span] = {
+    bl.vds.find(vd => vd2Str(vd).equals(name)) match {
+      case Some(vd) => Some(toSpan(vd))
+      case None => None
+    }
+  }
+  def declareVR(bl: LocalBlock, name: String): Option[Span] =
+    declareV(bl, name) match {
+      case None =>
+        bl.blocks.filter(_.isInstanceOf[VarBlock]).foreach(bl =>
+                  declareVR(bl, name) match {
+                    case None =>
+                    case res => return res})
+        None
+      case res => res
+    }
+  def declareF(bl: LocalBlock, name: String): Option[Span] = {
+    bl.fds.find(fd => fd2Str(fd).equals(name)) match {
+      case Some(fd) => Some(toSpan(fd))
+      case None => None
+    }
+  }
+  def declareFR(bl: LocalBlock, name: String): Option[Span] =
+    declareF(bl, name) match {
+      case None =>
+        bl.blocks.filter(_.isInstanceOf[VarBlock]).foreach(bl =>
+                  declareFR(bl, name) match {
+                    case None =>
+                    case res => return res})
+        None
+      case res => res
+    }
+  // 3. function vs function
+  //   2) a transitively enclosing function is the same name
+  def nestedF(bl: LocalBlock, name: String, span: String): Unit = bl.outer match {
+    case b:VarBlock => nestedF(b, name, span)
+    case f:FunBlock if f.name.equals(name) =>
+      signal(f.span, ShadowedFuncByFunc, name, span)
+    case f:FunBlock => nestedF(f, name, span)
+    case _ =>
+  }
+  // find the enclosing function block
+  def enclosingFuns(bl: LocalBlock): List[FunBlock] = bl match {
+    case f:FunBlock => List(f)++(enclosingFuns(f.outer))
+    case b:VarBlock if (b.outer != null) => enclosingFuns(b.outer)
+    case _ => List()
+  }
+
+  def checkLocalEnv(bl: FunBlock, name: String) =
+    // a reference to an enclosing function
+    if (bl.name.equals(name)) {
+      nestedF(bl, name, bl.span.toStringWithoutFiles)
+      // 4. var vs function
+      //   3) multiple variable and function names in a local environment
+      bl.vds.find(vd2Str(_).equals(name)) match {
+             case Some(vd) =>
+               signal(bl.span, ShadowedFuncByVar, name, toSpan(vd).toStringWithoutFiles)
+             case _ =>
+      }
+    }
+
+  // collect the assignments in the enclosing function
+  def collectAssigns(block: LocalBlock): List[(Span, String)] = block match {
+    case f:FunBlock => f.assigns
+    case v:VarBlock => v.assigns ++ collectAssigns(v.outer)
+    case _ => List()
+  }
+
+  // introduce a new block
+  def newBlock(stmts: List[SourceElement]) = {
+    val oldVB = currentBlock
+    currentBlock = new VarBlock(oldVB)
+    oldVB.blocks ++= List[LocalBlock](currentBlock)
+    walkUnit(stmts)
+    currentBlock = oldVB
+  }
+
+  override def walkUnit(node: Any): Unit = node match {
+    case ae@SAssignOpApp(_, SVarRef(i, name), _, _) =>
+      currentBlock.assigns ++= List((i.getSpan, name.getText))
+
+    case SVarStmt(_, vds) =>
+      addVds(vds)
+      vds.foldLeft(List[(Span, String)]())((res, vd) => {
+                    val name = vd2Str(vd)
+                    // 1. var vs var
+                    //   1) multiple names in a single var statement
+                    res.find(p => p._2.equals(name)) match {
+                      case Some((span, _)) =>
+                        signal(span, ShadowedVarByVar, name, toSpan(vd).toStringWithoutFiles)
+                      case _ =>
+                    }
+                    // 4. var vs function
+                    //   1) variable and function with the same name
+                    currentBlock.fds.find(fd2Str(_).equals(name)) match {
+                      case Some(fd) =>
+                        signal(toSpan(vd), ShadowedVarByFunc, name, toSpan(fd).toStringWithoutFiles)
+                      case _ =>
+                    }
+                    // 5. parameter vs (var or function)
+                    enclosingFuns(currentBlock) match {
+                      case immediate::rest =>
+                    //   5) parameter and variable with the same name
+                        immediate.params.find(id2Str(_).equals(name)) match {
+                          case Some(param) =>
+                            signal(toSpan(param), ShadowedParamByVar, name, toSpan(vd).toStringWithoutFiles)
+                          case _ =>
+                        }
+                    //   7) parameter and nested variable with the same name
+                        rest.foreach(b =>
+                          b.params.find(id2Str(_).equals(name)) match {
+                            case Some(param) =>
+                              signal(toSpan(param), ShadowedParamByVar, name, toSpan(vd).toStringWithoutFiles)
+                            case _ =>
+                          })
+                      case _ =>
+                    }
+                    // 6. assignments vs var
+                    collectAssigns(currentBlock).find(ass => ass._2.equals(name)) match {
+                      case Some((span, _)) =>
+                        signal(span, ShadowedVarByVar, name, toSpan(vd).toStringWithoutFiles)
+                      case _ =>
+                    }
+                    res++List((toSpan(vd), name))
+                  })
+      vds.foreach(walkUnit)
+
+    case SVarRef(_, id) =>
+      val name = id2Str(id)
+      declareV(currentBlock, name) match {
+        case Some(span) =>
+         currentBlock.blocks.filter(_.isInstanceOf[VarBlock]).foreach(bl => {
+                       // 1. var vs var
+                       //   2) multiple variable names in nested blocks
+                       //      and the name is used in an outer block
+                       declareVR(bl, name) match {
+                         case Some(sp) =>
+                           signal(span, ShadowedVarByVar, name, sp.toStringWithoutFiles)
+                         case _ => }
+                       // 4. var vs function
+                       //   2) multiple variable and function names in nested blocks
+                       //      and the name is used in an outer block
+                       declareFR(bl, name) match {
+                         case Some(sp) =>
+                           signal(span, ShadowedVarByFunc, name, sp.toStringWithoutFiles)
+                         case _ => }
+             })
+        case _ =>
+      }
+      declareF(currentBlock, name) match {
+        case Some(span) =>
+         currentBlock.blocks.filter(_.isInstanceOf[VarBlock]).foreach(bl => {
+                       // 4. var vs function
+                       //   2) multiple variable and function names in nested blocks
+                       //      and the name is used in an outer block
+                       declareVR(bl, name) match {
+                         case Some(sp) =>
+                           signal(span, ShadowedFuncByVar, name, sp.toStringWithoutFiles)
+                         case _ => }
+             })
+        case _ =>
+      }
+      // 1. var vs var
+      //   3) multiple variable names in parallel blocks and the name is used in an outer block
+      val blocks = currentBlock.blocks.filter(_.isInstanceOf[VarBlock])
+      val size = blocks.length
+      blocks.zipWithIndex.foreach(p =>
+             declareV(p._1, name) match {
+               case Some(span) =>
+                 blocks.takeRight(size-p._2-1).foreach(b =>
+                   declareV(b, name) match {
+                     case Some(sp) =>
+                       signal(span, ShadowedVarByVar, name, sp.toStringWithoutFiles)
+                     case _ => })
+               case _ => })
+      // multiple names in a local environment
+      enclosingFuns(currentBlock) match {
+        case immediate::rest =>
+          checkLocalEnv(immediate, name)
+          immediate.vds.find(vd2Str(_).equals(name)) match {
+            case Some(vd) =>
+              // 4. var vs function
+              //   4) if any transitively enclosing FunBlock has the same name
+              rest.foreach(b => if (b.name.equals(name))
+                                  signal(b.span, ShadowedFuncByVar, name, toSpan(vd).toStringWithoutFiles))
+            case _ =>
+          }
+        case _ =>
+      }
+
+    case SBlock(_, stmts, _) => newBlock(stmts)
+
+    case fd@SFunDecl(info, ftn) =>
+      val name = fd2Str(fd)
+      val fdSpan = toSpan(info).toStringWithoutFiles
+      // 4. var vs function
+      //   1) variable and function with the same name
+      currentBlock.vds.find(vd2Str(_).equals(name)) match {
+                      case Some(vd) =>
+                        signal(toSpan(vd), ShadowedVarByFunc, name, toSpan(fd).toStringWithoutFiles)
+                      case _ =>
+                    }
+      // 5. parameter vs (var or function)
+      enclosingFuns(currentBlock) match {
+        case immediate::rest =>
+      //   6) parameter and function with the same name
+          immediate.params.find(id2Str(_).equals(name)) match {
+            case Some(param) =>
+              signal(toSpan(param), ShadowedParamByFunc, name, toSpan(fd).toStringWithoutFiles)
+            case _ =>
+          }
+      //   8) parameter and nested function with the same name
+          rest.foreach(b =>
+            b.params.find(id2Str(_).equals(name)) match {
+              case Some(param) =>
+                signal(toSpan(param), ShadowedParamByFunc, name, toSpan(fd).toStringWithoutFiles)
+              case _ =>
+            })
+        case _ =>
+      }
+
+      // 3. function vs function
+      //   1) multiple function names in the same block
+      currentBlock.fds.find(f => fd2Str(f).equals(name)) match {
+        case Some(f) =>
+          signal(toSpan(f), ShadowedFuncByFunc, name, fdSpan)
+        case _ =>
+      }
+      if (currentBlock.outer != null) { // if (!toplevel)
+        // 3. function vs function
+        //   1) multiple function names in nested blocks
+        declareF(currentBlock.outer, name) match {
+          case Some(span) =>
+            signal(span, ShadowedFuncByFunc, name, fdSpan)
+          case _ =>
+        }
+        // 3. function vs function
+        //   1) multiple function names in parallel blocks
+        val blocks = currentBlock.outer.blocks.filter(_.isInstanceOf[VarBlock])
+        val size = blocks.length
+        blocks.zipWithIndex.foreach(p =>
+               declareF(p._1, name) match {
+                 case Some(span) =>
+                   blocks.takeRight(size-p._2-1).foreach(b =>
+                     declareF(b, name) match {
+                       case Some(sp) =>
+                         signal(span, ShadowedFuncByFunc, name, sp.toStringWithoutFiles)
+                       case _ => })
+                 case _ => })
+      }
+      walkUnit(ftn)
+      addFd(fd)
+
+    case SFunctional(_, _, stmts, n, params) =>
+      // 1. parameter vs parameter
+      //   1) multiple names in the parameter list of a single function
+      params.foldLeft(List[(Span, String)]())((res, param) => {
+                        val name = id2Str(param)
+                        res.find(p => p._2.equals(name)) match {
+                          case Some((span, _)) =>
+                            signal(span, ShadowedParamByParam, name, toSpan(param).toStringWithoutFiles)
+                          case _ =>
+                        }
+                        res++List((toSpan(param), name))
+                      })
+      // introduce a new block
+      val oldVB = currentBlock
+      currentBlock = new FunBlock(id2Str(n), toSpan(n), params, oldVB)
+      oldVB.blocks ++= List[LocalBlock](currentBlock)
+      walkUnit(stmts)
+      currentBlock = oldVB
+
+    case SSwitch(_, cond, frontCases, default, backCases) =>
+      walkUnit(cond); walkUnit(frontCases)
+      default match {
+        case Some(stmts) => newBlock(stmts)
+        case None =>
+      }
+      walkUnit(backCases)
+
+    case SCase(_, cond, body) => walkUnit(cond); newBlock(body)
+
+    case STry(_, body, catchBlock, fin) =>
+      newBlock(body); walkUnit(catchBlock)
+      fin match {
+        case Some(stmts) => newBlock(stmts)
+        case None =>
+      }
+
+    case SCatch(_, _, body) => newBlock(body)
+
+    case _ => super.walkUnit(node)
+  }
+
+  def checkUseStrictDirective(body: List[SourceElement]) = body match {
+    case (e@SExprStmt(_,SStringLiteral(_,_,txt),_))::_ =>
+      val s = NU.unescapeJava(txt)
+      if (!NU.removeEscapeSeqLineCont(s).equals(s))
+        throw new StaticError("A Use Strict Directive may not contain an EscapeSequence or LineContinuation.",
+                              Some(e))
+    case _ =>
+  }
+
+  def isInVd(vd: VarDecl, ds: List[VarDecl], vars: List[(Span, String)]) =
+    ds.exists(d => vd2Str(d).equals(vd2Str(vd)))
+  def isInFd(fd: FunDecl, ds: List[FunDecl]) =
+    ds.exists(d => fd2Str(d).equals(fd2Str(fd)))
+  def isVdInFd(vd: VarDecl, ds: List[FunDecl]) =
+    ds.exists(d => fd2Str(d).equals(vd2Str(vd)))
   def hoist(body: List[SourceElement], isTopLevel: Boolean, params: List[Id]) = {
-    val param_names = params.map(_.getText)
+    val param_names = params.map(id2Str)
     val (vdss, fdss, varss) = body.map(s => new hoistWalker(s, isTopLevel).doit).unzip3
     // hoisted variable declarations
     val vds = vdss.flatten.asInstanceOf[List[VarDecl]]
@@ -179,11 +503,6 @@ class Hoister(program: Program) extends Walker {
     val vdsUniq2 = vdsUniq.foldRight(List[VarDecl]())((vd, res) =>
                                      if (isVdInFd(vd, fdsUniq)) res
                                      else List(vd)++res)
-    // functions shadowing parameters
-    fdsUniq.filter(fd => param_names contains fd.getFtn.getName.getText).foreach(fdShadowParam(_,params))
-    // variables shadowing parameters
-    vdsUniq2.filter(vd => param_names contains vd.getName.getText).foreach(vdShadowParam(_,params))
-
     (fdsUniq, vdsUniq2,
      walk(rmFunDeclWalker.walk(body)).asInstanceOf[List[SourceElement]])
   }
@@ -229,29 +548,29 @@ class Hoister(program: Program) extends Walker {
       throw new StaticError("Function expressions before the hoisting phase should not have hoisted declarations.",
                             Some(sp))
       sp
-    case SVarStmt(info, vds) => SStmtUnit(info, hoistVds(vds))
+    case SVarStmt(info, vds) => stmtUnit(info, hoistVds(vds))
     case SForVar(info, vars, cond, action, body) =>
       val new_info = NU.spanInfoAll(vars)
       SBlock(new_info,
-             List(SStmtUnit(new_info, hoistVds(vars)),
-                 walk(SFor(info, None, cond, action, body)).asInstanceOf[Stmt]),
+             List(stmtUnit(new_info, hoistVds(vars)),
+                  walk(SFor(info, None, cond, action, body)).asInstanceOf[Stmt]),
              false)
     case SForVarIn(info, SVarDecl(i,n,None), expr, body) =>
       walk(SForIn(info, SVarRef(i,n), expr, body))
     case SForVarIn(info, SVarDecl(i,n,Some(e)), expr, body) =>
       SBlock(info,
-             List(SStmtUnit(info, List(walk(assignS(i,n,e)).asInstanceOf[Stmt])),
+             List(stmtUnit(info, List(walk(assignS(i,n,e)).asInstanceOf[Stmt])),
                   walk(SForIn(info, SVarRef(i,n), expr, body)).asInstanceOf[Stmt]),
              false)
     case SLabelStmt(info, label, SForVar(i, vars, cond, action, body)) =>
       val new_info = NU.spanInfoAll(vars)
       SBlock(new_info,
-             List(SStmtUnit(info, hoistVds(vars)),
+             List(stmtUnit(info, hoistVds(vars)),
                   SLabelStmt(info, label,
                              walk(SFor(i, None, cond, action, body)).asInstanceOf[Stmt])),
              false)
     case SLabelStmt(info, label, SForVarIn(finfo, SVarDecl(i,n,Some(e)), expr, body)) =>
-      SBlock(info, List(SStmtUnit(info, List(walk(assignS(i,n,e)).asInstanceOf[Stmt])),
+      SBlock(info, List(stmtUnit(info, List(walk(assignS(i,n,e)).asInstanceOf[Stmt])),
                         SLabelStmt(info, label,
                                    walk(SForIn(info, SVarRef(i,n), expr, body)).asInstanceOf[Stmt])),
              false)

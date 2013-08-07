@@ -1,0 +1,54 @@
+module ImageViewer {
+
+    enum ImageViewerState { 
+                         "UNKNOWN",
+                         "STOPPED", 
+                         "BUFFERING", 
+                         "SHOWING", 
+                         "CONTENT_CHANGED"
+    }; 
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface ImageViewerSuccessCallback {
+        
+        void onsuccess(in DeviceId viewerId);
+    };
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface ImageViewerErrorCallback {
+        
+        void onerror(in WebAPIError error,
+                     in DeviceId viewerId);
+    };    
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface ImageViewerStateChangedCallback {
+        
+         void onstatechange(in ImageViewerState state,
+                            in DeviceId viewerId);
+    };
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface ImageViewerStateCallback {
+        
+         void onsuccess(in ImageViewerState state,
+                        in DeviceId viewerId);
+    };
+    
+    [NonInterfaceObject] interface ImageViewer : Device {
+        
+        ViewController getViewController() raises(WebAPIException);
+        
+        void show(in Item item,
+                  in ImageViewerSuccessCallback successCallback, 
+                  in optional ImageViewerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void hide(in ImageViewerSuccessCallback successCallback,
+                  in optional ImageViewerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void getState(in ImageViewerStateCallback successCallback,
+                      in optional ImageViewerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        long addImageViewerStateChangeListener(in ImageViewerStateChangedCallback stateCallback) raises (WebAPIException);
+        
+        void removeImageViewerStateChangeListener(long changeListenerId) raises (WebAPIException);
+    
+    };
+      
+};

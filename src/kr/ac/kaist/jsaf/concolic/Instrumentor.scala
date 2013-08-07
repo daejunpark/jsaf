@@ -27,8 +27,10 @@ import kr.ac.kaist.jsaf.scala_src.useful.Sets._
  *   [IRFunDecl]
  *   [IRReturn]
  *   [IRVarStmt]
+ *   [IRSeq]
  *   [IRIf]
  *   [IRWhile]
+ *   [IRStmtUnit]
  * Instead of the 'end' statement in LCT, we have to report the terminal
  * information at the end of Interpreter.
  *
@@ -38,9 +40,7 @@ import kr.ac.kaist.jsaf.scala_src.useful.Sets._
  *   [IRBreak]
  *   [IRLabelStmt]
  *   [IRThrow]
- *   [IRSeq]
  *   [IRTry]
- *   [IRStmtUnit]
  *
  * Not yet targeted for instrumentation which is related with function call/object:
  *   [IRDelete]
@@ -98,7 +98,13 @@ class Instrumentor(program: IRRoot) extends IRWalker {
     case SIRVarStmt(info, lhs, fromparam) => walkVarStmt(info, lhs, env)
   }
 
-  def walk(node:Any, env: IRId): Any = node match {
+  var array = List[String]()
+  def storeIR(name: String): Unit = {
+    if (array.indexOf(name) < 0)
+      array = array:+name
+  }
+  def printIRs() = System.out.println(array)
+  def walk(node: Any, env: IRId): Any = node match {
 
     /* begin
      * ==>
@@ -108,6 +114,7 @@ class Instrumentor(program: IRRoot) extends IRWalker {
      * when it encounters SIRRoot.
      */
     case SIRRoot(info, fds, vds, irs) =>
+      storeIR("SIRRoot")
       SIRRoot(info, fds.map(walk(_, env).asInstanceOf[IRFunDecl]),
               vds, 
               vds.map(walkVarStmt(_, env))++irs.map(walk(_, env).asInstanceOf[IRStmt]))
@@ -121,13 +128,16 @@ class Instrumentor(program: IRRoot) extends IRWalker {
      * SIRInternalCall(info, "<>Concolic<>Instrumentor", "<>Concolic<>ExecuteAssignment", e, Some(v))
      */
     case SIRExprStmt(info, lhs, right, ref) =>
+      storeIR("SIRExprStmt")
       SIRSeq(info, List(node.asInstanceOf[IRStmt], executeAssignment(info, right, lhs, env)))
 
     /* x = x(x, x)
      * ==>
      * x = x(x, x)
      */
-    case SIRCall(info, lhs, fun, thisB, args) => node
+    case SIRCall(info, lhs, fun, thisB, args) =>       
+      storeIR("SIRCall")
+      node
 
     /* x = function f (x, x) {s*}
      * ==>
@@ -139,7 +149,9 @@ class Instrumentor(program: IRRoot) extends IRWalker {
      *
      * SymbolicExecutor should perform "CHECK_FOCUS()" 
      */
-    case SIRFunExpr(info, lhs, ftn) => SIRFunExpr(info, lhs, walkFunctional(info, ftn).asInstanceOf[IRFunctional])
+    case SIRFunExpr(info, lhs, ftn) =>  
+      storeIR("SIRFunExpr")
+      SIRFunExpr(info, lhs, walkFunctional(info, ftn).asInstanceOf[IRFunctional])
 
     /* function f (x, x) {s*}
      * ==>
@@ -151,18 +163,24 @@ class Instrumentor(program: IRRoot) extends IRWalker {
      *
      * SymbolicExecutor should perform "CHECK_FOCUS()" 
      */
-    case SIRFunDecl(info, ftn) => SIRFunDecl(info, walkFunctional(info, ftn).asInstanceOf[IRFunctional])
+    case SIRFunDecl(info, ftn) => 
+      storeIR("SIRFunDecl")
+      SIRFunDecl(info, walkFunctional(info, ftn).asInstanceOf[IRFunctional])
 
-    case SIRFunctional(i, name, params, args, fds, vds, body) => node
+    case SIRFunctional(i, name, params, args, fds, vds, body) => 
+      storeIR("SIRFunctional")
+      node
 
     /* return e?
      * ==>
      * return e?
      */
-    case SIRReturn(info, expr) => node
-   
+    case SIRReturn(info, expr) => 
+      storeIR("SIRReturn")
+      node
 
     case SIRSeq(info, stmts) =>
+      storeIR("SIRSeq")
       SIRSeq(info, stmts.map(walk(_, env).asInstanceOf[IRStmt]))
     
     /* if (e) then s (else s)?
@@ -176,11 +194,11 @@ class Instrumentor(program: IRRoot) extends IRWalker {
      * else {SIRInternalCall(info, "<>Concolic<>Instrumentor", "<>Concolic<>ExecuteCondition", e, None) s?}
      */
     case SIRIf(info, expr, trueB, falseB) =>
+      storeIR("SIRIf")
       SIRIf(info, expr, 
         SIRSeq(info, List(executeCondition(info, expr, env), walk(trueB, env).asInstanceOf[IRStmt])),
         falseB match { case Some(s) => Some(SIRSeq(info, List(executeCondition(info, expr, env), walk(s, env).asInstanceOf[IRStmt])))
                        case None => Some(executeCondition(info, expr, env))})
-
 
     /* while (e) s
      * ==>
@@ -202,21 +220,37 @@ class Instrumentor(program: IRRoot) extends IRWalker {
      */
      //TODO: Report condition only once
     case SIRWhile(info, cond, body) =>
+      storeIR("SIRWhile")
       SIRSeq(info, List(SIRWhile(info, cond, 
         SIRSeq(info, List(executeCondition(info, cond, env), walk(body, env).asInstanceOf[IRStmt]))),
         executeCondition(info, cond, env)))
 
-    case SIRStore(info, obj, index, rhs) => node
-    case SIRArray(info, lhs, elems) => node
-    case SIRArrayNumber(info, lhs, elements) => node
-    case SIRBreak(info, label) => node
+    case SIRStore(info, obj, index, rhs) => 
+      storeIR("SIRStore")
+      node
+
+    case SIRArray(info, lhs, elems) => 
+      storeIR("SIRArray")
+      node
     
+    case SIRArrayNumber(info, lhs, elements) => 
+      storeIR("SIRArrayNumber")
+      node
+
+    case SIRBreak(info, label) => 
+      storeIR("SIRBreak")
+      node
+
     case SIRLabelStmt(info, label, stmt) =>
+      storeIR("SIRLabelStmt")
       SIRLabelStmt(info, label, walk(stmt, env).asInstanceOf[IRStmt])
 
-    case SIRThrow(info, expr) => node
+    case SIRThrow(info, expr) => 
+      storeIR("SIRThrow")
+      node
 
     case SIRTry(info, body, name, catchB, finallyB) =>
+      storeIR("SIRTry")
       SIRTry(info, walk(body, env).asInstanceOf[IRStmt], name,
              catchB match { case Some(s) => Some(walk(s, env).asInstanceOf[IRStmt])
                             case None => None },
@@ -224,16 +258,39 @@ class Instrumentor(program: IRRoot) extends IRWalker {
                               case None => None })
 
     case SIRStmtUnit(info, stmts) =>
+      storeIR("SIRStmtUnit")
       SIRStmtUnit(info, stmts.map(walk(_, env).asInstanceOf[IRStmt]))
 
-    case SIRDelete(info, lhs, id) => node
-    case SIRDeleteProp(info, lhs, obj, index) => node
-    case SIRObject(info, lhs, members, proto) => node
-    case SIRArgs(info, lhs, elems) => node
-    case SIRInternalCall(info, lhs, fun, first, second) => node
-    case SIRNew(info, lhs, fun, args) => node
-    case SIREval(info, lhs, arg) => node
+    case SIRDelete(info, lhs, id) => 
+      storeIR("SIRDelete")
+      node
+
+    case SIRDeleteProp(info, lhs, obj, index) => 
+      storeIR("SIRDeleteProp")
+      node
+
+    case SIRObject(info, lhs, members, proto) => 
+      storeIR("SIRObject")
+      node
+
+    case SIRArgs(info, lhs, elems) => 
+      storeIR("SIRArgs")
+      node
+
+    case SIRInternalCall(info, lhs, fun, first, second) =>
+      storeIR("SIRInternalCall")
+      node
+
+    case SIRNew(info, lhs, fun, args) => 
+      storeIR("SIRNew")
+      node
+
+    case SIREval(info, lhs, arg) => 
+      storeIR("SIREval")
+      node
+
     case SIRWith(info, id, stmt) =>
+      storeIR("SIRWith")
       SIRWith(info, id, walk(stmt, env).asInstanceOf[IRStmt])
 
     case _ => node

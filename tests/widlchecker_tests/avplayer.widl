@@ -1,0 +1,121 @@
+module AVPlayer {  
+          
+    enum AVPlayerState { "UNKNOWN", "STOPPED", "BUFFERING", "PLAYING", 
+                         "PAUSED", "CONTENT_CHANGED" };
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface AVPlayerSuccessCallback {
+        
+        void onsuccess(in DeviceId playerId);
+    };
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface AVPlayerPlayPositionSuccessCallback {    
+
+         void onsuccess(in unsigned long position,
+                        in DeviceId playerId);    
+    };
+
+    [Callback=FunctionOnly, NoInterfaceObject] interface AVPlayerVolumeSuccessCallback  {    
+        
+         void onsuccess(in unsigned short level,
+                        in DeviceId playerId);    
+    };
+
+    [Callback=FunctionOnly, NoInterfaceObject] interface AVPlayerMuteSuccessCallback {    
+
+         void onsuccess(in boolean mute,
+                        in DeviceId playerId);                         
+    };
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface AVPlayerErrorCallback {
+        
+        void onerror(in WebAPIError error,
+                     in DeviceId playerId);
+    };
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface AVPlayerStateChangedCallback {
+
+         void onstatechange(in AVPlayerState state, 
+                            in DeviceId playerId);
+    };
+
+
+    [Callback=FunctionOnly, NoInterfaceObject] interface AVPlayerStateCallback {
+ 
+          void onsuccess(in AVPlayerState state, 
+                         in DeviceId playerId);     
+    };
+
+    [Callback=FunctionOnly, NoInterfaceObject] interface AVPlayerMediaInfoSuccessCallback {    
+
+         void onsuccess(in MediaInfo mediaInfo,
+                         in DeviceId playerId);    
+    };
+    
+    dictionary ContentInfo {
+    
+        long long startingPosition;
+        
+    };
+
+    [NoInterfaceObject] interface MediaInfo {
+        
+        readonly attribute unsigned long long duration;
+        
+    };
+
+    [NoInterfaceObject] interface AVPlayer : Device {        
+                
+        readonly attribute boolean isAudioSupported;
+        
+        readonly attribute boolean isVideoSupported;        
+        
+        void getState(in AVPlayerStateCallback successCallback, 
+                      in optional AVPlayerErrorCallback? errorCallback) raises(WebAPIException);                          
+        
+        void play(in Item item,
+                  in AVPlayerSuccessCallback successCallback, 
+                  in optional AVPlayerErrorCallback? errorCallback,
+                  in optional ContentInfo? contentInfo) raises (WebAPIException);
+        
+        void stop(in AVPlayerSuccessCallback successCallback, 
+                  in optional AVPlayerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void seek(in unsigned long position, 
+                  in AVPlayerSuccessCallback successCallback, 
+                  in optional AVPlayerErrorCallback? errorCallback) raises (WebAPIException);
+
+
+        void pause(in AVPlayerSuccessCallback successCallback, 
+                   in optional AVPlayerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void resume(in AVPlayerSuccessCallback successCallback, 
+                    in optional AVPlayerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        
+        void getVolume(in AVPlayerVolumeSuccessCallback successCallback, 
+                       in optional AVPlayerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        
+        void setVolume(in unsigned short level, 
+                       in AVPlayerSuccessCallback successCallback, 
+                       in optional AVPlayerErrorCallback? errorCallback) raises (WebAPIException);
+
+        void getMute(in AVPlayerMuteSuccessCallback successCallback, 
+                     in optional AVPlayerErrorCallback? errorCallback) raises (WebAPIException);
+
+        void setMute(in boolean muted,
+                     in AVPlayerSuccessCallback successCallback, 
+                     in optional AVPlayerErrorCallback? errorCallback) raises (WebAPIException);
+        
+        void getPlayPosition(in AVPlayerPlayPositionSuccessCallback successCallback, 
+                             in optional AVPlayerErrorCallback? errorCallback) raises (WebAPIException);
+
+        void getMediaInfo(in AVPlayerMediaInfoSuccessCallback successCallback,
+                          in AVPlayerErrorCallback errorCallback) raises(WebAPIException);
+        
+        long addAVPlayerStateChangeListener(in AVPlayerStateChangedCallback stateCallback) raises (WebAPIException);
+
+
+        void removeAVPlayerStateChangeListener(in long changeListenerId) raises (WebAPIException);        
+    };
+};

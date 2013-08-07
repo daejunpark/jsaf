@@ -10,13 +10,11 @@
 package kr.ac.kaist.jsaf.tests
 
 import junit.framework.TestSuite
-import _root_.java.io.File
-import kr.ac.kaist.jsaf.ProjectProperties
-import kr.ac.kaist.jsaf.Shell
+import java.io.File
 
 object WIDLParserJUTest {
   val SEP = File.separator
-  val WIDLPARSER_FAIL_TESTS_DIR = "tests/widl_tests"
+  val WIDLPARSER_FAIL_TESTS_DIR = "tests/widlparser_tests"
 
   def main(args: String*) = junit.textui.TestRunner.run(suite)
 

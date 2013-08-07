@@ -14,6 +14,6 @@ import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 
 class LocInfo(loc: Loc) {
-  var createdInst:                              CFGInst = null
+  var createdInst: CFGInst                      = null
   val containingVar                             = new MHashSet[(CFGInst, BugVar0)]()
 }

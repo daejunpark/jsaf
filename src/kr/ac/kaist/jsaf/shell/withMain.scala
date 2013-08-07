@@ -22,7 +22,7 @@ import kr.ac.kaist.jsaf.useful.{Useful, Pair}
 ////////////////////////////////////////////////////////////////////////////////
 // with Rewriter
 ////////////////////////////////////////////////////////////////////////////////
-object withMain {
+object WithMain {
   /**
    * Rewrite a JavaScript source code using the with statement
    * to another one without using the with statement.

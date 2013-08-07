@@ -1,0 +1,84 @@
+module DeviceDiscovery {    
+
+    typedef DOMString DeviceId;
+
+    typedef sequence<Device> DeviceArray;
+    
+    typedef sequence<Icon> IconArray;
+
+    enum DeviceType { "AVPLAYER", 
+                                "IMAGEVIEWER", 
+                                "FILERECEIVER",
+                                "MEDIAPROVIDER",
+                                "TVCONTROLLER",
+                                "UNKNOWN" };
+
+    
+    enum SubFeatureType  {"VIEWCONTROLLER"};
+
+    
+    enum DeviceDomain { "LOCAL_NETWORK", 
+                                    "MY_DEVICE", 
+                                    "REMOTE_NETWORK", 
+                                    "UNKNOWN" };
+    
+    [Callback, NoInterfaceObject] interface DeviceDiscoveryCallback {
+        
+        void ondeviceadded(in Device device); 
+        
+        void ondeviceremoved(in Device device); 
+    };
+    
+    [NoInterfaceObject] interface Icon {
+    
+        readonly attribute long depth;
+        
+        readonly attribute long height;
+        
+        readonly attribute long width;
+        
+        readonly attribute DOMString mimeType;
+        
+        readonly attribute DOMString iconUri;
+    };
+    
+    [NoInterfaceObject] interface DeviceFinder {
+
+        Device? getDevice(in DeviceType deviceType,
+                         in DeviceId id, in optional SubFeatureType? subFeatureType) raises(WebAPIException);
+
+        DeviceArray getDeviceList(in DeviceType deviceType) raises(WebAPIException);
+        
+        DeviceArray getDeviceListByDomain(in DeviceType deviceType,
+                               in DeviceDomain domain) raises(WebAPIException);
+        
+        DeviceArray getDeviceListByNIC(in DeviceType deviceType, 
+                               in DOMString nic) raises(WebAPIException);
+        
+        
+        void refresh() raises(WebAPIException);
+        
+        long addDeviceDiscoveryListener(in DeviceDiscoveryCallback deviceDiscoveryCallback) raises(WebAPIException);
+        
+        void removeDeviceDiscoveryListener(in long deviceDiscoveryListener) raises(WebAPIException);
+    };
+
+    [NoInterfaceObject] interface Device {
+        
+        readonly attribute DeviceId id;
+        
+        readonly attribute DeviceDomain deviceDomain;
+        
+        readonly attribute DeviceType deviceType;
+        
+        readonly attribute IconArray iconArray;
+        
+        readonly attribute DOMString ipAddress;
+        
+        readonly attribute DOMString? modelName;
+        
+        readonly attribute DOMString name;
+        
+        readonly attribute DOMString nic;
+    };
+};

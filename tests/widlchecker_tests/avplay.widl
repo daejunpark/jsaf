@@ -1,0 +1,241 @@
+module AVPlay {
+
+    typedef sequence<unsigned long> BitrateArray;
+    
+    [NoInterfaceObject] interface WebAPIsAVPlayManager {
+        readonly attribute AVPlayManager avplay;
+    };
+
+    WebAPIs implements WebAPIsAVPlayManager;
+    
+    [NoInterfaceObject] interface AVPlayManager {
+
+       const short PLAY_STATE_IDLE = 0;        
+
+       const short PLAY_STATE_INITIALIZED = 1;        
+
+       const short PLAY_STATE_STOPPED = 2;
+
+       const short PLAY_STATE_PREPARED = 3;
+
+       const short PLAY_STATE_STARTED = 4;
+
+       const short PLAY_STATE_PAUSED = 5;
+       
+        void getAVPlay(in AvailableAVPlaySuccessCallback successCallback,
+                           in optional ErrorCallback? errorCallback) raises (WebAPIException);
+    };
+        
+    [Callback=FuntionOnly, NoInterfaceObject] interface AvailableAVPlaySuccessCallback {
+        void onsuccess (in AVPlay obj);
+    };
+    
+    [Callback, NoInterfaceObject] interface BufferingCallback {
+
+        void onbufferingstart();
+
+        void onbufferingprogress(in unsigned short percent);
+
+        void onbufferingcomplete();
+    };
+
+    [Callback, NoInterfaceObject] interface AVPlayCallback {
+        void oncurrentplaytime(in PlayTime time);
+
+        void onresolutionchanged(in unsigned long width, in unsigned long height);
+
+        void onstreamcompleted();
+
+        void onerror(WebAPIError error);
+    };
+
+    [NoInterfaceObject] interface SRect {
+        attribute unsigned long top;
+
+        attribute unsigned long left;
+
+        attribute unsigned long width;
+
+        attribute unsigned long height;
+    };  
+    
+    [NoInterfaceObject] interface AVPlay {
+
+        readonly attribute DOMString id;
+
+        readonly attribute DOMString url;
+
+        readonly attribute unsigned long duration;
+
+        readonly attribute unsigned short videoWidth;
+
+        readonly attribute unsigned short videoHeight;
+
+        readonly attribute SRect displayRect;
+
+        readonly attribute DOMString containerID;
+
+        readonly attribute unsigned short zIndex;
+
+        readonly attribute unsigned short totalNumOfVideo;
+
+        readonly attribute unsigned short     totalNumOfAudio;
+
+        readonly attribute unsigned short     totalNumOfSubtitle;
+
+
+        readonly attribute unsigned long     totalBufferSize;
+
+        readonly attribute unsigned long    initialBufferSize;
+
+        readonly attribute unsigned long     pendingBufferSize;
+
+        readonly attribute boolean        macrovision;
+
+        readonly attribute short        status;
+
+        boolean init(in optional AVPlayInitialOption? option) raises(WebAPIException);
+                  
+        boolean open(in DOMString url, in optional AVPlayOption? option) raises(WebAPIException);
+                  
+        void play(in SuccessCallback successCallback, 
+                    in ErrorCallback? errorCallback, 
+                    in optional unsigned long? sec) raises (WebAPIException);
+                              
+        void stop() raises (WebAPIException);
+        
+        boolean pause() raises (WebAPIException);
+        
+        boolean resume() raises (WebAPIException);
+
+        boolean jumpForward(in unsigned long sec) raises (WebAPIException);
+        
+        boolean jumpBackward(in unsigned long sec) raises (WebAPIException);
+        
+        boolean setSpeed(in long speed) raises (WebAPIException);
+
+        boolean setAudioStreamID(in unsigned short index) raises (WebAPIException);
+        
+        boolean setSubtitleStreamID(in unsigned short index) raises (WebAPIException);
+        
+        unsigned long getCurrentBitrate() raises (WebAPIException);
+
+        BitrateArray getAvailableBitrates() raises (WebAPIException);
+        
+        boolean startSubtitle(in SubtitleOption option) raises (WebAPIException);
+        
+        void stopSubtitle() raises (WebAPIException);
+        
+        boolean setSubtitleSync(in long millisec) raises (WebAPIException);
+
+        boolean setDisplayRect(in SRect rect)  raises (WebAPIException);
+                                        
+        void clear() raises (WebAPIException);
+        
+        boolean show() raises (WebAPIException);
+        
+        boolean hide() raises (WebAPIException);        
+    };
+    
+   dictionary AdaptiveStreamingOption {
+        DOMString?    type;
+
+        DOMString?    startTime;
+
+        DOMString?    startBitrate; 
+
+        DOMString?    uptimer;
+
+        DOMString?    bitrates;
+
+        DOMString?    admode;
+    };
+    
+    dictionary DrmOption {
+        DOMString? type;
+
+        DOMString? company;
+
+        DOMString? deviceID;
+
+        DOMString? deviceType;
+
+        DOMString? streamID;
+
+        DOMString? drmURL;
+
+        DOMString? ackURL;
+
+        DOMString? heartbeatPeriod;
+
+        DOMString? portal;
+
+        DOMString? userData;
+
+        DOMString? cookie;
+    };
+      
+    dictionary MacrovisionOption {
+        unsigned short? type;
+
+        unsigned short? ict;
+
+        unsigned short?    dot;
+
+        unsigned long?    vbi;
+    };    
+ 
+    [Callback=FunctionOnly, NoInterfaceObject] interface SubtitleDataCallback {
+
+        void onsubtitle(in unsigned long syncTime, in DOMString dataString);
+    };
+    
+       
+    dictionary SubtitleOption {
+        DOMString path;
+
+        unsigned short streamID;
+
+        unsigned long?  sync;
+
+        SubtitleDataCallback subtitleDataCallback;
+    };
+    
+    dictionary PlayTime
+    {
+         unsigned long millisecond;
+
+         DOMString timeString;
+    };
+           
+    dictionary AVPlayInitialOption {
+        DOMString? containerID;
+
+        unsigned short? zIndex;
+
+        BufferingCallback? bufferingCallback;
+
+        AVPlayCallback? playCallback;
+
+        SRect? displayRect;
+
+        boolean? autoratio;
+    };
+    
+    dictionary AVPlayOption
+    {
+        unsigned long? totalBufferSize;
+        
+        unsigned long? pendingBufferSize;
+        
+        unsigned long? initialBufferSize;
+        
+        MacrovisionOption? macrovision;
+        
+        AdaptiveStreamingOption? adaptive; 
+        
+        DrmOption? drm;
+        
+        SubtitleOption? subtitle;        
+    };    
+};

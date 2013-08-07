@@ -196,7 +196,14 @@ package object domain {
         registerPredefLoc(addr, tag, name)
     }
   }
-  
+
+  def getPreDefLoc(name: String): Option[Loc] = {
+    reversePredefTable.get(name) match {
+      case Some(addr) => Some(addrToLoc(addr, Recent))
+      case None => None
+    }
+  }
+
   /* Map type for Heap */
   type HeapMap = HeapTreeMap
   val HeapMapBot: HeapMap = HeapTreeMap.Empty

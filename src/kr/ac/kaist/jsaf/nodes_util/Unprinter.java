@@ -564,7 +564,10 @@ public class Unprinter extends NodeReflection {
     }
 
     double readDouble(String s) throws IOException {
-        return Double.parseDouble(s);
+        if (s.endsWith("e") || s.endsWith("E")) {
+            return Double.parseDouble(s+l.string());
+        }
+        else return Double.parseDouble(s);
     }
 
     boolean readBoolean(String s) throws IOException {

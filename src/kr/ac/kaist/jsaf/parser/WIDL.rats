@@ -16,6 +16,7 @@ header {
 import kr.ac.kaist.jsaf.nodes.*;
 import kr.ac.kaist.jsaf.nodes_util.*;
 import kr.ac.kaist.jsaf.useful.Useful;
+import kr.ac.kaist.jsaf.widl.*;
 import edu.rice.cs.plt.tuple.Option;
 import edu.rice.cs.plt.iter.IterUtil;
 import edu.rice.cs.plt.collect.CollectUtil;
@@ -34,6 +35,8 @@ import static kr.ac.kaist.jsaf.exceptions.JSAFError.error;
 }
 
 body {
+  static WEAttribute eaNoInterfaceObject = WIDLFactory.eaNoInterfaceObject();
+  static WEAttribute eaCallbackFunctionOnly = WIDLFactory.eaCallbackFunctionOnly();
   static {
     add(JAVASCRIPT_RESERVED, new String[] {
         "DOMString",    "Date",         "Infinity",     "NaN",
@@ -49,7 +52,9 @@ body {
         "void",
 
         // reserved identifiers
+        /*
         "prototype",    "constructor",  "toString",
+        */
 
         // for WebKitIDL
         "module",       "in",           "raises",        "getraises",
@@ -91,8 +96,31 @@ public List<WDefinition> Definitions =
      a1:(w ExtendedAttributeList)? w a2:Definition a3:(w Definitions)?
      { if (a1 == null && a3 == null) yyValue = Useful.list(a2);
        else if (a1 == null) yyValue = Useful.list(a2, a3);
-       else if (a3 == null) yyValue = Useful.list(WIDLFactory.addAttrs(a1, a2));
-       else yyValue = Useful.list(WIDLFactory.addAttrs(a1, a2), a3);
+       else {
+           // Rewrite [Callback=FunctionOnly, NoInterfaceObject] interfaces.
+           // For example, rewrite the following:
+           //
+           // [Callback=FunctionOnly, NoInterfaceObject] interface ServiceProviderCreateSuccessCallback {
+           //     void onsuccess(in ServiceProvider serviceProvider);
+           // };
+           //
+           // as follows:
+           //
+           // callback ServiceProviderCreateSuccessCallback = void (ServiceProvider serviceProvider);
+           WDefinition def = WIDLFactory.addAttrs(a1, a2);
+           if (a1.contains(eaNoInterfaceObject) && a1.contains(eaCallbackFunctionOnly) &&
+               a2 instanceof WInterface && ((WInterface)a2).getMembers().size() == 1) {
+               WInterface interf = ((WInterface)a2);
+               WInterfaceMember member = interf.getMembers().get(0);
+               if (member instanceof WOperation) {
+                   WOperation op = (WOperation)member;
+                   def = WIDLFactory.mkCallback(a2.getInfo().getSpan(), interf.getName(),
+                                                op.getTyp(), op.getArgs());
+               }
+           }
+           if (a3 == null) yyValue = Useful.list(def);
+           else yyValue = Useful.list(def, a3);
+       }
      };
 
 /*
@@ -791,7 +819,11 @@ private List<WEAttribute> ExtendedAttributeInner =
  */
 private WEAttribute Other =
      opensquare w closesquare
-{ yyValue = WIDLFactory.eaArray(); }
+     { yyValue = WIDLFactory.eaArray(); }
+   / "NoInterfaceObject"
+     { yyValue = eaNoInterfaceObject; }
+   / "Callback" w equals w "FunctionOnly"
+     { yyValue = eaCallbackFunctionOnly; }
    / a1:(integer / floatL / minus / dot / colon / semicolon / "<" / equals / ">" /
          Date / DOMString / Infinity / NaN / any / boolean / byte / double / false /
          floatK / long / nullK / object / octet / or / sequence / short / true /

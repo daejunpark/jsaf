@@ -102,27 +102,31 @@ package object bug_detector {
   val CallNonFunction       :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling %s as a function.", 1)
   val CondBranch            :BugKind = addBugMsgFormat(newBugKind, Warning, "Conditional expression '%s' is always %s.", 2)
   val ConvertUndefToNum     :BugKind = addBugMsgFormat(newBugKind, Warning, "Trying to convert undefined to number.%s", 1)
-  val DefaultValueTypeError :BugKind = addBugMsgFormat(newBugKind, TypeError, "Computing default value (toString, valueOf) of %s yields TypeError.", 1)
-  /* BugKind : 10 ~ 19 */
   val FunctionArgSize       :BugKind = addBugMsgFormat(newBugKind, Warning, "Too %s arguments to function '%s'.", 2)
+  /* BugKind : 10 ~ 19 */
   val GlobalThis            :BugKind = addBugMsgFormat(newBugKind, Warning, "'this' refers the global object.", 0)
-  val ImplicitCallToString  :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit toString type-conversion to object '%s' by non-builtin toString method.", 1)
-  val ImplicitCallValueOf   :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit valueOf type-conversion to object '%s' by non-builtin valueOf method.", 1)
   val ImplicitTypeConvert   :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit type-conversion in equality comparison '%s%s %s %s%s'.", 5)
   val ObjectNullOrUndef     :BugKind = addBugMsgFormat(newBugKind, TypeError, "Property is trying to access %s, whose value is %s.", 2)
   val PrimitiveToObject     :BugKind = addBugMsgFormat(newBugKind, Warning, "Trying to convert primitive value(%s) to object.", 1)
   val ShadowedFuncByFunc    :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is shadowed by a function at '%s'.", 2)
   val ShadowedParamByFunc   :BugKind = addBugMsgFormat(newBugKind, Warning, "Parameter '%s' is shadowed by a function at '%s'.", 2)
   val ShadowedVarByFunc     :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a function at '%s'.", 2)
-  /* BugKind : 20 ~ 27 */
   val ShadowedVarByParam    :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a parameter at '%s'.", 2)
   val ShadowedVarByVar      :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a variable at '%s'.", 2)
+  val ShadowedParamByParam  :BugKind = addBugMsgFormat(newBugKind, Warning, "Parameter '%s' is shadowed by a parameter at '%s'.", 2)
+  /* BugKind : 20 ~ 27 */
+  val ShadowedFuncByVar     :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is shadowed by a variable at '%s'.", 2)
+  val ShadowedParamByVar    :BugKind = addBugMsgFormat(newBugKind, Warning, "Parameter '%s' is shadowed by a variable at '%s'.", 2)
   val UnreachableCode       :BugKind = addBugMsgFormat(newBugKind, Warning, "Unreachable code '%s' is found.", 1)
   val UnreferencedFunction  :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is neither called nor referenced.", 1)
   val UncalledFunction      :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is never called.", 1)
   val UnusedVarProp         :BugKind = addBugMsgFormat(newBugKind, Warning, "Value assigned to %s is never read.", 1)
   val VaryingTypeArguments  :BugKind = addBugMsgFormat(newBugKind, Warning, "Calling a function '%s' with the %sparameter %sof varying types (%s).", 4)
   val WrongThisType         :BugKind = addBugMsgFormat(newBugKind, TypeError, "Native function '%s' is called when its 'this' value is not of the expected object type.", 1)
+
+  //val DefaultValueTypeError :BugKind = addBugMsgFormat(newBugKind, TypeError, "Computing default value (toString, valueOf) of %s yields TypeError.", 1)
+  //val ImplicitCallToString  :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit toString type-conversion to object '%s' by non-builtin toString method.", 1)
+  //val ImplicitCallValueOf   :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit valueOf type-conversion to object '%s' by non-builtin valueOf method.", 1)
 
   /* 
   * toStringSet: Set of builtin methods that use ToString internally

@@ -402,7 +402,8 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SPropId(info, id) => walk(id)
     case SPropNum(info, num) => walk(num)
-    case SPropStr(info, str) => "\""+str+"\""
+    case SPropStr(info, str) =>
+      if (str.equals("\"")) "'\"'" else "\""+str+"\""
     case SRegularExpression(info, body, flags) =>
       if (testWith) "/"+body+"/"+flags
       else "/"+NU.unescapeJava(body)+"/"+NU.unescapeJava(flags)

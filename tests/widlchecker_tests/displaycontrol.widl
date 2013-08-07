@@ -1,0 +1,46 @@
+module DisplayControl {
+
+    [NoInterfaceObject] interface WebAPIsDisplayControlManager{
+        readonly attribute DisplayControlManager displaycontrol;
+    };
+    WebAPIs implements WebAPIsDisplayControlManager;
+    
+
+    [NoInterfaceObject] interface DisplayControlManager {
+ 
+        const unsigned short MODE_3D_EFFECT_OFF = 0;
+
+        const unsigned short MODE_3D_EFFECT_TOP_BOTTOM = 1;
+
+        const unsigned short MODE_3D_EFFECT_SIDE_BY_SIDE = 2;
+
+        const unsigned short MODE_3D_EFFECT_LINE_BY_LINE= 3;
+
+        const unsigned short MODE_3D_EFFECT_VERTICAL_STRIPE  = 4;
+
+        const unsigned short MODE_3D_EFFECT_FRAME_SEQUENCE = 5;
+
+        const unsigned short MODE_3D_EFFECT_CHECKER_BD = 6;
+
+        const unsigned short MODE_3D_EFFECT_FROM_2D_TO_3D = 7;
+
+        const unsigned short MODE_3D_DEVICE_NOT_CONNECTED = -1;
+
+        const unsigned short MODE_3D_NOT_SUPPORTED =  0;
+
+        const unsigned short MODE_3D_ENABLE_OK =  1;
+
+         unsigned short get3DEffectMode() raises (WebAPIException);
+
+         unsigned short check3DModeEnable() raises (WebAPIException);
+ 
+        void get3DModeSupportList(in Mode3DEffectListSupportCallback successCallback, 
+                                          in ErrorCallback? errorCallback)
+                                          raises (WebAPIException);
+    };
+     
+    [NoInterfaceObject] interface Mode3DEffectListSupportCallback {
+        void onsuccess(UnsignedShortArray mode3DEffectArray);
+    };
+ 
+};

@@ -838,8 +838,7 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
     }
   }
 
-  def initialize(): Unit = {
-
+  def initialize(quite: Boolean): Unit = {
     val s = System.nanoTime
     //val domModel = new DOMModel(cfg)
     // check start address of DOM Tree
@@ -850,7 +849,7 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
       initHtml
     // check end address of DOM Tree
     cfg.setHtmlEndAddr
-    System.out.println("# Time for initial heap with DOM modeling(ms): "+(System.nanoTime - s) / 1000000.0)
+    if(!quite) System.out.println("# Time for initial heap with DOM modeling(ms): "+(System.nanoTime - s) / 1000000.0)
     //builtinmodel.initHeap = Heap(m)
     init.setInitHeap(Heap(m))
     //fset_dom = domModel.fset_dom

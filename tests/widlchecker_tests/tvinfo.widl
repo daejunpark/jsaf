@@ -1,0 +1,91 @@
+module Info {
+    [NoInterfaceObject] interface WebAPIsTVInfoManager {
+        readonly attribute TVInfoManager info;
+    };
+    TV implements WebAPIsTVInfoManager;
+
+    [NoInterfaceObject] interface TimeZone
+    {
+        readonly attribute unsigned short timezone;  
+
+        readonly attribute long offset;
+
+        readonly attribute unsigned short dst;
+    };   
+
+   
+    [NoInterfaceObject] interface TVInfoManager {
+
+        const unsigned short TIMEZONE_USA_NEWFOUNDLAND = 0;
+
+        const unsigned short TIMEZONE_USA_ATLANTIC = 1;
+
+        const unsigned short TIMEZONE_USA_EASTERN = 2;
+
+        const unsigned short TIMEZONE_USA_CENTRAL = 3;
+
+        const unsigned short TIMEZONE_USA_MOUNTAIN = 4;
+
+        const unsigned short TIMEZONE_USA_PACIFIC = 5;
+
+        const unsigned short TIMEZONE_USA_ALASKA = 6;
+
+        const unsigned short TIMEZONE_USA_HAWAII = 7;
+
+        const unsigned short TIMEZONE_KOR_SEOUL = 8;
+
+        const unsigned short TIMEZONE_DVB_REGION_0 = 9;
+
+        const unsigned short TIMEZONE_DVB_REGION_1 = 10;
+                  
+        const unsigned short TIMEZONE_DVB_REGION_2 = 11;
+                  
+        const unsigned short TIMEZONE_DVB_REGION_3 = 12;           
+
+        const unsigned short TIMEZONE_DVB_REGION_4 = 13;         
+          
+        const unsigned short TIMEZONE_DVB_REGION_5 = 14;          
+         
+        const unsigned short TIMEZONE_DVB_REGION_6 = 15;           
+
+        const unsigned short TIMEZONE_DVB_REGION_7 = 16;
+                   
+        const unsigned short TIMEZONE_DVB_REGION_8 = 17;
+
+        const unsigned short PRODUCT_TYPE_TV = 0;
+
+        const unsigned short PRODUCT_TYPE_BD = 1;
+
+        const unsigned short PRODUCT_TYPE_MONITOR = 2; 
+
+        const unsigned short TIMEZONE_DST_ON = 1;
+
+        const unsigned short TIMEZONE_DST_OFF = 2;
+
+        const unsigned short TIMEZONE_DST_AUTO = 3;
+                     
+        unsigned short getProduct() raises(WebAPIException);        
+ 
+        DOMString getModel() raises(WebAPIException);
+ 
+        DOMString getFirmware() raises(WebAPIException);
+ 
+        DOMString getVersion() raises(WebAPIException);
+ 
+        DOMString getCountry() raises(WebAPIException);
+ 
+        DOMString getLanguage() raises(WebAPIException);
+ 
+        DOMString getDeviceID() raises(WebAPIException);      
+        
+       unsigned long getTick() raises(WebAPIException);
+       
+        unsigned long getEpochTime() raises(WebAPIException);
+               
+        Date convertEpochToTime(in unsigned long epoch) raises(WebAPIException);
+        
+        unsigned long convertTimeToEpoch(in Date time) raises(WebAPIException);
+        
+        TimeZone getTimeZone() raises(WebAPIException);
+    };
+};

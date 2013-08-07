@@ -1,0 +1,66 @@
+module AudioControl {
+ 
+    [NoInterfaceObject] interface WebAPIsAudioControlManager {
+        readonly attribute AudioControlManager audiocontrol;
+    };
+    WebAPIs implements WebAPIsAudioControlManager;
+
+    [NoInterfaceObject] interface AudioControlManager {
+
+        const short MODE_AUDIO_OUTPUT_PCM = 0;
+
+        const short MODE_AUDIO_OUTPUT_DOLBY = 1;
+
+        const short MODE_AUDIO_OUTPUT_DTS = 2;
+
+        const short AUDIO_SOUND_TYPE_UP = 1;
+
+        const short AUDIO_SOUND_TYPE_DOWN = 2;
+
+        const short AUDIO_SOUND_TYPE_LEFT = 3;
+
+        const short AUDIO_SOUND_TYPE_RIGHT = 4;
+
+        const short AUDIO_SOUND_TYPE_PAGE_LEFT = 5;
+
+        const short AUDIO_SOUND_TYPE_PAGE_RIGHT = 6;
+
+        const short AUDIO_SOUND_TYPE_BACK = 7;
+
+        const short AUDIO_SOUND_TYPE_SELECT = 8;
+
+        const short AUDIO_SOUND_TYPE_CANCEL = 9;
+
+        const short AUDIO_SOUND_TYPE_WARNING = 10;
+
+        const short AUDIO_SOUND_TYPE_KEYPAD = 11;
+
+        const short AUDIO_SOUND_TYPE_KEYPAD_ENTER = 12;
+
+        const short AUDIO_SOUND_TYPE_KEYPAD_DEL = 13;
+
+        const short AUDIO_SOUND_TYPE_SMARTCONTROL_MOVE = 14;
+
+        const short AUDIO_SOUND_TYPE_SMARTCONTROL_SELECT = 15;
+
+        const short AUDIO_SOUND_TYPE_MOVE = 16;
+
+        const short AUDIO_SOUND_TYPE_PREPARING = 17;
+  
+        boolean setMute(in boolean mute) raises(WebAPIException);
+ 
+        boolean getMute() raises(WebAPIException);
+ 
+        unsigned short getOutputMode() raises(WebAPIException);
+ 
+        boolean setVolume(in unsigned short volume) raises(WebAPIException);
+        
+        boolean setVolumeUp() raises(WebAPIException);
+        
+        boolean setVolumeDown() raises(WebAPIException);
+ 
+        unsigned short getVolume() raises(WebAPIException);      
+        
+        void playSound(in unsigned short soundType) raises(WebAPIException);       
+    };    
+};

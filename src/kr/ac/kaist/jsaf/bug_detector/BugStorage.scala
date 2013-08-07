@@ -16,17 +16,15 @@ import scala.collection.mutable.Stack
 import scala.collection.mutable.{HashMap => MHashMap}
 import scala.collection.mutable.{HashSet => MHashSet}
 import kr.ac.kaist.jsaf.analysis.cfg._
+import kr.ac.kaist.jsaf.analysis.cfg.{Block => CBlock, Node => CNode}
 import kr.ac.kaist.jsaf.analysis.typing.CallContext
 import kr.ac.kaist.jsaf.analysis.typing.ControlPoint
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.nodes.ASTNode
-import kr.ac.kaist.jsaf.nodes_util.NodeFactory
+import kr.ac.kaist.jsaf.nodes._
+import kr.ac.kaist.jsaf.nodes.{Block => ABlock, Node => ANode}
 import kr.ac.kaist.jsaf.nodes_util.NodeRelation
 import kr.ac.kaist.jsaf.nodes_util.Span
-import kr.ac.kaist.jsaf.nodes_util.SourceLoc
-import kr.ac.kaist.jsaf.bug_detector._
-import kr.ac.kaist.jsaf.nodes.Cond
-import kr.ac.kaist.jsaf.nodes.If
+import kr.ac.kaist.jsaf.scala_src.nodes._
 
 class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   val cfg          = bugDetector.cfg
@@ -129,7 +127,7 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
       // Instruction info
       val currentInst2: CFGInst = if (currentInst != null) currentInst else {
         cfg.getCmd(currentNode) match {
-          case Block(insts) => insts.last
+          case CBlock(insts) => insts.last
           case _ => null
         }
       }
@@ -185,7 +183,7 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   private var funcSet: Set[(String, Loc)] = Set()
   private var nameMap: Map[String, String] = Map() 
 
-  def getRWEntry(node: Node): List[RWEntry] = RWMap.get(node) match {
+  def getRWEntry(node: CNode): List[RWEntry] = RWMap.get(node) match {
     case Some(list) => list
     case None => List()
   }  
@@ -197,7 +195,7 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   }
   def updateFuncSet(loc: Loc, name: String): Unit = funcSet += ((name, loc))
   def updateNameMap(internalName: String, originalName: String): Unit = nameMap = nameMap + (internalName -> originalName) 
-  def updateRWMap(node: Node, readSet: List[RWEntry], writeSet: List[RWEntry]): Unit = RWMap.get(node) match {
+  def updateRWMap(node: CNode, readSet: List[RWEntry], writeSet: List[RWEntry]): Unit = RWMap.get(node) match {
     case Some(e) => RWMap += (node -> (e ++ readSet ++ writeSet))
     case None => RWMap += (node -> (readSet ++ writeSet))
   }
@@ -259,13 +257,13 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   //  UnreachableCode
   ////////////////////////////////////////////////////////////////
 
-  type reachabilityMap = MHashMap[kr.ac.kaist.jsaf.nodes.Node, MHashSet[Node]]
+  type reachabilityMap = MHashMap[ANode, MHashSet[CNode]]
   val reachableAST = new reachabilityMap
   val unreachableAST = new reachabilityMap
 
-  def insertReachabilityAST(ast: kr.ac.kaist.jsaf.nodes.Node, cfgNode: Node, reachable: Boolean): Unit = {
+  def insertReachabilityAST(ast: ANode, cfgNode: CNode, reachable: Boolean): Unit = {
     val selectedAST = if (reachable) reachableAST else unreachableAST
-    val asts = new Queue[kr.ac.kaist.jsaf.nodes.Node]
+    val asts = new Queue[ANode]
     asts.enqueue(ast)
     while(!asts.isEmpty) {
       val ast = asts.dequeue
@@ -291,9 +289,32 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
             case Some(parent) =>
               NodeRelation.astChildMap.get(parent) match {
                 case Some(children) =>
-                  if (!children.exists(child => !unreachableAST.contains(child))) {
-                    if (!unreachableAST.contains(parent)) asts.enqueue(parent)
+                  var isParentUnreachable = false
+                  if(!isParentUnreachable) {
+                    val ast = parent match {
+                      // Function call check
+                      case SFunApp(info, fun, args) => fun
+                      // Conditional expression check
+                      case SCond(_, condExpr, _, _) => condExpr
+                      case SIf (_, condExpr, _, _) => condExpr
+                      case SFor(_, _, Some(condExpr), _, _) => condExpr
+                      case SForVar(_, _, Some(condExpr), _, _) => condExpr
+                      case SDoWhile(_, _, condExpr) => condExpr
+                      case SWhile(_, condExpr, _) => condExpr
+                      case _ => null
+                    }
+                    if(ast != null) isParentUnreachable = unreachableAST.contains(ast)
                   }
+                  // Id, Op, VarDecl check
+                  if(!isParentUnreachable) {
+                    isParentUnreachable = !children.exists(child =>
+                      !child.isInstanceOf[Id] &&
+                      !child.isInstanceOf[Op] &&
+                      !child.isInstanceOf[VarDecl] &&
+                      !unreachableAST.contains(child)
+                    )
+                  }
+                  if(isParentUnreachable && !unreachableAST.contains(parent)) asts.enqueue(parent)
                 case None =>
               }
             case None =>
@@ -311,9 +332,11 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
     // Filter reachable nodes again
     val newUnreachableAST1 = unreachableAST.clone
     for((urAST, urCFGNodeSet) <- unreachableAST) {
-      reachableAST.get(urAST) match {
-        case Some(rCFGNodeSet) => newUnreachableAST1.remove(urAST)
-        case None =>
+      if(!urAST.isInstanceOf[FunDecl]) {
+        reachableAST.get(urAST) match {
+          case Some(rCFGNodeSet) => newUnreachableAST1.remove(urAST)
+          case None =>
+        }
       }
     }
 
@@ -328,7 +351,7 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
         case Some(parent) =>
           if(isAncestor(parent)) newUnreachableAST2.remove(urAST)
 
-          def isAncestor(ast: kr.ac.kaist.jsaf.nodes.Node): Boolean = {
+          def isAncestor(ast: ANode): Boolean = {
             var node = ast
             while(true) {
               if(node == null) return false
@@ -364,13 +387,16 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
     })
   }
 
-  def printReachability(ast: kr.ac.kaist.jsaf.nodes.Node, reachableAST: reachabilityMap, unreachableAST: reachabilityMap): Unit = {
+  def printReachability(ast: ANode, reachableAST: reachabilityMap, unreachableAST: reachabilityMap): Unit = {
     var indent = 0
     printAST(ast)
-    def printAST(ast: kr.ac.kaist.jsaf.nodes.Node): Unit = {
+    def printAST(ast: ANode): Unit = {
       for(i <- 0 until indent) print(' ')
-      print("AST(" + ast.getClass.getSimpleName + "): \"")
-      if(ast.isInstanceOf[ASTNode]) print(BugHelper.getOmittedCode(ast.asInstanceOf[ASTNode], 32))
+      print("AST" + ast.getClass.getSimpleName + ": \"")
+      if(ast.isInstanceOf[ASTNode]) {
+        val (code, isOmmited) = BugHelper.getOmittedCode(ast.asInstanceOf[ASTNode], 48)
+        if(isOmmited) print(code + " ...") else print(code)
+      }
       print("\", rCFG =")
       reachableAST.get(ast) match {
         case Some(rCFGNodeSet) => for (node <- rCFGNodeSet) print(" " + node._2.asInstanceOf[LBlock].id)
@@ -391,6 +417,7 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
       }
     }
   }
+
 
 
   ////////////////////////////////////////////////////////////////
@@ -443,12 +470,16 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   //  Conditional expression(CFGAssert) result collection
   ////////////////////////////////////////////////////////////////
 
-  val conditionMap = new MHashMap[ASTNode, MHashMap[(Node, CFGAssert), AbsBool]]()
+  val conditionMap = new MHashMap[ASTNode, MHashMap[(CNode, CFGAssert), AbsBool]]()
 
-  def insertConditionMap(node: Node, assert: CFGAssert, result: AbsBool, change: Boolean = true): Unit = {
+  def insertConditionMap(node: CNode, assert: CFGAssert, result: AbsBool, change: Boolean = true): Unit = {
     val astStmt = getASTNodeFromCFGAssert(assert) match {
       case astStmt: Cond => astStmt
       case astStmt: If => astStmt
+      case astStmt: For => astStmt
+      case astStmt: ForVar => astStmt
+      case astStmt: DoWhile => astStmt
+      case astStmt: While => astStmt
       case _ => return
     }
     val resultMap = conditionMap.getOrElseUpdate(astStmt, new MHashMap)

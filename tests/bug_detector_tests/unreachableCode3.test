@@ -12,7 +12,7 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-unreachableCode3.js:3:1~8:1: [Warning] Unreachable code 'if(false) { x = 10; { y = 20; } }' is found. \n\
+unreachableCode3.js:3:1~8:1: [Warning] Unreachable code 'if(false) { x = 10; y = 20; }' is found. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\

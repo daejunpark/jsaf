@@ -14,10 +14,10 @@ bug-detector_out_WCIequals=\
 * Bug Detector * \n\
 unreachableCode1.js:3:5~3:18: [Warning] Value assigned to variable 'z' is never read. \n\
 unreachableCode1.js:4:5~4:6: [Warning] Conditional expression 'y' is always false. \n\
-unreachableCode1.js:4:8~9:2: [Warning] Unreachable code '{ { f = (function () { return x; }); } f(); }' is found. \n\
+unreachableCode1.js:4:8~9:2: [Warning] Unreachable code '{ f = (function () { return x; }); f(); }' is found. \n\
 unreachableCode1.js:5:11~7:3: [Warning] Function 'anonymous_function' is never called. \n\
 unreachableCode1.js:9:12~9:17: [Warning] Conditional expression 'x < 2' is always false. \n\
-unreachableCode1.js:9:19~15:2: [Warning] Unreachable code '{ { tmp = 0; } for(i in z) { tmp += i; } tmp + 1 ...' is found. \n\
+unreachableCode1.js:9:19~15:2: [Warning] Unreachable code '{ tmp = 0; for(i in z) { tmp += i; } tmp + 10; }' is found. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\

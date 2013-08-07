@@ -1,0 +1,86 @@
+module Item {
+
+
+    enum ItemType { 
+        "AUDIO",
+        "FOLDER",
+        "IMAGE", 
+        "UNKNOWN", 
+        "VIDEO"
+    };
+    
+
+    enum ItemContentBuildType { 
+        "LOCAL",
+        "MEDIAPROVIDER",
+        "UNKNOWN",
+        "WEB"
+    };
+    
+
+    enum ItemPlayMode { 
+        "RELAY",
+        "REDIRECT",
+        "UNKNOWN"
+    };
+    
+    
+    [Constructor(DOMString uri, optional DOMString mimeType, optional DOMString title)] 
+
+    interface Item {
+    
+
+        readonly attribute DOMString albumTitle;
+        
+
+        readonly attribute DOMString artist;
+        
+
+        readonly attribute Date date; 
+        
+
+        readonly attribute unsigned long long duration; 
+        
+
+        readonly attribute DOMString extension;
+        
+
+        readonly attribute double fileSize; 
+        
+
+        readonly attribute DOMString genre;
+        
+
+        readonly attribute SimpleCoordinates? location;
+        
+
+        readonly attribute DOMString mimeType;
+        
+
+        readonly attribute unsigned long? width; 
+        
+
+        readonly attribute unsigned long? height;
+        
+
+        attribute DOMString? subtitleUri;
+        
+
+        readonly attribute DOMString? thumbnailUri;
+        
+
+        attribute DOMString title;
+        
+
+        readonly attribute ItemType itemType;
+        
+
+        readonly attribute DOMString itemUri;
+        
+
+        readonly attribute boolean isRootFolder;
+        
+
+        readonly attribute ItemContentBuildType contentBuildType; 
+    };
+};

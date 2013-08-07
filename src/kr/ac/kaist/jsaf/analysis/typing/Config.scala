@@ -147,6 +147,12 @@ object Config {
   def setJQueryMode = jqMode = true
 
   /**
+   * WIDL mode flag
+   */
+  var widlMode = false
+  def setWIDLMode = widlMode = true
+
+  /**
    * compare mode flag for html pre-analysis test
    */
   var compareMode = false

@@ -1,9 +1,7 @@
 ################################################################################
 #    Copyright (c) 2013, KAIST.
-#    All rights reserved.
-#
-#    Use is subject to license terms.
-#
+#    All rights reserved.\n#
+#    Use is subject to license terms.\n#
 #    This distribution may include materials developed by third parties.
 ################################################################################
 tests=undefToNumber3
@@ -13,7 +11,7 @@ bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
 undefToNumber3.js:12:1~12:4: [Warning] Reading absent property 'p' of object 'x'. \n\
-undefToNumber3.js:12:1~12:4: [Warning] Trying to convert undefined to number. 'x["p"]' can be undefined. \n\
+undefToNumber3.js:12:1~12:4: [Warning] Trying to convert undefined to number. 'x.p' can be undefined. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\

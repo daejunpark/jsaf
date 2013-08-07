@@ -12,7 +12,7 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
-shadowingVariable1.js:1:18~1:19: [Warning] Variable 'c' is shadowed by a parameter at '2:7-12'. \n\
+shadowingVariable1.js:1:18~1:19: [Warning] Parameter 'c' is shadowed by a variable at '2:7-12'. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\

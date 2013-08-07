@@ -1,0 +1,143 @@
+module Time {
+  
+  enum TimeDurationUnit { "MSECS", "SECS", "MINS", "HOURS", "DAYS" };
+  
+  [NoInterfaceObject] interface TimeManagerObject {
+    readonly attribute TimeUtil time;
+  };
+  WebAPIs implements TimeManagerObject;
+  
+  [NoInterfaceObject] interface TimeUtil {
+    TZDate getCurrentDateTime() raises(WebAPIException);
+    
+    DOMString getLocalTimezone() raises(WebAPIException);
+    
+    DOMString[] getAvailableTimezones() raises(WebAPIException);
+                                           
+    DOMString getDateFormat(optional boolean? shortformat) raises(WebAPIException);
+    
+    DOMString getTimeFormat() raises(WebAPIException);
+    
+    boolean isLeapYear(long year) raises(WebAPIException);
+  };
+
+  [Constructor(optional Date? datetime, optional DOMString? timezone),
+   Constructor(long year, long month, long day, optional long? hours, optional long? minutes, optional long? seconds, optional long? milliseconds, optional DOMString? timezone)]
+  interface TZDate {
+    long getDate();
+    
+    void setDate(long date);
+    
+    long getDay();
+    
+    long getFullYear();
+    
+    void setFullYear(long year);
+    
+    long getHours();
+    
+    void setHours(long hours);
+    
+    long getMilliseconds();
+    
+    void setMilliseconds(long ms);
+    
+    long getMinutes();
+    
+    void setMinutes(long minutes);
+    
+    long getMonth();
+    
+    void setMonth(long month);
+    
+    long getSeconds();
+    
+    void setSeconds(long seconds);
+    
+    long getUTCDate();
+    
+    void setUTCDate(long date);
+    
+    long getUTCDay();
+    
+    long getUTCFullYear();
+    
+    void setUTCFullYear(long year);
+    
+    long getUTCHours();
+    
+    void setUTCHours(long hours);
+    
+    long getUTCMilliseconds();
+    
+    void setUTCMilliseconds(long ms);
+    
+    long getUTCMinutes();
+    
+    void setUTCMinutes(long minutes);
+    
+    long getUTCMonth();
+    
+    void setUTCMonth(long month);
+    
+    long getUTCSeconds();
+    
+    void setUTCSeconds(long seconds);
+    
+    DOMString getTimezone();
+    
+    TZDate toTimezone(DOMString tzid) raises(WebAPIException);
+    
+    TZDate toLocalTimezone() raises(WebAPIException);
+    
+    TZDate toUTC() raises(WebAPIException);
+    
+    TimeDuration difference(TZDate other) raises(WebAPIException);
+
+    boolean equalsTo(TZDate other) raises(WebAPIException);
+    
+    boolean earlierThan(TZDate other) raises(WebAPIException);
+    
+    boolean laterThan(TZDate other) raises(WebAPIException);
+    
+    TZDate addDuration(TimeDuration duration) raises(WebAPIException);
+    
+    DOMString toLocaleDateString();
+    
+    DOMString toLocaleTimeString();
+    
+    DOMString toLocaleString();
+    
+    DOMString toDateString();
+    
+    DOMString toTimeString();
+    
+    DOMString toString();
+    
+    DOMString getTimezoneAbbreviation() raises(WebAPIException);
+    
+    long secondsFromUTC() raises(WebAPIException);
+    
+    boolean isDST() raises(WebAPIException);
+    
+    TZDate? getPreviousDSTTransition() raises(WebAPIException);
+    
+    TZDate? getNextDSTTransition() raises(WebAPIException);
+  };
+  
+  [Constructor(long long length, optional TimeDurationUnit? unit)]
+  interface TimeDuration
+  {   
+    attribute long long length;
+    
+    attribute TimeDurationUnit unit;
+    
+    TimeDuration difference(TimeDuration other) raises(WebAPIException);
+    
+    boolean equalsTo(TimeDuration other) raises(WebAPIException);
+    
+    boolean lessThan(TimeDuration other) raises(WebAPIException);
+    
+    boolean greaterThan(TimeDuration other) raises(WebAPIException);
+  };
+};

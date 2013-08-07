@@ -1,0 +1,63 @@
+module ViewController {
+
+    enum ViewAngle { 
+        "0", 
+        "90",
+        "180", 
+        "270"
+    };
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface ViewControllerSuccessCallback {
+        
+        void onsuccess(in DeviceId imageViewerId);
+    };
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface ViewControllerErrorCallback {
+        
+        void onerror(in WebAPIError error,
+                     in DeviceId imageViewerId);
+    };
+    
+    [Callback, NoInterfaceObject] interface ViewControllerEventCallback {
+
+        void ondisconnected(in DeviceId imageViewerId);
+    };
+    
+    [NoInterfaceObject] interface ViewController {
+        
+        readonly attribute DeviceId id;
+
+        readonly attribute boolean isConnected;
+        
+        readonly attribute unsigned long viewHeight;
+        
+        readonly attribute unsigned long viewWidth;
+        
+        void connect(in ViewControllerSuccessCallback successCallback,
+                     in optional ViewControllerErrorCallback? errorCallback) raises(WebAPIException);
+        
+        void disconnect(in ViewControllerSuccessCallback successCallback,
+                        in optional ViewControllerErrorCallback? errorCallback) raises(WebAPIException);
+        
+        void move(in unsigned long cx,
+                  in unsigned long cy,
+                  in boolean isReleased,
+                  in ViewControllerSuccessCallback successCallback,
+                  in optional ViewControllerErrorCallback? errorCallback) raises(WebAPIException);
+        
+        void setViewAngle(in ViewAngle angle,
+                          in ViewControllerSuccessCallback successCallback,
+                          in optional ViewControllerErrorCallback? errorCallback) raises(WebAPIException);
+        
+        void zoom(in unsigned long cx,
+                  in unsigned long cy,
+                  in unsigned long zoomPercent,
+                  in ViewAngle angle,
+                  in unsigned long sourceWidth,
+                  in unsigned long sourceHeight) raises(WebAPIException);
+        
+        long addViewControllerEventListener(in ViewControllerEventCallback eventCallback) raises(WebAPIException);
+        
+        void removeViewControllerEventListener(long eventListenerId) raises(WebAPIException);
+    };
+};

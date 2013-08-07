@@ -11,16 +11,14 @@ package kr.ac.kaist.jsaf.interpreter.objects
 
 import kr.ac.kaist.jsaf.nodes.{RegExpAbstractNode, RegExpNode, RegExpDecimalEscape, RegExpCharacterEscape, RegExpCharacterClassEscape}
 import kr.ac.kaist.jsaf.scala_src.nodes._
-import kr.ac.kaist.jsaf.scala_src.useful.Lists._
-import kr.ac.kaist.jsaf.scala_src.useful.Options._
-import kr.ac.kaist.jsaf.useful.Useful
 import kr.ac.kaist.jsaf.compiler.RegExpParser
-import kr.ac.kaist.jsaf.interpreter.{InterpreterPredefine => IP, _}
+import kr.ac.kaist.jsaf.interpreter._
 import kr.ac.kaist.jsaf.interpreter.objects.JSRegExpHelper._
-import scala.collection.mutable.{HashMap, HashSet}
+import scala.collection.mutable.{HashMap => MHashMap, HashSet => MHashSet}
+import kr.ac.kaist.jsaf.exceptions.ParserError
 
 class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
-  extends JSFunction13(_I, _proto, "Array", true, propTable, _I.IH.dummyFtn(0), EmptyEnv(), true) {
+  extends JSFunction13(_I, _proto, "Array", true, propTable(), _I.IH.dummyFtn(0), EmptyEnv(), true) {
   def init(): Unit = {
     /*
      * 15.10.5 Properties of the RegExp Constructor
@@ -111,7 +109,7 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
         r = c(x)
         cont = false
       } else {
-        val cap = x.captures.clone
+        val cap = x.captures.clone()
         for (k <- parenIndex+1 to parenIndex+parenCount) { cap(k) = None }
         val e = x.endIndex
         val xr = new RegExpState(e, cap)
@@ -318,11 +316,11 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
      */
     case SRegExpPatternChar(_, s) =>
       val ch = s(0)
-      val a = new HashSet[Char]
+      val a = new MHashSet[Char]
       a += ch
       characterSetMatcher(a, false, env, in)
     case SRegExpDot(_) =>
-      val a = new HashSet[Char]
+      val a = new MHashSet[Char]
       for (ch <- lineTerminator) { a += ch }
       characterSetMatcher(a, false, env, notin)
 
@@ -336,7 +334,7 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
       val e: EscapeValue = walkDecimalEscape(node, env)
       e match {
         case CharEscapeValue(ch) =>
-          val a = new HashSet[Char]
+          val a = new MHashSet[Char]
           a += ch
           characterSetMatcher(a, false, env, in)
         case IntEscapeValue(n) =>
@@ -370,7 +368,7 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
       }
     case node@SRegExpCharacterEscape(_) =>
       val ch: Char = walkCharacterEscape(node, env)
-      val a = new HashSet[Char]
+      val a = new MHashSet[Char]
       a += ch
       characterSetMatcher(a, false, env, in)
     case node@SRegExpCharacterClassEscape(_, s) =>
@@ -400,7 +398,7 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
       val m: Matcher = walk(d, env, parenIndex + 1)
       (x: RegExpState, c: Continuation) => {
         val d: Continuation = (y: RegExpState) => {
-          val cap = y.captures.clone
+          val cap = y.captures.clone()
           val xe: Int = x.endIndex
           val ye: Int = y.endIndex
           val s: String = env.input.substring(xe, ye)
@@ -462,27 +460,27 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
   def walkCharacterClassEscape(node: RegExpCharacterClassEscape, env: RegExpEnv): (CharSet, (CharSet, Char) => Boolean) = {
     node.getStr match {
       case "d" =>
-        val a = new HashSet[Char]
+        val a = new MHashSet[Char]
         for (ch <- decimalDigit) a += ch
         (a, in)
       case "D" =>
-        val a = new HashSet[Char]
+        val a = new MHashSet[Char]
         for (ch <- decimalDigit) a += ch
         (a, notin)
       case "s" =>
-        val a = new HashSet[Char]
+        val a = new MHashSet[Char]
         for (ch <- space) a += ch
         (a, in)
       case "S" =>
-        val a = new HashSet[Char]
+        val a = new MHashSet[Char]
         for (ch <- space) a += ch
         (a, notin)
       case "w" =>
-        val a = new HashSet[Char]
+        val a = new MHashSet[Char]
         for (ch <- alphanumeric) a += ch
         (a, in)
       case "W" =>
-        val a = new HashSet[Char]
+        val a = new MHashSet[Char]
         for (ch <- alphanumeric) a += ch
         (a, notin)
     }
@@ -499,7 +497,7 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
       if (i > j)
         throw new SyntaxErrorException
       else {
-        val c = new HashSet[Char]
+        val c = new MHashSet[Char]
         for (ch <- i.toChar to j.toChar) {
           c += ch
         }
@@ -515,7 +513,7 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
      *               | NonemptyClassRanges
      */
     case SRegExpEmptyClassRanges(_) =>
-      val a = new HashSet[Char]
+      val a = new MHashSet[Char]
       (a, in)
 
     /*
@@ -566,7 +564,7 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
      *             | ClassAtomNoDash
      */
     case SRegExpClassAtomDash(_) =>
-      val a = new HashSet[Char]
+      val a = new MHashSet[Char]
       a += '-'
       (a, in)
 
@@ -576,7 +574,7 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
      *                   | \ ClassEscape
      */
     case SRegExpClassAtomNoDashCharacter(_, str) =>
-      val a = new HashSet[Char]
+      val a = new MHashSet[Char]
       a += str(0)
       (a, in)
 
@@ -591,19 +589,19 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
       val e: EscapeValue = walkDecimalEscape(esc, env)
       e match {
         case CharEscapeValue(ch) =>
-          val a = new HashSet[Char]
+          val a = new MHashSet[Char]
           a += ch
           (a, in)
         case IntEscapeValue(n) =>
           throw new SyntaxErrorException
       }
     case SRegExpClassEscapeB(_) =>
-      val a = new HashSet[Char]
+      val a = new MHashSet[Char]
       a += '\u0008'
       (a, in)
     case SRegExpClassCharacterEscape(_, esc) =>
       val ch: Char = walkCharacterEscape(esc, env)
-      val a = new HashSet[Char]
+      val a = new MHashSet[Char]
       a += ch
       (a, in)
     case SRegExpClassCharacterClassEscape(_, esc) =>
@@ -620,6 +618,8 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
         if (I.IH.isUndef(flags)) {
           (r.pattern, r.flags)
         } else {
+          // 15.10.4.1. "If *pattern* is an object R whose [[Class]] internal property is 'RegExp'
+          // and *flags* is not **undefined**, then throw a **TypeError** exception."
           throw new TypeErrorException
         }
       case pv:PVal =>
@@ -631,18 +631,27 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
     val abstractPattern = try {
       RegExpParser.parsePattern(p, "RegExp")
     } catch {
-      case _ =>
-        throw new TypeErrorException
+      case e: ParserError => {
+        // 15.10.4.1. "If the characters of P do not have the syntactic form *Pattern*,
+        // then throw a **SyntaxError** exception."
+        throw new SyntaxErrorException
+      }
+      case e =>
+        throw new InternalError(e.getMessage)
     }
 
     val fl = f.toList
     if (!f.matches("^[gim]*$") || fl.count(x => x == 'g') > 1 ||
-        fl.count(x => x == 'i') > 1 || fl.count(x => x == 'm') > 1)
-      throw new TypeErrorException
+        fl.count(x => x == 'i') > 1 || fl.count(x => x == 'm') > 1) {
+      // 15.10.4.1. "If F contains any character other than 'g', 'i', or 'm',
+      // or if it contains the same character more then once,
+      // then throw a **SyntaxError** exception."
+      throw new SyntaxErrorException
+    }
 
     val s = p.replace("/", "\\/")
 
-    val prop = propTable
+    val prop = propTable()
     prop.put("source", I.IH.strProp(s))
     prop.put("global", I.IH.boolProp(f.contains("g")))
     prop.put("ignoreCase", I.IH.boolProp(f.contains("i")))
@@ -661,7 +670,7 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
         (str: String, index: Int) => {
           env.input = str
           val c: Continuation = (s: RegExpState) => Some(s)
-          val cap = new HashMap[Int, Option[String]]
+          val cap = new MHashMap[Int, Option[String]]
           for (i <- 1 to env.nCapturingParens) { cap(i) = None }
           val x = new RegExpState(index, cap)
           m(x, c)

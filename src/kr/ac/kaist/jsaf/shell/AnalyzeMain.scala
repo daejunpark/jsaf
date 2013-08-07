@@ -176,8 +176,8 @@ object AnalyzeMain {
 
     // Build CFG
     start = System.nanoTime
-    val builder: CFGBuilder = new CFGBuilder(ir)
-    val cfg: CFG = builder.build
+    val builder = new CFGBuilder(ir)
+    val cfg = builder.build
     val cfgBuildingTime = (System.nanoTime - start) / 1000000000.0
     if (!quiet) {
       printf("# Time for CFG building(s): %.2f\n", cfgBuildingTime)
@@ -209,7 +209,7 @@ object AnalyzeMain {
     }
 
     // Set the initial state with DOM objects
-    if (Config.domMode && jshtml != null) new DOMBuilder(cfg, init, jshtml.getDocument).initialize
+    if (Config.domMode && jshtml != null) new DOMBuilder(cfg, init, jshtml.getDocument).initialize(false)
 
     if (Shell.params.command == ShellParameters.CMD_PREANALYZE ||
         Shell.params.command == ShellParameters.CMD_SPARSE ||
@@ -257,7 +257,7 @@ object AnalyzeMain {
         pre_init.initialize
 
         // Set the initial state with DOM objects
-        if (Config.domMode && jshtml != null) new DOMBuilder(preCFG, pre_init, jshtml.getDocument).initialize
+        if (Config.domMode && jshtml != null) new DOMBuilder(preCFG, pre_init, jshtml.getDocument).initialize(false)
 
         val preTyping: PreTyping = new PreTyping(preCFG, true, false)
         preTyping.analyze(pre_init)

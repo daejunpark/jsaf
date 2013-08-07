@@ -89,15 +89,18 @@ transient void SingleLineComment =
      };
 
 transient private String SingleLineCommentChar =
-     !(LineTerminator) a1:_ { yyValue = a1+""; } ;
+     !(LineTerminatorChar) a1:_ { yyValue = a1+""; } ;
 
 /* If a MultiLineComment contains one or more line terminators,
  * then it is replaced by a single line terminator */
 /* LineTerminator ::= <LF> | <CR> | <LS> | <PS> */
 transient String LineTerminator =
+     LineTerminatorChar
+   ;
+
+transient String LineTerminatorChar =
      a1:([\u000a] / [\u000d] / [\u2028] / [\u2029])
-     { yyValue = ""+a1; }
-   / MultiLineCommentWLB ;
+     { yyValue = ""+a1; };
 
 transient String LineTerminatorNoMC =
      a1:([\u000a] / [\u000d] / [\u2028] / [\u2029])

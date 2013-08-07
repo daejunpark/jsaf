@@ -16,12 +16,12 @@ import kr.ac.kaist.jsaf.Shell
 
 object DisambiguatorJUTest {
   val SEP = File.separator
-  val DISAMBIGUATOR_FAIL_TESTS_DIR = "tests/compiler_tests"
-
+  val DISAMBIGUATOR_FAIL_TESTS_DIR = "tests/disambiguator_tests"
+      
   def main(args: String*) = junit.textui.TestRunner.run(suite)
 
   def suite() = {
-    val suite = new TestSuite("Test all .js files in 'tests/compiler_tests.")
+    val suite = new TestSuite("Test all .js files in 'tests/disambiguator_tests.")
     val failsOnly = true // false if we want to print out the test results
     //$JUnit-BEGIN$
     suite.addTest(FileTests.compilerSuite(DISAMBIGUATOR_FAIL_TESTS_DIR, failsOnly, false))

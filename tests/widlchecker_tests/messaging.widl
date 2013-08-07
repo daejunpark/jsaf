@@ -1,0 +1,295 @@
+module Messaging {
+
+  [NoInterfaceObject] interface MessageManagerObject {
+    readonly attribute Messaging messaging;
+  };
+  WebAPIs implements MessageManagerObject;
+
+  enum MessageServiceTag {"messaging.sms", "messaging.mms", "messaging.email" };
+  
+  typedef DOMString MessageId;
+  
+  typedef DOMString MessageAttachmentId;
+
+  typedef DOMString MessageConvId;
+
+  typedef DOMString MessageFolderId;  
+
+  [Constructor(MessageServiceTag type, optional MessageInit messageInitDict)]
+  interface Message {
+
+    readonly attribute MessageId? id;
+
+    readonly attribute MessageConvId? conversationId;
+
+    readonly attribute MessageFolderId? folderId;
+
+    readonly attribute MessageServiceTag type;
+
+    readonly attribute Date? timestamp;
+
+    readonly attribute DOMString? from;
+
+    attribute DOMString[] to setraises(WebAPIException);
+
+    attribute DOMString[] cc setraises(WebAPIException);
+
+    attribute DOMString[] bcc setraises(WebAPIException);
+
+    attribute MessageBody body setraises(WebAPIException);
+
+    attribute boolean isRead setraises(WebAPIException);
+
+    readonly attribute boolean hasAttachment;
+
+    attribute boolean isHighPriority setraises(WebAPIException);
+
+    attribute DOMString subject setraises(WebAPIException);
+
+    attribute MessageId? inResponseTo setraises(WebAPIException);
+
+    readonly attribute DOMString messageStatus;
+
+    attribute MessageAttachment[] attachments setraises(WebAPIException);
+  };
+  dictionary MessageInit
+  {
+
+    DOMString subject;
+
+    DOMString[] to;
+
+    DOMString[] cc;
+
+    DOMString[] bcc;
+
+    DOMString plainBody;
+
+    DOMString htmlBody;
+
+    boolean isHighPriority;
+  };
+
+  [NoInterfaceObject] interface MessageBody {
+
+    readonly attribute MessageId messageId;
+
+    readonly attribute boolean loaded;
+
+    attribute DOMString plainBody setraises(WebAPIException);
+
+    attribute DOMString htmlBody setraises(WebAPIException);
+
+    attribute MessageAttachment[] inlineAttachments setraises(WebAPIException);
+  };
+
+  [Constructor(DOMString filePath, optional DOMString mimeType)]
+  interface MessageAttachment {
+    
+    readonly attribute MessageAttachmentId? id;
+    
+    readonly attribute MessageId? messageId;
+    
+    readonly attribute DOMString? mimeType;
+    
+    readonly attribute DOMString? filePath;
+  };
+
+  [NoInterfaceObject] interface Messaging {
+
+    void getMessageServices(MessageServiceTag messageServiceType,
+                            MessageServiceArraySuccessCallback successCallback,
+                            optional ErrorCallback? errorCallback) raises(WebAPIException);
+  };
+
+  [Callback=FunctionOnly, NoInterfaceObject] interface MessageServiceArraySuccessCallback {
+
+    void onsuccess(MessageService[] services);
+
+  };
+
+
+  [NoInterfaceObject] interface MessageService {
+
+    readonly attribute MessageServiceTag type;
+
+    void sendMessage(Message message,
+                     optional MessageRecipientsCallback successCallback,
+                     optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    void loadMessageBody(Message message,
+                         MessageBodySuccessCallback successCallback,
+                         optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    void loadMessageAttachment(MessageAttachment attachment,
+                               MessageAttachmentSuccessCallback successCallback,
+                               optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    long sync(optional SuccessCallback? successCallback,
+              optional ErrorCallback? errorCallback,
+              optional unsigned long limit) raises(WebAPIException);
+
+    long syncFolder(MessageFolder folder,
+                    optional SuccessCallback? successCallback,
+                    optional ErrorCallback? errorCallback,
+                    optional unsigned long limit) raises(WebAPIException);
+
+    void stopSync(long opId) raises(WebAPIException);
+
+    readonly attribute MessageStorage messageStorage getraises(WebAPIException);
+  };
+
+  [Callback=FunctionOnly, NoInterfaceObject] interface MessageRecipientsCallback {
+
+    void onsuccess(DOMString[] recipients);
+
+   };
+
+  [Callback=FunctionOnly, NoInterfaceObject] interface MessageBodySuccessCallback {
+
+     void onsuccess(Message message);
+  };
+
+  [Callback=FunctionOnly, NoInterfaceObject] interface MessageAttachmentSuccessCallback {
+
+     void onsuccess(MessageAttachment attachment);
+   };
+
+  [NoInterfaceObject] interface MessageStorage {
+
+    void addDraftMessage(Message message,
+                         optional SuccessCallback? successCallback,
+                         optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    void findMessages(AbstractFilter filter,
+                      MessageArraySuccessCallback successCallback,
+                      optional ErrorCallback? errorCallback,
+                      optional SortMode? sort,
+                      optional unsigned long? limit,
+                      optional unsigned long? offset) raises(WebAPIException);
+
+    void removeMessages(Message[] messages,
+                        optional SuccessCallback? successCallback,
+                        optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    void updateMessages(Message[] messages,
+                        optional SuccessCallback? successCallback,
+                        optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    void findConversations(AbstractFilter filter,
+                           MessageConversationArraySuccessCallback successCallback,
+                           optional ErrorCallback? errorCallback,
+                           optional SortMode? sort,
+                           optional unsigned long? limit,
+                           optional unsigned long offset) raises(WebAPIException);
+
+    void removeConversations(MessageConversation[] conversations,
+                             optional SuccessCallback? successCallback,
+                             optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+
+    void findFolders(AbstractFilter filter,
+                     MessageFolderArraySuccessCallback successCallback,
+                     optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    long addMessagesChangeListener(MessagesChangeCallback messagesChangeCallback,
+                                   optional AbstractFilter filter) raises(WebAPIException);
+
+    long addConversationsChangeListener(MessageConversationsChangeCallback conversationsChangeCallback,
+                                        optional AbstractFilter filter) raises(WebAPIException);
+
+    long addFoldersChangeListener(MessageFoldersChangeCallback foldersChangeCallback,
+                                  optional AbstractFilter filter) raises(WebAPIException);
+
+    void removeChangeListener(long watchId) raises(WebAPIException);
+  };
+
+  [Callback=FunctionOnly, NoInterfaceObject] interface MessageArraySuccessCallback {
+
+    void onsuccess(Message[] messages);
+  };
+
+  [Callback=FunctionOnly, NoInterfaceObject] interface MessageConversationArraySuccessCallback {
+
+    void onsuccess(MessageConversation[] conversations);
+  };
+
+  [Callback=FunctionOnly, NoInterfaceObject] interface MessageFolderArraySuccessCallback {
+
+    void onsuccess(MessageFolder[] folders);
+  };
+
+  [Callback, NoInterfaceObject] interface MessagesChangeCallback {
+
+    void messagesadded(Message[] addedMessages);
+
+    void messagesupdated(Message[] updatedMessages);
+
+    void messagesremoved(Message[] removedMessages);
+  };
+
+  [Callback, NoInterfaceObject] interface MessageConversationsChangeCallback {
+
+    void conversationsadded(MessageConversation[] addedConversations);
+
+    void conversationsupdated(MessageConversation[] updatedConversations);
+
+    void conversationsremoved(MessageConversation[] removedConversations);
+  };
+
+  [Callback, NoInterfaceObject] interface MessageFoldersChangeCallback {
+ 
+    void foldersadded(MessageFolder[] addedFolders);
+
+    void foldersupdated(MessageFolder[] updatedFolders);
+
+    void foldersremoved(MessageFolder[] removedFolders);
+  };
+
+  [NoInterfaceObject] interface MessageConversation {
+
+    readonly attribute MessageConvId id;
+
+    readonly attribute MessageServiceTag type;
+
+    readonly attribute Date timestamp;
+     
+    readonly attribute unsigned long messageCount;
+
+    readonly attribute unsigned long unreadMessages;
+
+    readonly attribute DOMString preview;
+
+    readonly attribute DOMString subject;
+
+    readonly attribute boolean isRead;
+
+    readonly attribute DOMString from;
+
+    readonly attribute DOMString[] to;
+
+    readonly attribute DOMString[] cc;
+
+    readonly attribute DOMString[] bcc;
+
+    readonly attribute MessageId lastMessageId;
+  };
+
+  [NoInterfaceObject] interface MessageFolder {
+
+    readonly attribute MessageFolderId id;
+
+    readonly attribute MessageFolderId parentId;
+
+    readonly attribute MessageServiceTag contentType;
+
+    attribute DOMString name setraises(WebAPIException);
+
+    readonly attribute DOMString path;
+
+    readonly attribute DOMString type;
+
+    attribute boolean synchronizable setraises(WebAPIException);
+  };
+
+};

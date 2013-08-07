@@ -10,9 +10,7 @@
 package kr.ac.kaist.jsaf.tests
 
 import junit.framework.TestSuite
-import _root_.java.io.File
-import kr.ac.kaist.jsaf.ProjectProperties
-import kr.ac.kaist.jsaf.Shell
+import java.io.File
 
 object WIDLCheckerJUTest {
   val SEP = File.separator

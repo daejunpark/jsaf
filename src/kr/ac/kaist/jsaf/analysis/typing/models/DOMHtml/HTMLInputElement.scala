@@ -177,8 +177,9 @@ object HTMLInputElement extends DOM {
         ("form", PropValue(ObjectValue(NullTop, F, T, T))),
         // Modified in DOM Level 2
         ("size",  PropValue(ObjectValue(Helper.toNumber(PValue(AbsString.alpha(e.getAttribute("size")))), T, T, T))),
-        ("type", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("type")), T, T, T))))
-    // TODO: 'form' in DOM Level 1
+        ("type", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("type")), T, T, T))),
+        // HTML5
+        ("autofocus",   PropValue(ObjectValue((if(e.getAttribute("autofocus")!="falsee") T else F), T, T, T))))
     case _ => {
       System.err.println("* Warning: " + node.getNodeName + " cannot have instance objects.")
       List()

@@ -1,0 +1,78 @@
+module SystemInfo {
+
+  enum SystemInfoPropertyId { "BATTERY" , "CPU", "STORAGE", "DISPLAY" };
+  
+  [NoInterfaceObject] interface SystemInfoObject {
+    readonly attribute SystemInfo systeminfo;
+  };
+  WebAPIs implements SystemInfoObject;
+
+  [NoInterfaceObject] interface SystemInfo {
+
+    void getPropertyValue(SystemInfoPropertyId property,
+                          SystemInfoPropertySuccessCallback successCallback,
+                          optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    unsigned long addPropertyValueChangeListener(SystemInfoPropertyId property,
+                                        SystemInfoPropertySuccessCallback successCallback,
+                                        optional SystemInfoOptions? options) raises(WebAPIException);
+
+    void removePropertyValueChangeListener(unsigned long listenerId) raises(WebAPIException);
+  };
+  
+  dictionary SystemInfoOptions {
+    unsigned long timeout;
+
+    double highThreshold;
+
+    double lowThreshold;
+  };
+
+  [Callback=FunctionOnly, NoInterfaceObject] interface SystemInfoPropertySuccessCallback {
+    void onsuccess(SystemInfoProperty prop);
+  };
+
+  [NoInterfaceObject] interface SystemInfoProperty {
+  };
+
+  [NoInterfaceObject] interface SystemInfoBattery : SystemInfoProperty {
+    readonly attribute double level;
+
+    readonly attribute boolean isCharging;
+  };
+
+  [NoInterfaceObject] interface SystemInfoCpu : SystemInfoProperty {
+    readonly attribute double load;
+  };
+
+  [NoInterfaceObject] interface SystemInfoStorage : SystemInfoProperty {
+    readonly attribute SystemInfoStorageUnit[] units;
+  };
+
+  [NoInterfaceObject] interface SystemInfoStorageUnit : SystemInfoProperty {
+    readonly attribute DOMString type;
+
+    readonly attribute unsigned long long capacity;
+
+    readonly attribute unsigned long long availableCapacity;
+
+    readonly attribute boolean isRemoveable;
+  };
+
+  [NoInterfaceObject] interface SystemInfoDisplay : SystemInfoProperty {
+    readonly attribute unsigned long resolutionWidth;
+
+    readonly attribute unsigned long resolutionHeight;
+
+    readonly attribute unsigned long dotsPerInchWidth;
+
+    readonly attribute unsigned long dotsPerInchHeight;
+
+    readonly attribute double physicalWidth;
+
+    readonly attribute double physicalHeight;
+
+    readonly attribute double brightness;
+  };
+
+};

@@ -1,0 +1,55 @@
+module ASFService {
+
+    enum ServiceState {
+        "DISABLED", 
+        "ENABLED", 
+        "UNKNOWN"
+    };
+
+    [NoInterfaceObject] interface WebAPIsAllShareObject {
+
+        readonly attribute AllShare allshare;
+    
+    };
+    WebAPIs implements WebAPIsAllShareObject;    
+    
+    [NoInterfaceObject] interface AllShare {
+
+    };
+    
+    [NoInterfaceObject] interface ServiceConnectorObject {
+        
+        readonly attribute ServiceConnector serviceconnector;    
+    };
+    AllShare implements ServiceConnectorObject;
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface ServiceProviderCreateSuccessCallback {
+        
+        void onsuccess(in ServiceProvider serviceProvider);
+        
+    };    
+    
+    [Callback=FunctionOnly, NoInterfaceObject] interface ServiceProviderErrorCallback {
+        
+        void onerror(in WebAPIError error,
+                     in ServiceState state);
+    };
+    
+    [NoInterfaceObject] interface ServiceConnector {
+
+        void createServiceProvider(in ServiceProviderCreateSuccessCallback successCallback,
+                                   in optional ServiceProviderErrorCallback errorCallback) raises(WebAPIException);
+        
+        void deleteServiceProvider(in SuccessCallback successCallback,
+                                   in optional ServiceProviderErrorCallback errorCallback) raises(WebAPIException);
+
+        ServiceProvider? getServiceProvider() raises(WebAPIException);
+    };
+    
+    [NoInterfaceObject] interface ServiceProvider {
+        
+        DeviceFinder getDeviceFinder() raises(WebAPIException); 
+        
+        ServiceState getServiceState() raises(WebAPIException);         
+    };
+};

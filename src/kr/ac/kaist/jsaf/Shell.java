@@ -124,7 +124,7 @@ public final class Shell {
                 return_code = URLMain.url();
                 break;
             case ShellParameters.CMD_WITH :
-                return_code = withMain.withRewriter();
+                return_code = WithMain.withRewriter();
                 break;
             case ShellParameters.CMD_MODULE :
                 return_code = ModuleMain.module();
@@ -192,7 +192,7 @@ public final class Shell {
             "Usage:\n" +
             " parse [-out file] [-time] somefile.js ...\n" +
             " unparse [-out file] somefile.tjs\n" +
-            " widlparse [-db] somefile.widl\n" +
+            " widlparse [-db somefile.db] somefile.widl\n" +
             " widlcheck somefile.js api1.db ...\n" +
             " strict [-out file] somefile.js\n" +
             " clone-detector\n" +
@@ -233,11 +233,11 @@ public final class Shell {
          "  Converts a parsed file back to JavaScript source code. The output will be dumped to stdout if -out is not given.\n"+
          "  If -out file is given, the unparsed source code will be written to the file.\n"+
          "\n"+
-         "jsaf widlparse [-db] somefile.widl\n"+
+         "jsaf widlparse [-db somefile.db] somefile.widl or somedir\n"+
          "  Parses a Web IDL file.\n"+
-         "  If -out file is given, the parsed AST will be written to the file.\n"+
+         "  If -db file is given, the parsed Web IDL will be written to the file.\n"+
          "\n"+
-         "jsaf widlcheck somefile.js api1 ..."+
+         "jsaf widlcheck somefile.js api1.db ...\n"+
          "  Checks uses of APIS in Web IDL.\n"+
          "\n"+
          "jsaf strict [-out file] somefile.js\n"+
@@ -245,16 +245,16 @@ public final class Shell {
          "  If it succeeds the message \"Ok\" will be printed.\n"+
          "  If -out file is given, the messages about what restrictions are violated, if any, will be printed.\n"+
          "\n"+
-         "jsaf clone-detector"+
+         "jsaf clone-detector\n"+
          "  Runs the JavaScript clone detector.\n"+
          "\n"+
-         "jsaf coverage somefile.js"+
+         "jsaf coverage somefile.js\n"+
          "  Calculates a very simple statement coverage.\n"+
          "\n"+
-         "jsaf concolic somefile.js"+
+         "jsaf concolic somefile.js\n"+
          "  Working on a very simple concolic testing...\n"+
          "\n"+
-         "jsaf url [-out file] someurl"+
+         "jsaf url [-out file] someurl\n"+
          "  Extracts JavaScript source code from a url and writes it to a file, if any.\n"+
          "  If -out file is given, the extracted source code will be written to the file.\n"+
          "\n"+
@@ -273,12 +273,12 @@ public final class Shell {
          "  Runs the system test file(s) somefile1.test (etc) in a junit textui harness.\n"+
          "\n"+
          "jsaf disambiguate [-out file] somefile.js ...\n"+
-         "  Disambiguates references in JavaScript source files."+
+         "  Disambiguates references in JavaScript source files.\n"+
          "  The files are concatenated in the given order before being parsed.\n"+
          "  If -out file is given, the disambiguated AST will be written to the file.\n"+
          "\n"+
          "jsaf compile [-out file] [-time] somefile.js ...\n"+
-         "  Translates JavaScript source files to IR."+
+         "  Translates JavaScript source files to IR.\n"+
          "  If the compilation succeeds the message \"Ok\" will be printed.\n"+
          "  The files are concatenated in the given order before being parsed.\n"+
          "  If -out file is given, the resulting IR will be written to the file.\n"+
@@ -288,9 +288,9 @@ public final class Shell {
          "  Builds a control flow graph for JavaScript source files.\n"+
          "  The files are concatenated in the given order before being parsed.\n"+
          "  If -out file is given, the resulting CFG will be written to the file.\n"+
-         "  If -test is specified, predefined values for testing purpose will be provided.\n" +
-         "  If -model is specified, the resulting CFG will include built-in models.\n" +
-         "  If -library is specified, ...\n" +
+         "  If -test is specified, predefined values for testing purpose will be provided.\n"+
+         "  If -model is specified, the resulting CFG will include built-in models.\n"+
+         "  If -library is specified, ...\n"+
          "\n"+
          "jsaf interpret [-out file] [-time] [-mozilla] somefile.js ...\n"+
          "  Interprets JavaScript files.\n"+
@@ -305,17 +305,17 @@ public final class Shell {
          "             [-context-tajs] [-unsound]\n"+
          "             somefile.js\n"+
          "  Analyzes a JavaScript source.\n"+
-         "  If -verbose is specified, analysis results will be printed in verbose format.\n" +
-         "  If -test is specified, predefined values for testing purpose will be provided.\n" +
+         "  If -verbose is specified, analysis results will be printed in verbose format.\n"+
+         "  If -test is specified, predefined values for testing purpose will be provided.\n"+
          "  If -memdump is specified, result memory will be dumped to screen.\n"+
          "  If -statdump is specified, statistics will be printed in dump format.\n"+
          "  If -visual is specified, result will be printed in web-based visualization format.\n"+
          "  If -checkResult is specified, expected result will be checked as in unit tests.\n"+
-         "  If -context-insensitive is specified, context-sensitivity will be turned-off.\n" +
-         "  If -context-1-callsite is specified, context-sensitivity will distinguish last callsite.\n" +
-         "  If -context-1-object is specified, context-sensitivity will distinguish this values at last callsite.\n" +
-         "  If -context-tajs is specified, TAJS-style 1-object context-sensitivity will be used.\n" +
-         "  If -unsound is specified, unsound semantics is used.\n" +
+         "  If -context-insensitive is specified, context-sensitivity will be turned-off.\n"+
+         "  If -context-1-callsite is specified, context-sensitivity will distinguish last callsite.\n"+
+         "  If -context-1-object is specified, context-sensitivity will distinguish this values at last callsite.\n"+
+         "  If -context-tajs is specified, TAJS-style 1-object context-sensitivity will be used.\n"+
+         "  If -unsound is specified, unsound semantics is used.\n"+
          "jsaf bug-detector somefile.js\n"+
          "  Reports possible bugs in JavaScript source files.\n"
         );

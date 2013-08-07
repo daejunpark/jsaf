@@ -1,3 +1,7 @@
-return;
-return 3;
-function f() { return 42; }
+function f () {
+    return;
+    return 0;
+    return 1.0;
+    return "jsaf";
+}
+f()

@@ -81,6 +81,12 @@ object NodeRelation {
   var cfgChildMap:                              CFGChildMap = null
 
   ////////////////////////////////////////////////////////////////////////////////
+  // Sibling relation
+  ////////////////////////////////////////////////////////////////////////////////
+  type ASTSiblingMap =                          MHashMapEx[ASTRootNode, MList[ASTRootNode]]
+  var astSiblingMap:                            ASTSiblingMap = null
+
+  ////////////////////////////////////////////////////////////////////////////////
   // AST <-> IR <-> CFG relation
   ////////////////////////////////////////////////////////////////////////////////
   // For AST -> (Set[IR], Set[CFG])
@@ -123,6 +129,9 @@ object NodeRelation {
     cfgParentMap = null
     cfgChildMap = null
 
+    // Sibling
+    astSiblingMap = null
+
     // AST <-> IR <-> CFG
     ast2irMap = null
     ast2cfgMap = null
@@ -146,6 +155,9 @@ object NodeRelation {
     irChildMap = new IRChildMap
     cfgParentMap = new CFGParentMap
     cfgChildMap = new CFGChildMap
+
+    // Sibling
+    astSiblingMap = new ASTSiblingMap
 
     // AST <-> IR <-> CFG
     ast2irMap = new AST2IRMap
@@ -180,6 +192,19 @@ object NodeRelation {
       val childNode = child.asInstanceOf[CFGNode]
       cfgParentMap.put(childNode, parentNode)
       cfgChildMap.getOrElseUpdate(parentNode, new MList).append(childNode)
+    }
+
+    // Put AST sibling
+    def putASTSibling(siblings: List[Any]): Unit = {
+      val siblingNodes = new MList[ASTRootNode]
+      for(sibling <- siblings) {
+        sibling match {
+          case Some(sibling) => siblingNodes.append(sibling.asInstanceOf[ASTRootNode])
+          case None =>
+          case _ => siblingNodes.append(sibling.asInstanceOf[ASTRootNode])
+        }
+      }
+      for(siblingNode <- siblingNodes) astSiblingMap.put(siblingNode, siblingNodes)
     }
 
     // Put AST <-> IR
@@ -310,7 +335,7 @@ object NodeRelation {
         case SComment(info, comment) =>
         case STopLevel(fds, vds, stmts) => walkAST(ast, fds); walkAST(ast, vds); walkAST(ast, stmts)
         case SFunctional(id, params, fds, vds, stmts) => walkAST(ast, id); walkAST(ast, params); walkAST(ast, fds); walkAST(ast, vds); walkAST(ast, stmts)
-        case astList: List[_] => for(ast <- astList) walkAST(parent, ast)
+        case astList: List[_] => putASTSibling(astList); for(ast <- astList) walkAST(parent, ast)
         case Some(ast) => walkAST(parent, ast)
         case None =>
       }

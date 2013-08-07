@@ -1,0 +1,225 @@
+module NService {
+
+
+    typedef sequence<NServiceDevice> NServiceDeviceArray;
+
+
+    enum NServiceHostStatus { "RUNNING", "INSTALLING", "LAUNCHING", "UNKNOWN" };
+
+
+    [NoInterfaceObject] interface WebAPIsNServiceManager {
+        readonly attribute NServiceManager nservice;
+    };
+    WebAPIs implements WebAPIsNServiceManager;
+
+
+    dictionary NServiceOwnDeviceInfoInit {
+        DOMString deviceID;
+
+        DOMString deviceName;
+    };
+
+
+    [Constructor (NServiceOwnDeviceInfoInit init)]
+    interface NServiceOwnDeviceInfo {
+        attribute DOMString deviceID;
+
+        attribute DOMString vendorID;
+
+        attribute DOMString deviceName;
+
+        attribute DOMString productID;
+    };
+
+
+    dictionary NServiceHostInfoInit {
+
+        DOMString ipAddress;
+
+        DOMString appID;
+    };
+
+
+    [Constructor (NServiceHostInfoInit init)]
+    interface NServiceHostInfo {
+
+        attribute DOMString ipAddress;
+
+        attribute unsigned short portNumber;
+
+        attribute DOMString appID;
+
+        readonly attribute DOMString? version;
+
+        readonly attribute DOMString? appName;
+
+        readonly attribute NServiceHostStatus status;
+
+    };
+
+
+    [Callback=FunctionOnly, NoInterfaceObject]
+    interface NServiceDeviceListSuccessCallback {
+        void onsuccess(NServiceDeviceArray devices);
+  };    
+
+
+    [Callback=FunctionOnly, NoInterfaceObject]
+    interface NServiceDeviceManagerCallback {
+        void ondetected(ManagerEvent event);
+    };    
+
+
+    [Callback=FunctionOnly, NoInterfaceObject]
+    interface NServiceDeviceCallback {
+
+        void onreceived(NServiceDeviceEventInfo message);
+    };
+
+
+    [Callback=FunctionOnly, NoInterfaceObject]
+    interface NServiceHostConnectSuccessCallback {
+
+        void onsuccess(NServiceHost host);
+    };
+
+
+    [Callback=FunctionOnly, NoInterfaceObject]
+    interface NServiceMessageCallback {
+
+        void onreceive(in DOMString message);
+    };
+
+    [Callback=FunctionOnly, NoInterfaceObject]
+    interface NServiceGroupSuccessCallback {
+
+        void onjoin(NServiceDeviceGroup group);
+    };
+
+    [Callback=FunctionOnly, NoInterfaceObject]
+    interface NServiceFileUploadSuccessCallback {
+
+        void onuploaded(DOMString filePath);
+
+    };
+
+    [NoInterfaceObject] interface ManagerEvent {
+
+       readonly attribute unsigned short eventType; 
+
+       readonly attribute DOMString name; 
+
+       readonly attribute DOMString uniqueID; 
+    };
+
+    [NoInterfaceObject] interface NServiceDeviceEventInfo {
+
+        readonly attribute unsigned short eventType;  
+
+
+        readonly attribute (NServiceDeviceMessageInfo or NServiceDeviceGroup) eventData;  
+
+    };
+
+    [NoInterfaceObject] interface NServiceDeviceMessageInfo {
+
+        readonly attribute DOMString message;  
+
+        readonly attribute DOMString context; 
+
+    };
+
+    [NoInterfaceObject] interface NServiceDeviceGroup {
+
+        readonly attribute DOMString groupName; 
+
+        NServiceDeviceArray getMembers() raises(WebAPIException);  
+
+        void leave(SuccessCallback onsuccess, optional ErrorCallback? onerror) raises(WebAPIException);  
+
+    };
+
+    [NoInterfaceObject] interface NServiceHost {
+
+
+        void disconnect(SuccessCallback onsuccess, optional ErrorCallback? onerror) raises (WebAPIException); 
+
+
+        NServiceHostInfo getHostInfo() raises (WebAPIException); 
+
+        void uploadFile(DOMString filePath, NServiceFileUploadSuccessCallback onsuccess, optional ErrorCallback? onerror) raises (WebAPIException); 
+
+
+        void deleteFile(DOMString filePath,
+                    optional SuccessCallback? onsuccess,
+                    optional ErrorCallback? onerror) raises(WebAPIException);
+
+        void registerMessageCallback(NServiceMessageCallback messageCallback) raises (WebAPIException); 
+
+
+        void unregisterMessageCallback() raises (WebAPIException); 
+
+    }; 
+
+    [NoInterfaceObject] interface NServiceDevice {
+
+       DOMString getName() raises(WebAPIException); 
+
+
+       unsigned short getType() raises(WebAPIException);  
+
+        unsigned short sendMessage(DOMString message) raises (WebAPIException);
+
+        void registerDeviceCallback(NServiceDeviceCallback eventCallback)  raises (WebAPIException);
+
+
+        void unregisterDeviceCallback() raises (WebAPIException);
+    };
+
+    [NoInterfaceObject] interface NServiceManager {
+   
+        const unsigned short ERROR_CODE_NO_ERR = 0; 
+
+        const unsigned short ERROR_CODE_ERR = 9999; 
+
+        const unsigned short DEV_EVENT_MESSAGE_RECEIVED = 150; 
+
+        const unsigned short DEV_EVENT_JOINED_GROUP = 151;
+
+        const unsigned short DEV_EVENT_LEFT_GROUP = 152;
+
+        const unsigned short MGR_EVENT_DEV_CONNECT = 11; 
+
+        const unsigned short MGR_EVENT_DEV_DISCONNECT = 12; 
+
+        const unsigned short MGR_EVENT_DEV_STATUS = 13; 
+
+        const unsigned short DEV_SMART_DEVICE = 33; 
+
+
+        boolean setOwnDeviceInfo(NServiceOwnDeviceInfo info) raises (WebAPIException);
+
+        NServiceOwnDeviceInfo? getOwnDeviceInfo() raises (WebAPIException);
+
+        void connectNServiceHost(NServiceHostInfo hostInfo, 
+            NServiceHostConnectSuccessCallback onsuccess,
+            optional ErrorCallback? onerror) raises (WebAPIException);
+
+        void joinGroup(DOMString groupName,
+            NServiceGroupSuccessCallback onsuccess, 
+            optional ErrorCallback? onerror) raises (WebAPIException);
+
+        void getNServiceDevices(NServiceDeviceListSuccessCallback onsuccess, optional ErrorCallback onerror) raises (WebAPIException);
+
+        unsigned short multicastMessage(DOMString groupID, DOMString message) raises (WebAPIException);
+
+        unsigned short broadcastMessage(DOMString message) raises (WebAPIException);
+
+        unsigned short sendMessageToHost(DOMString message) raises (WebAPIException);
+
+        void registerManagerCallback(NServiceDeviceManagerCallback monitorCallback) raises (WebAPIException);
+        
+         void unregisterManagerCallback() raises (WebAPIException); 
+   };
+
+};

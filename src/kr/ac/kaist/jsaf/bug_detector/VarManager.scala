@@ -77,10 +77,10 @@ class VarManager(bugDetector: BugDetector) {
           case _ => defInfo
         }
         insertLocInfo(addr2, inst, inst, null, CFGVarRef(lhsInfo, lhs), CFGString("prototype")) // function.prototype object
-        if(addr3.isDefined) {
+        /*if(addr3.isDefined) {
           throw new RuntimeException("TODO: Captured variable(?) is found.")
           //insertLocInfo(addr3.get, inst)
-        }
+        }*/
         insertVarInfo(BugVar0(lhs, null), null)
       case CFGConstruct(_, _, _, _, _, addr) =>
         val lhs: CFGId = cfg.getReturnVar(cfg.getAftercallFromCall(node)).get
@@ -295,7 +295,12 @@ case class BugVar0(id: CFGId, index: CFGExpr) {
       case CFGTempId(text, _) => text
     }
     if(index == null) idToString
-    else idToString + "[" + index.toString() + "]"
+    else {
+      index match {
+        case CFGString(str) => idToString + '.' + str
+        case _ => idToString + "[" + index.toString() + "]"
+      }
+    }
   }
 }
 
@@ -306,6 +311,11 @@ case class BugVar1(inst: CFGInst, id: CFGId, index: CFGExpr) {
       case CFGTempId(text, _) => text
     }
     if(index == null) idToString
-    else idToString + "[" + index.toString() + "]"
+    else {
+      index match {
+        case CFGString(str) => idToString + '.' + str
+        case _ => idToString + "[" + index.toString() + "]"
+      }
+    }
   }
 }

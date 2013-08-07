@@ -290,8 +290,8 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
     def getLhs(l: Expr): Option[Expr] = l match {
       case SParenthesized(_, expr) => getLhs(expr)
       case vr:VarRef => Some(vr)
-      case SDot(info, obj, member) =>
-        getLhs(SBracket(info, obj, NF.makeStringLiteral(getSpan(member), member.getText, "\"")))
+      case dot@SDot(info, obj, member) =>
+        getLhs(setUID(SBracket(info, obj, NF.makeStringLiteral(getSpan(member), member.getText, "\"")), dot.getUID))
       case br:Bracket => Some(br)
       case _ => None
     }
@@ -1104,8 +1104,8 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
         (List(mkExprS(ast, getE(env, oldName), irid))++stmts:+mkExprS(ast, irid, e), irid)
       else
         (stmts:+mkExprS(ast, irid, e), irid)
-    case SDot(info, obj, member) =>
-      walkLval(ast, SBracket(info, obj, NF.makeStringLiteral(getSpan(member), member.getText, "\"")),
+    case dot@SDot(info, obj, member) =>
+      walkLval(ast, setUID(SBracket(info, obj, NF.makeStringLiteral(getSpan(member), member.getText, "\"")), dot.getUID),
                env, stmts, e, keepOld)
     case SBracket(info, first, index) =>
       val span = getSpan(info)

@@ -9,13 +9,12 @@
 
 package kr.ac.kaist.jsaf.bug_detector
 
-import scala.collection.mutable.{HashMap => MHashMap}
-import scala.collection.mutable.{HashSet => MHashSet}
+import scala.collection.mutable.{HashMap => MHashMap, HashSet => MHashSet, ListBuffer}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
-import kr.ac.kaist.jsaf.nodes_util.JSAstToConcrete
-import kr.ac.kaist.jsaf.nodes_util.Span
+import kr.ac.kaist.jsaf.nodes.{ASTNode, FunDecl}
+import kr.ac.kaist.jsaf.nodes_util.{NodeRelation, JSAstToConcrete, Span}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 
 class FinalDetect(bugDetector: BugDetector) {
@@ -32,6 +31,8 @@ class FinalDetect(bugDetector: BugDetector) {
   val analyzeMode   = bugDetector.analyzeMode
   val env           = bugDetector.env
   val quiet         = bugDetector.quietFlag
+
+
 
   ////////////////////////////////////////////////////////////////
   // Bug Detection Main (final check)
@@ -54,6 +55,8 @@ class FinalDetect(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////
 
   private def callConstFuncCheck(): Unit = {
+    if(!bugOption.CallConstFunc_Check) return
+
     // callMap   : set of fids used as a function
     // constMap  : set of fids used as a constructor
     val callMap = new MHashMap[FunctionId, CFGExpr]
@@ -75,6 +78,8 @@ class FinalDetect(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////
 
   def conditionalBranchCheck(): Unit = {
+    if(!bugOption.CondBranch_Check) return
+
     // Insert left CFGAsserts
     bugDetector.traverseInsts((node, inst) => {
       inst match {
@@ -85,8 +90,12 @@ class FinalDetect(bugDetector: BugDetector) {
 
     for ((astStmt, resultSet) <- bugStorage.conditionMap) {
       val condExpr = astStmt match {
-        case SCond(_, condExpr, _, _) => condExpr
-        case SIf (_, condExpr, _, _) => condExpr
+        case SCond(_, condExpr, _, _) if bugOption.CondBranch_CheckTernary => condExpr
+        case SIf (_, condExpr, _, _) if bugOption.CondBranch_CheckIf => condExpr
+        case SFor(_, _, Some(condExpr), _, _) if bugOption.CondBranch_CheckLoop => condExpr
+        case SForVar(_, _, Some(condExpr), _, _) if bugOption.CondBranch_CheckLoop => condExpr
+        case SDoWhile(_, _, condExpr) if bugOption.CondBranch_CheckLoop => condExpr
+        case SWhile(_, condExpr, _) if bugOption.CondBranch_CheckLoop => condExpr
         case _ => null
       }
       if (condExpr != null) {
@@ -144,7 +153,11 @@ class FinalDetect(bugDetector: BugDetector) {
   // Shadowing Check
   ////////////////////////////////////////////////////////////////
 
-  private def shadowingCheck(): Unit = shadowings.foreach((bug) => bugStorage.addMessage(bug.span, bug.bugKind, null, null, bug.arg1, bug.arg2))
+  private def shadowingCheck(): Unit = {
+    if(!bugOption.Shadowing_Check) return
+
+    shadowings.foreach((bug) => bugStorage.addMessage(bug.span, bug.bugKind, null, null, bug.arg1, bug.arg2))
+  }
 
 
 
@@ -153,31 +166,60 @@ class FinalDetect(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////
 
   private def unreachableCodeCheck(): Unit = {
+    if(!bugOption.UnreachableCode_Check) return
+
+    val maxCodeLength = 48
     val astList = bugStorage.getUnreachableASTList
-    var (prevSpan, prevCode): (Span, String) = (null, null)
+    var (prevAST, prevSpan, prevCode, prevIsOmitted): (ASTNode, Span, String, Boolean) = (null, null, null, false)
     for (ast <- astList) {
       // Span, Code
-      val span = ast.getInfo.getSpan
-      val code = BugHelper.getOmittedCode(ast)
+      var span = ast.getInfo.getSpan
+      var (code, isOmitted) = BugHelper.getOmittedCode(ast, maxCodeLength)
+      ast match
+      {
+        // If only the function body is unreachable (function declaration is reachable)
+        case SFunDecl(info, SFunctional(fds, vds, body, name, params)) if bugStorage.reachableAST.contains(ast) =>
+          // Get function code
+          val sb = new StringBuilder
+          JSAstToConcrete.prFtn(sb, fds, vds, body)
+          val (bodyCode, bodyIsOmitted) = BugHelper.getOmittedCode(sb.toString(), maxCodeLength)
+          code = "{ " + bodyCode + (if(bodyIsOmitted) " ... }" else " }")
+          isOmitted = false
+          // Get function span
+          val spanList = new ListBuffer[(Span, Span)]
+          if(fds.length > 0) spanList.append((fds.head.getInfo.getSpan(), fds.last.getInfo.getSpan()))
+          if(vds.length > 0) spanList.append((vds.head.getInfo.getSpan(), vds.last.getInfo.getSpan()))
+          if(body.length > 0) spanList.append((body.head.getInfo.getSpan(), body.last.getInfo.getSpan()))
+          if(spanList.length > 0) span = null
+          for((firstSpan, lastSpan) <- spanList) {
+            if(span == null) span = new Span(firstSpan.begin, lastSpan.end)
+            else {
+              if(Span.beginsEarlierThan(firstSpan, span)) span = new Span(firstSpan.begin, span.end)
+              if(Span.endsLaterThan(lastSpan, span)) span = new Span(span.begin, lastSpan.end)
+            }
+          }
+        case _ =>
+      }
 
       // Debug
       //println(span + " : " + code)
 
-      if(prevSpan == null || prevCode == null) {prevSpan = span; prevCode = code}
-      else if(equals(prevSpan, span)) {if(prevCode.length < code.length) {prevSpan = span; prevCode = code}}
+      if(prevAST == null || prevSpan == null || prevCode == null) {prevAST = ast; prevSpan = span; prevCode = code; prevIsOmitted = isOmitted}
+      else if(equals(prevSpan, span)) {if(prevCode.length < code.length) {prevAST = ast; prevSpan = span; prevCode = code}}
       else if(contains(prevSpan, span)) Unit
-      else if(contains(span, prevSpan)) {prevSpan = span; prevCode = code}
-      else if(overlaps(prevSpan, span)) {prevSpan = new Span(prevSpan.begin, span.end)}
-      else if(overlaps(span, prevSpan)) {prevSpan = new Span(span.begin, prevSpan.end); prevCode = code}
+      else if(contains(span, prevSpan)) {prevAST = ast; prevSpan = span; prevCode = code; prevIsOmitted = isOmitted}
+      else if(overlaps(prevSpan, span)) {prevAST = ast; prevSpan = new Span(prevSpan.begin, span.end); prevIsOmitted = true}
+      else if(overlaps(span, prevSpan)) {prevAST = ast; prevSpan = new Span(span.begin, prevSpan.end); prevCode = code; prevIsOmitted = true}
+      else if(continuous(prevAST, ast)) {prevAST = ast; prevSpan = new Span(prevSpan.begin, span.end); prevIsOmitted = true}
       // else TODO: continuous ASTs!
-      else {report; prevSpan = span; prevCode = code}
+      else {report; prevAST = ast; prevSpan = span; prevCode = code; prevIsOmitted = isOmitted}
     }
     report
 
     def report(): Unit = {
       if(prevSpan == null || prevCode == null) return
-      bugStorage.addMessage(prevSpan, UnreachableCode, null, null, prevCode)
-      prevSpan = null; prevCode = null
+      bugStorage.addMessage(prevSpan, UnreachableCode, null, null, if(prevIsOmitted) prevCode + " ..." else prevCode)
+      prevAST = null; prevSpan = null; prevCode = null; prevIsOmitted = false
     }
     def equals(a: Span, b: Span): Boolean = a.getBegin == b.getBegin && a.getEnd == b.getEnd
     def contains(a: Span, b: Span): Boolean = {
@@ -191,6 +233,16 @@ class FinalDetect(bugDetector: BugDetector) {
       val (aSL, aSC, aEL, aEC) = (aS.getLine, aS.column, aE.getLine, aE.column) // Start(Line, Column) ~ End(Line ,Column)
       val (bSL, bSC) = (bS.getLine, bS.column) // Start(Line, Column)
       (aSL < bSL || aSL == bSL && aSC <= bSC) && (aEL > bSL || aEL == bSL && aEC >= bSC) // a ... [b ... a] ...  b
+    }
+    def continuous(a: ASTNode, b: ASTNode): Boolean = {
+      if(a.isInstanceOf[FunDecl] && bugStorage.reachableAST.contains(a)) return false
+      NodeRelation.astSiblingMap.get(a) match {
+        case Some(siblingList) =>
+          val aIndex = siblingList.indexOf(a)
+          val bIndex = siblingList.indexOf(b)
+          aIndex != -1 && bIndex != -1 && aIndex + 1 == bIndex
+        case None => false
+      }
     }
   }
 
@@ -392,13 +444,17 @@ class FinalDetect(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////
 
   private def varyingTypeArgumentsCheck(): Unit = {
+    if(!bugOption.VaryingTypeArguments_Check) return
+
     for ((fid, (funExpr, argObjSet, span)) <- bugStorage.detectedFuncMap) {
       // function name, expected maximum argument length
       val funcName = cfg.getFuncName(fid)
       val funcArgList = cfg.getArgVars(fid)
-      val (funcArgLen, isBuiltinFunc) = ModelManager.getFIdMap("Builtin").get(fid) match {
-        case Some(builtinFuncName) => (argSizeMap(builtinFuncName)._2, true)
-        case None => (funcArgList.length, false)
+      val (funcArgLen, isBuiltinFunc) = ModelManager.getFuncName(fid) match {
+        case builtinFuncName: String =>
+          // Model function
+          (BugHelper.getBuiltinArgumentSize(builtinFuncName)._2, true)
+        case null => (funcArgList.length, false)
       }
       //println("- " + funcName + "(" + funcArgLen + ") #" + fid)
 

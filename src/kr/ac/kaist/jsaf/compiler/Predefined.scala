@@ -42,6 +42,7 @@ class Predefined(params: ShellParameters) {
     "status",
     "top",
     "window",
+    "console",
     // DOM (possibly) functions
     "Attr",
     "CDATASection",

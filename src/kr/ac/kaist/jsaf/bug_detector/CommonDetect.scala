@@ -29,6 +29,8 @@ class CommonDetect(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////
 
   def convertToNumberCheck(node: Node, inst: CFGInst, expr1: CFGExpr, expr2: CFGExpr, doToPrimitive: Boolean, conditionFunction: (PValue, PValue) => Boolean): Unit = {
+    if(!bugOption.ConvertUndefToNum_Check) return
+
     // Get spans
     val expr1Span = expr1.getInfo match {
       case Some(info) => info.getSpan
@@ -56,7 +58,7 @@ class CommonDetect(bugDetector: BugDetector) {
 
     // Check for each CState
     val bugCheckInstance = new BugCheckInstance()
-    val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(CallNonFunction))
+    val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(ConvertUndefToNum))
     for ((callContext, state) <- mergedCState) {
       // For expr1
       val value1: Value = SE.V(expr1, state.heap, state.context)._1

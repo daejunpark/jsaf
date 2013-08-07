@@ -71,7 +71,8 @@ public Stmt Statement =
      { Span span = createSpan(yyStart,yyCount);
        yyValue = NodeFactory.makeEmptyStmt(span);
      }
-   / !(opencurly) a1:Expression EOS // !(opencurly / function) a1:Expression EOS
+// !(opencurly) a1:Expression EOS // !(opencurly / function) a1:Expression EOS
+   / a1:Expression EOS // !(opencurly / function) a1:Expression EOS
      { Span span = createSpan(yyStart,yyCount);
        yyValue = NodeFactory.makeExprStmt(span, a1);
      }

@@ -33,8 +33,8 @@ object CompileMain {
 
     val return_code = 0
     val irOpt: JOption[IRRoot] = Shell.fileToIR(fileNames, Shell.toOption(Shell.params.opt_OutFileName))
+    if (Shell.opt_DisambiguateOnly) return 0
     if (irOpt.isSome) {
-      if (Shell.opt_DisambiguateOnly) return 0
       val ir: IRRoot = irOpt.unwrap
       val ircode = new JSIRUnparser(ir).doit
       if (Shell.params.opt_OutFileName != null) {

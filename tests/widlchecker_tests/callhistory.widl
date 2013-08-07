@@ -1,0 +1,65 @@
+module Callhistory {
+    [NoInterfaceObject] interface CallHistoryObject {
+        readonly attribute CallHistory callhistory;
+    };
+    
+    WebAPIs implements CallHistoryObject;
+
+    [NoInterfaceObject] interface RemoteParty {
+        readonly attribute DOMString? remoteParty;
+
+        readonly attribute PersonId? personId;
+
+    };
+
+    [NoInterfaceObject] interface CallHistoryEntry {
+    
+        readonly attribute DOMString uid;
+
+        readonly attribute DOMString type;
+
+        readonly attribute DOMString[]? features;
+
+        readonly attribute RemoteParty[] remoteParties;
+
+        readonly attribute Date startTime;
+
+        readonly attribute unsigned long duration;
+
+        attribute DOMString direction;
+    };
+
+    [NoInterfaceObject] interface CallHistory {
+
+        void find(CallHistoryEntryArraySuccessCallback successCallback,
+                  optional ErrorCallback? errorCallback,
+                  optional AbstractFilter? filter,
+                  optional SortMode? sortMode,
+                  optional unsigned long? limit,
+                  optional unsigned long? offset) raises(WebAPIException);
+
+        void remove(CallHistoryEntry entry) raises(WebAPIException);
+
+        void removeBatch(CallHistoryEntry[] entries,
+                         optional SuccessCallback? successCallback,
+                         optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+        void removeAll(optional SuccessCallback? successCallback,
+                       optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+        long addChangeListener(CallHistoryChangeCallback observer) raises(WebAPIException);
+
+        void removeChangeListener(long handle) raises(WebAPIException);
+    };
+
+    [Callback, NoInterfaceObject] interface CallHistoryEntryArraySuccessCallback {
+        void onsuccess(CallHistoryEntry[] entries);
+    };
+
+    [Callback, NoInterfaceObject]
+    interface CallHistoryChangeCallback {
+        void onadded(CallHistoryEntry[] newItems);
+
+        void onchanged(CallHistoryEntry[] changedItems);
+    };
+};

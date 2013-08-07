@@ -243,6 +243,7 @@ This is the main Ant build file.
     <delete file="${parser}/IR.java"/>
     <delete file="${parser}/RegExp.java"/>
     <delete file="${parser}/WIDL.java"/>
+    <delete file="${parser}/Json.java"/>
     <delete file="${JS}/tests/printing/test_output.txt"/>
     <delete dir="${JS}/test-tmp" />
     <delete>
@@ -538,6 +539,9 @@ This is the main Ant build file.
         <uptodate targetfile="${parser}/WIDL.java">
           <srcfiles dir="${parser}" includes="**/WIDL.rats"/>
         </uptodate>
+        <uptodate targetfile="${parser}/Json.java">
+          <srcfiles dir="${parser}" includes="**/Json.rats"/>
+        </uptodate>
       </and>
     </condition>
     <echo>Parser up to date? ${parser.uptodate}</echo>
@@ -548,6 +552,7 @@ This is the main Ant build file.
       <uptodate targetfile="${parser}/JS.java" >
         <srcfiles dir= "${parser}" includes="**/*.rats" excludes="**/RegExp.rats"/>
         <srcfiles dir= "${parser}" includes="**/*.rats" excludes="**/WIDL.rats"/>
+        <srcfiles dir= "${parser}" includes="**/*.rats" excludes="**/Json.rats"/>
       </uptodate>
     </condition>
     <echo>JavaScript parser up to date? ${jsparser.uptodate}</echo>
@@ -565,6 +570,13 @@ This is the main Ant build file.
       <srcfiles dir= "${parser}" includes="WIDL.rats"/>
     </uptodate>
     <echo>JavaScript WIDL parser up to date? ${widlparser.uptodate}</echo>
+  </target>
+
+  <target name="checkJsonParserUptodate" depends="init">
+    <uptodate property="reparser.uptodate" targetfile="${parser}/Json.java" >
+      <srcfiles dir= "${parser}" includes="Json.rats"/>
+    </uptodate>
+    <echo>JavaScript Json parser up to date? ${reparser.uptodate}</echo>
   </target>
 
   <macrodef name="buildparser">
@@ -593,6 +605,7 @@ This is the main Ant build file.
     <ant target="jsparser" />
     <ant target="reparser" />
     <ant target="widlparser" />
+    <ant target="jsonparser" />
   </target>
 
   <target name="jsparser" unless="jsparser.uptodate"
@@ -611,6 +624,12 @@ This is the main Ant build file.
           depends="checkWIDLParserUptodate"
           description="WIDL Parser">
     <buildparser name="WIDL" dir="${parser}" file="WIDL.rats" />
+  </target>
+
+  <target name="jsonparser" unless="jsonparser.uptodate"
+          depends="checkJsonParserUptodate"
+          description="Json Parser">
+    <buildparser name="Json" dir="${parser}" file="Json.rats" />
   </target>
 
   <target name="testOnly"
@@ -651,16 +670,16 @@ This is the main Ant build file.
   </target>
 
   <target name="test" depends="compileAll, testParser, testUnparser, testStrict,
-                               testDisambiguator, testTranslator, testInterpreter,
+                               testDisambiguator, testCompiler, testInterpreter,
                                testWith, testCFG, testTyping, testAssert, testBugDetector,
-                               testWIDLParser"
+                               testWIDLParser, testWIDLChecker"
           description="Clean, compile everything, and run all unit and system tests.">
   </target>
 
   <target name="testWOcompile" depends="testParser, testUnparser, testStrict,
-                               testDisambiguator, testTranslator, testInterpreter,
+                               testDisambiguator, testCompiler, testInterpreter,
                                testWith, testCFG, testTyping, testAssert, testBugDetector,
-                               testWIDLParser"
+                               testWIDLParser, testWIDLChecker"
           description="Clean, compile everything, and run all unit and system tests.">
   </target>
 
@@ -714,6 +733,35 @@ This is the main Ant build file.
         <formatter type="xml" />
         <fileset dir="${build}">
           <include name="**/WIDLParserJUTest.class"/>
+          <exclude name="**/*$*.class"/>
+        </fileset>
+      </batchtest>
+    </junit>
+    <delete dir="${JS}/test-tmp" />
+    <fail message="Tests expected to pass are failing!" if="tests.failed"/>
+  </target>
+
+  <target name="testWIDLChecker"
+          description="Run the WIDL parser tests">
+    <mkdir dir="${test.results}"/>
+    <mkdir dir="${JS}/test-tmp" />
+    <junit printsummary="on"
+           haltonerror="off"
+           haltonfailure="off"
+           showoutput="yes"
+           fork="true"
+           maxmemory="${junitMem}"
+           errorProperty="tests.failed"
+           failureProperty="tests.failed">
+      <classpath refid="compile.classpath"/>
+      <jvmarg value="-Djava.io.tmpdir=${JS}/test-tmp" />
+      <jvmarg value="${bigStack}" />
+      <formatter type="plain" usefile="true"/>
+      <batchtest fork="true" todir="${junit.dir}">
+        <formatter type="brief" usefile="false" />
+        <formatter type="xml" />
+        <fileset dir="${build}">
+          <include name="**/WIDLCheckerJUTest.class"/>
           <exclude name="**/*$*.class"/>
         </fileset>
       </batchtest>
@@ -809,7 +857,7 @@ This is the main Ant build file.
     <fail message="Tests expected to pass are failing!" if="tests.failed"/>
   </target>
 
-  <target name="testTranslator"
+  <target name="testCompiler"
           description="Run the AST2IR-checker tests">
     <mkdir dir="${test.results}"/>
     <mkdir dir="${JS}/test-tmp" />
@@ -829,7 +877,7 @@ This is the main Ant build file.
         <formatter type="brief" usefile="false" />
         <formatter type="xml" />
         <fileset dir="${build}">
-          <include name="**/TranslatorJUTest.class"/>
+          <include name="**/CompilerJUTest.class"/>
           <exclude name="**/*$*.class"/>
         </fileset>
       </batchtest>
@@ -901,6 +949,7 @@ This is the main Ant build file.
           <include name="**/TypingJUTest.class"/>
           <include name="**/BugDetectorJUTest.class"/>
           <include name="**/WIDLParserJUTest.class"/>
+          <include name="**/WIDLCheckerJUTest.class"/>
           <exclude name="**/*$*.class"/>
         </fileset>
       </batchtest>
@@ -1141,34 +1190,34 @@ This is the main Ant build file.
     <fail message="Tests expected to pass are failing!" if="tests.failed"/>
   </target>
 
-  <target name="testTizen"
-          description="Run the Tizen tests">
-      <mkdir dir="${test.results}"/>
-      <mkdir dir="${JS}/test-tmp" />
-      <junit printsummary="on"
-             haltonerror="off"
-             haltonfailure="off"
-             showoutput="yes"
-             fork="true"
-             maxmemory="${junitMem}"
-             errorProperty="tests.failed"
-             failureProperty="tests.failed">
-          <classpath refid="compile.classpath"/>
-          <jvmarg value="-Djava.io.tmpdir=${JS}/test-tmp" />
-          <jvmarg value="${bigStack}" />
-          <formatter type="plain" usefile="true"/>
-          <batchtest fork="true" todir="${junit.dir}">
-              <formatter type="brief" usefile="false" />
-              <formatter type="xml" />
-              <fileset dir="${build}">
-                  <include name="**/TypingTizenTest.class"/>
-                  <exclude name="**/*$*.class"/>
-              </fileset>
-          </batchtest>
-      </junit>
-      <delete dir="${JS}/test-tmp" />
-      <fail message="Tests expected to pass are failing!" if="tests.failed"/>
-  </target>
+    <target name="testTizen"
+            description="Run the Tizen tests">
+        <mkdir dir="${test.results}"/>
+        <mkdir dir="${JS}/test-tmp" />
+        <junit printsummary="on"
+               haltonerror="off"
+               haltonfailure="off"
+               showoutput="yes"
+               fork="true"
+               maxmemory="${junitMem}"
+               errorProperty="tests.failed"
+               failureProperty="tests.failed">
+            <classpath refid="compile.classpath"/>
+            <jvmarg value="-Djava.io.tmpdir=${JS}/test-tmp" />
+            <jvmarg value="${bigStack}" />
+            <formatter type="plain" usefile="true"/>
+            <batchtest fork="true" todir="${junit.dir}">
+                <formatter type="brief" usefile="false" />
+                <formatter type="xml" />
+                <fileset dir="${build}">
+                    <include name="**/TypingTizenTest.class"/>
+                    <exclude name="**/*$*.class"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <delete dir="${JS}/test-tmp" />
+        <fail message="Tests expected to pass are failing!" if="tests.failed"/>
+    </target>
 
   <target name="cron"
           description="Configure user crontab to run all unit and system tests expected to pass.">

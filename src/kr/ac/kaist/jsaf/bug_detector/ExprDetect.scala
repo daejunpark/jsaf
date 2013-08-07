@@ -27,6 +27,8 @@ class ExprDetect(bugDetector: BugDetector) {
   val stateManager  = bugDetector.stateManager
   val CommonDetect  = bugDetector.CommonDetect
 
+
+
   ////////////////////////////////////////////////////////////////
   // Bug Detection Main (check CFGExpr)
   ////////////////////////////////////////////////////////////////
@@ -96,6 +98,8 @@ class ExprDetect(bugDetector: BugDetector) {
     ////////////////////////////////////////////////////////////////
 
     def absentReadPropertyCheck(span: Span, obj: CFGExpr, index: CFGExpr): Unit = {
+      if(!bugOption.AbsentReadProperty_Check) return
+
       // Don't check if this instruction is "LHS = <>fun<>["prototype"]".
       if (obj.isInstanceOf[CFGVarRef] && obj.asInstanceOf[CFGVarRef].id.contains("<>fun<>") &&
         index.isInstanceOf[CFGString] && index.asInstanceOf[CFGString].str == "prototype") return
@@ -177,6 +181,8 @@ class ExprDetect(bugDetector: BugDetector) {
     ////////////////////////////////////////////////////////////////
 
     def absentReadVariableCheck(span: Span, id: CFGId): Unit = {
+      if(!bugOption.AbsentReadVariable_Check) return
+
       // Check for user variable only
       if (!id.isInstanceOf[CFGUserId]) return
       val idAbsString = AbsString.alpha(id.getText)
@@ -214,6 +220,8 @@ class ExprDetect(bugDetector: BugDetector) {
     ////////////////////////////////////////////////////////////////
 
     def binaryOpSecondTypeCheck(span: Span, op: IROp, second: CFGExpr): Unit = {
+      if(!bugOption.BinaryOpSecondType_Check) return
+
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance()
       val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(BinaryOpSecondType))
@@ -277,6 +285,8 @@ class ExprDetect(bugDetector: BugDetector) {
     ////////////////////////////////////////////////////////////////
 
     def convertToNumberCheck2(op: String, expr1: CFGExpr, expr2: CFGExpr): Unit = {
+      if(!bugOption.ConvertUndefToNum_Check) return
+
       op match {
         // 11.5 Multiplicative Operators
         // 11.6.2 The Subtraction Operator ( - )
@@ -377,6 +387,8 @@ class ExprDetect(bugDetector: BugDetector) {
     ////////////////////////////////////////////////////////////////
 
     def globalThisCheck(span: Span, fid: Int): Unit = {
+      if(!bugOption.GlobalThis_Check) return
+
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance()
       val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(GlobalThis))
@@ -419,11 +431,12 @@ class ExprDetect(bugDetector: BugDetector) {
     ////////////////////////////////////////////////////////////////
 
     def implicitTypeConversionEqualityComparison(span: Span, op: String, expr1: CFGExpr, expr2: CFGExpr): Unit = {
+      if(!bugOption.ImplicitTypeConvert_Check) return
       if (inst.isInstanceOf[CFGAssert] && !inst.asInstanceOf[CFGAssert].flag) return
 
       // Check for each CState
       val bugCheckInstance = new BugCheckInstance()
-      val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(CallNonFunction))
+      val mergedCState = stateManager.getInputCState(node, inst.getInstId, bugOption.contextSensitive(ImplicitTypeConvert))
       for ((callContext, state) <- mergedCState) {
         // expr1, expr2
         val value1: Value = SE.V(expr1, state.heap, state.context)._1

@@ -37,6 +37,8 @@ object AbsString {
   }
 
   def alpha(str: String): AbsString = {
+    if(str == null) return StrBot
+
     // check cached result
     if (alpha_cache != null) {
       alpha_cache.synchronized {

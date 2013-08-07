@@ -604,6 +604,7 @@ object BuiltinArray extends ModelData {
           val n_start = Operator.ToInteger(getArgValue(h_1, ctx_1, args, "0"))
           val v_end = getArgValue(h, ctx, args, "1")
           //val n_end = Operator.ToInteger(getArgValue(h_1, ctx_1, "1"))
+
           val o = (AbsNumber.concretize(n_start)) match {
             case (Some(start)) =>
               lset_this.foldLeft(ObjBot)((_o, l) => {
@@ -611,7 +612,7 @@ object BuiltinArray extends ModelData {
                 val n_end =
                   if (v_end._1._1 </ UndefBot)  n_len + v_end._1._4
                   else Operator.ToInteger(v_end)
-                AbsNumber.concretize(n_end) match {
+                _o + (AbsNumber.concretize(n_end) match {
                   case Some(end) =>
                     n_len match {
                       case UIntSingle(n) => {
@@ -652,7 +653,7 @@ object BuiltinArray extends ModelData {
                             val o_new = Helper.NewArrayObject(UInt)
                             o_new.update(NumStr, PropValue(ObjectValue(Helper.Proto(h_1, l, NumStr),BoolTrue,BoolTrue,BoolTrue)))
                         } })
-                }
+                })
               })
             case _ =>
               if (n_start <= NumBot)

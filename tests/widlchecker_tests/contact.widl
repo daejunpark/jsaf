@@ -1,0 +1,352 @@
+module Contact {
+
+  typedef DOMString AddressBookId;
+
+  typedef DOMString ContactId;
+
+  typedef DOMString PersonId;
+
+  typedef DOMString ContactGroupId;
+
+  enum ContactTextFormat {"VCARD_30"};
+
+  [NoInterfaceObject] interface ContactManagerObject {
+    readonly attribute ContactManager contact;
+  };
+  WebAPIs implements ContactManagerObject;
+
+  [NoInterfaceObject] interface ContactManager {
+
+    void getAddressBooks(AddressBookArraySuccessCallback successCallback,
+                         optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    AddressBook getDefaultAddressBook() raises(WebAPIException);
+
+    AddressBook getAddressBook(AddressBookId addressBookId) raises(WebAPIException);
+
+    Person get(PersonId personId) raises(WebAPIException);
+
+    void update(Person person) raises(WebAPIException);
+
+    void updateBatch(Person[] persons,
+                     optional SuccessCallback? successCallback,
+                     optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    void remove(PersonId personId) raises(WebAPIException);
+
+    void removeBatch(PersonId[] personIds,
+                     optional SuccessCallback? successCallback,
+                     optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    void find(PersonArraySuccessCallback successCallback,
+              optional ErrorCallback? errorCallback,
+              optional AbstractFilter? filter,
+              optional SortMode? sortMode) raises(WebAPIException);
+
+    long addChangeListener(PersonsChangeCallback successCallback) raises(WebAPIException);
+
+    void removeChangeListener(long watchId) raises(WebAPIException);
+  };
+
+  [NoInterfaceObject] interface AddressBook {
+
+    readonly attribute AddressBookId? id;
+
+    readonly attribute DOMString name;
+
+    readonly attribute boolean readOnly;
+
+    Contact get(ContactId id) raises(WebAPIException);
+
+    void add(Contact contact) raises(WebAPIException);
+
+    void addBatch(Contact[] contacts,
+                  optional ContactArraySuccessCallback? successCallback,
+                  optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    void update(Contact contact) raises(WebAPIException);
+
+    void updateBatch(Contact[] contacts,
+                     optional SuccessCallback? successCallback,
+                     optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    void remove(ContactId id) raises(WebAPIException);
+
+    void removeBatch(ContactId[] ids,
+                     optional SuccessCallback? successCallback,
+                     optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    void find(ContactArraySuccessCallback successCallback,
+              optional ErrorCallback? errorCallback,
+              optional AbstractFilter? filter,
+              optional SortMode? sortMode) raises(WebAPIException);
+
+    long addChangeListener(AddressBookChangeCallback successCallback,
+                           optional ErrorCallback? errorCallback) raises(WebAPIException);
+
+    void removeChangeListener(long watchId) raises(WebAPIException);
+
+    ContactGroup getGroup(ContactGroupId groupId) raises(WebAPIException);
+
+    void addGroup(ContactGroup group) raises(WebAPIException);
+
+    void updateGroup(ContactGroup group) raises(WebAPIException);
+
+    void removeGroup(ContactGroupId groupId) raises(WebAPIException);
+
+    ContactGroup[] getGroups() raises(WebAPIException);
+  };
+
+  [NoInterfaceObject] interface Person {
+    readonly attribute PersonId id;
+
+    readonly attribute DOMString displayName;
+
+    readonly attribute long contactCount;
+
+    readonly attribute boolean hasPhoneNumber;
+
+    readonly attribute boolean hasEmail;
+
+    attribute boolean isFavorite;
+
+    attribute DOMString? photoURI;
+
+    attribute DOMString? ringtoneURI;
+
+    attribute ContactId displayContactId;
+
+    void link(PersonId personId) raises(WebAPIException);
+
+    Person unlink(ContactId contactId) raises(WebAPIException);
+  };
+
+  dictionary ContactInit {
+    ContactName name;
+    ContactAddress[] addresses;
+    DOMString photoURI;
+    ContactPhoneNumber[] phoneNumbers;
+    ContactEmailAddress[] emails;
+    Date birthday;
+    ContactAnniversary[] anniversaries;
+    ContactOrganization[] organizations;
+    DOMString[] notes;
+    ContactWebSite[] urls;
+    DOMString ringtoneURI;
+    ContactGroupId[] groupIds;
+  };
+
+  [Constructor(optional ContactInit? ContactInitDict),
+   Constructor(DOMString stringRepresentation)]
+  interface Contact {
+    readonly attribute ContactId? id;
+
+    readonly attribute PersonId? personId;
+
+    readonly attribute AddressBookId? addressBookId;
+
+    readonly attribute Date? lastUpdated;
+
+    readonly attribute boolean isFavorite;
+
+    attribute ContactName? name setraises(WebAPIException);
+
+    attribute ContactAddress[] addresses setraises(WebAPIException);
+
+    attribute DOMString? photoURI setraises(WebAPIException);
+
+    attribute ContactPhoneNumber[] phoneNumbers setraises(WebAPIException);
+
+    attribute ContactEmailAddress[] emails setraises(WebAPIException);
+
+    attribute Date? birthday setraises(WebAPIException);
+
+    attribute ContactAnniversary[] anniversaries setraises(WebAPIException);
+
+    attribute ContactOrganization[] organizations setraises(WebAPIException);
+
+    attribute DOMString[] notes setraises(WebAPIException);
+
+    attribute ContactWebSite[] urls setraises(WebAPIException);
+
+    attribute DOMString? ringtoneURI setraises(WebAPIException);
+
+    attribute ContactGroupId[] groupIds setraises(WebAPIException);
+
+    DOMString convertToString(optional ContactTextFormat? format) raises(WebAPIException);
+
+    Contact clone() raises(WebAPIException);
+  };
+
+  [Constructor(AddressBookId addressBookId, ContactId contactId)]
+  interface ContactRef {
+    attribute AddressBookId addressBookId;
+
+    attribute ContactId contactId;
+  };
+
+  dictionary ContactNameInit {
+    DOMString prefix;
+    DOMString suffix;
+    DOMString firstName;
+    DOMString middleName;
+    DOMString lastName;
+    DOMString[] nicknames;
+    DOMString phoneticFirstName;
+    DOMString phoneticLastName;
+  };
+
+  [Constructor(optional ContactNameInit? nameInitDict)]
+  interface ContactName {
+    attribute DOMString? prefix;
+
+    attribute DOMString? suffix;
+
+    attribute DOMString? firstName;
+
+    attribute DOMString? middleName;
+
+    attribute DOMString? lastName;
+
+    attribute DOMString[] nicknames;
+
+    attribute DOMString? phoneticFirstName;
+
+    attribute DOMString? phoneticLastName;
+
+    readonly attribute DOMString? displayName;
+  };
+
+  dictionary ContactOrganizationInit {
+    DOMString name;
+    DOMString department;
+    DOMString title;
+    DOMString role;
+    DOMString logoURI;
+  };
+
+  [Constructor(optional ContactOrganizationInit? orgInitDict)]
+  interface ContactOrganization {
+    attribute DOMString? name;
+
+    attribute DOMString? department;
+
+    attribute DOMString? title;
+
+    attribute DOMString? role;
+
+    attribute DOMString? logoURI;
+  };
+
+  [Constructor(DOMString url, optional DOMString? type)]
+  interface ContactWebSite
+  {
+    attribute DOMString url;
+
+    attribute DOMString? type;
+  };
+
+  [Constructor(Date date, optional DOMString? label)]
+  interface ContactAnniversary
+  {
+    attribute Date date;
+
+    attribute DOMString? label;
+  };
+
+  dictionary ContactAddressInit
+  {
+    DOMString country;
+    DOMString region;
+    DOMString city;
+    DOMString streetAddress;
+    DOMString additionalInformation;
+    DOMString postalCode;
+    boolean isDefault;
+    DOMString[] types;
+  };
+
+  [Constructor(optional ContactAddressInit? addressInitDict)]
+  interface ContactAddress
+  {
+    attribute DOMString? country;
+
+    attribute DOMString? region;
+
+    attribute DOMString? city;
+
+    attribute DOMString? streetAddress;
+
+    attribute DOMString? additionalInformation;
+
+    attribute DOMString? postalCode;
+
+    attribute boolean isDefault;
+
+    attribute DOMString[] types;
+  };
+
+  [Constructor(DOMString number, optional DOMString[]? types, optional boolean isDefault)]
+  interface ContactPhoneNumber
+  {
+    attribute DOMString number;
+
+    attribute boolean isDefault;
+
+    attribute DOMString[] types;
+  };
+
+  [Constructor(DOMString email, optional DOMString[]? types, optional boolean isDefault)]
+  interface ContactEmailAddress
+  {
+    attribute DOMString email;
+
+    attribute boolean isDefault;
+
+    attribute DOMString[] types;
+  };
+
+  [Constructor(DOMString name, optional DOMString? ringtoneURI, optional DOMString? photoURI)]
+  interface ContactGroup
+  {
+    readonly attribute ContactGroupId? id;
+
+    readonly attribute AddressBookId? addressBookId;
+
+    attribute DOMString name;
+
+    attribute DOMString? ringtoneURI;
+
+    attribute DOMString? photoURI;
+
+    readonly attribute DOMString readOnly;
+  };
+
+  [Callback=FunctionOnly, NoInterfaceObject] interface PersonArraySuccessCallback {
+    void onsuccess(Person[] persons);
+  };
+
+  [Callback=FunctionOnly, NoInterfaceObject] interface ContactArraySuccessCallback {
+    void onsuccess(Contact[] contacts);
+  };
+
+  [Callback=FunctionOnly, NoInterfaceObject] interface AddressBookArraySuccessCallback {
+    void onsuccess(AddressBook[] addressbooks);
+  };
+
+  [Callback, NoInterfaceObject] interface AddressBookChangeCallback {
+    void oncontactsadded(Contact[] contacts);
+
+    void oncontactsupdated(Contact[] contacts);
+
+    void oncontactsremoved(ContactId[] contactIds);
+  };
+
+  [Callback, NoInterfaceObject] interface PersonsChangeCallback {
+    void onpersonsadded(Person[] persons);
+
+    void onpersonsupdated(Person[] persons);
+
+    void onpersonsremoved(PersonId[] personIds);
+  };
+};

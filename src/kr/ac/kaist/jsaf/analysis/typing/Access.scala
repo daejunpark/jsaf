@@ -153,6 +153,11 @@ class Access(cfg: CFG, cg: Map[CFGInst, Set[FunctionId]], state_org: State) {
           // 1. Both of #Context and #PureLocal are defined by an edge transfer function.
           // 2. @temp stands for all the properties in #PureLocal.
           duset += (node -> (du._2._1 ++ LPSet(Set((SinglePureLocalLoc, "@temp"), (ContextLoc, "3"), (ContextLoc, "4"))), du._2._2))
+        } else if (cfg.getAftercatches.contains(node)) {
+          // Notes
+          // 1. Both of #Context and #PureLocal are defined by an edge transfer function.
+          // 2. @temp stands for all the properties in #PureLocal.
+          duset += (node -> (du._2._1 ++ LPSet(Set((SinglePureLocalLoc, "@temp"), (ContextLoc, "3"), (ContextLoc, "4"))), du._2._2))
         }
       }
     }

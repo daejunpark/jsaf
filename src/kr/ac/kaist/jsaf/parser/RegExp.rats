@@ -77,6 +77,9 @@ public RegExpPattern Pattern =
 private transient RegExpDisjunction Disjunction =
      a1:Alternative w "|" w a2:Disjunction
      { yyValue = new RegExpConsDisjunction(makeParenInfo(getParenCount(a1) + getParenCount(a2)), a1, a2); }
+   / a1:Alternative w "|"
+     { yyValue = new RegExpConsDisjunction(makeParenInfo(getParenCount(a1)), a1,
+                                           new RegExpBaseDisjunction(makeParenInfo(0), new RegExpEmptyAlternative(makeParenInfo(0)))); }
    / w "|" w a2:Disjunction
      { yyValue = new RegExpConsDisjunction(makeParenInfo(getParenCount(a2)), new RegExpEmptyAlternative(makeParenInfo(0)), a2); }
    / a1:Alternative 

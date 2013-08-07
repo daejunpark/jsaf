@@ -49,8 +49,8 @@ object InterpreterMain {
             val list: Array[String] = file.list
             var done = true
             breakable {
-              for(i <- list.length - 1 to 0) {
-                if (list(i) == "Shell.params.js") {
+              for(i <- list.length - 1 to 0 by -1) {
+                if (list(i) == "shell.js") {
                   done = false
                   break
                 }
@@ -60,19 +60,28 @@ object InterpreterMain {
               if (safe ne "") tmp.add(safe)
               break
             }
-            tmp.add(file.getCanonicalPath + "/Shell.params.js")
+            tmp.add(file.getCanonicalPath + "/shell.js")
             safe = file.getCanonicalPath + "/safe.js"
             file = file.getParentFile
           }
         }
       }
-      for(i <- tmp.size - 1 to 0) fileNames.add(tmp.get(i))
+      for(i <- tmp.size - 1 to 0 by -1) fileNames.add(tmp.get(i))
     }
 
-    val return_code: Int = 0
+    val return_code = 0
     val irOpt: JOption[IRRoot] = Shell.fileToIR(fileNames, Shell.toOption(Shell.params.opt_OutFileName))
     if (irOpt.isSome) {
       val ir: IRRoot = irOpt.unwrap
+      /*
+       * The following 2 lines are to print IR program for debug.
+       * Check getE method in nodes_util/JSIRUnparser.scala to get unsimplified name.
+       */
+      /*
+      String ircode = new JSIRUnparser(ir).doit();
+      System.out.println(ircode);
+      */
+      // Interpret ir...
       new Interpreter().doit(ir, JOption.none[Coverage], printComp)
       if (Shell.params.opt_Time) Shell.printTimeTitle = "Interpretation"
     }

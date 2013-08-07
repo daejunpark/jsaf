@@ -1,0 +1,109 @@
+module ImageView {
+    typedef sequence<unsigned short> EffectListArray;
+
+    [NoInterfaceObject] interface WebAPIsImageViewManager { 
+        readonly attribute ImageViewManager imageview; 
+    };    
+    WebAPIs implements WebAPIsImageViewManager;
+
+    [NoInterfaceObject] interface ImageViewManager {
+
+        const short EFFECT_INIT = -1;
+
+        const short EFFECT_FADE_1 = 0;
+
+        const short EFFECT_FADE_2 = 1;
+
+        const short EFFECT_BLIND = 2;
+
+        const short EFFECT_SPIRAL = 3;
+
+        const short EFFECT_CHECKER = 4;
+
+        const short EFFECT_LINEAR = 5;
+
+        const short EFFECT_STAIRS = 6;
+
+        const short EFFECT_WIPE = 7;
+
+        const short EFFECT_RANDOM = 8;
+
+        const short EFFECT_NORMAL = 9;
+
+       const short IMAGEVIEW_STATE_IDLE = 0;        
+
+       const short IMAGEVIEW_STATE_INITIALIZED = 1;
+               
+       const short IMAGEVIEW_STATE_PREPARED = 3;
+
+       const short IMAGEVIEW_STATE_DRAWN = 4;
+
+       const short IMAGEVIEW_STATE_STOPPED = 5;
+       
+        void getImageView(in AvailableImageViewSuccessCallback successCallback,
+                               in optional ErrorCallback? errorCallback)
+                               raises (WebAPIException);
+    };            
+
+    [Callback=FuntionOnly, NoInterfaceObject] interface AvailableImageViewSuccessCallback {
+        void onsuccess(in ImageView obj);
+    };
+ 
+    dictionary ImageViewInitialOption
+    {
+        SRect? displayRect;
+
+        DOMString? containerID;            
+
+        unsigned short? zIndex;
+    };
+    
+    dictionary ImageOption
+    {
+        short effect;
+    }; 
+
+    [NoInterfaceObject] interface ImageView {
+        readonly attribute DOMString id;
+
+        readonly attribute DOMString url;
+
+        readonly attribute unsigned short imageWidth;
+
+        readonly attribute unsigned short imageHeight;
+
+        readonly attribute SRect displayRect;
+
+        readonly attribute DOMString containerID;            
+
+        readonly attribute unsigned short zIndex;
+
+        readonly attribute short effect;
+
+        readonly attribute short status;
+
+        boolean init(in optional ImageViewInitialOption? option) raises(WebAPIException);
+        
+        void prepare(in DOMString url, 
+                        in SuccessCallback successCallback, 
+                        in ErrorCallback? errorCallback, 
+                        in optional ImageOption option) 
+                        raises(WebAPIException);
+                
+        boolean setSlideShow(in boolean slideshowMode) raises(WebAPIException);        
+                                         
+        void draw(in SuccessCallback successCallback, 
+                     in ErrorCallback? errorCallback)
+                     raises(WebAPIException);
+
+        boolean setDisplayRect(SRect rect) raises(WebAPIException);
+                
+        boolean clear() raises(WebAPIException);
+      
+        boolean show() raises(WebAPIException);
+        
+        boolean hide() raises(WebAPIException);
+        
+        short getTransitionEffectList() raises(WebAPIException);    
+    };  
+};

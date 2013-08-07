@@ -1,0 +1,42 @@
+module Power {
+
+    enum PowerResource    { "SCREEN", "CPU" };
+
+    enum PowerScreenState { "SCREEN_OFF", "SCREEN_DIM", "SCREEN_NORMAL", "SCREEN_BRIGHT" };
+
+    enum PowerCpuState { "CPU_AWAKE" };
+
+    typedef (PowerScreenState or PowerCpuState) PowerState;
+
+    [NoInterfaceObject] interface PowerManagerObject {
+        readonly attribute PowerManager power;
+    };
+    WebAPIs implements PowerManagerObject;
+
+   [NoInterfaceObject] interface PowerManager {
+       void request(PowerResource resource, PowerState state) raises(WebAPIException);
+
+       void release(PowerResource resource) raises(WebAPIException);
+
+       void setScreenStateChangeListener(ScreenStateChangeCallback listener) raises(WebAPIException);
+
+       void unsetScreenStateChangeListener() raises(WebAPIException);
+
+       double getScreenBrightness() raises(WebAPIException);
+
+       void setScreenBrightness(double brightness) raises(WebAPIException);
+
+       boolean isScreenOn() raises(WebAPIException);
+
+       void restoreScreenBrightness() raises(WebAPIException);
+
+       void turnScreenOn() raises(WebAPIException);
+
+       void turnScreenOff() raises(WebAPIException);
+   };
+
+   [Callback=FunctionOnly, NoInterfaceObject] interface ScreenStateChangeCallback {
+       void onchanged(PowerScreenState previousState, PowerScreenState changedState);
+   };
+
+};

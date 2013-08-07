@@ -17,7 +17,7 @@ import kr.ac.kaist.jsaf.analysis.cfg.CFGId
 
 package object typing {
   type ControlPoint = (Node, CallContext)
-  type CPEdgeSet = HashSet[(ControlPoint, ControlPoint)]
+  type CPEdgeList = List[(ControlPoint, ControlPoint)]
   
   type CState = Map[CallContext, State]
   type Table = MMap[Node, CState]

@@ -14,16 +14,19 @@ bug-detector_out_WCIequals=\
 * Bug Detector * \n\
 shadowingVariable5.js:7:15~7:18: [TypeError] Calling the non-function 'h' as a function. \n\
 shadowingVariable5.js:2:12~2:13: [Warning] Parameter 'g' is shadowed by a function at '3:3-8:3'. \n\
+shadowingVariable5.js:2:15~2:16: [Warning] Parameter 'h' is shadowed by a variable at '4:9-14'. \n\
+shadowingVariable5.js:2:15~2:16: [Warning] Parameter 'h' is shadowed by a function at '5:5-7:5'. \n\
+shadowingVariable5.js:3:14~3:15: [Warning] Parameter 'h' is shadowed by a variable at '4:9-14'. \n\
 shadowingVariable5.js:3:14~3:15: [Warning] Parameter 'h' is shadowed by a function at '5:5-7:5'. \n\
 shadowingVariable5.js:4:9~4:14: [Warning] Variable 'h' is shadowed by a function at '5:5-7:5'. \n\
 shadowingVariable5.js:5:5~7:5: [Warning] Function 'h' is never called. \n\
-shadowingVariable5.js:6:7~6:15: [Warning] Unreachable code 'return h;' is found. \n\
+shadowingVariable5.js:6:7~6:15: [Warning] Unreachable code '{ return h; }' is found. \n\
 shadowingVariable5.js:7:15~7:16: [Warning] Trying to convert primitive value(number) to object. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
-|  TypeErrors        :      1 ( 14.29%) | \n\
-|  Warnings          :      6 ( 85.71%) | \n\
+|  TypeErrors        :      1 ( 10.00%) | \n\
+|  Warnings          :      9 ( 90.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -40,7 +43,7 @@ shadowingVariable5.js:7:15~7:16: [Warning] Trying to convert primitive value(num
 |  ImplicitTypeConversion  :      0 | \n\
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      1 | \n\
-|  Shadowing               :      3 | \n\
+|  Shadowing               :      6 | \n\
 |  UncalledFuction         :      1 | \n\
 |  UnreachableCode         :      1 | \n\
 |  ValueNeverRead          :      0 | \n\

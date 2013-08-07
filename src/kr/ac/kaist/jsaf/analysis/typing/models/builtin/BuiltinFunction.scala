@@ -43,7 +43,8 @@ object BuiltinFunction extends ModelData {
     ("toString",             AbsBuiltinFunc("Function.prototype.toString", 0)),
     ("apply",                AbsBuiltinFuncAftercall("Function.prototype.apply", 2)),
     ("call",                 AbsBuiltinFuncAftercall("Function.prototype.call", 1)),
-    ("bind",                 AbsBuiltinFuncAftercall("Function.prototype.bind", 1))
+    // ("bind",                 AbsBuiltinFuncAftercall("Function.prototype.bind", 1))
+    ("bind",                 AbsBuiltinFunc("Function.prototype.bind", 1))
   )
 
   def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(

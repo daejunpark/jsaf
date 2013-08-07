@@ -41,7 +41,6 @@ instantiate kr.ac.kaist.jsaf.parser.Unicode
 
 header {
 import java.util.HashMap;
-import kr.ac.kaist.jsaf.ShellParameters;
 import kr.ac.kaist.jsaf.exceptions.SyntaxError;
 import kr.ac.kaist.jsaf.nodes.*;
 import kr.ac.kaist.jsaf.nodes_util.*;
