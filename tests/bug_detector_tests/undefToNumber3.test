@@ -1,7 +1,9 @@
 ################################################################################
 #    Copyright (c) 2013, KAIST.
-#    All rights reserved.\n#
-#    Use is subject to license terms.\n#
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
 #    This distribution may include materials developed by third parties.
 ################################################################################
 tests=undefToNumber3
@@ -27,7 +29,7 @@ undefToNumber3.js:12:1~12:4: [Warning] Trying to convert undefined to number. 'x
 |  CallNonFunction         :      0 | \n\
 |  ConditionalBranch       :      0 | \n\
 |  ConvertToNumber         :      1 | \n\
-|  DefaultValueTypeError   :      0 | \n\
+|  DefaultValue            :      0 | \n\
 |  FunctionArgSize         :      0 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\

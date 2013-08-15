@@ -13,6 +13,7 @@ import java.util.{List => JList}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.nodes._
 import kr.ac.kaist.jsaf.scala_src.nodes._
+import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 
 object WIDLHelper {
   def getFirstAttr(node: WDefinition): String = {
@@ -39,7 +40,7 @@ object WIDLHelper {
     false
   }
   def isCallback(interface: WInterface): Boolean = hasStrAttr(interface.getAttrs, "Callback")
-  def isConstructor(interface: WInterface): Boolean = hasStrAttr(interface.getAttrs, "Constructor")
+  def isConstructor(interface: WInterface): Boolean = toList(interface.getAttrs).exists(_.isInstanceOf[WEAConstructor])
   def isNoInterfaceObject(interface: WInterface): Boolean = interface.getAttrs.contains(WIDLFactory.eaNoInterfaceObject)
   def isOptional(argument: WArgument): Boolean = {
     val i = argument.getAttributes.iterator()
@@ -117,7 +118,7 @@ object WIDLHelper {
             return Some(Value(memberLocProps._1))
           case None =>
         }
-        case SWUnionType(info, suffix, types) =>
+      case SWUnionType(info, suffix, types) =>
         var value: Value = ValueBot
         for(typ <- types) {
           WType2Value(typ, widlModel) match {

@@ -12,6 +12,7 @@ package kr.ac.kaist.jsaf.shell
 import java.io._
 import java.nio.charset.Charset
 import java.util.{ArrayList, HashMap}
+import java.util.{List => JList}
 import kr.ac.kaist.jsaf.analysis.cfg.CFGBuilder
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMBuilder
@@ -41,11 +42,12 @@ object WIDLMain {
    */
   def widlparse: Int = {
     val return_code = 0
-    if (Shell.params.FileNames.length == 0) throw new UserError("The widlparse command needs a file to parse.")
+    if (Shell.params.FileNames.length == 0)
+      throw new UserError("The widlparse command needs a file or a directory to parse.")
     val name = Shell.params.FileNames(0)
     val widl: ArrayList[WDefinition] = if (name.endsWith(".widl")) parseWidl(name)
                                        else parseDir(name)
-    if (Shell.params.opt_DB != null) WIDLToDB.storeToDB(Shell.params.opt_DB, widl)
+    if (Shell.params.opt_OutFileName != null) WIDLToDB.storeToDB(Shell.params.opt_OutFileName, widl)
     else System.out.println(WIDLToString.doit(widl))
     return_code
   }
@@ -54,6 +56,9 @@ object WIDLMain {
   val widlFilter = new FilenameFilter() {
                        def accept(dir: File, name: String) = name.endsWith(".widl")
                    }
+  val jsFilter = new FilenameFilter() {
+                     def accept(dir: File, name: String) = name.endsWith(".js")
+                 }
   def parseDir(_dir: String): ArrayList[WDefinition] = {
     var dir = _dir
     if (!dir.endsWith(SEP)) dir += SEP
@@ -101,10 +106,19 @@ object WIDLMain {
    * Check the uses of APIs in Web IDL.
    */
   def widlcheck: Int = {
-    if (Shell.params.FileNames.length == 0) throw new UserError("The widlcheck command needs a file to parse.")
-    val JSFileName = Shell.params.FileNames(0)
-    val JSFileNameList = new ArrayList[String]; JSFileNameList.add(JSFileName)
-    val DBFileNames = Shell.params.FileNames.drop(1).toList
+    if (Shell.params.opt_JS.size == 0 && Shell.params.opt_Dir == null)
+      throw new UserError("The widlcheck command needs a file or a directory to check.")
+    if (Shell.params.opt_JS.size > 0 && Shell.params.opt_Dir != null)
+      throw new UserError("The widlcheck command should not take both -js and -dir options.")
+          val JSFileNameList: JList[String] =
+        if (Shell.params.opt_JS.size > 0) Shell.params.opt_JS
+        else {
+          var dir = Shell.params.opt_Dir
+          if (!dir.endsWith(SEP)) dir += SEP
+          new File(dir).list(jsFilter).map(f => dir+f).toList
+        }
+    val JSFileName = JSFileNameList.get(0)
+    val DBFileNames = toList(Shell.params.opt_DB)
 
     // AST
     val pair: Pair[Program, HashMap[String, String]] = Parser.fileToAST(JSFileNameList)

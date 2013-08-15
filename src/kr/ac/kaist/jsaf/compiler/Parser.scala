@@ -24,13 +24,12 @@ import kr.ac.kaist.jsaf.exceptions.ParserError
 import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.exceptions.SyntaxError
 import kr.ac.kaist.jsaf.exceptions.UserError
-import kr.ac.kaist.jsaf.nodes.Comment
+import kr.ac.kaist.jsaf.nodes.ASTSpanInfo
 import kr.ac.kaist.jsaf.nodes.FunDecl
 import kr.ac.kaist.jsaf.nodes.Program
 import kr.ac.kaist.jsaf.nodes.SourceElement
 import kr.ac.kaist.jsaf.nodes.TopLevel
 import kr.ac.kaist.jsaf.nodes.VarDecl
-import kr.ac.kaist.jsaf.nodes_util.SpanInfo
 import kr.ac.kaist.jsaf.nodes_util.{NodeFactory => NF}
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.nodes_util.SourceLoc
@@ -54,26 +53,25 @@ object Parser {
   }
 
   val mergedSourceLoc = new SourceLocRats(NU.freshFile("merged"), 0, 0, 0)
-  val mergedSourceInfo = new SpanInfo(new Span(mergedSourceLoc, mergedSourceLoc))
+  val mergedSourceInfo = new ASTSpanInfo(new Span(mergedSourceLoc, mergedSourceLoc))
   var fileMap = new HashMap[String, String]()
   var fileindex = 1
 
-  def getInfoStmtsComments(program: Program): (SpanInfo, List[SourceElement], List[Comment]) = {
+  def getInfoStmts(program: Program): (ASTSpanInfo, List[SourceElement]) = {
     val info = program.getInfo
-    (info, toList(program.getBody.getStmts):+(NF.makeNoOp(info, "EndOfFile")),
-     toList(program.getComments))
+    (info, toList(program.getBody.getStmts):+(NF.makeNoOp(info, "EndOfFile")))
   }
 
-  def scriptToStmts(script: Triple[String, JInteger, String]): (SpanInfo, List[SourceElement], List[Comment]) =
+  def scriptToStmts(script: Triple[String, JInteger, String]): (ASTSpanInfo, List[SourceElement]) =
     scriptToStmts(script, false)
 
   def scriptToStmts(script: Triple[String, JInteger, String],
-                    isCloneDetector: Boolean): (SpanInfo, List[SourceElement], List[Comment]) = {
+                    isCloneDetector: Boolean): (ASTSpanInfo, List[SourceElement]) = {
     val f = script.first
     val file = new File(f)
     fileMap.put(file.getCanonicalPath, "%s::%d".format(f, fileindex))
     fileindex += 1
-    getInfoStmtsComments(parseScriptConvertExn(f, script.second, script.third, isCloneDetector))
+    getInfoStmts(parseScriptConvertExn(f, script.second, script.third, isCloneDetector))
   }
 
   def clearFileMap() = fileMap.clear
@@ -87,7 +85,7 @@ object Parser {
     }
     fileMap.put(path, "%s::%d".format(f, fileindex))
     fileindex += 1
-    getInfoStmtsComments(parseFileConvertExn(file))
+    getInfoStmts(parseFileConvertExn(file))
   }
 
   def stringToAST(str: Triple[String, JInteger, String]): Program =
@@ -95,32 +93,32 @@ object Parser {
 
   def stringToAST(str: Triple[String, JInteger, String],
                   isCloneDetector: Boolean): Program = {
-    val (info, stmts, comments) = scriptToStmts(str, isCloneDetector)
-    NF.makeProgram(info, stmts, comments)
+    val (info, stmts) = scriptToStmts(str, isCloneDetector)
+    NF.makeProgram(info, stmts)
   }
 
   def scriptToAST(ss: JList[Triple[String, JInteger, String]]) = toList(ss) match {
     case List(script) =>
-      val (info, stmts, comments) = scriptToStmts(script)
-      new Pair[Program, HashMap[String,String]](NF.makeProgram(info, stmts, comments), fileMap)
+      val (info, stmts) = scriptToStmts(script)
+      new Pair[Program, HashMap[String,String]](NF.makeProgram(info, stmts), fileMap)
     case scripts =>
-      val (stmts, comments) =
-          scripts.foldLeft((List[SourceElement](), List[Comment]()))((l, s) => {
-                          val (i, ss, cs) = scriptToStmts(s)
-                          (l._1++ss,  l._2++cs)})
-      new Pair[Program, HashMap[String,String]](NF.makeProgram(mergedSourceInfo, stmts, comments), fileMap)
+      val stmts =
+          scripts.foldLeft(List[SourceElement]())((l, s) => {
+                          val (_, ss) = scriptToStmts(s)
+                          l++ss})
+      new Pair[Program, HashMap[String,String]](NF.makeProgram(mergedSourceInfo, stmts), fileMap)
   }
 
   def fileToAST(fs: JList[String]) = toList(fs) match {
     case List(file) =>
-      val (info, stmts, comments) = fileToStmts(file)
-      new Pair[Program, HashMap[String,String]](NF.makeProgram(info, stmts, comments), fileMap)
+      val (info, stmts) = fileToStmts(file)
+      new Pair[Program, HashMap[String,String]](NF.makeProgram(info, stmts), fileMap)
     case files =>
-      val (stmts, comments) =
-          files.foldLeft((List[SourceElement](), List[Comment]()))((l, f) => {
-                        val (i, ss, cs) = fileToStmts(f)
-                        (l._1++ss,  l._2++cs)})
-      new Pair[Program, HashMap[String,String]](NF.makeProgram(mergedSourceInfo, stmts, comments), fileMap)
+      val stmts =
+          files.foldLeft(List[SourceElement]())((l, f) => {
+                        val (_, ss) = fileToStmts(f)
+                        l++ss})
+      new Pair[Program, HashMap[String,String]](NF.makeProgram(mergedSourceInfo, stmts), fileMap)
   }
 
   def parseScriptConvertExn(filename: String, start: JInteger, script: String): Program =
@@ -187,7 +185,6 @@ object Parser {
 
   def parsePgm(in: BufferedReader, filename: String, start: JInteger, isCloneDetector: Boolean): Program = {
     val syntaxLogFile = filename + ".log"
-    val commentLogFile = filename + ".comment"
     try {
       val parser = new JS(in, filename)
       NU.setCloneDetector(isCloneDetector)
@@ -198,7 +195,6 @@ object Parser {
     } finally {
       try {
         Files.rm(syntaxLogFile)
-        Files.rm(commentLogFile)
       } catch { case ioe:IOException => }
       try {
         in.close

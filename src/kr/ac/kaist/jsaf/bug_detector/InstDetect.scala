@@ -46,6 +46,9 @@ class InstDetect(bugDetector: BugDetector) {
     unreachableCodeCheck(node, inst, cstate)
     if (cstate.size == 0) return
 
+    // DefaultValue check
+    defaultValueCheck(node, inst)
+
     //println("NODE: " + node + "\tINSTRUNCTION := " + inst)
     inst match {
       case CFGAlloc(_, info, id, proto, _) =>
@@ -187,7 +190,7 @@ class InstDetect(bugDetector: BugDetector) {
       for ((callContext, state) <- mergedCState) {
         val funLocSet = SE.V(fun, state.heap, state.context)._1.locset
 
-        // Check for each CState
+        // Check for each location
         for (funLoc <- funLocSet) {
           val isCallable = Helper.IsCallable(state.heap, funLoc)
           //println(funId + " #" + funLoc + ": isCallable = " + isCallable)
@@ -235,7 +238,7 @@ class InstDetect(bugDetector: BugDetector) {
       for ((callContext, state) <- mergedCState) {
         val funLocSet = SE.V(const, state.heap, state.context)._1.locset
 
-        // Check for each CState
+        // Check for each location
         for (funLoc <- funLocSet) {
           val hasConstruct = Helper.HasConstruct(state.heap, funLoc)
           //println(funId + " #" + funLoc + ": hasConstruct = " + hasConstruct)
@@ -427,6 +430,62 @@ class InstDetect(bugDetector: BugDetector) {
       }
     }
     */
+    def defaultValueCheck(node: Node, inst: CFGInst): Unit = {
+      if(!bugOption.DefaultValue_Check) return
+
+      // Get LHS
+      val (info, lhsExpr: CFGExpr, variableName) = inst match {
+        case CFGAlloc(iid, info, lhs, proto, addr) => (info, CFGVarRef(null, lhs), lhs.getText)
+        case CFGAllocArray(iid, info, lhs, length, addr) => (info, CFGVarRef(null, lhs), lhs.getText)
+        case CFGAllocArg(iid, info, lhs, length, addr) => (info, CFGVarRef(null, lhs), lhs.getText)
+        case CFGExprStmt(iid, info, lhs, expr) => (info, CFGVarRef(null, lhs), lhs.getText)
+        case CFGDelete(iid, info, lhs, expr) => (info, CFGVarRef(null, lhs), lhs.getText)
+        case CFGDeleteProp(iid, info, lhs, obj, index) => (info, CFGVarRef(null, lhs), lhs.getText)
+        case CFGStore(iid, info, obj, CFGString(index), rhs) => (info, CFGLoad(null, obj, CFGString(index)), index)
+        case CFGFunExpr(iid, info, lhs, name, fid, addr1, addr2, addr3) => (info, CFGVarRef(null, lhs), lhs.getText)
+        case _ => return
+      }
+
+      // If the variable name is neither "toString" nor "valueOf"
+      if(variableName != "toString" && variableName != "valueOf") return
+
+      // Check for each CState
+      val bugCheckInstance = new BugCheckInstance
+      val mergedCState = stateManager.getOutputCState(node, inst.getInstId, CallContext._MOST_SENSITIVE)
+      for((callContext, state) <- mergedCState) {
+        val objValue = SE.V(lhsExpr, state.heap, state.context)._1
+
+        // Check primitive value
+        if(objValue.pvalue.typeCount > 0) {
+          val checkInstance = bugCheckInstance.insert(true, info.getSpan, callContext, state)
+          checkInstance.loc1 = -1
+        }
+
+        // Check for each location
+        for(loc <- objValue.locset) {
+          // Collect function's callablility
+          val isCallable = Helper.IsCallable(state.heap, loc)
+          val isBug = bugOption.DefaultValue_MustBeCallableDefinitely match {
+            case true => isCallable != BoolTrue
+            case false => isCallable <= BoolFalse
+          }
+          val checkInstance = bugCheckInstance.insert(isBug, info.getSpan, callContext, state)
+          checkInstance.loc1 = loc
+        }
+      }
+
+      // Filter out bugs depending on options
+      if (!bugOption.DefaultValue_MustBeCallableInEveryState) {
+        bugCheckInstance.filter((bug, notBug) => (bug.loc1 == notBug.loc1))
+      }
+      if (!bugOption.DefaultValue_MustBeCallableForEveryLocation) {
+        bugCheckInstance.filter((bug, notBug) => (bug.callContext == notBug.callContext && bug.state == notBug.state))
+      }
+
+      // Report bugs
+      for (b <- bugCheckInstance.bugList) bugStorage.addMessage(b.span, DefaultValue, inst, b.callContext, variableName)
+    }
+
 
 
     ////////////////////////////////////////////////////////////////

@@ -648,7 +648,7 @@ class CFGBuilder (ir: IRRoot) {
       case id:IRId => CFGVarRef(id.getInfo, id2cfgId(id))
       case SIRThis(info) => CFGThis(info)
       case SIRNumber(_, text, num) => CFGNumber(text, javaToScalaDouble(num))
-      case SIRString(_, str, _) => CFGString(str)
+      case SIRString(_, str) => CFGString(str)
       case SIRBool(_, bool) => CFGBool(bool)
       case _:IRNull => CFGNull()
     }

@@ -63,6 +63,11 @@ class BugOption(defaultForUser: Boolean = true) {
   var ConvertUndefToNum_VariableMustHaveUndefinedOnly           = true
   var ConvertUndefToNum_ToNumberMustBeCalledForExactValue       = true
 
+  var DefaultValue_Check                                        = true
+  var DefaultValue_MustBeCallableInEveryState                   = false
+  var DefaultValue_MustBeCallableForEveryLocation               = false
+  var DefaultValue_MustBeCallableDefinitely                     = false
+
   var FunctionArgSize_Check                                     = true
   var FunctionArgSize_CheckNativeFunction                       = true
   var FunctionArgSize_CheckUserFunction                         = true
@@ -171,6 +176,11 @@ class BugOption(defaultForUser: Boolean = true) {
     ConvertUndefToNum_VariableMustHaveUndefinedOnly = true
     ConvertUndefToNum_ToNumberMustBeCalledForExactValue = true
 
+    // DefaultValue
+    DefaultValue_MustBeCallableInEveryState = false
+    DefaultValue_MustBeCallableForEveryLocation = false
+    DefaultValue_MustBeCallableDefinitely = false
+
     // FunctionArgSize
     FunctionArgSize_CheckNativeFunction = true
     FunctionArgSize_CheckUserFunction = true
@@ -262,6 +272,11 @@ class BugOption(defaultForUser: Boolean = true) {
     ConvertUndefToNum_UndefMustBeConvertedInEveryState = true
     ConvertUndefToNum_VariableMustHaveUndefinedOnly = false
     ConvertUndefToNum_ToNumberMustBeCalledForExactValue = false
+
+    // DefaultValue
+    DefaultValue_MustBeCallableInEveryState = true
+    DefaultValue_MustBeCallableForEveryLocation = true
+    DefaultValue_MustBeCallableDefinitely = true
 
     // FunctionArgSize
     FunctionArgSize_CheckNativeFunction = true

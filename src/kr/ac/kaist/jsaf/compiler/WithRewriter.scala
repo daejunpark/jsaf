@@ -13,7 +13,6 @@ import _root_.java.util.{List => JList}
 import kr.ac.kaist.jsaf.exceptions.JSAFError.error
 import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.nodes._
-import kr.ac.kaist.jsaf.nodes_util.SpanInfo
 import kr.ac.kaist.jsaf.nodes_util.{ NodeFactory => NF }
 import kr.ac.kaist.jsaf.nodes_util.{ NodeUtil => NU }
 import kr.ac.kaist.jsaf.scala_src.nodes._
@@ -75,15 +74,15 @@ class WithRewriter(program: Program, forTest: Boolean) extends Walker {
 
   // For SAFE
   val internalSymbol = NU.internalSymbol
-  def freshName(info: SpanInfo) = {
+  def freshName(info: ASTSpanInfo) = {
     val name = NU.freshName("alpha")
     SId(info, name, Some(name), true)
   }
   val toObjectName = NU.toObjectName
-  def toObjectId(info: SpanInfo) = SId(info, toObjectName, Some(toObjectName), false)
+  def toObjectId(info: ASTSpanInfo) = SId(info, toObjectName, Some(toObjectName), false)
 
-  def assignOp(info: SpanInfo) = SOp(info, "=")
-  def inOp(info: SpanInfo) = SOp(info, "in")
+  def assignOp(info: ASTSpanInfo) = SOp(info, "=")
+  def inOp(info: ASTSpanInfo) = SOp(info, "in")
   def paren(expr: Expr) = SParenthesized(NU.getInfo(expr), expr)
   def splitNames(names: List[List[String]]) = names match {
     case hd::tl => (hd, tl)
@@ -338,12 +337,11 @@ class WithRewriter(program: Program, forTest: Boolean) extends Walker {
         }
       }
     }
-    case SProgram(info, STopLevel(fds, vds, ses), comments) =>
+    case SProgram(info, STopLevel(fds, vds, ses)) =>
       SProgram(info, STopLevel((if (forTest) List(toObjectFnDecl) else Nil)++
                                fds.map(fd => walk(fd, env).asInstanceOf[FunDecl]),
                                vds.map(vd => walk(vd, env).asInstanceOf[VarDecl]),
-                               walk(ses, env).asInstanceOf[List[SourceElement]]),
-               comments)
+                               walk(ses, env).asInstanceOf[List[SourceElement]]))
     case SReturn(info, expr) =>
       SReturn(info, walk(expr, env).asInstanceOf[Option[Expr]])
     case sp@SSetProp(info, prop, SFunctional(fds, vds, body, name, params)) =>

@@ -15,8 +15,8 @@ import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
 import kr.ac.kaist.jsaf.interpreter.{InterpreterPredefine => IP, _}
-import kr.ac.kaist.jsaf.interpreter.objects.JSRegExpHelper._
 import scala.collection.mutable.HashMap
+import kr.ac.kaist.jsaf.utils.regexp._
 
 class JSStringPrototype(_I: Interpreter, _proto: JSObject)
   extends JSString(_I, _proto, "String", true, propTable) {

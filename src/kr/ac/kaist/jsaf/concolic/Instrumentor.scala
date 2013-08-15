@@ -11,8 +11,9 @@ package kr.ac.kaist.jsaf.concolic
 
 import _root_.java.util.{List => JList}
 import kr.ac.kaist.jsaf.nodes._
-import kr.ac.kaist.jsaf.nodes_util.{ IRFactory => IF }
-import kr.ac.kaist.jsaf.nodes_util.{ NodeUtil => NU }
+import kr.ac.kaist.jsaf.nodes_util.Coverage
+import kr.ac.kaist.jsaf.nodes_util.{IRFactory => IF}
+import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
@@ -55,7 +56,7 @@ import kr.ac.kaist.jsaf.scala_src.useful.Sets._
  *   [IRWith]
  */
 
-class Instrumentor(program: IRRoot) extends IRWalker {
+class Instrumentor(program: IRRoot, coverage: Coverage) extends IRWalker {
 
   def doit() = walk(program, IF.dummyIRId(NU.freshConcolicName("Main"))).asInstanceOf[IRRoot]
 
@@ -122,10 +123,10 @@ class Instrumentor(program: IRRoot) extends IRWalker {
     /* x = e
      * ==>
      * x = e
-     * EXECUTE_ASSIGNMENT(v, e);
+     * EXECUTE_ASSIGNMENT(x, e);
      *
      * x = e
-     * SIRInternalCall(info, "<>Concolic<>Instrumentor", "<>Concolic<>ExecuteAssignment", e, Some(v))
+     * SIRInternalCall(info, "<>Concolic<>Instrumentor", "<>Concolic<>ExecuteAssignment", e, Some(x))
      */
     case SIRExprStmt(info, lhs, right, ref) =>
       storeIR("SIRExprStmt")
@@ -133,10 +134,13 @@ class Instrumentor(program: IRRoot) extends IRWalker {
 
     /* x = x(x, x)
      * ==>
+     * STORE_FUNCTION_INFORMATION(node); 
      * x = x(x, x)
+     *
      */
     case SIRCall(info, lhs, fun, thisB, args) =>       
       storeIR("SIRCall")
+      coverage.storeFuncInfo(node)
       node
 
     /* x = function f (x, x) {s*}

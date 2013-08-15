@@ -268,16 +268,10 @@ class JSIRUnparser(program: IRNode) extends Walker {
       s.append(walk(obj)).append("[").append(walk(index))
       s.append("] = ").append(walk(rhs))
       s.toString
-    case SIRString(_, str, None) =>
+    case SIRString(_, str) =>
       val s: StringBuilder = new StringBuilder
       s.append("\"")
-      pp(s, str)
-      s.append("\"")
-      s.toString
-    case SIRString(_, _, Some(str)) =>
-      val s: StringBuilder = new StringBuilder
-      s.append("\"")
-      pp(s, str)
+      pp(s, str.replaceAll("\\\\", "\\\\\\\\")) // TODO need to be checked.
       s.append("\"")
       s.toString
     case SIRThrow(_, expr) =>

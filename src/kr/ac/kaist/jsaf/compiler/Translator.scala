@@ -15,7 +15,6 @@ import kr.ac.kaist.jsaf.exceptions.JSAFError.error
 import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.interpreter.{InterpreterPredefine => IP, _}
 import kr.ac.kaist.jsaf.nodes._
-import kr.ac.kaist.jsaf.nodes_util.SpanInfo
 import kr.ac.kaist.jsaf.nodes_util.{ IRFactory => IF }
 import kr.ac.kaist.jsaf.nodes_util.{ NodeFactory => NF }
 import kr.ac.kaist.jsaf.nodes_util.{ NodeUtil => NU }
@@ -93,7 +92,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
   }
   def getSpan(n: IRAbstractNode) = n.getInfo.getSpan
   def getSpan(n: AbstractNode) = n.getInfo.getSpan
-  def getSpan(n: SpanInfo) = n.getSpan
+  def getSpan(n: ASTSpanInfo) = n.getSpan
 
   def setUID[A <: AbstractNode](n: A, uid: Long): A = {n.setUID(uid); n}
 
@@ -236,7 +235,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
     case _ => ss:+mkExprS(ast, id, expr)
   }
 
-  def makeSeq(ast: ASTNode, info: SpanInfo, ss: List[IRStmt], expr: IRExpr, id: IRId) = expr match {
+  def makeSeq(ast: ASTNode, info: ASTSpanInfo, ss: List[IRStmt], expr: IRExpr, id: IRId) = expr match {
     case SIRId(_, _, uniqueName, _) if uniqueName.equals(id.getUniqueName) => IF.makeSeq(ast, getSpan(info), ss)
     case _ => IF.makeSeq(ast, getSpan(info), ss:+mkExprS(ast, id, expr))
   }
@@ -317,7 +316,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
    * AST2IR_P : Program -> IRRoot
    */
   def walkProgram(pgm: Program): IRRoot = pgm match {
-    case SProgram(info, STopLevel(fds, vds, sts), comments) =>
+    case SProgram(info, STopLevel(fds, vds, sts)) =>
       val env = List()
       IF.makeRoot(true, pgm, getSpan(info), fds.map(walkFd(_, env)), vds.map(walkVd(_, env)),
                   sts.map(s => walkStmt(s.asInstanceOf[Stmt], env)))
@@ -836,7 +835,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val str = member.getText
       (ss1:+toObject(first, objspan, obj, r1),
        IF.makeLoad(true, e, getSpan(info), obj,
-                   IF.makeString(true, e, NU.unescapeJava(str), Some(str))))
+                   IF.makeString(true, e, NU.unescapeJava(str))))
 
     case SBracket(info, first, SStringLiteral(_, _, str)) =>
       val objspan = getSpan(first)
@@ -845,7 +844,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val (ss1, r1) = walkExpr(first, env, obj1)
       (ss1:+toObject(first, objspan, obj, r1),
        IF.makeLoad(true, e, getSpan(info), obj,
-                   IF.makeString(true, e, NU.unescapeJava(str), Some(str))))
+                   IF.makeString(true, e, NU.unescapeJava(str))))
 
     case SBracket(info, first, index) =>
       val objspan = getSpan(first)
@@ -997,7 +996,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       (List(), IF.makeNumber(true, e, intVal.toString, intVal.doubleValue))
 
     case SStringLiteral(info, _, str) =>
-      (List(), IF.makeString(true, e, NU.unescapeJava(str), Some(str)))
+      (List(), IF.makeString(true, e, NU.unescapeJava(str)))
   }
 
   def prop2ir(prop: Property) = prop match {

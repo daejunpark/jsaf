@@ -12,8 +12,10 @@ package kr.ac.kaist.jsaf.shell
 import java.io.{BufferedWriter, FileWriter}
 import java.util.HashMap
 import scala.collection.JavaConversions
+import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.analysis.cfg.CFGBuilder
 import kr.ac.kaist.jsaf.analysis.typing._
+import kr.ac.kaist.jsaf.bug_detector.StateManager
 import kr.ac.kaist.jsaf.compiler.Parser
 import kr.ac.kaist.jsaf.concolic.{Z3, Instrumentor}
 import kr.ac.kaist.jsaf.exceptions.UserError
@@ -21,7 +23,6 @@ import kr.ac.kaist.jsaf.interpreter.Interpreter
 import kr.ac.kaist.jsaf.nodes.{IRRoot, Program}
 import kr.ac.kaist.jsaf.nodes_util._
 import kr.ac.kaist.jsaf.nodes.IRRoot
-import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.useful.Pair
 import edu.rice.cs.plt.tuple.{Option => JOption}
 
@@ -57,12 +58,16 @@ object ConcolicMain {
       NodeRelation.set(program2, ir, cfg, true)
       // Initialize AbsString cache
       kr.ac.kaist.jsaf.analysis.typing.domain.AbsString.initCache
-      val init = new InitHeap(cfg)
-      init.initialize
-      val typing = new Typing(cfg, true, false)
-      typing.analyze(init)
+      val initHeap = new InitHeap(cfg)
+      initHeap.initialize
 
-      val instrumentor = new Instrumentor(ir)
+      coverage.cfg = cfg
+      coverage.typing = new Typing(cfg, true, false)
+      coverage.typing.analyze(initHeap)
+      coverage.semantics = new Semantics(cfg, Worklist.computes(cfg, true), false)
+      coverage.stateManager = new StateManager(cfg, coverage.typing, coverage.semantics) 
+
+      val instrumentor = new Instrumentor(ir, coverage)
       ir = instrumentor.doit
       instrumentor.printIRs
       val z3 = new Z3
@@ -70,10 +75,10 @@ object ConcolicMain {
       do {
         do {
           System.out.println
-          val result = z3.solve(coverage.getConstraints, coverage.inputNum)
+          val result = z3.solve(coverage.getConstraints, coverage.inum)
           if (result.isSome) coverage.setInput(result.unwrap)
           interpreter.doit(ir, JOption.some[Coverage](coverage), true)
-        } while (coverage.cont)
+        } while (coverage.continue)
         coverage.removeTarget
       } while (coverage.existCandidate)
     }

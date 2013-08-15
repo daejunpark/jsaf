@@ -335,7 +335,13 @@ object WIDLToString extends _WIDLWalker {
   def walkJavaNode(node:Any):String =
     if (node.isInstanceOf[WTSArray]) "[]"
     else if (node.isInstanceOf[WTSQuestion]) "?"
-    else if (node.isInstanceOf[WEAArray]) "[]"
+    else if (node.isInstanceOf[WEAConstructor]) {
+      val s: StringBuilder = new StringBuilder
+      s.append("Constructor(")
+      s.append(join(toList(node.asInstanceOf[WEAConstructor].getArgs), ", ", new StringBuilder("")))
+      s.append(")")
+      s.toString
+    } else if (node.isInstanceOf[WEAArray]) "[]"
     else if (node.isInstanceOf[WEANoInterfaceObject]) "NoInterfaceObject"
     else if (node.isInstanceOf[WEACallbackFunctionOnly]) "Callback=FunctionOnly"
     else if (node.isInstanceOf[WEAString]) {

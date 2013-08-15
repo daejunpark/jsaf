@@ -287,7 +287,7 @@ class JSAstSerializer (program: Program, st: java.util.Vector[ASTNode], minT: In
       st.add(node.asInstanceOf[ASTNode])
       walk(op)
       walk(right)
-    case SProgram(info, program, comments) =>
+    case SProgram(info, program) =>
       DebugPrint("SProgram")
       DebugPrint(info.getSpan.getCharVector.toString + info.getSpan.getCharVector.isMergeable)
       info.getSpan.getCharVector.setNodeKind(Util.name2id(node))

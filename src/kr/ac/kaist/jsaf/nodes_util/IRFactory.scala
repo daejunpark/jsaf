@@ -289,19 +289,18 @@ object IRFactory {
     new IRNumber(makeSourceInfo(fromSource, ast), text, num)
   val oneV = makeNumber(false, "1", 1)
 
-  val zero  = new IRString(defaultInfo, "0", None)
-  val one   = new IRString(defaultInfo, "1", None)
-  val two   = new IRString(defaultInfo, "2", None)
-  val three = new IRString(defaultInfo, "3", None)
-  val four  = new IRString(defaultInfo, "4", None)
-  val five  = new IRString(defaultInfo, "5", None)
-  val six   = new IRString(defaultInfo, "6", None)
-  val seven = new IRString(defaultInfo, "7", None)
-  val eight = new IRString(defaultInfo, "8", None)
-  val nine  = new IRString(defaultInfo, "9", None)
-  def makeString(str: String, ast: ASTNode): IRString = makeString(false, ast, str, None)
-  def makeString(fromSource: Boolean, ast: ASTNode, str1: String, str2: Option[String]): IRString = str2 match {
-    case None =>
+  val zero  = new IRString(defaultInfo, "0")
+  val one   = new IRString(defaultInfo, "1")
+  val two   = new IRString(defaultInfo, "2")
+  val three = new IRString(defaultInfo, "3")
+  val four  = new IRString(defaultInfo, "4")
+  val five  = new IRString(defaultInfo, "5")
+  val six   = new IRString(defaultInfo, "6")
+  val seven = new IRString(defaultInfo, "7")
+  val eight = new IRString(defaultInfo, "8")
+  val nine  = new IRString(defaultInfo, "9")
+  def makeString(str: String, ast: ASTNode): IRString = makeString(false, ast, str)
+  def makeString(fromSource: Boolean, ast: ASTNode, str1: String): IRString = {
       if(str1.equals("0")) zero
       else if(str1.equals("1")) one
       else if(str1.equals("2")) two
@@ -312,10 +311,7 @@ object IRFactory {
       else if(str1.equals("7")) seven
       else if(str1.equals("8")) eight
       else if(str1.equals("9")) nine
-      else new IRString(defaultInfo, str1, str2)
-    case Some(escaped) =>
-      if (str1.equals(escaped)) new IRString(makeSourceInfo(fromSource, ast), str1, None)
-      else new IRString(makeSourceInfo(fromSource, ast), str1, str2)
+      else new IRString(defaultInfo, str1)
   }
 ////////////////////////////////////////////////////////////////////////////////////////
 

@@ -21,7 +21,7 @@ class ModUpdWalker(env: Env, var path: Path, program: Any) extends Walker {
   }
 
   override def walk(node: Any): Any = node match {
-    case SProgram(_, STopLevel(_, _, stmts), _) => walk(stmts)
+    case SProgram(_, STopLevel(_, _, stmts)) => walk(stmts)
     case SModDecl(info, name, STopLevel(_, _, stmts)) =>
       val p = name.getText :: path
       val f = SDot(info, MH.initfun(p), SId(info, "call", None, false))

@@ -17,14 +17,11 @@ import xtc.parser.SemanticValue
 import xtc.parser.ParseError
 
 import kr.ac.kaist.jsaf.exceptions.JSAFError
-import kr.ac.kaist.jsaf.exceptions.MultipleStaticError
 import kr.ac.kaist.jsaf.exceptions.ParserError
-import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.exceptions.SyntaxError
 import kr.ac.kaist.jsaf.nodes.RegExpPattern
 import kr.ac.kaist.jsaf.parser.RegExp
 import kr.ac.kaist.jsaf.useful.Files
-import kr.ac.kaist.jsaf.useful.Useful
 
 
 object RegExpParser {

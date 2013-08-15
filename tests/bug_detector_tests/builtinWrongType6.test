@@ -31,7 +31,7 @@ builtinWrongType6.js:8:1~8:17: [Warning] Calling a function 'Function.prototype.
 |  CallNonFunction         :      0 | \n\
 |  ConditionalBranch       :      0 | \n\
 |  ConvertToNumber         :      0 | \n\
-|  DefaultValueTypeError   :      0 | \n\
+|  DefaultValue            :      0 | \n\
 |  FunctionArgSize         :      0 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\

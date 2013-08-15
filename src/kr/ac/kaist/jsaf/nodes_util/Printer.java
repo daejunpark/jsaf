@@ -10,6 +10,7 @@
 package kr.ac.kaist.jsaf.nodes_util;
 
 import edu.rice.cs.plt.tuple.Null;
+import edu.rice.cs.plt.tuple.Option;
 import edu.rice.cs.plt.tuple.Wrapper;
 import kr.ac.kaist.jsaf.nodes.*;
 import kr.ac.kaist.jsaf.useful.Pair;
@@ -190,14 +191,20 @@ public class Printer extends NodeReflection {
             dumpFields(w, indent, x, oneLiner, fields, true);
             w.append(")");
             oneLinerNesting -= oneLinerNestingInc;
-        } else if (o instanceof SpanInfo) {
-            SpanInfo x = (SpanInfo) o;
+        } else if (o instanceof ASTSpanInfo) {
+            ASTSpanInfo x = (ASTSpanInfo) o;
             Class cl = x.getClass();
             String clname = cl.getSimpleName();
             Field[] fields = getCachedPrintableFields(cl, clname);
             w.append("(");
             w.append(clname);
-            dumpFields(w, indent, x, false, fields, true);
+            Option<Comment> comment = x.getComment();
+            if (comment.isNone()) w.append("()");
+            else {
+                w.append("(");
+                dump(comment.unwrap().getComment(), w);
+                w.append(")");
+            }
             w.append(")");
         } else if (o instanceof IRAbstractNode) {
             IRAbstractNode x = (IRAbstractNode) o;

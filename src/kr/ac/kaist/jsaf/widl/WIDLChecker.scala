@@ -190,8 +190,8 @@ object WIDLChecker extends Walker {
       }
     }
     astWalker.walk(program) match {
-      case SProgram(info, STopLevel(fds, vds, stmts), comments) =>
-        SProgram(info, STopLevel(fds, vds, bindings++stmts), comments)
+      case SProgram(info, STopLevel(fds, vds, stmts)) =>
+        SProgram(info, STopLevel(fds, vds, bindings++stmts))
     }
   }
 

@@ -10,7 +10,6 @@
 package kr.ac.kaist.jsaf.compiler
 
 import _root_.java.util.{List => JList}
-import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.ShellParameters
 import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.nodes._
@@ -22,6 +21,7 @@ import kr.ac.kaist.jsaf.scala_src.useful.ErrorLog
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
 import kr.ac.kaist.jsaf.useful.HasAt
+import kr.ac.kaist.jsaf.Shell
 
 /**
  * Eliminates ambiguities in an AST that can be resolved solely by knowing what
@@ -49,8 +49,8 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
   /* Environment for renaming identifiers. */
   type Env = List[(String, String)]
   val emptyLabel = ("empty", "empty")
-  val pred = if (Shell.pred != null) Shell.pred
-             else new Predefined(new ShellParameters())
+  val pred = if (Shell.pred == null) new Predefined(new ShellParameters())
+             else Shell.pred
   var env: Env = pred.vars.map(v => (v,v)) ++
                  pred.funs.map(f => (f,f)) ++ List(("alert", "alert"), // alert???
                                                    (NU.internalPrint, NU.internalPrint))
@@ -231,7 +231,7 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
   }
 
   override def walk(node: Any): Any = node match {
-    case SProgram(info, STopLevel(fds, vds, body), comments) =>
+    case SProgram(info, STopLevel(fds, vds, body)) =>
       fds.foreach(fd => addEnv(fd.getFtn.getName, newId(fd.getInfo.getSpan, fd.getFtn.getName.getText)))
       val new_vds = vds.map(p => p match {
           case SVarDecl(i, id, _) =>
@@ -243,8 +243,7 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
       SProgram(info,
                STopLevel(new_fds,
                          new_vds,
-                         body.map(walk).asInstanceOf[List[Stmt]]),
-               comments)
+                         body.map(walk).asInstanceOf[List[Stmt]]))
 
     case SFunDecl(info, SFunctional(fds, vds, body, name, params)) =>
       val old_env = (env, labEnv)
@@ -479,11 +478,12 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
       val result = super.walk(node)
       resetLEnv(oldLEnv)
       result
-    case SRegularExpression(info, body, flags) =>
+    case SRegularExpression(info, body, flags) => {
       val regexp = "RegExp"
       SNew(info, SFunApp(info, SVarRef(info, SId(info, regexp, Some(regexp), false)),
-                         List(SStringLiteral(info, "\"", body),
+                         List(SStringLiteral(info, "\"", NU.escape(body)),
                               SStringLiteral(info, "\"", flags))))
+    }
     case _: AbstractNode =>
       val oldLEnv = setLEnv(node.asInstanceOf[AbstractNode])
       val result = super.walk(node)

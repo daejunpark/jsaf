@@ -21,7 +21,7 @@ class ModInstWalker(env: Env, var path: Path, program: Any) extends Walker {
   }
 
   override def walk(node: Any): Any = node match {
-    case SProgram(_, STopLevel(_, _, stmts), _) => walk(stmts)
+    case SProgram(_, STopLevel(_, _, stmts)) => walk(stmts)
     case SModDecl(_, name, STopLevel(_, _, stmts)) =>
       // TODO: Arguments
       path = name.getText :: path

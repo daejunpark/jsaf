@@ -27,7 +27,7 @@ object WIDLToDB extends _WIDLWalker {
   //////////////////////////////////////////////////////////
   // WIDL nodes enumeration
   //
-  // maximum number = 58
+  // maximum number = 59
   //////////////////////////////////////////////////////////
   // WDefinition
   private val MODULE = 56
@@ -42,6 +42,7 @@ object WIDLToDB extends _WIDLWalker {
   private val TSARRAY = 7
   private val TSQUESTION = 8
   // WEAttribute
+  private val EACONSTRUCTOR = 59
   private val EAARRAY = 55
   private val EANOINTERFACEOBJECT = 58
   private val EASTRING = 9
@@ -221,7 +222,11 @@ object WIDLToDB extends _WIDLWalker {
   def walkUnitJavaNode(node:Any): Unit =
     if (node.isInstanceOf[WTSArray]) bw.write(TSARRAY+"\n")
     else if (node.isInstanceOf[WTSQuestion]) bw.write(TSQUESTION+"\n")
-    else if (node.isInstanceOf[WEAArray]) bw.write(EAARRAY+"\n")
+    else if (node.isInstanceOf[WEAConstructor]) {
+      bw.write(EACONSTRUCTOR+"\n")
+      val args = toList(node.asInstanceOf[WEAConstructor].getArgs)
+      bw.write(args.length+"\n"); join(args)
+    } else if (node.isInstanceOf[WEAArray]) bw.write(EAARRAY+"\n")
     else if (node.isInstanceOf[WEANoInterfaceObject]) bw.write(EANOINTERFACEOBJECT+"\n")
     else if (node.isInstanceOf[WEAString]) {
       bw.write(EASTRING+"\n")
@@ -458,6 +463,11 @@ object WIDLToDB extends _WIDLWalker {
     }
     def readString(): WString = { readLine; WF.mkString(span, readLine) }
     def readAttribute(): WEAttribute = readInt match {
+      case EACONSTRUCTOR =>
+        val argsNum = readInt
+        var args = new ArrayList[WArgument](argsNum)
+        for (i <- 0 until argsNum) args.add(readArgument)
+        WF.mkEAConstructor(args)
       case EAARRAY => WF.eaArray
       case EANOINTERFACEOBJECT => WF.eaNoInterfaceObject
       case EASTRING => WF.mkEAString(readLine)

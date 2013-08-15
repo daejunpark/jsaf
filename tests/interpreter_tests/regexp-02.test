@@ -11,7 +11,7 @@ INTERPRETER_TESTS_DIR=${JS_HOME}/tests/interpreter_tests
 interpret
 interpret_out_WCIequals=\
 /a|bc/\n\
-/\\//\n\
+///\n\
 /a/g\n\
 /a/i\n\
 /a/m\n\

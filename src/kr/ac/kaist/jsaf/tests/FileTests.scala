@@ -190,8 +190,8 @@ object FileTests {
                                                                 shouldFail) {
     override def justTheTest = {
       val tokens = if (command.equals("widlcheck"))
-                     Array[String](command, join(dir, makeTestFileName(name)),
-                                   "tests/widlchecker_tests/webapis.db")
+                     Array[String](command, "-js", join(dir, makeTestFileName(name)),
+                                   "-db", "tests/widlchecker_tests/webapis.db")
                    else
                      Array[String](command, join(dir, makeTestFileName(name)))
       /*

@@ -29,7 +29,7 @@ valueNeverRead2.js:14:12~14:17: [Warning] Unreachable code 'x = 9;' is found. \n
 |  CallNonFunction         :      0 | \n\
 |  ConditionalBranch       :      1 | \n\
 |  ConvertToNumber         :      0 | \n\
-|  DefaultValueTypeError   :      0 | \n\
+|  DefaultValue            :      0 | \n\
 |  FunctionArgSize         :      0 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\

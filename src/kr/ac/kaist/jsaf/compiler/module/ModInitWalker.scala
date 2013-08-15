@@ -21,7 +21,7 @@ class ModInitWalker(env: Env, path: Path, program: Any) extends Walker {
   }
 
   override def walk(node: Any): Any = node match {
-    case SProgram(_, STopLevel(_, _, stmts), _) => walk(stmts)
+    case SProgram(_, STopLevel(_, _, stmts)) => walk(stmts)
     case SModDecl(info, name, _) =>
       val p: Path = name.getText :: path
       var f: LHS = SVarRef(info, SId(info, MH.initFunId, None, false))

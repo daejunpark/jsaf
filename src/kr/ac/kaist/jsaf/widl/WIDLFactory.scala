@@ -345,6 +345,7 @@ object WIDLFactory {
    def tsQuestion(): WTypeSuffix = tQuestion
 
   /* Extended attributes ***************************************************/
+   def mkEAConstructor(args: JList[WArgument]): WEAttribute = new WEAConstructor(args)
    val eArray = new WEAArray()
    def eaArray(): WEAttribute = eArray
    val eNoInterfaceObject = new WEANoInterfaceObject()

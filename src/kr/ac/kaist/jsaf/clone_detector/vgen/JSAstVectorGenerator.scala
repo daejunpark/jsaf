@@ -414,7 +414,7 @@ class JSAstVectorGenerator(program: Program, minT: Int) extends Walker {
       DebugPrint(info.getSpan.getCharVector.toString + "SPrefixOpApp" + " " + info.getSpan.getCharVector.getNumOfTokens + " " + info.getSpan.getCharVector.isMergeable)
       info.getSpan.getCharVector.getVector
 
-    case SProgram(info, program, comments) =>
+    case SProgram(info, program) =>
       DebugPrint("SProgram")
       info.getSpan.getCharVector.merge(walk(program))
       if (isRelevant(node)) info.getSpan.getCharVector.addAt(Util.name2id(node))

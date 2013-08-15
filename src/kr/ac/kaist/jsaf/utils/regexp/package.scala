@@ -1,28 +1,25 @@
 /*******************************************************************************
-    Copyright (c) 2012-2013, KAIST, S-Core.
+    Copyright (c) 2012-2013, S-Core, KAIST.
     All rights reserved.
 
     Use is subject to license terms.
 
     This distribution may include materials developed by third parties.
- ******************************************************************************/
+  ***************************************************************************** */
 
-package kr.ac.kaist.jsaf.interpreter.objects
+package kr.ac.kaist.jsaf.utils
 
-import kr.ac.kaist.jsaf.nodes._
-import kr.ac.kaist.jsaf.scala_src.nodes._
-import kr.ac.kaist.jsaf.scala_src.useful.Lists._
-import kr.ac.kaist.jsaf.scala_src.useful.Options._
-import kr.ac.kaist.jsaf.interpreter.{InterpreterPredefine => IP, _}
-import scala.collection.mutable.{HashMap, HashSet}
+import scala.collection.mutable.{HashSet => MHashSet, HashMap => MHashMap}
 
-object JSRegExpHelper {
-  type CharSet = HashSet[Char]
-  class RegExpState(var endIndex: Int, var captures: HashMap[Int, Option[String]])
-  type MatchResult = Option[RegExpState]
+package object regexp {
+  type CharSet = MHashSet[Char]
   type Continuation = (RegExpState) => MatchResult
   type Matcher = (RegExpState, Continuation) => MatchResult
+  type MatchFunc = (String, Int) => MatchResult
   type AssertionTester = (RegExpState) => Boolean
+
+  class RegExpState(var endIndex: Int, var captures: MHashMap[Int, Option[String]])
+  type MatchResult = Option[RegExpState]
 
   abstract class EscapeValue
   case class CharEscapeValue(var ch: Char) extends EscapeValue

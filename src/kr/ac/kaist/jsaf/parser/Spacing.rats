@@ -45,7 +45,7 @@ transient void MultiLineComment =
        buf.append("/*");
        for (String s : a1s.list()) buf.append(s);
        buf.append("*/");
-       commentLog(createSpan(yyStart,yyCount+1), buf.toString());
+       NodeFactory.commentLog(createSpan(yyStart,yyCount+1), buf.toString());
      };
 
 transient private String MultiLineCommentChar =
@@ -60,7 +60,7 @@ transient String MultiLineCommentWLB =
        for (String s : a3s.list()) buf.append(s);
        buf.append("*/");
        yyValue = buf.toString();
-       commentLog(createSpan(yyStart,yyCount+1), yyValue);
+       NodeFactory.commentLog(createSpan(yyStart,yyCount+1), yyValue);
      };
 
 transient private String MultiLineCommentCharWLB =
@@ -73,7 +73,7 @@ transient String MultiLineCommentNoLB =
        for (String s : a1s.list()) buf.append(s);
        buf.append("*/");
        yyValue = buf.toString();
-       commentLog(createSpan(yyStart,yyCount+1), yyValue);
+       NodeFactory.commentLog(createSpan(yyStart,yyCount+1), yyValue);
      };
 
 transient private String MultiLineCommentCharNoLB =
@@ -82,10 +82,9 @@ transient private String MultiLineCommentCharNoLB =
 transient void SingleLineComment =
      "//" a1s:SingleLineCommentChar*
      { StringBuilder buf = new StringBuilder();
-       buf.append("/*");
+       buf.append("//");
        for (String s : a1s.list()) buf.append(s);
-       buf.append("*/");
-       commentLog(createSpan(yyStart,yyCount), buf.toString());
+       NodeFactory.commentLog(createSpan(yyStart,yyCount), buf.toString());
      };
 
 transient private String SingleLineCommentChar =

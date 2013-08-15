@@ -66,8 +66,8 @@ class Interpreter extends IRWalker {
     var SIRRoot(_, vds, fds, irs) = program
     if (IS.coverage.isDefined) {
       val cov = IS.coverage.get
-      cov.inputNum = 0
-      SH.initialize(cov.input, cov.covered_function, cov.target_function)
+      cov.inum = 0
+      SH.initialize(cov.input, cov.coveredFunc, cov.targetFunc)
       walkIRs(vds ++ fds ++ irs.filterNot(_.isInstanceOf[IRNoOp]))
       SH.print
       cov.functions = SH.function_info.filter(!_._2.is_covered).keySet.toList
@@ -879,7 +879,7 @@ class Interpreter extends IRWalker {
             }
           case "<>Concolic<>GetInput" =>
             var cov = IS.coverage.get
-            cov.inputNum = cov.inputNum + 1
+            cov.inum = cov.inum + 1
             IS.span = info.getSpan
             SH.getInput(arg1.asInstanceOf[IRId], arg2.get) match {
               case Some(v) => IH.putValue(arg1.asInstanceOf[IRId], PVal(IH.mkIRNum(v)), IS.strict)

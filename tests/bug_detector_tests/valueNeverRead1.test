@@ -12,11 +12,13 @@ bug-detector
 bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
+valueNeverRead1.js:12:1~12:22: [Warning] Assigning a non-function value to 'valueOf' may cause a TypeError. \n\
+valueNeverRead1.js:13:1~13:23: [Warning] Assigning a non-function value to 'toString' may cause a TypeError. \n\
  \n\
 ============== Total Count ============== \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      0 (  0.00%) | \n\
+|  Warnings          :      2 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
@@ -27,7 +29,7 @@ bug-detector_out_WCIequals=\
 |  CallNonFunction         :      0 | \n\
 |  ConditionalBranch       :      0 | \n\
 |  ConvertToNumber         :      0 | \n\
-|  DefaultValueTypeError   :      0 | \n\
+|  DefaultValue            :      2 | \n\
 |  FunctionArgSize         :      0 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\

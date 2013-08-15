@@ -22,7 +22,7 @@ class ModFunWalker(env: Env, path: Path, program: Any) extends Walker {
 
   override def walk(node: Any): Any = node match {
     // TODO: Document
-    case SProgram(_, STopLevel(_, _, stmts), _) => walk(stmts)
+    case SProgram(_, STopLevel(_, _, stmts)) => walk(stmts)
     case SModExpFunDecl(_, fd) => fd
     case fd: FunDecl => fd
     case xs:List[_] => (new ModImpWalker(env, path, xs.map(walk _).filter(_ != null))).doit

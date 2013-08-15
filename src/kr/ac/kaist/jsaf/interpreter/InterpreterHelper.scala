@@ -664,8 +664,8 @@ class InterpreterHelper(I: Interpreter) {
     case PVal(SIRBool(_,b)) => b
     case PVal(SIRNumber(_,"NaN", _)) => false
     case PVal(SIRNumber(_,_, d)) => d != 0
-    case PVal(SIRString(_,"",_)) => false
-    case PVal(SIRString(_,text,_)) => true
+    case PVal(SIRString(_,"")) => false
+    case PVal(SIRString(_,text)) => true
     case _:JSObject => true
   }
 
@@ -683,7 +683,7 @@ class InterpreterHelper(I: Interpreter) {
     case PVal(_:IRNull) => IP.plusZero
     case PVal(SIRBool(_,b)) => if(b) mkIRNum(1) else IP.plusZero
     case PVal(n:IRNumber) => n
-    case PVal(SIRString(_,text,_)) =>
+    case PVal(SIRString(_,text)) =>
       val reg    =
        "[+-]?(" +
        "([0-9]+[.]?([0-9]+)?([eE][+-]?[0-9]+)?)|" +
@@ -779,26 +779,6 @@ class InterpreterHelper(I: Interpreter) {
     case PVal(n:IRNumber) => toString(n)
     case PVal(s:IRString) => s.getStr
     case _:JSObject => toString(toPrimitive(v, "String"))
-  }
-  def toEscapedString(v: Val): String = v match {
-    case PVal(_:IRUndef) => "undefined"
-    case PVal(_:IRNull) => "null"
-    case PVal(SIRBool(_,b)) => b.toString
-    case PVal(n:IRNumber) => toString(n)
-    case PVal(s:IRString) => getEscapedString(s)
-    case _:JSObject => toString(toPrimitive(v, "String"))
-  }
-  def toUnescapedString(v: Val): String = v match {
-    case PVal(_:IRUndef) => "undefined"
-    case PVal(_:IRNull) => "null"
-    case PVal(SIRBool(_,b)) => b.toString
-    case PVal(n:IRNumber) => toString(n)
-    case PVal(s:IRString) => s.getStr
-    case _:JSObject => toString(toPrimitive(v, "String"))
-  }
-  def getEscapedString(str: IRString): String = toOption(str.getEscaped) match {
-    case Some(escaped) => escaped
-    case _ => str.getStr
   }
   def toString(n: IRNumber): String = {
     if (isNaN(n)) "NaN"
@@ -905,7 +885,7 @@ class InterpreterHelper(I: Interpreter) {
        *   string equality and collating order defined in the Unicode specification.
        *   Therefore String values that are canonically equal according to the Unicode standard could test as unequal.
        */
-      case (PVal(SIRString(_,sx,_)), PVal(SIRString(_,sy,_))) => PVal(getIRBool(sx < sy))
+      case (PVal(SIRString(_,sx)), PVal(SIRString(_,sy))) => PVal(getIRBool(sx < sy))
       // 3. If it is not the case that both type(px) is String and Type(py) is String, then
       // a. Let nx be the result of calling ToNumber(px).
       // b. Let ny be the result of calling ToNumber(py).
@@ -957,7 +937,7 @@ class InterpreterHelper(I: Interpreter) {
         else false
       }
       // d. If Type(x) is String, ...
-      case (PVal(SIRString(_,sx,_)), PVal(SIRString(_,sy,_))) => sx == sy
+      case (PVal(SIRString(_,sx)), PVal(SIRString(_,sy))) => sx == sy
       // e. If Type(x) is Boolean, ...
       case (PVal(SIRBool(_,bx)), PVal(SIRBool(_,by))) => bx == by
       // f. Return true if x and y refer to the same object. Otherwise, return false.
@@ -1013,7 +993,7 @@ class InterpreterHelper(I: Interpreter) {
       else false
     }
     // 5. If Type(x) is String, then return true if x and y are exactly the same sequence of characters (...); otherwise, return false.
-    case (PVal(SIRString(_,sx,_)), PVal(SIRString(_,sy,_))) => sx == sy
+    case (PVal(SIRString(_,sx)), PVal(SIRString(_,sy))) => sx == sy
     // 6. If Type(x) is Boolean, return true if x and y are both true or both false; otherwise, return false.
     case (PVal(SIRBool(_,bx)), PVal(SIRBool(_,by))) => bx == by
     // 7. Return true if x and y refer to the same object. Otherwise, return false.

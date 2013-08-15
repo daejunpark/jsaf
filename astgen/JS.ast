@@ -51,12 +51,12 @@ import edu.rice.cs.plt.tuple.Option;
 begin ast;
 
 interface Node() extends HasAt;
-    interface ASTNode(SpanInfo info);
-        root abstract AbstractNode(SpanInfo info) extends UIDObject;
+    interface ASTNode(ASTSpanInfo info);
+        root abstract AbstractNode(ASTSpanInfo info) extends UIDObject;
             /**
              * Program ::= SourceElement*
              */
-            Program(TopLevel body, List<Comment> comments);
+            Program(TopLevel body);
             abstract SourceElement();
                 /**
                  * SourceElement ::= ModuleDeclaration
@@ -424,4 +424,8 @@ interface Node() extends HasAt;
          * Common shape for functions
          */
         Functional(Id name, List<Id> params);
+    /**
+     * Source location
+     */
+    ASTSpanInfo(ignoreForEquals Span span, Option<Comment> comment = Option.<Comment>none()) extends UIDObject;
 end;

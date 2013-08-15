@@ -14,7 +14,6 @@ import kr.ac.kaist.jsaf.ShellParameters
 import kr.ac.kaist.jsaf.bug_detector._
 import kr.ac.kaist.jsaf.exceptions.StaticError
 import kr.ac.kaist.jsaf.nodes._
-import kr.ac.kaist.jsaf.nodes_util.SpanInfo
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.scala_src.nodes._
@@ -36,7 +35,7 @@ class Hoister(program: Program) extends Walker {
 
   // getters
   def toSpan(node: ASTNode): Span = node.getInfo.getSpan
-  def toSpan(info: SpanInfo): Span = info.getSpan
+  def toSpan(info: ASTSpanInfo): Span = info.getSpan
   def vd2Str(vd: VarDecl): String = vd.getName.getText
   def fd2Str(fd: FunDecl): String = fd.getFtn.getName.getText
   def id2Str(id: Id): String = id.getText
@@ -51,15 +50,15 @@ class Hoister(program: Program) extends Walker {
   }
 
   // Utility functions
-  def assignOp(info: SpanInfo) = SOp(info, "=")
-  def assignS(i: SpanInfo, name: Id, expr: Expr) =
+  def assignOp(info: ASTSpanInfo) = SOp(info, "=")
+  def assignS(i: ASTSpanInfo, name: Id, expr: Expr) =
     SExprStmt(i, walk(SAssignOpApp(i, SVarRef(i, name), assignOp(i), expr)).asInstanceOf[Expr], true)
   def hoistVds(vds: List[VarDecl]) =
     vds.foldRight(List[Stmt]())((vd, res) => vd match {
                                 case SVarDecl(_,_,None) => res
                                 case SVarDecl(i,n,Some(e)) => List(assignS(i,n,e))++res
                                })
-  def stmtUnit(info: SpanInfo, stmtList: List[Stmt]): Stmt = {
+  def stmtUnit(info: ASTSpanInfo, stmtList: List[Stmt]): Stmt = {
     if(stmtList.length == 1) stmtList.head
     else SStmtUnit(info, stmtList)
   }
@@ -508,10 +507,10 @@ class Hoister(program: Program) extends Walker {
   }
 
   override def walk(node: Any): Any = node match {
-    case SProgram(info, STopLevel(Nil, Nil, program), comments) =>
+    case SProgram(info, STopLevel(Nil, Nil, program)) =>
       checkUseStrictDirective(program)
       val (fds, vds, new_program) = hoist(program, true, Nil)
-      SProgram(info, STopLevel(fds, vds, new_program), comments)
+      SProgram(info, STopLevel(fds, vds, new_program))
     case pgm:Program =>
       throw new StaticError("Program before the hoisting phase should not have hoisted declarations.",
                             Some(pgm))

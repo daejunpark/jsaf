@@ -1126,4 +1126,16 @@ object Helper {
         update("@return", PropValue(Value(UndefTop)))
     }
   }
+
+  def NewRegExp(source: AbsString, g: AbsBool, i: AbsBool, m: AbsBool): Obj = {
+    ObjEmpty.
+      update("@class", PropValue(AbsString.alpha("RegExp"))).
+      update("@proto", PropValue(ObjectValue(Value(newPreDefLoc("RegExpProto", Recent)), BoolFalse, BoolFalse, BoolFalse))).
+      update("@extensible", PropValue(BoolTrue)).
+      update("source", PropValue(ObjectValue(Value(source), BoolFalse, BoolFalse, BoolFalse))).
+      update("global", PropValue(ObjectValue(Value(g), BoolFalse, BoolFalse, BoolFalse))).
+      update("ignoreCase", PropValue(ObjectValue(Value(i), BoolFalse, BoolFalse, BoolFalse))).
+      update("multiline", PropValue(ObjectValue(Value(m), BoolFalse, BoolFalse, BoolFalse))).
+      update("lastIndex", PropValue(ObjectValue(AbsNumber.alpha(0), BoolTrue, BoolFalse, BoolFalse)))
+  }
 }

@@ -28,7 +28,7 @@ shadowingVarFunc4.js:1:10~1:11: [Warning] Function 'f' is shadowed by a variable
 |  CallNonFunction         :      0 | \n\
 |  ConditionalBranch       :      0 | \n\
 |  ConvertToNumber         :      0 | \n\
-|  DefaultValueTypeError   :      0 | \n\
+|  DefaultValue            :      0 | \n\
 |  FunctionArgSize         :      0 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\

@@ -292,7 +292,7 @@ class StrictModeChecker(program: Program) extends Walker {
     case SPrefixOpApp(_, op, right) =>
       DebugPrint("SPrefixOpApp")
       walk(op); walk(right)
-    case SProgram(_, STopLevel(_, _, program), comments) =>
+    case SProgram(_, STopLevel(_, _, program)) =>
       DebugPrint("SProgram")
       walk(program)
     case SPropId(_, id) =>

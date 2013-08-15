@@ -105,8 +105,26 @@ object NodeFactory {
    *
    */
   def makeSetSpan(ifEmpty: String, l: JList[ASTNode]): Span = makeSpan(ifEmpty, l)
-  def makeSpanInfo(span: Span): SpanInfo = new SpanInfo(span)
-  def makeSpanInfo(info: SpanInfo, span: Span): SpanInfo = new SpanInfo(span)
+
+  private var comment = none[Comment]
+  def commentLog(span: Span, message: String) = {
+    if (NU.getKeepComments)
+      comment = some[Comment](makeComment(span, message))
+  }
+
+  def makeSpanInfoComment(span: Span): ASTSpanInfo =
+    if (NU.getKeepComments && comment.isDefined) {
+      val result = new ASTSpanInfo(span, comment)
+      comment = none[Comment]
+      result
+    } else new ASTSpanInfo(span, none[Comment])
+
+  def makeSpanInfo(span: Span, comment: String): ASTSpanInfo =
+    new ASTSpanInfo(span, some[Comment](makeComment(span, comment)))
+  def makeSpanInfo(span: Span): ASTSpanInfo =
+    new ASTSpanInfo(span, none[Comment])
+
+  def makeOnlySpanInfo(span: Span): SpanInfo = new SpanInfo(span)
 
   def makeTopLevel(body: JList[SourceElement]): TopLevel =
     makeTopLevel(toJavaList(Nil), toJavaList(Nil), body)
@@ -115,37 +133,34 @@ object NodeFactory {
                    body: JList[SourceElement]): TopLevel =
     new TopLevel(fds, vds, body)
 
-  def makeProgram(span: Span, elements: JList[SourceElement],
-                  comments: JList[Comment]): Program =
-    makeProgram(makeSpanInfo(span), makeTopLevel(elements), comments)
+  def makeProgram(span: Span, elements: JList[SourceElement]): Program =
+    makeProgram(makeSpanInfoComment(span), makeTopLevel(elements))
 
-  def makeProgram(info: SpanInfo, body: List[SourceElement],
-                  comments: List[Comment]): Program =
-    makeProgram(info, makeTopLevel(toJavaList(body)), toJavaList(comments))
+  def makeProgram(info: ASTSpanInfo, body: List[SourceElement]): Program =
+    makeProgram(info, makeTopLevel(toJavaList(body)))
 
-  def makeProgram(info: SpanInfo, toplevel: TopLevel,
-                  comments: JList[Comment]): Program =
-    new Program(info, toplevel, comments)
+  def makeProgram(info: ASTSpanInfo, toplevel: TopLevel): Program =
+    new Program(info, toplevel)
 
   def makeModDecl(span: Span, name: Id, body: JList[SourceElement]) =
-    new ModDecl(makeSpanInfo(span), name, makeTopLevel(body))
+    new ModDecl(makeSpanInfoComment(span), name, makeTopLevel(body))
 
   def makeModExpVarStmt(span: Span, vds: JList[VarDecl]) =
-    new ModExpVarStmt(makeSpanInfo(span), vds)
+    new ModExpVarStmt(makeSpanInfoComment(span), vds)
 
   def makeModExpFunDecl(span: Span, fd: FunDecl) =
-    new ModExpFunDecl(makeSpanInfo(span), fd)
+    new ModExpFunDecl(makeSpanInfoComment(span), fd)
 
   def makeModExpGetter(span: Span, name: Id, body: JList[SourceElement]) =
-    new ModExpGetter(makeSpanInfo(span),
+    new ModExpGetter(makeSpanInfoComment(span),
                      makeGetProp(span, makePropId(span, name), body))
 
   def makeModExpSetter(span: Span, name: Id, param: Id, body: JList[SourceElement]) =
-    new ModExpSetter(makeSpanInfo(span),
+    new ModExpSetter(makeSpanInfoComment(span),
                      makeSetProp(span, makePropId(span, name), param, body))
 
   def makeModExpSpecifiers(span: Span, names: JList[ModExpSpecifier]) =
-    new ModExpSpecifiers(makeSpanInfo(span), names)
+    new ModExpSpecifiers(makeSpanInfoComment(span), names)
 
   def makeExportName(span: Span, name: Id): ModExpSpecifier =
     new ModExpName(makeSpanInfo(span), makePath(name))
@@ -163,7 +178,7 @@ object NodeFactory {
     new ModExpAlias(makeSpanInfo(span), name, alias)
 
   def makeModImpDecl(span: Span, imports: JList[ModImport]) =
-    new ModImpDecl(makeSpanInfo(span), imports)
+    new ModImpDecl(makeSpanInfoComment(span), imports)
 
   def makeModImpSpecifierSet(span: Span, imports: JList[ModImpSpecifier], module: Path): ModImport =
     new ModImpSpecifierSet(makeSpanInfo(span), imports, module)
@@ -183,7 +198,7 @@ object NodeFactory {
 
   def makeFunDecl(span: Span, name: Id, params: JList[Id],
                   body: JList[SourceElement]) =
-    new FunDecl(makeSpanInfo(span),
+    new FunDecl(makeSpanInfoComment(span),
                 makeFunctional(name, toJavaList(Nil), toJavaList(Nil), body, params))
 
   def makeFunExpr(span: Span, name: Id, params: JList[Id],
@@ -192,64 +207,64 @@ object NodeFactory {
                 makeFunctional(name, toJavaList(Nil), toJavaList(Nil), body, params))
 
   def makeBlock(span: Span, stmts: JList[Stmt]) =
-    new Block(makeSpanInfo(span), stmts)
+    new Block(makeSpanInfoComment(span), stmts)
 
   def makeVarStmt(span: Span, vds: JList[VarDecl]) =
-    new VarStmt(makeSpanInfo(span), vds)
+    new VarStmt(makeSpanInfoComment(span), vds)
 
   def makeEmptyStmt(span: Span) =
-    new EmptyStmt(makeSpanInfo(span))
+    new EmptyStmt(makeSpanInfoComment(span))
 
   def makeExprStmt(span: Span, expr: Expr) =
-    new ExprStmt(makeSpanInfo(span), expr)
+    new ExprStmt(makeSpanInfoComment(span), expr)
 
   def makeIf(span: Span, cond: Expr, trueB: Stmt, falseB: JOption[Stmt]) =
-    new If(makeSpanInfo(span), cond, trueB, falseB)
+    new If(makeSpanInfoComment(span), cond, trueB, falseB)
 
   def makeDoWhile(span: Span, body: Stmt, cond: Expr) =
-    new DoWhile(makeSpanInfo(span), body, cond)
+    new DoWhile(makeSpanInfoComment(span), body, cond)
 
   def makeWhile(span: Span, cond: Expr, body: Stmt) =
-    new While(makeSpanInfo(span), cond, body)
+    new While(makeSpanInfoComment(span), cond, body)
 
   def makeFor(span: Span, init: JOption[Expr], cond: JOption[Expr],
               action: JOption[Expr], body: Stmt) =
-    new For(makeSpanInfo(span), init, cond, action, body)
+    new For(makeSpanInfoComment(span), init, cond, action, body)
 
   def makeForVar(span: Span, vars: JList[VarDecl], cond: JOption[Expr],
                  action: JOption[Expr], body: Stmt) =
-    new ForVar(makeSpanInfo(span), vars, cond, action, body)
+    new ForVar(makeSpanInfoComment(span), vars, cond, action, body)
 
   def makeForIn(span: Span, lhs: LHS, expr: Expr, body: Stmt) =
-    new ForIn(makeSpanInfo(span), lhs, expr, body)
+    new ForIn(makeSpanInfoComment(span), lhs, expr, body)
 
   def makeForVarIn(span: Span, vd: VarDecl, expr: Expr, body: Stmt) =
-    new ForVarIn(makeSpanInfo(span), vd, expr, body)
+    new ForVarIn(makeSpanInfoComment(span), vd, expr, body)
 
   def makeContinue(span: Span, target: JOption[Label]) =
-    new Continue(makeSpanInfo(span), target)
+    new Continue(makeSpanInfoComment(span), target)
 
   def makeBreak(span: Span, target: JOption[Label]) =
-    new Break(makeSpanInfo(span), target)
+    new Break(makeSpanInfoComment(span), target)
 
   def makeReturn(span: Span, expr: JOption[Expr]) =
-    new Return(makeSpanInfo(span), expr)
+    new Return(makeSpanInfoComment(span), expr)
 
   def makeWith(span: Span, expr: Expr, stmt: Stmt) =
-    new With(makeSpanInfo(span), expr, stmt)
+    new With(makeSpanInfoComment(span), expr, stmt)
 
   def makeSwitch(span: Span, expr: Expr, front: JList[Case]): Switch =
     makeSwitch(span, expr, front, none[JList[Stmt]], toJavaList(Nil))
 
   def makeSwitch(span: Span, expr: Expr, front: JList[Case],
                  defaultC: JOption[JList[Stmt]], back: JList[Case]): Switch =
-    new Switch(makeSpanInfo(span), expr, front, defaultC, back)
+    new Switch(makeSpanInfoComment(span), expr, front, defaultC, back)
 
   def makeLabelStmt(span: Span, label: Label, stmt: Stmt) =
-    new LabelStmt(makeSpanInfo(span), label, stmt)
+    new LabelStmt(makeSpanInfoComment(span), label, stmt)
 
   def makeThrow(span: Span, expr: Expr) =
-    new Throw(makeSpanInfo(span), expr)
+    new Throw(makeSpanInfoComment(span), expr)
 
   def makeTry(span: Span, body: JList[Stmt], catchB: Catch): Try =
     makeTry(span, body, some(catchB), none[JList[Stmt]])
@@ -261,10 +276,10 @@ object NodeFactory {
     makeTry(span, body, some(catchB), some(fin))
 
   def makeTry(span: Span, body: JList[Stmt], catchB: JOption[Catch], fin: JOption[JList[Stmt]]): Try =
-    new Try(makeSpanInfo(span), body, catchB, fin)
+    new Try(makeSpanInfoComment(span), body, catchB, fin)
 
   def makeDebugger(span: Span) =
-    new Debugger(makeSpanInfo(span))
+    new Debugger(makeSpanInfoComment(span))
 
   def makeVarDecl(span: Span, name: Id, expr: JOption[Expr]) =
     new VarDecl(makeSpanInfo(span), name, expr)
@@ -465,6 +480,6 @@ object NodeFactory {
   def makeNoOp(span: Span, desc: String): NoOp =
     makeNoOp(makeSpanInfo(span), desc)
 
-  def makeNoOp(info: SpanInfo, desc: String): NoOp =
+  def makeNoOp(info: ASTSpanInfo, desc: String): NoOp =
     new NoOp(info, desc)
 }

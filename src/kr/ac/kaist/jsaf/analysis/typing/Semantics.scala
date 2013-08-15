@@ -10,15 +10,12 @@
 package kr.ac.kaist.jsaf.analysis.typing
 
 import scala.collection.immutable.HashSet
-import scala.collection.mutable.{HashSet => MHashSet}
 import scala.collection.mutable.{HashMap => MHashMap}
-import scala.collection.mutable.{Set => MSet}
 import scala.collection.mutable.{Map => MMap}
 
 import kr.ac.kaist.jsaf.analysis.asserts._
 import kr.ac.kaist.jsaf.analysis.asserts.{ASSERTHelper => AH}
 import kr.ac.kaist.jsaf.analysis.cfg._
-import kr.ac.kaist.jsaf.analysis.typing.Operator._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.nodes_util.EJSOp
 import kr.ac.kaist.jsaf.nodes_util.IRFactory
@@ -27,7 +24,43 @@ import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.analysis.typing.{PreSemanticsExpr => PSE}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolTrue => BTrue, BoolFalse => BFalse}
 import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMEvent.{Event, MouseEvent, KeyboardEvent}
+import kr.ac.kaist.jsaf.utils.regexp._
+import kr.ac.kaist.jsaf.analysis.cfg.CFGNoOp
+import kr.ac.kaist.jsaf.analysis.cfg.CFGAPICall
+import scala.Some
+import kr.ac.kaist.jsaf.analysis.cfg.CFGAllocArg
+import kr.ac.kaist.jsaf.analysis.cfg.CFGNull
+import kr.ac.kaist.jsaf.analysis.cfg.CFGLoad
+import kr.ac.kaist.jsaf.analysis.cfg.CFGVarRef
+import kr.ac.kaist.jsaf.analysis.cfg.CFGStore
+import kr.ac.kaist.jsaf.analysis.cfg.CFGExprStmt
+import kr.ac.kaist.jsaf.analysis.cfg.CFGDelete
+import kr.ac.kaist.jsaf.analysis.asserts.Id
+import kr.ac.kaist.jsaf.analysis.cfg.CFGBin
+import kr.ac.kaist.jsaf.analysis.cfg.CFGUserId
+import kr.ac.kaist.jsaf.analysis.cfg.CFGConstruct
+import kr.ac.kaist.jsaf.analysis.cfg.CFGAllocArray
+import kr.ac.kaist.jsaf.analysis.asserts.Prop
+import kr.ac.kaist.jsaf.analysis.cfg.CFGThrow
+import kr.ac.kaist.jsaf.analysis.cfg.CFGUn
+import kr.ac.kaist.jsaf.analysis.cfg.CFGAlloc
+import kr.ac.kaist.jsaf.analysis.cfg.CFGCall
+import kr.ac.kaist.jsaf.analysis.typing.domain.Context
+import kr.ac.kaist.jsaf.analysis.typing.domain.OtherStrSingle
+import kr.ac.kaist.jsaf.analysis.cfg.CFGInternalCall
+import kr.ac.kaist.jsaf.analysis.cfg.CFGDeleteProp
+import kr.ac.kaist.jsaf.analysis.cfg.CFGAsyncCall
+import kr.ac.kaist.jsaf.analysis.cfg.CFGNumber
+import kr.ac.kaist.jsaf.analysis.cfg.CFGFunExpr
+import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
+import kr.ac.kaist.jsaf.analysis.asserts.RelExpr
+import kr.ac.kaist.jsaf.analysis.cfg.CFGReturn
+import kr.ac.kaist.jsaf.analysis.cfg.Block
+import kr.ac.kaist.jsaf.analysis.typing.domain.State
+import kr.ac.kaist.jsaf.analysis.cfg.CFGCatch
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.cfg.CFGAssert
+import kr.ac.kaist.jsaf.analysis.typing.domain.NumStrSingle
 
 
 class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
@@ -51,7 +84,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
   // for Address refinement
   private var ccCount = 0
   private var callContextMap: Map[CallContext, Int] = Map[CallContext, Int]()
-  private val maxProgramAddr = if (locclone) cfg.newProgramAddr else 0
+  private val maxProgramAddr = if (locclone) cfg.newProgramAddr() else 0
   private val shift = if (locclone) (() => {
     var maxAddr = maxProgramAddr 
     var retShift = 0
@@ -73,7 +106,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
     }
   }
   def extendAddr(addr: Int, n: Int): Int = addr | (n << shift)
-  
+
   // Semantics of inter-procedural edge from cp1 to cp2 with context label ctx.
   def E(cp1: ControlPoint, cp2: ControlPoint, ctx: Context, obj: Obj, s: State): State = {
     cp2 match {
@@ -157,7 +190,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
     } else {
       val ((h_1, ctx_1), (he_1, ctxe_1)) = c match {
         case Entry =>
-          val (fid, l) = cp._1
+          val (fid, _) = cp._1
           val x_argvars = cfg.getArgVars(fid)
           val x_localvars = cfg.getLocalVars(fid)
           val lset_arg = h(SinglePureLocalLoc)(cfg.getArgumentsName(fid))._1._1._1._2
@@ -467,8 +500,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                       if (AbsString.alpha("length") <= s) {
                         val v_newLen = Value(Operator.ToUInt32(v_rhs))
                         val n_oldLen = h(l)("length")._1._1._1._1._4 // number
-                        val b_g = (n_oldLen < v_newLen._1._4)
-                        val b_eq = (n_oldLen === v_newLen._1._4)
+                        val b_g = n_oldLen < v_newLen._1._4
+                        val b_eq = n_oldLen === v_newLen._1._4
                         val b_canputLen = Helper.CanPut(h, l, AbsString.alpha("length"))
                         // 3.d
                         val n_value = Helper.toNumber(v_rhs._1) + Helper.toNumber(Helper.objToPrimitive(v_rhs._2, "Number"))
@@ -515,8 +548,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                       if (BTrue <= Helper.IsArrayIndex(s)) {
                       val n_oldLen = h(l)("length")._1._1._1._1._4 // number
                       val n_index = Operator.ToUInt32(Value(Helper.toNumber(PValue(s))))
-                      val b_g = (n_oldLen < n_index)
-                      val b_eq = (n_oldLen === n_index)
+                      val b_g = n_oldLen < n_index
+                      val b_eq = n_oldLen === n_index
                       val b_canputLen = Helper.CanPut(h, l, AbsString.alpha("length"))
                       // 4.b
                       val h1 =
@@ -731,7 +764,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
         case CFGReturn(_, _, expr) => {
           val (v,es) =
             expr match {
-              case Some(expr) => SE.V(expr, h, ctx)
+              case Some(e) => SE.V(e, h, ctx)
               case None => (Value(UndefTop),Set[Exception]())
             }
           val (h_1, ctx_1) =
@@ -915,19 +948,19 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
   // Assert semantics
   def B(info:Info, expr: CFGExpr, h: Heap, ctx: Context, he: Heap, ctxe: Context) = {
     val relSet = expr match {
-      case CFGBin(info, first, op, second) if AH.isRelationalOperator(op) =>
-        getRel(expr, State(h, ctx)) ++ getRel(CFGBin(info, second, AH.reflectiveIROp(op), first), State(h, ctx))
-      case CFGBin(info, first, op, second) if AH.isObjectOperator(op) =>
+      case CFGBin(i, first, op, second) if AH.isRelationalOperator(op) =>
+        getRel(expr, State(h, ctx)) ++ getRel(CFGBin(i, second, AH.reflectiveIROp(op), first), State(h, ctx))
+      case CFGBin(_, first, op, second) if AH.isObjectOperator(op) =>
         HashSet(RelExpr(first, op, second))
       case _ => getRel(expr, State(h, ctx))
     }
 
     // transform notIn and notInstanceof to ! in ! instanceof to evaluate them.
     val (v, es) = expr match{
-      case CFGBin(info, first, op, second) if op.getKind == EJSOp.BIN_COMP_REL_NOTIN =>
-        SE.V(CFGUn(info, IRFactory.makeOp("!"), CFGBin(info, first, IRFactory.makeOp("in"), second)), h, ctx)
-      case CFGBin(info, first, op, second) if op.getKind == EJSOp.BIN_COMP_REL_NOTINSTANCEOF =>
-        SE.V(CFGUn(info, IRFactory.makeOp("!"), CFGBin(info, first, IRFactory.makeOp("instanceof"), second)), h, ctx)
+      case CFGBin(i, first, op, second) if op.getKind == EJSOp.BIN_COMP_REL_NOTIN =>
+        SE.V(CFGUn(i, IRFactory.makeOp("!"), CFGBin(i, first, IRFactory.makeOp("in"), second)), h, ctx)
+      case CFGBin(i, first, op, second) if op.getKind == EJSOp.BIN_COMP_REL_NOTINSTANCEOF =>
+        SE.V(CFGUn(i, IRFactory.makeOp("!"), CFGBin(i, first, IRFactory.makeOp("instanceof"), second)), h, ctx)
       case _ =>
         SE.V(expr, h, ctx)
     }
@@ -1029,13 +1062,13 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
   
   def Pruning(re: RelExpr, h: Heap, ctx: Context):(Heap, Context) = {
     val (e1, op, e2) = re match {
-      case RelExpr(first, op, second) => (first, op, second)
+      case RelExpr(first, op_, second) => (first, op_, second)
     }
-    val (v1, v2) = ((SE.V(e1, h, ctx))._1, (SE.V(e2, h, ctx))._1)
+    val (v1, v2) = (SE.V(e1, h, ctx)._1, SE.V(e2, h, ctx)._1)
     val s = Helper.toString(Helper.toPrimitive(v1))
     val L_base = op.getKind match {
       case EJSOp.BIN_COMP_REL_IN =>
-        (v2._2).foldLeft(LocSetBot)((l_set, l) => l_set ++ Helper.ProtoBase(h, l, s))
+        v2._2.foldLeft(LocSetBot)((l_set, l) => l_set ++ Helper.ProtoBase(h, l, s))
       case EJSOp.BIN_COMP_REL_NOTIN =>
         v2._2
       case EJSOp.BIN_COMP_REL_INSTANCEOF =>
@@ -1050,9 +1083,9 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
         case EJSOp.BIN_COMP_REL_IN => s match {
           case NumStrSingle(x) =>
               // make property definitely exist
-              h.update(L_base.head, h(L_base.head).update(s, (h(L_base.head)(s))._1))
+              h.update(L_base.head, h(L_base.head).update(s, h(L_base.head)(s)._1))
           case OtherStrSingle(x) =>
-              h.update(L_base.head, h(L_base.head).update(s, (h(L_base.head)(s))._1))
+              h.update(L_base.head, h(L_base.head).update(s, h(L_base.head)(s)._1))
           case _ => h
         }
         case EJSOp.BIN_COMP_REL_NOTIN => s match {
@@ -1063,10 +1096,10 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
               AH.DeleteAll(h, L_base.head, s)
           case _ => h
         }
-        case EJSOp.BIN_COMP_REL_INSTANCEOF if ((v1._2).size == 1) =>
-              AH.PruneInstanceof((v1._2).head, L_base.head, BoolTrue, h)
-        case EJSOp.BIN_COMP_REL_NOTINSTANCEOF if ((v1._2).size == 1) =>
-              AH.PruneInstanceof((v1._2).head, L_base.head, BoolFalse, h)
+        case EJSOp.BIN_COMP_REL_INSTANCEOF if v1._2.size == 1 =>
+              AH.PruneInstanceof(v1._2.head, L_base.head, BoolTrue, h)
+        case EJSOp.BIN_COMP_REL_NOTINSTANCEOF if v1._2.size == 1 =>
+              AH.PruneInstanceof(v1._2.head, L_base.head, BoolFalse, h)
         case _ => h
       }, ctx)
       case _ => (h, ctx)
@@ -1114,12 +1147,12 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
           case NumStrSingle(x) =>
             val ov = h(L_base.head)(s)._1._1
             val (v, abs) = AH.K(op, v2, v1._2)
-            val propv = PropValue(ObjectValue(v <> v1, ov._2, ov._3, ov._4), h(L_base.head)(s)._1._2, h(L_base.head)(s)._1._3)
+//            val propv = PropValue(ObjectValue(v <> v1, ov._2, ov._3, ov._4), h(L_base.head)(s)._1._2, h(L_base.head)(s)._1._3)
             (h.update(L_base.head, h(L_base.head).update(x, PropValue(ObjectValue(v,ov._2,ov._3,ov._4)), abs <> h(L_base.head)(s)._2)), ctx)
           case OtherStrSingle(x) =>
             val ov = h(L_base.head)(s)._1._1
             val (v, abs) = AH.K(op, v2, v1._2)
-            val propv = PropValue(ObjectValue(v <> v1, ov._2, ov._3, ov._4), h(L_base.head)(s)._1._2, h(L_base.head)(s)._1._3)
+//            val propv = PropValue(ObjectValue(v <> v1, ov._2, ov._3, ov._4), h(L_base.head)(s)._1._2, h(L_base.head)(s)._1._3)
             (h.update(L_base.head, h(L_base.head).update(x, PropValue(ObjectValue(v,ov._2,ov._3,ov._4)), abs <> h(L_base.head)(s)._2)), ctx)
           case _ => (h, ctx)
         }
@@ -1146,16 +1179,16 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
               case EJSOp.BIN_ARITH_MUL_MULTIPLICATION if e1.isInstanceOf[CFGNumber] =>
                 getRel(CFGBin(info, CFGBin(inInfo, e2, op1, e1), op, second), s)
               // (e1 * n) <> second and n > 0
-              case EJSOp.BIN_ARITH_MUL_MULTIPLICATION if (e2.isInstanceOf[CFGNumber] && e2.asInstanceOf[CFGNumber].toNumber > 0) =>
+              case EJSOp.BIN_ARITH_MUL_MULTIPLICATION if e2.isInstanceOf[CFGNumber] && e2.asInstanceOf[CFGNumber].toNumber > 0 =>
                 getRel(CFGBin(info, e1, op, CFGBin(dummyInfo, second, IRFactory.makeOp("/"), e2)), s)
               // (e1 * n) <> second and n < 0
-              case EJSOp.BIN_ARITH_MUL_MULTIPLICATION if (e2.isInstanceOf[CFGNumber] && e2.asInstanceOf[CFGNumber].toNumber < 0) =>
+              case EJSOp.BIN_ARITH_MUL_MULTIPLICATION if e2.isInstanceOf[CFGNumber] && e2.asInstanceOf[CFGNumber].toNumber < 0 =>
                 getRel(CFGBin(info, e1, AH.reflectiveIROp(op), CFGBin(dummyInfo, second, IRFactory.makeOp("/"), e2)), s)
               // (e1 / n) <> second and n > 0
-              case EJSOp.BIN_ARITH_MUL_DIVISION if (e2.isInstanceOf[CFGNumber] && e2.asInstanceOf[CFGNumber].toNumber > 0) =>
+              case EJSOp.BIN_ARITH_MUL_DIVISION if e2.isInstanceOf[CFGNumber] && e2.asInstanceOf[CFGNumber].toNumber > 0 =>
                 getRel(CFGBin(info, e1, op, CFGBin(dummyInfo, second, IRFactory.makeOp("*"), e2)), s)
               // (e1 / n) <> second and n < 0
-              case EJSOp.BIN_ARITH_MUL_DIVISION if (e2.isInstanceOf[CFGNumber] && e2.asInstanceOf[CFGNumber].toNumber > 0) =>
+              case EJSOp.BIN_ARITH_MUL_DIVISION if e2.isInstanceOf[CFGNumber] && e2.asInstanceOf[CFGNumber].toNumber > 0 =>
                 getRel(CFGBin(info, e1, AH.reflectiveIROp(op), CFGBin(dummyInfo, second, IRFactory.makeOp("*"), e2)), s)
               case _ => HashSet[RelExpr]()
             }
@@ -1262,7 +1295,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
     */
       val (h_1, ctx_1) = c match {
         case Entry =>
-          val (fid, l) = cp._1
+          val (fid, _) = cp._1
           val x_argvars = cfg.getArgVars(fid)
           val x_localvars = cfg.getLocalVars(fid)
           val lset_arg = h(PureLocalLoc)(cfg.getArgumentsName(fid))._1._1._1._2
@@ -1374,7 +1407,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
           } else {
             (h, ctx)
           }
-        val (h_e, ctx_e) = PreHelper.RaiseException(h_1, ctx, PureLocalLoc, es)
+        val (h_e, ctx_e) = PreHelper.RaiseException(h_1, ctx_1, PureLocalLoc, es)
           (h_e, ctx_e)
       }
       case CFGDelete(_, _, lhs, expr) =>
@@ -1456,8 +1489,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                     if (AbsString.alpha("length") <= s) {
                       val v_newLen = Value(Operator.ToUInt32(v_rhs))
                       val n_oldLen = h(l)("length")._1._1._1._1._4 // number
-                      val b_g = (n_oldLen < v_newLen._1._4)
-                      val b_eq = (n_oldLen === v_newLen._1._4)
+                      val b_g = n_oldLen < v_newLen._1._4
+                      val b_eq = n_oldLen === v_newLen._1._4
                       val b_canputLen = PreHelper.CanPut(h, l, AbsString.alpha("length"))
                       // 3.d
                       val n_value = PreHelper.toNumber(v_rhs._1) + PreHelper.toNumber(PreHelper.objToPrimitive(v_rhs._2, "Number"))
@@ -1504,8 +1537,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                     if (BTrue <= PreHelper.IsArrayIndex(s)) {
                     val n_oldLen = h(l)("length")._1._1._1._1._4 // number
                     val n_index = Operator.ToUInt32(Value(PreHelper.toNumber(PValue(s))))
-                    val b_g = (n_oldLen < n_index)
-                    val b_eq = (n_oldLen === n_index)
+                    val b_g = n_oldLen < n_index
+                    val b_eq = n_oldLen === n_index
                     val b_canputLen = PreHelper.CanPut(h, l, AbsString.alpha("length"))
                     // 4.b
                     val h1 =
@@ -1703,7 +1736,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
       }
       case CFGReturn(_, _, expr) => {
         val (v,es) = expr match {
-          case Some(expr) => PSE.V(expr, h, ctx, PureLocalLoc)
+          case Some(e) => PSE.V(e, h, ctx, PureLocalLoc)
           case None => (Value(UndefTop),Set[Exception]())
         }
         val (h_1, ctx_1) =
@@ -1712,7 +1745,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
           } else {
             (h, ctx)
           }
-        val (h_e, ctx_e) = PreHelper.RaiseException(h_1, ctx, PureLocalLoc, es)
+        val (h_e, ctx_e) = PreHelper.RaiseException(h_1, ctx_1, PureLocalLoc, es)
         (h_e, ctx_e)
       }
       case CFGThrow(_, _, expr) => {

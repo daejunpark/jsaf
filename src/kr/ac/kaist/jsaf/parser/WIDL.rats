@@ -77,7 +77,7 @@ body {
   }
 
   private SpanInfo makeSpanInfo(int start, int end) {
-      return NodeFactory.makeSpanInfo(createSpan(start, end));
+      return NodeFactory.makeOnlySpanInfo(createSpan(start, end));
   }
 }
 
@@ -745,6 +745,8 @@ private List<WEAttribute> ExtendedAttributes =
  *                     | "[" w ExtendedAttributeInner w "]" w ExtendedAttributeRest
  *                     | "{" w ExtendedAttributeInner w "}" w ExtendedAttributeRest
  *                     | Other w ExtendedAttributeRest
+ * Extension: "Constructor" w "(" (w ArgumentList)? w ")" w ExtendedAttributeRest
+ *          | "Constructor"
  * ExtendedAttributeRest ::= ExtendedAttribute | \epsilon
  */
 private List<WEAttribute> ExtendedAttribute =
@@ -754,7 +756,13 @@ private List<WEAttribute> ExtendedAttribute =
    ;
 
 private List<WEAttribute> ExtendedAttributeFront =
-     openparen a1:(w ExtendedAttributeInner)? w closeparen
+     "Constructor" w openparen a1:(w ArgumentList)? w closeparen
+     { if (a1 == null) a1 = Collections.<WArgument>emptyList();
+       yyValue = Useful.list(WIDLFactory.mkEAConstructor(a1));
+     }
+   / "Constructor"
+     { yyValue = Useful.list(WIDLFactory.mkEAConstructor(Collections.<WArgument>emptyList())); }
+   / openparen a1:(w ExtendedAttributeInner)? w closeparen
      { if (a1 == null) yyValue = Collections.<WEAttribute>emptyList();
        else yyValue = a1;
      }
@@ -816,6 +824,7 @@ private List<WEAttribute> ExtendedAttributeInner =
  *         | "sequence" | "short" | "true" | "unsigned" | "void" 
  *         | ArgumentNameKeyword
  *         | "[" w "]" | in // WebKitIDL
+ * Extension: "NoInterfaceObject" | "Callback" w "=" w "FunctionOnly"
  */
 private WEAttribute Other =
      opensquare w closesquare

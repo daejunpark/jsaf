@@ -256,7 +256,7 @@ object NodeRelation {
     def walkAST(parent: Any, ast: Any): Unit = {
       putAST_AST(parent, ast)
       ast match {
-        case SProgram(info, body, comments) => walkAST(ast, body)
+        case SProgram(info, body) => walkAST(ast, body)
         case SModDecl(info, name, body) => walkAST(ast, name); walkAST(ast, body)
         case SModExpVarStmt(info, vds) => walkAST(ast, vds)
         case SModExpFunDecl(info, fd) => walkAST(ast, fd)
@@ -382,7 +382,7 @@ object NodeRelation {
         case SIRTmpId(info, originalName, uniqueName, global) => putAST_IR(ir)
         case SIRThis(info) => putAST_IR(ir)
         case SIRNumber(info, text, num) => putAST_IR(ir)
-        case SIRString(info, str, escaped) => putAST_IR(ir)
+        case SIRString(info, str) => putAST_IR(ir)
         case SIRBool(info, bool) => putAST_IR(ir)
         case SIRUndef(info) => putAST_IR(ir)
         case SIRNull(info) => putAST_IR(ir)
@@ -670,12 +670,12 @@ object NodeRelation {
     println*/
 
     // IR -> CFG
-    /*println("*** IR -> CFG ***")
+    println("*** IR -> CFG ***")
     for((ir, cfgList)<- ir2cfgMap) {
       println(ir.getClass().getSimpleName() + '[' + getUID(ir) + "] : " + irToString(ir))
       for(cfg <- cfgList) println("    " + cfg.getClass().getSimpleName() + " : " + cfgToString(cfg))
     }
-    println*/
+    println
 
     // CFG -> IR
     /*println("*** CFG -> IR ***")

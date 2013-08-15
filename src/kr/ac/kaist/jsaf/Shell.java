@@ -192,8 +192,8 @@ public final class Shell {
             "Usage:\n" +
             " parse [-out file] [-time] somefile.js ...\n" +
             " unparse [-out file] somefile.tjs\n" +
-            " widlparse [-db somefile.db] somefile.widl\n" +
-            " widlcheck somefile.js api1.db ...\n" +
+            " widlparse [-out somefile.db] {somefile.widl | somedir}\n" +
+            " widlcheck {-js somefile.js ... | -dir somedir} -db api1.db ...\n" +
             " strict [-out file] somefile.js\n" +
             " clone-detector\n" +
             " coverage somefile.js\n" +
@@ -233,12 +233,12 @@ public final class Shell {
          "  Converts a parsed file back to JavaScript source code. The output will be dumped to stdout if -out is not given.\n"+
          "  If -out file is given, the unparsed source code will be written to the file.\n"+
          "\n"+
-         "jsaf widlparse [-db somefile.db] somefile.widl or somedir\n"+
-         "  Parses a Web IDL file.\n"+
-         "  If -db file is given, the parsed Web IDL will be written to the file.\n"+
+         "jsaf widlparse [-out somefile.db] {somefile.widl | somedir}\n" +
+         "  Parses a Web IDL file or files in a directory.\n"+
+         "  If -out file is given, the parsed Web IDL will be written to the file.\n"+
          "\n"+
-         "jsaf widlcheck somefile.js api1.db ...\n"+
-         "  Checks uses of APIS in Web IDL.\n"+
+         "jsaf widlcheck {-js somefile.js ... | -dir somedir} -db api1.db ...\n"+
+         "  Checks uses of APIS described in Web IDL.\n"+
          "\n"+
          "jsaf strict [-out file] somefile.js\n"+
          "  Checks whether a file satisfies the strict mode restrictions.\n"+

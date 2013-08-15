@@ -9,12 +9,8 @@
 
 package kr.ac.kaist.jsaf.interpreter.objects
 
-import kr.ac.kaist.jsaf.nodes._
-import kr.ac.kaist.jsaf.scala_src.nodes._
-import kr.ac.kaist.jsaf.scala_src.useful.Lists._
-import kr.ac.kaist.jsaf.scala_src.useful.Options._
-import kr.ac.kaist.jsaf.interpreter.{InterpreterPredefine => IP, _}
-import kr.ac.kaist.jsaf.interpreter.objects.JSRegExpHelper._
+import kr.ac.kaist.jsaf.interpreter._
+import kr.ac.kaist.jsaf.utils.regexp._
 
 class JSRegExp(_I: Interpreter,
                _proto: JSObject,

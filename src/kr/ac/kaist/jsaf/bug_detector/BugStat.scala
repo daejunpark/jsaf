@@ -57,7 +57,7 @@ class BugStat(bugDetector: BugDetector) {
     System.out.println("|  CallNonFunction         : %6d |".format(BugCount(CallNonFunction)))
     System.out.println("|  ConditionalBranch       : %6d |".format(BugCount(CondBranch)))
     System.out.println("|  ConvertToNumber         : %6d |".format(BugCount(ConvertUndefToNum)))
-    System.out.println("|  DefaultValueTypeError   : %6d |".format(0 /*BugCount(DefaultValueTypeError)*/))
+    System.out.println("|  DefaultValue            : %6d |".format(BugCount(DefaultValue)))
     System.out.println("|  FunctionArgSize         : %6d |".format(BugCount(FunctionArgSize)))
     System.out.println("|  GlobalThis              : %6d |".format(BugCount(GlobalThis)))
     System.out.println("|  ImplicitTypeConversion  : %6d |".format(/*BugCount(ImplicitCallToString) + BugCount(ImplicitCallValueOf) +*/ BugCount(ImplicitTypeConvert)))

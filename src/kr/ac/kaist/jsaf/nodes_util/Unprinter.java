@@ -260,8 +260,8 @@ public class Unprinter extends NodeReflection {
                     f.set(node, readDouble(l.name()+"."+lexAfter(".")));
                 } else if (Option.class.isAssignableFrom(f.getType())) {
                     f.set(node, readOption());
-                } else if (SpanInfo.class.isAssignableFrom(f.getType())) {
-                    f.set(node, readSpanInfo(NodeUtil.getSpan((ASTNode)node)));
+                } else if (ASTSpanInfo.class.isAssignableFrom(f.getType())) {
+                    f.set(node, readASTSpanInfo(NodeUtil.getSpan((ASTNode)node)));
                 } else if (AbstractNode.class.isAssignableFrom(f.getType())
                            || ScopeBody.class.isAssignableFrom(f.getType())
                            || IRInfoNode.class.isAssignableFrom(f.getType())) {
@@ -510,15 +510,22 @@ public class Unprinter extends NodeReflection {
         return new Pair<Object, Object>(x, y);
     }
 
-    public SpanInfo readSpanInfo(Span span) throws IOException {
+    public ASTSpanInfo readASTSpanInfo(Span span) throws IOException {
         expectPrefix("(");
         String s = l.name();
-        SpanInfo info;
-        if ( "SpanInfo".equals(s) ) {
+        ASTSpanInfo info;
+        if ( "ASTSpanInfo".equals(s) ) {
+            expectPrefix("(");
+            s = l.name(false);
+            if (")".equals(s))
+                info = NodeFactory.makeSpanInfo(span);
+            else {
+                info = NodeFactory.makeSpanInfo(span, deQuote(s).intern());
+                s = l.name(false);
+            }
             expectPrefix(")");
-            info = NodeFactory.makeSpanInfo(span);
         } else {
-            error(s + " is not a valid subclass of SpanInfo.");
+            error(s + " is not a valid subclass of ASTSpanInfo.");
             info = NodeFactory.makeSpanInfo(span);
         }
         return info;

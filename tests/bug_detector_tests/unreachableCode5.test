@@ -30,7 +30,7 @@ unreachableCode5.js:1:30~1:55: [Warning] Unreachable code '(y.target = y.srcElem
 |  CallNonFunction         :      0 | \n\
 |  ConditionalBranch       :      0 | \n\
 |  ConvertToNumber         :      0 | \n\
-|  DefaultValueTypeError   :      0 | \n\
+|  DefaultValue            :      0 | \n\
 |  FunctionArgSize         :      0 | \n\
 |  GlobalThis              :      0 | \n\
 |  ImplicitTypeConversion  :      0 | \n\

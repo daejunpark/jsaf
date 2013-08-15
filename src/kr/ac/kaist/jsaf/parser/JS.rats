@@ -74,25 +74,18 @@ body {
         return new Span(slStart, slEnd);
     }
 
-    private SpanInfo makeSpanInfo(int start, int end) {
+    private ASTSpanInfo makeSpanInfo(int start, int end) {
         return NodeFactory.makeSpanInfo(createSpan(start, end));
     }
 
     private FileWriter fw;
     private BufferedWriter writer;
-    private FileWriter cfw;
-    private BufferedWriter commentWriter;
     private BufferedReader reader;
-    private BufferedReader commentReader;
     private String logFile = column(0).file + ".log";
-    private String commentFile = column(0).file + ".comment";
-
     public Result JSmain(final int yyStart) throws IOException {
         Result result = this.pJS$File(yyStart);
         if (result.hasValue()) return result;
         else {
-            commentWriter.close();
-            cfw.close();
             writer.close();
             fw.close();
             return result;
@@ -101,29 +94,12 @@ body {
 
     void initParser() {
         try {
-            if (commentWriter == null)
-                try {
-                    kr.ac.kaist.jsaf.useful.Pair<FileWriter,BufferedWriter> pair = Useful.filenameToBufferedWriter( commentFile );
-                    cfw = pair.first();
-                    commentWriter = pair.second();
-                } catch (IOException err) {}
             kr.ac.kaist.jsaf.useful.Pair<FileWriter,BufferedWriter> pair = Useful.filenameToBufferedWriter( logFile );
             fw = pair.first();
             writer = pair.second();
         } catch (IOException error) {
             error("Creating a log file for the parser failed!");
         }
-    }
-
-    private void commentLog(Span span, String message) {
-        if (commentWriter == null)
-            try {
-                kr.ac.kaist.jsaf.useful.Pair<FileWriter,BufferedWriter> pair = Useful.filenameToBufferedWriter( commentFile );
-                cfw = pair.first();
-                commentWriter = pair.second();
-            } catch (IOException err) {}
-        if (NodeUtil.getKeepComments())
-            NodeUtil.log(commentWriter, span, message);
     }
 
     private void log(String message) {

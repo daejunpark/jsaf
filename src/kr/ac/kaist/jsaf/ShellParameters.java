@@ -10,6 +10,7 @@
 package kr.ac.kaist.jsaf;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShellParameters
 {
@@ -47,7 +48,9 @@ public class ShellParameters
     ////////////////////////////////////////////////////////////////////////////////
     public int                                     command;
     public String                                  opt_OutFileName;
-    public String                                  opt_DB;
+    public String                                  opt_Dir;
+    public List<String>                            opt_JS;
+    public List<String>                            opt_DB;
     public boolean                                 opt_Time;
     public boolean                                 opt_Module;
     public boolean                                 opt_IgnoreErrorOnAST;
@@ -86,7 +89,7 @@ public class ShellParameters
     public boolean                                 opt_PreContextSensitive;
     public boolean                                 opt_Unsound;
     public boolean                                 opt_Dom;
-	public boolean                                 opt_Tizen;
+    public boolean                                 opt_Tizen;
     public boolean                                 opt_jQuery;
     public boolean                                 opt_MultiThread;
     public int                                     opt_unrollingCount;
@@ -110,7 +113,9 @@ public class ShellParameters
     {
         command = CMD_USAGE;
         opt_OutFileName = null;
-        opt_DB = null;
+        opt_Dir = null;
+        opt_JS = new ArrayList<String>();
+        opt_DB = new ArrayList<String>();
         opt_Time = false;
         opt_Module = false;
         opt_IgnoreErrorOnAST = false;
@@ -206,11 +211,14 @@ public class ShellParameters
         else if(cmd.compareTo("widlparse") == 0)
         {
             command = CMD_WIDLPARSE;
-            feasibleOptions.add("-db");
+            feasibleOptions.add("-out");
         }
         else if(cmd.compareTo("widlcheck") == 0)
         {
             command = CMD_WIDLCHECK;
+            feasibleOptions.add("-js");
+            feasibleOptions.add("-dir");
+            feasibleOptions.add("-db");
         }
         else if(cmd.compareTo("strict") == 0)
         {
@@ -419,14 +427,42 @@ public class ShellParameters
                 ConsumedParameterCount = 1;
             }
         }
-        else if(opt.compareTo("-db") == 0)
+        else if(opt.compareTo("-dir") == 0)
         {
             if(index + 1 >= args.length)
             {
                 ErrorMessage = "`" + opt + "` parameter needs an output filename. See help.";
             } else {
-                opt_DB = args[index + 1];
+                opt_Dir = args[index + 1];
                 ConsumedParameterCount = 1;
+            }
+        }
+        else if(opt.compareTo("-js") == 0 || opt.compareTo("-db") == 0)
+        {
+            if(index + 1 >= args.length)
+            {
+                ErrorMessage = "`" + opt + "` parameter needs an output filename. See help.";
+            } else {
+                if(opt.compareTo("-js") == 0) {
+                    for(int i = index+1; i < args.length; i++) {
+                        // Is this an option parameter?
+                        if(args[i].charAt(0) == '-') {
+                            ConsumedParameterCount = i-index-1;
+                            break;
+                        }
+                        else opt_JS.add(args[i]);
+                    }
+                }
+                else if(opt.compareTo("-db") == 0) {
+                    for(int i = index+1; i < args.length; i++) {
+                        // Is this an option parameter?
+                        if(args[i].charAt(0) == '-') {
+                            ConsumedParameterCount = i-index-1;
+                            break;
+                        }
+                        else opt_DB.add(args[i]);
+                    }
+                }
             }
         }
         else if(opt.compareTo("-time") == 0) opt_Time = true;

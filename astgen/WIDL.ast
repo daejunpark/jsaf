@@ -101,6 +101,7 @@ interface WNode() extends HasAt;
             WTSArray();
             WTSQuestion();
         abstract WEAttribute();
+            WEAConstructor(List<WArgument> args);
             WEAArray();
             WEANoInterfaceObject();
             WEACallbackFunctionOnly();

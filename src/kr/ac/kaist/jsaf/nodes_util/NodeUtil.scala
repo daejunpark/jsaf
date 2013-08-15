@@ -47,11 +47,11 @@ object NodeUtil {
       case i:SpanInfo =>
         val span = i.getSpan
         val key = span.at
-        if (map.containsKey(key)) new SpanInfo(map.get(key))
+        if (map.containsKey(key)) new ASTSpanInfo(map.get(key))
         else {
           val newSpan = span.addLines(line)
           map.put(key, newSpan)
-          new SpanInfo(newSpan)
+          new ASTSpanInfo(newSpan)
         }
       case _ => super.walk(node)
     }
@@ -102,10 +102,9 @@ object NodeUtil {
         SSwitch(info, cond, super.walk(frontCases).asInstanceOf[List[Case]],
                 Some(simplify(stmts.map(walk).asInstanceOf[List[Stmt]])),
                 super.walk(backCases).asInstanceOf[List[Case]])
-      case SProgram(info, STopLevel(fds, vds, program), comments) =>
+      case SProgram(info, STopLevel(fds, vds, program)) =>
         SProgram(info, STopLevel(super.walk(fds).asInstanceOf[List[FunDecl]], vds,
-                                 simplify(program.map(walk).asInstanceOf[List[Stmt]])),
-                 comments)
+                                 simplify(program.map(walk).asInstanceOf[List[Stmt]])))
       case SFunctional(fds, vds, body, name, params) =>
         SFunctional(super.walk(fds).asInstanceOf[List[FunDecl]], vds,
                     simplify(body.map(walk).asInstanceOf[List[Stmt]]), name, params)
@@ -250,6 +249,10 @@ object NodeUtil {
     case SSetProp(_, prop, _) => prop2Str(prop)
   }
 
+  def escape(s: String) = {
+    s.replaceAll("\\\\", "\\\\\\\\")
+  }
+
   def unescapeJava(s: String) =
     if (-1 == s.indexOf('\\')) s
     else {
@@ -386,7 +389,7 @@ object NodeUtil {
   def getEnd(n: ASTNode) = getSpan(n).getEnd
   def getLine(n: ASTNode) = getSpan(n).getBegin.getLine
 
-  def spanInfoAll(nodes: List[ASTNode]) = new SpanInfo(spanAll(nodes))
+  def spanInfoAll(nodes: List[ASTNode]) = new ASTSpanInfo(spanAll(nodes))
 
   def spanAll(nodes: List[ASTNode], span: Span): Span = nodes match {
     case Nil => span

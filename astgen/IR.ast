@@ -260,7 +260,7 @@ interface IRNode() extends HasAt;
                 /**
                  * PVal ::= String
                  */
-                IRString(noIntern String str, Option<String> escaped);
+                IRString(noIntern String str);
                 /**
                  * PVal ::= true | false
                  */

@@ -26,35 +26,8 @@ public Program File =
      initParser a1:SourceElements? closeParser
      { Span span = createSpan(yyStart,yyCount);
        if (a1 == null) a1 = Collections.<SourceElement>emptyList();
-       commentWriter.close();
-       cfw.close();
-       FileReader fr = new FileReader(commentFile);
-       commentReader = new BufferedReader(fr);
        HashMap<String, Span> map = new HashMap<String, Span>();
-       String line = commentReader.readLine();
-       Boolean inComment = false;
-       while (line != null) {
-           Span spanC = NodeUtil.readSpan(line);
-           String commentString = "";
-           line = commentReader.readLine();
-           while (line != null && !line.startsWith(" @")) {
-               commentString += line;
-               line = commentReader.readLine();
-           }
-           if (!map.containsKey(commentString))
-               map.put(commentString, spanC);
-       }
-       commentReader.close();
-       fr.close();
-       List<Comment> comments = new ArrayList<Comment>();
-       for (String cs : map.keySet()) {
-           Comment comment = NodeFactory.makeComment(map.get(cs), cs);
-           comments.add(comment);
-       }
-       List<Comment> result = new ArrayList<Comment>();
-       for (Comment c: IterUtil.sort(comments, ASTIO.commentComparator))
-           result.add(c);
-       yyValue = NodeFactory.makeProgram(span, a1, result);
+       yyValue = NodeFactory.makeProgram(span, a1);
      };
 void initParser = w { initParser(); };
 void closeParser = w EndOfFile

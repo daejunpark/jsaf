@@ -71,7 +71,7 @@ package object bug_detector {
   val property      = false
   val CALL_NORMAL   = true
   val CALL_CONST    = false
-  val MAX_BUG_COUNT = 28
+  val MAX_BUG_COUNT = 29
 
   /* Options */
   val SOUNDNESS_LEVEL_LOW     = 0 
@@ -102,8 +102,9 @@ package object bug_detector {
   val CallNonFunction       :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling %s as a function.", 1)
   val CondBranch            :BugKind = addBugMsgFormat(newBugKind, Warning, "Conditional expression '%s' is always %s.", 2)
   val ConvertUndefToNum     :BugKind = addBugMsgFormat(newBugKind, Warning, "Trying to convert undefined to number.%s", 1)
-  val FunctionArgSize       :BugKind = addBugMsgFormat(newBugKind, Warning, "Too %s arguments to function '%s'.", 2)
+  val DefaultValue          :BugKind = addBugMsgFormat(newBugKind, Warning, "Assigning a non-function value to '%s' may cause a TypeError.", 1)
   /* BugKind : 10 ~ 19 */
+  val FunctionArgSize       :BugKind = addBugMsgFormat(newBugKind, Warning, "Too %s arguments to function '%s'.", 2)
   val GlobalThis            :BugKind = addBugMsgFormat(newBugKind, Warning, "'this' refers the global object.", 0)
   val ImplicitTypeConvert   :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit type-conversion in equality comparison '%s%s %s %s%s'.", 5)
   val ObjectNullOrUndef     :BugKind = addBugMsgFormat(newBugKind, TypeError, "Property is trying to access %s, whose value is %s.", 2)
@@ -113,8 +114,8 @@ package object bug_detector {
   val ShadowedVarByFunc     :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a function at '%s'.", 2)
   val ShadowedVarByParam    :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a parameter at '%s'.", 2)
   val ShadowedVarByVar      :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a variable at '%s'.", 2)
+  /* BugKind : 20 ~ 28 */
   val ShadowedParamByParam  :BugKind = addBugMsgFormat(newBugKind, Warning, "Parameter '%s' is shadowed by a parameter at '%s'.", 2)
-  /* BugKind : 20 ~ 27 */
   val ShadowedFuncByVar     :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is shadowed by a variable at '%s'.", 2)
   val ShadowedParamByVar    :BugKind = addBugMsgFormat(newBugKind, Warning, "Parameter '%s' is shadowed by a variable at '%s'.", 2)
   val UnreachableCode       :BugKind = addBugMsgFormat(newBugKind, Warning, "Unreachable code '%s' is found.", 1)

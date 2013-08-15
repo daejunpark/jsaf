@@ -1,6 +1,62 @@
 
 \chapter{Built-in Objects}
-\section{Collecting Semantics}
+\section{Concrete Semantics}
+
+\subsection{Helper Functions}
+\[
+\begin{array}{ll}
+  \chf{getMatcher} & : \matcher \rightarrow (\SF{String} \times \SF{Int} \rightarrow \SF{MatchResult}) \\
+\\
+  \chf{NewRegExp} & : \SF{Value} \times \SF{Bool} \times \SF{Bool} \times \SF{Bool} \times \matcher \rightarrow \SF{Obj} \\
+  & \chf{NewRegExp}(v_{source}, b_g, b_i, b_m, mid)
+  = \set{
+    \varprop{class}\mapsto ``RegExp",\\
+    \varprop{proto}\mapsto
+    \set{
+      value=\varloc{RegExpProto};\\
+      writable=\vfalse;\\
+      enumerable=\vfalse;\\
+      configurable=\vfalse\\
+    },\\
+    \varprop{matcher}\mapsto mid,\\
+    ``source"\mapsto
+    \set{
+      value=v_{source};\\
+      writable=\vfalse;\\
+      enumerable=\vfalse;\\
+      configurable=\vfalse\\
+    },\\
+    ``global"\mapsto
+    \set{
+      value=b_g;\\
+      writable=\vfalse;\\
+      enumerable=\vfalse;\\
+      configurable=\vfalse\\
+    },\\
+    ``ignoreCase"\mapsto
+    \set{
+      value=b_i;\\
+      writable=\vfalse;\\
+      enumerable=\vfalse;\\
+      configurable=\vfalse\\
+    },\\
+    ``multiline"\mapsto
+    \set{
+      value=b_m;\\
+      writable=\vfalse;\\
+      enumerable=\vfalse;\\
+      configurable=\vfalse\\
+    },\\
+    ``lastIndex"\mapsto
+    \set{
+      value=0;\\
+      writable=\vtrue;\\
+      enumerable=\vfalse;\\
+      configurable=\vfalse\\
+    }\\
+  }
+\end{array}
+\]
 
 \subsection{Global}
 
@@ -2575,6 +2631,237 @@
 \end{array}
 \]
 
+\subsection{RegExp}
+\[
+\begin{array}{l}
+% 15.10.3.1 RegExp(pattern, flags)
+% If pattern is an object R whose [[Class]] internal property is "RegExp" and flags is undefined,
+% then return R unchanged.
+\I_{cp}\lbr \SF{BuiltinCall}(``RegExp", args)\rbr(H,A)
+= (H_1, A)\\
+\quad\ifc{
+  v_{1} \in \SF{Loc} ~\land~ H(v_{1})(\varprop{class}) = ``RegExp" ~\land~ v_2 = \SF{undefined}
+}\\
+\quad\wherec{
+  v_{1} = \hf{getArgValue}(args, ``0") ~\land~  v_{2} = \hf{getArgValue}(args, ``1") \\
+  \land~ H_1 = H[\varloc{temp}\mapsto H(\varloc{temp})[\varprop{return}\mapsto v_{1}]]
+}\\
+
+% 15.10.3.1 RegExp(pattern, flags)
+% Otherwise call the standard built-in RegExp constructor as if by the expression
+% new RegExp(pattern, flags) and return the object constructed by that constructor.
+\I_{cp}\lbr \SF{BuiltinCall}(``RegExp", args)\rbr(H,A)
+= \I_{cp}\lbr \SF{BuiltinCall}(``RegExp.constructor", args)\rbr(H,A)
+\\\\
+
+% 15.10.4.1. new RegExp(pattern, flags)
+% * Copy Constructor
+% If pattern is an object R whose [[Class]] internal property is "RegExp"
+% and flags is undefined, then let P be the pattern used to construct R
+% and let F be the flags used to construct R.
+\I_{cp}\lbr \SF{BuiltinCall}(``RegExp.constructor", args)\rbr(H,A)
+= (H_2, A)\\
+\quad\ifc{
+  v_{1} \in Loc ~\land~ H(v_{1})(\varprop{class}) = ``RegExp" ~\land~ v_{2} = \SF{undefined}
+}\\
+\quad\wherec{
+  v_{1} = \hf{getArgValue}(args, ``0") ~\land~  v_{2} = \hf{getArgValue}(args, ``1")\\
+  \land~ v_{source} = H(v_{1})(``source") \\
+  \land~ b_{g} = H(v_{1})(``global")\\
+  \land~ b_{i} = H(v_{1})(``ignoreCase")\\
+  \land~ b_{m} = H(v_{1})(``multiline")\\
+  \land~ mid = H(v_{1})(\varprop{matcher})\\
+  \land~ o = \chf{NewRegExp}(v_{source}, b_{g}, b_{i}, b_{m}, mid)\\
+  \land~ l=\hf{NewLocation}()\\
+  \land~ H_1 = H[l\mapsto o]\\
+  \land~ H_2 = H_1[\varloc{temp}\mapsto H_1(\varloc{temp})[\varprop{return}\mapsto l]]
+}\\
+
+% 15.10.4.1. new RegExp(pattern, flags)
+% * Copy Constructor exception case
+% If pattern is an object R whose [[Class] internal property is "RegExp"
+% and flags is not undefined, then throw a TypeError exception.
+\I_{cp}\lbr \SF{BuiltinCall}(``RegExp.constructor", args)\rbr(H,A)
+= (H_1, A)\\
+\quad\ifc{
+  v_{1} \in Loc ~\land~ H(v_{1})(\varprop{class}) = ``RegExp" ~\land~ v_{2} \neq \SF{undefined}
+ }\\
+\quad\wherec{
+  v_{1} = \hf{getArgValue}(args, ``0") ~\land~  v_{2} = \hf{getArgValue}(args, ``1")\\
+  \land~ H_1 = \chf{RaiseException}(H, \exc{TypeError})
+}\\
+
+% 15.10.4.1. new RegExp(pattern, flags)
+% * Constructor
+\I_{cp}\lbr \SF{BuiltinCall}(``RegExp.constructor", args)\rbr(H,A)
+ = (H_1, A)\\
+ \quad\ifc{v_{1} \not\in Loc
+  ~\land~ v_{match} \in \matcher\\
+}\\
+\quad\wherec{
+  v_{1} = \hf{getArgValue}(args, ``0") ~\land~  v_{2} = \hf{getArgValue}(args, ``1")\\
+% let P be the empty String if pattern is undefined and ToString(pattern) otherwise,
+  \land~ v_P = \left\{
+    \begin{array}{ll}
+      ``" & \ifc{v_{1} = \SF{undefined}} \\
+      \chf{toString}(v_{1}) & \owc % Warning, if v_{1} is an object.
+    \end{array}
+  \right.\\
+% and let F be the empty String if flags is undefined and ToString(flags) otherwise.
+  \land~ v_F = \left\{
+    \begin{array}{ll}
+      ``" & \ifc{v_{2} = \SF{undefined}} \\
+      \chf{toString}(v_{2}) & \owc
+    \end{array}
+  \right.\\
+% If a SyntaxError exception is not thrown, then:
+  \land~ v_{match} = {\inred\chf{RegExpParser}(v_{P}, v_{F})}\\
+  \land~ o = \chf{NewRegExp}(v_{source}, b_{g}, b_{i}, b_{m}, v_{match})\\
+  \land~ l=\hf{NewLocation}()\\
+  \land~ H_1 = H[l\mapsto o]
+}\\
+
+% 15.10.4.1. new RegExp(pattern, flags)
+% * Constructor exception case
+\I_{cp}\lbr \SF{BuiltinCall}(``RegExp.constructor", args)\rbr(H,A)
+= (H_1, A)\\
+\quad\ifc{
+   v_{1} \not\in Loc ~\land~ exc \in \SF{Exception}\\
+ }\\
+\quad\wherec{
+  v_{1} = \hf{getArgValue}(args, ``0") ~\land~  v_{2} = \hf{getArgValue}(args, ``1")\\
+% let P be the empty String if pattern is undefined and ToString(pattern) otherwise,
+  \land~ v_P = \left\{
+    \begin{array}{ll}
+      ``" & \ifc{v_{1} = \SF{undefined}} \\
+      \chf{toString}(v_{1}) & \owc % Warning, if v_{1} is an object.
+    \end{array}
+  \right.\\
+% and let F be the empty String if flags is undefined and ToString(flags) otherwise.
+  \land~ v_F = \left\{
+    \begin{array}{ll}
+      ``" & \ifc{v_{2} = \SF{undefined}} \\
+      \chf{toString}(v_{2}) & \owc
+    \end{array}
+  \right.\\
+% If the characters of P do not have the syntactic form Pattern, then throw a SyntaxError exception.
+% If F contains any character other than "g", "i", "m", or if it contains the same character more than once,
+% then throw a SyntaxError exception.
+  \land~ exc = {\inred \chf{RegExpParser}(v_{P}, v_{F})} \\
+  \land~ H_1 = \chf{RaiseException}(H, exc) \\
+}\\
+
+\end{array}
+\]
+
+\subsection{RegExp.prototype}
+\[
+\begin{array}{l}
+% 15.10.6.2 RegExp.prototype.exec(string)
+\I_{cp}\lbr \SF{BuiltinCall}(``RegExp.prototype.exec", args)\rbr(H,A)
+= (H_3, A)\\
+\quad\ifc{
+  v_{exec} \in \Obj \times \SF{Int}
+}\\
+\quad\wherec{
+   v_{1} = \hf{getArgValue}(args, ``0")\\
+   \land~ v_R = \V _{cp}\lbr \TT{this}\rbr (H,A)
+   ~\land~ v_S = \chf{toString}(v_1)\\
+   \land~ v_{lastIndex} = H(v_R)(``lastIndex") ~\land~ i = \chf{ToInteger}(v_{lastIndex}) \\
+   \land~ v_{g} = H(v_R)(``global")\\
+   \land~ v_{i} = H(v_R)(``ignoreCase")\\
+   \land~ v_{m} = H(v_R)(``multiline")\\
+   \land~ mid = H(v_R)(\varprop{matcher})\\
+   \land~ v_{exec} = {\inred \chf{exec}(mid, v_S, i, v_{g}, v_{i}, v_{m})}\\
+   \land~ l=\hf{NewLocation}()\\
+   \land~ H_1 = H[l\mapsto v_{exec}.1]\\
+   \land~ H_2 = \left\{
+     \begin{array}{ll}
+       H_1[v_R\mapsto H_1(v_R)[``lastIndex"\mapsto v_{exec}.2]] & \quad\ifc{v_g = \SF{true}}\\
+       H_1 & \quad\owc \\
+     \end{array}
+   \right.\\
+   \land~ H_3 = H_2[\varloc{temp}\mapsto H_1(\varloc{temp})[\varprop{return}\mapsto l]]
+}\\
+% 15.10.6.2 RegExp.prototype.exec(string)
+% * Case for string did not match.
+\I_{cp}\lbr \SF{BuiltinCall}(``RegExp.prototype.exec", args)\rbr(H,A)
+= (H_1, A)\\
+\quad\ifc{
+  v_{exec} = \SF{null}
+}\\
+\quad\wherec{
+   v_{1} = \hf{getArgValue}(args, ``0")\\
+   \land~ v_R = \V _{cp}\lbr \TT{this}\rbr (H,A)
+   ~\land~ v_S = \chf{toString}(v_1)\\
+   \land~ v_{lastIndex} = H(v_R)(``lastIndex") ~\land~ i = \chf{ToInteger}(v_{lastIndex}) \\
+   \land~ v_{g} = H(v_R)(``global")\\
+   \land~ v_{i} = H(v_R)(``ignoreCase")\\
+   \land~ v_{m} = H(v_R)(``multiline")\\
+   \land~ mid = H(v_R)(\varprop{matcher})\\
+   \land~ v_{exec} = {\inred\chf{exec}(mid, v_S, i, v_{g}, v_{i}, v_{m})}\\
+   \land~ H_1 = H[\varloc{temp}\mapsto H_1(\varloc{temp})[\varprop{return}\mapsto \SF{null}]]
+}\\\\
+
+% 15.10.6.3 RegExp.prototype.test(string)
+\I_{cp}\lbr \SF{BuiltinCall}(``RegExp.prototype.exec", args)\rbr(H,A)
+= (H_1, A)\\
+\quad\wherec{
+  % 1. Let match be the result of evaulating the RegExp.prototype.exec algorithm.
+   v_{1} = \hf{getArgValue}(args, ``0")\\
+   \land~ v_R = \V _{cp}\lbr \TT{this}\rbr (H,A)
+   ~\land~ v_S = \chf{toString}(v_1)\\
+   \land~ v_{lastIndex} = H(v_R)(``lastIndex") ~\land~ i = \chf{ToInteger}(v_{lastIndex}) \\
+   \land~ v_{g} = H(v_R)(``global")\\
+   \land~ v_{i} = H(v_R)(``ignoreCase")\\
+   \land~ v_{m} = H(v_R)(``multiline")\\
+   \land~ mid = H(v_R)(\varprop{matcher})\\
+   \land~ v_{exec} = {\inred\chf{exec}(mid, v_S, i, v_{g}, v_{i}, v_{m})}\\
+  % 2. If match is not null, return true; else return false.
+   \land~ v_{return} = \left\{
+     \begin{array}{ll}
+       \SF{true} & \quad\ifc{v_{exec} \neq \SF{null}} \\
+       \SF{false} & \quad\owc \\
+     \end{array}
+   \right.\\
+   \land~ H_1 = H[\varloc{temp}\mapsto H_1(\varloc{temp})[\varprop{return}\mapsto v_{return}]]
+}\\\\
+
+% 15.10.6.4 RegExp.prototype.toString()
+\I_{cp}\lbr \SF{BuiltinCall}(``RegExp.prototype.toString", args)\rbr(H,A)
+= (H_1, A)\\
+\quad\wherec{
+  v_R = \V _{cp}\lbr \TT{this}\rbr (H,A)\\
+  \land~ v_{src} = H(v_R)(``source")\\
+  \land~ v_{g} = H(v_R)(``global")\\
+  \land~ v_{i} = H(v_R)(``ignoreCase")\\
+  \land~ v_{m} = H(v_R)(``multiline")\\
+  \land~ s_1 = \left\{
+    \begin{array}{ll}
+      ``g" & \quad\ifc{v_g = \SF{true}} \\
+      ``" & \quad\owc
+    \end{array}
+  \right.\\
+  \land~ s_2 = \left\{
+    \begin{array}{ll}
+      ``i" & \quad\ifc{v_i = \SF{true}} \\
+      ``" & \quad\owc
+    \end{array}
+  \right.\\
+  \land~ s_3 = \left\{
+    \begin{array}{ll}
+      ``m" & \quad\ifc{v_m = \SF{true}} \\
+      ``" & \quad\owc
+    \end{array}
+  \right.\\
+  \land~ v_{return} = ``/" + v_{src} + ``/" + s_1 + s_2 + s_3 \\
+   \land~ H_1 = H[\varloc{temp}\mapsto H_1(\varloc{temp})[\varprop{return}\mapsto v_{return}]]
+}
+
+\end{array}
+\]
+
+
 \subsection{Error}
 \[
 \begin{array}{l}
@@ -3749,7 +4036,7 @@
       \bot_{bool}& \owc
     \end{array}\right.\\
   \land\ \hat{b}_2 = \left\{\begin{array}{ll}
-      \atrue & \ifc{\forall \hat{l} \in \hat{v}.2 : \hat{``Array"} \sqsubseteq \hat{H}(\hat{l})(\avarprop{class}).1.2.1.5}\\
+      \atrue & \ifc{\exists \hat{l} \in \hat{v}.2 : \hat{``Array"} \sqsubseteq \hat{H}(\hat{l})(\avarprop{class}).1.2.1.5}\\
       \bot_{bool}& \owc
     \end{array}\right.\\
   \land\ \hat{b}_3 = \left\{\begin{array}{ll}
