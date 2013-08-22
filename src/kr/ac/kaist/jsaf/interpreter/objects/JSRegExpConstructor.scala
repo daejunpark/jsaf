@@ -58,6 +58,13 @@ class JSRegExpConstructor(_I: Interpreter, _proto: JSObject)
     new JSRegExp(I, I.IS.RegExpPrototype, "RegExp", true, prop, matcher, p, f, nCapturingParens)
   }
 
+  /*
+   * 15.10.3 The RegExp Constructor Called as a Function
+   * 15.10.3.1 RegExp(pattern, flags)
+   * TODO
+   */
+  override def _call(tb: Val, argsObj: JSObject): Unit = I.IS.comp.setReturn(_construct(argsObj))
+
   override def _construct(argsObj: JSObject): JSRegExp = {
     construct(argsObj._get("0"), argsObj._get("1"))
   }

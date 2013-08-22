@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<!-- Test for substringData in CharacterData -->
+<body id="body1"> ddd
+  <input type="text" value="2" class="test" />
+  <input type="text" value="3" class="test" />
+  <div id="div1" class="test">
+    <div id="div2"> ttt2 </div>
+  </div>
+  <script>
+     var bodyElem = document.getElementById("body1"); // HTMLBodyElement
+     var textElem = bodyElem.firstChild; // Text node
+     var __result1 = textElem instanceof CharacterData;    // true
+     var __expect1 = true;
+     var __result2 = textElem.substringData(0, 2);    // StrTop
+     var __expect2 = "__StrTop";
+  </script>
+</body>
+

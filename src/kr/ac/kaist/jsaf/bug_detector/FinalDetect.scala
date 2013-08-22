@@ -127,7 +127,7 @@ class FinalDetect(bugDetector: BugDetector) {
               if (assertInst == null) {
                 val predNodes = cfg.getAllPred(node)
                 if (level == 1 && predNodes.size > 0) for (predNode <- predNodes) followUp(predNode, 2)
-                else bugStorage.addMessage(condExpr.getInfo.getSpan, CondBranch, rootAssertInst, null, JSAstToConcrete.doit(condExpr), rootAssertInst.flag.toString)
+                else bugStorage.addMessage(condExpr.getInfo.getSpan, CondBranch, rootAssertInst, null, JSAstToConcrete.doit(condExpr), assert.flag.toString)
                 return
               }
               else rootAssertInst = assertInst

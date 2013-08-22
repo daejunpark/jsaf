@@ -257,9 +257,9 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   //  UnreachableCode
   ////////////////////////////////////////////////////////////////
 
-  type reachabilityMap = MHashMap[ANode, MHashSet[CNode]]
-  val reachableAST = new reachabilityMap
-  val unreachableAST = new reachabilityMap
+  type ReachabilityMap = NodeRelation.MHashMapEx[ANode, MHashSet[CNode]]
+  val reachableAST = new ReachabilityMap
+  val unreachableAST = new ReachabilityMap
 
   def insertReachabilityAST(ast: ANode, cfgNode: CNode, reachable: Boolean): Unit = {
     val selectedAST = if (reachable) reachableAST else unreachableAST
@@ -331,7 +331,8 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
 
     // Filter reachable nodes again
     val newUnreachableAST1 = unreachableAST.clone
-    for((urAST, urCFGNodeSet) <- unreachableAST) {
+    for(keyValue <- unreachableAST) {
+      val (urAST, urCFGNodeSet) = keyValue
       if(!urAST.isInstanceOf[FunDecl]) {
         reachableAST.get(urAST) match {
           case Some(rCFGNodeSet) => newUnreachableAST1.remove(urAST)
@@ -346,7 +347,8 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
 
     // Filter child nodes
     val newUnreachableAST2 = newUnreachableAST1.clone
-    for((urAST, _) <- newUnreachableAST1) {
+    for(keyValue <- newUnreachableAST1) {
+      val (urAST, _) = keyValue
       NodeRelation.astParentMap.get(urAST) match {
         case Some(parent) =>
           if(isAncestor(parent)) newUnreachableAST2.remove(urAST)
@@ -373,7 +375,8 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
 
     // To list
     val list = new ListBuffer[ASTNode]
-    for((urAST, _) <- newUnreachableAST2) {
+    for(keyValue <- newUnreachableAST2) {
+      val (urAST, _) = keyValue
       urAST match {
         case ast: ASTNode => list.append(ast)
         case _ =>
@@ -387,7 +390,7 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
     })
   }
 
-  def printReachability(ast: ANode, reachableAST: reachabilityMap, unreachableAST: reachabilityMap): Unit = {
+  def printReachability(ast: ANode, reachableAST: ReachabilityMap, unreachableAST: ReachabilityMap): Unit = {
     var indent = 0
     printAST(ast)
     def printAST(ast: ANode): Unit = {

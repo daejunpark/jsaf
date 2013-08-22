@@ -107,10 +107,18 @@ object NodeFactory {
   def makeSetSpan(ifEmpty: String, l: JList[ASTNode]): Span = makeSpan(ifEmpty, l)
 
   private var comment = none[Comment]
-  def commentLog(span: Span, message: String) = {
-    if (NU.getKeepComments)
-      comment = some[Comment](makeComment(span, message))
-  }
+  def initComment = { comment = none[Comment] }
+  def commentLog(span: Span, message: String) =
+    if (NU.getKeepComments) {
+      if (!comment.isDefined ||
+          (!comment.get.getComment.startsWith("/*") && !comment.get.getComment.startsWith("//")))
+        comment = some[Comment](makeComment(span, message))
+      else {
+        val com = comment.get
+        comment = some[Comment](makeComment(NU.spanAll(com.getInfo.getSpan, span),
+                                            com.getComment+"\n"+message))
+      }
+    }
 
   def makeSpanInfoComment(span: Span): ASTSpanInfo =
     if (NU.getKeepComments && comment.isDefined) {
@@ -163,34 +171,34 @@ object NodeFactory {
     new ModExpSpecifiers(makeSpanInfoComment(span), names)
 
   def makeExportName(span: Span, name: Id): ModExpSpecifier =
-    new ModExpName(makeSpanInfo(span), makePath(name))
+    new ModExpName(makeSpanInfoComment(span), makePath(name))
 
   def makeExportName(span: Span, name: Id, path: Path): ModExpSpecifier =
-    new ModExpName(makeSpanInfo(span), makePath(name, path))
+    new ModExpName(makeSpanInfoComment(span), makePath(name, path))
 
   def makeStarFromPath(span: Span, path: Path): ModExpSpecifier =
-    new ModExpStarFromPath(makeSpanInfo(span), path)
+    new ModExpStarFromPath(makeSpanInfoComment(span), path)
 
   def makeStar(span: Span): ModExpSpecifier =
-    new ModExpStar(makeSpanInfo(span))
+    new ModExpStar(makeSpanInfoComment(span))
 
   def makeExportAlias(span: Span, name: Id, alias: Path): ModExpSpecifier =
-    new ModExpAlias(makeSpanInfo(span), name, alias)
+    new ModExpAlias(makeSpanInfoComment(span), name, alias)
 
   def makeModImpDecl(span: Span, imports: JList[ModImport]) =
     new ModImpDecl(makeSpanInfoComment(span), imports)
 
   def makeModImpSpecifierSet(span: Span, imports: JList[ModImpSpecifier], module: Path): ModImport =
-    new ModImpSpecifierSet(makeSpanInfo(span), imports, module)
+    new ModImpSpecifierSet(makeSpanInfoComment(span), imports, module)
 
   def makeModImpAlias(span: Span, name: Path, alias: Id): ModImport =
-    new ModImpAliasClause(makeSpanInfo(span), name, alias)
+    new ModImpAliasClause(makeSpanInfoComment(span), name, alias)
 
   def makeImportAlias(span: Span, name: Id, alias: Id): ModImpSpecifier =
-    new ModImpAlias(makeSpanInfo(span), name, alias)
+    new ModImpAlias(makeSpanInfoComment(span), name, alias)
 
   def makeImportName(span: Span, name: Id): ModImpSpecifier =
-    new ModImpName(makeSpanInfo(span), name)
+    new ModImpName(makeSpanInfoComment(span), name)
 
   def makeFunctional(name: Id, fds: JList[FunDecl], vds: JList[VarDecl],
                      body: JList[SourceElement], params: JList[Id]) =
@@ -203,7 +211,7 @@ object NodeFactory {
 
   def makeFunExpr(span: Span, name: Id, params: JList[Id],
                   body: JList[SourceElement]) =
-    new FunExpr(makeSpanInfo(span),
+    new FunExpr(makeSpanInfoComment(span),
                 makeFunctional(name, toJavaList(Nil), toJavaList(Nil), body, params))
 
   def makeBlock(span: Span, stmts: JList[Stmt]) =
@@ -282,71 +290,71 @@ object NodeFactory {
     new Debugger(makeSpanInfoComment(span))
 
   def makeVarDecl(span: Span, name: Id, expr: JOption[Expr]) =
-    new VarDecl(makeSpanInfo(span), name, expr)
+    new VarDecl(makeSpanInfoComment(span), name, expr)
 
   def makeCase(span: Span, cond: Expr, body: JList[Stmt]) =
-    new Case(makeSpanInfo(span), cond, body)
+    new Case(makeSpanInfoComment(span), cond, body)
 
   def makeCatch(span: Span, id: Id, body: JList[Stmt]) =
-    new Catch(makeSpanInfo(span), id, body)
+    new Catch(makeSpanInfoComment(span), id, body)
 
   def makeExprList(span: Span, es: JList[Expr]) =
-    new ExprList(makeSpanInfo(span), es)
+    new ExprList(makeSpanInfoComment(span), es)
 
   def makeCond(span: Span, cond: Expr, trueB: Expr, falseB: Expr) =
-    new Cond(makeSpanInfo(span), cond, trueB, falseB)
+    new Cond(makeSpanInfoComment(span), cond, trueB, falseB)
 
   def makeInfixOpApp(span: Span, left: Expr, op: Op, right: Expr) =
-    new InfixOpApp(makeSpanInfo(span), left, op, right)
+    new InfixOpApp(makeSpanInfoComment(span), left, op, right)
 
   def makePrefixOpApp(span: Span, op: Op, right: Expr) =
-    new PrefixOpApp(makeSpanInfo(span), op, right)
+    new PrefixOpApp(makeSpanInfoComment(span), op, right)
 
   def makeUnaryAssignOpApp(span: Span, lhs: LHS, op: Op) =
-    new UnaryAssignOpApp(makeSpanInfo(span), lhs, op)
+    new UnaryAssignOpApp(makeSpanInfoComment(span), lhs, op)
 
   def makeAssignOpApp(span: Span, lhs: LHS, op: Op, right: Expr) =
-    new AssignOpApp(makeSpanInfo(span), lhs, op, right)
+    new AssignOpApp(makeSpanInfoComment(span), lhs, op, right)
 
   def makeBracket(span: Span, lhs: LHS, index: Expr) =
-    new Bracket(makeSpanInfo(span), lhs, index)
+    new Bracket(makeSpanInfoComment(span), lhs, index)
 
   def makeDot(span: Span, lhs: LHS, member: Id) =
-    new Dot(makeSpanInfo(span), lhs, member)
+    new Dot(makeSpanInfoComment(span), lhs, member)
 
   def makeNew(span: Span, lhs: LHS) =
-    new New(makeSpanInfo(span), lhs)
+    new New(makeSpanInfoComment(span), lhs)
 
   def makeFunApp(span: Span, lhs: LHS, args: JList[Expr]) =
-    new FunApp(makeSpanInfo(span), lhs, args)
+    new FunApp(makeSpanInfoComment(span), lhs, args)
 
   def makeThis(span: Span) =
-    new This(makeSpanInfo(span))
+    new This(makeSpanInfoComment(span))
 
   def makeNull(span: Span) =
-    new Null(makeSpanInfo(span))
+    new Null(makeSpanInfoComment(span))
 
   def makeBool(span: Span, bool: Boolean) =
-    new Bool(makeSpanInfo(span), bool)
+    new Bool(makeSpanInfoComment(span), bool)
 
   def makeVarRef(span: Span, id: Id) =
-    new VarRef(makeSpanInfo(span), id)
+    new VarRef(makeSpanInfoComment(span), id)
 
   def makeArrayNumberExpr(span: Span, elmts: JList[JDouble]) = {
     if (elmts.size > 1000)
-      new ArrayNumberExpr(makeSpanInfo(span), elmts)
+      new ArrayNumberExpr(makeSpanInfoComment(span), elmts)
     else
       makeArrayExpr(span, toJavaList(toList(elmts).map(e => some(makeDoubleLiteral(span, e.toString, e).asInstanceOf[Expr]))))
   }
 
   def makeArrayExpr(span: Span, elmts: JList[JOption[Expr]]) =
-    new ArrayExpr(makeSpanInfo(span), elmts)
+    new ArrayExpr(makeSpanInfoComment(span), elmts)
 
   def makeObjectExpr(span: Span, elmts: JList[Member]) =
-    new ObjectExpr(makeSpanInfo(span), elmts)
+    new ObjectExpr(makeSpanInfoComment(span), elmts)
 
   def makeParenthesized(span: Span, expr: Expr) =
-    new Parenthesized(makeSpanInfo(span), expr)
+    new Parenthesized(makeSpanInfoComment(span), expr)
 
     /*
      * DecimalLiteral ::=
@@ -407,10 +415,10 @@ object NodeFactory {
   }
 
   def makeIntLiteral(span: Span, intVal: BigInteger, radix: Int = 10) =
-    new IntLiteral(makeSpanInfo(span), intVal, radix)
+    new IntLiteral(makeSpanInfoComment(span), intVal, radix)
 
   def makeDoubleLiteral(span: Span, str: String, doubleVal: Double) =
-    new DoubleLiteral(makeSpanInfo(span), str, doubleVal)
+    new DoubleLiteral(makeSpanInfoComment(span), str, doubleVal)
 
   def makeHexIntegerLiteral(span: Span, num: String) =
     makeIntLiteral(span, new BigInteger(num, 16), 16)
@@ -419,33 +427,33 @@ object NodeFactory {
     makeIntLiteral(span, new BigInteger(num, 8), 8)
 
   def makeStringLiteral(span: Span, str: String, quote: String) =
-    new StringLiteral(makeSpanInfo(span), quote, str)
+    new StringLiteral(makeSpanInfoComment(span), quote, str)
 
   def makeRegularExpression(span: Span, body: String, flags: String) =
-    new RegularExpression(makeSpanInfo(span), body, flags)
+    new RegularExpression(makeSpanInfoComment(span), body, flags)
 
   def makeField(span: Span, prop: Property, expr: Expr) =
-    new Field(makeSpanInfo(span), prop, expr)
+    new Field(makeSpanInfoComment(span), prop, expr)
 
   def makeGetProp(span: Span, prop: Property, body: JList[SourceElement]) =
-    new GetProp(makeSpanInfo(span), prop,
+    new GetProp(makeSpanInfoComment(span), prop,
                 makeFunctional(NU.prop2Id(prop), toJavaList(Nil), toJavaList(Nil), body,
                                toJavaList(Nil)))
 
   def makeSetProp(span: Span, prop: Property, id: Id,
                   body: JList[SourceElement]) =
-    new SetProp(makeSpanInfo(span), prop,
+    new SetProp(makeSpanInfoComment(span), prop,
                 makeFunctional(NU.prop2Id(prop), toJavaList(Nil), toJavaList(Nil), body,
                                toJavaList(List(id))))
 
   def makePropId(span: Span, id: Id) =
-    new PropId(makeSpanInfo(span), id)
+    new PropId(makeSpanInfoComment(span), id)
 
   def makePropStr(span: Span, str: String) =
-    new PropStr(makeSpanInfo(span), str)
+    new PropStr(makeSpanInfoComment(span), str)
 
   def makePropNum(span: Span, num: NumberLiteral) =
-    new PropNum(makeSpanInfo(span), num)
+    new PropNum(makeSpanInfoComment(span), num)
 
   def makeId(span: Span, name: String, uniq: String): Id =
     makeId(span, name, some(uniq))
@@ -454,16 +462,16 @@ object NodeFactory {
     makeId(span, name, None)
 
   def makeId(span: Span, name: String, uniq: Option[String]): Id =
-    new Id(makeSpanInfo(span), name, uniq, false)
+    new Id(makeSpanInfoComment(span), name, uniq, false)
 
   def makeOp(span: Span, name: String) =
     new Op(makeSpanInfo(span), name)
 
   def makeLabel(span: Span, id: Id) =
-    new Label(makeSpanInfo(span), id)
+    new Label(makeSpanInfoComment(span), id)
 
   def makeComment(span: Span, comment: String): Comment =
-    new Comment(makeSpanInfo(span), comment)
+    new Comment(makeSpanInfoComment(span), comment)
 
   def makePath(id: Id): Path =
     makePath(NU.getSpan(id), toJavaList(List(id)))
@@ -475,10 +483,10 @@ object NodeFactory {
     makePath(makeSpan(p, path), toJavaList(toList(path.getNames)++toList(p.getNames)))
 
   def makePath(span: Span, ids: JList[Id]): Path =
-    new Path(makeSpanInfo(span), ids)
+    new Path(makeSpanInfoComment(span), ids)
 
   def makeNoOp(span: Span, desc: String): NoOp =
-    makeNoOp(makeSpanInfo(span), desc)
+    makeNoOp(makeSpanInfoComment(span), desc)
 
   def makeNoOp(info: ASTSpanInfo, desc: String): NoOp =
     new NoOp(info, desc)

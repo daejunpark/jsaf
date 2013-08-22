@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<!-- Test for getUserData in Node -->
+<body id="mybody"> ddd
+  <div id="newdiv"> newdiv </div>
+  <input type="text" value="2" class="test" />
+  <input type="text" value="3" class="test" />
+  <div id="div1" class="test">
+    <div id="div2"> ttt2 </div>
+  </div>
+  <script>
+     var divElem1 = document.getElementById("div1");     // HTMLDivElement  
+     var __result1 = divElem1.getUserData("aa");    //  null
+     var __expect1 = null;
+  </script>
+</body>
+

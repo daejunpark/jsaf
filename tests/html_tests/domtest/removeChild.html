@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<!-- Test for removeChild in Node -->
+<body id="mybody"> ddd
+  <div id="newdiv"> newdiv </div>
+  <input type="text" value="2" class="test" />
+  <input type="text" value="3" class="test" />
+  <div id="div1" class="test">
+    <div id="div2"> ttt2 </div>
+  </div>
+  <script>
+     var divElem1 = document.getElementById("div1");     // HTMLDivElement  
+     var divElem2 = document.getElementById("div2");     // HTMLDivElement  
+     var __result1 = divElem1.childNodes.length;    // 3
+     var __expect1 = 3;
+     var __result2 = divElem1.childNodes[1].id;    // "div2"
+     var __expect2 = "div2";
+     var oldDivElem = divElem1.removeChild(divElem2);   // old HTMLDivElement
+     var __result3 = oldDivElem.id;       // "div2"
+     var __expect3 = "div2"
+     var __result4 = divElem1.childNodes.length;    // 2
+     var __expect4 = 2;
+     var __result5 = divElem1.childNodes[1].nodeName;    // "#text"
+     var __expect5 = "#text";
+  </script>
+</body>
+

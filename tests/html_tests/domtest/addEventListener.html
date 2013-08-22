@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<!-- Test for addEventListener in Event -->
+<body id="mybody"> ddd
+  <div id="newdiv"> newdiv </div>
+  <input type="text" value="2" class="test" />
+  <input type="text" value="3" class="test" />
+  <div id="div1" class="test">
+    <div id="div2"> ttt2 </div>
+  </div>
+  <script>
+     var divElem1 = document.getElementById("div1");     // HTMLDivElement 
+     var x=3;
+     var handler = function aa() {x=1; __result1=x;};
+     divElem1.addEventListener("click", handler);
+     var __expect1 = 1;
+  </script>
+</body>
+

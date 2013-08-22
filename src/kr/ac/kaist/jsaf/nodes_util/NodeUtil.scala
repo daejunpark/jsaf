@@ -44,7 +44,7 @@ object NodeUtil {
     }
     var map = new HashMap[String, Span]
     override def walk(node:Any):Any = node match {
-      case i:SpanInfo =>
+      case i:ASTSpanInfo =>
         val span = i.getSpan
         val key = span.at
         if (map.containsKey(key)) new ASTSpanInfo(map.get(key))
@@ -401,6 +401,9 @@ object NodeUtil {
     case hd::_ =>
       new Span(getSpan(hd).getBegin, getSpan(nodes.last).getEnd)
   }
+
+  def spanAll(span1: Span, span2: Span): Span =
+    new Span(span1.getBegin, span2.getEnd)
 
   def jspanAll(nodes: JList[Expr]): Span =
     spanAll(toList(nodes).asInstanceOf[List[ASTNode]])

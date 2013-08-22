@@ -149,18 +149,21 @@ object JSAstToConcrete extends Walker {
   override def walk(node:Any):String = node match {
     case SArrayExpr(info, elements) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("[")
       elements.foreach(e => s.append(walk(e)).append(", "))
       s.append("]")
       s.toString
     case SArrayNumberExpr(info, elements) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("[")
       s.append("A LOT!!! "+elements.size+" elements are not printed here.")
       s.append("]")
       s.toString
     case SAssignOpApp(info, lhs, op, right) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(lhs)).append(" ")
       s.append(walk(op)).append(" ")
       s.append(walk(right))
@@ -176,15 +179,18 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SStmtUnit(info, stmts) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("{\n")
       increaseIndent
       s.append(getIndent).append(join(stmts, "\n"+getIndent, new StringBuilder("")))
       decreaseIndent
       s.append("\n").append(getIndent).append("}")
       s.toString
-    case SBool(info, isBool) => if(isBool) "true" else "false"
+    case SBool(info, isBool) =>
+      walk(info)+(if(isBool) "true" else "false")
     case SBracket(info, obj, index) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(obj)).append("[").append(walk(index)).append("]")
       s.toString
     case SBreak(info, target) =>
@@ -196,6 +202,7 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SCase(info, cond, body) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("case ").append(walk(cond))
       s.append(":\n")
       increaseIndent
@@ -216,6 +223,7 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SCond(info, cond, trueBranch, falseBranch) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(cond)).append(" ? ").append(walk(trueBranch)).append(" : ").append(walk(falseBranch))
       s.toString
     case SContinue(info, target) =>
@@ -243,6 +251,7 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SDot(info, obj, member) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(obj)).append(".").append(walk(member))
       s.toString
     case SEmptyStmt(info) =>
@@ -250,7 +259,8 @@ object JSAstToConcrete extends Walker {
       s.append(walk(info))
       s.append(";")
       s.toString
-    case SExprList(info, exprs) => join(exprs, ", ", new StringBuilder("")).toString
+    case SExprList(info, exprs) =>
+      join(exprs, ", ", new StringBuilder(walk(info))).toString
     case SExprStmt(info, expr, _) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -258,9 +268,11 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SField(info, prop, expr) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(prop)).append(" : ").append(walk(expr))
       s.toString
-    case SDoubleLiteral(info, text, num) => text
+    case SDoubleLiteral(info, text, num) =>
+      walk(info)+text
     case SFor(info, init, cond, action, body) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -313,6 +325,7 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SFunApp(info, fun, args) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(fun)).append("(")
       s.append(join(args, ", ", new StringBuilder("")))
       s.append(")")
@@ -328,6 +341,7 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SFunExpr(info, SFunctional(fds, vds, body, name, params)) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("(function ")
       if(!NU.isFunExprName(name.getText)) s.append(walk(name))
       s.append("(")
@@ -338,15 +352,17 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SGetProp(info, prop, SFunctional(fds, vds, body, _, _)) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("get ").append(walk(prop)).append("()\n").append(getIndent).append("{\n")
       prFtn(s, fds, vds, body)
       s.append("\n").append(getIndent).append("}")
       s.toString
-    case SId(_, text, Some(uniq), _) =>
-      if (internal && NU.isInternal(uniq))
-        uniq.dropRight(significantBits)+getE(uniq.takeRight(significantBits))
-      else text
-    case SId(_, text, None, _) => text
+    case SId(info, text, Some(uniq), _) =>
+      walk(info)+(if (internal && NU.isInternal(uniq))
+                    uniq.dropRight(significantBits)+getE(uniq.takeRight(significantBits))
+                  else text)
+    case SId(info, text, None, _) =>
+      walk(info)+text
     case SIf(info, cond, trueBranch, falseBranch) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -365,12 +381,15 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SInfixOpApp(info, left, op, right) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(left)).append(" ")
       s.append(walk(op)).append(" ")
       s.append(walk(right))
       s.toString
-    case SIntLiteral(info, intVal, radix) => intVal.toString
-    case SLabel(info, id) => walk(id)
+    case SIntLiteral(info, intVal, radix) =>
+      walk(info)+intVal.toString
+    case SLabel(info, id) =>
+      walk(info)+walk(id)
     case SLabelStmt(info, label, stmt) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -378,21 +397,27 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SNew(info, lhs) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("new ").append(walk(lhs))
       s.toString
-    case SNull(info) => "null"
+    case SNull(info) =>
+      walk(info)+"null"
     case SObjectExpr(info, members) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("{\n")
       increaseIndent
       s.append(getIndent).append(join(members, ",\n"+getIndent, new StringBuilder("")))
       decreaseIndent
       s.append("\n").append(getIndent).append("}")
       s.toString
-    case SOp(info, text) => text
-    case SParenthesized(info, expr) => inParentheses(walk(expr))
+    case SOp(info, text) =>
+      walk(info)+text
+    case SParenthesized(info, expr) =>
+      walk(info)+inParentheses(walk(expr))
     case SPrefixOpApp(info, op, right) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(op)).append(" ").append(walk(right))
       s.toString
     case SProgram(info, STopLevel(fds, vds, program)) =>
@@ -400,13 +425,14 @@ object JSAstToConcrete extends Walker {
       prFtn(s, fds, vds, program)
       s.append(walk(info))
       s.toString
-    case SPropId(info, id) => walk(id)
-    case SPropNum(info, num) => walk(num)
+    case SPropId(info, id) =>
+      walk(info)+walk(id)
+    case SPropNum(info, num) => walk(info)+walk(num)
     case SPropStr(info, str) =>
-      if (str.equals("\"")) "'\"'" else "\""+str+"\""
+      walk(info)+(if (str.equals("\"")) "'\"'" else "\""+str+"\"")
     case SRegularExpression(info, body, flags) =>
-      if (testWith) "/"+body+"/"+flags
-      else "/"+NU.unescapeJava(body)+"/"+NU.unescapeJava(flags)
+      walk(info)+(if (testWith) "/"+body+"/"+flags
+                  else "/"+NU.unescapeJava(body)+"/"+NU.unescapeJava(flags))
     case SReturn(info, expr) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -416,6 +442,7 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SSetProp(info, prop, SFunctional(fds, vds, body, _, List(id))) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("set ").append(walk(prop)).append("(")
       s.append(walk(id)).append(") \n").append(getIndent).append("{\n")
       prFtn(s, fds, vds, body)
@@ -423,9 +450,13 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SStringLiteral(info, quote, txt) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(quote)
+                           /*
       if (NU.getKeepComments) pp(s, txt)
       else pp(s, NU.unescapeJava(txt))
+                           */
+      pp(s, NU.unescapeJava(txt))
       s.append(quote)
       s.toString
     case SSwitch(info, cond, frontCases, defjs, backCases) =>
@@ -444,7 +475,8 @@ object JSAstToConcrete extends Walker {
       decreaseIndent
       s.append("\n").append(getIndent).append("}")
       s.toString
-    case SThis(info) => "this"
+    case SThis(info) =>
+      walk(info)+"this"
     case SThrow(info, expr) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -470,16 +502,19 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SUnaryAssignOpApp(info, lhs, op) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(lhs)).append(" ").append(walk(op))
       s.toString
     case SVarDecl(info, name, expr) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(name))
       if(expr.isSome) s.append(" = ").append(walk(expr))
       s.toString
-    case SVarRef(info, id) => walk(id)
+    case SVarRef(info, id) =>
+      walk(info)+walk(id)
     case SVarStmt(info, vds) => vds match {
-      case Nil => ""
+      case Nil => walk(info)
       case _ =>
         val s: StringBuilder = new StringBuilder
         s.append(walk(info))
@@ -529,10 +564,12 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SModExpGetter(info, fd) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("export ").append(walk(fd))
       s.toString
     case SModExpSetter(info, fd) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("export ").append(walk(fd))
       s.toString
     case SModExpSpecifiers(info, names) =>
@@ -549,36 +586,45 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SModImpSpecifierSet(info, imports, module) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("{").append(join(imports, ", ", new StringBuilder(""))).append("} from ")
       s.append(walk(module))
       s.toString
     case SModImpAliasClause(info, name, alias) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(name)).append(" as ").append(walk(alias))
       s.toString
     case SModExpStarFromPath(info, path) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append("* from ").append(walk(path))
       s.toString
     case SModExpStar(info) => "*"
     case SModExpAlias(info, name, alias) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(name)).append(" : ").append(walk(alias))
       s.toString
     case SModExpName(info, name) => name match {
-      case SPath(i, names) if names.length == 1 => walk(names.head)
+      case SPath(i, names) if names.length == 1 =>
+        walk(info)+walk(names.head)
       case SPath(i, names) =>
         val s: StringBuilder = new StringBuilder
+        s.append(walk(info))
         s.append(walk(names.last)).append(" from ").append(walk(SPath(i, names.dropRight(1))))
         s.toString
     }
     case SModImpAlias(info, name, alias) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(walk(name)).append(" : ").append(walk(alias))
       s.toString
-    case SModImpName(info, name) => walk(name)
+    case SModImpName(info, name) =>
+      walk(info)+walk(name)
     case SPath(info, names) =>
       val s: StringBuilder = new StringBuilder
+      s.append(walk(info))
       s.append(join(names, ".", new StringBuilder("")))
       s.toString
     case SComment(info, comment) =>

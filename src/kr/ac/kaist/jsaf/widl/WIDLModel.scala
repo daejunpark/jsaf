@@ -271,7 +271,7 @@ class WIDLModel(cfg: CFG) extends Model(cfg) {
     }
     // If this interface implements another interface
     WIDLChecker.implementsMap.get(interfaceName) match {
-      case Some(implementsNode) => doImplements(protoLocProps._1, implementsNode)
+      case Some(implementsNodeList) => for(implementsNode <- implementsNodeList) doImplements(protoLocProps._1, implementsNode)
       case none =>
     }
     // Return the created object(interface)
@@ -297,8 +297,8 @@ class WIDLModel(cfg: CFG) extends Model(cfg) {
   def initialize(h: Heap): Heap = {
     // Top-down from "Window" object
     WIDLChecker.implementsMap.get("Window") match {
-      case Some(implementsNode) => doImplements(GlobalLoc, implementsNode)
-      case none =>
+      case Some(implementsNodeList) => for(implementsNode <- implementsNodeList) doImplements(GlobalLoc, implementsNode)
+      case None =>
     }
 
     // Bind interfaces to "Window" object directly

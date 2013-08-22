@@ -69,6 +69,33 @@ object BuiltinGlobal extends ModelData {
 
   def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
+      ("Global.eval" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          System.err.println("* Warning: Semantics of the API funcion 'Global.eval' are not defined")
+          // arguments
+          val argv = getArgValue(h, ctx, args, "0")
+          if(argv._1._5</StrBot){
+            val s = Helper.toString(Helper.toPrimitive(argv))
+            val message = s match {
+              case StrTop => "StrTop"
+              case StrBot => "StrBot"
+              case NumStr => "NumStr"
+              case OtherStr => "OtherStr"
+              case NumStrSingle(v) => v
+              case OtherStrSingle(v) => v
+            }
+            System.err.println("* Warning: the argument of 'Global.eval' is in the below ...")           
+            System.err.println("\"" + message + "\"")           
+            ((HeapBot, ContextBot), (he, ctxe))
+          }
+          else {
+            System.err.println("* Warning: the argument of 'Global.eval' is a non-string")           
+            System.err.println("* The argument is " + DomainPrinter.printValue(argv))           
+            ((Helper.ReturnStore(h, argv), ctx), (he, ctxe))
+          }
+        })
+      ),
+
       ("Global.parseInt" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           // 15.1.2.2 parseInt(string, radix)
@@ -85,6 +112,34 @@ object BuiltinGlobal extends ModelData {
           ((Helper.ReturnStore(h, rtn), ctx), (he, ctx))
         })
       ),
+      ("Global.decodeURI" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          // TODO
+          // argument
+          val s = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          // imprecise semantics
+          if(s </ StrBot){
+            ((Helper.ReturnStore(h, Value(StrTop)), ctx), (he, ctx))
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        })
+      ),
+
+      ("Global.decodeURIComponent" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          // TODO
+          // argument
+          val s = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          // imprecise semantics
+          if(s </ StrBot){
+            ((Helper.ReturnStore(h, Value(StrTop)), ctx), (he, ctx))
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        })
+      ),
+
       ("Global.encodeURIComponent" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           // TODO

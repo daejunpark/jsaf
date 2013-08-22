@@ -19,11 +19,13 @@ import kr.ac.kaist.jsaf.analysis.typing.models.DOMBuilder
 import kr.ac.kaist.jsaf.bug_detector.{StateManager, BugDetector}
 import kr.ac.kaist.jsaf.compiler.Parser
 import kr.ac.kaist.jsaf.exceptions.{ParserError, UserError}
+import kr.ac.kaist.jsaf.nodes._
 import kr.ac.kaist.jsaf.nodes_util._
-import kr.ac.kaist.jsaf.nodes.{IRRoot, WDefinition, Program}
+import kr.ac.kaist.jsaf.nodes_util.{NodeFactory => NF}
 import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.useful.{Files, Pair}
 import kr.ac.kaist.jsaf.parser.WIDL
+import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.widl.{WIDLToString, WIDLToDB, WIDLChecker}
 import edu.rice.cs.plt.tuple.{Option => JOption}
@@ -122,7 +124,7 @@ object WIDLMain {
 
     // AST
     val pair: Pair[Program, HashMap[String, String]] = Parser.fileToAST(JSFileNameList)
-    val ast_0: Program = pair.first
+    val ast_0: Program = rewriteWebapisConstructors(pair.first) // add bindings for webapis Interface constructor calls
     val fileMap: HashMap[String, String] = pair.second
     // IR
     val irErrors = Shell.ASTtoIR(JSFileName, ast_0, JOption.none[String], JOption.none[Coverage])
@@ -163,12 +165,40 @@ object WIDLMain {
     WIDLChecker.typing.dump*/
     // BugDetector Test
     /*System.out.println("\n* Bug Detector *")
-    NodeRelation.set(pgm2, ir, cfg, false)
-    val detector = new BugDetector(cfg, typing, fileMap, false, irErrors.second)
+    val detector = new BugDetector(cfg, WIDLChecker.typing, fileMap, false, irErrors.second)
     detector.detectBug*/
     // Run Web IDL checker
     WIDLChecker.doit(ast_n)
 
     0
+  }
+
+  // add bindings for webapis Interface constructor calls
+  // for each webapis Interface constructor call:
+  //     new webapis.CalendarTask(...)
+  // rewrite the above call to the following:
+  //     new webapis_CalendarTask(...)
+  // and add the following binding:
+  //     webapis_CalendarTask = CalendarTask
+  def rewriteWebapisConstructors(program: Program): Program = {
+    var bindings : List[SourceElement] = List[SourceElement]()
+    val equalsOp = NF.makeOp(program.getInfo.getSpan, "=")
+    object astWalker extends Walker {
+      override def walk(node: Any): Any = {
+        node match {
+          case SNew(i0, SFunApp(i, SDot(_, SVarRef(_, SId(_, name, _, _)), id), args))
+            if name.equals("webapis") =>
+            val lhs = SVarRef(i, SId(i, "webapis_"+id.getText, None, false))
+            bindings ++= List(SExprStmt(i, SAssignOpApp(i, lhs, equalsOp,
+              SVarRef(i, id)), true))
+            SNew(i0, SFunApp(i, lhs, super.walk(args).asInstanceOf[List[Expr]]))
+          case _ => super.walk(node)
+        }
+      }
+    }
+    astWalker.walk(program) match {
+      case SProgram(info, STopLevel(fds, vds, stmts)) =>
+        SProgram(info, STopLevel(fds, vds, bindings++stmts))
+    }
   }
 }

@@ -1,0 +1,12 @@
+<!DOCTYPE HTML>
+<body onunload="__result1 = x;">
+  <div id="div1">
+    <div id="div2" onclick="x=1"> div </div>
+  </div>
+  <script>
+    var x = 2;  // after the execution of onclick event handler function, x should be UInt(2 join 1)
+    var __result1;
+    var __expect1 = 1;
+  </script>
+</body>
+

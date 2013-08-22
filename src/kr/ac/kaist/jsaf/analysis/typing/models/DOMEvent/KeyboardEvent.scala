@@ -102,9 +102,13 @@ object KeyboardEvent extends DOM {
       ("ctrlKey", PropValue(ObjectValue(Value(BoolTop), F,T,F))),
       ("shiftKey", PropValue(ObjectValue(Value(BoolTop), F,T,F))),
       ("altKey", PropValue(ObjectValue(Value(BoolTop), F,T,F))),
-      ("metaKey", PropValue(ObjectValue(Value(BoolTop), F,T,F)))
+      ("metaKey", PropValue(ObjectValue(Value(BoolTop), F,T,F))),
+      // legacy attributes
+      ("keyCode", PropValue(ObjectValue(Value(UInt), F,T,F))),
+      ("charCode", PropValue(ObjectValue(Value(UInt), F,T,F))),
+      ("which", PropValue(ObjectValue(Value(UInt), F,T,F)))
     )
   }
 
-  val instProps = Set("keyIdentifier", "keyLocation", "ctrlKey", "shiftKey", "altKey", "metaKey")
+  val instProps = Set("keyIdentifier", "keyLocation", "ctrlKey", "shiftKey", "altKey", "metaKey", "keyCode", "charCode", "which")
 }

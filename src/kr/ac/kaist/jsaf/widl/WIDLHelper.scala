@@ -16,6 +16,14 @@ import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 
 object WIDLHelper {
+  // Integer
+  val decimalGrammer = "-?[1-9][0-9]*"
+  val decimalPattern = decimalGrammer.r.pattern
+  val hexadecimalGrammer = "-?0[Xx][0-9A-Fa-f]+"
+  val hexadecimalPattern = hexadecimalGrammer.r.pattern
+  val octalGrammer = "-?0[0-7]*"
+  val octalPattern = octalGrammer.r.pattern
+
   def getFirstAttr(node: WDefinition): String = {
     val attrs = node.getAttrs
     if(attrs.size() > 0) attrs.get(0) match {
@@ -62,7 +70,12 @@ object WIDLHelper {
     literal match {
       case SWBoolean(info, value) => Value(AbsBool.alpha(value))
       case SWFloat(info, value) => Value(AbsNumber.alpha(value.toDouble))
-      case SWInteger(info, value) => Value(AbsNumber.alpha(value.toInt))
+      case SWInteger(info, value) =>
+        if(value == "0") return Value(AbsNumber.alpha(0))
+        if(decimalPattern.matcher(value).matches) return Value(AbsNumber.alpha(Integer.parseInt(value, 10)))
+        if(hexadecimalPattern.matcher(value).matches) return Value(AbsNumber.alpha(Integer.parseInt(value.substring(2), 16)))
+        if(octalPattern.matcher(value).matches) return Value(AbsNumber.alpha(Integer.parseInt(value, 8)))
+        throw new RuntimeException("Cannot parse the \"" + value + "\" as an integer.")
       case SWString(info, str) => Value(AbsString.alpha(str))
       case SWNull(info) => Value(NullTop)
     }

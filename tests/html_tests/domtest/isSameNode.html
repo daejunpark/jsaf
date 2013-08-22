@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<!-- Test for isSameNode in Node -->
+<body id="mybody"> ddd
+  <div id="newdiv"> newdiv </div>
+  <input type="text" value="2" class="test" />
+  <input type="text" value="3" class="test" />
+  <div id="div1" class="test">
+    <div id="div2"> ttt2 </div>
+  </div>
+  <script>
+     var divElem1 = document.getElementById("div1");     // HTMLDivElement  
+     var divElem2 = document.getElementById("div2");     // HTMLDivElement  
+     var __result1 = divElem1.isSameNode(divElem2);    //  false
+     var __expect1 = false;
+     var __result2 = divElem1.isSameNode(divElem1);    //  true
+     var __expect2 = true;
+  </script>
+</body>
+

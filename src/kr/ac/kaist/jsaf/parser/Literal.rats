@@ -47,6 +47,8 @@ public Literal Literal =
 
 NumberLiteral NumericLiteral =
      HexIntegerLiteral !(idrest)
+   // B.1 Additional Syntax
+   // B.1.1 Numeric Literals
    / OctalIntegerLiteral !(idrest)
    / DecimalLiteral !(idrest) ;
 
@@ -149,6 +151,8 @@ private transient String EscapeSequence =
      }
    / a1:(!EscapeCharOrLT _) { yyValue = "\\"+a1+""; }
    / [0] !([0-9]) { yyValue = "\\0"; }
+   // B.1 Additional Syntax
+   // B.1.2 String Literals
    / a1:OctalDigit a2:OctalDigit { yyValue = "\\"+a1+a2; }
    / a1:OctalDigit { yyValue = "\\"+a1; }
    / a1:[0-3] a2:OctalDigit a3:OctalDigit { yyValue = "\\"+a1+a2+a3; }

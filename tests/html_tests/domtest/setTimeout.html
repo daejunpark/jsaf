@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<!-- Test for setTimeout in window -->
+<body id="mybody"> ddd
+  <div id="newdiv"> newdiv </div>
+  <input type="text" value="2" class="test" />
+  <input type="text" value="3" class="test" />
+  <div id="div1" class="test">
+    <div id="div2"> ttt2 </div>
+  </div>
+  <script>
+     var x=3;
+     var __result2=setTimeout(function aa() {x=1; __result1=x;}, 1000);
+     var __expect1 = "1";
+     var __expect2 = "UInt";
+  </script>
+</body>
+

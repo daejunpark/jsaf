@@ -237,24 +237,24 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
       case "#ALL" =>
         // Event object
         val proplist = MouseEvent.getInstList(lset_target) ++ KeyboardEvent.getInstList(lset_target)
-        proplist.foldLeft(Helper.NewObject(ObjProtoLoc))((o, pv) =>
+        proplist.foldLeft(Helper.NewObject(LocSet(MouseEvent.loc_proto) + KeyboardEvent.loc_proto))((o, pv) =>
           o.update(pv._1, pv._2)
         )
       case "#MOUSE" =>
         // MouseEvent object
         val proplist = MouseEvent.getInstList(lset_target)
-        proplist.foldLeft(Helper.NewObject(ObjProtoLoc))((o, pv) =>
+        proplist.foldLeft(Helper.NewObject(MouseEvent.loc_proto))((o, pv) =>
           o.update(pv._1, pv._2)
         )
       case "#KEYBOARD" =>
         // KeyboardEvent object
         val proplist = KeyboardEvent.getInstList(lset_target)
-        proplist.foldLeft(Helper.NewObject(ObjProtoLoc))((o, pv) =>
+        proplist.foldLeft(Helper.NewObject(KeyboardEvent.loc_proto))((o, pv) =>
           o.update(pv._1, pv._2)
         )
       case _ =>
         // Event object
-        Event.getInstList(lset_target).foldLeft(Helper.NewObject(ObjProtoLoc))((o, pv) =>
+        Event.getInstList(lset_target).foldLeft(Helper.NewObject(Event.loc_proto))((o, pv) =>
           o.update(pv._1, pv._2)
         )
     }

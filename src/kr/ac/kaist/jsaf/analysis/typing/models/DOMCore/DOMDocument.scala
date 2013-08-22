@@ -99,29 +99,39 @@ object DOMDocument extends DOM {
           val addr_env = set_addr.head
           val addr1 = cfg.getAPIAddress(addr_env, 0)
           val addr2 = cfg.getAPIAddress(addr_env, 1)
+          val addr3 = cfg.getAPIAddress(addr_env, 2)
           val l_r = addrToLoc(addr1, Recent)
           val l_nodes = addrToLoc(addr2, Recent)
+          val l_attributes = addrToLoc(addr3, Recent)
           val (h_1, ctx_1)  = Helper.Oldify(h, ctx, addr1)
           val (h_2, ctx_2)  = Helper.Oldify(h_1, ctx_1, addr2)
+          val (h_3, ctx_3)  = Helper.Oldify(h_2, ctx_2, addr3)
 
-          val s_tag = Helper.toString(Helper.toPrimitive(getArgValue(h_2, ctx_2, args, "0")))
+          val s_tag = Helper.toString(Helper.toPrimitive(getArgValue(h_3, ctx_3, args, "0")))
 
           // DOMException object with the INVALID_CHARACTER_ERR exception code
           val es = Set(DOMException.INVALID_CHARACTER_ERR)
-          val (he_1, ctxe_1) = DOMHelper.RaiseDOMException(h_2, ctx_2, es)
+          val (he_1, ctxe_1) = DOMHelper.RaiseDOMException(h_3, ctx_3, es)
 
+          // object for 'childNodes' property
+          val childNodes_list = DOMNodeList.getInsList(0)
+          val childNodes = childNodes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+          
+          // object for 'attributes' property
+          val attributes_list = DOMNamedNodeMap.getInsList(0)
+          val attributes = attributes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+          
           /* imprecise semantics */
           s_tag match {
             // may cause the INVALID_CHARACTER_ERR exception
             case StrTop | OtherStr =>
               val element_obj_proplist = HTMLTopElement.default_getInsList()
               val element_obj = element_obj_proplist.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2, AbsentTop))
-              // 'childNodes' update
-              val childNodes_list = DOMNodeList.getInsList(0)
-              val childNodes = childNodes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
-              val element_obj_up = element_obj.update("childNodes", PropValue(ObjectValue(l_nodes, F, T, T)))
-              val h_3= h_2.update(l_nodes, childNodes).update(l_r, element_obj_up)
-              ((Helper.ReturnStore(h_3, Value(l_r)), ctx_2), (he + he_1, ctxe + ctxe_1))
+              // 'childNodes' and 'attributes' update
+              val element_obj_up = element_obj.update("childNodes", PropValue(ObjectValue(l_nodes, F, T, T))).update(
+                                                      "attributes", PropValue(ObjectValue(l_attributes, F, T, T)))
+              val h_4= h_3.update(l_nodes, childNodes).update(l_attributes, attributes).update(l_r, element_obj_up)
+              ((Helper.ReturnStore(h_4, Value(l_r)), ctx_3), (he + he_1, ctxe + ctxe_1))
             // cause the INVALID_CHARACTER_ERR exception
             case NumStr | NumStrSingle(_) =>
               ((HeapBot, ContextBot), (he + he_1, ctxe + ctxe_1))
@@ -130,12 +140,11 @@ object DOMDocument extends DOM {
               // if(DOMHelper.isValidHtmlTag(tag_name)) {
                 val element_obj_proplist = DOMElement.getInsList(PropValue(ObjectValue(AbsString.alpha(tag_name), F, T, T))):::DOMHelper.getInsList(tag_name)
                 val element_obj = element_obj_proplist.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
-                // 'childNodes' update
-                val childNodes_list = DOMNodeList.getInsList(0)
-                val childNodes = childNodes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
-                val element_obj_up = element_obj.update("childNodes", PropValue(ObjectValue(l_nodes, F, T, T)))
-                val h_3= h_2.update(l_nodes, childNodes).update(l_r, element_obj_up)
-                ((Helper.ReturnStore(h_3, Value(l_r)), ctx_2), (he, ctxe))
+                // 'childNodes' and 'attributes' update
+                val element_obj_up = element_obj.update("childNodes", PropValue(ObjectValue(l_nodes, F, T, T))).update(
+                                                        "attributes", PropValue(ObjectValue(l_attributes, F, T, T)))
+                val h_4= h_3.update(l_nodes, childNodes).update(l_attributes, attributes).update(l_r, element_obj_up)
+                ((Helper.ReturnStore(h_4, Value(l_r)), ctx_3), (he + he_1, ctxe + ctxe_1))
               //}
               // An invalid tag name causes the INVALID_CHARACTER_ERR exception
               //else
@@ -146,7 +155,44 @@ object DOMDocument extends DOM {
         })),
       //case "DOMDocument.createDocumentFragment" => ((h, ctx), (he, ctxe))
       //case "DOMDocument.createTextNode" => ((h, ctx), (he, ctxe))
-      //case "DOMDocument.createComment" => ((h, ctx), (he, ctxe))
+      ("DOMDocument.createComment" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+          val addr2 = cfg.getAPIAddress(addr_env, 1)
+          val addr3 = cfg.getAPIAddress(addr_env, 2)
+          val l_r = addrToLoc(addr1, Recent)
+          val l_nodes = addrToLoc(addr2, Recent)
+          val l_attributes = addrToLoc(addr3, Recent)
+          val (h_1, ctx_1)  = Helper.Oldify(h, ctx, addr1)
+          val (h_2, ctx_2)  = Helper.Oldify(h_1, ctx_1, addr2)
+          val (h_3, ctx_3)  = Helper.Oldify(h_2, ctx_2, addr3)
+
+          // argument
+          val s_data = Helper.toString(Helper.toPrimitive(getArgValue(h_2, ctx_2, args, "0")))
+
+          if(s_data </ StrBot) {
+            val comment_obj_proplist = DOMComment.getInsList(PropValue(ObjectValue(s_data, T, T, T)))
+            val comment_obj = comment_obj_proplist.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+            // 'childNodes' update
+            val childNodes_list = DOMNodeList.getInsList(0)
+            val childNodes = childNodes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+            val comment_obj_up = comment_obj.update("childNodes", PropValue(ObjectValue(l_nodes, F, T, T)))
+            // 'attributes' update
+            val attributes_list = DOMNamedNodeMap.getInsList(0)
+            val attributes = attributes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+            val comment_obj_up2 = comment_obj.update("attributes", PropValue(ObjectValue(l_attributes, F, T, T)))
+            // heap update
+            val h_4= h_3.update(l_nodes, childNodes).update(l_attributes, attributes).update(l_r, comment_obj_up2)
+            // returns a comment node
+            ((Helper.ReturnStore(h_4, Value(l_r)), ctx_3), (he, ctxe))
+          }
+          else 
+            ((HeapBot, ContextBot), (he, ctxe))
+         })),
       //case "DOMDocument.createCDATASection" => ((h, ctx), (he, ctxe))
       //case "DOMDocument.createProcessingInstruction" => ((h, ctx), (he, ctxe))
       //case "DOMDocument.createAttribute" => ((h, ctx), (he, ctxe))

@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<!-- Test for Event.target -->
+<body id="mybody"> ddd
+  <div id="newdiv"> newdiv </div>
+  <input id="input1" type="text" value="2" class="test" />
+  <input type="text" value="3" class="test" />
+  <div id="div1" class="test">
+    <div id="div2"> ttt2 </div>
+  </div>
+  <script>
+
+    // event listener
+    function f(e) {
+      e.target.setAttribute("newattr", "eventcall");
+      var inputElem = document.getElementById("input1");
+      var divElem = document.getElementById("div1");
+      __result1 = inputElem.getAttribute("newattr");
+      __result2 = divElem.attributes["newattr"].value;
+    }
+    document.addEventListener("click", f, false);
+    var __expect1 = "eventcall";
+    var __expect2 = "eventcall";
+  </script>
+</body>
+

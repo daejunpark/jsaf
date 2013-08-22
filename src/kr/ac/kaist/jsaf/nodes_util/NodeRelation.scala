@@ -50,6 +50,13 @@ object NodeRelation {
       }
       key1Value == key2Value
     }
+
+    // Clone
+    override def clone = {
+      val clonedMap = new MHashMapEx[KeyType, ValueType]
+      for(keyValue <- this) clonedMap.put(keyValue._1, keyValue._2)
+      clonedMap
+    }
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -670,12 +677,12 @@ object NodeRelation {
     println*/
 
     // IR -> CFG
-    println("*** IR -> CFG ***")
+    /*println("*** IR -> CFG ***")
     for((ir, cfgList)<- ir2cfgMap) {
       println(ir.getClass().getSimpleName() + '[' + getUID(ir) + "] : " + irToString(ir))
       for(cfg <- cfgList) println("    " + cfg.getClass().getSimpleName() + " : " + cfgToString(cfg))
     }
-    println
+    println*/
 
     // CFG -> IR
     /*println("*** CFG -> IR ***")

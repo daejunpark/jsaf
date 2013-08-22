@@ -9,20 +9,20 @@
 
 package kr.ac.kaist.jsaf.widl
 
-import scala.collection.mutable.{HashMap => MHashMap, Map => MMap}
+import scala.collection.mutable.{ HashMap => MHashMap, Map => MMap, ListBuffer => MListBuffer }
 import kr.ac.kaist.jsaf.analysis.cfg._
-import kr.ac.kaist.jsaf.analysis.cfg.{Node => CNode}
+import kr.ac.kaist.jsaf.analysis.cfg.{ Node => CNode }
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.CallContext._
-import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
+import kr.ac.kaist.jsaf.analysis.typing.{ SemanticsExpr => SE }
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.bug_detector.StateManager
 import kr.ac.kaist.jsaf.nodes._
-import kr.ac.kaist.jsaf.nodes.{Node => ANode}
-import kr.ac.kaist.jsaf.nodes_util.{NodeFactory => NF, NodeUtil => NU, NodeRelation, Span, SourceLocRats}
+import kr.ac.kaist.jsaf.nodes.{ Node => ANode }
+import kr.ac.kaist.jsaf.nodes_util.{ NodeFactory => NF, NodeUtil => NU, NodeRelation, Span, SourceLocRats }
 import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
-import edu.rice.cs.plt.tuple.{Option => JOption}
+import edu.rice.cs.plt.tuple.{ Option => JOption }
 
 // libraries = ["webapis.tv.channel", ...]
 object WIDLChecker extends Walker {
@@ -37,10 +37,10 @@ object WIDLChecker extends Walker {
   ////////////////////////////////////////////////////////////////////////////////
   // WIDL Nodes
   ////////////////////////////////////////////////////////////////////////////////
-  val enumMap =                                 new MHashMap[String, WEnum]
-  val interfaceMap =                            new MHashMap[String, WInterface]
-  val implementsMap =                           new MHashMap[String, WImplementsStatement]
-  val typedefMap =                              new MHashMap[String, WTypedef]
+  val enumMap = new MHashMap[String, WEnum]
+  val interfaceMap = new MHashMap[String, WInterface]
+  val implementsMap = new MHashMap[String, MListBuffer[WImplementsStatement]]
+  val typedefMap = new MHashMap[String, WTypedef]
   // interface |-> parent interfaces
   var impdbs: MMap[String, List[String]] = MHashMap[String, List[String]]()
   // interface |-> variables
@@ -53,15 +53,22 @@ object WIDLChecker extends Walker {
   ////////////////////////////////////////////////////////////////////////////////
   // Analysis
   ////////////////////////////////////////////////////////////////////////////////
-  var cfg: CFG =                                null
-  var typing: TypingInterface =                 null
-  var semantics: Semantics =                    null
-  var stateManager: StateManager =              null
+  var cfg: CFG = null
+  var argObj: Obj = null
+  var argState: State = null
+  var typing: TypingInterface = null
+  var semantics: Semantics = null
+  var stateManager: StateManager = null
 
   ////////////////////////////////////////////////////////////////////////////////
   // Function Argument Size
   ////////////////////////////////////////////////////////////////////////////////
-  val argSizeMap =                              new MHashMap[String, (Int, Int)]
+  val argSizeMap = new MHashMap[String, (Int, Int)]
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // Soundness for argument type cheching
+  ////////////////////////////////////////////////////////////////////////////////
+  val soundness = true
 
   ////////////////////////////////////////////////////////////////////////////////
   // ...
@@ -70,60 +77,208 @@ object WIDLChecker extends Walker {
     case SWNamedType(_, _, n) => Some(n)
     case _ => None // Not yet implemented : In case of other types...?
   }
-  
+
   def isErrorCallback(typ: WType): Boolean = getType(typ) match {
     case Some(t) => t.endsWith("ErrorCallback")
     case None => false
   }
-  
+
   def isOptional(attr: WEAttribute): Boolean = attr match {
     case SWEAOptional(_) => true
     case _ => false
   }
-  
+
+  def checkArgumentType(propValue: PropValue, apitype: String): (Boolean, String) = {
+    val undefval = propValue.objval.value.pvalue.undefval
+    val nullval = propValue.objval.value.pvalue.nullval
+    val boolval = propValue.objval.value.pvalue.boolval
+    val strval = propValue.objval.value.pvalue.strval
+    val numval = propValue.objval.value.pvalue.numval
+    val locset = propValue.objval.value.locset
+    val notAllBottom = !undefval.isBottom || !nullval.isBottom || !boolval.isBottom || !strval.isBottom || !numval.isBottom
+    val notInf = !(numval == PosInf || numval == NegInf || numval == NaN || numval == Infinity)
+    val notOtherStr = !(strval == OtherStr || strval.isInstanceOf[OtherStrSingle])
+    if (soundness) {
+      apitype match {
+        case "any" => (true, "any")
+        case "boolean" => (true, "boolean")
+        case "byte" => (locset.isEmpty, "byte")
+        case "octet" => (locset.isEmpty, "octet")
+        case "short" => (locset.isEmpty, "short")
+        case "unsigned short" => (locset.isEmpty, "unsigned short")
+        case "long" => (locset.isEmpty, "long")
+        case "unsigned long" => (locset.isEmpty, "unsigned long")
+        case "long long" => (locset.isEmpty, "long long")
+        case "unsigned long long" => (locset.isEmpty, "unsigned long long")
+        case "float" => (undefval.isBottom && notInf && !numval.isTop && notOtherStr && !strval.isTop, "float")
+        case "unrestricted float" => (locset.isEmpty, "unrestricted float")
+        case "double" => (undefval.isBottom && notInf && !numval.isTop && notOtherStr && !strval.isTop, "double")
+        case "unrestricted double" => (locset.isEmpty, "unrestricted double")
+        case "DOMString" => (true, "DOMString")
+        case typ =>
+          var result = false;
+          var allLocResult = true;
+          enumMap.get(typ) match {
+            case Some(enum) => result = true;
+            case _ =>
+          }
+          interfaceMap.get(typ) match {
+            case Some(interface) =>
+              val interfaceMemberTypeMap = new MHashMap[String, String]
+              for (mem <- toList(interface.getMembers)) {
+                mem match {
+                  case SWConst(_, _, t, n, _) => getType(t) match {
+                    case Some(t) => interfaceMemberTypeMap.update(n, t)
+                    case _ =>
+                  }
+                  case SWAttribute(_, _, t, n, _) => getType(t) match {
+                    case Some(t) => interfaceMemberTypeMap.update(n, t)
+                    case _ =>
+                  }
+                  case SWOperation(_, _, _, t, n, args, _) => (n, getType(t)) match {
+                    case (Some(n), Some(t)) => interfaceMemberTypeMap.update(n, t)
+                    case _ =>
+                  }
+                  case _ =>
+                }
+              }
+              for (loc <- locset) {
+                var num = 0
+                for (prop <- argState.heap(loc).getProps) {
+                  if (interfaceMemberTypeMap.contains(prop) &&
+                      checkArgumentType(argState.heap(loc).map(prop)._1, interfaceMemberTypeMap(prop))._1) {
+                      num = num + 1
+                      if (num == interfaceMemberTypeMap.size && num == argState.heap(loc).getProps.size) result = true
+                  } else {
+                    allLocResult = false
+                  }
+                }
+              }
+            case _ =>
+          }
+          typedefMap.get(typ) match {
+            case Some(typedef) =>
+              getType(typedef.getTyp) match {
+                case Some(t) => result = checkArgumentType(propValue, t)._1
+                case _ => 
+              }
+            case _ =>
+          }
+          (allLocResult && result, typ)
+      }
+    } else {
+      apitype match {
+        case "any" => (true, "any")
+        case "boolean" => (true, "boolean")
+        case "byte" => (notAllBottom, "byte")
+        case "octet" => (notAllBottom, "octet")
+        case "short" => (notAllBottom, "short")
+        case "unsigned short" => (notAllBottom, "unsigned short")
+        case "long" => (notAllBottom, "long")
+        case "unsigned long" => (notAllBottom, "unsigned long")
+        case "long long" => (notAllBottom, "long long")
+        case "unsigned long long" => (notAllBottom, "unsigned long long")
+        case "float" => (!nullval.isBottom || !boolval.isBottom || (!strval.isBottom && notOtherStr) ||
+          (!numval.isBottom && notInf), "float")
+        case "unrestricted float" => (notAllBottom, "unrestricted float")
+        case "double" => (!nullval.isBottom || !boolval.isBottom || (!strval.isBottom && notOtherStr) ||
+          (!numval.isBottom && notInf), "double")
+        case "unrestricted double" => (notAllBottom, "sunrestricted double")
+        case "DOMString" => (true, "DOMString")
+        case typ =>
+          var result = false;
+          enumMap.get(typ) match {
+            case Some(enum) => result = true; // how can we know if typ is an element of enum?
+            case _ =>
+          }
+          interfaceMap.get(typ) match {
+            case Some(interface) =>
+              val interfaceMemberTypeMap = new MHashMap[String, String]
+              for (mem <- toList(interface.getMembers)) {
+                mem match {
+                  case SWConst(_, _, t, n, _) => getType(t) match {
+                    case Some(t) => interfaceMemberTypeMap.update(n, t)
+                    case _ =>
+                  }
+                  case SWAttribute(_, _, t, n, _) => getType(t) match {
+                    case Some(t) => interfaceMemberTypeMap.update(n, t)
+                    case _ =>
+                  }
+                  case SWOperation(_, _, _, t, n, _, _) => (n, getType(t)) match {
+                    case (Some(n), Some(t)) => interfaceMemberTypeMap.update(n, t)
+                    case _ =>
+                  }
+                  case _ =>
+                }
+              }
+              for (loc <- locset) {
+                var num = 0
+                for (prop <- argState.heap(loc).getProps) {
+                  if (interfaceMemberTypeMap.contains(prop) &&
+                      checkArgumentType(argState.heap(loc).map(prop)._1, interfaceMemberTypeMap(prop))._1) {
+                      num = num + 1
+                      if (num == interfaceMemberTypeMap.size && num == argState.heap(loc).getProps.size) result = true
+                  }
+                }
+              }
+            case _ =>
+          }
+          typedefMap.get(typ) match {
+            case Some(typedef) =>
+              getType(typedef.getTyp) match {
+                case Some(t) => result = checkArgumentType(propValue, t)._1
+                case _ => 
+              }
+            case _ =>
+          }
+          (result, typ)
+      }
+    }
+  }
+
   def addAllMembers(now: String, wdefs: List[WDefinition]): Unit = {
     wdefs.foreach(wdef => wdef match {
       case SWModule(_, _, n, list) => addAllMembers(n, list);
       case SWInterface(_, _, n, _, list) => addAllInterfaceMembers(n, list);
       case SWImplementsStatement(_, _, n, m) =>
-        if(impdbs.contains(n)) impdbs.update(n, m::impdbs(n))
+        if (impdbs.contains(n)) impdbs.update(n, m :: impdbs(n))
         else impdbs.update(n, List(m))
       case _ => None
     })
   }
-  
+
   def addAllInterfaceMembers(now: String, wintmems: List[WInterfaceMember]): Unit = {
     wintmems.foreach(wintmem => wintmem match {
       case SWConst(_, _, t, n, _) => getType(t) match {
         case Some(typ) =>
           typedbs.update((now, n), typ)
-          if (vardbs.contains(now)) vardbs.update(now, (n, wintmem)::vardbs(now))
+          if (vardbs.contains(now)) vardbs.update(now, (n, wintmem) :: vardbs(now))
           else vardbs.update(now, List((n, wintmem)))
         case _ =>
       }
       case SWAttribute(_, _, t, n, _) => getType(t) match {
         case Some(typ) =>
           typedbs.update((now, n), typ)
-          if (vardbs.contains(now)) vardbs.update(now, (n, wintmem)::vardbs(now))
+          if (vardbs.contains(now)) vardbs.update(now, (n, wintmem) :: vardbs(now))
           else vardbs.update(now, List((n, wintmem)))
         case _ =>
       }
-      case  SWOperation(_, _, _, _, n, _, _) => n match {
+      case SWOperation(_, _, _, _, n, _, _) => n match {
         case Some(n) =>
-          if (fundbs.contains(now)) fundbs.update(now, (n, wintmem)::fundbs(now))
+          if (fundbs.contains(now)) fundbs.update(now, (n, wintmem) :: fundbs(now))
           else fundbs.update(now, List((n, wintmem)))
         case None =>
       }
       case _ =>
     })
   }
-  
+
   def dotToStr(dot: LHS): Option[String] = dot match {
-    case SDot(_, d:Dot, SId(_, x, _, _)) => dotToStr(d) match {
-      case Some(str) => Some(str+"."+x)
+    case SDot(_, d: Dot, SId(_, x, _, _)) => dotToStr(d) match {
+      case Some(str) => Some(str + "." + x)
       case None => None
     }
-    case SDot(_, SVarRef(_, SId(_, o, _, _)), SId(_, x, _, _)) => Some(o+"."+x)
+    case SDot(_, SVarRef(_, SId(_, o, _, _)), SId(_, x, _, _)) => Some(o + "." + x)
     case SVarRef(_, SId(_, x, _, _)) => Some(x)
     case _ => None
   }
@@ -137,12 +292,12 @@ object WIDLChecker extends Walker {
   }
 
   private var nestedTries = 0
-  private val sl = new SourceLocRats("WIDLChecker",0,0,0)
-  private val span = new Span(sl,sl)
+  private val sl = new SourceLocRats("WIDLChecker", 0, 0, 0)
+  private val span = new Span(sl, sl)
   def freshName(name: String) = "__WIDLChecker__" + name
   def mkId(name: String) = NF.makeId(span, name)
   def mkFreshId(name: String) = NF.makeId(span, freshName(name))
-  
+
   def initAll = {
     // Initialize variables
     dbs = MHashMap[String, List[WDefinition]]()
@@ -160,47 +315,16 @@ object WIDLChecker extends Walker {
     // Reset
     initAll
     // Read libraries (databases)
-    for(lib <- libraries) readDB(lib)
+    for (lib <- libraries) readDB(lib)
     typedbs.update(("top-level", "window"), "Window")
     // Collect some nodes
     walkWIDL()
-  }
-
-  // add bindings for webapis Interface constructor calls
-  // for each webapis Interface constructor call:
-  //     new webapis.CalendarTask(...)
-  // rewrite the above call to the following:
-  //     new webapis_CalendarTask(...)
-  // and add the following binding:
-  //     webapis_CalendarTask = CalendarTask
-  def rewriteWebapisConstructors(program: Program) = {
-    var bindings : List[SourceElement] = List[SourceElement]()
-    val equalsOp = NF.makeOp(program.getInfo.getSpan, "=")
-    object astWalker extends Walker {
-      override def walk(node: Any): Any = {
-        node match {
-          case SNew(i0, SFunApp(i, SDot(_, SVarRef(_, SId(_, name, _, _)), id), args))
-               if name.equals("webapis") =>
-            val lhs = SVarRef(i, SId(i, "webapis_"+id.getText, None, false))
-            bindings ++= List(SExprStmt(i, SAssignOpApp(i, lhs, equalsOp,
-                                                        SVarRef(i, id)), true))
-            SNew(i0, SFunApp(i, lhs, super.walk(args).asInstanceOf[List[Expr]]))
-          case _ => super.walk(node)
-        }
-      }
-    }
-    astWalker.walk(program) match {
-      case SProgram(info, STopLevel(fds, vds, stmts)) =>
-        SProgram(info, STopLevel(fds, vds, bindings++stmts))
-    }
   }
 
   def doit(_program: Program, libraries: List[String] = null) = {
     var program = _program
     // Set libraries (database)
     if(libraries != null) setLibraries(libraries)
-    // add bindings for webapis Interface constructor calls
-    program = rewriteWebapisConstructors(program)
     // Check
     walkUnit(program)
     // Report
@@ -214,7 +338,7 @@ object WIDLChecker extends Walker {
           case node@SWInterface(info, attrs, name, parent, members) => interfaceMap.put(name, node)
           case node@SWEnum(info, attrs, name, enumValueList) => enumMap.put(name, node)
           case node@SWTypedef(info, attrs, typ, name) => typedefMap.put(name, node)
-          case node@SWImplementsStatement(info, attrs, name, parent) => implementsMap.put(name, node)
+          case node@SWImplementsStatement(info, attrs, name, parent) => implementsMap.getOrElseUpdate(name, new MListBuffer).append(node)
           case _ =>
         }
         super.walk(node)
@@ -240,15 +364,17 @@ object WIDLChecker extends Walker {
   val errSpace = "\n            "
   val wnSpace = "\n              "
   val error_CF = "Name %s is not found in the API %s."
-  val error_AN = "Number of the arguments to %s is %s;"+errSpace+"provide arguments of size from %s to %s."
-  val error_AT = "Argument Type Error at %s"
-  val warning_EC = "Call to %s is missing an error callback function;"+wnSpace+"provide an error callback function."
-  val warning_EH = "Function %s may raise an exception;"+wnSpace+"call the function inside the try statement."
+  val error_AN = "Number of the arguments to %s is %s;" + errSpace + "provide arguments of size from %s to %s."
+  val error_AN2 = "Number of the arguments to %s is %s;" + errSpace + "provide arguments of size of %s."
+  val error_AT = "Argument #%s of the function %s is wrong;" + errSpace + "provide %s type for argument #%s."
+  val warning_AT = "Argument #%s of the function %s may be wrong;" + wnSpace + "provide %s type for argument #%s."
+  val warning_EC = "Call to %s is missing an error callback function;" + wnSpace + "provide an error callback function."
+  val warning_EH = "Function %s may raise an exception;" + wnSpace + "call the function inside the try statement."
   def printErrMsgLHS(obj: LHS, x: String): Unit = {
     val api = dotToStr(obj) match {
-                case Some(apis) => apis
-                case _ => obj.toString
-              }
+      case Some(apis) => apis
+      case _ => obj.toString
+    }
     printErrMsg(obj, error_CF.format(x, api))
   }
 
@@ -263,14 +389,14 @@ object WIDLChecker extends Walker {
 
   // find a pair of an owner type and a member
   def getMembers(typ: String): List[(String, (String, WInterfaceMember))] =
-    impdbs.getOrElse(typ, Nil).foldLeft(vardbs.getOrElse(typ, Nil).map(v => (typ,v)) ++
-                                        fundbs.getOrElse(typ, Nil).map(f => (typ,f)))((res,p) => res ++ getMembers(p))
+    impdbs.getOrElse(typ, Nil).foldLeft(vardbs.getOrElse(typ, Nil).map(v => (typ, v)) ++
+      fundbs.getOrElse(typ, Nil).map(f => (typ, f)))((res, p) => res ++ getMembers(p))
 
   def getAPI(obj: LHS, y: String): Option[String] = obj match {
-    case SDot(_, dot:LHS, SId(_, x, _, _)) => getAPI(dot, x) match {
+    case SDot(_, dot: LHS, SId(_, x, _, _)) => getAPI(dot, x) match {
       case Some(typ) =>
         (getMembers(typ).find(p => p._2._1.equals(x))) match {
-          case Some((ty,_)) => Some(typedbs(ty, x))
+          case Some((ty, _)) => Some(typedbs(ty, x))
           case None => None
         }
       case None => None
@@ -303,61 +429,68 @@ object WIDLChecker extends Walker {
           (getMembers(typ).find(p => p._2._1.equals(x))) match {
             case Some(pair) => current = Some(pair._2)
             case None => printErrMsgLHS(obj, x)
-            }
+          }
         case _ => printErrMsgLHS(obj, x)
       }
-      
+
     case fa@SFunApp(_, fun@SDot(_, obj, SId(_, x, _, _)), args) if (isAPI(obj)) =>
       current = None // assertion
       walkUnit(fun)
       current match {
-        case Some((_, op:WOperation)) =>
+        case Some((_, op: WOperation)) =>
           if (!op.getExns.isEmpty && nestedTries == 0)
             printWarnMsg(fa, warning_EH.format(dotToStr(fun).getOrElse(x)))
-          var numOfArgument = op.getArgs.size
+          NodeRelation.ast2cfgMap.get(fa) match {
+            case Some(cfgList) =>
+              for (cfgInst <- cfgList) {
+                cfgInst match {
+                  case inst@CFGCall(iid, info, fun, thisArg, arguments, addr) =>
+                    val cfgNode = cfg.findEnclosingNode(inst)
+                    val cstate = stateManager.getInputCState(cfgNode, inst.getInstId, _MOST_SENSITIVE)
+                    for ((callContext, state) <- cstate) {
+                      val argLocSet = SE.V(arguments, state.heap, state.context)._1.locset
+                      for (argLoc <- argLocSet) {
+                        argState = state
+                        argObj = state.heap(argLoc)
+                      }
+                    }
+                  case _ =>
+                }
+              }
+            case None =>
+          }
           var numOfOptional = 0
+          var numOfArgument = op.getArgs.size
           toList(op.getArgs).zipWithIndex.foreach(pair => pair._1 match {
             case SWArgument(_, attrs, t, _, _) =>
-              /*NodeRelation.ast2cfgMap.get(fa) match {
-                case Some(cfgList) =>
-                  for(cfgInst <- cfgList) {
-                    cfgInst match {
-                      case inst@CFGCall(iid, info, fun, thisArg, arguments, addr) =>
-                        println("HERE!!! => ASTFunApp[" + fa.getUID + ']' + NodeRelation.cfgToString(cfgInst))
-                        val cfgNode = cfg.findEnclosingNode(inst)
-                        val cstate = stateManager.getInputCState(cfgNode, inst.getInstId, _MOST_SENSITIVE)
-                        for((callContext, state) <- cstate) {
-                          val argLocSet = SE.V(arguments, state.heap, state.context)._1.locset
-                          for(argLoc <- argLocSet) {
-                            println("* For argument loc #" + argLoc)
-                            for(i <- 0 until args.length) {
-                              val argObj = state.heap(argLoc)
-                              argObj.map.get(i.toString) match {
-                                case Some((propValue, _)) =>
-                                  println("  [" + i + "] = " + propValue.objval.value)
-                                  if(propValue.objval.value.pvalue.numval != NumBot) {
-                                  }
-                                case None => println("  [" + i + "] =")
-                              }
-                            }
-                          }
-                        }
-                        //stateManager.dump(cfgNode, inst, cstate)
-                      case _ =>
-                    }
+              if (pair._2 < args.length) {
+                var result = (false, "?")
+                if (argObj != null && argObj.map != null) {
+                  (argObj.map.get(pair._2.toString), getType(t)) match {
+                    case (Some(objTuple), Some(typ)) => result = checkArgumentType(objTuple._1, typ)
+                    case _ =>
                   }
-                case None =>
-              }*/
-              if(!attrs.filter(attr => isOptional(attr)).isEmpty) {
+                }
+                if (!result._1) {
+                  if (soundness)
+                    printWarnMsg(fa, warning_AT.format(pair._2 + 1, dotToStr(fun).getOrElse(x), result._2, pair._2 + 1))
+                  else
+                    printErrMsg(fa, error_AT.format(pair._2 + 1, dotToStr(fun).getOrElse(x), result._2, pair._2 + 1))
+                }
+              }
+              if (!attrs.filter(attr => isOptional(attr)).isEmpty) {
                 numOfOptional = numOfOptional + 1
-                if(pair._2 >= args.length && isErrorCallback(t))
+                if (pair._2 >= args.length && isErrorCallback(t))
                   printWarnMsg(fa, warning_EC.format(dotToStr(fun).getOrElse(x)))
               }
             case _ =>
           })
-          if(numOfArgument-numOfOptional > args.length || args.length > numOfArgument)
-            printErrMsg(fa, error_AN.format(dotToStr(fun).getOrElse(x), args.length,
-                                            numOfArgument-numOfOptional, numOfArgument))
+          if (numOfArgument - numOfOptional > args.length || args.length > numOfArgument)
+            if (numOfOptional != 0)
+              printErrMsg(fa, error_AN.format(dotToStr(fun).getOrElse(x), args.length,
+                numOfArgument - numOfOptional, numOfArgument))
+            else
+              printErrMsg(fa, error_AN.format(dotToStr(fun).getOrElse(x), args.length, numOfArgument))
         case _ =>
       }
       current = None

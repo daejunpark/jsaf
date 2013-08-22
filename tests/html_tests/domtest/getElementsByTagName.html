@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<!-- Test for getElementsByTagName in Document -->
+<body> ddd
+  <input type="text" value="2" class="test" />
+  <input type="text" value="3" class="test" />
+  <div id="div1" class="test">
+    <div id="div2"> ttt2 </div>
+  </div>
+  <script>
+     var testElems = document.getElementsByTagName("div"); // NodeList
+     var __result1 = testElems.length;
+     var __expect1 = 2;
+  </script>
+</body>
+

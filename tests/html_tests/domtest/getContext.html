@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title> test for getContext in HTMLCanvasElement </title>
+  </head>
+  <body>
+    <canvas height="715" width="1157" id="c"> </canvas>
+    <script type="text/javascript">
+      var canvasElem=document.getElementById("c"); // HTMLCanvasElement 
+      var context = canvasElem.getContext('2d'); // CanvasRenderingContext2D
+      var notsupported_context = canvasElem.getContext('3d'); // null
+      var align = context.textAlign; // "start"
+      var offset = context.shadowOffsetX; // 0
+      var __result1 = align;
+      var __expect1 = "start";
+      var __result2 = notsupported_context;
+      var __expect2 = null;
+    </script>
+  </body>
+</html>
+  

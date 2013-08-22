@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<body>
+  <div id="div1">
+    <div id="div2" onclick="__result1=event.clientX"> div </div>
+  </div>
+  <script>
+    var __expect1 = "__NumTop";
+    function f(e) { 
+    // When 'f' is called with a mouse event, 'e' should be the 'MouseEvent' object
+      __result2 = e.button;     // UInt
+    }
+    document.addEventListener("dbclick", f, false);
+    var __expect2 = "__UInt";
+  </script>
+</body>
+

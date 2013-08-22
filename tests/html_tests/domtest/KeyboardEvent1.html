@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<body>
+  <div id="div1">
+    <div id="div2" onkeydown="__result1=event.keyIdentifier"> div </div>
+  </div>
+  <script>
+    var __expect1 = "__StrTop";
+    function f(e) { 
+    // When 'f' is called with a keyboard event, 'e' should be the 'KeyboardEvent' object
+      __result2 = e.keyLocation;     // UInt
+    }
+    document.addEventListener("keyup", f, false);
+    var __expect2 = "__UInt";
+  </script>
+</body>
+

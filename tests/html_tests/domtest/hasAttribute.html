@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<!-- Test for hasAttribute in DOMElement -->
+<body> 
+  <div id="div1" aaa="111">
+    <div id="div2"> ttt2 </div>
+  </div>
+  <script>
+     var divElem = document.getElementById("div1"); // HTMLDivElement
+     var __result1 = divElem.hasAttribute("aaa");       // true
+     var __expect1 = true;
+     var __result2 = divElem.hasAttribute("bbb");       // false
+     var __expect2 = false; 
+  </script>
+</body>
+

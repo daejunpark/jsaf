@@ -18,6 +18,7 @@ import org.w3c.dom.Comment
 import kr.ac.kaist.jsaf.analysis.cfg.CFG
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLDocument
 
 object DOMComment extends DOM {
   private val name = "Comment"
@@ -86,4 +87,31 @@ object DOMComment extends DOM {
       List()
     }
   }
+
+  def getInsList(data: PropValue): List[(String, PropValue)] = {
+    val nodeName = PropValue(ObjectValue(AbsString.alpha("#comment"), F, T, T))
+    val nodeValue = data
+    val nodeType = PropValue(ObjectValue(AbsNumber.alpha(DOMNode.COMMENT_NODE), F, T, T))
+    val parentNode = PropValue(ObjectValue(NullTop, F, T, T))
+    val childNodes = PropValue(ObjectValue(NullTop, F, T, T))
+    val firstChild = PropValue(ObjectValue(NullTop, F, T, T))
+    val lastChild = PropValue(ObjectValue(NullTop, F, T, T))
+    val previousSibling = PropValue(ObjectValue(NullTop, F, T, T))
+    val nextSibling = PropValue(ObjectValue(NullTop, F, T, T))
+    val ownerDocument = PropValue(ObjectValue(HTMLDocument.getInstance().get, F, T, T))
+    val namespaceURI = PropValue(ObjectValue(NullTop, F, T, T))
+    val prefix = PropValue(ObjectValue(NullTop, T, T, T))
+    val localName = PropValue(ObjectValue(NullTop, F, T, T))
+    val textContent = data
+
+    // This instance object has all properties of the CharacterData object and the Node object
+    DOMCharacterData.getInsList(data) ++
+    DOMNode.getInsList(nodeName, nodeValue, nodeType, parentNode, childNodes, firstChild, lastChild,
+           previousSibling, nextSibling, ownerDocument, namespaceURI, prefix, localName, textContent) ++ List(
+      ("@class",  PropValue(AbsString.alpha("Object"))),
+      ("@proto",  PropValue(ObjectValue(loc_proto, F, F, F))),
+      ("@extensible", PropValue(BoolTrue)))
+
+  }
+
 }

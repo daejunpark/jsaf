@@ -74,15 +74,13 @@ body {
         return new Span(slStart, slEnd);
     }
 
-    private ASTSpanInfo makeSpanInfo(int start, int end) {
-        return NodeFactory.makeSpanInfo(createSpan(start, end));
-    }
-
     private FileWriter fw;
     private BufferedWriter writer;
     private BufferedReader reader;
     private String logFile = column(0).file + ".log";
+    private boolean keepComments = NodeUtil.getKeepComments();
     public Result JSmain(final int yyStart) throws IOException {
+        NodeFactory.initComment();
         Result result = this.pJS$File(yyStart);
         if (result.hasValue()) return result;
         else {

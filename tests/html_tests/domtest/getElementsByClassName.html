@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<!-- Test for getElementsByClassName in Document -->
+<body> ddd
+  <input type="text" value="2" class="test" />
+  <input type="text" value="3" class="test" />
+  <div id="div1" class="test">
+    <div id="div2"> ttt2 </div>
+  </div>
+  <script>
+     var testElems = document.getElementsByClassName("test"); // NodeList
+     var length = testElems.length; // 3
+     var elem1 = testElems[0];      // HTMLInputElement
+     var elem2 = testElems[1];      // HTMLInputElement
+     var elem3 = testElems[2];      // HTMLDivElement
+     var elem4 = testElems[3];      // undefined
+     var elem1value = elem1.value;  // 2
+     var elem3id = elem3.id;        // "div1"
+     var __result1 = elem3id;
+     var __expect1 = "div1"; 
+  </script>
+</body>
+
