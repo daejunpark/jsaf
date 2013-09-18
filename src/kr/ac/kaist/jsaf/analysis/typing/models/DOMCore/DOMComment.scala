@@ -103,11 +103,11 @@ object DOMComment extends DOM {
     val prefix = PropValue(ObjectValue(NullTop, T, T, T))
     val localName = PropValue(ObjectValue(NullTop, F, T, T))
     val textContent = data
-
+    val attributes = PropValue(ObjectValue(NullTop, F, T, T))
     // This instance object has all properties of the CharacterData object and the Node object
     DOMCharacterData.getInsList(data) ++
     DOMNode.getInsList(nodeName, nodeValue, nodeType, parentNode, childNodes, firstChild, lastChild,
-           previousSibling, nextSibling, ownerDocument, namespaceURI, prefix, localName, textContent) ++ List(
+           previousSibling, nextSibling, ownerDocument, namespaceURI, prefix, localName, textContent, attributes) ++ List(
       ("@class",  PropValue(AbsString.alpha("Object"))),
       ("@proto",  PropValue(ObjectValue(loc_proto, F, F, F))),
       ("@extensible", PropValue(BoolTrue)))

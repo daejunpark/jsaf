@@ -58,7 +58,7 @@ object BuiltinNumber extends ModelData {
 
   def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
-      ("Number"-> (
+      "Number" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           // 15.7.1.1 Number( [value] )
           val v_1 = getArgValue(h, ctx, args, "0")
@@ -75,8 +75,8 @@ object BuiltinNumber extends ModelData {
           val value = value_1 + value_2
 
           ((Helper.ReturnStore(h, value), ctx), (he, ctxe))
-        })),
-      ("Number.constructor"-> (
+        }),
+      "Number.constructor" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           // 15.7.2.1 new Number( [value] )
@@ -98,22 +98,18 @@ object BuiltinNumber extends ModelData {
             ((Helper.ReturnStore(h_1, Value(lset_this)), ctx), (he, ctxe))
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
-      ("Number.prototype.toString"-> (
+        }),
+      "Number.prototype.toString" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           val n_arglen = Operator.ToUInt32(getArgValue(h, ctx, args, "length"))
-          val lset_num = lset_this.filter((l) => OtherStrSingle("Number") <= h(l)("@class")._1._2._1._5)
-          val v_prim = lset_num.foldLeft(ValueBot)((_v, _l) => _v + h(_l)("@primitive")._1._2)
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != AbsString.alpha("Number")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
+          val lset_num = lset_this.filter((l) => AbsString.alpha("Number") <= h(l)("@class")._1._2._1._5)
+
+          val es = notGenericMethod(h, lset_this, "Number")
           val (v, es2) =
             n_arglen match {
               case UIntSingle(n_arglen) if n_arglen == 0 =>
-                (Value(Helper.toString(v_prim._1)), ExceptionBot)
+                (Value(Helper.defaultToString(h, lset_num)), ExceptionBot)
               case UIntSingle(n_arglen) if n_arglen > 0 => {
                 val es =
                   if (BoolTrue <= Operator.bopGreater(getArgValue(h, ctx, args, "0"), Value(AbsNumber.alpha(36)))._1._3)
@@ -129,33 +125,27 @@ object BuiltinNumber extends ModelData {
                 (Value(StrTop), Set[Exception](RangeError))
               }
             }
-          val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es++es2)
+          val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es ++ es2)
           if (v </ ValueBot)
             ((Helper.ReturnStore(h, v), ctx), (he + h_e, ctxe + ctx_e))
           else
             ((HeapBot, ContextBot), (he + h_e, ctxe + ctx_e))
-        })),
-      ("Number.prototype.toLocaleString"-> (
+        }),
+      "Number.prototype.toLocaleString" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val n_arglen = Operator.ToUInt32(getArgValue(h, ctx, args, "length"))
           val v_prim = lset_this.foldLeft(ValueBot)((_v, _l) => _v + h(_l)("@primitive")._1._2)
           val v = Value(Helper.toString(v_prim._1))
           if (v </ ValueBot)
             ((Helper.ReturnStore(h, v), ctx), (he, ctxe))
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
-      ("Number.prototype.valueOf"-> (
+        }),
+      "Number.prototype.valueOf" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val es =
-          // XXX : Check whether it is correct or not
-            if (lset_this.exists((l) => h.domIn(l) && h(l)("@class")._1._2._1._5 != OtherStrSingle("Number")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
-          val lset_num = lset_this.filter((l) => OtherStrSingle("Number") <= h(l)("@class")._1._2._1._5)
+          val es = notGenericMethod(h, lset_this, "Number")
+          val lset_num = lset_this.filter((l) => AbsString.alpha("Number") <= h(l)("@class")._1._2._1._5)
           val n = lset_num.foldLeft[AbsNumber](NumBot)((_b, l) => _b + h(l)("@primitive")._1._2._1._4)
           val (h_1, c_1) =
             if (n == NumBot)
@@ -164,8 +154,8 @@ object BuiltinNumber extends ModelData {
               (Helper.ReturnStore(h, Value(n)), ctx)
           val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
           ((h_1, c_1), (he + h_e, ctxe + ctx_e))
-        })),
-      ("Number.prototype.toFixed"-> (
+        }),
+      "Number.prototype.toFixed" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val v_1 = getArgValue(h, ctx, args, "0")
           val v_2 =
@@ -182,8 +172,8 @@ object BuiltinNumber extends ModelData {
               ExceptionBot
           val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
           ((Helper.ReturnStore(h, Value(StrTop)), ctx), (he + h_e, ctxe + ctx_e))
-        })),
-      ("Number.prototype.toExponential"-> (
+        }),
+      "Number.prototype.toExponential" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val v_1 = getArgValue(h, ctx, args, "0")
           val v_2 =
@@ -200,8 +190,8 @@ object BuiltinNumber extends ModelData {
               ExceptionBot
           val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
           ((Helper.ReturnStore(h, Value(StrTop)), ctx), (he + h_e, ctxe + ctx_e))
-        })),
-      ("Number.prototype.toPrecision"-> (
+        }),
+      "Number.prototype.toPrecision" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val v_1 = getArgValue(h, ctx, args, "0")
           val v_2 =
@@ -218,13 +208,13 @@ object BuiltinNumber extends ModelData {
               ExceptionBot
           val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
           ((Helper.ReturnStore(h, Value(StrTop)), ctx), (he + h_e, ctxe + ctx_e))
-        }))
+        })
     )
   }
 
   def getPreSemanticMap(): Map[String, SemanticFun] = {
     Map(
-      ("Number" -> (
+      "Number" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
           // 15.7.1.1 Number( [value] )
@@ -242,8 +232,8 @@ object BuiltinNumber extends ModelData {
           val value = value_1 + value_2
 
           ((PreHelper.ReturnStore(h, PureLocalLoc, value), ctx), (he, ctxe))
-        })),
-      ("Number.constructor" -> (
+        }),
+      "Number.constructor" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
           val lset_this = h(PureLocalLoc)("@this")._1._2._2
@@ -266,19 +256,16 @@ object BuiltinNumber extends ModelData {
             ((PreHelper.ReturnStore(h_1, PureLocalLoc, Value(lset_this)), ctx), (he, ctxe))
           else
             ((h, ctx), (he, ctxe))
-        })),
-      ("Number.prototype.toString" -> (
+        }),
+      "Number.prototype.toString" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
           val lset_this = h(PureLocalLoc)("@this")._1._2._2
           val n_arglen = Operator.ToUInt32(getArgValue_pre(h, ctx, args, "length", PureLocalLoc))
-          val lset_num = lset_this.filter((l) => OtherStrSingle("Number") <= h(l)("@class")._1._2._1._5)
+          val lset_num = lset_this.filter((l) => AbsString.alpha("Number") <= h(l)("@class")._1._2._1._5)
           val v_prim = lset_num.foldLeft(ValueBot)((_v, _l) => _v + h(_l)("@primitive")._1._2)
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != AbsString.alpha("Number")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
+          val es = notGenericMethod(h, lset_this, "Number")
+
           val (v, es2) =
             n_arglen match {
               case UIntSingle(n_arglen) if n_arglen == 0 =>
@@ -298,33 +285,28 @@ object BuiltinNumber extends ModelData {
                 (Value(StrTop), Set[Exception](RangeError))
               }
             }
-          val (h_e, ctx_e) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es++es2)
+          val (h_e, ctx_e) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es ++ es2)
           if (v </ ValueBot)
             ((PreHelper.ReturnStore(h_e, PureLocalLoc, v), ctx_e), (he + h_e, ctxe + ctx_e))
           else
             ((h, ctx), (he + h_e, ctxe + ctx_e))
-        })),
-      ("Number.prototype.toLocaleString" -> (
+        }),
+      "Number.prototype.toLocaleString" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
           val lset_this = h(PureLocalLoc)("@this")._1._2._2
-          val n_arglen = Operator.ToUInt32(getArgValue_pre(h, ctx, args, "length", PureLocalLoc))
           val v_prim = lset_this.foldLeft(ValueBot)((_v, _l) => _v + h(_l)("@primitive")._1._2)
           val v = Value(PreHelper.toString(v_prim._1))
           if (v </ ValueBot)
             ((PreHelper.ReturnStore(h, PureLocalLoc, v), ctx), (he, ctxe))
           else
             ((h, ctx), (he, ctxe))
-        })),
-      ("Number.prototype.valueOf" -> (
+        }),
+      "Number.prototype.valueOf" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
           val lset_this = h(PureLocalLoc)("@this")._1._2._2
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != OtherStrSingle("Number")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
+          val es = notGenericMethod(h, lset_this, "Number")
           val lset_num = lset_this.filter((l) => OtherStrSingle("Number") <= h(l)("@class")._1._2._1._5)
           val n = lset_num.foldLeft[AbsNumber](NumBot)((_b, l) => _b + h(l)("@primitive")._1._2._1._4)
           val (h_1, c_1) =
@@ -334,8 +316,8 @@ object BuiltinNumber extends ModelData {
               (PreHelper.ReturnStore(h, PureLocalLoc, Value(n)), ctx)
           val (h_e, ctx_e) = PreHelper.RaiseException(h_1, c_1, PureLocalLoc, es)
           ((h_1, c_1), (he + h_e, ctxe + ctx_e))
-        })),
-      ("Number.prototype.toFixed" -> (
+        }),
+      "Number.prototype.toFixed" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
           val lset_this = h(PureLocalLoc)("@this")._1._2._2
@@ -354,8 +336,8 @@ object BuiltinNumber extends ModelData {
               ExceptionBot
           val (h_e, ctx_e) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es)
           ((PreHelper.ReturnStore(h_e, PureLocalLoc, Value(StrTop)), ctx_e), (he + h_e, ctxe + ctx_e))
-        })),
-      ("Number.prototype.toExponential" -> (
+        }),
+      "Number.prototype.toExponential" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
           val v_1 = getArgValue_pre(h, ctx, args, "0", PureLocalLoc)
@@ -373,8 +355,8 @@ object BuiltinNumber extends ModelData {
               ExceptionBot
           val (h_e, ctx_e) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es)
           ((PreHelper.ReturnStore(h_e, PureLocalLoc, Value(StrTop)), ctx_e), (he + h_e, ctxe + ctx_e))
-        })),
-      ("Number.prototype.toPrecision" -> (
+        }),
+      "Number.prototype.toPrecision" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
           val v_1 = getArgValue_pre(h, ctx, args, "0", PureLocalLoc)
@@ -392,35 +374,31 @@ object BuiltinNumber extends ModelData {
               ExceptionBot
           val (h_e, ctx_e) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es)
           ((PreHelper.ReturnStore(h_e, PureLocalLoc, Value(StrTop)), ctx_e), (he + h_e, ctxe + ctx_e))
-        }))
+        })
     )
   }
 
   def getDefMap(): Map[String, AccessFun] = {
     Map(
-      ("Number" -> (
+      "Number" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           LPSet((SinglePureLocalLoc, "@return"))
-        })),
-      ("Number.constructor" -> (
+        }),
+      "Number.constructor" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           val LP1 = lset_this.foldLeft(LPBot)((lpset, l) =>
-            AH.NewNumber_def.foldLeft(lpset)((_lpset, prop) => _lpset + (l, prop)))
-          LP1 + (SinglePureLocalLoc, "@return")
-        })),
-      ("Number.prototype.toString" -> (
+            AH.NewNumber_def.foldLeft(lpset)((_lpset, prop) => _lpset +(l, prop)))
+          LP1 +(SinglePureLocalLoc, "@return")
+        }),
+      "Number.prototype.toString" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           val n_arglen = Operator.ToUInt32(getArgValue(h, ctx, args, "length"))
-          val es1 =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != AbsString.alpha("Number")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
+          val es1 = notGenericMethod(h, lset_this, "Number")
           val es2 =
             n_arglen match {
-              case UIntSingle(n_arglen) if n_arglen == 0 =>  ExceptionBot
+              case UIntSingle(n_arglen) if n_arglen == 0 => ExceptionBot
               case UIntSingle(n_arglen) if n_arglen > 0 => {
                 if (BoolTrue <= Operator.bopGreater(getArgValue(h, ctx, args, "0"), Value(AbsNumber.alpha(36)))._1._3)
                   Set[Exception](RangeError)
@@ -432,23 +410,19 @@ object BuiltinNumber extends ModelData {
               case NumBot => ExceptionBot
               case _ => Set[Exception](RangeError)
             }
-          AH.RaiseException_def(es1 ++ es2) + (SinglePureLocalLoc, "@return")
-        })),
-      ("Number.prototype.toLocaleString" -> (
+          AH.RaiseException_def(es1 ++ es2) +(SinglePureLocalLoc, "@return")
+        }),
+      "Number.prototype.toLocaleString" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           LPSet((SinglePureLocalLoc, "@return"))
-        })),
-      ("Number.prototype.valueOf" -> (
+        }),
+      "Number.prototype.valueOf" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != OtherStrSingle("Number")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
-          AH.RaiseException_def(es) + (SinglePureLocalLoc, "@return")
-        })),
-      ("Number.prototype.toFixed" -> (
+          val es = notGenericMethod(h, lset_this, "Number")
+          AH.RaiseException_def(es) +(SinglePureLocalLoc, "@return")
+        }),
+      "Number.prototype.toFixed" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val v_1 = getArgValue(h, ctx, args, "0")
           val v_2 =
@@ -463,9 +437,9 @@ object BuiltinNumber extends ModelData {
               Set[Exception](RangeError)
             else
               ExceptionBot
-          AH.RaiseException_def(es) + (SinglePureLocalLoc, "@return")
-        })),
-      ("Number.prototype.toExponential" -> (
+          AH.RaiseException_def(es) +(SinglePureLocalLoc, "@return")
+        }),
+      "Number.prototype.toExponential" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val v_1 = getArgValue(h, ctx, args, "0")
           val v_2 =
@@ -480,9 +454,9 @@ object BuiltinNumber extends ModelData {
               Set[Exception](RangeError)
             else
               ExceptionBot
-          AH.RaiseException_def(es) + (SinglePureLocalLoc, "@return")
-        })),
-      ("Number.prototype.toPrecision" -> (
+          AH.RaiseException_def(es) +(SinglePureLocalLoc, "@return")
+        }),
+      "Number.prototype.toPrecision" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val v_1 = getArgValue(h, ctx, args, "0")
           val v_2 =
@@ -497,44 +471,40 @@ object BuiltinNumber extends ModelData {
               Set[Exception](RangeError)
             else
               ExceptionBot
-          AH.RaiseException_def(es) + (SinglePureLocalLoc, "@return")
-        }))
+          AH.RaiseException_def(es) +(SinglePureLocalLoc, "@return")
+        })
     )
   }
 
   def getUseMap(): Map[String, AccessFun] = {
     Map(
-      ("Number" -> (
+      "Number" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           getArgValue_use(h, ctx, args, "0") ++
-            getArgValue_use(h, ctx, args, "length") + (SinglePureLocalLoc, "@return")
-        })),
-      ("Number.constructor" -> (
+            getArgValue_use(h, ctx, args, "length") +(SinglePureLocalLoc, "@return")
+        }),
+      "Number.constructor" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           /* may def */
           val LP1 = lset_this.foldLeft(LPBot)((lpset, l) =>
-            AH.NewNumber_def.foldLeft(lpset)((_lpset, prop) => _lpset + (l, prop)))
+            AH.NewNumber_def.foldLeft(lpset)((_lpset, prop) => _lpset +(l, prop)))
           LP1 ++ getArgValue_use(h, ctx, args, "0") ++
-            getArgValue_use(h, ctx, args, "length") + (SinglePureLocalLoc, "@return") + (SinglePureLocalLoc, "@this")
-        })),
-      ("Number.prototype.toString" -> (
+            getArgValue_use(h, ctx, args, "length") +(SinglePureLocalLoc, "@return") +(SinglePureLocalLoc, "@this")
+        }),
+      "Number.prototype.toString" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           val n_arglen = Operator.ToUInt32(getArgValue(h, ctx, args, "length"))
           val LP1 = getArgValue_use(h, ctx, args, "length")
-          val es1 =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != AbsString.alpha("Number")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
-          val lset_num = lset_this.filter((l) => h(l)("@class")._1._2._1._5 == OtherStrSingle("Number"))
-          val LP2 = lset_this.foldLeft(LPBot)((lpset, l) => lpset + (l, "@class"))
+          val es1 = notGenericMethod(h, lset_this, "Number")
+          val lset_num = lset_this.filter((l) => AbsString.alpha("Number") <= h(l)("@class")._1._2._1._5)
+          val LP2 = lset_this.foldLeft(LPBot)((lpset, l) => lpset +(l, "@class"))
           val v_prim = lset_num.foldLeft(ValueBot)((_v, _l) => _v + h(_l)("@primitive")._1._2)
-          val LP3 = lset_num.foldLeft(LPBot)((lpset, l) => lpset + (l, "@primitive"))
+          val LP3 = lset_num.foldLeft(LPBot)((lpset, l) => lpset +(l, "@primitive"))
           val (es2, lpset4) =
             n_arglen match {
-              case UIntSingle(n_arglen) if n_arglen == 0 =>  (ExceptionBot, LPBot)
+              case UIntSingle(n_arglen) if n_arglen == 0 => (ExceptionBot, LPBot)
               case UIntSingle(n_arglen) if n_arglen > 0 => {
                 if (BoolTrue <= Operator.bopGreater(getArgValue(h, ctx, args, "0"), Value(AbsNumber.alpha(36)))._1._3)
                   (Set[Exception](RangeError), getArgValue_use(h, ctx, args, "0"))
@@ -547,28 +517,24 @@ object BuiltinNumber extends ModelData {
               case _ => (Set[Exception](RangeError), getArgValue_use(h, ctx, args, "0"))
             }
           val LP5 = AH.RaiseException_use(es1 ++ es2)
-          LP1 ++ LP2 ++ LP3 ++ lpset4 ++ LP5 + (SinglePureLocalLoc, "@return") + (SinglePureLocalLoc, "@this")
-        })),
-      ("Number.prototype.toLocaleString" -> (
+          LP1 ++ LP2 ++ LP3 ++ lpset4 ++ LP5 +(SinglePureLocalLoc, "@return") +(SinglePureLocalLoc, "@this")
+        }),
+      "Number.prototype.toLocaleString" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val LP1= lset_this.foldLeft(LPBot)((lpset, l) => lpset + (l, "@primitive"))
-          LP1 ++ getArgValue_use(h, ctx, args, "length") + (SinglePureLocalLoc, "@return") + (SinglePureLocalLoc, "@this")
-        })),
-      ("Number.prototype.valueOf" -> (
+          val LP1 = lset_this.foldLeft(LPBot)((lpset, l) => lpset +(l, "@primitive"))
+          LP1 ++ getArgValue_use(h, ctx, args, "length") +(SinglePureLocalLoc, "@return") +(SinglePureLocalLoc, "@this")
+        }),
+      "Number.prototype.valueOf" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val lset_num = lset_this.filter((l) => h(l)("@class")._1._2._1._5 == OtherStrSingle("Number"))
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != OtherStrSingle("Number")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
-          val LP1 = lset_this.foldLeft(LPBot)((lpset, l) => lpset + (l, "@class"))
-          val LP2 = lset_num.foldLeft(LPBot)((lpset, l) => lpset + (l, "@primitive"))
-          LP1 ++ LP2 ++ AH.RaiseException_use(es) + (SinglePureLocalLoc, "@return") + (SinglePureLocalLoc, "@this")
-        })),
-      ("Number.prototype.toFixed" -> (
+          val lset_num = lset_this.filter((l) => AbsString.alpha("Number") <= h(l)("@class")._1._2._1._5)
+          val es = notGenericMethod(h, lset_this, "Number")
+          val LP1 = lset_this.foldLeft(LPBot)((lpset, l) => lpset +(l, "@class"))
+          val LP2 = lset_num.foldLeft(LPBot)((lpset, l) => lpset +(l, "@primitive"))
+          LP1 ++ LP2 ++ AH.RaiseException_use(es) +(SinglePureLocalLoc, "@return") +(SinglePureLocalLoc, "@this")
+        }),
+      "Number.prototype.toFixed" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val v_1 = getArgValue(h, ctx, args, "0")
           val v_2 =
@@ -583,9 +549,9 @@ object BuiltinNumber extends ModelData {
               Set[Exception](RangeError)
             else
               ExceptionBot
-          getArgValue_use(h, ctx, args, "0") ++ AH.RaiseException_def(es) + (SinglePureLocalLoc, "@return") + (SinglePureLocalLoc, "@this")
-        })),
-      ("Number.prototype.toExponential" -> (
+          getArgValue_use(h, ctx, args, "0") ++ AH.RaiseException_def(es) +(SinglePureLocalLoc, "@return") +(SinglePureLocalLoc, "@this")
+        }),
+      "Number.prototype.toExponential" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val v_1 = getArgValue(h, ctx, args, "0")
           val v_2 =
@@ -600,9 +566,9 @@ object BuiltinNumber extends ModelData {
               Set[Exception](RangeError)
             else
               ExceptionBot
-          getArgValue_use(h, ctx, args, "0") ++ AH.RaiseException_def(es) + (SinglePureLocalLoc, "@return") + (SinglePureLocalLoc, "@this")
-        })),
-      ("Number.prototype.toPrecision" -> (
+          getArgValue_use(h, ctx, args, "0") ++ AH.RaiseException_def(es) +(SinglePureLocalLoc, "@return") +(SinglePureLocalLoc, "@this")
+        }),
+      "Number.prototype.toPrecision" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val v_1 = getArgValue(h, ctx, args, "0")
           val v_2 =
@@ -617,8 +583,8 @@ object BuiltinNumber extends ModelData {
               Set[Exception](RangeError)
             else
               ExceptionBot
-          getArgValue_use(h, ctx, args, "0") ++ AH.RaiseException_def(es) + (SinglePureLocalLoc, "@return") + (SinglePureLocalLoc, "@this")
-        }))
+          getArgValue_use(h, ctx, args, "0") ++ AH.RaiseException_def(es) +(SinglePureLocalLoc, "@return") +(SinglePureLocalLoc, "@this")
+        })
     )
   }
 }

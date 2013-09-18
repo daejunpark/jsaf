@@ -20,7 +20,7 @@ class WorkManager
   private var workThreads: Array[Thread] = null
   private var workThreadContexts: Array[Any] = null
   private var idleWorkThreadCount: Int = 0
-  private var workQueue: ListBuffer[WorkTrait] = new ListBuffer[WorkTrait]()
+  private val workQueue: ListBuffer[WorkTrait] = new ListBuffer[WorkTrait]()
   private val workFinishEvent: AnyRef = new AnyRef()
 
   ////////////////////////////////////////////////////////////////////////////////

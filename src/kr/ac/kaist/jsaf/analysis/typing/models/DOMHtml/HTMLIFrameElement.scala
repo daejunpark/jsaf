@@ -19,6 +19,7 @@ import kr.ac.kaist.jsaf.analysis.cfg.CFG
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
 
+// Limitation : we do not support multiple documents by <iframe> in one execution
 object HTMLIFrameElement extends DOM {
   private val name = "HTMLIFrameElement"
 
@@ -92,7 +93,10 @@ object HTMLIFrameElement extends DOM {
       ("name", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("name")), T, T, T))),
       ("scrolling", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("scrolling")), T, T, T))),
       ("src", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("src")), T, T, T))),
-      ("width", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("width")), T, T, T))))
+      ("width", PropValue(ObjectValue(AbsString.alpha(e.getAttribute("width")), T, T, T))),
+      // TODO: 'contentWindow' should be a window object of the nested document in the <iframe> tag
+      ("contentWindow", PropValue(ObjectValue(NullTop, F, T, T)))
+    )
       // TODO: 'contentDocument' in DOM Level 2
     case _ => {
       System.err.println("* Warning: " + node.getNodeName + " cannot have instance objects.")
@@ -101,7 +105,8 @@ object HTMLIFrameElement extends DOM {
   }
  
   def getInsList(align: PropValue, frameBorder: PropValue, height: PropValue, longDesc: PropValue, marginHeight: PropValue,
-                 marginWidth: PropValue, name: PropValue, scrolling: PropValue, src: PropValue, width: PropValue): List[(String, PropValue)] = List(
+                 marginWidth: PropValue, name: PropValue, scrolling: PropValue, src: PropValue, width: PropValue,
+                 contentWindow: PropValue): List[(String, PropValue)] = List(
     ("@class",    PropValue(AbsString.alpha("Object"))),
     ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
     ("@extensible", PropValue(BoolTrue)),
@@ -115,7 +120,8 @@ object HTMLIFrameElement extends DOM {
     ("name", name),
     ("scrolling", scrolling),
     ("src", src),
-    ("width", width)
+    ("width", width),
+    ("contentWindow", contentWindow)
   )
   
   override def default_getInsList(): List[(String, PropValue)] = {    
@@ -129,9 +135,10 @@ object HTMLIFrameElement extends DOM {
     val scrolling = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
     val src = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
     val width = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
+    val contentWindow = PropValue(ObjectValue(NullTop, F, T, T))
     // This object has all properties of the HTMLElement object 
     HTMLElement.default_getInsList ::: 
-      getInsList(align, frameBorder, height, longDesc, marginHeight, marginWidth, name, scrolling, src, width)
+      getInsList(align, frameBorder, height, longDesc, marginHeight, marginWidth, name, scrolling, src, width, contentWindow)
   }
 
 }

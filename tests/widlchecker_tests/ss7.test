@@ -1,0 +1,16 @@
+################################################################################
+#    Copyright (c) 2013, KAIST.
+#    All rights reserved.
+#
+#    Use is subject to license terms.
+#
+#    This distribution may include materials developed by third parties.
+################################################################################
+tests=ss7
+WIDLCHECKER_TESTS_DIR=${JS_HOME}/tests/widlchecker_tests
+widlcheck
+widlcheck_out_WCIequals=\
+${WIDLCHECKER_TESTS_DIR}/ss7.js:1:18-47:\n\
+    Error : Number of the arguments to CalendarEventId is 0;\n\
+            provide arguments of size from 1 to 2.\n
+widlcheck_err_equals=

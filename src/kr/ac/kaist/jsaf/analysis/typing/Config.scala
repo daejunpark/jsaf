@@ -5,7 +5,7 @@
     Use is subject to license terms.
 
     This distribution may include materials developed by third parties.
- ***************************************************************************** */
+ ******************************************************************************/
 
 package kr.ac.kaist.jsaf.analysis.typing
 
@@ -17,6 +17,18 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.{BuiltinError, BuiltinObject}
 
 object Config {
+  /**
+   * File name.
+   */
+  var fileName: String = ""
+  def setFileName(name: String) = fileName = name
+
+  /**
+   * Typing interface.
+   */
+  var typingInterface: TypingInterface = null
+  def setTypingInterface(ti: TypingInterface) = typingInterface = ti
+
   /**
    * Quiet mode.
    */
@@ -52,9 +64,11 @@ object Config {
     ("__RefErrLoc", Value(BuiltinError.RefErrLoc)),
     ("__RangeErrLoc", Value(BuiltinError.RangeErrLoc)),
     ("__TypeErrLoc", Value(BuiltinError.TypeErrLoc)),
+    ("__URIErrLoc", Value(BuiltinError.URIErrLoc)),
     ("__RefErrProtoLoc", Value(BuiltinError.RefErrProtoLoc)),
     ("__RangeErrProtoLoc", Value(BuiltinError.RangeErrProtoLoc)),
     ("__TypeErrProtoLoc", Value(BuiltinError.TypeErrProtoLoc)),
+    ("__URIErrProtoLoc", Value(BuiltinError.URIErrProtoLoc)),
     ("__ErrProtoLoc", Value(BuiltinError.ErrProtoLoc))
   )
   
@@ -163,4 +177,12 @@ object Config {
    */
   var defaultUnrollingCount = 0
   def setDefaultUnrollingCount(unrollingCount: Int) = defaultUnrollingCount = unrollingCount
+  var defaultForinUnrollingCount = 0
+  def setDefaultForinUnrollingCount(unrollingCount: Int) = defaultForinUnrollingCount = unrollingCount
+
+  /**
+   * Console debugger mode
+   */
+  var debugger = false
+  def setDebugger(b: Boolean) = debugger = b
 }

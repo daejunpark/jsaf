@@ -79,7 +79,7 @@ class InitHeap(cfg: CFG) {
     val notYetImplemented = Set[String]()
 
     val predef = if (Shell.pred != null) Shell.pred.all.toSet
-                 else (new Predefined(new ShellParameters())).all.toSet
+    else (new Predefined(new ShellParameters())).all.toSet
     var global = initHeap(GlobalLoc).getProps
 
     // ignore test mode variables

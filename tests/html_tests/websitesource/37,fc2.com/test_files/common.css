@@ -1,0 +1,162 @@
+html {
+	margin: 0px; padding: 0px;
+}
+body {
+	margin: 0px; padding: 0px;
+}
+div {
+	margin: 0px; padding: 0px;
+}
+dl {
+	margin: 0px; padding: 0px;
+}
+dt {
+	margin: 0px; padding: 0px;
+}
+dd {
+	margin: 0px; padding: 0px;
+}
+ul {
+	margin: 0px; padding: 0px;
+}
+ol {
+	margin: 0px; padding: 0px;
+}
+li {
+	margin: 0px; padding: 0px;
+}
+h1 {
+	margin: 0px; padding: 0px;
+}
+h2 {
+	margin: 0px; padding: 0px;
+}
+h3 {
+	margin: 0px; padding: 0px;
+}
+h4 {
+	margin: 0px; padding: 0px;
+}
+h5 {
+	margin: 0px; padding: 0px;
+}
+h6 {
+	margin: 0px; padding: 0px;
+}
+pre {
+	margin: 0px; padding: 0px;
+}
+form {
+	margin: 0px; padding: 0px;
+}
+fieldset {
+	margin: 0px; padding: 0px;
+}
+input {
+	margin: 0px; padding: 0px;
+}
+textarea {
+	margin: 0px; padding: 0px;
+}
+blockquote {
+	margin: 0px; padding: 0px;
+}
+th {
+	margin: 0px; padding: 0px;
+}
+td {
+	margin: 0px; padding: 0px;
+}
+p {
+	margin: 0px; padding: 0px;
+}
+body {
+	width: 100%; text-align: center; line-height: 1.4; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 82%; -ms-word-break: break-all;
+}
+html > body {
+	font-size: 13px;
+}
+a {
+	overflow: hidden; text-decoration: none;
+}
+img {
+	border: currentColor;
+}
+a img {
+	border: currentColor;
+}
+ul {
+	list-style: none;
+}
+ol {
+	list-style: none;
+}
+li {
+	list-style: none;
+}
+dl {
+	list-style: none;
+}
+dt {
+	list-style: none;
+}
+dd {
+	list-style: none;
+}
+table {
+	border: 0px currentColor;
+}
+th {
+	padding: 0px;
+}
+td {
+	padding: 0px;
+}
+th {
+	font-weight: normal;
+}
+input {
+	padding: 2px;
+}
+select {
+	padding: 2px;
+}
+textarea {
+	padding: 2px;
+}
+textarea {
+	font-size: 100%;
+}
+html > textarea {
+	font-size: 13px;
+}
+fieldset {
+	border: currentColor;
+}
+pre {
+	font-family: monospace;
+}
+h1 {
+	font-size: 170%;
+}
+h2 {
+	font-size: 131%;
+}
+h3 {
+	font-size: 116%;
+}
+h4 {
+	font-size: 108%;
+}
+h5 {
+	font-size: 100%;
+}
+h6 {
+	font-size: 100%;
+}
+.clear::after {
+	height: 0px; overflow: hidden; clear: both; display: block; content: "";
+}
+* html .clear {
+	height: 1%; overflow: visible;
+}

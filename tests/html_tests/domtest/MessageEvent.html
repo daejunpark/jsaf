@@ -1,0 +1,18 @@
+<!-- test for message event -->
+<!DOCTYPE HTML>
+<body>
+  <div id="div1">
+    <div id="div2"> div </div>
+  </div>
+  <script>
+    var __expect1 = "__StrTop";
+    function f(e) { 
+    // When 'f' is called with a message event, 'e' should be the 'MessageEvent' object
+      __result1 = e.origin;     // StrTop
+      __result2 = e.lastEventId;     // StrTop
+    }
+    document.addEventListener("message", f, false);
+    var __expect2 = "__StrTop";
+  </script>
+</body>
+

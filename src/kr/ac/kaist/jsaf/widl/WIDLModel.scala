@@ -9,7 +9,7 @@
 
 package kr.ac.kaist.jsaf.widl
 
-import scala.collection.mutable.{HashMap => MHashMap, ListBuffer}
+import scala.collection.mutable.{HashMap => MHashMap, HashSet => MHashSet, ListBuffer}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.cfg.{Node => CNode}
 import kr.ac.kaist.jsaf.analysis.typing._
@@ -74,6 +74,39 @@ class WIDLModel(cfg: CFG) extends Model(cfg) {
   ////////////////////////////////////////////////////////////////////////////////
   val returnTypeMap =                           new MHashMap[String, WType]
   def semantic(sem: Semantics, heap: Heap, context: Context, heapExc: Heap, contextExc: Context, cp: ControlPoint, cfg: CFG, funcName: String, args: CFGExpr): ((Heap, Context),(Heap, Context)) = {
+    // Constructor call
+    if(funcName.endsWith(".constructor")) {
+      var isCorrectArgument = true
+      WIDLChecker.constructorMap.get(funcName.substring(0, funcName.length - 12)) match {
+        case Some(constructorList) =>
+          // Collect constructor argument sizes
+          val constructorArgSizeSet = new MHashSet[(Int, Int)]
+          for(constructor <- constructorList) {
+            val args = constructor.getArgs
+            val argMinSize = args.size - WIDLHelper.getOptionalParameterCount(args)
+            val argMaxSize = args.size
+            constructorArgSizeSet.add((argMinSize, argMaxSize))
+          }
+          // Check the argument size for each argument location
+          val argLocSet = SemanticsExpr.V(args, heap, context)._1.locset
+          for(argLoc <- argLocSet) {
+            if(isCorrectArgument) {
+              heap(argLoc)("length")._1.objval.value.pvalue.numval match {
+                case UIntSingle(n) => isCorrectArgument = constructorArgSizeSet.exists(size => n >= size._1 && n <= size._2)
+                case NUIntSingle(n) => isCorrectArgument = constructorArgSizeSet.exists(size => n >= size._1 && n <= size._2)
+                case _ =>
+              }
+            }
+          }
+        case None => isCorrectArgument = false
+      }
+      if(!isCorrectArgument) {
+        // Throw TypeError
+        val (newHeapExc, newContextExc) = Helper.RaiseException(heap, context, Set[Exception](TypeError))
+        return ((HeapBot, ContextBot), (heapExc + newHeapExc, contextExc + newContextExc))
+      }
+    }
+    // Function call
     returnTypeMap.get(funcName) match {
       case Some(returnType) =>
         initList.clear()
@@ -197,6 +230,10 @@ class WIDLModel(cfg: CFG) extends Model(cfg) {
     if(!WIDLHelper.isNoInterfaceObject(interfaceNode)) {
       globalProps.put(interfaceName, AbsConstValue(PropValue(ObjectValue(locProps._1, T, F, T))))
     }
+    // Insert semantic function and return type for a constructor
+    val constructorName = interfaceName + ".constructor"
+    map_semantic+= (constructorName -> semantic)
+    returnTypeMap.put(constructorName, WIDLFactory.mkNamedType(interfaceName))
     // Members
     val i = interfaceNode.getMembers.iterator()
     while(i.hasNext) {

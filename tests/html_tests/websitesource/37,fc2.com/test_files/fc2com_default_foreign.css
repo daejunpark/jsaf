@@ -1,0 +1,9 @@
+body {
+	-ms-word-break: normal;
+}
+#main ul.tab li.middle_tab_alfabet {
+	width: 130px; border-left-color: rgb(153, 153, 153); border-left-width: 1px; border-left-style: solid;
+}
+#menu .bttn_twitter_follow_me {
+	margin-top: 8px;
+}

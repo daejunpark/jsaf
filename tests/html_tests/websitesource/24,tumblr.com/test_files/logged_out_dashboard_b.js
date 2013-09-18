@@ -1,0 +1,1 @@
+(function(b,a){var c=Backbone.View.extend({initialize:function(){b(window).on("load",function(){b("body").removeClass("loading")})},});a.LoggedOutDashboardB=c})(jQuery,Tumblr);

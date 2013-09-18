@@ -1,0 +1,735 @@
+HTML {
+	OVERFLOW-Y: scroll
+}
+BODY {
+	FONT-SIZE: 13px; FONT-FAMILY: arial; FONT-WEIGHT: 100; COLOR: #5a5a5a; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px
+}
+* {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px
+}
+A:link {
+	COLOR: #10afd1; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #10afd1; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #10afd1; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #10afd1; TEXT-DECORATION: none
+}
+.cleared {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; CLEAR: both; MARGIN: 0px; PADDING-RIGHT: 0px
+}
+UL {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px
+}
+LI {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px
+}
+IMG {
+	BORDER-TOP: 0px; BORDER-RIGHT: 0px; BORDER-BOTTOM: 0px; BORDER-LEFT: 0px
+}
+.wrapheader {
+	RIGHT: 0px; POSITION: absolute; LEFT: 0px; MARGIN: 0px auto; Z-INDEX: 100; TOP: 100px
+}
+.wrapNav {
+	HEIGHT: 40px; RIGHT: 0px; POSITION: fixed; LEFT: 0px; MARGIN: 0px auto; Z-INDEX: 100; TOP: 64px; WIDTH: 100%; BACKGROUND-COLOR: #196095
+}
+.wrapCart {
+	POSITION: relative; FLOAT: right; MARGIN-TOP: 16px; WIDTH: 165px
+}
+.nav {
+	MARGIN: 0px auto; WIDTH: 960px
+}
+.nav UL {
+	MARGIN-LEFT: 50px
+}
+.nav LI A {
+	HEIGHT: 39px; COLOR: #fff; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 26px; DISPLAY: inline-block; LINE-HEIGHT: 3; PADDING-RIGHT: 14px; MARGIN-RIGHT: 10px; -webkit-transition: all .2s ease; -moz-transition: all .2s ease; -ms-transition: all .2s ease; -o-transition: all .2s ease; transition: all .2s ease
+}
+.nav LI A:hover {
+	HEIGHT: 40px; BACKGROUND-COLOR: #18496d
+}
+#tohomepage {
+	BACKGROUND-COLOR: transparent
+}
+.discover {
+	HEIGHT: 25px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/icons.png); BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: 0px -76px; FLOAT: right; MARGIN-LEFT: 18px; MARGIN-TOP: 6px; WIDTH: 23px
+}
+.discover_text {
+	FLOAT: left
+}
+.products_text {
+	FLOAT: left
+}
+.special_text {
+	FLOAT: left
+}
+.support_text {
+	FLOAT: left
+}
+.products {
+	HEIGHT: 21px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/products_icon.png); BACKGROUND-REPEAT: no-repeat; FLOAT: right; MARGIN-LEFT: 18px; MARGIN-TOP: 7px; WIDTH: 35px
+}
+.special {
+	HEIGHT: 25px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/icons.png); BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: 0px -25px; FLOAT: right; MARGIN-LEFT: 18px; MARGIN-TOP: 5px; WIDTH: 23px
+}
+.support {
+	HEIGHT: 25px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/icons.png); BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: 0px 0px; FLOAT: right; MARGIN-LEFT: 18px; MARGIN-TOP: 7px; WIDTH: 23px
+}
+.seperator {
+	HEIGHT: 23px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/sep_blue_menu.png); FLOAT: right; MARGIN-TOP: 7px; WIDTH: 2px
+}
+.navCurrent {
+	BACKGROUND-COLOR: #18496d
+}
+.menu1 {
+	MARGIN: 0px auto; WIDTH: 1400px
+}
+.page {
+	HEIGHT: 2000px; MARGIN: 0px auto; WIDTH: 1400px; BACKGROUND-COLOR: #fff1c4
+}
+.nav LI {
+	LIST-STYLE-TYPE: none; FONT-SIZE: 13px; FLOAT: left; LIST-STYLE-IMAGE: none; MARGIN: 0px 0px 0px 10px
+}
+.wraphead {
+	HEIGHT: 64px; POSITION: fixed; Z-INDEX: 10; TOP: 0px; WIDTH: 100%; BACKGROUND-COLOR: #ffffff
+}
+.navBorderYellow {
+	BORDER-TOP: #f1f2f2 1px solid; HEIGHT: 5px; BORDER-BOTTOM: #efbd25 1px solid; WIDTH: 100%; BACKGROUND-COLOR: #efbd25
+}
+.navShadow {
+	HEIGHT: 9px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/under_menu_shadow.png); RIGHT: 0px; POSITION: absolute; LEFT: 0px; MARGIN: 0px auto; WIDTH: 849px; BOTTOM: -9px
+}
+.head {
+	HEIGHT: 57px; MARGIN: 0px auto; WIDTH: 960px
+}
+.logo {
+	CURSOR: pointer; HEIGHT: 36px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/logo_img.jpg); FLOAT: left; MARGIN-TOP: 8px; WIDTH: 164px
+}
+.cart {
+	CURSOR: pointer; HEIGHT: 25px; FLOAT: right; COLOR: #fff; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 5px; PADDING-RIGHT: 5px; WIDTH: 96px; BACKGROUND-COLOR: #80b946; border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -o-border-radius: 2px; -ms-border-radius: 2px
+}
+.cart:hover {
+	BACKGROUND-COLOR: #6da436
+}
+.cart IMG {
+	VERTICAL-ALIGN: bottom; MARGIN: 4px 26px 0px 8px
+}
+.placeHolderWH {
+	HEIGHT: 65px
+}
+.wrap_footer {
+	HEIGHT: 190px; WIDTH: 100%; BACKGROUND-COLOR: #74ab3e
+}
+.footer {
+	COLOR: #fff; PADDING-TOP: 25px; MARGIN: 0px auto; WIDTH: 960px
+}
+.footLinks {
+	FONT-SIZE: 12px; FONT-FAMILY: arial; FLOAT: left; WIDTH: 110px
+}
+[lang='fre'].footLinks {
+	WIDTH: 190px
+}
+[lang='spa'].footLinks {
+	WIDTH: 130px
+}
+[lang='ptg'].footLinks {
+	WIDTH: 150px
+}
+[lang='heb'].footLinks {
+	FLOAT: right; DIRECTION: rtl
+}
+[lang='ara'].footLinks {
+	FLOAT: right; DIRECTION: rtl
+}
+.footer LI {
+	LIST-STYLE-TYPE: none; LIST-STYLE-IMAGE: none; MARGIN-LEFT: 16px; MARGIN-TOP: 10px
+}
+.wrapFooterLeft {
+	FLOAT: left; WIDTH: 350px
+}
+[lang='heb'].wrapFooterLeft {
+	FLOAT: right
+}
+[lang='ara'].wrapFooterLeft {
+	FLOAT: right
+}
+.coverFooterLeft {
+	PADDING-BOTTOM: 7px; WIDTH: 350px
+}
+[lang='fre'].coverFooterLeft {
+	WIDTH: 650px
+}
+[lang='spa'].coverFooterLeft {
+	WIDTH: 390px
+}
+[lang='ptg'].coverFooterLeft {
+	WIDTH: 450px
+}
+.logoFooter {
+	HEIGHT: 31px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/footer_logo.png); FLOAT: left; WIDTH: 31px
+}
+.social_footer {
+	MARGIN: 13px 0px 0px 15px
+}
+.facebook_fotter {
+	CURSOR: pointer; HEIGHT: 17px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/facebook_footer.png); FLOAT: left; WIDTH: 17px
+}
+.facebook_fotter:hover {
+	BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/facebook_footer_hover.png); -webkit-transition: all .5s ease; -moz-transition: all .5s ease; -ms-transition: all .5s ease; -o-transition: all .5s ease; transition: all .5s ease
+}
+.twitter_footer {
+	CURSOR: pointer; HEIGHT: 17px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/twetter_footer.png); FLOAT: left; WIDTH: 17px; MARGIN-RIGHT: 7px
+}
+.twitter_footer:hover {
+	BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/twetter_footer_hover.png); -webkit-transition: all .5s ease; -moz-transition: all .5s ease; -ms-transition: all .5s ease; -o-transition: all .5s ease; transition: all .5s ease
+}
+.copy_footer {
+	FONT-SIZE: 12px; FLOAT: left; COLOR: #548424; CLEAR: both; MARGIN: 5px 0px 0px 15px
+}
+[lang='ara'].copy_footer {
+	FLOAT: right; CLEAR: both; MARGIN: 5px 15px 0px 0px
+}
+[lang='heb'].copy_footer {
+	FLOAT: right; CLEAR: both; MARGIN: 5px 15px 0px 0px
+}
+.coverFooterRight {
+	FONT-SIZE: 15px; FONT-FAMILY: "MuseoSans-500"; FLOAT: right; PADDING-BOTTOM: 0px; PADDING-TOP: 5px; PADDING-LEFT: 10px; MARGIN: 10px 34px 0px 0px; BORDER-LEFT: #fff 1px solid; LINE-HEIGHT: 1.41; PADDING-RIGHT: 0px; WIDTH: 550px
+}
+.coverFooterRight .rightFooter {
+	FLOAT: right; WIDTH: 520px
+}
+.coverFooterRight .leftFooter {
+	FLOAT: left; WIDTH: 25px
+}
+[lang='heb'].coverFooterRight .leftFooter {
+	FLOAT: right; WIDTH: 25px
+}
+[lang='ara'].coverFooterRight .leftFooter {
+	FLOAT: right; WIDTH: 25px
+}
+[lang='fre'].coverFooterRight {
+	WIDTH: 350px
+}
+[lang='spa'].coverFooterRight {
+	WIDTH: 480px
+}
+[lang='ptg'].coverFooterRight {
+	WIDTH: 420px
+}
+[lang='heb'].coverFooterRight {
+	BORDER-RIGHT: #fff 1px solid; PADDING-BOTTOM: 10px; PADDING-TOP: 10px; PADDING-LEFT: 0px; BORDER-LEFT: 0px; PADDING-RIGHT: 10px
+}
+[lang='ara'].coverFooterRight {
+	BORDER-RIGHT: #fff 1px solid; PADDING-BOTTOM: 10px; PADDING-TOP: 10px; PADDING-LEFT: 0px; BORDER-LEFT: 0px; PADDING-RIGHT: 10px
+}
+.coverFooterRight [lang='fre'].rightFooter {
+	WIDTH: 320px
+}
+.coverFooterRight [lang='spa'].rightFooter {
+	WIDTH: 460px
+}
+.coverFooterRight [lang='ptg'].rightFooter {
+	WIDTH: 400px
+}
+.rightFooter P {
+	FONT-STYLE: italic
+}
+[lang='heb'].wrap_footer .rightFooter P {
+	FONT-SIZE: 16px
+}
+[lang='ara'].wrap_footer .rightFooter P {
+	FONT-SIZE: 16px
+}
+[lang='ptg'].wrap_footer .rightFooter P {
+	FONT-SIZE: 16px
+}
+.quoteFooter {
+	HEIGHT: 15px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/quote_footer.png); FLOAT: left; WIDTH: 19px
+}
+[lang='heb'].wrap_footer .rightFooter .quote_footerImg {
+	MARGIN-RIGHT: 8px
+}
+[lang='ara'].wrap_footer .rightFooter .quote_footerImg {
+	MARGIN-RIGHT: 8px
+}
+.quote_footerImg {
+	MARGIN-LEFT: 8px
+}
+.ajaxLoad {
+	HEIGHT: 300px; TEXT-ALIGN: center; MARGIN-TOP: 200px; WIDTH: 100%
+}
+.footLinks A {
+	COLOR: #fff
+}
+.footLinks A:hover {
+	TEXT-DECORATION: underline
+}
+header {
+	POSITION: relative; Z-INDEX: 999
+}
+.lb_positionerBlack {
+	FONT-SIZE: 14px; RIGHT: -5px; POSITION: relative; FLOAT: right; COLOR: #004a80; MARGIN: 0px; Z-INDEX: 999999999; TOP: -1px; WIDTH: 55px
+}
+.lb_positionerBlack > .lb_wrap {
+	BORDER-TOP: #a4a4a4 1px solid; HEIGHT: 25px; BORDER-RIGHT: #a4a4a4 1px solid; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/arrow_lang_bar.png); BACKGROUND-REPEAT: no-repeat; BORDER-BOTTOM: #a4a4a4 1px solid; POSITION: absolute; BACKGROUND-POSITION: right center; FILTER: alpha(opacity=90); BORDER-LEFT: #a4a4a4 1px solid; Z-INDEX: 9999999; WIDTH: 44px; BACKGROUND-COLOR: #fff; border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -o-border-radius: 2px; -ms-border-radius: 2px; opacity: 0.90
+}
+.lb_currentBlack {
+	FLOAT: left; COLOR: #fff; LINE-HEIGHT: 25px; WIDTH: 150px
+}
+.lb_positionerBlack > .lb_wrap UL .lb_flag {
+	HEIGHT: 13px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/gif.gif); BACKGROUND-REPEAT: no-repeat; FLOAT: left; MARGIN: 3px 5px 0px; WIDTH: 26px
+}
+.lb_flagCurrent {
+	HEIGHT: 13px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/gif.gif); BACKGROUND-REPEAT: no-repeat; FLOAT: left; MARGIN: 6px 5px 0px; WIDTH: 26px
+}
+.lb_positionerBlack > .lb_wrap UL {
+	LIST-STYLE-TYPE: none; DISPLAY: none; BACKGROUND-COLOR: #fff
+}
+.lb_positionerBlack > .lb_wrap:hover UL {
+	FONT-SIZE: 100% !important; BORDER-TOP: #a4a4a4 1px solid; HEIGHT: 200px; BORDER-RIGHT: #a4a4a4 1px solid; BORDER-BOTTOM: #a4a4a4 1px solid; FLOAT: right; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; BORDER-LEFT: #a4a4a4 1px solid; MARGIN-TOP: -1px; DISPLAY: block; PADDING-RIGHT: 0px; WIDTH: 140px; border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -o-border-radius: 2px; -ms-border-radius: 2px
+}
+.lb_wrap UL LI {
+	CURSOR: pointer; HEIGHT: 20px; FLOAT: left; DISPLAY: block; LINE-HEIGHT: 19px; WIDTH: 140px
+}
+.lb_container UL LI A {
+	FONT-SIZE: 100% !important; COLOR: #004a97; TEXT-DECORATION: none; DISPLAY: block; WIDTH: 140px
+}
+.lb_container UL LI A:hover {
+	FONT-SIZE: 100% !important; COLOR: #000; TEXT-DECORATION: none
+}
+.lb_container {
+	POSITION: absolute; MARGIN-LEFT: -535px; MARGIN-TOP: 25px; WIDTH: 580px
+}
+.lb_positionerBlack > .lb_wrap UL LI:hover {
+	BACKGROUND-COLOR: #fff
+}
+.white_hover {
+	HEIGHT: 3px; RIGHT: 0px; POSITION: absolute; Z-INDEX: 9999999; TOP: 20px; WIDTH: 44px; BACKGROUND-COLOR: white
+}
+.eng.lb_flag {
+	BACKGROUND-POSITION: 0px 0px
+}
+.ger.lb_flag {
+	BACKGROUND-POSITION: 0px -13px
+}
+.fre.lb_flag {
+	BACKGROUND-POSITION: 0px -26px
+}
+.spa.lb_flag {
+	BACKGROUND-POSITION: 0px -39px
+}
+.ita.lb_flag {
+	BACKGROUND-POSITION: 0px -52px
+}
+.dut.lb_flag {
+	BACKGROUND-POSITION: 0px -65px
+}
+.ptg.lb_flag {
+	BACKGROUND-POSITION: 0px -78px
+}
+.heb.lb_flag {
+	BACKGROUND-POSITION: 0px -91px
+}
+.swe.lb_flag {
+	BACKGROUND-POSITION: 0px -104px
+}
+.jpn.lb_flag {
+	BACKGROUND-POSITION: 0px -117px
+}
+.chs.lb_flag {
+	BACKGROUND-POSITION: 0px -130px
+}
+.cht.lb_flag {
+	BACKGROUND-POSITION: 0px -143px
+}
+.rus.lb_flag {
+	BACKGROUND-POSITION: 0px -156px
+}
+.kor.lb_flag {
+	BACKGROUND-POSITION: 0px -169px
+}
+.tur.lb_flag {
+	BACKGROUND-POSITION: 0px -182px
+}
+.ara.lb_flag {
+	BACKGROUND-POSITION: 0px -195px
+}
+.hun.lb_flag {
+	BACKGROUND-POSITION: 0px -208px
+}
+.nor.lb_flag {
+	BACKGROUND-POSITION: 0px -221px
+}
+.pol.lb_flag {
+	BACKGROUND-POSITION: 0px -234px
+}
+.rom.lb_flag {
+	BACKGROUND-POSITION: 0px -247px
+}
+.tha.lb_flag {
+	BACKGROUND-POSITION: 0px -260px
+}
+.hin.lb_flag {
+	BACKGROUND-POSITION: 0px -273px
+}
+.dan.lb_flag {
+	BACKGROUND-POSITION: 0px -286px
+}
+.ind.lb_flag {
+	BACKGROUND-POSITION: 0px -273px
+}
+.den.lb_flag {
+	BACKGROUND-POSITION: 0px -286px
+}
+.ukr.lb_flag {
+	BACKGROUND-POSITION: 0px -299px
+}
+.far.lb_flag {
+	BACKGROUND-POSITION: 0px -312px
+}
+.gre.lb_flag {
+	BACKGROUND-POSITION: 0px -325px
+}
+.ido.lb_flag {
+	BACKGROUND-POSITION: 0px -339px
+}
+.cze.lb_flag {
+	BACKGROUND-POSITION: 0px -354px
+}
+.vie.lb_flag {
+	BACKGROUND-POSITION: 0px -367px
+}
+.srp.lb_flag {
+	BACKGROUND-POSITION: 0px -381px
+}
+.fin.lb_flag {
+	BACKGROUND-POSITION: 0px -394px
+}
+.slk.lb_flag {
+	BACKGROUND-POSITION: 0px -408px
+}
+.fil.lb_flag {
+	BACKGROUND-POSITION: 0px -422px
+}
+.bul.lb_flag {
+	BACKGROUND-POSITION: 0px -436px
+}
+.hrv.lb_flag {
+	BACKGROUND-POSITION: 0px -450px
+}
+.lit.lb_flag {
+	BACKGROUND-POSITION: 0px -464px
+}
+.slv.lb_flag {
+	BACKGROUND-POSITION: 0px -479px
+}
+.eng.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px 0px
+}
+.ger.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -13px
+}
+.fre.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -26px
+}
+.spa.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -39px
+}
+.ita.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -52px
+}
+.dut.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -65px
+}
+.ptg.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -78px
+}
+.heb.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -91px
+}
+.swe.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -104px
+}
+.jpn.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -117px
+}
+.chs.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -130px
+}
+.cht.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -143px
+}
+.rus.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -156px
+}
+.kor.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -169px
+}
+.tur.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -182px
+}
+.ara.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -195px
+}
+.hun.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -208px
+}
+.nor.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -221px
+}
+.pol.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -234px
+}
+.rom.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -247px
+}
+.tha.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -260px
+}
+.hin.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -273px
+}
+.dan.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -286px
+}
+.ind.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -273px
+}
+.den.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -286px
+}
+.ukr.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -299px
+}
+.far.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -312px
+}
+.gre.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -325px
+}
+.ido.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -339px
+}
+.cze.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -354px
+}
+.vie.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -367px
+}
+.srp.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -381px
+}
+.fin.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -394px
+}
+.slk.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -408px
+}
+.fil.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -422px
+}
+.bul.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -436px
+}
+.hrv.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -450px
+}
+.lit.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -464px
+}
+.slv.lb_flagCurrent {
+	BACKGROUND-POSITION: 0px -479px
+}
+.firstLeft {
+	LEFT: 145px
+}
+.secondLeft {
+	LEFT: 247px
+}
+.thirdLeft {
+	LEFT: 407px
+}
+.menuLangBar2 {
+	DISPLAY: none
+}
+.lb_positionerBlack > .lb_wrap UL.lb_mid {
+	BORDER-TOP: #a4a4a4 1px solid; BORDER-RIGHT: 0px; BORDER-BOTTOM: #a4a4a4 1px solid; MARGIN-LEFT: -2px; BORDER-LEFT: 0px; MARGIN-RIGHT: -2px
+}
+.lb_positionerBlack > .lb_wrap UL.lb_last {
+	BORDER-TOP: #a4a4a4 1px solid; BORDER-RIGHT: 0px; BORDER-BOTTOM: #a4a4a4 1px solid; BORDER-LEFT: #a4a4a4 1px solid; MARGIN-RIGHT: -2px
+}
+.lb_positionerBlack > .lb_wrap UL.lb_first {
+	BORDER-TOP: #a4a4a4 1px solid; HEIGHT: auto !important; BORDER-RIGHT: #a4a4a4 1px solid; BORDER-BOTTOM: #a4a4a4 1px solid; MARGIN-LEFT: -2px; BORDER-LEFT: #a4a4a4 1px solid
+}
+.wrapSubMenu {
+	BORDER-TOP: #cecece 1px solid; HEIGHT: 35px; RIGHT: 0px; BORDER-BOTTOM: #cecece 1px solid; POSITION: fixed; LEFT: 0px; MARGIN: 0px auto; Z-INDEX: 50; TOP: 104px; WIDTH: 100%; BACKGROUND-COLOR: #dfe7ef; -webkit-transform: rotate(0deg)
+}
+.wrapSubMenu UL {
+	MARGIN: 0px auto; WIDTH: 960px
+}
+.wrapSubMenu LI {
+	LIST-STYLE-TYPE: none; CURSOR: pointer; HEIGHT: 33px; FLOAT: left; LIST-STYLE-IMAGE: none; COLOR: #004f8a; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 8px; LINE-HEIGHT: 2.8; PADDING-RIGHT: 8px; MARGIN-RIGHT: 25px
+}
+.currentSubMenu {
+	BORDER-BOTTOM: #004f8a 2px solid
+}
+[lang='heb'].nav {
+	MARGIN: 0px auto; WIDTH: 585px
+}
+[lang='heb'].nav UL {
+	MARGIN-LEFT: 0px
+}
+[lang='heb'].nav UL LI {
+	LIST-STYLE-TYPE: none; FONT-SIZE: 13px; FLOAT: right; LIST-STYLE-IMAGE: none; MARGIN: 0px 0px 0px 10px; WIDTH: auto
+}
+[lang='heb'].nav UL LI A {
+	MARGIN-LEFT: 10px; MARGIN-RIGHT: 0px
+}
+[lang='heb'].nav .seperator {
+	HEIGHT: 23px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/sep_blue_menu.png); FLOAT: left; MARGIN-TOP: 7px; WIDTH: 2px
+}
+[lang='heb'].wrapSubMenu UL {
+	MARGIN: 0px auto; WIDTH: 720px
+}
+[lang='heb'].wrapSubMenu LI {
+	FLOAT: right; MARGIN-RIGHT: 20px
+}
+[lang='heb'].wrap_footer .rightFooter {
+	FLOAT: left
+}
+[lang='heb'].wrap_footer .rightFooter P {
+	DIRECTION: rtl; PADDING-RIGHT: 4px
+}
+[lang='heb'].wraphead .wrapCart {
+	WIDTH: 172px
+}
+[lang='heb'].wraphead .cart {
+	DIRECTION: rtl; WIDTH: 104px
+}
+[lang='heb'].wrap_footer .copy_footer {
+	DIRECTION: rtl
+}
+[lang='ara'].wrap_footer .copy_footer {
+	DIRECTION: rtl
+}
+[lang='ara'].wraphead .cart IMG {
+	MARGIN: 4px 12px 0px 8px
+}
+[lang='ara'].wraphead .wrapCart {
+	WIDTH: 179px
+}
+[lang='ara'].wraphead .cart {
+	DIRECTION: rtl; WIDTH: 113px
+}
+[lang='ara'].nav {
+	MARGIN: 0px auto; WIDTH: 585px
+}
+[lang='ara'].nav UL {
+	MARGIN-LEFT: 0px
+}
+[lang='ara'].nav UL LI {
+	LIST-STYLE-TYPE: none; FONT-SIZE: 13px; FLOAT: right; LIST-STYLE-IMAGE: none; MARGIN: 0px 0px 0px 10px; WIDTH: auto
+}
+[lang='ara'].nav UL LI A {
+	MARGIN-LEFT: 10px; MARGIN-RIGHT: 0px
+}
+[lang='ara'].nav .seperator {
+	HEIGHT: 23px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/sep_blue_menu.png); FLOAT: left; MARGIN-TOP: 7px; WIDTH: 2px
+}
+[lang='ara'].wrapSubMenu UL {
+	MARGIN: 0px auto; WIDTH: 622px
+}
+[lang='ara'].wrap_footer .rightFooter {
+	FLOAT: left
+}
+[lang='ara'].wrap_footer .rightFooter P {
+	DIRECTION: rtl; PADDING-RIGHT: 4px
+}
+[lang='fre'].wrap_footer .rightFooter P {
+	FONT-SIZE: 14px
+}
+[lang='fre'].wraphead .wrapCart {
+	WIDTH: 172px
+}
+[lang='fre'].wraphead .cart {
+	WIDTH: 104px
+}
+[lang='fre'].wrapSubMenu {
+	FONT-SIZE: 12px
+}
+[lang='ger'].wraphead .cart {
+	FONT-SIZE: 11px
+}
+[lang='ger'].wraphead .cart IMG {
+	MARGIN: 4px 5px 0px -1px
+}
+[lang='ger'].wrap_footer {
+	HEIGHT: 200px
+}
+[lang='ger'].wrap_footer .rightFooter P {
+	FONT-SIZE: 16px
+}
+[lang='ger'].wraphead .wrapCart {
+	WIDTH: 191px
+}
+[lang='ger'].wraphead .cart {
+	WIDTH: 125px
+}
+[lang='jpn'].wrap_footer .coverFooterLeft {
+	WIDTH: 643px
+}
+[lang='jpn'].wrap_footer .footLinks {
+	FLOAT: left
+}
+[lang='jpn'].wrap_footer .rightFooter P {
+	FONT-SIZE: 14px
+}
+[lang='spa'].wraphead .cart {
+	FONT-SIZE: 12px
+}
+[lang='spa'].wraphead .cart IMG {
+	MARGIN: 4px 2px 0px -1px
+}
+[lang='spa'].wraphead .wrapCart {
+	WIDTH: 215px
+}
+[lang='spa'].wraphead .cart {
+	WIDTH: 145px
+}
+[lang='ita'].wraphead .wrapCart {
+	WIDTH: 179px
+}
+[lang='ita'].wraphead .cart {
+	WIDTH: 105px
+}
+.liveChat {
+	RIGHT: 0px; POSITION: fixed; BOTTOM: -11px
+}
+[lang='ptg'].wraphead .wrapCart {
+	WIDTH: 191px
+}
+[lang='ptg'].wraphead .cart {
+	WIDTH: 125px
+}
+.productsLi {
+	MARGIN-LEFT: 175px !important
+}
+[lang='heb'].nav .productsLi {
+	MARGIN: 0px 105px 0px 0px
+}
+[lang='ara'].nav .productsLi {
+	MARGIN: 0px 105px 0px 0px
+}
+#discover {
+	MARGIN-RIGHT: 29px !important
+}
+[lang='heb'].nav #discover {
+	MARGIN-RIGHT: 0px !important
+}
+[lang='ara'].nav #discover {
+	MARGIN-RIGHT: 0px !important
+}

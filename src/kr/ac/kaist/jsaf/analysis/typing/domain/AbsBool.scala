@@ -13,6 +13,9 @@ object AbsBool {
   def alpha(bool: Boolean): AbsBool = {
     if (bool) BoolTrue else BoolFalse
   }
+
+  val bot: AbsBool = BoolBot
+  val top: AbsBool = BoolTop
 }
 
 sealed abstract class AbsBool extends AbsBase {

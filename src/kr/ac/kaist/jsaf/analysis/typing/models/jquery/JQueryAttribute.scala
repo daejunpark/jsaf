@@ -122,11 +122,13 @@ object JQueryAttribute extends ModelData {
           val addr2 = list_addr(1)
           val addr3 = list_addr(2)
           val addr4 = list_addr(3)
+          val addr5 = list_addr(4)
           /* new loc */
           val l_attr = addrToLoc(addr1, Recent)
           val l_text = addrToLoc(addr2, Recent)
           val l_child1 = addrToLoc(addr3, Recent)
           val l_child2 = addrToLoc(addr4, Recent)
+          val l_tableentry = addrToLoc(addr5, Recent)
 
           /* jQuery object */
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
@@ -156,9 +158,10 @@ object JQueryAttribute extends ModelData {
               val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
               val (h_3, ctx_3) = Helper.Oldify(h_2, ctx_2, addr3)
               val (h_4, ctx_4) = Helper.Oldify(h_3, ctx_3, addr4)
-              val lset_elem = lset_this.foldLeft(LocSetBot)((ls, l) => ls ++ Helper.Proto(h_4, l, NumStr)._2)
-              val h1 = DOMHelper.setAttribute(h_4, lset_elem, l_attr, l_text, l_child1, l_child2, v_arg1._1._5, v_arg2._1._5)
-              (h1, Value(lset_this), ctx_4)
+              val (h_5, ctx_5) = Helper.Oldify(h_4, ctx_4, addr5)
+              val lset_elem = lset_this.foldLeft(LocSetBot)((ls, l) => ls ++ Helper.Proto(h_5, l, NumStr)._2)
+              val h1 = DOMHelper.setAttribute(h_5, lset_elem, l_attr, l_text, l_child1, l_child2, l_tableentry, v_arg1._1._5, v_arg2._1._5)
+              (h1, Value(lset_this), ctx_5)
             }
             else
               (HeapBot, ValueBot, ContextBot)

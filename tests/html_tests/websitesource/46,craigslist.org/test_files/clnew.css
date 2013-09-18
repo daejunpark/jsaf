@@ -1,0 +1,2409 @@
+html {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+body {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+div {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+span {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+applet {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+object {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+iframe {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+h1 {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+h2 {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+h3 {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+h4 {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+h5 {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+h6 {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+p {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+blockquote {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+pre {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+a {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+abbr {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+acronym {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+address {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+big {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+cite {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+code {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+del {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+dfn {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+em {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+img {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+ins {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+kbd {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+q {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+s {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+samp {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+small {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+strike {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+strong {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+sub {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+sup {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+tt {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+var {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+b {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+u {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+i {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+center {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+dl {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+dt {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+dd {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+ol {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+ul {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+li {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+fieldset {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+form {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+label {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+legend {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+table {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+caption {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+tbody {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+tfoot {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+thead {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+tr {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+th {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+td {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+article {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+aside {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+canvas {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+details {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+embed {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+figure {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+figcaption {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+footer {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+header {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+hgroup {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+menu {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+nav {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+output {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+ruby {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+section {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+summary {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+time {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+mark {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+audio {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+video {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+ul {
+	list-style: none;
+}
+blockquote {
+	quotes: none;
+}
+q {
+	quotes: none;
+}
+blockquote::before {
+	content: none;
+}
+blockquote::after {
+	content: none;
+}
+q::before {
+	content: none;
+}
+q::after {
+	content: none;
+}
+table {
+	border-collapse: collapse; border-spacing: 0;
+}
+article {
+	display: block;
+}
+aside {
+	display: block;
+}
+details {
+	display: block;
+}
+figcaption {
+	display: block;
+}
+figure {
+	display: block;
+}
+footer {
+	display: block;
+}
+header {
+	display: block;
+}
+hgroup {
+	display: block;
+}
+menu {
+	display: block;
+}
+nav {
+	display: block;
+}
+section {
+	display: block;
+}
+html {
+	height: 100%;
+}
+body {
+	height: 100%;
+}
+body {
+	background: white; color: rgb(34, 34, 34);
+}
+img {
+	border: 0px currentColor;
+}
+em {
+	color: red; font-style: normal; font-weight: bold;
+}
+strong {
+	font-weight: bolder;
+}
+b {
+	font-weight: bolder;
+}
+big {
+	font-size: larger;
+}
+small {
+	font-size: smaller;
+}
+sup {
+	line-height: normal; font-size: x-small; vertical-align: super;
+}
+hr {
+	background: rgb(204, 204, 204); border: 0px currentColor; height: 2px; color: rgb(204, 204, 204);
+}
+p {
+	margin: 1em 0px; clear: none;
+}
+input.dv {
+	color: rgb(170, 170, 170) !important;
+}
+textarea.dv {
+	color: rgb(170, 170, 170) !important;
+}
+ul.ul {
+	margin: 1em 0px; padding-left: 40px;
+}
+ol.ol {
+	margin: 1em 0px; padding-left: 40px;
+}
+ul.ul {
+	list-style-type: disc;
+}
+ol.ol {
+	list-style-type: decimal;
+}
+ul.ul li {
+	margin: 1em 0px; line-height: 1.3em; display: list-item;
+}
+ol.ol li {
+	margin: 1em 0px; line-height: 1.3em; display: list-item;
+}
+.highlight {
+	background: rgb(255, 255, 204); padding: 8px; border: 1px solid rgb(255, 255, 136); font-family: sans-serif;
+}
+.error {
+	background: rgb(255, 255, 204); padding: 8px; border: 1px solid rgb(255, 255, 136); font-family: sans-serif;
+}
+.error {
+	border-color: rgb(255, 187, 187);
+}
+aside.highlight {
+	margin: 8px auto;
+}
+fieldset {
+	background: rgb(238, 238, 238); padding: 0.35em 0.62em 0.75em; border: 2px groove rgb(204, 204, 204);
+}
+legend {
+	font-family: sans-serif; font-size: small; font-weight: bold; margin-left: 1em;
+}
+.ban {
+	padding: 2px; text-align: center; clear: both; font-weight: bold; border-top-color: rgb(204, 204, 204); border-bottom-color: rgb(204, 204, 204); border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid; background-color: rgb(238, 238, 238);
+}
+.greytext {
+	color: rgb(119, 119, 119); font-family: serif; font-size: x-small; font-weight: normal;
+}
+#pagecontainer {
+	position: relative; min-height: 100%;
+}
+.shadow {
+	box-shadow: 3px 3px 4px #222; -moz-box-shadow: 3px 3px 4px #222; -webkit-box-shadow: 3px 3px 4px #222;
+}
+#pagecontainer > header {
+	background: rgb(238, 238, 238); padding: 5px 0px; line-height: 1.1em; font-family: sans-serif; min-height: 1.1em;
+}
+#pagecontainer > footer {
+	background: rgb(238, 238, 238); padding: 5px 0px; line-height: 1.1em; font-family: sans-serif; min-height: 1.1em;
+}
+.post .posting > header {
+	background: rgb(238, 238, 238); padding: 5px 0px; line-height: 1.1em; font-family: sans-serif; min-height: 1.1em;
+}
+.post .posting > footer {
+	background: rgb(238, 238, 238); padding: 5px 0px; line-height: 1.1em; font-family: sans-serif; min-height: 1.1em;
+}
+#pagecontainer > header {
+	margin-bottom: 1em; border-bottom-color: rgb(204, 204, 204); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#pagecontainer > header .contents {
+	margin: 0px auto; padding: 0px 8px; line-height: 24px; position: relative; min-height: 24px; max-width: 768px;
+}
+.w1024 #pagecontainer > header .contents {
+	max-width: 980px;
+}
+.mobile #pagecontainer > header .contents {
+	max-width: 10000px !important;
+}
+#pagecontainer > footer {
+	left: 0px; height: 1.1em; text-align: center; right: 0px; bottom: 0px; clear: both; margin-top: 2.5em; border-top-color: rgb(204, 204, 204); border-top-width: 1px; border-top-style: solid; position: absolute;
+}
+#pagecontainer > footer ul li {
+	padding: 0px 5px; font-size: small; display: inline;
+}
+#pagecontainer > footer .rss {
+	text-align: right; float: right;
+}
+#pagecontainer > footer .rss .l {
+	background: orange; padding: 0px 2px; color: white; font-family: sans-serif; font-weight: bold;
+}
+section.body {
+	margin: 0px auto; padding: 0px 8px 4em; width: 768px; height: 90%; min-height: 600px;
+}
+.map section.body {
+	padding-bottom: 2em;
+}
+.w1024 section.body {
+	width: 980px;
+}
+.mobile section.body {
+	width: auto !important;
+}
+.star {
+	background: url("/images/sprites.png") 0px -112px; width: 16px; height: 16px; display: inline-block; visibility: hidden;
+}
+.v.star {
+	visibility: visible;
+}
+.star:hover {
+	background-position: 0px -128px;
+}
+.half.star {
+	background-position: 0px -128px;
+}
+.star:hover {
+	background-color: rgb(238, 238, 238);
+}
+.fav.star {
+	background-position: 0px -144px;
+}
+h4 .star {
+	display: inline-block;
+}
+.pic h4 .star {
+	left: 55px; position: relative;
+}
+h4 .delfaves {
+	top: -2px; position: relative;
+}
+.mobile .topright_box {
+	display: none;
+}
+.mobile .star {
+	display: none;
+}
+.topright_box #ef {
+	margin-left: 4px; float: right;
+}
+#favorites {
+	background: rgb(255, 255, 170); padding: 0px; font-family: sans-serif; float: right; display: none;
+}
+#favorites a {
+	padding: 0px 4px; text-decoration: none; display: block;
+}
+#favorites a::before {
+	background: url("/images/sprites.png") 0px -144px; margin: 4px 5px 0px 0px; width: 16px; height: 16px; line-height: 16px; float: left; content: "";
+}
+#favorites a:hover {
+	background: rgb(204, 204, 204);
+}
+#favorites a.off:hover {
+	
+}
+.tabcontainer {
+	top: 6px; width: 100%; height: 24px; overflow: hidden; font-size: smaller; position: relative;
+}
+.tabcontainer b {
+	margin: auto 2px; padding: 3px; border-radius: 0.7em 0.7em 0px 0px; border: 2px solid rgb(204, 204, 204); height: 25px; white-space: nowrap; -moz-border-radius: 0.7em 0.7em 0 0; -webkit-border-radius: 0.7em 0.7em 0 0;
+}
+.tabcontainer a {
+	margin: auto 2px; padding: 3px; border-radius: 0.7em 0.7em 0px 0px; border: 2px solid rgb(204, 204, 204); height: 25px; white-space: nowrap; -moz-border-radius: 0.7em 0.7em 0 0; -webkit-border-radius: 0.7em 0.7em 0 0;
+}
+:root .tabcontainer b {
+	line-height: 25px;
+}
+:root .tabcontainer a {
+	line-height: 25px;
+}
+.tabcontainer b {
+	background: white; font-weight: normal; border-bottom-color: white; border-bottom-width: 2px; border-bottom-style: solid;
+}
+.tabcontainer a {
+	text-decoration: none; border-bottom-style: none;
+}
+.tabcontainer a:hover {
+	background: rgb(247, 247, 247);
+}
+.posting .postingtitle {
+	margin: 10px 0px; line-height: 1.4em; font-size: 1.4em; font-weight: bold;
+}
+.posting .tsb {
+	margin: 0px 0px 1em; padding: 8px; border: 1px solid rgb(238, 238, 238);
+}
+.posting aside.tsb {
+	font-size: small;
+}
+.posting .tsb em {
+	font-weight: normal;
+}
+.posting .flags {
+	margin-right: 3em; margin-left: 3em;
+}
+.posting fieldset {
+	display: inline;
+}
+.posting .removed h2 {
+	margin: 0.83em 0px; font-size: 1.5em; font-weight: bold;
+}
+.posting .removed h5 {
+	margin: 1.67em 0px; font-size: 0.83em; font-weight: bold;
+}
+.posting .flags {
+	font-size: small; display: inline; z-index: 10000;
+}
+.posting .flags .flagChooser a {
+	margin-left: 6px;
+}
+.posting .flags .flagChooser a:hover {
+	background: rgb(238, 238, 238);
+}
+.posting .flags .flagChooser sup a {
+	margin-left: 0px;
+}
+.posting .dateReplyBar {
+	font-size: smaller; position: relative; z-index: 1000;
+}
+.posting .dateReplyBar a {
+	white-space: nowrap;
+}
+.posting .dateReplyBar .returnemail {
+	left: 0px; position: absolute; z-index: 1000;
+}
+.posting #availdate {
+	float: right;
+}
+.posting .userbody {
+	padding-bottom: 0.5em; margin-bottom: 1.5em;
+}
+#postingbody p {
+	margin-bottom: 16px;
+}
+#postingbody i {
+	font-style: italic;
+}
+#postingbody blockquote {
+	margin: 1em 40px;
+}
+#postingbody h1 {
+	text-align: inherit; font-weight: bold; display: block;
+}
+#postingbody h2 {
+	text-align: inherit; font-weight: bold; display: block;
+}
+#postingbody h3 {
+	text-align: inherit; font-weight: bold; display: block;
+}
+#postingbody h4 {
+	text-align: inherit; font-weight: bold; display: block;
+}
+#postingbody h5 {
+	text-align: inherit; font-weight: bold; display: block;
+}
+#postingbody h6 {
+	text-align: inherit; font-weight: bold; display: block;
+}
+#postingbody h1 {
+	margin: 0.67em 0px; line-height: 2em; font-size: 2em;
+}
+#postingbody h2 {
+	margin: 0.83em 0px; line-height: 1.5em; font-size: 1.5em;
+}
+#postingbody h3 {
+	margin: 1em 0px; line-height: 1.17em; font-size: 1.17em;
+}
+#postingbody h4 {
+	margin: 1.33em 0px; line-height: 1em; font-size: 1em;
+}
+#postingbody h5 {
+	margin: 1.67em 0px; line-height: 0.83em; font-size: 0.83em;
+}
+#postingbody h6 {
+	margin: 2em 0px; line-height: 0.67em; font-size: 0.67em;
+}
+#postingbody ul {
+	margin: 1em 0px; padding-left: 40px;
+}
+#postingbody ol {
+	margin: 1em 0px; padding-left: 40px;
+}
+#postingbody ul {
+	list-style-type: disc;
+}
+#postingbody dl {
+	margin: 1em 0px;
+}
+#postingbody dd {
+	margin-left: 40px;
+}
+#postingbody pre {
+	margin: 1em 0px; font-family: monospace; white-space: pre;
+}
+#postingbody th {
+	padding: 1px; vertical-align: inherit; display: table-cell;
+}
+#postingbody td {
+	padding: 1px; vertical-align: inherit; display: table-cell;
+}
+#postingbody th {
+	font-weight: bold;
+}
+.posting .cltags {
+	margin: 1em 0px; font-size: smaller;
+}
+.posting ul.blurbs {
+	padding: 10px; margin-left: 10px; list-style-type: disc;
+}
+.posting .postinginfos {
+	clear: both;
+}
+.posting p.streetAddr {
+	margin: 0px 1.2em 0px 0px; font-size: 75%; display: inline;
+}
+.posting p.postinginfo {
+	margin: 0px 1.2em 0px 0px; font-size: 75%; display: inline;
+}
+.posting #leaflet {
+	width: 280px; height: 280px; margin-bottom: 5px;
+}
+.w1024.posting #leaflet {
+	width: 300px; height: 300px;
+}
+.posting button.reply_button {
+	display: none;
+}
+.posting div.reply_options {
+	background: white; padding: 5px; border: 2px solid rgb(204, 204, 204); margin-top: 5px; display: none;
+}
+.posting div.reply_options h5 {
+	margin: 0px 0px 10px; text-decoration: underline;
+}
+.posting div.reply_options ul {
+	margin: 0px 0px 6px 20px; padding-left: 0px;
+}
+.posting div.reply_options li {
+	padding: 2px;
+}
+.posting div.reply_options li:hover {
+	background: rgb(238, 238, 238);
+}
+.posting div.reply_options li a {
+	text-decoration: none; display: block; position: relative;
+}
+.posting div.reply_options li a::before {
+	width: 16px; height: 16px; padding-right: 16px; margin-right: 5px; content: ""; background-image: url("/images/sprites.png");
+}
+.posting div.reply_options li a.aol::before {
+	
+}
+.posting div.reply_options li a.gmail::before {
+	background-position: 0px -32px;
+}
+.posting div.reply_options li a.msmail::before {
+	background-position: 0px -48px;
+}
+.posting div.reply_options li a.yahoo::before {
+	background-position: 0px -96px;
+}
+.posting div.reply_options li a.mailto::before {
+	background: inherit; padding: 0px;
+}
+.posting div.reply_options .anonemail {
+	padding: 5px; border: 1px solid rgb(204, 204, 204); width: 100%; margin-left: -10px; background-color: rgb(238, 238, 238);
+}
+.iw {
+	height: 330px; margin-bottom: 2em;
+}
+.w1024 .iw {
+	height: 450px;
+}
+.iw #iwt {
+	margin-top: 1px; margin-right: 2px; float: left;
+}
+.iw #thumbs {
+	margin-top: 1px; margin-right: 2px; float: left;
+}
+.iw #iwt img {
+	width: 40px; height: 40px; margin-bottom: 2px;
+}
+.iw #thumbs img {
+	width: 40px; height: 40px; margin-bottom: 2px;
+}
+.w1024 .iw #iwt img {
+	width: auto; height: auto;
+}
+.w1024 .iw #thumbs img {
+	width: auto; height: auto;
+}
+.iw #iwt br {
+	display: none;
+}
+.iw img {
+	display: block;
+}
+.iw img.hover {
+	margin-left: -4px;
+}
+.iw #iwt img.hover {
+	margin-left: 4px;
+}
+.iw #ci {
+	border: 1px solid rgb(238, 238, 238); width: 440px; height: 330px; text-align: center; float: left; position: relative;
+}
+.w1024 .iw #ci {
+	border: 1px solid rgb(238, 238, 238); width: 600px; height: 450px;
+}
+#ci img {
+	border: 0px currentColor; max-height: 330px; max-width: 440px;
+}
+.w1024 #ci img {
+	max-height: none; max-width: none;
+}
+.posting #attributes {
+	width: 280px; float: right;
+}
+.w1024.posting #attributes {
+	width: 300px;
+}
+.posting #attributes #terms {
+	line-height: 1.4em; font-size: 1em; min-height: 1.4em;
+}
+.posting #attributes #terms #price b {
+	font-size: 1.4em;
+}
+.posting #attributes #terms #hood {
+	font-size: 1em;
+}
+.posting .amenities h5 {
+	background: white; color: rgb(0, 0, 0); padding-left: 1em; font-size: 90%; font-weight: bold; margin-top: 1em; border-top-color: rgb(204, 204, 204); border-bottom-color: rgb(204, 204, 204); border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid;
+}
+.posting .amenities ul {
+	margin: 2px 10px; display: block;
+}
+.posting .amenities ul li {
+	display: inline;
+}
+.posting .amenities ul li + li::before {
+	content: ", ";
+}
+.mobile.posting .flags {
+	font-size: 10px;
+}
+.mobile.posting .postinginfo {
+	font-size: 10px;
+}
+.mobile.posting .blurbs {
+	font-size: 10px;
+}
+.mobile.posting .returnemail {
+	font-size: 10px;
+}
+.mobile.posting .flags {
+	margin-top: 2em; display: block; white-space: nowrap;
+}
+.mobile.posting .postinginfo {
+	display: inline-block; white-space: nowrap;
+}
+.mobile.posting header a {
+	font-size: 1em; white-space: nowrap;
+}
+.mobile.posting header.contents {
+	
+}
+.mobile.posting .flags a {
+	font-size: 12px;
+}
+.mobile.posting .body {
+	width: 95%;
+}
+.mobile.posting h2 {
+	font-size: 18px;
+}
+.posting-mobile .userbody {
+	font-size: 16px;
+}
+.mobile.posting .returnemail a {
+	font-size: 14px; white-space: nowrap;
+}
+.mobile.posting #attributes {
+	width: 90%; margin-top: 2em; float: none;
+}
+.mobile.posting #postingbody {
+	font-size: 12px;
+}
+.mobile.posting .iw {
+	height: auto; max-height: 450px; max-width: 600px;
+}
+.mobile.posting .iw #thumbs {
+	display: none;
+}
+.mobile.posting .iw #ci {
+	width: auto; height: auto; float: none; display: inline-block;
+}
+.mobile.posting .iw #iwi {
+	max-width: 100%;
+}
+.slidernav {
+	text-align: center;
+}
+.sliderinfo {
+	margin: 0px 2em;
+}
+.swipe {
+	border: 1px solid rgb(204, 204, 204); text-align: center; overflow: hidden; visibility: hidden; position: relative; max-height: 450px; max-width: 600px;
+}
+.swipe-wrap {
+	overflow: hidden; position: relative;
+}
+.swipe-wrap > div {
+	overflow: hidden; float: left; position: relative;
+}
+.swipe img {
+	margin: auto; max-height: 100%; max-width: 100%;
+}
+.toc td {
+	white-space: nowrap;
+}
+.toc a {
+	white-space: nowrap;
+}
+.toc th {
+	white-space: nowrap;
+}
+.toc .hl {
+	white-space: nowrap;
+}
+.toc a {
+	text-decoration: none;
+}
+.toc a:hover {
+	text-decoration: underline;
+}
+.toc #messagetable #messages {
+	margin: 1em 0px; width: 50%; text-align: right; float: right;
+}
+.toc .sortby {
+	float: right;
+}
+#pagecontainer header .contents .breadcrumbs .crumb::after {
+	color: rgb(68, 68, 68); content: " > ";
+}
+#pagecontainer header .contents .breadcrumbs > :last-child.crumb::after {
+	content: "";
+}
+#pagecontainer header .contents .dropdown {
+	display: none;
+}
+#pagecontainer header .contents .back {
+	display: none;
+}
+.mobile.toc #pagecontainer header {
+	width: 100%; padding-bottom: 0px; position: fixed; z-index: 1001;
+}
+.mobile.posting #pagecontainer header {
+	width: 100%; padding-bottom: 0px; position: fixed; z-index: 1001;
+}
+.mobile.post .body .posting header {
+	display: none;
+}
+.mobile.toc #pagecontainer header .contents {
+	transition:height 0.3s; height: 24px; margin-bottom: 5px; -moz-transition: height 0.3s; -webkit-transition: height 0.3s; -o-transition: height 0.3s;
+}
+.mobile.posting #pagecontainer header .contents {
+	transition:height 0.3s; height: 24px; margin-bottom: 5px; -moz-transition: height 0.3s; -webkit-transition: height 0.3s; -o-transition: height 0.3s;
+}
+.mobile #pagecontainer header .contents .leftside {
+	height: 100%;
+}
+.mobile #pagecontainer header .contents .breadbox {
+	height: 100%; overflow: hidden; position: relative;
+}
+.mobile #pagecontainer header .contents .breadcrumbs {
+	width: 100%; bottom: 0px; position: absolute;
+}
+.mobile #pagecontainer header .contents .breadcrumbs .crumb {
+	overflow: hidden; clear: right; float: right; -ms-text-overflow: ellipsis; max-width: 100%;
+}
+.mobile #pagecontainer header .contents .back {
+	margin: 0px 10px 0px 0px; font-size: 14px; float: left; display: block;
+}
+.mobile #pagecontainer header .contents .dropdown {
+	padding: 0px 5px 0px 10px; height: 100%; font-size: 1.3em; float: right;
+}
+.mobile #pagecontainer header .open.contents .up.dropdown {
+	display: inline;
+}
+.mobile #pagecontainer header .closed.contents .down.dropdown {
+	display: inline;
+}
+.mobile.toc #pagecontainer header + * {
+	padding-top: 50px;
+}
+.mobile.posting #pagecontainer header + * {
+	padding-top: 50px;
+}
+.mobile header {
+	min-width: inherit;
+}
+.mobile header a {
+	font-size: 1em; text-decoration: none;
+}
+.nojs .toc .modebtns {
+	display: none;
+}
+.toc .modebtns button {
+	border-color: rgb(136, 136, 204); border-radius: 2px; color: rgb(0, 0, 0); min-height: 32px; background-color: rgb(204, 204, 255); -moz-border-radius: 2px;
+}
+.toc .modebtns button.down {
+	border-style: inset; border-color: rgb(68, 68, 170); color: rgb(255, 255, 255); background-color: rgb(102, 102, 187);
+}
+.toc .modebtns button:hover {
+	background-color: rgb(187, 187, 238);
+}
+.toc .modebtns button.down:hover {
+	background-color: rgb(102, 102, 187);
+}
+.toc #searchfieldset {
+	margin: 0px auto 1em; padding: 0px; border: 1px solid rgb(204, 204, 204); white-space: nowrap; max-width: 768px;
+}
+.w1024.toc #searchfieldset {
+	max-width: 980px;
+}
+.toc #searchtable {
+	background: rgb(238, 238, 238); font-family: sans-serif; white-space: nowrap;
+}
+.toc #searchtable input {
+	font-family: serif;
+}
+.toc #searchtable td {
+	padding: 5px; vertical-align: middle;
+}
+.toc #searchtable #searchchecks {
+	float: right;
+}
+.toc #searchtable #hoodpicker {
+	display: inline-block;
+}
+.toc #hoodcount {
+	text-align: right; display: inline-block; min-width: 1em;
+}
+.toc #hoodtitle {
+	cursor: pointer;
+}
+.toc #hoodtogon {
+	font-family: monospace; font-weight: bold; display: none;
+}
+.toc #hoodtogoff {
+	font-family: monospace; font-weight: bold; display: none;
+}
+.toc aside.sharedFavList {
+	display: none;
+}
+.toc aside.oldFavList {
+	display: none;
+}
+.toc footer .rss {
+	right: 4px; bottom: 4px; position: absolute;
+}
+.toc footer .rss .l {
+	background: orange; padding: 0px 2px; color: white; font-family: sans-serif; font-weight: bold; text-decoration: none;
+}
+.toc #floater {
+	background: white; border: 2px solid rgb(204, 204, 204); width: 300px; height: 225px; overflow: hidden; display: none; position: absolute; z-index: 999;
+}
+.toc #floater img.loading {
+	left: 118px; top: 90px; position: absolute;
+}
+.toc #floater img.payload {
+	margin: 0px auto; display: none;
+}
+.toc .f#floater img.loading {
+	display: none;
+}
+.toc .f#floater img.payload {
+	display: block;
+}
+.toc .resulttotal {
+	text-align: center; clear: both; font-family: sans-serif; margin-top: 10px;
+}
+.toc .resultshdr {
+	margin: 0.1em 0px 1em; padding: 5px; color: rgb(170, 170, 170); font-family: sans-serif; background-color: transparent;
+}
+.toc .resultshdr .npcontrols {
+	margin: auto; width: 250px;
+}
+.toc .resultshdr .npcontrolcenter {
+	width: 100%;
+}
+.toc .resultshdr .nplink {
+	padding: 1px 5px;
+}
+.toc .resultshdr .first.nplink {
+	float: left;
+}
+.toc .resultshdr .prev.nplink {
+	float: left;
+}
+.toc .resultshdr .next.nplink {
+	float: right;
+}
+.toc .resultshdr .nplabel {
+	margin: 0px 5px; font-size: 0.9em;
+}
+.toc .resultshdr .pagenum {
+	color: rgb(34, 34, 34); font-weight: normal;
+}
+.toc .row {
+	clear: both;
+}
+.toc .row .i {
+	background-position: center; width: 50px; height: 50px; overflow: hidden; clear: both; margin-right: 10px; float: left; display: none; background-repeat: no-repeat;
+}
+.pic.toc .row .i {
+	display: inline;
+}
+.pic.toc #toc_rows .empty.i {
+	background-image: url("/images/peace-sm.jpg");
+}
+.toc .row .date::after {
+	content: " - ";
+}
+.toc .row .pl::after {
+	content: " - ";
+}
+.toc .row #mapcontainer .date::after {
+	content: "";
+}
+.pic.toc .row .pl::after {
+	content: "";
+}
+.pic.toc .row {
+	margin: 10px 0px; height: 50px;
+}
+.toc .row .price {
+	padding: 1px 3px; border-radius: 0.25em; border: 1px solid rgb(204, 204, 204); font-size: 90%; -moz-border-radius: 0.25em; -webkit-border-radius: 0.25em; -o-border-radius: 0.25em; -ms-border-radius: 0.25em;
+}
+.pic.toc .row .pl {
+	display: block;
+}
+.pic.toc .row .l2 {
+	font-size: 90%;
+}
+.toc .row .i img {
+	border: 0px currentColor; width: 50px; height: 50px;
+}
+.toc span.p {
+	color: orange; font-size: smaller;
+}
+.toc span.p .maptag {
+	color: rgb(0, 136, 0);
+}
+.toc .nextpage {
+	text-align: center; clear: both; font-size: larger;
+}
+.toc .row .c {
+	clear: both;
+}
+.toc .gc {
+	background: rgb(238, 238, 238); padding: 2px; font-size: smaller;
+}
+.toc .gc:hover {
+	background: rgb(247, 247, 247);
+}
+.grid.toc #toc_rows h4.ban {
+	margin-bottom: 1.5em;
+}
+.mobile.grid.toc #toc_rows h4.ban {
+	margin-bottom: 0.1em;
+}
+.grid.toc #toc_rows p.row {
+	margin: 0px 12px 16px 0px; border: 1px solid rgb(255, 255, 255); width: 302px; height: 290px; overflow: hidden; clear: none; float: left; position: relative;
+}
+.mobile.grid.toc #toc_rows p.row {
+	margin: 0px 0px 0px 9px; padding: 16px 0px 0px; border: currentColor; height: 315px; overflow: visible; white-space: normal;
+}
+.grid.toc #toc_rows p.row:hover {
+	border-color: rgb(170, 170, 170);
+}
+.mobile.grid.toc #toc_rows p.row:hover {
+	border-color: rgb(204, 204, 204);
+}
+.grid.toc #toc_rows .row .pnr {
+	content: "";
+}
+.grid.toc #toc_rows .row .gc {
+	content: "";
+}
+.grid.toc #toc_rows .row .pl::after {
+	content: "";
+}
+.grid.toc #toc_rows .row .pl {
+	white-space: nowrap;
+}
+.mobile.grid.toc #toc_rows .gc {
+	display: none;
+}
+.mobile.grid.toc #toc_rows .row .pl a {
+	width: 302px; overflow: hidden; display: block; white-space: nowrap; -ms-text-overflow: ellipsis;
+}
+.grid.toc #toc_rows .px {
+	display: none;
+}
+.grid.toc #toc_rows .pnr {
+	display: block;
+}
+.mobile.grid.toc #toc_rows .pp {
+	margin: 5px 7px;
+}
+.mobile.grid.toc #toc_rows .price {
+	font-size: 1.25em;
+}
+.grid.toc #toc_rows .i {
+	border: 1px solid rgb(204, 204, 204); width: 300px; height: 225px; margin-bottom: 3px; display: block; position: relative; background-color: rgb(238, 238, 238);
+}
+.grid.toc #toc_rows .empty.i {
+	background-image: url("/images/peace.jpg");
+}
+.grid.toc #toc_rows .i img {
+	margin: auto; left: 0px; top: 0px; width: auto; height: auto; right: 0px; bottom: 0px; vertical-align: middle; position: absolute; max-height: 225px; max-width: 300px;
+}
+.grid.toc #toc_rows .pnr {
+	white-space: nowrap;
+}
+.grid.toc #toc_rows .cg {
+	right: 0px; bottom: 0px; position: absolute;
+}
+.grid.toc #toc_rows .date {
+	display: none;
+}
+.best h2 {
+	margin: 0.83em 0px; text-align: left; line-height: 1.5em; font-size: 1.5em; font-weight: bold; display: block;
+}
+.mobile.toc #satabs .tog {
+	display: none;
+}
+.mobile.toc .row span.p {
+	display: none;
+}
+.mobile.toc .row .date {
+	display: none;
+}
+.mobile.toc .row br.c {
+	display: none;
+}
+.mobile.toc #satabs {
+	display: none;
+}
+.mobile.toc header #ef {
+	display: none;
+}
+.mobile.toc #searchdrop {
+	display: none;
+}
+.mobile.toc #messagetable {
+	display: none;
+}
+.mobile.toc #satabs .tog {
+	display: none;
+}
+.mobile.toc .modebtns {
+	margin: 5px 0px; text-align: center; clear: both; display: block;
+}
+.mobile.toc .modebtns #mapview {
+	display: none;
+}
+.mobile.toc blockquote {
+	max-width: inherit;
+}
+.mobile.toc .searchhead {
+	background: white; width: 100%;
+}
+.mobile.toc header > span {
+	font-size: small;
+}
+.mobile.toc .dateReplyBar {
+	font-size: small;
+}
+.mobile.toc .postinginfos {
+	margin-bottom: 1em;
+}
+.mobile.toc #searchform {
+	background: white; padding: 0px;
+}
+.mobile.toc #searchfieldset {
+	margin: 0px; padding: 2px 8px; border-right-color: currentColor; border-left-color: currentColor; border-right-width: 0px; border-left-width: 0px; border-right-style: none; border-left-style: none; display: none; white-space: normal; max-width: 10000px !important;
+}
+.mobile.toc #searchdrop #satabs a {
+	display: block;
+}
+.mobile.toc #searchdrop #satabs b {
+	display: block;
+}
+.mobile.toc #topsubmit {
+	font-size: 20px;
+}
+.mobile.toc #expsrch {
+	font-size: 20px;
+}
+.mobile.toc #topsubmit {
+	float: right;
+}
+.mobile.toc #searchfieldset .leftside {
+	overflow: hidden;
+}
+.mobile.toc #searchfieldset .expando {
+	float: left;
+}
+.mobile.toc #searchfieldset .searchbox {
+	overflow: hidden;
+}
+.mobile.toc #searchtable {
+	width: 100%;
+}
+.mobile.toc #messages {
+	text-align: left;
+}
+.mobile.toc #searchtable tr td {
+	text-align: left;
+}
+.mobile.toc #searchtable input {
+	text-align: left;
+}
+.mobile.toc #searchtable select {
+	text-align: left;
+}
+.mobile.toc #searchtable td {
+	display: block;
+}
+.mobile.toc #query {
+	width: 88%; font-size: 20px; display: inline;
+}
+.mobile.toc .body {
+	padding: 0px 0px 60px;
+}
+.mobile.toc #satabs b {
+	color: blue; font-weight: normal; cursor: pointer;
+}
+.mobile.toc .row {
+	margin: 0px; padding: 3px; line-height: 22px; overflow: hidden; font-size: 12px; border-top-color: rgb(204, 204, 204); border-top-width: 1px; border-top-style: solid; white-space: nowrap; position: relative; cursor: pointer; min-height: 4.4em;
+}
+.mobile.toc .row .pl > a {
+	font-size: 17px;
+}
+.mobile.toc .row a {
+	text-decoration: none;
+}
+.pic.mobile.toc .row .i {
+	width: 55px; height: 50px; position: relative;
+}
+.pic.mobile.toc .row .pp {
+	margin: 2px; padding: 1px; left: 0px; top: 0px; color: rgb(255, 255, 255); font-family: sans-serif; font-weight: bold; position: absolute; z-index: 100;
+}
+.grid.mobile.toc .row .pp {
+	margin: 2px; padding: 1px; left: 0px; top: 0px; color: rgb(255, 255, 255); font-family: sans-serif; font-weight: bold; position: absolute; z-index: 100;
+}
+.grid.mobile.toc .row .pp .price {
+	background-color: rgb(0, 136, 0);
+}
+.pic.mobile.toc .row .pp .price {
+	background-color: rgb(0, 136, 0);
+}
+.mobile.toc .row .price {
+	border-radius: 0.75em; -moz-border-radius: 0.75em; -webkit-border-radius: 0.75em;
+}
+.mobile.toc .row .pl {
+	display: block;
+}
+.mobile.toc .row img {
+	margin-right: 5px;
+}
+.mobile.toc .row .pl::after {
+	content: "";
+}
+.mobile.toc .gc {
+	display: none;
+}
+.mobile.toc .pleasewait {
+	width: 100%; text-align: center; color: rgb(136, 0, 255); font-size: 96px;
+}
+.mobile.toc .nextpage {
+	text-align: right; padding-right: 8px;
+}
+.mobile.toc .imagehole {
+	width: 100%;
+}
+.mobile.toc .postinginfo {
+	margin: 0px 1.2em 0px 0px; display: inline;
+}
+select#neighborhood {
+	display: none;
+}
+select#nh {
+	display: none;
+}
+div#hoodtitle {
+	display: none;
+}
+div#neighborhood {
+	position: absolute; z-index: 1001;
+}
+div#nh {
+	position: absolute; z-index: 1001;
+}
+div.checklist {
+	overflow: hidden;
+}
+div.checklistHighlighted {
+	overflow: hidden;
+}
+div.checklist {
+	border: 1px solid rgb(204, 204, 204); left: -6px; top: 6px; color: rgb(85, 85, 85); line-height: 1.6em; font-size: 12px; position: absolute;
+}
+ul.checklist {
+	background: white; margin: 0px; padding: 0px; list-style-type: none;
+}
+div.checklist li {
+	padding: 3px;
+}
+div.checklist li.even {
+	background: white;
+}
+div.checklist li.odd {
+	background: rgb(247, 247, 247);
+}
+div.checklist li.even:hover {
+	background: rgb(221, 221, 238);
+}
+div.checklist li.odd:hover {
+	background: rgb(221, 221, 238);
+}
+div.checklist li.focused {
+	background: rgb(221, 221, 238);
+}
+div.checklist li:hover label {
+	background: rgb(221, 221, 238);
+}
+div.checklist li.checked {
+	background: rgb(255, 255, 167); font-style: italic;
+}
+div.checklist li.checked:hover {
+	background: rgb(255, 255, 34); font-style: italic;
+}
+div.checklist li.checked:hover label {
+	background: rgb(255, 255, 34); font-style: italic;
+}
+div.checklist label.disabled {
+	color: rgb(221, 221, 221);
+}
+div.checklist li input {
+	float: left; display: block;
+}
+div.checklist label {
+	margin: 0px; padding: 0px; display: block;
+}
+div.checklist label.leaveRoomForCheckbox {
+	padding-left: 25px; display: block;
+}
+ul.showSelectedItems {
+	color: rgb(119, 119, 0); padding-left: 1.4em; font-size: 0.8em; margin-left: 0px; list-style-position: outside;
+}
+div.checklist li.optgroup {
+	background: rgb(204, 204, 204); padding-left: 7px; font-size: 1.1em; font-style: italic; font-weight: bold; border-top-color: rgb(119, 119, 119); border-bottom-color: rgb(119, 119, 119); border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid;
+}
+div.checklist li.optgroup:hover {
+	background: rgb(204, 204, 204);
+}
+div#shareSocial {
+	background: white; margin: 7px; padding: 7px; border: 2px solid rgb(204, 204, 204); width: 10em; font-family: sans-serif; font-size: x-small; float: right; display: none;
+}
+div#shareSocial #sstitle {
+	margin: 5px; font-size: small;
+}
+div#shareSocial #ssmain {
+	margin: 6px 0px 0px; padding: 0px; border-top-color: rgb(204, 204, 204); border-top-width: 2px; border-top-style: solid; list-style-type: none;
+}
+div#shareSocial #ssGetMore {
+	padding: 2px 0px 0px 20px;
+}
+div#shareSocial li.more {
+	display: none;
+}
+div#shareSocial a {
+	background: url("/images/shareSocial.png") no-repeat left top; margin: 3px; padding: 0px 0px 0px 20px; height: 16px; color: rgb(76, 76, 76) !important; line-height: 16px; text-decoration: none; border-bottom-color: rgb(238, 238, 238); border-bottom-width: 1px; border-bottom-style: solid; display: block;
+}
+#shareSocial a#delicious {
+	background-position: 0px -176px;
+}
+#shareSocial a#diigo {
+	background-position: 0px -208px;
+}
+#shareSocial a#digg {
+	background-position: 0px -192px;
+}
+#shareSocial a#email {
+	background-position: 0px -224px;
+}
+#shareSocial a#facebook {
+	background-position: 0px -240px;
+}
+#shareSocial a#fark {
+	background-position: 0px -256px;
+}
+#shareSocial a#friendfeed {
+	background-position: 0px -304px;
+}
+#shareSocial a#mixx {
+	background-position: 0px -464px;
+}
+#shareSocial a#myspace {
+	background-position: 0px -496px;
+}
+#shareSocial a#stumbleupon {
+	background-position: 0px -704px;
+}
+#shareSocial a#reddit {
+	background-position: 0px -592px;
+}
+#shareSocial a#technorati {
+	background-position: 0px -752px;
+}
+#shareSocial a#twitter {
+	background-position: 0px -784px;
+}
+div#shareSocial a:hover {
+	background-color: rgb(238, 238, 238);
+}
+.post .picker {
+	font-family: sans-serif;
+}
+.post .picker label {
+	line-height: 1.8em;
+}
+.post form#postingForm {
+	font-family: sans-serif;
+}
+.post form#postingForm input {
+	font-family: serif; font-size: 1.1em;
+}
+select {
+	font-family: serif; font-size: 1.1em;
+}
+textarea {
+	font-family: serif; font-size: 1.1em;
+}
+.post form#postingForm fieldset input {
+	font-size: 1em;
+}
+select {
+	font-size: 1em;
+}
+textarea {
+	font-size: 1em;
+}
+.post form#postingForm select {
+	min-width: 6em;
+}
+.post form#postingForm textarea {
+	border: 1px solid green;
+}
+.post .formnote {
+	font-family: sans-serif;
+}
+.post .fieldlabel {
+	font-family: sans-serif; font-size: 80%;
+}
+.post .fieldnote {
+	font-family: sans-serif; font-size: 70%; float: right;
+}
+.post .row {
+	width: 100%;
+}
+.post .row div {
+	padding: 0px 5px; margin-bottom: 5px; float: left;
+}
+.post .fieldset {
+	margin-left: 0px;
+}
+.post .bigbutton {
+	font-size: 140%; float: right;
+}
+.post .pickbutton {
+	font-size: 140%; margin-top: 0.2em; float: left;
+}
+.post ul {
+	list-style: circle;
+}
+.post .parenthetical {
+	color: rgb(68, 68, 68); font-size: 80%;
+}
+.post div#oiab {
+	margin-top: 1.2em;
+}
+.post bc a {
+	font-weight: bold; white-space: nowrap;
+}
+.post span.imageLabel {
+	font-family: sans-serif; font-size: smaller;
+}
+.post form {
+	display: inline;
+}
+.post p {
+	padding-bottom: 20px;
+}
+.post #housingBlurb p {
+	margin: 1em 0px;
+}
+.post #housingBlurb ul {
+	margin: 1em 0px; padding-left: 40px; list-style-type: disc;
+}
+.post #housingBlurb ul li {
+	display: list-item;
+}
+.post #accountBlurb {
+	margin: 0px 0px 10px; text-align: right; float: right; white-space: nowrap;
+}
+.post #accountBlurb a {
+	white-space: nowrap;
+}
+.post textarea {
+	background: rgb(251, 251, 251); border: 1px solid rgb(204, 204, 204); font-family: serif;
+}
+.post ol {
+	margin: 1em 0px 0.5em; padding-left: 40px;
+}
+.post ul {
+	margin: 1em 0px 0.5em; padding-left: 40px;
+}
+.post span.std {
+	font-weight: bold;
+}
+.post span.req {
+	font-weight: bold;
+}
+.post span.err {
+	font-weight: bold;
+}
+.post span.req {
+	color: green;
+}
+.post span.err {
+	color: red;
+}
+.post input.nreq {
+	border: 1px solid black;
+}
+.post input.req {
+	border: 1px solid green;
+}
+.post input.err {
+	border: 2px solid red;
+}
+.post textarea.err {
+	border: 2px solid red;
+}
+.post button {
+	font-family: sans-serif;
+}
+.post blockquote {
+	margin: 1em 40px;
+}
+.post #thanks {
+	font-family: sans-serif;
+}
+.post #thanks div {
+	background: rgb(238, 238, 238); padding: 12px; margin-bottom: 2em;
+}
+.post #thanks div .e {
+	color: green; font-weight: bold;
+}
+.post h5 {
+	padding: 6px; font-family: sans-serif; border-bottom-color: rgb(170, 170, 170); border-bottom-width: 3px; border-bottom-style: solid;
+}
+.post #map div {
+	padding: 0px 0.2em; display: inline-block;
+}
+.post #geoverifymapbits {
+	border: 1px solid rgb(221, 221, 221);
+}
+.post #search_button {
+	margin: 0.2em; display: inline-block;
+}
+.post #geocodebutton {
+	margin: 0.2em; float: right; display: inline-block;
+}
+.post .title {
+	white-space: nowrap;
+}
+.post .title input {
+	padding: 0px 5px; font-size: 1.1em; font-weight: bold;
+}
+.post ol.sprlst li {
+	margin-top: 1em;
+}
+.post ol.sprlst li span {
+	background: rgb(255, 255, 204);
+}
+.post .posting {
+	margin: 1em auto; padding: 10px; border: 2px solid rgb(204, 204, 204); width: 754px; overflow: hidden;
+}
+.w1024.post .posting {
+	width: 954px;
+}
+.mobile.post .posting {
+	width: auto !important;
+}
+.post #jsErr {
+	display: none;
+}
+.post #ed {
+	white-space: nowrap;
+}
+.post #ed p {
+	padding: 5px; float: left;
+}
+.post #postingInvoice {
+	min-width: 50%;
+}
+.post #postingInvoice td {
+	padding: 8px;
+}
+.post .addmore {
+	font-family: sans-serif; float: left;
+}
+.post .imguploadbuttons {
+	margin-left: 2em;
+}
+.post .images {
+	margin-left: 2em;
+}
+.post .images div.imgbox {
+	border: 1px solid rgb(204, 204, 204); width: 100%; height: 225px; text-align: center; overflow: hidden; margin-bottom: 5px; float: left; position: relative; max-width: 300px; background-image: url("/styles/images/checkerboard.png");
+}
+.post .images div.imgwrap {
+	height: 225px; text-align: center; vertical-align: middle; display: table-cell; max-width: 300px;
+}
+.post .images div img {
+	max-height: 225px; max-width: 100%;
+}
+.post .images div form {
+	top: 1px; right: 0px; position: absolute;
+}
+.post .images div form button {
+	border: 1px solid rgb(170, 136, 136); color: rgb(85, 0, 0); opacity: 0.8; background-color: rgb(255, 221, 221);
+}
+.post .images div:hover form button {
+	display: block; cursor: pointer; opacity: 1;
+}
+.post .replytextemail {
+	font-size: 80%; margin-right: 3em;
+}
+.post .managestatus p {
+	padding: inherit;
+}
+.post .managestatus table td {
+	padding: 5px 0px;
+}
+.post .managestatus {
+	padding: 12px 20px; font-family: sans-serif;
+}
+.post .managebutton {
+	padding: 12px 4px 4px; display: inline;
+}
+.post .managebutton form {
+	display: inline;
+}
+.post #previewButtons form {
+	display: inline;
+}
+.post #leafletForm #leaflet {
+	margin: 5px 5px 0px; border: 1px solid rgb(221, 221, 221); width: 100%; height: 450px; float: left; min-width: 450px;
+}
+.mobile.post #leafletForm #leaflet {
+	height: 350px; min-width: inherit;
+}
+.post #leafletForm #map {
+	background: rgb(255, 255, 255); border-width: 0px 1px 1px; border-style: none solid solid; border-color: currentColor rgb(221, 221, 221) rgb(221, 221, 221); margin: 0px 5px 12px; width: 100%; clear: both; float: left;
+}
+.post #leafletForm #search_button {
+	margin-bottom: 5px; float: right;
+}
+#mapcontainer .loading#map {
+	background: url("http://www.craigslist.org/images/map/animated-spinny.gif") fixed no-repeat center rgb(255, 255, 255); min-height: 400px;
+}
+.mobile.post div.row {
+	margin-bottom: 1em;
+}
+.mobile.post .userbody {
+	margin-bottom: 1em;
+}
+.mobile.post header {
+	margin-bottom: 1em;
+}
+.mobile.post .highlight {
+	margin: 0px; padding: 0px; width: 100%;
+}
+.mobile.post #accountBlurb {
+	text-align: center; margin-top: 0.5em; float: none;
+}
+.mobile.post #accountBlurb a {
+	white-space: nowrap;
+}
+.mobile.post .highlight > ol {
+	background: rgb(255, 255, 204); margin: 0px;
+}
+.mobile.post .managestatus table {
+	width: 100%; font-size: 12px;
+}
+.mobile.post .managestatus a {
+	font-size: 14px;
+}
+.mobile.post blockquote {
+	margin: 8px; font-size: 20px;
+}
+.mobile.post blockquote > i {
+	font-size: 10px; margin-left: 20px;
+}
+.mobile.post label.req {
+	font-size: 10px;
+}
+.mobile.post #leaflet {
+	height: 250px;
+}
+.interstitial .body li a {
+	font-weight: bold;
+}
+.interstitial .body .warning {
+	padding: 12px; float: right; max-width: 396px; background-color: rgb(255, 255, 221);
+}
+.interstitial .body h3 {
+	margin: 20px 0px; line-height: 1.2em; font-size: 1.2em; font-weight: bold;
+}
+.interstitial #personalLinks {
+	padding: 40px; margin-bottom: 1.5em;
+}
+.interstitial #personalLinks ul {
+	list-style: none; padding: 0px; display: inline;
+}
+.interstitial #personalLinks li {
+	padding-left: 6px; display: inline;
+}
+.interstitial #personalLinks li a {
+	font-weight: normal;
+}
+.interstitial #personalLinks ul.subLinks {
+	margin-top: 2em; display: block;
+}
+.interstitial .infoBlurb {
+	margin: 1em 35px;
+}
+.mobile.interstitial {
+	width: 100%;
+}
+.mobile.interstitial .warning {
+	clear: both; margin-top: 2em; float: none;
+}
+.simple #fakePage {
+	position: relative;
+}
+.simple #mailFlagsSpinner {
+	display: none; min-height: 75px;
+}
+#mailFlagsThanks {
+	display: none; min-height: 75px;
+}
+.simple #pagecontainer #banner {
+	background: rgb(238, 238, 238); padding: 10px; left: 0px; top: 0px; width: 10em; bottom: 0px; border-right-color: rgb(204, 204, 204); border-right-width: 1px; border-right-style: solid; position: absolute;
+}
+.simple #pagecontainer #banner #logo {
+	text-align: center; margin-bottom: 8em;
+}
+.simple #pagecontainer #banner #logo span {
+	font-size: smaller; font-weight: bold;
+}
+.simple #pagecontainer #banner #logo a {
+	font-size: 200%;
+}
+.simple #pagecontainer #banner #update {
+	padding: 10px; color: rgb(68, 68, 68); font-size: x-small;
+}
+.simple #pagecontainer #banner #prinfo {
+	background: rgb(255, 255, 204); margin: 8px 8px 3em; padding: 4px; font-size: x-small;
+}
+.simple #pagecontainer #postingbody {
+	padding: 10px; margin-left: 12em;
+}
+.simple #pagecontainer #questions {
+	font-size: small;
+}
+.simple #frog {
+	font-family: monospace; margin-left: 40px; white-space: pre;
+}
+.mobile.simple #pagecontainer #banner {
+	width: 100%; position: relative;
+}
+.mobile.simple .ban {
+	text-align: left; margin-top: 1em;
+}
+.mobile.simple #pagecontainer #banner #prinfo {
+	display: none;
+}
+.mobile.simple #pagecontainer #banner #update {
+	display: none;
+}
+.mobile.simple #pagecontainer #banner #logo {
+	margin: 0px;
+}
+.mobile.simple #pagecontainer #postingbody {
+	margin: 4px;
+}
+.simple #fmtsel {
+	position: static;
+}
+#fmtsel {
+	background: white; padding: 10px 0px 0px; width: 100%; text-align: center; bottom: 0px; color: rgb(68, 68, 68); clear: both; font-family: sans-serif; font-size: 10px; margin-bottom: 3.5em; display: none; position: absolute;
+}
+#fmtsel li {
+	margin: 0px 4px; display: inline;
+}
+#fmtsel li * {
+	padding: 2px;
+}
+#fmtsel li.fsel b {
+	border-top-color: rgb(221, 221, 221); border-bottom-color: rgb(221, 221, 221); border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid;
+}
+#fmtsel li.fsel a {
+	border: 0px currentColor;
+}
+#fmtsel li.fsel a:hover {
+	background: rgb(221, 221, 221);
+}
+.login #loginBox {
+	padding: 6px;
+}
+.login #warnings {
+	padding: 6px;
+}
+.login #pagecontainer header .contents {
+	margin: 0px auto; max-width: 600px;
+}
+.login form {
+	margin: 0px auto; max-width: 600px;
+}
+.login #loginBox {
+	border: 1px solid rgb(204, 204, 204); font-weight: bold; margin-top: 1em; margin-bottom: 2em;
+}
+.login #loginBox p {
+	margin: 10px;
+}
+.login #loginBox p label {
+	width: 250px; text-align: right; display: inline-block;
+}
+.login #loginBox p input {
+	width: 250px;
+}
+.login #loginBox div {
+	padding: 8px;
+}
+.login #loginBoxWarning {
+	background-color: rgb(238, 238, 238);
+}
+.login #loginBox a {
+	font-size: smaller; font-weight: normal;
+}
+.login #loginBoxWarning {
+	font-weight: bold;
+}
+.mobile.login #warnings {
+	display: none;
+}
+.bios section.body {
+	margin: 0px auto; width: 80%;
+}
+.bios #pagecontainer header .contents {
+	width: 80%; max-width: inherit;
+}
+.bios ul li {
+	margin: 10px 0px; padding: 10px; width: 100%; overflow: auto;
+}
+.bios ul li img {
+	margin: 0px 0px 0px 10px; float: right;
+}
+.bios i {
+	font-style: italic;
+}
+.bios img {
+	max-width: 400px;
+}
+.bios ul li:nth-child(2n) {
+	background: rgb(238, 238, 238);
+}
+.bios ul li:nth-child(2n) img {
+	margin: 0px 10px 0px 0px; float: left;
+}
+.bios pre {
+	margin: 1em 0px; line-height: 1.5em; font-family: monospace; font-size: smaller; white-space: pre;
+}
+.homepage {
+	font-family: sans-serif;
+}
+.homepage #container {
+	margin: 0px auto;
+}
+.homepage section.body {
+	padding-top: 16px;
+}
+.homepage .ban a {
+	padding: 0px 5px; display: block;
+}
+.homepage .ban a:hover {
+	background: white;
+}
+.homepage td {
+	white-space: nowrap;
+}
+.homepage a {
+	white-space: nowrap;
+}
+.homepage a {
+	text-decoration: none;
+}
+.homepage a:hover {
+	color: purple;
+}
+.homepage td {
+	vertical-align: top;
+}
+.homepage ul {
+	list-style: none;
+}
+.homepage div.cats {
+	position: relative;
+}
+.homepage .col ul {
+	list-style: none; width: 48%; padding-bottom: 1em; font-size: smaller; display: table-cell;
+}
+.homepage .col h4 {
+	margin-bottom: 3px;
+}
+.homepage div#ppp ul {
+	width: 100%; display: block;
+}
+.homepage div#hhh ul {
+	width: 100%; display: block;
+}
+.homepage div#jjj ul {
+	width: 100%; display: block;
+}
+.homepage div#forums ul {
+	font-size: 72%;
+}
+.homepage .col ul li {
+	padding-right: 8px;
+}
+.homepage .col ul li a {
+	padding: 0px 0px 1px; width: 100%; border-bottom-color: rgb(234, 234, 234); border-bottom-width: 1px; border-bottom-style: solid; display: block; position: relative;
+}
+.homepage .col ul li a:hover {
+	background: rgb(238, 238, 238); border-bottom-color: rgb(204, 204, 204); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.homepage #leftbar {
+	background: rgb(244, 244, 244); margin: 0px 10px; border-right-color: rgb(204, 204, 204); border-left-color: rgb(204, 204, 204); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; min-width: 11em;
+}
+.homepage #rightbar {
+	background: rgb(244, 244, 244); margin: 0px 10px; border-right-color: rgb(204, 204, 204); border-left-color: rgb(204, 204, 204); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; min-width: 11em;
+}
+.homepage #leftbar {
+	text-align: center; font-size: smaller;
+}
+.homepage #leftbar * {
+	margin-right: auto; margin-left: auto;
+}
+.homepage #leftbar li {
+	padding: 2px;
+}
+.homepage #leftbar a {
+	padding: 2px;
+}
+.homepage #leftbar li:hover {
+	background: white;
+}
+.homepage #leftbar a:hover {
+	background: white;
+}
+.homepage #rightbar ul.acitem > li > a:hover {
+	background: white;
+}
+.homepage #center {
+	padding: 0px 10px;
+}
+.homepage #rightbar ul.acitem > li.cont:hover {
+	
+}
+.homepage #rightbar h5.active {
+	background: white;
+}
+.homepage .leftlinks {
+	margin-top: 2em;
+}
+.homepage .leftlinks li a {
+	display: block;
+}
+.homepage #logo {
+	width: 100%; line-height: 135%; font-family: serif; font-size: 235%; font-weight: 500;
+}
+.homepage #main {
+	width: 100%;
+}
+.homepage #main td {
+	padding: 0px 10px;
+}
+.homepage #calban {
+	margin: 2px; font-weight: bold;
+}
+.homepage #calban a:hover {
+	
+}
+.homepage table.cal {
+	background: rgb(204, 204, 204);
+}
+.homepage .cal {
+	margin: 0px 10px; text-align: center;
+}
+.homepage .cal a {
+	padding: 1px !important;
+}
+.homepage .cal a:hover {
+	
+}
+.homepage .cal .dys th {
+	border: 1px solid rgb(204, 204, 204);
+}
+.homepage .cal td {
+	border: 1px solid rgb(204, 204, 204);
+}
+.homepage .cal .dys th {
+	color: rgb(85, 85, 85); font-weight: bold;
+}
+.homepage .cal td {
+	background: white; padding: 2px;
+}
+.homepage .cal td:hover {
+	background: rgb(238, 238, 238);
+}
+.homepage .cal td.tdy {
+	background: rgb(255, 255, 204); font-weight: bold;
+}
+.homepage #postlks {
+	margin: 15px 0px;
+}
+.homepage #postlks li {
+	font-weight: 500;
+}
+.homepage #postlks li a {
+	display: block;
+}
+.homepage #search {
+	margin: 20px 10px; text-align: left;
+}
+.homepage #search div {
+	text-align: center;
+}
+.homepage #search #query {
+	width: 98%; font-size: 13px;
+}
+.homepage #search select {
+	width: 75%;
+}
+.homepage #topban {
+	margin: 0px 10px 1em; padding: 3px; height: 2em; font-weight: normal;
+}
+.homepage #topban h2 {
+	line-height: 1.2em; font-family: serif; font-size: 1.5em; display: inline;
+}
+.homepage #topban .sublinks {
+	font-size: 72%;
+}
+.homepage #topban a {
+	display: inline;
+}
+.homepage #topban .sublinks a {
+	background: white; margin: 1px 3px; padding: 2px 5px;
+}
+.homepage #topban .sublinks span {
+	margin: 3px 7px;
+}
+.homepage #rightbar {
+	padding: 5px 10px; line-height: 1.43em; font-size: 70%; vertical-align: top;
+}
+.homepage #rightbar #langlinks {
+	padding: 8px; height: 2em; text-align: center; font-size: small;
+}
+.homepage #rightbar h5 {
+	color: blue;
+}
+.homepage #rightbar h5.active {
+	color: inherit;
+}
+.homepage #rightbar h5.ctry {
+	background: rgb(255, 255, 204); border-color: rgb(221, 221, 221);
+}
+.homepage #rightbar h5.hot {
+	cursor: pointer;
+}
+.homepage #rightbar h5.hot:hover {
+	background: white;
+}
+.homepage #rightbar h5.ctry.hot:hover {
+	background: rgb(255, 255, 136);
+}
+.homepage #rightbar h5.active.ctry.hot {
+	background: rgb(255, 255, 136);
+}
+.homepage #rightbar h5.active.ctry.hot:hover {
+	background: rgb(255, 255, 136);
+}
+.homepage #rightbar ul {
+	list-style: none; margin: 4px;
+}
+.homepage #rightbar ul.menu li {
+	display: none;
+}
+.homepage #rightbar ul.menu li.s {
+	display: block;
+}
+.homepage #rightbar ul.menu li.s a {
+	display: block;
+}
+.homepage #rightbar ul.menu ul li.more {
+	padding-left: 1em; font-style: italic;
+}
+.mobile.homepage #center {
+	margin: 0px; padding: 0px;
+}
+.mobile.homepage section.body {
+	margin: 0px; padding: 0px;
+}
+.mobile.homepage {
+	margin: 0px; padding: 0px;
+}
+.mobile.homepage section.body {
+	padding-bottom: 4em;
+}
+.mobile.homepage #sflinks {
+	display: none;
+}
+.mobile.homepage #logo {
+	display: none;
+}
+.mobile.homepage #leftbar {
+	display: none;
+}
+.mobile.homepage #center {
+	display: none;
+}
+.mobile.homepage #rightbar {
+	display: none;
+}
+.mobile.homepage #rightbar li a {
+	padding: 6px;
+}
+.mobile.homepage #topban {
+	margin: 0px 0px 2px; height: 2em; text-align: left; line-height: 2em;
+}
+.mobile.homepage .leftlinks a {
+	padding: 2px; text-align: center; font-size: 16px; display: block;
+}
+.mobile.homepage .leftlinks a:hover {
+	background: rgb(238, 238, 238);
+}
+.mobile.homepage #topban sup {
+	display: none;
+}
+.mobile.homepage #topban h2 {
+	padding-left: 5px; display: block; cursor: pointer;
+}
+.mobile.homepage .sublinks {
+	padding: 8px 0px; width: 100%; text-align: center; display: block;
+}
+.mobile.homepage .sublinks a {
+	background: rgb(238, 238, 238); padding: 2px; border-radius: 1em; border: 1px solid rgb(221, 221, 221); color: rgb(0, 0, 187); margin-right: 2px;
+}
+.mobile.homepage #search {
+	margin: 8px 4px;
+}
+.mobile.homepage #search input {
+	font-size: 20px;
+}
+.mobile.homepage #search select {
+	font-size: 20px;
+}
+.mobile.homepage #postlks {
+	text-align: center;
+}
+.mobile.homepage #postlks li {
+	background: rgb(238, 238, 238); margin: 0.5em 0px 2em; padding: 2px 6px; border-radius: 0.7em; border: 1px solid rgb(204, 204, 204); font-size: 16px; font-weight: inherit; display: inline-block;
+}
+.mobile.homepage #postlks li:first-child {
+	border-left-color: currentColor; border-left-width: 0px; border-left-style: none; float: left; border-top-left-radius: 0px; border-bottom-left-radius: 0px;
+}
+.mobile.homepage #postlks li:last-child {
+	border-right-color: currentColor; border-right-width: 0px; border-right-style: none; float: right; border-top-right-radius: 0px; border-bottom-right-radius: 0px;
+}
+.mobile.homepage .cats {
+	width: 100%; display: none;
+}
+.mobile.homepage .cats ul {
+	width: 100%; display: inline;
+}
+.mobile.homepage .cats li {
+	border-right-color: rgb(255, 255, 255); border-left-color: rgb(255, 255, 255); border-right-width: 2px; border-left-width: 2px; border-right-style: solid; border-left-style: solid;
+}
+.mobile.homepage .cats li a {
+	padding: 0px; width: 100%;
+}
+.mobile.homepage .ban {
+	line-height: 28px; font-size: 24px; margin-bottom: 2px; display: block;
+}
+.mobile.homepage .cats a {
+	line-height: 28px; font-size: 24px; margin-bottom: 2px; display: block;
+}
+.mobile.homepage .ban {
+	color: blue; cursor: pointer;
+}
+.mobile.homepage .ban:hover {
+	background: white; color: purple;
+}
+.mobile.homepage #forums .cats {
+	display: none;
+}
+.mobile.homepage .cal {
+	margin: 0px auto; width: 90%; display: none;
+}
+.mobile.homepage .cal td {
+	width: 4em; height: 1.5em; line-height: 1.5em;
+}
+.sites {
+	font-size: 80%; white-space: nowrap; min-width: 600px;
+}
+.sites #logo {
+	margin: 0px auto; border: 0px currentColor; width: 100%; text-align: center; color: rgb(85, 26, 139); line-height: 90px; font-family: serif; font-size: 90px; font-weight: 500; font-stretch: expanded; background-color: white;
+}
+.sites .colmask {
+	overflow: hidden;
+}
+.sites .box {
+	padding: 0px 5px 1em; width: 23%; overflow: hidden; float: left;
+}
+.sites a {
+	font-family: sans-serif; text-decoration: none;
+}
+.sites .colmask a {
+	display: block;
+}
+.sites a:hover {
+	background: rgb(238, 238, 238); text-decoration: underline;
+}
+.sites h1 {
+	margin: 0.67em auto; line-height: 31px; font-family: serif; font-size: 31px; border-bottom-color: rgb(204, 204, 204); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.sites h4 {
+	margin: 1em 0px; padding: 1px 0px; text-align: left;
+}
+.sites .box ul {
+	padding: 0px 0px 1em 40px; border-bottom-color: rgb(204, 204, 204); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.sites .jump_to_continents {
+	margin: 10px auto; padding: 10px 0px; text-align: center;
+}
+.sites .jump_to_continents a {
+	margin: 0px 15px 0px 0px; font-size: 14px;
+}
+.mobile.sites .colmask {
+	left: 0px; width: 100%; float: none; display: none;
+}
+.mobile.sites .box {
+	padding: 0px; width: 100%;
+}
+.mobile.sites .jump_to_continents {
+	padding-left: 6em; display: none;
+}
+.mobile.sites .colmask ul {
+	padding-left: 6em; display: none;
+}
+.mobile.sites .body ul li {
+	line-height: 2em;
+}
+.mobile.sites .body ul li > a {
+	font-size: 16px; display: block;
+}
+.mobile.sites #logo {
+	background: rgb(238, 238, 238); line-height: 24px; font-size: 24px; margin-bottom: 5px; border-bottom-color: rgb(204, 204, 204); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.mobile.sites #map {
+	margin-bottom: 1em;
+}
+.mobile.sites h1 {
+	background: rgb(238, 238, 238); border-width: 1px 0px; border-style: solid none; border-color: rgb(221, 221, 221) currentColor; margin: 2px 0px; padding: 2px 1em; line-height: 30px; overflow: hidden; font-size: 20px; white-space: nowrap; cursor: pointer;
+}
+.mobile.sites h4 {
+	background: rgb(238, 238, 238); border-width: 1px 0px; border-style: solid none; border-color: rgb(221, 221, 221) currentColor; margin: 2px 0px; padding: 2px 1em; line-height: 30px; overflow: hidden; font-size: 20px; white-space: nowrap; cursor: pointer;
+}
+.mobile.sites h4 {
+	line-height: 24px; font-size: 16px; margin-left: 2em;
+}
+.mobile.sites footer {
+	margin: 0px; padding: 0px; left: 0px; width: 100%; float: none; white-space: normal;
+}
+.sites #map {
+	margin: 0px auto; width: 600px; height: 300px;
+}
+.sites .marker-cluster {
+	background-color: rgba(128, 128, 128, 0.2);
+}
+.sites .marker-cluster > div {
+	margin-top: 0px; margin-left: 0px;
+}
+.sites .marker-cluster > div:hover {
+	margin-top: -2px; margin-left: -2px;
+}
+.sites .marker-cluster-small {
+	border-radius: 16px; max-height: 32px; max-width: 32px; -moz-border-radius: 16px;
+}
+.sites .marker-cluster-small:hover {
+	max-height: 33px; max-width: 33px;
+}
+.sites .marker-cluster-small > div {
+	border-radius: 14px; border: 1px solid rgb(110, 204, 57); width: 28px; height: 28px; -moz-border-radius: 14px;
+}
+.sites .marker-cluster-small > div:hover {
+	background-color: rgb(110, 204, 57);
+}
+.sites .marker-cluster-medium {
+	border-radius: 17px; max-height: 34px; max-width: 34px; -moz-border-radius: 17px;
+}
+.sites .marker-cluster-medium:hover {
+	max-height: 35px; max-width: 35px;
+}
+.sites .marker-cluster-medium > div {
+	border-radius: 15px; border: 1px solid rgb(240, 194, 12); width: 30px; height: 30px; -moz-border-radius: 15px;
+}
+.sites .marker-cluster-medium > div:hover {
+	background-color: rgb(240, 194, 12);
+}
+.sites .marker-cluster-large {
+	border-radius: 18px; max-height: 36px; max-width: 36px; -moz-border-radius: 18px;
+}
+.sites .marker-cluster-large:hover {
+	max-height: 37px; max-width: 37px;
+}
+.sites .marker-cluster-large > div {
+	border-radius: 16px; border: 1px solid rgb(241, 128, 23); width: 32px; height: 32px; -moz-border-radius: 16px;
+}
+.sites .marker-cluster-large > div:hover {
+	background-color: rgb(241, 128, 23);
+}
+.sites img.leaflet-marker-icon:hover {
+	left: -1px; top: -2px;
+}
+div#mapprob {
+	background: rgb(238, 238, 238); padding: 10px; visibility: hidden;
+}
+ul.ui-autocomplete a {
+	position: relative;
+}
+ul.ui-autocomplete span.local {
+	margin-right: 3em;
+}
+ul.ui-autocomplete span.remove {
+	padding: 2px; border: 1px solid transparent; top: 3px; right: 2px; color: blue; font-size: 60%; position: absolute;
+}
+ul.ui-autocomplete span.remove:hover {
+	background: rgb(248, 248, 248); border-color: rgb(238, 238, 238);
+}

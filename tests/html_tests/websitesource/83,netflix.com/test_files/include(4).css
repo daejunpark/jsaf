@@ -1,0 +1,327 @@
+html {
+	background-color: rgb(0, 0, 0);
+}
+body {
+	width: auto;
+}
+body > header {
+	margin: 15px 10px; box-shadow: 0px 0px 30px 15px black;
+}
+#fixedHeaderLayer {
+	background-color: rgb(0, 0, 0);
+}
+#paddedHeaderLayer {
+	padding-top: 90px;
+}
+body.page-HOME#page-HOME {
+	margin: 0px auto 20px; width: auto;
+}
+article#content {
+	margin: 0px auto; width: 990px;
+}
+footer {
+	margin: 0px auto; width: 990px;
+}
+.col {
+	float: left;
+}
+.third {
+	width: 33%;
+}
+.listitems .left {
+	width: 460px;
+}
+.listitems .right {
+	width: 460px;
+}
+.listitems .left {
+	float: left;
+}
+.listitems .right {
+	float: right;
+}
+#regform #aerrors {
+	margin: 0px auto 10px; padding: 0px;
+}
+#regform fieldset dt.error {
+	color: rgb(255, 154, 45);
+}
+#regform input.error#email {
+	border-width: 2px; border-color: rgb(255, 154, 45);
+}
+#regform input.error#password {
+	border-width: 2px; border-color: rgb(255, 154, 45);
+}
+#regform dd.error input#email {
+	border-width: 2px; border-color: rgb(255, 154, 45);
+}
+#regform dd.error input#password {
+	border-width: 2px; border-color: rgb(255, 154, 45);
+}
+#regform #aerrors ul {
+	background: url("https://netflix.hs.llnwd.net/e1/us/layout/ecweb/common/error_exclamation_white_large_40w.png") no-repeat 10px rgb(255, 154, 45); padding: 10px; border-radius: 3px;
+}
+#regform #aerrors ul li {
+	width: auto; color: rgb(255, 255, 255); line-height: 15px; margin-left: 50px;
+}
+#regform {
+	font-weight: 400;
+}
+#regform section.header h2 {
+	font-weight: 400;
+}
+#regform fieldset > * {
+	margin: 0px auto; display: block;
+}
+#regform input {
+	font-family: arial, helvetica, sans-serif;
+}
+#regform button {
+	font-family: arial, helvetica, sans-serif;
+}
+footer nav {
+	text-align: left;
+}
+footer nav ul {
+	margin-bottom: 10px;
+}
+footer nav ul.fsec2 {
+	margin-bottom: 10px;
+}
+footer nav .fsec2 li a {
+	white-space: nowrap;
+}
+footer nav .fsec2 li {
+	white-space: nowrap;
+}
+footer nav ul li::after {
+	margin-right: 15px; margin-left: 15px; content: "|";
+}
+footer nav ul li:first-child {
+	margin-left: 0px;
+}
+footer nav ul li:last-child::after {
+	margin-left: 0px; content: none;
+}
+footer ul li strong {
+	font-weight: normal;
+}
+footer ul li .emphasis {
+	font-weight: normal;
+}
+footer ul li {
+	padding: 0px; white-space: nowrap;
+}
+footer ul li a {
+	color: rgb(148, 148, 148); font-size: 13px; font-weight: 400; text-decoration: none;
+}
+footer ul li {
+	color: rgb(148, 148, 148); font-size: 13px; font-weight: 400; text-decoration: none;
+}
+footer nav ul li::after {
+	color: rgb(148, 148, 148); font-size: 13px; font-weight: 400; text-decoration: none;
+}
+footer .fterms {
+	color: rgb(148, 148, 148); font-size: 13px; font-weight: 400; text-decoration: none;
+}
+footer a:hover {
+	color: rgb(255, 255, 255); text-decoration: underline;
+}
+footer .fterms a:hover {
+	color: rgb(255, 255, 255); text-decoration: underline;
+}
+footer .fterms {
+	text-align: left; font-size: 10px; margin-top: 25px; margin-left: 15px;
+}
+footer .fterms a {
+	color: rgb(153, 153, 153); text-decoration: none;
+}
+#regrec {
+	background-color: transparent;
+}
+#regrec #regform div.privacy > div {
+	display: inline;
+}
+#regrec button {
+	height: 25px; font-size: 14px;
+}
+.hide {
+	display: none;
+}
+.arrow-left {
+	position: absolute; z-index: 9999; background-image: url("https://netflix.hs.llnwd.net/e1/us/layout/ecweb/common/arrows.png"); background-repeat: no-repeat; background-color: transparent;
+}
+.arrow-right {
+	position: absolute; z-index: 9999; background-image: url("https://netflix.hs.llnwd.net/e1/us/layout/ecweb/common/arrows.png"); background-repeat: no-repeat; background-color: transparent;
+}
+.arrow-up {
+	position: absolute; z-index: 9999; background-image: url("https://netflix.hs.llnwd.net/e1/us/layout/ecweb/common/arrows.png"); background-repeat: no-repeat; background-color: transparent;
+}
+.arrow-left {
+	width: 48px; height: 60px;
+}
+.arrow-right {
+	background-position: -47px 0px; width: 52px; height: 60px;
+}
+.arrow-up {
+	background-position: 0px -73px; width: 90px; height: 25px;
+}
+#moredeviceslink {
+	white-space: nowrap;
+}
+.layer#moredevicescontentlayer {
+	padding: 15px; border: 1px solid rgb(194, 194, 194); width: 300px; text-align: left; display: none; position: absolute; z-index: 999; box-shadow: 0px 0px 20px #000; background-color: rgb(255, 255, 255); -moz-box-shadow: 0 0 20px #000; -webkit-box-shadow: 0 0 20px #000;
+}
+body.page-HOME#page-HOME {
+	margin-bottom: 0px; box-shadow: inset 0px 140px 60px rgba(0,0,0,0.5);
+}
+.backgroundsize #fill-bkg-container {
+	display: none;
+}
+.backgroundsize img.fill-bkg {
+	display: none;
+}
+article#content {
+	width: auto;
+}
+footer {
+	width: auto;
+}
+#content .container {
+	padding: 15px 0px 10px; background-color: rgba(0, 0, 0, 0.6);
+}
+.no-opacity #content .container {
+	background-color: rgb(0, 0, 0);
+}
+.call-to-action h1 {
+	color: rgb(255, 255, 255); font-size: 35px; font-weight: 400; display: inline; text-shadow: 1px 3px #000000;
+}
+.call-to-action h1 a {
+	color: rgb(255, 255, 255); text-decoration: none;
+}
+.call-to-action h1 * {
+	display: inline-block;
+}
+#page-HOME .listitems li {
+	background: url("https://netflix.hs.llnwd.net/e1/us/layout/ecweb/common/arrow_right_white.png") no-repeat 0px 5px; list-style: none; color: rgb(148, 148, 148); padding-left: 15px; font-size: 14px; margin-bottom: 8px;
+}
+.listitems li strong {
+	color: rgb(255, 255, 255); font-weight: 400;
+}
+#regform {
+	width: 300px; margin-top: 10px; float: right;
+}
+#regrec {
+	width: 300px; margin-top: 10px; float: right;
+}
+#regform {
+	border-radius: 7px; box-shadow: 0px 2px 3px #222; background-image: url("https://netflix.hs.llnwd.net/e1/us/layout/ecweb/common/regform_shine.png"); background-repeat: no-repeat; background-color: rgb(199, 199, 199);
+}
+.backgroundsize #regform {
+	background-color: rgba(200, 200, 200, 0.75);
+}
+#regform {
+	font-weight: 400;
+}
+#regform section.header h2 {
+	font-weight: 400;
+}
+#regform input {
+	width: 273px;
+}
+#regform #aerrors {
+	width: 273px;
+}
+#regform input {
+	height: 30px; font-size: 18px; margin-bottom: 10px;
+}
+#regform .privacy {
+	width: 90%; max-width: 275px;
+}
+#regform .privacy {
+	padding-top: 5px;
+}
+#regform .privacy {
+	width: 100%; font-size: 11px;
+}
+#regform .privacy img {
+	margin: 0px 5px 0px 0px; vertical-align: bottom;
+}
+.no-backgroundsize #regform .privacy img {
+	vertical-align: baseline;
+}
+#regform .privacy a {
+	color: rgb(0, 102, 153); font-size: 11px; font-weight: 700;
+}
+img.fill-bkg {
+	left: 0px; top: 45px; width: 100%; position: absolute; z-index: -1;
+}
+img.min-size.fill-bkg {
+	width: 1450px;
+}
+img.max-size.fill-bkg {
+	width: 1920px;
+}
+.min-size#fill-bkg-container {
+	left: 0px; top: 0px; overflow: hidden; position: absolute; z-index: -1;
+}
+.max-size#fill-bkg-container {
+	left: 0px; top: 0px; overflow: hidden; position: absolute; z-index: -1;
+}
+footer {
+	padding-top: 30px; background-color: rgb(0, 0, 0);
+}
+.no-backgroundsize footer {
+	min-height: 315px;
+}
+.backgroundsize footer {
+	min-height: 220px;
+}
+footer .fterms {
+	padding: 15px 0px;
+}
+.call-to-action {
+	margin: 0px auto; width: 940px;
+}
+section.listitems {
+	margin: 0px auto; width: 940px;
+}
+footer nav {
+	margin: 0px auto; width: 940px;
+}
+footer div.fterms {
+	margin: 0px auto; width: 940px;
+}
+.call-to-action h1 div {
+	white-space: nowrap;
+}
+.affiliate-promo-parent {
+	margin: 10px auto 0px; padding: 10px 30px; width: 880px; line-height: normal; overflow: hidden; min-height: 40px; background-color: white;
+}
+#page-HOME .affiliate-promo p {
+	margin: 0px; padding: 0px; font-size: 14px;
+}
+#page-HOME .affiliate-promo h2 {
+	margin: 0px; padding: 0px; font-size: 14px;
+}
+#page-HOME .affiliate-promo h2 {
+	font-weight: 700;
+}
+#page-HOME .affiliate-promo-logo {
+	padding-left: 150px; vertical-align: middle; display: table-cell;
+}
+#page-HOME .affiliate-promo-logo img {
+	padding-right: 10px; float: right;
+}
+#page-HOME .affiliate-promo-content {
+	padding-right: 150px; vertical-align: middle; display: table-cell;
+}
+#page-HOME .affiliate-promo-nologo {
+	margin: 0px auto; width: 60%; float: none;
+}
+#page-HOME .affiliate-terms {
+	padding-top: 8px; font-size: 11px;
+}
+#page-HOME p.affiliate-terms {
+	padding-top: 8px; font-size: 11px;
+}

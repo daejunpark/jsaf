@@ -101,7 +101,9 @@ object DOMNode extends DOM {
     ("isEqualNode",             AbsBuiltinFunc("DOMNode.isEqualNode", 1)),
     ("getFeature",              AbsBuiltinFunc("DOMNode.getFeature", 2)),
     ("setUserData",             AbsBuiltinFunc("DOMNode.setUserData", 3)),
-    ("getUserData",             AbsBuiltinFunc("DOMNode.getUserData", 1))
+    ("getUserData",             AbsBuiltinFunc("DOMNode.getUserData", 1)),
+    // WHATWG DOM
+    ("contains",                AbsBuiltinFunc("DOMNode.contains", 1))
   )
 
   /* global */
@@ -121,11 +123,16 @@ object DOMNode extends DOM {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           /* arguments */
           val lset_new = getArgValue(h, ctx, args, "0")._2
-          val lset_ref = getArgValue(h, ctx, args, "1")._2
+          val ref = getArgValue(h, ctx, args, "1")
+          val lset_ref = ref._2
+          // If refChild is null, insert newChild at the end of the list of children.
+          val nullh = if(NullTop <= ref._1._2) {
+               DOMHelper.appendChild(h, lset_this, lset_new)   
+            } else h
           if (!lset_new.isEmpty && !lset_ref.isEmpty) {
             /* location for clone node */
-            val h_1 = lset_this.foldLeft(h)((hh, l_node) => {
-              val lset_ns = Helper.Proto(h, l_node, AbsString.alpha("childNodes"))._2
+            val h_1 = lset_this.foldLeft(nullh)((hh, l_node) => {
+              val lset_ns = Helper.Proto(hh, l_node, AbsString.alpha("childNodes"))._2
               lset_ns.foldLeft(hh)((hhh, l_ns) => {
                 val n_len = Operator.ToUInt32(Helper.Proto(h, l_ns, AbsString.alpha("length")))
                 n_len match {
@@ -159,9 +166,27 @@ object DOMNode extends DOM {
                 }
               })
             })
-            ((Helper.ReturnStore(h_1, Value(lset_new)), ctx), (he, ctxe))
+            /* 'previousSibling' update of the reference child */
+            val (h_2, oldpresibling) = lset_ref.foldLeft[(Heap, Value)]((h_1, ValueBot))((d, l) => {
+              val oldpres = Helper.Proto(d._1, l, AbsString.alpha("previousSibling"))
+              val h_2_1 = Helper.PropStore(d._1, l, AbsString.alpha("previousSibling"), Value(lset_new))
+              (h_2_1, d._2 + oldpres)
+            })
+            /* 'parentNode', 'nextSibling', `previousSibling' update of the new child */
+            val h_3 = lset_new.foldLeft(h_2)((_h, l) => {
+              val h_3_1 = Helper.PropStore(_h, l, AbsString.alpha("parentNode"), Value(lset_this))
+              val h_3_2 = Helper.PropStore(h_3_1, l, AbsString.alpha("nextSibling"), ref)
+              Helper.PropStore(h_3_2, l, AbsString.alpha("previousSibling"), oldpresibling)
+            })
+            /* 'nextSibling' update of the old previousSibling of the reference child */
+            val h_4 = oldpresibling._2.foldLeft(h_3)((_h, l) =>
+              Helper.PropStore(_h, l, AbsString.alpha("nextSibling"), Value(lset_new))
+            )
+            ((Helper.ReturnStore(h_4, Value(lset_new)), ctx), (he, ctxe))
           }
-          else
+          else if(NullTop <= ref._1._2)
+            ((nullh, ctx), (he, ctxe))
+          else 
             ((HeapBot, ContextBot), (he, ctxe))
         })),
       ("DOMNode.replaceChild" -> (
@@ -203,7 +228,34 @@ object DOMNode extends DOM {
                 }
               })
             })
-            ((Helper.ReturnStore(h_1, Value(lset_old)), ctx), (he, ctxe))
+            /* `parentNode', 'previousSibling', 'nextSibling' update of the reference child */
+            val (h_2, preSib, nextSib) = lset_old.foldLeft((h_1, ValueBot, ValueBot))((d, l) => {
+              val preS = Helper.Proto(d._1, l, AbsString.alpha("previousSibling"))
+              val nextS = Helper.Proto(d._1, l, AbsString.alpha("nextSibling"))
+              val h_2_1 = Helper.PropStore(d._1, l, AbsString.alpha("parentNode"), Value(NullTop))
+              val h_2_2 = Helper.PropStore(h_2_1, l, AbsString.alpha("previousSibling"), Value(NullTop))
+              val h_2_3 = Helper.PropStore(h_2_2, l, AbsString.alpha("nextSibling"), Value(NullTop))
+              (h_2_3, preS + d._2, nextS + d._3)
+            })
+
+            /* 'prarentNode', 'previousSibling', 'nextSibling' update of the new child */
+            val h_3 = lset_new.foldLeft(h_2)((_h, l) => {
+              val h_3_1 = Helper.PropStore(_h, l, AbsString.alpha("parentNode"), Value(lset_this))
+              val h_3_2 = Helper.PropStore(h_3_1, l, AbsString.alpha("previousSibling"), preSib)
+              Helper.PropStore(h_3_2, l, AbsString.alpha("nextSibling"), nextSib)
+            })
+
+            /* 'nextSibling' update of the previous sibling of the reference child */
+            val h_4 = preSib._2.foldLeft(h_3)((_h, l) =>
+              Helper.PropStore(_h, l, AbsString.alpha("nextSibling"), Value(lset_new))
+            )
+            
+            /* 'previousSibling' update of the next sibling of the reference child */
+            val h_5 = nextSib._2.foldLeft(h_4)((_h, l) =>
+              Helper.PropStore(_h, l, AbsString.alpha("previousSibling"), Value(lset_new))
+            )
+            
+            ((Helper.ReturnStore(h_5, Value(lset_old)), ctx), (he, ctxe))
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
@@ -268,7 +320,9 @@ object DOMNode extends DOM {
             /* this node only */
             val o_node = lset_this.foldLeft(ObjBot)((o, l) => o + h_1(l))
             val h_2 = h_1.update(l_r, o_node)
-            ((Helper.ReturnStore(h_2, Value(l_r)), ctx_1), (he, ctxe))
+            /* The duplicate node has no parent; (parentNode is null.). */
+            val h_3 = Helper.PropStore(h_2, l_r, AbsString.alpha("parentNode"), Value(NullTop))
+            ((Helper.ReturnStore(h_3, Value(l_r)), ctx_1), (he, ctxe))
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
@@ -387,6 +441,30 @@ object DOMNode extends DOM {
           if (s_key </ StrBot)
           /* unsound semantic */
             ((Helper.ReturnStore(h, Value(NullTop)), ctx), (he, ctxe))
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        })),
+      ("DOMNode.contains" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          /* arguments */
+          val other = getArgValue(h, ctx, args, "0") 
+          val nullargcheck = if(other._1._2 </ NullBot) Value(BoolFalse) else ValueBot
+
+          val lset_other = getArgValue(h, ctx, args, "0")._2
+          if(!lset_other.isEmpty){
+            val returnval = lset_this.foldLeft(Value(BoolBot))((_val, l_this) => {
+              lset_other.foldLeft(_val)((__val, l_other) => {
+                if(DOMHelper.contains(h, LocSetBot, l_this, l_other) == true)
+                  __val + Value(BoolTrue)
+                else
+                  __val + Value(BoolFalse)
+              })
+            })
+            ((Helper.ReturnStore(h, returnval + nullargcheck), ctx), (he, ctxe))
+          }
+          else if(nullargcheck </ ValueBot)
+            ((Helper.ReturnStore(h, nullargcheck), ctx), (he, ctxe))
           else
             ((HeapBot, ContextBot), (he, ctxe))
         }))
@@ -1280,6 +1358,29 @@ object DOMNode extends DOM {
     ("prefix", prefix),
     ("localName", localName),
     ("textContent", textContent))
-  // TODO: 'attributes' in DOM Level 1, 'OwnerDocument' in DOM Level 2, 'baseURI' in DOM Level 3
+  // TODO: 'baseURI' in DOM Level 3
+
+
+  def getInsList(nodeName: PropValue, nodeValue: PropValue, nodeType: PropValue, parentNode: PropValue, childNodes: PropValue,
+                 firstChild: PropValue, lastChild: PropValue, previousSibling: PropValue, nextSibling: PropValue , ownerDocument: PropValue,
+                 namespaceURI: PropValue, prefix: PropValue, localName: PropValue, textContent: PropValue, attributes: PropValue) : List[(String, PropValue)] = List(
+    ("nodeName", nodeName),
+    ("nodeValue", nodeValue),
+    ("nodeType", nodeType),
+    ("parentNode", parentNode),
+    ("childNodes", childNodes),
+    ("firstChild", firstChild),
+    ("lastChild", lastChild),
+    ("previousSibling", previousSibling),
+    ("nextSibling", nextSibling),
+    ("ownerDocument", ownerDocument),
+    ("namespaceURI", namespaceURI),
+    ("prefix", prefix),
+    ("localName", localName),
+    ("textContent", textContent),
+    ("attributes", attributes)
+  )
+  // TODO: 'baseURI' in DOM Level 3
+
 
 }

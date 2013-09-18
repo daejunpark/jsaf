@@ -13,6 +13,7 @@ import edu.rice.cs.plt.iter.IterUtil;
 import edu.rice.cs.plt.tuple.Option;
 import kr.ac.kaist.jsaf.analysis.typing.Config;
 import kr.ac.kaist.jsaf.bug_detector.BugInfo;
+import kr.ac.kaist.jsaf.bug_detector.StrictModeChecker;
 import kr.ac.kaist.jsaf.compiler.*;
 import kr.ac.kaist.jsaf.compiler.module.ModuleRewriter;
 import kr.ac.kaist.jsaf.exceptions.*;
@@ -108,9 +109,6 @@ public final class Shell {
             case ShellParameters.CMD_WIDLCHECK :
                 return_code = WIDLMain.widlcheck();
                 break;
-            case ShellParameters.CMD_STRICT :
-                return_code = StrictMain.strict();
-                break;
             case ShellParameters.CMD_CLONE_DETECTOR :
                 return_code = CloneDetectorMain.cloneDetector();
                 break;
@@ -194,7 +192,6 @@ public final class Shell {
             " unparse [-out file] somefile.tjs\n" +
             " widlparse [-out somefile.db] {somefile.widl | somedir}\n" +
             " widlcheck {-js somefile.js ... | -dir somedir} -db api1.db ...\n" +
-            " strict [-out file] somefile.js\n" +
             " clone-detector\n" +
             " coverage somefile.js\n" +
             " concolic somefile.js\n" +
@@ -204,12 +201,16 @@ public final class Shell {
             " junit sometest.test ...\n" +
             " disambiguate [-out file] somefile.js ...\n" +
             " compile [-out file] [-time] somefile.js ...\n" +
-            " cfg [-out file] [-test] [-model] [-dom] somefile.js ...\n" +
+            " cfg [-out file] [-test] [-model] [-dom] somefile.js(somefile.html) ...\n" +
             " interpret [-out file] [-time] [-mozilla] somefile.js ...\n" +
-            " analyze [-verbose] [-test] [-memdump] [-statdump] [-visual] [-checkResult]\n" +
+            " analyze [-verbose] [-test] [-memdump] [-exitdump] [-statdump] [-visual] [-checkResult]\n" +
             "         [-context-insensitive] [-context-1-callsite] [-context-1-object]\n" +
             "         [-context-tajs] [-unsound]\n" +
             "         somefile.js\n" +
+            " html [-verbose] [-test] [-memdump] [-exitdump] [-statdump] [-visual] [-checkResult]\n" +
+            "      [-context-insensitive] [-context-1-callsite] [-context-1-object]\n" +
+            "      [-context-tajs] [-unsound]\n" +
+            "      somefile.htm(l)\n" +
             " bug-detector somefile.js\n" +
             "\n" +
             " help\n"
@@ -239,11 +240,6 @@ public final class Shell {
          "\n"+
          "jsaf widlcheck {-js somefile.js ... | -dir somedir} -db api1.db ...\n"+
          "  Checks uses of APIS described in Web IDL.\n"+
-         "\n"+
-         "jsaf strict [-out file] somefile.js\n"+
-         "  Checks whether a file satisfies the strict mode restrictions.\n"+
-         "  If it succeeds the message \"Ok\" will be printed.\n"+
-         "  If -out file is given, the messages about what restrictions are violated, if any, will be printed.\n"+
          "\n"+
          "jsaf clone-detector\n"+
          "  Runs the JavaScript clone detector.\n"+
@@ -284,7 +280,7 @@ public final class Shell {
          "  If -out file is given, the resulting IR will be written to the file.\n"+
          "  If -time is given, the time it takes will be printed.\n"+
          "\n"+
-         "jsaf cfg [-out file] [-test] [-model] [-library] somefile.js ...\n"+
+         "jsaf cfg [-out file] [-test] [-model] [-library] somefile.js(somefile.html) ...\n"+
          "  Builds a control flow graph for JavaScript source files.\n"+
          "  The files are concatenated in the given order before being parsed.\n"+
          "  If -out file is given, the resulting CFG will be written to the file.\n"+
@@ -300,14 +296,22 @@ public final class Shell {
          "  If -time is given, the time it takes will be printed.\n"+
          "  If -mozilla is given, the shell files are prepended.\n"+
          "\n"+
-         "jsaf analyze [-verbose] [-test] [-memdump] [-statdump] [-visual] [-checkResult]\n"+
+         "jsaf analyze [-verbose] [-test] [-memdump] [-exitdump] [-statdump] [-visual] [-checkResult]\n"+
          "             [-context-insensitive] [-context-1-callsite] [-context-1-object]\n"+
          "             [-context-tajs] [-unsound]\n"+
          "             somefile.js\n"+
          "  Analyzes a JavaScript source.\n"+
+         "\n"+
+         "jsaf html [-verbose] [-test] [-memdump] [-exitdump] [-statdump] [-visual] [-checkResult]\n"+
+         "          [-context-insensitive] [-context-1-callsite] [-context-1-object]\n"+
+         "          [-context-tajs] [-unsound]\n"+
+         "          somefile.htm(l)\n"+
+         "  Analyzes JavaScript code in an HTML source.\n"+
+         "\n"+
          "  If -verbose is specified, analysis results will be printed in verbose format.\n"+
          "  If -test is specified, predefined values for testing purpose will be provided.\n"+
          "  If -memdump is specified, result memory will be dumped to screen.\n"+
+         "  If -exitdump is specified, result memory at the end will be dumped to screen.\n"+
          "  If -statdump is specified, statistics will be printed in dump format.\n"+
          "  If -visual is specified, result will be printed in web-based visualization format.\n"+
          "  If -checkResult is specified, expected result will be checked as in unit tests.\n"+
@@ -316,6 +320,8 @@ public final class Shell {
          "  If -context-1-object is specified, context-sensitivity will distinguish this values at last callsite.\n"+
          "  If -context-tajs is specified, TAJS-style 1-object context-sensitivity will be used.\n"+
          "  If -unsound is specified, unsound semantics is used.\n"+
+         "  If -jq is specified, analysis will be performed with jQuery APIs loaded at the initial heap.\n"+
+         "\n"+
          "jsaf bug-detector somefile.js\n"+
          "  Reports possible bugs in JavaScript source files.\n"
         );
@@ -393,6 +399,20 @@ public final class Shell {
             Disambiguator disambiguator = new Disambiguator(program, opt_DisambiguateOnly);
             program = (Program)disambiguator.doit();
             List<StaticError> errors = disambiguator.getErrors();
+
+            // Strict Mode Check
+            switch(Shell.params.command) {
+                case ShellParameters.CMD_ANALYZE :
+                case ShellParameters.CMD_PREANALYZE :
+                case ShellParameters.CMD_SPARSE :
+                case ShellParameters.CMD_NEW_SPARSE :
+                case ShellParameters.CMD_BUG_DETECTOR :
+                case ShellParameters.CMD_HTML :
+                case ShellParameters.CMD_HTML_SPARSE :
+                    StrictModeChecker.clear();
+                    StrictModeChecker.checkSimple(program);
+            }
+
             // Testing Disambiguator...
             if (opt_DisambiguateOnly) {
                 if (out.isSome()) {

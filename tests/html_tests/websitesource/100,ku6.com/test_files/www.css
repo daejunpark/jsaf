@@ -1,0 +1,1440 @@
+body {
+	background: rgb(241, 241, 241); font: 12px/1.5em Arial,Helvetica,sans-serif; color: rgb(153, 153, 153); font-size-adjust: none; font-stretch: normal;
+}
+th {
+	background: rgb(241, 241, 241); font: 12px/1.5em Arial,Helvetica,sans-serif; color: rgb(153, 153, 153); font-size-adjust: none; font-stretch: normal;
+}
+td {
+	background: rgb(241, 241, 241); font: 12px/1.5em Arial,Helvetica,sans-serif; color: rgb(153, 153, 153); font-size-adjust: none; font-stretch: normal;
+}
+input {
+	background: rgb(241, 241, 241); font: 12px/1.5em Arial,Helvetica,sans-serif; color: rgb(153, 153, 153); font-size-adjust: none; font-stretch: normal;
+}
+select {
+	background: rgb(241, 241, 241); font: 12px/1.5em Arial,Helvetica,sans-serif; color: rgb(153, 153, 153); font-size-adjust: none; font-stretch: normal;
+}
+textarea {
+	background: rgb(241, 241, 241); font: 12px/1.5em Arial,Helvetica,sans-serif; color: rgb(153, 153, 153); font-size-adjust: none; font-stretch: normal;
+}
+button {
+	background: rgb(241, 241, 241); font: 12px/1.5em Arial,Helvetica,sans-serif; color: rgb(153, 153, 153); font-size-adjust: none; font-stretch: normal;
+}
+body {
+	margin: 0px; padding: 0px;
+}
+h1 {
+	margin: 0px; padding: 0px;
+}
+h2 {
+	margin: 0px; padding: 0px;
+}
+h3 {
+	margin: 0px; padding: 0px;
+}
+h4 {
+	margin: 0px; padding: 0px;
+}
+h5 {
+	margin: 0px; padding: 0px;
+}
+h6 {
+	margin: 0px; padding: 0px;
+}
+form {
+	margin: 0px; padding: 0px;
+}
+fieldset {
+	margin: 0px; padding: 0px;
+}
+div {
+	margin: 0px; padding: 0px;
+}
+dl {
+	margin: 0px; padding: 0px;
+}
+dt {
+	margin: 0px; padding: 0px;
+}
+dd {
+	margin: 0px; padding: 0px;
+}
+ul {
+	margin: 0px; padding: 0px;
+}
+ol {
+	margin: 0px; padding: 0px;
+}
+li {
+	margin: 0px; padding: 0px;
+}
+input {
+	margin: 0px; padding: 0px;
+}
+button {
+	margin: 0px; padding: 0px;
+}
+textarea {
+	margin: 0px; padding: 0px;
+}
+p {
+	margin: 0px; padding: 0px;
+}
+th {
+	margin: 0px; padding: 0px;
+}
+td {
+	margin: 0px; padding: 0px;
+}
+a {
+	margin: 0px; padding: 0px;
+}
+img {
+	margin: 0px; padding: 0px;
+}
+strong {
+	margin: 0px; padding: 0px;
+}
+div {
+	margin: 0px; padding: 0px; border: 0px currentColor;
+}
+form {
+	margin: 0px; padding: 0px; border: 0px currentColor;
+}
+img {
+	margin: 0px; padding: 0px; border: 0px currentColor;
+}
+ul {
+	margin: 0px; padding: 0px; border: 0px currentColor;
+}
+ol {
+	margin: 0px; padding: 0px; border: 0px currentColor;
+}
+li {
+	margin: 0px; padding: 0px; border: 0px currentColor;
+}
+dl {
+	margin: 0px; padding: 0px; border: 0px currentColor;
+}
+dt {
+	margin: 0px; padding: 0px; border: 0px currentColor;
+}
+dd {
+	margin: 0px; padding: 0px; border: 0px currentColor;
+}
+p {
+	margin: 0px; padding: 0px; border: 0px currentColor;
+}
+h1 {
+	margin: 0px; padding: 0px; line-height: 150%; font-size: 12px;
+}
+h2 {
+	margin: 0px; padding: 0px; line-height: 150%; font-size: 12px;
+}
+h3 {
+	margin: 0px; padding: 0px; line-height: 150%; font-size: 12px;
+}
+h4 {
+	margin: 0px; padding: 0px; line-height: 150%; font-size: 12px;
+}
+h5 {
+	margin: 0px; padding: 0px; line-height: 150%; font-size: 12px;
+}
+h6 {
+	margin: 0px; padding: 0px; line-height: 150%; font-size: 12px;
+}
+li {
+	list-style-type: none;
+}
+img {
+	vertical-align: middle;
+}
+input {
+	vertical-align: middle;
+}
+cite {
+	font-style: normal;
+}
+em {
+	font-style: normal;
+}
+a {
+	-ms-word-break: break-all; -ms-word-wrap: break-word;
+}
+span {
+	-ms-word-break: break-all; -ms-word-wrap: break-word;
+}
+p {
+	-ms-word-break: break-all; -ms-word-wrap: break-word;
+}
+h1 {
+	-ms-word-break: break-all; -ms-word-wrap: break-word;
+}
+h2 {
+	-ms-word-break: break-all; -ms-word-wrap: break-word;
+}
+h3 {
+	-ms-word-break: break-all; -ms-word-wrap: break-word;
+}
+h4 {
+	-ms-word-break: break-all; -ms-word-wrap: break-word;
+}
+h5 {
+	-ms-word-break: break-all; -ms-word-wrap: break-word;
+}
+h6 {
+	-ms-word-break: break-all; -ms-word-wrap: break-word;
+}
+em {
+	-ms-word-break: break-all; -ms-word-wrap: break-word;
+}
+cite {
+	-ms-word-break: break-all; -ms-word-wrap: break-word;
+}
+a {
+	color: rgb(72, 72, 72); text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+a img {
+	border: currentColor;
+}
+input[name=q]:focus {
+	border-color: rgba(82, 168, 236, 0.8); outline: 0px; box-shadow: inset 0px 1px 1px rgba(0,0,0,0.075), 0px 0px 8px rgba(82,168,236,0.6); -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6); -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+.clear {
+	font: 0px/0px sans-serif; clear: both; display: block; font-size-adjust: none; font-stretch: normal;
+}
+.cfix::after {
+	height: 0px; clear: both; display: block; visibility: hidden; content: ".";
+}
+.cfix {
+	-ms-zoom: 1;
+}
+.hand {
+	cursor: pointer;
+}
+.more {
+	float: right;
+}
+.area {
+	margin: 0px auto; width: 1000px;
+}
+.abs {
+	position: absolute;
+}
+.rel {
+	position: relative;
+}
+.fl {
+	float: left;
+}
+.fr {
+	float: right;
+}
+.t_home {
+	background: url("ku6_Iicon.png") no-repeat;
+}
+.n_ku6logo {
+	background: url("ku6_Iicon.png") no-repeat;
+}
+.v_logo {
+	background: url("ku6_Iicon.png") no-repeat;
+}
+.search_box {
+	background: url("ku6_Iicon.png") no-repeat;
+}
+.top_btn .tb1 {
+	background: url("ku6_Iicon.png") no-repeat;
+}
+.top_btn .tb2 {
+	background: url("ku6_Iicon.png") no-repeat;
+}
+.k_zb {
+	background: url("ku6_Iicon.png") no-repeat;
+}
+.k_dj {
+	background: url("ku6_Iicon.png") no-repeat;
+}
+.k_zt {
+	background: url("ku6_Iicon.png") no-repeat;
+}
+.k_topbtn {
+	background: url("ku6_Iicon.png") no-repeat;
+}
+.cKL_columns strong {
+	background: url("ku6_Iicon.png") no-repeat;
+}
+.cKL_columns .cKL_skey {
+	background: url("ku6_Iicon.png") no-repeat;
+}
+.inner_footer {
+	background: url("index_bg.png") no-repeat 0px 0px;
+}
+.inner_nav2 {
+	background: url("index_bg.png") no-repeat 0px 0px;
+}
+.top_nav {
+	background: url("index_bg.png") no-repeat 0px 0px;
+}
+.t_menu li.n1:hover {
+	background: url("index_bg.png") no-repeat 0px 0px;
+}
+.t_menu li.on.n1 {
+	background: url("index_bg.png") no-repeat 0px 0px;
+}
+.t_menu li:hover {
+	background: url("index_bg.png") no-repeat 0px 0px;
+}
+.t_menu li.on {
+	background: url("index_bg.png") no-repeat 0px 0px;
+}
+.t_logo {
+	background: url("cKL_icon6_2.png") no-repeat;
+}
+.f_logo {
+	background: url("cKL_icon6_2.png") no-repeat;
+}
+.head_menu {
+	margin: 9px 0px 0px; padding-top: 5px; float: right;
+}
+.head_menu ul {
+	float: left;
+}
+.head_menu li {
+	background: url("bg_split_line.png") no-repeat left; padding: 0px 0px 0px 1px; height: 24px; float: left;
+}
+.head_menu li.first {
+	padding: 0px;
+}
+.head_menu li a {
+	padding: 0px 10px; height: 24px; color: rgb(51, 51, 51); line-height: 24px; font-size: 16px; display: inline-block;
+}
+.head_menu li a:hover {
+	color: rgb(51, 51, 51); text-decoration: underline;
+}
+.arrow {
+	margin: 0px 0px 0px 4px; border: 4px solid rgb(153, 153, 153); width: 0px; height: 0px; overflow: hidden; vertical-align: middle; display: inline-block; background-repeat: no-repeat; _background-image: url(ku6_Iicon.png);
+}
+.arw_down {
+	border-color: rgb(153, 153, 153) transparent transparent; _border: none; _background-position: -492px -110px; _padding: 8px 0 0 10px;
+}
+.user_menu {
+	margin: 9px 0px 0px; width: 108px; height: 34px; float: right; position: relative; z-index: 3;
+}
+.user_menu a.info {
+	padding: 2px 6px 2px 2px; border-radius: 3px; border: 1px solid rgb(204, 204, 204); width: 98px; height: 28px; line-height: 28px; overflow: hidden; float: left; display: block; box-shadow: 0px 1px 1px #fff;
+}
+.user_menu a.info:hover {
+	background: 0px 0px rgb(255, 255, 255); border: 1px solid rgb(153, 153, 153); box-shadow: 0px 1px 2px #999;
+}
+.toggle_on a.info {
+	background: 0px 0px rgb(255, 255, 255); border: 1px solid rgb(153, 153, 153); box-shadow: 0px 1px 2px #999;
+}
+.user_menu span {
+	cursor: pointer;
+}
+.user_menu img {
+	cursor: pointer;
+}
+.user_menu .head {
+	width: 28px; height: 28px; overflow: hidden; float: left;
+}
+.user_menu .head span {
+	margin: 0px -36px; width: 100px; height: 28px; text-align: center; overflow: hidden; display: block;
+}
+.user_menu .head img {
+	height: 28px; vertical-align: top;
+}
+.user_menu .name {
+	padding: 0px 3px; width: 56px; height: 28px; line-height: 28px; overflow: hidden; float: left; display: block;
+}
+.user_menu a .arrow {
+	margin: 13px 0px; text-indent: -99px; overflow: hidden; float: left;
+}
+.user_menu a.info:hover {
+	color: rgb(78, 78, 78); text-decoration: none;
+}
+.um_box {
+	background: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); left: 0px; top: 32px; width: 106px; overflow: hidden; clear: both; display: none; position: absolute;
+}
+.um_box a {
+	padding: 0px; width: 106px; height: 25px; text-align: center; line-height: 25px; display: block;
+}
+.um_box a:hover {
+	background: rgb(241, 241, 241); text-decoration: underline;
+}
+.toggle_on .um_box {
+	display: block;
+}
+.t_home {
+	text-indent: -999px; overflow: hidden; float: left; display: inline-block;
+}
+.n_ku6logo {
+	text-indent: -999px; overflow: hidden; float: left; display: inline-block;
+}
+.v_logo {
+	text-indent: -999px; overflow: hidden; float: left; display: inline-block;
+}
+.t_logo {
+	text-indent: -999px; overflow: hidden; float: left; display: inline-block;
+}
+.f_logo {
+	text-indent: -999px; overflow: hidden; float: left; display: inline-block;
+}
+.t_home {
+	display: inline;
+}
+.n_ku6logo {
+	display: inline;
+}
+.v_logo {
+	display: inline;
+}
+.t_logo {
+	display: inline;
+}
+.f_logo {
+	display: inline;
+}
+.t_home {
+	width: 92px; height: 42px; margin-top: 7px; margin-left: 13px;
+}
+.n_ku6logo {
+	background-position: -284px -291px; margin: 13px 0px 6px 5px; width: 93px; height: 30px;
+}
+.v_logo {
+	background-position: -185px 0px; margin: 13px 0px 6px 5px; width: 101px; height: 30px;
+}
+.t_logo {
+	margin: 13px 0px 6px 5px; width: 98px; height: 30px;
+}
+.f_logo {
+	background-position: 0px -30px; margin: 13px 0px 6px 5px; width: 84px; height: 30px;
+}
+.k_zb {
+	background-position: -121px -331px; left: 0px; top: 0px; width: 51px; height: 51px; display: block; position: absolute;
+}
+.k_dj {
+	background-position: -121px -331px; left: 0px; top: 0px; width: 51px; height: 51px; display: block; position: absolute;
+}
+.k_zt {
+	background-position: -121px -331px; left: 0px; top: 0px; width: 51px; height: 51px; display: block; position: absolute;
+}
+.k_dj {
+	background-position: -175px -331px;
+}
+.k_zt {
+	background-position: -231px -331px;
+}
+.k_topbtn {
+	background-position: -445px -78px; width: 34px; height: 95px; right: 10px; bottom: 10px; text-indent: -999px; overflow: hidden; text-decoration: none; visibility: hidden; position: fixed; z-index: 500;
+}
+.bodyback {
+	background: url("ku6bg.png") repeat-x 0px 0px; width: 100%;
+}
+.header {
+	margin: 0px auto 15px; width: 1000px; position: relative; z-index: 3;
+}
+.top_info {
+	width: 100%; height: 49px;
+}
+.search_area {
+	margin: 13px 0px 0px 20px; width: 347px; height: 30px; float: left;
+}
+.search_box {
+	background-position: 0px -115px; width: 347px; height: 30px; position: relative; z-index: 100;
+}
+.search_area .input {
+	padding: 5px; border: currentColor; width: 304px; height: 20px; color: rgb(153, 153, 153); line-height: 20px; float: left; box-sizing: content-box; -webkit-appearance: textfield;
+}
+.search_area .btn_search {
+	border: currentColor; width: 33px; height: 30px; float: left;
+}
+.sel_about {
+	left: 0px; top: 30px; width: 100%; visibility: hidden; position: absolute;
+}
+.btm_menu .sel_about {
+	top: auto; bottom: 30px; position: absolute;
+}
+.sel_about ul {
+	border-radius: 0px 0px 2px 2px; border: 1px solid rgb(204, 204, 204); width: 345px; overflow: hidden; box-shadow: 0px 1px 3px rgba(0,0,0,0.3); background-color: rgb(255, 255, 255);
+}
+.sel_about li {
+	height: 24px; line-height: 24px; cursor: pointer;
+}
+.sel_about li a {
+	padding: 0px 3px; display: block;
+}
+.sel_about li a:hover {
+	text-decoration: none; background-color: rgb(83, 149, 51);
+}
+.sel_about li.eon {
+	background-color: rgb(83, 149, 51);
+}
+.sel_about li.eon:hover {
+	background-color: rgb(83, 149, 51);
+}
+.sel_about li span {
+	color: rgb(153, 153, 153); float: right;
+}
+.sel_about li a:hover {
+	color: rgb(255, 255, 255);
+}
+.sel_about li a:hover span {
+	color: rgb(255, 255, 255);
+}
+.sel_about li.eon a {
+	color: rgb(255, 255, 255);
+}
+.sel_about li.eon span {
+	color: rgb(255, 255, 255);
+}
+.top_con {
+	padding: 11px 0px; width: 100%; height: 64px;
+}
+.top_con .logo {
+	width: 199px; height: 64px; text-indent: -999px; overflow: hidden; float: left; display: block;
+}
+.top_con .logo a {
+	width: 199px; height: 64px; text-indent: -999px; overflow: hidden; float: left; display: block;
+}
+.top_con .logo a {
+	background: url("//css.ku6cdn.com/2012/0626/logo.png") no-repeat 0px 5px;
+}
+.top_con .top_ad {
+	margin: 2px 0px; width: 685px; height: 60px; overflow: hidden; float: left;
+}
+.top_con .top_ad img {
+	width: 685px; height: 60px; display: block;
+}
+.top_con .top_btn {
+	width: 85px; height: 64px; overflow: hidden; margin-right: 6px; float: right;
+}
+.top_btn .tb1 {
+	background-position: 0px -52px; width: 85px; height: 31px; text-indent: -999px; display: block;
+}
+.top_btn .tb2 {
+	background-position: 0px -52px; width: 85px; height: 31px; text-indent: -999px; display: block;
+}
+.top_btn .tb2 {
+	background-position: -95px -53px; height: 29px; margin-top: 4px;
+}
+.top_nav {
+	background-position: 0px -62px; width: 1000px; height: 55px;
+}
+.t_menu {
+	width: 940px; height: 55px; float: left;
+}
+.t_menu li {
+	width: 137px; height: 55px; font-size: 14px; font-weight: bold; margin-left: 2px; float: left; position: relative; z-index: 1; cursor: pointer;
+}
+.t_menu li .til {
+	color: rgb(255, 255, 255);
+}
+.t_menu li span {
+	line-height: 55px; padding-left: 20px;
+}
+.t_menu li.n1 {
+	width: 145px; margin-left: 0px;
+}
+.t_menu li.n2 {
+	width: 151px;
+}
+.t_menu li.n3 {
+	width: 82px;
+}
+.t_menu li.n3 span {
+	padding-left: 10px;
+}
+.top_nav em {
+	width: 57px; height: 36px; padding-top: 10px; font-size: 12px; font-weight: normal; float: right; display: block;
+}
+.top_nav em a {
+	color: rgb(175, 226, 25); line-height: 16px; display: block;
+}
+.t_menu li:hover {
+	background-position: right -123px;
+}
+.t_menu li.on {
+	background-position: right -123px;
+}
+.t_menu li.n1:hover {
+	background-position: 0px -123px;
+}
+.t_menu li.on.n1 {
+	background-position: 0px -123px;
+}
+.tn_box {
+	background: rgb(255, 255, 255); padding: 15px 10px; border: 1px solid rgb(222, 222, 222); left: -2px; top: 51px; width: 287px; overflow: hidden; display: none; position: absolute;
+}
+.tn_box1 {
+	background: rgb(255, 255, 255); padding: 15px 10px; border: 1px solid rgb(222, 222, 222); left: -2px; top: 51px; width: 287px; overflow: hidden; display: none; position: absolute;
+}
+.tn_box2 {
+	left: -225px;
+}
+.t_menu li.n1 .tn_box {
+	left: 0px;
+}
+.p_left {
+	width: 124px; overflow: hidden; float: left; display: block;
+}
+.p_left em {
+	width: 52px; height: 25px; overflow: hidden; padding-top: 0px; padding-right: 10px; font-size: 14px; float: left; display: block;
+}
+.p_left em a {
+	color: rgb(84, 148, 51); line-height: 25px;
+}
+.p_right {
+	padding: 0px 5px 0px 15px; width: 138px; height: auto; overflow: hidden; border-left-color: rgb(222, 222, 222); border-left-width: 1px; border-left-style: solid;
+}
+.p_right .span_list {
+	background: url("dot.gif") no-repeat 0px 9px; width: 128px; height: 22px; line-height: 22px; overflow: hidden; padding-left: 10px; font-size: 12px; font-weight: normal; display: block;
+}
+.p_right .span_list a {
+	color: rgb(141, 141, 141);
+}
+.pflt a {
+	color: rgb(141, 141, 141);
+}
+.tn_box1 {
+	width: 145px;
+}
+.pflt {
+	width: 72px; height: 22px; text-align: center; line-height: 22px; font-size: 12px; font-weight: normal; float: left; display: block;
+}
+.t_menu li.on .tn_box {
+	display: block;
+}
+.t_menu li.on .tn_box1 {
+	display: block;
+}
+.t_menu li:hover .tn_box {
+	display: block;
+}
+.t_menu li:hover .tn_box1 {
+	display: block;
+}
+.footer {
+	margin: 0px auto; width: 1000px; padding-top: 10px;
+}
+.footer_info {
+	margin: 0px auto; padding: 10px 0px; text-align: center;
+}
+.link_main {
+	color: rgb(153, 153, 153);
+}
+.link_main a {
+	color: rgb(153, 153, 153);
+}
+.copy_right {
+	color: rgb(153, 153, 153);
+}
+.copy_right a {
+	color: rgb(153, 153, 153);
+}
+.link_main {
+	padding-bottom: 10px;
+}
+.copy_right {
+	padding-bottom: 10px;
+}
+.img_footer {
+	margin: 0px auto; width: 378px; height: 50px;
+}
+.img_footer_01 {
+	background: url("07133.png") no-repeat 0px 0px; margin: 0px 3px; width: 120px; height: 50px; float: left; display: inline-block;
+}
+.img_footer_02 {
+	background: url("07133.png") no-repeat 0px 0px; margin: 0px 3px; width: 120px; height: 50px; float: left; display: inline-block;
+}
+.img_footer_03 {
+	background: url("07133.png") no-repeat 0px 0px; margin: 0px 3px; width: 120px; height: 50px; float: left; display: inline-block;
+}
+.img_footer_01 {
+	display: inline;
+}
+.img_footer_02 {
+	display: inline;
+}
+.img_footer_03 {
+	display: inline;
+}
+.img_footer_02 {
+	background-position: 0px -50px;
+}
+.img_footer_03 {
+	background-position: 0px -100px;
+}
+.inner_footer {
+	background-position: 0px -184px; margin: 0px auto; width: 1000px; clear: both; background-color: rgb(255, 255, 255);
+}
+.inner_nav1 {
+	height: 45px; text-align: center; line-height: 45px;
+}
+.inner_nav2 {
+	height: 45px; text-align: center; line-height: 45px;
+}
+.inner_nav1 a {
+	padding: 0px 2px; color: rgb(102, 102, 102);
+}
+.inner_nav1 span {
+	color: rgb(204, 204, 204);
+}
+.inner_nav2 {
+	height: 30px; line-height: 30px; background-color: rgb(228, 228, 228);
+}
+.inner_nav2 a {
+	padding: 0px 4px;
+}
+.inner_footer .search_area {
+	margin: 10px 0px 14px 65px; width: 820px; height: 32px; position: relative;
+}
+.hot_search_area {
+	width: 400px; line-height: 32px; float: right;
+}
+.hot_search_area .hot_span {
+	width: 250px; height: 28px; color: rgb(102, 102, 102); overflow: hidden; display: block;
+}
+.hot_search_area .hot_span a {
+	color: rgb(102, 102, 102); margin-right: 8px;
+}
+.cKL_columns {
+	margin: -15px auto 0px; width: 970px; height: 29px; color: rgb(153, 153, 153); overflow: hidden; padding-top: 10px; font-size: 12px;
+}
+.cKL_columns strong {
+	background-position: 0px -94px; color: rgb(72, 72, 72); padding-left: 20px; font-size: 14px; margin-right: 13px; display: inline-block;
+}
+.cKL_columns a {
+	color: rgb(1, 102, 206);
+}
+.cKL_columns .cKL_skey {
+	background-position: 0px -94px; padding-left: 20px; margin-left: 10px; display: inline-block;
+}
+.cKL_columns em {
+	color: rgb(72, 72, 72);
+}
+.cKL_columns cite {
+	color: rgb(0, 153, 255);
+}
+.cKL_columns ul {
+	height: 2000px;
+}
+.cKL_columns ul li {
+	height: 29px; overflow: hidden;
+}
+.cKL_columns .cKL_color {
+	color: rgb(72, 72, 72);
+}
+.cKL_columns .cKL_color a:hover {
+	color: rgb(1, 102, 206);
+}
+.cKL_columns .cKL_color a {
+	color: rgb(1, 102, 206);
+}
+.cKL_columns .cKL_color strong {
+	color: rgb(255, 96, 0);
+}
+.area_space {
+	height: 20px; line-height: 20px; overflow: hidden; clear: both; display: block;
+}
+.m_focus {
+	background-color: rgb(255, 255, 255);
+}
+.aream {
+	background: url("ku6_Ikm.png") repeat-y 0px 0px; width: 100%;
+}
+.iatop {
+	background: url("index_bg.png") no-repeat 0px 0px;
+}
+.iabot {
+	background: url("index_bg.png") no-repeat 0px 0px;
+}
+.iatop {
+	background-position: 0px -42px; width: 1000px; height: 5px; overflow: hidden; display: block;
+}
+.iabot {
+	background-position: 0px -42px; width: 1000px; height: 5px; overflow: hidden; display: block;
+}
+.iabot {
+	background-position: 0px -47px;
+}
+.iabox {
+	width: 1000px; overflow: hidden;
+}
+.ib_rbox {
+	width: 680px;
+}
+.ico1 {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.ico2 {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.ico3 {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.ico4 {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.ico5 {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.ico6 {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.kplus a {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.irealbox_ico .box a {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.irealbox_ico .box a.on {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.irealbox_ico .box a:hover {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.focus_img1 li.btn {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.focus_img1 li.btn a {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.m_newslist li em {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.v_det1 {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.v_det2 {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.v_det3 {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.i_play {
+	background: url("playico.png") no-repeat 0px 0px; left: 10px; width: 60px; height: 60px; bottom: 10px; overflow: hidden; display: block; position: absolute; _background: url(playico1.png) 0 0 no-repeat;
+}
+.k_time {
+	background: rgb(0, 0, 0); font: bold 12px/15px Arial, Verdana, Tahoma; padding: 0px 2px; left: 0px; bottom: 0px; color: rgb(255, 255, 255); position: absolute; font-size-adjust: none; font-stretch: normal; opacity: 0.6;
+}
+.kplus {
+	right: 0px; bottom: 0px; display: block; position: absolute;
+}
+.kplus a {
+	background-position: -392px 0px; width: 15px; height: 15px; display: block;
+}
+.kplus a.play {
+	background-position: -365px 2px;
+}
+.kps {
+	display: none;
+}
+.v_det {
+	top: 0px; width: 29px; height: 15px; right: 0px; overflow: hidden; display: block; position: absolute; z-index: 2;
+}
+.v_det1 {
+	top: 0px; width: 29px; height: 15px; right: 0px; overflow: hidden; display: block; position: absolute; z-index: 2;
+}
+.v_det2 {
+	top: 0px; width: 29px; height: 15px; right: 0px; overflow: hidden; display: block; position: absolute; z-index: 2;
+}
+.v_det3 {
+	top: 0px; width: 29px; height: 15px; right: 0px; overflow: hidden; display: block; position: absolute; z-index: 2;
+}
+.v_det1 {
+	background-position: -406px -118px;
+}
+.v_det2 {
+	background-position: -406px -133px;
+}
+.v_det3 {
+	background-position: -406px -148px;
+}
+.ico5 {
+	background-position: -324px 0px; margin: 5px 5px 4px 0px; width: 15px; height: 11px; float: left; display: block;
+}
+.ico6 {
+	background-position: -324px 0px; margin: 5px 5px 4px 0px; width: 15px; height: 11px; float: left; display: block;
+}
+.ico1 {
+	background-position: -355px -45px; margin: 2px 5px 2px 0px; width: 16px; height: 16px; float: left; display: block;
+}
+.ico2 {
+	background-position: -355px -45px; margin: 2px 5px 2px 0px; width: 16px; height: 16px; float: left; display: block;
+}
+.ico3 {
+	background-position: -355px -45px; margin: 2px 5px 2px 0px; width: 16px; height: 16px; float: left; display: block;
+}
+.ico4 {
+	background-position: -355px -45px; margin: 2px 5px 2px 0px; width: 16px; height: 16px; float: left; display: block;
+}
+.ico2 {
+	background-position: -313px -45px;
+}
+.ico3 {
+	background-position: -334px -45px;
+}
+.ico4 {
+	background-position: -376px -45px;
+}
+.ico6 {
+	background-position: -344px 0px;
+}
+.col_1 {
+	color: rgb(255, 102, 0);
+}
+.irealbox_ico {
+	padding: 5px 0px 10px; width: 100%; height: 17px; overflow: hidden; clear: both;
+}
+.irealbox_ico .box {
+	margin: 0px auto; padding: 0px 8px 0px 9px; width: 300px; text-align: center; overflow: hidden; display: block;
+}
+.irealbox_ico .box a {
+	background-position: -363px -81px; padding: 4px 17px 3px; overflow: hidden; text-decoration: none;
+}
+.irealbox_ico .box a.on {
+	background-position: -483px -72px;
+}
+.irealbox_ico .box a:hover {
+	background-position: -483px -72px;
+}
+.m_boxl .irealbox_ico {
+	background: rgb(246, 246, 246);
+}
+.vlist li {
+	width: 140px; overflow: hidden; float: left;
+}
+.vlist li p.pic {
+	width: 140px; height: 88px; overflow: hidden; display: block; background-color: rgb(51, 51, 51);
+}
+.vlist li p.pic img {
+	width: 140px; height: 88px; overflow: hidden; display: block; background-color: rgb(51, 51, 51);
+}
+.vlist li p.pic {
+	margin-bottom: 5px; position: relative;
+}
+.vlist li p.txt {
+	width: 140px; height: 18px; line-height: 18px; overflow: hidden; display: block;
+}
+.vlist li p.txt1 {
+	width: 140px; height: 18px; line-height: 18px; overflow: hidden; display: block;
+}
+.vlist li p.txt1 {
+	height: 20px;
+}
+.vlist li p.txt1 span {
+	padding: 0px 5px 0px 0px; height: 20px; line-height: 2em; overflow: hidden; font-size: 10px; float: left; display: block;
+}
+.vlist li p.txt1 span.tx1 {
+	width: 114px; font-size: 12px;
+}
+.focus_img {
+	background: rgb(246, 246, 246); width: 328px; overflow: hidden;
+}
+.focus_img li {
+	background: rgb(246, 246, 246); width: 328px; overflow: hidden;
+}
+.focus_img li {
+	float: left;
+}
+.focus_img li p.pic {
+	width: 328px; height: 276px; overflow: hidden; display: block;
+}
+.focus_img li p.pic img {
+	width: 328px; height: 276px; overflow: hidden; display: block;
+}
+.focus_img li p.pic a {
+	width: 328px; height: 276px; overflow: hidden; display: block; position: relative;
+}
+.focus_img li p.txt {
+	padding: 10px 5px 3px; width: 310px; height: 20px; line-height: 20px; overflow: hidden; font-size: 14px; display: block;
+}
+.focus_img li p.txt1 {
+	padding: 10px 5px 3px; width: 310px; height: 20px; line-height: 20px; overflow: hidden; font-size: 14px; display: block;
+}
+.focus_img li p.txt1 {
+	padding: 0px 15px; width: 298px; font-size: 12px;
+}
+.focus_img li p.txt1 span {
+	padding: 0px 5px 0px 0px; height: 20px; line-height: 20px; overflow: hidden; float: left; display: block;
+}
+#hot_focus .focus_img {
+	height: 329px; position: relative;
+}
+#hot_focus .focus_img ul {
+	left: 0px; top: 0px; position: absolute;
+}
+#hot_focus .focus_img1 li {
+	display: none;
+}
+#hot_focus .focus_img1 li.on {
+	display: block;
+}
+.left-anim {
+	transition:left 0.5s ease-in-out; left: 0px; -webkit-transition: left .5s ease-in-out; -moz-transition: left .5s ease-in-out; -o-transition-property: left; -o-transition-duration: .5s; -o-transition-timing-function: ease-in-out;
+}
+.i_title {
+	padding: 15px 20px; height: 18px; position: relative;
+}
+.i_title h2 {
+	width: 160px; height: 18px; display: block;
+}
+.i_title h2 a {
+	width: 160px; height: 18px; overflow: hidden; display: block; background-image: url("ku6_Itil.png"); background-repeat: no-repeat;
+}
+.i_title h2 a.til1 {
+	
+}
+.i_title h2 a.til2 {
+	background-position: 0px -28px; width: 50px; float: left;
+}
+.i_title h2 a.til2c {
+	background-position: 0px -28px; width: 50px; float: left;
+}
+.i_title h2 a.til2c {
+	background-position: -51px -28px;
+}
+.i_title h2 a.til3 {
+	background-position: 0px -56px;
+}
+.i_title h2 a.til4 {
+	background-position: 0px -84px; width: 50px; float: left;
+}
+.i_title h2 a.til4c {
+	background-position: 0px -84px; width: 50px; float: left;
+}
+.i_title h2 a.til4c {
+	background-position: -51px -84px;
+}
+.i_title h2 a.til5 {
+	background-position: 0px -112px;
+}
+.i_title h2 a.til6 {
+	background-position: 0px -140px; width: 50px; float: left;
+}
+.i_title h2 a.til6c {
+	background-position: 0px -140px; width: 50px; float: left;
+}
+.i_title h2 a.til6c {
+	background-position: -51px -140px;
+}
+.i_title h2 a.til7 {
+	background-position: 0px -168px;
+}
+.i_title h2 a.til8 {
+	background-position: 0px -196px; width: 50px; float: left;
+}
+.i_title h2 a.til8c {
+	background-position: 0px -196px; width: 50px; float: left;
+}
+.i_title h2 a.til8c {
+	background-position: -51px -196px;
+}
+.i_title h2 a.til9 {
+	background-position: 0px -224px; width: 50px; float: left;
+}
+.i_title h2 a.til9c {
+	background-position: 0px -224px; width: 50px; float: left;
+}
+.i_title h2 a.til9c {
+	background-position: -51px -224px;
+}
+.i_title h2 a.til10 {
+	background-position: 0px -252px; width: 50px; float: left;
+}
+.i_title h2 a.til10c {
+	background-position: 0px -252px; width: 50px; float: left;
+}
+.i_title h2 a.til10c {
+	background-position: -51px -252px;
+}
+.i_title h2 a.til11 {
+	background-position: 0px -279px; width: 64px; float: left;
+}
+.i_title h2 a.til11c {
+	background-position: 0px -279px; width: 64px; float: left;
+}
+.i_title h2 a.til11c {
+	background-position: -63px -280px;
+}
+.i_title h2 a.til12 {
+	background-position: 0px -307px;
+}
+.i_title h2 a.til13 {
+	background-position: 0px -336px;
+}
+.i_title h2 a.til14 {
+	background-position: 0px -364px;
+}
+.i_title h2 a.til15 {
+	background-position: 0px -392px;
+}
+.i_title h2 a.til16 {
+	background-position: 0px -420px;
+}
+.i_title h2 a.til17 {
+	background-position: 0px -448px;
+}
+.i_title h2 a.til18 {
+	background-position: 0px -476px;
+}
+.i_title h2 a.til19 {
+	background-position: 0px -504px;
+}
+.i_title h2 a.til20 {
+	background-position: 0px -532px;
+}
+.i_title h2 a.til21 {
+	background-position: 0px -560px;
+}
+.i_title h2 a.til22c {
+	background-position: -70px -280px;
+}
+.i_title h2 a.til23 {
+	background-position: 0px -333px;
+}
+.i_title h2 a.til24 {
+	background-position: 0px -362px; width: 53px; float: left;
+}
+.i_title h2 a.til24c {
+	background-position: 0px -362px; width: 53px; float: left;
+}
+.i_title h2 a.til24c {
+	background-position: -56px -362px;
+}
+.i_ulnav {
+	top: 15px; width: 800px; height: 18px; text-align: right; right: 20px; color: rgb(102, 102, 102); line-height: 18px; overflow: hidden; display: block; position: absolute;
+}
+.i_ulnav a {
+	padding: 0px 15px 0px 5px; color: rgb(0, 0, 0);
+}
+.i_ulnav1 {
+	width: 505px;
+}
+.focus_img1 {
+	width: 278px; height: 65px;
+}
+.focus_img1 li {
+	width: 242px; height: 65px; overflow: hidden; float: left; display: inline; position: relative;
+}
+.focus_img1 li p {
+	width: 1000px; height: 65px; display: block; position: absolute;
+}
+.focus_img1 li span {
+	width: 242px; height: 65px; overflow: hidden; float: left; display: block;
+}
+.focus_img1 li span img {
+	width: 242px; height: 65px; overflow: hidden; float: left; display: block;
+}
+.focus_img1 li.btn {
+	background-position: -196px -40px; width: 18px; height: 65px; text-indent: -99px; overflow: hidden; display: block; cursor: pointer;
+}
+.focus_img1 li.btn a {
+	background-position: -196px -40px; width: 18px; height: 65px; text-indent: -99px; overflow: hidden; display: block; cursor: pointer;
+}
+.focus_img1 li.btn a:hover {
+	background-position: -254px -40px;
+}
+.focus_img1 li.b1 a {
+	background-position: -219px -40px;
+}
+.focus_img1 li.b1 a:hover {
+	background-position: -277px -40px;
+}
+.m_newslist {
+	padding: 1px 0px; overflow: hidden; float: left;
+}
+.m_newslist li {
+	height: 24px; line-height: 24px; overflow: hidden;
+}
+.m_newslist li em {
+	background-position: -365px 0px; margin: 5px 5px 6px 0px; width: 15px; height: 13px; float: left; display: block;
+}
+.m_newslist li span {
+	height: 24px; line-height: 24px; overflow: hidden; float: left; display: block;
+}
+.m_newslist li span a {
+	color: rgb(0, 0, 0);
+}
+.m_newslist li.red a {
+	color: rgb(255, 0, 0); padding-right: 6px;
+}
+.area_main {
+	margin: 0px auto; width: 1000px;
+}
+.m_boxl {
+	padding: 11px 9px 17px 13px; width: 328px;
+}
+.m_boxr {
+	width: 648px; padding-top: 11px; float: left;
+}
+.st_til {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.st_til a {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.th_til a {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.th_til a:hover {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.th_til a.on {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.th_con .thc_l {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.th_con .thc_r {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.kg_layer .kgl em {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.kq_close {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.k_qtne .nav a em {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.k_qtne .btn a {
+	background: url("ku6_Iicon.png") no-repeat 0px 0px;
+}
+.m_boxr .vlist li {
+	padding: 0px 14px 17px 11px; width: 191px;
+}
+.m_boxr .vlist li p.txt1 span.tx1 {
+	width: 165px;
+}
+.m_boxr .vlist li p.pic {
+	width: 191px;
+}
+.m_boxr .vlist li p.pic img {
+	width: 191px;
+}
+.m_boxr .vlist li p.txt {
+	width: 191px;
+}
+.m_boxr .vlist li p.txt1 {
+	width: 191px;
+}
+.m_boxr .vlist li p.pic {
+	height: 108px; background-color: rgb(51, 51, 51);
+}
+.m_boxr .vlist li p.pic img {
+	height: 108px; background-color: rgb(51, 51, 51);
+}
+.m_boxr .kplus {
+	_right: -1px;
+}
+.m_box_1 .vlist {
+	padding: 0px 8px; width: 984px;
+}
+.m_box_1 .vlist li {
+	padding: 10px 12px 15px;
+}
+.m_box_2 {
+	padding: 0px 19px 0px 20px;
+}
+.m_box_2 .m_boxl {
+	padding: 10px 0px 0px; width: 278px;
+}
+.m_box_2 .focus_img {
+	background: rgb(255, 255, 255); width: 278px;
+}
+.m_box_2 .focus_img li {
+	background: rgb(255, 255, 255); width: 278px;
+}
+.m_box_2 .focus_img li p.pic {
+	background: rgb(255, 255, 255); width: 278px;
+}
+.m_box_2 .focus_img li p.pic img {
+	background: rgb(255, 255, 255); width: 278px;
+}
+.m_box_2 .focus_img li p.pic {
+	height: 188px;
+}
+.m_box_2 .focus_img li p.pic img {
+	height: 188px;
+}
+.m_box_2 .focus_img li p.txt {
+	background: rgb(83, 149, 51); padding: 0px 10px; width: 258px; height: 30px; line-height: 30px; font-size: 14px; font-weight: bold;
+}
+.m_box_2 .focus_img li p.txt a {
+	color: rgb(255, 255, 255);
+}
+.m_box_2 .focus_img li p.txt1 {
+	padding: 10px 0px 5px; width: 278px; height: 40px; color: rgb(101, 101, 101); line-height: 20px; overflow: hidden;
+}
+.m_box_2 .focus_img li p.txt1 a {
+	color: rgb(2, 101, 203); padding-left: 5px;
+}
+.box_v1 {
+	background: url("lineDot.gif") repeat-x 0px 175px; width: 648px; overflow: hidden;
+}
+.box_v1 .vlist {
+	width: 676px;
+}
+.box_v1 .vlist li {
+	padding: 10px 28px 20px 0px;
+}
+.space_hot {
+	width: 300px; height: 393px; overflow: hidden; margin-top: 10px; margin-right: 15px; float: right; display: inline; position: relative;
+}
+.space_hot p {
+	display: block;
+}
+.space_hot span {
+	display: block;
+}
+.st_til {
+	background-position: 0px -197px; left: 0px; top: 0px; width: 300px; height: 36px; position: absolute;
+}
+.st_til a {
+	background-position: -305px -155px; width: 98px; height: 36px; text-align: center; line-height: 36px; overflow: hidden; font-size: 14px; margin-right: 2px; float: left; display: block; cursor: pointer;
+}
+.st_til a.on {
+	background-position: -306px -197px; font-weight: bold; text-decoration: none;
+}
+.space_hot .vlist {
+	background: rgb(255, 255, 255); border-width: medium 1px 1px; border-style: none solid solid; border-color: currentColor rgb(222, 222, 222) rgb(222, 222, 222); left: 0px; top: 36px; width: 296px; display: none; position: absolute;
+}
+.space_hot .on.vlist {
+	display: block;
+}
+.space_hot .vlist li {
+	width: 296px; height: 30px; overflow: hidden; border-bottom-color: rgb(243, 243, 243); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.space_hot .vlist li .stul_num {
+	width: 35px; text-align: center; color: rgb(149, 147, 148); line-height: 30px; font-family: "ýÙ?"; font-size: 14px; font-weight: bold; float: left;
+}
+.space_hot .vlist li .pic {
+	width: 97px; height: 61px; display: none; position: static;
+}
+.space_hot .vlist li .pic img {
+	width: 97px; height: 61px; display: none;
+}
+.space_hot .vlist li .txt {
+	width: 172px; height: 30px; line-height: 30px; padding-right: 5px; float: left;
+}
+.space_hot .vlist li .tx1 {
+	width: 172px; height: 30px; line-height: 30px; padding-right: 5px; float: left;
+}
+.space_hot .vlist li .tx1 {
+	width: 76px;
+}
+.space_hot .vlist li .tx1 cite {
+	margin-top: 7px;
+}
+.space_hot .vlist li .tx1 span {
+	width: 50px; overflow: hidden;
+}
+.space_hot .vlist li .txt1 {
+	display: none;
+}
+.space_hot .vlist li.on {
+	padding: 8px 0px; height: 61px;
+}
+.space_hot .vlist li.on .stul_num {
+	color: rgb(67, 184, 25); line-height: 18px; font-size: 24px;
+}
+.space_hot .vlist li.on .pic {
+	width: 97px; height: 61px; margin-right: 10px; float: left; display: block;
+}
+.space_hot .vlist li.on .pic img {
+	display: block;
+}
+.space_hot .vlist li.on .txt {
+	width: 148px; height: 36px; line-height: 18px; font-size: 12px; font-weight: bold;
+}
+.space_hot .vlist li.on .txt1 {
+	width: 73px; height: 20px; padding-top: 5px; float: left; display: block;
+}
+.space_hot .vlist li.on .txt1 span {
+	padding: 0px; width: 53px;
+}
+.space_hot .vlist li.noline {
+	border-bottom-color: currentColor; border-bottom-width: medium; border-bottom-style: none;
+}
+.ku6_ad {
+	width: 1000px; height: 90px;
+}
+.ku6_ad span {
+	background: rgb(204, 204, 204); width: 40px; height: 90px; overflow: hidden; float: left; display: none;
+}
+.ku6_ad p {
+	background: rgb(204, 204, 204); width: 1000px; height: 90px; overflow: hidden; float: left; display: block;
+}
+.ku6i_word {
+	width: 100%; overflow: hidden;
+}
+.ku6i_word a {
+	padding: 5px 15px 0px 0px; display: inline-block; -ms-word-break: keep-all;
+}
+.top_hot {
+	padding: 45px 15px 0px; width: 970px; position: relative;
+}
+.th_til {
+	left: 15px; top: -5px; width: 970px; height: 35px; position: absolute;
+}
+.th_til a {
+	background-position: -120px -286px; margin: 0px 5px; width: 154px; height: 35px; text-align: center; color: rgb(114, 114, 114); line-height: 35px; font-size: 14px; float: left; display: inline-block; cursor: pointer;
+}
+.th_til a:hover {
+	background-position: -120px -241px; color: rgb(62, 176, 19); font-weight: bold; text-decoration: none;
+}
+.th_til a.on {
+	background-position: -120px -241px; color: rgb(62, 176, 19); font-weight: bold; text-decoration: none;
+}
+.th_con {
+	width: 970px; overflow: hidden; padding-bottom: 10px;
+}
+.th_con .thc_l {
+	background-position: 0px -241px; width: 20px; height: 161px; text-indent: -999px; overflow: hidden; float: left; display: block; cursor: pointer;
+}
+.th_con .thc_r {
+	background-position: 0px -241px; width: 20px; height: 161px; text-indent: -999px; overflow: hidden; float: left; display: block; cursor: pointer;
+}
+.th_con .thc_r {
+	background-position: -30px -241px;
+}
+.th_con .thc_l:hover {
+	background-position: -59px -241px; text-decoration: none;
+}
+.th_con .thc_r:hover {
+	background-position: -91px -241px; text-decoration: none;
+}
+.thc_box {
+	width: 930px; height: 161px; overflow: hidden; float: left; position: relative;
+}
+.thc_box .vlist {
+	width: 1860px; overflow: hidden; display: none; position: absolute;
+}
+.thc_box .vlist li {
+	margin: 0px 13px; width: 160px; display: inline;
+}
+.thc_box .vlist li p.pic {
+	width: 160px; height: 90px;
+}
+.thc_box .vlist li p.pic img {
+	width: 160px; height: 90px;
+}
+.thc_box .vlist li p.txt {
+	width: 160px; padding-top: 2px;
+}
+.thc_box .vlist li p.txt1 {
+	width: 160px; padding-top: 2px;
+}
+.thc_box .vlist li p.txt1 span.tx1 {
+	width: 130px;
+}
+.fw_gg {
+	width: 300px; height: 250px; right: 10px; bottom: 10px; display: none; position: fixed; z-index: 409; _position: absolute;
+}
+.fw_gg .close {
+	background: url("ku6_Iicon.png") no-repeat -414px -206px; top: 1px; width: 15px; height: 15px; right: 1px; text-indent: -5em; overflow: hidden; display: block; position: absolute;
+}

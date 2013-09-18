@@ -1,0 +1,219 @@
+.LayoutSlimGrid {
+	width: 349px; padding-right: 10px; padding-left: 10px; _height: 1em;
+}
+.LayoutSlimGrid::after {
+	height: 0px; clear: left; display: block; content: "\0020";
+}
+.LayoutSlimGrid-1 {
+	width: 169px;
+}
+.LayoutSlimGrid-1-2 {
+	width: 349px;
+}
+.LayoutSlimGrid-2 {
+	width: 169px;
+}
+.LayoutSlimGrid-1 {
+	clear: left; margin-left: 0px;
+}
+.LayoutSlimGrid-1-2 {
+	clear: left; margin-left: 0px;
+}
+.LayoutSlimGrid-1 {
+	float: left;
+}
+.LayoutSlimGrid-1-2 {
+	float: left;
+}
+.LayoutSlimGrid-2 {
+	float: left;
+}
+.LayoutSlimGrid-2 {
+	margin-left: 11px;
+}
+.LayoutSlimGrid {
+	width: 349px; padding-right: 10px; padding-left: 10px; _height: 1em;
+}
+.LayoutSlimGrid::after {
+	height: 0px; clear: left; display: block; content: "\0020";
+}
+.LayoutSlimGridBreakAfter::after {
+	height: 0px; clear: left; display: block; content: "\0020";
+}
+.LayoutSlimGrid-1 {
+	width: 169px;
+}
+.LayoutSlimGrid-1-2 {
+	width: 349px;
+}
+.LayoutSlimGrid-2 {
+	width: 169px;
+}
+.LayoutSlimGrid-1 {
+	clear: left; margin-left: 0px;
+}
+.LayoutSlimGrid-1-2 {
+	clear: left; margin-left: 0px;
+}
+.LayoutSlimGrid-1 {
+	float: left;
+}
+.LayoutSlimGrid-1-2 {
+	float: left;
+}
+.LayoutSlimGrid-2 {
+	float: left;
+}
+.LayoutSlimGrid-2 {
+	margin-left: 11px;
+}
+.LayoutSlimCellSides {
+	padding-right: 11px; padding-left: 11px;
+}
+.LayoutSlimSmallCellVSides {
+	padding-top: 5px; padding-bottom: 5px;
+}
+.LayoutSlimGridReset {
+	padding-right: 0px !important; padding-left: 0px !important;
+}
+.LayoutSlimGridMarginReset {
+	padding-right: 0px !important; padding-left: 0px !important;
+}
+.LayoutSlimGridReset {
+	width: auto;
+}
+.LayoutSlimGridWidthReset {
+	width: auto;
+}
+.LayoutSlimGridReset {
+	_height: auto;
+}
+.LayoutSlimGridReset::after {
+	height: auto; clear: none; display: none; content: none;
+}
+.LayoutSlimGridColReset {
+	left: inherit !important; width: auto; right: inherit !important; clear: left; margin-right: 0px !important; margin-left: 0px; float: none !important;
+}
+.LayoutSlimGridPositionReset {
+	left: 0px !important; right: 0px !important;
+}
+.LayoutSlimIconReset {
+	left: 23px; position: relative;
+}
+.LayoutSlimHidden {
+	display: none;
+}
+.LayoutSlim {
+	display: block;
+}
+.Slim .ImageAlign .LayoutPullout {
+	width: auto !important; padding-right: 0px !important; padding-left: 0px !important; margin-right: 0px !important; margin-left: 0px !important;
+}
+.Slim .ImageAlign .LayoutPullout .LayoutSlimGrid-1-2 {
+	width: auto !important; padding-right: 0px !important; padding-left: 0px !important; margin-right: 0px !important; margin-left: 0px !important;
+}
+.Slim .BuyPodTTT .LayoutPullout {
+	width: auto !important; padding-right: 0px !important; padding-left: 0px !important; margin-right: 0px !important; margin-left: 0px !important;
+}
+.Slim .BuyPodTTT .LayoutPullout .LayoutSlimGrid-1-2 {
+	width: auto !important; padding-right: 0px !important; padding-left: 0px !important; margin-right: 0px !important; margin-left: 0px !important;
+}
+.Slim .LayoutXLCell {
+	padding-left: 0px;
+}
+.Slim .LayoutXLCellSides {
+	padding-left: 0px;
+}
+.Slim .LayoutXLCellLeft {
+	padding-left: 0px;
+}
+.Slim .LayoutXLCell {
+	padding-right: 0px;
+}
+.Slim .LayoutXLCellSides {
+	padding-right: 0px;
+}
+.Slim .LayoutXLCellRight {
+	padding-right: 0px;
+}
+.Slim .LayoutPXLCellTop {
+	top: inherit; bottom: inherit; position: relative;
+}
+.Slim .LayoutPXLCellBottom {
+	top: inherit; bottom: inherit; position: relative;
+}
+.Slim .LayoutPXLCellLeft {
+	left: inherit !important; right: inherit !important;
+}
+.Slim .LayoutPXLCellRight {
+	left: inherit !important; right: inherit !important;
+}
+.Slim .LayoutPullout .LayoutSlimGrid-1-2 {
+	left: inherit !important; right: inherit !important;
+}
+.Slim .SegmentNavPanel {
+	padding: 5px;
+}
+.Slim .SegmentNavPanel a:hover {
+	background: 0px;
+}
+.Slim .SegmentNavPanel a:hover:visited {
+	background: 0px;
+}
+.Slim .SegmentNavPanel .SegmentNavPanelSelected {
+	background: 0px;
+}
+.Slim .SegmentNavPanel a {
+	padding: 10px;
+}
+.Slim .SegmentNavPanel .SegmentNavPanelSelected {
+	padding: 10px;
+}
+.Slim .PulloutItem {
+	max-width: 349px;
+}
+.Slim .PulloutItem img {
+	max-width: 349px;
+}
+.Slim .ThreeColumnFullXL {
+	max-width: 349px;
+}
+.Slim .TwoColumnFullXL {
+	max-width: 349px;
+}
+.Slim .ThreeColumnFullXL img {
+	max-width: 349px;
+}
+.Slim .TwoColumnFullXL img {
+	max-width: 349px;
+}
+.Slim .FlashAltCanvas {
+	max-width: 349px;
+}
+.Slim .ImageAlign .ImageShadow {
+	max-width: 349px;
+}
+.Slim .ImageAlign .PulloutItem {
+	margin-right: inherit !important; margin-left: inherit !important; min-height: inherit !important;
+}
+.Slim .ImageAlign .PulloutItem img {
+	margin-right: inherit !important; margin-left: inherit !important; min-height: inherit !important;
+}
+.Slim .BuyPodTTT .PulloutItem {
+	margin-right: inherit !important; margin-left: inherit !important; min-height: inherit !important;
+}
+.Slim .BuyPodTTT .PulloutItem img {
+	margin-right: inherit !important; margin-left: inherit !important; min-height: inherit !important;
+}
+.Slim .ThreeColumnFullXL {
+	padding-right: 0px !important; padding-left: 0px !important;
+}
+.Slim .TwoColumnFullXL {
+	padding-right: 0px !important; padding-left: 0px !important;
+}
+.Slim .ThreeColumnFullXL .LayoutPullout {
+	padding-right: 0px !important; padding-left: 0px !important;
+}
+.Slim .TwoColumnFullXL .LayoutPullout {
+	padding-right: 0px !important; padding-left: 0px !important;
+}

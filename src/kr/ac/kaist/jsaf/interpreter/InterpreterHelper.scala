@@ -208,31 +208,23 @@ class InterpreterHelper(I: Interpreter) {
    * 10.2.1 Environment Records
    * 10.2.1.1 Declarative Environment Records
    * 10.2.1.1.1 HasBinding(N)
-   * x \in Dom(\sigma)
+   * 10.2.1.2 Object Environment Records
+   * 10.2.1.2.1 HasBinding(N)
    */
   def hasBinding(x: Var): Boolean = {
     var env = I.IS.env
     while (true) {
       env match {
-        case EmptyEnv() =>
-          return false
+        case EmptyEnv() => return I.IS.GlobalObject._hasProperty(x)
         case ConsEnv(envRec, rest) => envRec match {
-          case DeclEnvRec(s) =>
-            return isInDomS(s, x)
-          case ObjEnvRec(_) =>
-            env = rest
+          case DeclEnvRec(s) => return isInDomS(s, x)
+          case ObjEnvRec(_) => env = rest
         }
       }
     }
     false
   }
   def isInDomS(s: Store, x: Var): Boolean = s.containsKey(x)
-
-  /*
-   * 10.2.1.2 Object Environment Records
-   * 10.2.1.2.1 HasBinding(N)
-   * 8.12.6 [[HasProperty]](P)
-   */
 
   /*
    * 10.2.1.1.2 CreateMutableBinding(N,D)

@@ -115,8 +115,9 @@ object NodeFactory {
         comment = some[Comment](makeComment(span, message))
       else {
         val com = comment.get
-        comment = some[Comment](makeComment(NU.spanAll(com.getInfo.getSpan, span),
-                                            com.getComment+"\n"+message))
+        if (!com.getComment.equals(message))
+          comment = some[Comment](makeComment(NU.spanAll(com.getInfo.getSpan, span),
+                                              com.getComment+"\n"+message))
       }
     }
 
@@ -134,24 +135,31 @@ object NodeFactory {
 
   def makeOnlySpanInfo(span: Span): SpanInfo = new SpanInfo(span)
 
-  def makeTopLevel(body: JList[SourceElement]): TopLevel =
-    makeTopLevel(toJavaList(Nil), toJavaList(Nil), body)
+  def makeTopLevel(info: ASTSpanInfo, body: JList[SourceElement], strict: Boolean): TopLevel =
+    makeTopLevel(info, toJavaList(Nil), toJavaList(Nil), List(new SourceElements(info, body, strict)))
 
-  def makeTopLevel(fds: JList[FunDecl], vds: JList[VarDecl],
-                   body: JList[SourceElement]): TopLevel =
+  def makeTopLevel(info: ASTSpanInfo, body: List[SourceElements]): TopLevel =
+    makeTopLevel(info, toJavaList(Nil), toJavaList(Nil), body)
+
+  def makeTopLevel(info: ASTSpanInfo, fds: JList[FunDecl], vds: JList[VarDecl],
+                   body: List[SourceElements]): TopLevel =
     new TopLevel(fds, vds, body)
 
-  def makeProgram(span: Span, elements: JList[SourceElement]): Program =
-    makeProgram(makeSpanInfoComment(span), makeTopLevel(elements))
+  def makeProgram(span: Span, elements: JList[SourceElement], strict: Boolean): Program = {
+    val info = makeSpanInfoComment(span)
+    makeProgram(info, makeTopLevel(info, elements, strict))
+  }
 
-  def makeProgram(info: ASTSpanInfo, body: List[SourceElement]): Program =
-    makeProgram(info, makeTopLevel(toJavaList(body)))
+  def makeProgram(info: ASTSpanInfo, body: List[SourceElement], strict: Boolean): Program =
+    makeProgram(info, makeTopLevel(info, toJavaList(body), strict))
 
   def makeProgram(info: ASTSpanInfo, toplevel: TopLevel): Program =
     new Program(info, toplevel)
 
-  def makeModDecl(span: Span, name: Id, body: JList[SourceElement]) =
-    new ModDecl(makeSpanInfoComment(span), name, makeTopLevel(body))
+  def makeModDecl(span: Span, name: Id, body: JList[SourceElement], strict: Boolean) = {
+    val info = makeSpanInfoComment(span)
+    new ModDecl(info, name, makeTopLevel(info, body, strict))
+  }
 
   def makeModExpVarStmt(span: Span, vds: JList[VarDecl]) =
     new ModExpVarStmt(makeSpanInfoComment(span), vds)
@@ -159,13 +167,13 @@ object NodeFactory {
   def makeModExpFunDecl(span: Span, fd: FunDecl) =
     new ModExpFunDecl(makeSpanInfoComment(span), fd)
 
-  def makeModExpGetter(span: Span, name: Id, body: JList[SourceElement]) =
+  def makeModExpGetter(span: Span, name: Id, body: JList[SourceElement], strict: Boolean) =
     new ModExpGetter(makeSpanInfoComment(span),
-                     makeGetProp(span, makePropId(span, name), body))
+                     makeGetProp(span, makePropId(span, name), body, strict))
 
-  def makeModExpSetter(span: Span, name: Id, param: Id, body: JList[SourceElement]) =
+  def makeModExpSetter(span: Span, name: Id, param: Id, body: JList[SourceElement], strict: Boolean) =
     new ModExpSetter(makeSpanInfoComment(span),
-                     makeSetProp(span, makePropId(span, name), param, body))
+                     makeSetProp(span, makePropId(span, name), param, body, strict))
 
   def makeModExpSpecifiers(span: Span, names: JList[ModExpSpecifier]) =
     new ModExpSpecifiers(makeSpanInfoComment(span), names)
@@ -200,19 +208,23 @@ object NodeFactory {
   def makeImportName(span: Span, name: Id): ModImpSpecifier =
     new ModImpName(makeSpanInfoComment(span), name)
 
-  def makeFunctional(name: Id, fds: JList[FunDecl], vds: JList[VarDecl],
-                     body: JList[SourceElement], params: JList[Id]) =
-    new Functional(fds, vds, body, name, params)
+  def makeFunctional(info: ASTSpanInfo, name: Id, fds: JList[FunDecl], vds: JList[VarDecl],
+                     body: JList[SourceElement], params: JList[Id], strict: Boolean) =
+    new Functional(fds, vds, new SourceElements(info, body, strict), name, params)
 
   def makeFunDecl(span: Span, name: Id, params: JList[Id],
-                  body: JList[SourceElement]) =
-    new FunDecl(makeSpanInfoComment(span),
-                makeFunctional(name, toJavaList(Nil), toJavaList(Nil), body, params))
+                  body: JList[SourceElement], strict: Boolean) = {
+    val info = makeSpanInfoComment(span)
+    new FunDecl(info,
+                makeFunctional(info, name, toJavaList(Nil), toJavaList(Nil), body, params, strict))
+  }
 
   def makeFunExpr(span: Span, name: Id, params: JList[Id],
-                  body: JList[SourceElement]) =
-    new FunExpr(makeSpanInfoComment(span),
-                makeFunctional(name, toJavaList(Nil), toJavaList(Nil), body, params))
+                  body: JList[SourceElement], strict: Boolean) = {
+    val info = makeSpanInfoComment(span)
+    new FunExpr(info,
+                makeFunctional(info, name, toJavaList(Nil), toJavaList(Nil), body, params, strict))
+  }
 
   def makeBlock(span: Span, stmts: JList[Stmt]) =
     new Block(makeSpanInfoComment(span), stmts)
@@ -435,16 +447,20 @@ object NodeFactory {
   def makeField(span: Span, prop: Property, expr: Expr) =
     new Field(makeSpanInfoComment(span), prop, expr)
 
-  def makeGetProp(span: Span, prop: Property, body: JList[SourceElement]) =
-    new GetProp(makeSpanInfoComment(span), prop,
-                makeFunctional(NU.prop2Id(prop), toJavaList(Nil), toJavaList(Nil), body,
-                               toJavaList(Nil)))
+  def makeGetProp(span: Span, prop: Property, body: JList[SourceElement], strict: Boolean) = {
+    val info = makeSpanInfoComment(span)
+    new GetProp(info, prop,
+                makeFunctional(info, NU.prop2Id(prop), toJavaList(Nil), toJavaList(Nil), body,
+                               toJavaList(Nil), strict))
+  }
 
   def makeSetProp(span: Span, prop: Property, id: Id,
-                  body: JList[SourceElement]) =
-    new SetProp(makeSpanInfoComment(span), prop,
-                makeFunctional(NU.prop2Id(prop), toJavaList(Nil), toJavaList(Nil), body,
-                               toJavaList(List(id))))
+                  body: JList[SourceElement], strict: Boolean) = {
+    val info = makeSpanInfoComment(span)
+    new SetProp(info, prop,
+                makeFunctional(info, NU.prop2Id(prop), toJavaList(Nil), toJavaList(Nil), body,
+                               toJavaList(List(id)), strict))
+  }
 
   def makePropId(span: Span, id: Id) =
     new PropId(makeSpanInfoComment(span), id)

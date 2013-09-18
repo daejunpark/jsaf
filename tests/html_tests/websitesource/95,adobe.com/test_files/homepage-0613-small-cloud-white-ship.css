@@ -1,0 +1,177 @@
+.LayoutGrid {
+	padding-left: 14px !important; min-height: 1180px;
+}
+.LayoutContent {
+	height: auto; _height: 1150px;
+}
+.HomePromoContent {
+	margin-top: -37px; margin-bottom: 0px;
+}
+.HomePromoContentMain {
+	height: 400px;
+}
+.HomePromoContentMain .ThreeColumn-1-2-Text {
+	top: 350px; width: 440px !important; z-index: 3;
+}
+.HomePromoContentMain .ThreeColumn-1-2-Button {
+	top: 320px; width: 440px !important; z-index: 3;
+}
+.HomePromoContentMain .ThreeColumn-3 {
+	width: 10px !important;
+}
+.HomePromoSubContent {
+	z-index: 2;
+}
+.LayoutBigCellLeft {
+	padding-left: 5px !important;
+}
+.Vis85 {
+	display: none;
+}
+.TextH1Home {
+	padding-left: 10px;
+}
+.TextH1Home h1 {
+	background: url("/homepage/include/style/homepage/cloud-icon-small.jpg") no-repeat left top; color: rgb(34, 34, 34); line-height: 26px; padding-left: 35px; font-size: 20px; font-weight: 100; margin-bottom: 12px;
+}
+.TextH1Home h2 {
+	color: rgb(34, 34, 34); line-height: 42px; font-size: 40px; font-weight: 100; margin-bottom: 12px;
+}
+.TextH1Home p {
+	color: rgb(34, 34, 34); line-height: 22px; font-size: 18px; font-weight: 200; margin-bottom: 16px;
+}
+.TextH1Home p br {
+	display: none;
+}
+.TextH1Home p a.TextMedium {
+	font-weight: 400; margin-bottom: 0px;
+}
+.TextH1Home p .CPodButton {
+	border-color: rgb(255, 224, 102) rgb(255, 203, 77) rgb(255, 176, 69) rgb(255, 193, 68); color: rgb(34, 34, 34); max-width: 200px !important;
+}
+.SiteHeaderCart {
+	background: url("/include/style/default/SiteHeader/cart_dark.png") no-repeat 0px 4px; padding-left: 16px;
+}
+a.SiteHeaderCart {
+	background: url("/include/style/default/SiteHeader/cart_dark.png") no-repeat 0px 4px; padding-left: 16px;
+}
+a.SiteHeaderCart:link {
+	background: url("/include/style/default/SiteHeader/cart_dark.png") no-repeat 0px 4px; padding-left: 16px;
+}
+a.SiteHeaderCart:visited {
+	background: url("/include/style/default/SiteHeader/cart_dark.png") no-repeat 0px 4px; padding-left: 16px;
+}
+a.SiteHeaderCart:active {
+	background: url("/include/style/default/SiteHeader/cart_dark.png") no-repeat 0px 4px; padding-left: 16px;
+}
+.SiteHeaderCart a {
+	background: url("/include/style/default/SiteHeader/cart_dark.png") no-repeat 0px 4px; padding-left: 16px;
+}
+.SiteHeaderCart a:link {
+	background: url("/include/style/default/SiteHeader/cart_dark.png") no-repeat 0px 4px; padding-left: 16px;
+}
+.SiteHeaderCart a:visited {
+	background: url("/include/style/default/SiteHeader/cart_dark.png") no-repeat 0px 4px; padding-left: 16px;
+}
+a.SiteHeaderCart:hover {
+	background: url("/include/style/default/SiteHeader/cart_dark_hover.png") no-repeat 0px 4px; padding-left: 16px;
+}
+a.SiteHeaderCart:hover:visited {
+	background: url("/include/style/default/SiteHeader/cart_dark_hover.png") no-repeat 0px 4px; padding-left: 16px;
+}
+.SiteHeaderCart a:hover {
+	background: url("/include/style/default/SiteHeader/cart_dark_hover.png") no-repeat 0px 4px; padding-left: 16px;
+}
+.SiteHeaderCart a:hover:visited {
+	background: url("/include/style/default/SiteHeader/cart_dark_hover.png") no-repeat 0px 4px; padding-left: 16px;
+}
+.SiteHeaderUserItem {
+	color: rgb(51, 51, 51);
+}
+a.SiteHeaderUserItem {
+	color: rgb(51, 51, 51);
+}
+a.SiteHeaderUserItem:link {
+	color: rgb(51, 51, 51);
+}
+a.SiteHeaderUserItem:visited {
+	color: rgb(51, 51, 51);
+}
+a.SiteHeaderUserItem:active {
+	color: rgb(51, 51, 51);
+}
+.SiteHeaderUserItem a {
+	color: rgb(51, 51, 51);
+}
+.SiteHeaderUserItem a:link {
+	color: rgb(51, 51, 51);
+}
+.SiteHeaderUserItem a:visited {
+	color: rgb(51, 51, 51);
+}
+a.SiteHeaderUserItem:hover {
+	color: rgb(68, 112, 153);
+}
+a.SiteHeaderUserItem:hover:visited {
+	color: rgb(68, 112, 153);
+}
+.SiteHeaderUserItem a:hover {
+	color: rgb(68, 112, 153);
+}
+.SiteHeaderUserItem a:hover:visited {
+	color: rgb(68, 112, 153);
+}
+html {
+	background: rgb(255, 255, 255) !important;
+}
+.LayoutGrid {
+	padding: 0px 10px !important;
+}
+.TextH1Home h2 {
+	line-height: 38px; font-size: 36px !important;
+}
+.TextH1Home p {
+	line-height: 17px; font-size: 17px !important;
+}
+#homepageEduSolutionsSection {
+	margin-top: 150px;
+}
+.LayoutGrid {
+	padding: 0px !important;
+}
+.HomePromoContentMain .ThreeColumn-1-2 {
+	width: auto !important;
+}
+#MCBoxShot {
+	left: 0px !important; display: block;
+}
+#MCBoxShot a {
+	width: auto; overflow: hidden;
+}
+#MCBoxShot a img {
+	left: -200px; position: relative;
+}
+.NewsReelPanel {
+	margin-top: 90px;
+}
+.TextH1Home {
+	padding-left: 0px;
+}
+.TextH1Home h1 {
+	font-size: 16px !important;
+}
+.TextH1Home h2 {
+	line-height: 30px; font-size: 26px !important;
+}
+.TextH1Home p {
+	line-height: 16px; font-size: 16px !important;
+}
+.TextH1Home p br {
+	display: block;
+}
+.Setoverflow {
+	width: 100%; overflow: hidden;
+}
+#homepageEduSolutionsSection {
+	margin-top: 160px;
+}

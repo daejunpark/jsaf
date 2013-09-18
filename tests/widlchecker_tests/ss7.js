@@ -1,0 +1,1 @@
+var invalidObj = new webapis.CalendarEventId(); // contructor requires 1~2 parameters

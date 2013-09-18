@@ -1,0 +1,81 @@
+.searchForm .searchSubmit {
+	background: url("https://www.paypalobjects.com/webstatic/i/sparta/sprite/sprite_header_footer_94.png") no-repeat 3px -491px rgb(221, 221, 221);
+}
+.searchForm .textInput .searchSubmit:hover {
+	background: url("https://www.paypalobjects.com/webstatic/i/sparta/sprite/sprite_header_footer_94.png") no-repeat 3px -491px rgb(199, 199, 199);
+}
+.searchForm .textInput .searchSubmit:focus {
+	background: url("https://www.paypalobjects.com/webstatic/i/sparta/sprite/sprite_header_footer_94.png") no-repeat 3px -491px rgb(199, 199, 199);
+}
+.searchForm .textInput .hover.searchSubmit {
+	background: url("https://www.paypalobjects.com/webstatic/i/sparta/sprite/sprite_header_footer_94.png") no-repeat 3px -491px rgb(199, 199, 199);
+}
+.searchForm .textInput .searchSubmit:active {
+	background: url("https://www.paypalobjects.com/webstatic/i/sparta/sprite/sprite_header_footer_94.png") no-repeat 3px -491px rgb(199, 199, 199);
+}
+.gblMHeader .login.utility .account.secondary.button {
+	background: url("https://www.paypalobjects.com/webstatic/i/sparta/sprite/sprite_ieButtons.png") repeat-x 0px -301px; padding-right: 8px; padding-left: 8px;
+}
+.gblMHeader .small.optOut.button {
+	background: url("https://www.paypalobjects.com/webstatic/i/ex_ce2/sprite/sprite_ieButtons.png") repeat-x 0px -1300px; padding: 4px 10px;
+}
+.gblMHeader .small.optOut.button:hover {
+	background-position: 0px -1400px;
+}
+.small.optOut.button:focus {
+	background-position: 0px -1400px;
+}
+.gblMHeader .formSmall .secondaryAlt.button {
+	background: url("https://www.paypalobjects.com/webstatic/i/sparta/sprite/sprite_ieButtons.png") repeat-x 0px -1000px; border-width: 1px; border-style: solid; display: inline-block; min-width: 44px;
+}
+.gblMHeader .small.secondaryAlt.button {
+	background: url("https://www.paypalobjects.com/webstatic/i/sparta/sprite/sprite_ieButtons.png") repeat-x 0px -1000px; border-width: 1px; border-style: solid; display: inline-block; min-width: 44px;
+}
+.button {
+	background-image: url("https://www.paypalobjects.com/webstatic/i/sparta/sprite/sprite_ieButtons.png"); background-repeat: repeat-x;
+}
+.button:hover {
+	background-position: 0px -100px;
+}
+.button:focus {
+	background-position: 0px -100px;
+}
+.button:active {
+	background-position: 0px -200px;
+}
+.secondary.button {
+	background-position: 0px -301px;
+}
+.secondary.button:hover {
+	background-position: 0px -400px;
+}
+.secondary.button:focus {
+	background-position: 0px -400px;
+}
+.secondary.button:active {
+	background-position: 0px -500px;
+}
+.notify.button {
+	background-position: 0px -600px;
+}
+.notify.button:hover {
+	background-position: 0px -700px;
+}
+.notify.button:focus {
+	background-position: 0px -700px;
+}
+.notify.button:active {
+	background-position: 0px -800px;
+}
+.disabled.button {
+	background-position: 0px -900px;
+}
+.disabled.button:hover {
+	background-position: 0px -900px;
+}
+.disabled.button:active {
+	background-position: 0px -900px;
+}
+.disabled.button:focus {
+	background-position: 0px -900px;
+}

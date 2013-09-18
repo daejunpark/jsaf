@@ -10,12 +10,23 @@
 package kr.ac.kaist.jsaf.analysis.typing.models.builtin
 
 import scala.math.{min,max,floor, abs}
-import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG}
+import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
+import kr.ac.kaist.jsaf.analysis.typing.domain.NUIntSingle
+import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
+import kr.ac.kaist.jsaf.analysis.typing.InternalError
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsInternalFunc
+import kr.ac.kaist.jsaf.analysis.typing.domain.Context
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFuncCallback
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 
 object BuiltinArray extends ModelData {
 
@@ -60,8 +71,8 @@ object BuiltinArray extends ModelData {
     ("forEach",              AbsBuiltinFunc("Array.prototype.forEach", 1)),
     ("map",                  AbsBuiltinFunc("Array.prototype.map", 1)),
     ("filter",               AbsBuiltinFunc("Array.prototype.filter", 1)),
-    ("reduce",               AbsBuiltinFunc("Array.prototype.reduce", 1)),
-    ("reduceRight",          AbsBuiltinFunc("Array.prototype.reduceRight", 1))
+    ("reduce",               AbsBuiltinFuncCallback("Array.prototype.reduce", 1)),
+    ("reduceRight",          AbsBuiltinFuncCallback("Array.prototype.reduce", 1))
   )
 
   def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
@@ -261,40 +272,122 @@ object BuiltinArray extends ModelData {
           else
             ((HeapBot, ContextBot), (he, ctxe))
         })),
-        ("Array.prototype.toLocaleString" -> (
+        "Array.prototype.toLocaleString" -> (
           (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-            val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+            val v_this = h(SinglePureLocalLoc)("@this")._1._2
+
+            // Get a new address
+            val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+            val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+            if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+            val addr_env = set_addr.head
+            val addr1 = cfg.getAPIAddress(addr_env, 0)
+            val addr2 = cfg.getAPIAddress(addr_env, 1)
+
+            // 1. Let array be the result of calling ToObject passing the this value as the argument.
+            val (v_this2, h_1, ctx_1, es_1) = Helper.toObject(h, ctx, v_this, addr1)
+            val lset_this = v_this2._2
+
+            // 2. Let arrayLen be the result of calling the [[Get]] internal method of array with argument "length".
+            val v_len = lset_this.foldLeft(ValueBot)((_v, l) => _v + Helper.Proto(h_1, l, AbsString.alpha("length")))
+            // 3. Let len be ToUint32(arrayLen).
+            val n_len = Operator.ToUInt32(v_len)
+            // 4. Let separator be the String value for the list-separator String appropriate for the host environment‘s current locale (this is derived in an implementation-defined way).
             val s_sep = AbsString.alpha(",")
-            val n_len = Operator.ToUInt32(lset_this.foldLeft(ValueBot)((_v, l) => _v + Helper.Proto(h, l, AbsString.alpha("length"))))
-            val s = n_len match {
-              case UIntSingle(n) if n == 0 => AbsString.alpha("")
-              case UIntSingle(n) if n > 0 => {
-                val v_f = lset_this.foldLeft(ValueBot)((_v, l) =>_v + Helper.Proto(h, l, AbsString.alpha("0")))
-                val v_f2 = Value(PValue(UndefBot,NullBot,v_f._1._3,v_f._1._4,v_f._1._5), v_f._2)
+
+            val (h_2, ctx_2, es_2, s) = n_len.getConcreteValue() match {
+              case Some(n) if n == 0 => (h_1, ctx_1, ExceptionBot, AbsString.alpha(""))
+              case Some(n) if n > 0 => {
+                val v_f = lset_this.foldLeft(ValueBot)((_v, l) => _v + Helper.Proto(h_1, l, AbsString.alpha("0")))
+                val v_f2 = Value(PValue(UndefBot, NullBot, v_f._1._3, v_f._1._4, v_f._1._5), v_f._2)
                 val s_first =
                   if (v_f._1._1 </ UndefBot || v_f._1._2 </ NullBot)
                     AbsString.alpha("") + Helper.toString(Helper.toPrimitive(v_f2))
                   else
                     Helper.toString(Helper.toPrimitive(v_f))
-                (1 until n.toInt).foldLeft(s_first)((_s, i) =>{
-                  val v_i = lset_this.foldLeft(ValueBot)((_v, l) =>_v + Helper.Proto(h, l, AbsString.alpha(i.toString)))
-                  val v_i2 = Value(PValue(UndefBot,NullBot,v_i._1._3,v_i._1._4,v_i._1._5), v_i._2)
+
+                // b. Let func be the result of calling the [[Get]] internal method of elementObj with argument "toLocaleString".
+                val func = v_f._2.foldLeft(ValueBot)((S, l) => S + Helper.Proto(h_1, l, AbsString.alpha("toLocaleString")))
+                val notfn = func._2.filter(l => BoolFalse <= Helper.IsCallable(h_1, l))
+                // c. If IsCallable(func) is false, throw a TypeError exception.
+                val es_1 =
+                  if (!notfn.isEmpty || func._1 </ PValueBot) {
+                    Set[Exception](TypeError)
+                  } else {
+                    ExceptionBot
+                  }
+
+                val (s, es_2) = (1 until n.toInt).foldLeft((s_first, es_1))((_s, i) => {
+                  val v_i = lset_this.foldLeft(ValueBot)((_v, l) => _v + Helper.Proto(h, l, AbsString.alpha(i.toString)))
+                  val v_i2 = Value(PValue(UndefBot, NullBot, v_i._1._3, v_i._1._4, v_i._1._5), v_i._2)
                   val s_i =
                     if (v_i._1._1 </ UndefBot || v_i._1._2 </ NullBot)
                       AbsString.alpha("") + Helper.toString(Helper.toPrimitive(v_i2))
                     else
                       Helper.toString(Helper.toPrimitive(v_i))
-                  _s.concat(s_sep).concat(s_i)
+                  // ii. Let func be the result of calling the [[Get]] internal method of elementObj with argument "toLocaleString".
+                  val func = v_i._2.foldLeft(ValueBot)((S, l) => S + Helper.Proto(h_1, l, AbsString.alpha("toLocaleString")))
+                  val notfn = func._2.filter(l => BoolFalse <= Helper.IsCallable(h_1, l))
+                  // iii. If IsCallable(func) is false, throw a TypeError exception.
+                  val es_i =
+                    if (!notfn.isEmpty || func._1 </ PValueBot) {
+                      Set[Exception](TypeError)
+                    } else {
+                      ExceptionBot
+                    }
+
+                  (_s._1.concat(s_sep).concat(s_i), _s._2 ++ es_i)
                 })
+
+                (h_1, ctx_1, es_2, s)
               }
-              case NumBot => StrBot
-              case _ => StrTop
+              case None if n_len <= NumBot => (HeapBot, ContextBot, ExceptionBot, StrBot)
+              case _ => {
+                // 5. If len is zero, return the empty String.
+                // 6. Let firstElement be the result of calling the [[Get]] internal method of array with argument "0".
+                val elements_1 =
+                  if (BoolTrue <= Operator.bopLessEq(Value(AbsNumber.alpha(1)), Value(n_len))._1._3) {
+                    lset_this.foldLeft(ValueBot)((_v, l) => _v + Helper.Proto(h_1, l, AbsString.NumTop))
+                  } else {
+                    ValueBot
+                  }
+                // a. Let elementObj be ToObject(firstElement).
+                val (elements_2, h_2, ctx_2, es_2) =
+                  if (elements_1 </ ValueBot) {
+                    Helper.toObject(h_1, ctx_1, elements_1, addr2)
+                  } else {
+                    (ValueBot, h_1, ctx_1, ExceptionBot)
+                  }
+
+                // ii. Let func be the result of calling the [[Get]] internal method of elementObj with argument "toLocaleString".
+                val func = elements_2._2.foldLeft(ValueBot)((S, l) => S + Helper.Proto(h_2, l, AbsString.alpha("toLocaleString")))
+
+                // iii. If IsCallable(func) is false, throw a TypeError exception.
+                val notfn = func._2.filter(l => BoolFalse <= Helper.IsCallable(h_2, l))
+                val es_3 =
+                  if (!notfn.isEmpty) {
+                    Set[Exception](TypeError)
+                  } else {
+                    ExceptionBot
+                  }
+
+                val es = es_2 ++ es_3
+
+                (h_2, ctx_2, es, StrTop)
+              }
             }
-            if (s </ StrBot)
-              ((Helper.ReturnStore(h, Value(s)), ctx), (he, ctxe))
-            else
-              ((HeapBot, ContextBot), (he, ctxe))
-          })),
+
+            val (h_3, ctx_3) =
+              if (s </ StrBot) {
+                (Helper.ReturnStore(h_2, Value(s)), ctx_2)
+              } else {
+                (HeapBot, ContextBot)
+              }
+            val es = es_1 ++ es_2
+            val (h_e, ctx_e) = Helper.RaiseException(h_3, ctx_3, es)
+
+            ((h_3, ctx_3), (he + h_e, ctxe + ctx_e))
+          }),
       ("Array.prototype.concat" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
@@ -1039,7 +1132,163 @@ object BuiltinArray extends ModelData {
             ((Helper.ReturnStore(h, Value(n_index)), ctx), (he, ctxe))
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        }))
+        })),
+      "Array.prototype.reduce.init" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val v_this = h(SinglePureLocalLoc)("@this")._1._2
+          val v_callbackfn = getArgValue(h, ctx, args, "0")
+          val n_arglen = Operator.ToUInt32(getArgValue(h, ctx, args, "length"))
+          val v_initial =
+            n_arglen.getConcreteValue() match {
+              case Some(d) if d >= 2 => Some(getArgValue(h, ctx, args, "1"))
+              case None if AbsNumber.alpha(2) <= n_arglen => Some(getArgValue(h, ctx, args, "1"))
+              case None => None
+              case _ => None
+            }
+          val bInitValue = v_initial.isDefined
+
+          // Get a new address
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+
+          // 1. Let O be the result of calling ToObject passing the this value as the argument.
+          val (v_this2, h_1, ctx_1, es_1) = Helper.toObject(h, ctx, v_this, addr1)
+          val lset_this = v_this2._2
+
+          // 2. Let lenValue be the result of calling the [[Get]] internal method of O with the argument "length".
+          val v_len = lset_this.foldLeft(ValueBot)((_v, l) => _v + Helper.Proto(h_1, l, AbsString.alpha("length")))
+          // 3. Let len be ToUint32(lenValue).
+          val n_len = Operator.ToUInt32(v_len)
+
+          // 4. If IsCallable(callbackfn) is false, throw a TypeError exception.
+          val es_2 =
+            if (BoolFalse <= Helper.IsCallable(h_1, v_callbackfn))
+              Set[Exception](TypeError)
+            else
+              ExceptionBot
+
+          // 5. If len is 0 and initialValue is not present, throw a TypeError exception.
+          val es_3 =
+            if ((AbsNumber.alpha(0) <= n_len) && !bInitValue)
+              Set[Exception](TypeError)
+            else
+              ExceptionBot
+
+          // If initialValue is not present
+          // c. If kPresent is false, throw a TypeError exception.
+          val es_4 =
+            n_len.getConcreteValue() match {
+              case Some(len) if !bInitValue => {
+                val present =
+                  (0 to (len.toInt-1)).foldLeft(false)((b, k) => {
+                    if (b) b
+                    else {
+                      val v = lset_this.foldLeft(ValueBot)((_v, l) => _v + Helper.Proto(h_1, l, AbsString.alpha(k.toString)))
+                      val v_1 = Value(PValue(UndefBot, v._1._2, v._1._3, v._1._4, v._1._5), v._2)
+                      v_1 </ ValueBot
+                    }
+                  })
+                if (!present) Set[Exception](TypeError)
+                else ExceptionBot
+              }
+              case _ => Set[Exception](TypeError)
+            }
+
+          val es = es_1 ++ es_2 ++ es_3 ++ es_4
+          val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
+
+          ((h_1, ctx_1), (he + h_e, ctxe + ctx_e))
+        }),
+      "Array.prototype.reduce.call" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val v_this = h(SinglePureLocalLoc)("@this")._1._2
+
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+
+          val v_callbackfn = getArgValue(h, ctx, args, "0")
+          val n_arglen = Operator.ToUInt32(getArgValue(h, ctx, args, "length"))
+          val v_initial =
+            n_arglen.getConcreteValue() match {
+              case Some(d) if d >= 2 => Some(getArgValue(h, ctx, args, "1"))
+              case None if AbsNumber.alpha(2) <= n_arglen => Some(getArgValue(h, ctx, args, "1"))
+              case None => None
+              case _ => None
+            }
+
+          val addr1 = cfg.getAPIAddress(addr_env, 1)
+          val addr2 = cfg.getAPIAddress(addr_env, 2)
+          val addr3 = cfg.getAPIAddress(addr_env, 0)
+          val l_r1 = addrToLoc(addr1, Recent)
+          val l_r2 = addrToLoc(addr2, Recent)
+          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+          val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
+
+          val (v_this2, h_3, ctx_3, es_1) = Helper.toObject(h_2, ctx_2, v_this, addr3)
+
+          // 1.
+          val cond = v_callbackfn._2.exists((l) => BoolFalse <= Helper.IsCallable(h_3, l))
+          val es =
+            if (cond) Set[Exception](TypeError)
+            else Set[Exception]()
+          val (h_e, ctx_e) = Helper.RaiseException(h_3, ctx_3, es)
+          val lset_f = v_callbackfn._2.filter((l) => BoolTrue <= Helper.IsCallable(h_3, l))
+          val lset_this = v_this2._2
+
+          val value = lset_this.foldLeft(ValueBot)((v, l) => v + Helper.Proto(h_3, l, absNumberToString(AbsNumber.naturalNumbers)))
+          val temp = h_3(SinglePureLocalLoc)("temp")._1._1._1
+          val temp_2 = v_initial match {
+            case Some(v) => v + temp + value
+            case None => temp + value
+          }
+
+          // 2., 3. create Arguments object
+          val o_arg =
+            Helper.NewArgObject(AbsNumber.alpha(4))
+              .update(AbsString.alpha("0"), PropValue(ObjectValue(temp_2, T, T, T))) // accumulator
+              .update(AbsString.alpha("1"), PropValue(ObjectValue(value, T, T, T))) // kValue
+              .update(AbsString.alpha("2"), PropValue(ObjectValue(Value(AbsNumber.naturalNumbers), T, T, T))) // k
+              .update(AbsString.alpha("3"), PropValue(ObjectValue(v_this2, T, T, T))) // O
+
+          val h_4 = h_3.update(l_r1, o_arg)
+          val v_arg = Value(l_r1)
+
+          val callee_this = Value(GlobalSingleton)
+
+          val o_old = h_4(SinglePureLocalLoc)
+          val cc_caller = cp._2
+          val n_aftercall = cfg.getAftercallFromCall(cp._1)
+          val cp_aftercall = (n_aftercall, cc_caller)
+          val n_aftercatch = cfg.getAftercatchFromCall(cp._1)
+          val cp_aftercatch = (n_aftercatch, cc_caller)
+          lset_f.foreach((l_f) => {
+            val o_f = h_4(l_f)
+            o_f("@function")._1._3.foreach((fid) => {
+              cc_caller.NewCallContext(cfg, fid, l_r2, callee_this._2).foreach((pair) => {
+                val (cc_new, o_new) = pair
+                val o_new2 = o_new.
+                  update(cfg.getArgumentsName(fid),
+                  PropValue(ObjectValue(v_arg, BoolTrue, BoolFalse, BoolFalse))).
+                  update("@scope", o_f("@scope")._1)
+                sem.addCallEdge(cp, ((fid, LEntry), cc_new), ContextEmpty, o_new2)
+                sem.addReturnEdge(((fid, LExit), cc_new), cp_aftercall, ctx_3, o_old)
+                sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_3, o_old)
+              })
+            })
+          })
+          val h_5 = v_arg._2.foldLeft(HeapBot)((hh, l) => {
+            hh + h_4.update(l, h_4(l).update("callee",
+              PropValue(ObjectValue(Value(lset_f), BoolTrue, BoolFalse, BoolTrue))))
+          })
+
+          val s_1 = (he + h_e, ctxe + ctx_e)
+          ((h_5, ctx_3), s_1)
+        })
     )
   }
 
@@ -1234,41 +1483,46 @@ object BuiltinArray extends ModelData {
           else
             ((h, ctx), (he, ctxe))
         })),
-      ("Array.prototype.toLocaleString" -> (
+      "Array.prototype.toLocaleString" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
-          val lset_this = h(PureLocalLoc)("@this")._1._2._2
-          val s_sep = AbsString.alpha(",")
-          val n_len = Operator.ToUInt32(lset_this.foldLeft(ValueBot)((_v, l) =>
-            _v + PreHelper.Proto(h, l, AbsString.alpha("length"))))
-          val s = n_len match {
-            case UIntSingle(n) if n == 0 => AbsString.alpha("")
-            case UIntSingle(n) if n > 0 => {
-              val v_f = lset_this.foldLeft(ValueBot)((_v, l) =>_v + PreHelper.Proto(h, l, AbsString.alpha("0")))
-              val v_f2 = Value(PValue(UndefBot,NullBot,v_f._1._3,v_f._1._4,v_f._1._5), v_f._2)
-              val s_first =
-                if (v_f._1._1 </ UndefBot || v_f._1._2 </ NullBot)
-                  AbsString.alpha("") + PreHelper.toString(PreHelper.toPrimitive(v_f2))
-                else
-                  PreHelper.toString(PreHelper.toPrimitive(v_f))
-              (1 until n.toInt).foldLeft(s_first)((_s, i) =>{
-                val v_i = lset_this.foldLeft(ValueBot)((_v, l) =>_v + PreHelper.Proto(h, l, AbsString.alpha(i.toString)))
-                val v_i2 = Value(PValue(UndefBot,NullBot,v_i._1._3,v_i._1._4,v_i._1._5), v_i._2)
-                val s_i =
-                  if (v_i._1._1 </ UndefBot || v_i._1._2 </ NullBot)
-                    AbsString.alpha("") + PreHelper.toString(PreHelper.toPrimitive(v_i2))
-                  else
-                    PreHelper.toString(PreHelper.toPrimitive(v_i))
-                _s.concat(s_sep).concat(s_i)
-              })
+          val v_this = h(PureLocalLoc)("@this")._1._2
+
+          // Get a new address
+          val lset_env = h(PureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+          val addr2 = cfg.getAPIAddress(addr_env, 1)
+
+          // 1. Let array be the result of calling ToObject passing the this value as the argument.
+          val (v_this2, h_1, ctx_1, es_1) = PreHelper.toObject(h, ctx, v_this, addr1)
+          val lset_this = v_this2._2
+
+          // 2. Let arrayLen be the result of calling the [[Get]] internal method of array with argument "length".
+          val v_len = lset_this.foldLeft(ValueBot)((_v, l) => _v + PreHelper.Proto(h_1, l, AbsString.alpha("length")))
+          // 3. Let len be ToUint32(arrayLen).
+          val n_len = Operator.ToUInt32(v_len)
+
+          val elements_1 =
+            if (BoolTrue <= Operator.bopLessEq(Value(AbsNumber.alpha(1)), Value(n_len))._1._3) {
+              lset_this.foldLeft(ValueBot)((_v, l) => _v + PreHelper.Proto(h_1, l, AbsString.NumTop))
+            } else {
+              ValueBot
             }
-            case _ => StrTop
-          }
-          if (s </ StrBot)
-            ((PreHelper.ReturnStore(h, PureLocalLoc, Value(s)), ctx), (he, ctxe))
-          else
-            ((h, ctx), (he, ctxe))
-        })),
+          // a. Let elementObj be ToObject(firstElement).
+          val (_, h_2, ctx_2, es_2) = PreHelper.toObject(h_1, ctx_1, elements_1, addr2)
+
+          // iii. If IsCallable(func) is false, throw a TypeError exception.
+          val es_3 = Set[Exception](TypeError)
+
+          val (h_3, ctx_3) = (PreHelper.ReturnStore(h_2, PureLocalLoc, Value(StrTop)), ctx_2)
+          val es = es_1 ++ es_2 ++ es_3
+          val (h_e, ctx_e) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es)
+
+          ((h_3, ctx_3), (he + h_e, ctxe + ctx_e))
+        }),
       ("Array.prototype.concat" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
@@ -2041,7 +2295,113 @@ object BuiltinArray extends ModelData {
             ((PreHelper.ReturnStore(h, PureLocalLoc, Value(n_index)), ctx), (he, ctxe))
           else
             ((h, ctx), (he, ctxe))
-        }))
+        })),
+      "Array.prototype.reduce.init" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val PureLocalLoc = cfg.getPureLocal(cp)
+          val v_this = h(PureLocalLoc)("@this")._1._2
+
+          // Get a new address
+          val lset_env = h(PureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+
+          // 1. Let O be the result of calling ToObject passing the this value as the argument.
+          val (_, h_1, ctx_1, es_1) = PreHelper.toObject(h, ctx, v_this, addr1)
+          val es_2 = Set[Exception](TypeError)
+
+          val es = es_1 ++ es_2
+          val (h_e, ctx_e) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es)
+
+          ((h_1, ctx_1), (he + h_e, ctxe + ctx_e))
+        }),
+      "Array.prototype.reduce.call" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val PureLocalLoc = cfg.getPureLocal(cp)
+          val v_this = h(PureLocalLoc)("@this")._1._2
+
+          val lset_env = h(PureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+
+          val v_callbackfn = getArgValue_pre(h, ctx, args, "0", PureLocalLoc)
+          val n_arglen = Operator.ToUInt32(getArgValue_pre(h, ctx, args, "length", PureLocalLoc))
+          val v_initial =
+            n_arglen.getConcreteValue() match {
+              case Some(d) if d >= 2 => Some(getArgValue_pre(h, ctx, args, "1", PureLocalLoc))
+              case None if AbsNumber.alpha(2) <= n_arglen => Some(getArgValue_pre(h, ctx, args, "1", PureLocalLoc))
+              case None => None
+              case _ => None
+            }
+
+          val addr1 = cfg.getAPIAddress(addr_env, 1)
+          val addr2 = cfg.getAPIAddress(addr_env, 2)
+          val addr3 = cfg.getAPIAddress(addr_env, 0)
+          val l_r1 = addrToLoc(addr1, Recent)
+          val l_r2 = addrToLoc(addr2, Recent)
+          val (h_1, ctx_1) = PreHelper.Oldify(h, ctx, addr1)
+          val (h_2, ctx_2) = PreHelper.Oldify(h_1, ctx_1, addr2)
+
+          val (v_this2, h_3, ctx_3, _) = PreHelper.toObject(h_2, ctx_2, v_this, addr3)
+
+          // 1.
+          val es = Set[Exception](TypeError)
+          val (h_e, ctx_e) = PreHelper.RaiseException(h_3, ctx_3, PureLocalLoc, es)
+          val lset_f = v_callbackfn._2.filter((l) => BoolTrue <= PreHelper.IsCallable(h_3, l))
+          val lset_this = v_this2._2
+
+          val value = lset_this.foldLeft(ValueBot)((v, l) => v + PreHelper.Proto(h_3, l, absNumberToString(AbsNumber.naturalNumbers)))
+          val temp = h_3(PureLocalLoc)("temp")._1._1._1
+          val temp_2 = v_initial match {
+            case Some(v) => v + temp + value
+            case None => temp + value
+          }
+
+          // 2., 3. create Arguments object
+          val o_arg =
+            PreHelper.NewArgObject(AbsNumber.alpha(4))
+              .update(AbsString.alpha("0"), PropValue(ObjectValue(temp_2, T, T, T))) // accumulator
+              .update(AbsString.alpha("1"), PropValue(ObjectValue(value, T, T, T))) // kValue
+              .update(AbsString.alpha("2"), PropValue(ObjectValue(Value(AbsNumber.naturalNumbers), T, T, T))) // k
+              .update(AbsString.alpha("3"), PropValue(ObjectValue(v_this2, T, T, T))) // O
+
+          val h_4 = h_3.update(l_r1, o_arg)
+          val v_arg = Value(l_r1)
+
+          val callee_this = Value(GlobalSingleton)
+
+          val o_old = h_4(PureLocalLoc)
+          val cc_caller = cp._2
+          val n_aftercall = cfg.getAftercallFromCall(cp._1)
+          val cp_aftercall = (n_aftercall, cc_caller)
+          val n_aftercatch = cfg.getAftercatchFromCall(cp._1)
+          val cp_aftercatch = (n_aftercatch, cc_caller)
+          lset_f.foreach((l_f) => {
+            val o_f = h_4(l_f)
+            o_f("@function")._1._3.foreach((fid) => {
+              cc_caller.NewCallContext(cfg, fid, l_r2, callee_this._2).foreach((pair) => {
+                val (cc_new, o_new) = pair
+                val o_new2 = o_new.
+                  update(cfg.getArgumentsName(fid),
+                  PropValue(ObjectValue(v_arg, BoolTrue, BoolFalse, BoolFalse))).
+                  update("@scope", o_f("@scope")._1)
+                sem.addCallEdge(cp, ((fid, LEntry), cc_new), ContextEmpty, o_new2)
+                sem.addReturnEdge(((fid, LExit), cc_new), cp_aftercall, ctx_3, o_old)
+                sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_3, o_old)
+              })
+            })
+          })
+          val h_5 = v_arg._2.foldLeft(h_4)((hh, l) => {
+            hh.update(l, hh(l).update("callee",
+              PropValue(ObjectValue(Value(lset_f), BoolTrue, BoolFalse, BoolTrue))))
+          })
+
+          val s_1 = (he + h_e, ctxe + ctx_e)
+          ((h_5, ctx_3), s_1)
+        })
     )
   }
 
@@ -2112,10 +2472,35 @@ object BuiltinArray extends ModelData {
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           LPSet((SinglePureLocalLoc, "@return"))
         })),
-      ("Array.prototype.toLocaleString" -> (
+      "Array.prototype.toLocaleString" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
-          LPSet((SinglePureLocalLoc, "@return"))
-        })),
+          val v_this = h(SinglePureLocalLoc)("@this")._1._2
+
+          // Get a new address
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          val set_addr1 = set_addr.foldLeft(LocSetBot)((S, addr_env) => S + cfg.getAPIAddress(addr_env, 0))
+          val set_addr2 = set_addr.foldLeft(LocSetBot)((S, addr_env) => S + cfg.getAPIAddress(addr_env, 1))
+
+          // 1. Let array be the result of calling ToObject passing the this value as the argument.
+          val (v_this2, h_1, ctx_1, es_1) = set_addr1.foldLeft((ValueBot, HeapBot, ContextBot, ExceptionBot))((S, addr1) => {
+            val (v, h_1, c, es) = Helper.toObject(h, ctx, v_this, addr1)
+            (S._1 + v, S._2 + h_1, S._3 + c, S._4 ++ es)
+          })
+          val lset_this = v_this2._2
+
+          val elements_1 = lset_this.foldLeft(ValueBot)((_v, l) => _v + Helper.Proto(h_1, l, AbsString.NumTop))
+          val es_2 = Set[Exception](TypeError)
+
+          val es = es_1 ++ es_2
+
+          val LP_1 = set_addr1.foldLeft(LPBot)((S, addr1) => S ++ AH.toObject_def(h, ctx, v_this, addr1))
+          val LP_2 = set_addr2.foldLeft(LPBot)((S, addr2) => AH.toObject_def(h_1, ctx_1, elements_1, addr2))
+          val LP_3 = LPSet((SinglePureLocalLoc, "@return"))
+          val LP_4 = AH.RaiseException_def(es)
+
+          LP_1 ++ LP_2 ++ LP_3 ++ LP_4
+        }),
       ("Array.prototype.concat" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
@@ -2529,7 +2914,54 @@ object BuiltinArray extends ModelData {
       ("Array.prototype.lastIndexOf" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           LPSet((SinglePureLocalLoc, "@return"))
-        }))
+        })),
+      "Array.prototype.reduce.init" -> (
+        (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
+          val v_this = h(SinglePureLocalLoc)("@this")._1._2
+
+          // Get a new address
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+
+          val es = Set[Exception](TypeError)
+
+          val LP_1 = AH.toObject_def(h, ctx, v_this, addr1)
+          val LP_2 = AH.RaiseException_def(es)
+
+          LP_1 ++ LP_2
+        }),
+      "Array.prototype.reduce.call" -> (
+        (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
+          val v_this = h(SinglePureLocalLoc)("@this")._1._2
+
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+
+          val addr1 = cfg.getAPIAddress(addr_env, 1)
+          val addr2 = cfg.getAPIAddress(addr_env, 2)
+          val addr3 = cfg.getAPIAddress(addr_env, 0)
+          val l_r1 = addrToLoc(addr1, Recent)
+          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+          val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
+
+          val es = Set[Exception](TypeError)
+
+          val props = AH.NewArgObject_def ++ Set("0", "1", "2", "3")
+
+          val LP_1 = AH.Oldify_def(h, ctx, addr1)
+          val LP_2 = AH.Oldify_def(h_1, ctx_1, addr2)
+          val LP_3 = AH.toObject_def(h_2, ctx_2, v_this, addr3)
+          val LP_4 = props.foldLeft(LPBot)((S, p) => S + (l_r1, p))
+          val LP_5 = LPSet((l_r1, "callee"))
+          val LP_6 = AH.RaiseException_def(es)
+
+          LP_1 ++ LP_2 ++ LP_3 ++ LP_4 ++ LP_5 ++ LP_6
+        })
     )
   }
 
@@ -2634,26 +3066,46 @@ object BuiltinArray extends ModelData {
           }
           LP1 ++ LP2 + ((SinglePureLocalLoc, "@return")) + (SinglePureLocalLoc, "@this")
         })),
-      ("Array.prototype.toLocaleString" -> (
+      "Array.prototype.toLocaleString" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
-          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val n_len = Operator.ToUInt32(lset_this.foldLeft(ValueBot)((_v, l) =>
-            _v + Helper.Proto(h, l, AbsString.alpha("length"))))
-          val LP1 = lset_this.foldLeft(LPBot)((lpset, l) => lpset ++ AH.Proto_use(h, l, AbsString.alpha("length")))
-          val LP2 = n_len match {
-            case UIntSingle(n) if n == 0 => LPBot
-            case UIntSingle(n) if n > 0 => {
-              val _LP1 = lset_this.foldLeft(LPBot)((lpset, l) => lpset  ++ AH.Proto_use(h, l, AbsString.alpha("0")))
-              val _LP2 = (1 until n.toInt).foldLeft(LPBot)((lpset, i) =>{
-                lpset ++ lset_this.foldLeft(LPBot)((_lpset, l) => _lpset ++ AH.Proto_use(h, l, AbsString.alpha(i.toString)))
-              })
-              _LP1 ++ _LP2
-            }
-            case UInt | NumTop => lset_this.foldLeft(LPBot)((lpset, l) => lpset  ++ AH.Proto_use(h, l, NumStr))
-            case _ => LPBot
-          }
-          LP1 ++ LP2 + ((SinglePureLocalLoc, "@return")) + (SinglePureLocalLoc, "@this")
-        })),
+          val v_this = h(SinglePureLocalLoc)("@this")._1._2
+
+          // Get a new address
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          val set_addr1 = set_addr.foldLeft(LocSetBot)((S, addr_env) => S + cfg.getAPIAddress(addr_env, 0))
+          val set_addr2 = set_addr.foldLeft(LocSetBot)((S, addr_env) => S + cfg.getAPIAddress(addr_env, 1))
+
+          // 1. Let array be the result of calling ToObject passing the this value as the argument.
+          val (v_this2, h_1, ctx_1, es_1) = set_addr1.foldLeft((ValueBot, HeapBot, ContextBot, ExceptionBot))((S, addr1) => {
+            val (v, h_1, c, es) = Helper.toObject(h, ctx, v_this, addr1)
+            (S._1 + v, S._2 + h_1, S._3 + c, S._4 ++ es)
+          })
+          val lset_this = v_this2._2
+
+          val elements_1 = lset_this.foldLeft(ValueBot)((_v, l) => _v + Helper.Proto(h_1, l, AbsString.NumTop))
+          val (elements_2, h_2, ctx_2, es_2) = set_addr2.foldLeft((ValueBot, HeapBot, ContextBot, ExceptionBot))((S, addr2) => {
+            val (v, _h, c, es) = Helper.toObject(h_1, ctx_1, elements_1, addr2)
+            (S._1 + v, S._2 + _h, S._3 + c, S._4 ++ es)
+          })
+          val func = elements_2._2.foldLeft(ValueBot)((S, l) => S + Helper.Proto(h_2, l, AbsString.alpha("toLocaleString")))
+          val es_3 = Set[Exception](TypeError)
+          val es = es_1 ++ es_2 ++ es_3
+
+          val LP_1 = LPSet((SinglePureLocalLoc, "@this"))
+          val LP_2 = LPSet((SinglePureLocalLoc, "@env"))
+          val LP_3 = set_addr1.foldLeft(LPBot)((S, addr1) => S ++ AH.toObject_use(h, ctx, v_this, addr1))
+          val LP_4 = lset_this.foldLeft(LPBot)((S, l) => S ++ AH.Proto_use(h, l, AbsString.alpha("length")))
+          val LP_5 = lset_this.foldLeft(LPBot)((S, l) => S ++ AH.Proto_use(h, l, AbsString.NumTop))
+
+          val LP_6 = set_addr2.foldLeft(LPBot)((S, addr2) => AH.toObject_use(h_1, ctx_1, elements_1, addr2))
+          val LP_7 = elements_2._2.foldLeft(LPBot)((S, l) => S ++ AH.Proto_use(h_2, l, AbsString.alpha("toLocaleString")))
+          val LP_8 = func._2.foldLeft(LPBot)((S, l) => S ++ AH.IsCallable_use(h, l))
+          val LP_9 = LPSet((SinglePureLocalLoc, "@return"))
+          val LP_10 = AH.RaiseException_use(es)
+
+          LP_1 ++ LP_2 ++ LP_3 ++ LP_4 ++ LP_5 ++ LP_6 ++ LP_7 ++ LP_8 ++ LP_9 ++ LP_10
+        }),
       ("Array.prototype.concat" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
@@ -3300,7 +3752,74 @@ object BuiltinArray extends ModelData {
           }
           */
           LP1 ++ LP2 + (SinglePureLocalLoc, "@return") + (SinglePureLocalLoc, "@this")
-        }))
+        })),
+      "Array.prototype.reduce.init" -> (
+        (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
+          val v_this = h(SinglePureLocalLoc)("@this")._1._2
+          val v_callbackfn = getArgValue(h, ctx, args, "0")
+
+          // Get a new address
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+
+          // 1. Let O be the result of calling ToObject passing the this value as the argument.
+          val (v_this2, h_1, _, _) = Helper.toObject(h, ctx, v_this, addr1)
+          val lset_this = v_this2._2
+
+          val es = Set[Exception](TypeError)
+
+          val LP_1 = LPSet((SinglePureLocalLoc, "@this"))
+          val LP_2 = getArgValue_use(h, ctx, args, "0") ++ getArgValue_use(h, ctx, args, "1")
+          val LP_3 = getArgValue_use(h, ctx, args, "length")
+          val LP_4 = LPSet((SinglePureLocalLoc, "@env"))
+          val LP_5 = AH.toObject_use(h, ctx, v_this, addr1)
+          val LP_6 = lset_this.foldLeft(LPBot)((S, l) => S ++ AH.Proto_use(h_1, l, AbsString.alpha("length)")))
+          val LP_7 = lset_this.foldLeft(LPBot)((S, l) => S ++ AH.Proto_use(h_1, l, AbsString.NumTop))
+          val LP_8 = AH.IsCallable_use(h_1, v_callbackfn)
+          val LP_9 = AH.RaiseException_use(es)
+
+          LP_1 ++ LP_2 ++ LP_3 ++ LP_4 ++ LP_5 ++ LP_6 ++ LP_7 ++ LP_8 ++ LP_9
+        }),
+      "Array.prototype.reduce.call" -> (
+        (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
+          val v_this = h(SinglePureLocalLoc)("@this")._1._2
+
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+
+          val v_callbackfn = getArgValue(h, ctx, args, "0")
+
+          val addr1 = cfg.getAPIAddress(addr_env, 1)
+          val addr2 = cfg.getAPIAddress(addr_env, 2)
+          val addr3 = cfg.getAPIAddress(addr_env, 0)
+          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+          val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
+
+          val (v_this2, h_3, _, _) = Helper.toObject(h_2, ctx_2, v_this, addr3)
+          val lset_this = v_this2._2
+
+          val es = Set[Exception](TypeError)
+
+          val LP_1 = LPSet((SinglePureLocalLoc, "@this"))
+          val LP_2 = getArgValue_use(h, ctx, args, "0") ++ getArgValue_use(h, ctx, args, "1")
+          val LP_3 = getArgValue_use(h, ctx, args, "length")
+          val LP_4 = LPSet((SinglePureLocalLoc, "@env"))
+          val LP_5 = AH.Oldify_use(h, ctx, addr1)
+          val LP_6 = AH.Oldify_use(h_1, ctx_1, addr2)
+          val LP_7 = AH.toObject_use(h_2, ctx_2, v_this, addr3)
+          val LP_8 = lset_this.foldLeft(LPBot)((S, l) => S ++ AH.Proto_use(h_1, l, AbsString.alpha("length)")))
+          val LP_9 = lset_this.foldLeft(LPBot)((S, l) => S ++ AH.Proto_use(h_1, l, AbsString.NumTop))
+          val LP_10 = AH.IsCallable_use(h_3, v_callbackfn)
+          val LP_11 = AH.RaiseException_use(es)
+          val LP_12 = LPSet((SinglePureLocalLoc, "temp"))
+
+          LP_1 ++ LP_2 ++ LP_3 ++ LP_4 ++ LP_5 ++ LP_6 ++ LP_7 ++ LP_8 ++ LP_9 ++ LP_10 ++ LP_11 ++ LP_12
+        })
     )
   }
 }

@@ -1,0 +1,144 @@
+#myRakutenColumn {
+	background: rgb(248, 248, 248); border: 1px solid rgb(187, 187, 187); margin-right: 2px;
+}
+#myRakutenColumn #logout {
+	border-bottom-color: rgb(187, 187, 187); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#myRakutenColumn .logoutCont {
+	background: rgb(248, 248, 248); padding: 7px; border-bottom-color: rgb(187, 187, 187); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#myRakutenColumn .logoutCont .forlog {
+	padding: 7px 0px 5px; font-size: 110%; font-weight: bold;
+}
+#myRakutenColumn .logoutCont .firstUse {
+	background: url("http://jp.rakuten-static.com/1/bu/myraku/im/beginner.jpg") no-repeat 15px 5px; padding: 5px 5px 5px 30px;
+}
+#myRakutenColumn .logoutCont .serviceUse {
+	padding-left: 15px;
+}
+#myRakutenColumn #logout .logoutSubCont {
+	background: rgb(255, 255, 255); padding: 10px 7px 0px;
+}
+#myRakutenColumn #logout .info {
+	background: url("http://jp.rakuten-static.com/1/bu/myraku/im/line_normal.gif") repeat-x left top; margin: 0px 0px 7px !important; padding: 7px 0px 3px; text-align: center;
+}
+#myRakutenColumn #logout .logoutSubCont .topics {
+	padding: 7px;
+}
+#myRakutenColumn #normal .subCont {
+	background: rgb(255, 255, 255); margin: 0px 2px; padding: 8px 4px; border: 1px solid rgb(187, 187, 187); width: 284px;
+}
+#myRakutenColumn #normal .subCont .topics {
+	padding: 7px 7px 0px;
+}
+#myRakutenColumn #normal .subCont .member a {
+	color: rgb(0, 0, 0);
+}
+#myRakutenColumn #normal .member a {
+	color: rgb(29, 84, 167); font-weight: bold;
+}
+#myRakutenColumn #diamond .subCont {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/200809/loginarea_bg_diamond03.gif?v=120713") no-repeat left top; margin: 0px 2px; padding: 8px 4px; width: 286px; border-bottom-color: rgb(170, 155, 203); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#myRakutenColumn #diamond .member a {
+	color: rgb(51, 51, 51); font-weight: bold;
+}
+#myRakutenColumn #platinum .subCont {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/200809/loginarea_bg_platinum03.gif") no-repeat left top; margin: 0px 2px; padding: 8px 4px; width: 286px; border-bottom-color: rgb(114, 189, 232); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#myRakutenColumn #platinum .member a {
+	color: rgb(0, 153, 204); font-weight: bold;
+}
+#myRakutenColumn #gold .subCont {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/200809/loginarea_bg_gold03.gif") no-repeat left top; margin: 0px 2px; padding: 8px 4px; width: 286px; border-bottom-color: rgb(170, 121, 48); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#myRakutenColumn #gold .member a {
+	color: rgb(153, 102, 0); font-weight: bold;
+}
+#myRakutenColumn #silver .subCont {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/200809/loginarea_bg_silver03.gif") no-repeat left top; margin: 0px 2px; padding: 8px 4px; width: 286px; border-bottom-color: rgb(164, 164, 164); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#myRakutenColumn #silver .member a {
+	color: rgb(86, 86, 86); font-weight: bold;
+}
+#myRakutenColumn .name {
+	background: rgb(248, 248, 248); text-align: center; padding-top: 7px; font-weight: bold;
+}
+#myRakutenColumn .notMe {
+	text-align: center; padding-bottom: 7px;
+}
+#myRakutenColumn .name a {
+	color: rgb(191, 0, 0); text-decoration: underline;
+}
+#myRakutenColumn .info {
+	background: url("http://jp.rakuten-static.com/1/bu/myraku/im/line_normal.gif") repeat-x left top; margin: 0px 15px; padding: 7px 0px; text-align: center;
+}
+#myRakutenColumn .colrPt01 {
+	color: rgb(191, 0, 0);
+}
+#myRakutenColumn .colrPt02 {
+	color: rgb(5, 49, 154);
+}
+.regi {
+	height: 1px; overflow: hidden;
+}
+#myRakutenColumn .pointClub {
+	background: url("http://jp.rakuten-static.com/1/bu/myraku/im/line_normal.gif") repeat-x left bottom; padding-bottom: 5px;
+}
+#myRakutenColumn .pointClub .pointClubName a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/200809/icn_arrow_solid.gif") no-repeat left 1px; padding: 0px 3px 0px 15px; color: rgb(191, 0, 0);
+}
+#myRakutenColumn .pointClub p img {
+	vertical-align: middle;
+}
+#myRakutenColumn .topics {
+	padding: 7px;
+}
+#myRakutenColumn .topics li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/topic02.gif") no-repeat left 2px; padding-left: 33px;
+}
+#myRakutenColumn .statusDetail {
+	padding-top: 5px;
+}
+#myRakutenColumn .member {
+	padding: 5px 0px; text-align: center;
+}
+#myRakutenColumn .member img.point {
+	padding: 0px 5px 0px 0px; margin-top: -5px;
+}
+#myRakutenColumn .member img.invit {
+	padding: 0px 0px 0px 5px; margin-top: -5px;
+}
+#myRakutenColumn .member a.invittxt {
+	color: rgb(29, 84, 167) !important; padding-right: 0px; font-weight: normal !important;
+}
+#myRakutenColumn .member a.invittxt:hover {
+	color: rgb(191, 0, 0) !important;
+}
+#myRakutenColumn .statusDetail .holdPoint {
+	margin: 0px 0px 3px; width: 268px; color: rgb(191, 0, 0); padding-left: 10px;
+}
+#myRakutenColumn .statusDetail .holdPoint .totalPossession {
+	color: rgb(0, 0, 0); font-weight: bold;
+}
+#myRakutenColumn .statusDetail .holdPoint .totalPoint {
+	padding-left: 6px; font-size: 125%; font-weight: bold;
+}
+#myRakutenColumn .statusDetail .limitPoint {
+	background: url("http://jp.rakuten-static.com/1/bu/myraku/im/bg_pointinfo.gif") no-repeat left top; margin: 0px 12px; padding: 0px 0px 0px 13px;
+}
+#myRakutenColumn #riRankGadget {
+	background: url("http://jp.rakuten-static.com/1/bu/myraku/im/line_normal.gif") repeat-x left bottom; padding: 5px 0px; text-align: center;
+}
+#myRakutenColumn #user_rank_gadget table {
+	margin: 0px auto; text-align: left;
+}
+#myRakutenColumn .otherService {
+	padding: 7px 15px;
+}
+#myRakutenColumn .otherService li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/200809/icn_ex.gif") no-repeat left 1px; padding-left: 15px;
+}
+#myRakutenColumn .entry {
+	margin: 0px 15px 7px; padding: 0px 5px;
+}

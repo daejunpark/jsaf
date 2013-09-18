@@ -1,0 +1,312 @@
+#division .hd {
+	background-image: url("1.png");
+}
+#srchbtn {
+	background-image: url("1.png");
+}
+#spotlight {
+	background-image: url("1.png");
+}
+.bx {
+	background-color: rgb(255, 255, 255);
+}
+.bxEx {
+	background-color: rgb(255, 255, 255);
+}
+.bgA0 {
+	background-color: rgb(255, 255, 255);
+}
+.bxSl {
+	background-color: rgb(255, 255, 255);
+}
+.bgA1 {
+	background-color: rgb(110, 135, 181);
+}
+.bgA2 {
+	background-color: rgb(158, 180, 219);
+}
+.bgA3 {
+	background-color: rgb(190, 204, 234);
+}
+.bgA4 {
+	background-color: rgb(206, 218, 243);
+}
+.bgA5 {
+	background-color: rgb(230, 236, 254);
+}
+#navi .bx {
+	background-color: rgb(230, 236, 254);
+}
+.bgA6 {
+	background-color: rgb(241, 245, 255);
+}
+.bgB2 {
+	background-color: rgb(186, 197, 211);
+}
+.bgB3 {
+	background-color: rgb(208, 216, 225);
+}
+.bgB4 {
+	background-color: rgb(221, 227, 234);
+}
+.bgB5 {
+	background-color: rgb(240, 243, 247);
+}
+.bdA0 {
+	border-color: rgb(255, 255, 255);
+}
+#topicsbox .tab .on span a {
+	border-color: rgb(255, 255, 255);
+}
+.bdA1 {
+	border-color: rgb(110, 135, 181);
+}
+.bdtA1 {
+	border-top-color: rgb(110, 135, 181) !important;
+}
+#topicsbox .tab .on {
+	border-top-color: rgb(110, 135, 181) !important;
+}
+.bdrA1 {
+	border-right-color: rgb(110, 135, 181) !important;
+}
+.bdbA1 {
+	border-bottom-color: rgb(110, 135, 181) !important;
+}
+#navi .hd {
+	border-bottom-color: rgb(110, 135, 181) !important;
+}
+.bdlA1 {
+	border-left-color: rgb(110, 135, 181) !important;
+}
+.bdA2 {
+	border-color: rgb(158, 180, 219);
+}
+.bx {
+	border-color: rgb(158, 180, 219);
+}
+.bdtA2 {
+	border-top-color: rgb(158, 180, 219) !important;
+}
+#navi .hd {
+	border-top-color: rgb(158, 180, 219) !important;
+}
+.bdrA2 {
+	border-right-color: rgb(158, 180, 219) !important;
+}
+#topicsbox .tab .on span {
+	border-right-color: rgb(158, 180, 219) !important;
+}
+#topicsbox .tab .off span {
+	border-right-color: rgb(158, 180, 219) !important;
+}
+.bdbA2 {
+	border-bottom-color: rgb(158, 180, 219) !important;
+}
+.bdlA2 {
+	border-left-color: rgb(158, 180, 219) !important;
+}
+.bdA3 {
+	border-color: rgb(190, 204, 234);
+}
+.bdtA3 {
+	border-top-color: rgb(190, 204, 234) !important;
+}
+.bdrA3 {
+	border-right-color: rgb(190, 204, 234) !important;
+}
+.bdbA3 {
+	border-bottom-color: rgb(190, 204, 234) !important;
+}
+.bdlA3 {
+	border-left-color: rgb(190, 204, 234) !important;
+}
+.bdA4 {
+	border-color: rgb(206, 218, 243);
+}
+.bdtA4 {
+	border-top-color: rgb(206, 218, 243) !important;
+}
+.bxEx {
+	border-top-color: rgb(206, 218, 243) !important;
+}
+.bdrA4 {
+	border-right-color: rgb(206, 218, 243) !important;
+}
+.bdbA4 {
+	border-bottom-color: rgb(206, 218, 243) !important;
+}
+.bdlA4 {
+	border-left-color: rgb(206, 218, 243) !important;
+}
+.bdA5 {
+	border-color: rgb(230, 236, 254);
+}
+.bdtA5 {
+	border-top-color: rgb(230, 236, 254) !important;
+}
+.bdrA5 {
+	border-right-color: rgb(230, 236, 254) !important;
+}
+.bdbA5 {
+	border-bottom-color: rgb(230, 236, 254) !important;
+}
+.bdlA5 {
+	border-left-color: rgb(230, 236, 254) !important;
+}
+.bdA6 {
+	border-color: rgb(241, 245, 255);
+}
+.bdtA6 {
+	border-top-color: rgb(241, 245, 255) !important;
+}
+.bdrA6 {
+	border-right-color: rgb(241, 245, 255) !important;
+}
+.bdbA6 {
+	border-bottom-color: rgb(241, 245, 255) !important;
+}
+.bdlA6 {
+	border-left-color: rgb(241, 245, 255) !important;
+}
+.bdB2 {
+	border-color: rgb(186, 197, 211);
+}
+.bdtB2 {
+	border-top-color: rgb(186, 197, 211) !important;
+}
+.bdrB2 {
+	border-right-color: rgb(186, 197, 211) !important;
+}
+.bdbB2 {
+	border-bottom-color: rgb(186, 197, 211) !important;
+}
+.bdlB2 {
+	border-left-color: rgb(186, 197, 211) !important;
+}
+.bdB3 {
+	border-color: rgb(208, 216, 225);
+}
+.bdtB3 {
+	border-top-color: rgb(208, 216, 225) !important;
+}
+.bdrB3 {
+	border-right-color: rgb(208, 216, 225) !important;
+}
+.bdbB3 {
+	border-bottom-color: rgb(208, 216, 225) !important;
+}
+.bdlB3 {
+	border-left-color: rgb(208, 216, 225) !important;
+}
+.bdB4 {
+	border-color: rgb(221, 227, 234);
+}
+.bdtB4 {
+	border-top-color: rgb(221, 227, 234) !important;
+}
+.bdrB4 {
+	border-right-color: rgb(221, 227, 234) !important;
+}
+.bdbB4 {
+	border-bottom-color: rgb(221, 227, 234) !important;
+}
+.bdlB4 {
+	border-left-color: rgb(221, 227, 234) !important;
+}
+.bdB5 {
+	border-color: rgb(240, 243, 247);
+}
+.bdtB5 {
+	border-top-color: rgb(240, 243, 247) !important;
+}
+.bdrB5 {
+	border-right-color: rgb(240, 243, 247) !important;
+}
+.bdbB5 {
+	border-bottom-color: rgb(240, 243, 247) !important;
+}
+.bdlB5 {
+	border-left-color: rgb(240, 243, 247) !important;
+}
+#srchbtn {
+	background-color: rgb(64, 112, 255);
+}
+#srchbtn:hover {
+	border-color: rgb(17, 85, 238); background-color: rgb(17, 85, 238);
+}
+.bdC1 {
+	border-color: rgb(158, 180, 219);
+}
+#local .bdC1 {
+	border-color: rgb(206, 218, 243);
+}
+.bdC2 {
+	border-color: rgb(206, 218, 243);
+}
+.bdshC1 {
+	border-top-color: rgb(236, 241, 252);
+}
+.bgC {
+	border-color: rgb(230, 236, 254); background-color: rgb(241, 245, 255);
+}
+.bgC2 {
+	background: rgb(241, 245, 255);
+}
+.bgC3 {
+	background: rgb(247, 247, 247);
+}
+.bgD {
+	border-top-color: rgb(206, 218, 243); border-top-width: 1px; border-top-style: solid;
+}
+.bxShp {
+	background: rgb(240, 243, 247); border-color: rgb(186, 197, 211);
+}
+#rightbox {
+	background: rgb(240, 243, 247); border-color: rgb(186, 197, 211);
+}
+#rightbox2 {
+	background: rgb(240, 243, 247); border-color: rgb(186, 197, 211);
+}
+#ultra {
+	background: rgb(240, 243, 247); border-color: rgb(186, 197, 211);
+}
+#centralPosition {
+	background: rgb(240, 243, 247); border-color: rgb(186, 197, 211);
+}
+#tct {
+	background: rgb(240, 243, 247); border-color: rgb(186, 197, 211);
+}
+#contentbox {
+	background: rgb(230, 236, 254);
+}
+#companybox {
+	background: rgb(230, 236, 254);
+}
+#contentbox .hd {
+	border-top-color: rgb(158, 180, 219); border-bottom-color: rgb(110, 135, 181);
+}
+#contentbox .hd .cbbtn {
+	border-right-color: rgb(206, 218, 243);
+}
+#companybox div {
+	border-color: rgb(206, 218, 243);
+}
+.contentbox2nd {
+	background: rgb(110, 135, 181);
+}
+.cb2moreservice {
+	background: rgb(110, 135, 181);
+}
+#cb2yjedit .cb2allservice {
+	background-color: rgb(230, 236, 254);
+}
+#cb2worldservice {
+	background-color: rgb(230, 236, 254);
+}
+.contentbox2nd .cb2detail .bgD {
+	border-top-color: rgb(110, 135, 181);
+}
+#topicsboxbd .topicsdetail {
+	border-color: rgb(221, 227, 234); background-color: rgb(240, 243, 247);
+}

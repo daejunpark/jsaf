@@ -1,0 +1,33 @@
+nav.carousel_pagination {
+	margin: -5px 0px 30px; height: 15px; text-align: center;
+}
+nav.carousel_pagination a {
+	background: url("../images/bg-switcher.png") no-repeat; margin: 0px 5px 0px 0px; width: 15px; height: 15px; display: inline-block;
+}
+nav.carousel_pagination a:hover {
+	background-position: 0px -19px;
+}
+nav.carousel_pagination a.selected {
+	background-position: 0px -38px;
+}
+nav.carousel_pagination a span {
+	display: none;
+}
+.work-list {
+	margin: 3px 0px 3px 3px; padding: 0px;
+}
+.slider_list_carousel {
+	width: 990px; height: 397px;
+}
+.slider_list_carousel ul {
+	list-style: none; margin: 0px; padding: 0px; display: block;
+}
+.slider_list_carousel ul li {
+	margin: 0px; padding: 0px; border: 0px solid rgb(153, 153, 153); width: 990px; height: 397px; text-align: center; color: rgb(153, 153, 153); font-size: 40px; float: left; display: block; background-color: rgb(238, 238, 238);
+}
+.timer {
+	background: rgba(0, 0, 0, 0.3); width: 0px; height: 5px; margin-top: -5px; position: absolute;
+}
+.clearfix {
+	clear: both; float: none;
+}

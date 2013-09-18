@@ -17,7 +17,7 @@ import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMBuilder
 import kr.ac.kaist.jsaf.analysis.visualization.Visualization
 import kr.ac.kaist.jsaf.compiler.Parser
-import kr.ac.kaist.jsaf.bug_detector.BugDetector
+import kr.ac.kaist.jsaf.bug_detector.{BugDetector, StrictModeChecker}
 import kr.ac.kaist.jsaf.exceptions.UserError
 import kr.ac.kaist.jsaf.nodes.{IRRoot, Program}
 import kr.ac.kaist.jsaf.nodes_util._
@@ -44,6 +44,7 @@ object AnalyzeMain {
     if (Shell.params.FileNames.length == 0) throw new UserError("Need a file to analyze")
     val fileName: String = Shell.params.FileNames(0)
     val fileNames = JavaConversions.seqAsJavaList(Shell.params.FileNames)
+    Config.setFileName(fileName)
 
     // Analysis Config
     if (Shell.params.opt_Verbose1) Config.setVerbose(1)
@@ -71,10 +72,14 @@ object AnalyzeMain {
     var context: Int = -1
     context = Config.contextSensitivityMode
 
-    // Temporary parameter setting for bug-detector
+    // Temporary parameter setting for html and bug-detector
     if (Shell.params.command == ShellParameters.CMD_BUG_DETECTOR) {
       context = Config.Context_OneCallsiteAndObject
+    }
+    if (Shell.params.command == ShellParameters.CMD_HTML ||
+        Shell.params.command == ShellParameters.CMD_BUG_DETECTOR) {
       Shell.params.opt_MultiThread = true
+      Shell.params.opt_ReturnStateOn = true
     }
 
     // Context-sensitivity mode
@@ -114,6 +119,7 @@ object AnalyzeMain {
 
     // Unrolling count
     Config.setDefaultUnrollingCount(Shell.params.opt_unrollingCount)
+    Config.setDefaultForinUnrollingCount(Shell.params.opt_forinunrollingCount)
 
     // Unsound mode
     if (Shell.params.opt_Unsound) {
@@ -129,6 +135,7 @@ object AnalyzeMain {
       if (!(low.endsWith(".html") || low.endsWith(".xhtml") || low.endsWith(".htm"))) throw new UserError("Not an HTML file.")
       // DOM mode
       Config.setDomMode
+      if(Shell.params.opt_jQuery) Config.setJQueryMode
     }
 
     // for Tizen
@@ -188,6 +195,7 @@ object AnalyzeMain {
       Shell.reportErrors(NodeUtil.getFileName(ir), Shell.flattenErrors(errors), JOption.none[Pair[FileWriter, BufferedWriter]])
     }
 
+    // Peak memory
     if (!quiet) {
       System.out.println("\n* Analyze *")
       printf("# Initial peak memory(mb): %.2f\n", MemoryMeasurer.peakMemory)
@@ -229,6 +237,7 @@ object AnalyzeMain {
              Shell.params.command == ShellParameters.CMD_BUG_DETECTOR ||
              Shell.params.command == ShellParameters.CMD_HTML_SPARSE) typingInterface = new DSparseTyping(cfg, quiet, locclone)
     else throw new UserError("Cannot create the Typing. The command is unknown.")
+    Config.setTypingInterface(typingInterface)
 
     // Compare with Pre Analysis
     /*
@@ -284,8 +293,9 @@ object AnalyzeMain {
       val accessTime = (System.nanoTime - access_start) / 1000000000.0
       if (!quiet) printf("# Time for access analysis(s): %.2f\n", accessTime)
 
+      val cg = preTyping.computeCallGraph()
       // computes def/use graph
-      if (typingInterface.env != null) typingInterface.env.drawDDG(preTyping.computeCallGraph, duanalysis.result, quiet)
+      if (typingInterface.env != null) typingInterface.env.drawDDG(cg, duanalysis.result, quiet)
 
       // Analyze
       typingInterface.analyze(init, duanalysis.result)
@@ -317,10 +327,13 @@ object AnalyzeMain {
       System.out.println("Test pass")
     }
 
+    // Node relation set
+    NodeRelation.set(program2, ir, cfg, quiet)
+
     // Execute Bug Detector
     System.out.println("\n* Bug Detector *")
-    NodeRelation.set(program2, ir, cfg, quiet)
-    val detector = new BugDetector(cfg, typingInterface, fileMap, quiet, irErrors.second)
+    val detector = new BugDetector(program2, cfg, typingInterface, fileMap, quiet, irErrors.second)
+    StrictModeChecker.checkAdvanced(program2, cfg, detector.varManager, detector.stateManager)
     detector.detectBug
 
     if (!quiet) printf("\nAnalysis took %.2fs\n", (System.nanoTime - analyzeStartTime) / 1000000000.0)

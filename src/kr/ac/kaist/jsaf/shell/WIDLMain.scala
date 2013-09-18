@@ -169,7 +169,6 @@ object WIDLMain {
     detector.detectBug*/
     // Run Web IDL checker
     WIDLChecker.doit(ast_n)
-
     0
   }
 
@@ -188,7 +187,7 @@ object WIDLMain {
         node match {
           case SNew(i0, SFunApp(i, SDot(_, SVarRef(_, SId(_, name, _, _)), id), args))
             if name.equals("webapis") =>
-            val lhs = SVarRef(i, SId(i, "webapis_"+id.getText, None, false))
+            val lhs = SVarRef(i, SId(i, "<>webapis_"+id.getText, None, false))
             bindings ++= List(SExprStmt(i, SAssignOpApp(i, lhs, equalsOp,
               SVarRef(i, id)), true))
             SNew(i0, SFunApp(i, lhs, super.walk(args).asInstanceOf[List[Expr]]))
@@ -198,7 +197,7 @@ object WIDLMain {
     }
     astWalker.walk(program) match {
       case SProgram(info, STopLevel(fds, vds, stmts)) =>
-        SProgram(info, STopLevel(fds, vds, bindings++stmts))
+        SProgram(info, STopLevel(fds, vds, List(SSourceElements(info, bindings, false))++stmts))
     }
   }
 }

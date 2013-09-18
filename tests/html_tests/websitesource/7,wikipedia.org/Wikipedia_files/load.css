@@ -1,0 +1,201 @@
+body {
+	font: 13px/1.5 sans-serif; margin: 0.3em 0px; font-size-adjust: none; font-stretch: normal; background-color: white;
+}
+a {
+	outline: 0px; color: rgb(6, 69, 173); text-decoration: none; white-space: nowrap; unicode-bidi: embed;
+}
+a:active {
+	outline: 0px; color: rgb(6, 69, 173); text-decoration: none; white-space: nowrap; unicode-bidi: embed;
+}
+a:focus {
+	outline: 0px; color: rgb(6, 69, 173); text-decoration: none; white-space: nowrap; unicode-bidi: embed;
+}
+a:hover {
+	text-decoration: underline;
+}
+img {
+	border: currentColor; vertical-align: middle;
+}
+.nowrap {
+	white-space: nowrap;
+}
+#content {
+	margin: 0px auto; width: 80%;
+}
+div#footer {
+	margin: 10px auto; width: 70%; text-align: center; border-top-color: rgb(170, 170, 170); border-top-width: 1px; border-top-style: solid;
+}
+div#footer ul {
+	margin: 0px 10px; padding: 0px; display: inline;
+}
+div#footer ul li {
+	margin: 0px 10px; padding: 0px; display: inline;
+}
+table#content th {
+	padding: 0.5em 1em; text-align: center; vertical-align: middle;
+}
+table#content td {
+	padding: 0.5em 1em; text-align: center; vertical-align: middle;
+}
+table#content div#intro {
+	margin: 0px auto; width: 90%; text-align: justify; font-size: 150%; vertical-align: top;
+}
+table#content td#footer {
+	text-align: center; border-top-color: rgb(170, 170, 170); border-top-width: 1px; border-top-style: solid;
+}
+a.extiw {
+	color: rgb(51, 102, 187);
+}
+a.extiw:active {
+	color: rgb(51, 102, 187);
+}
+a.extiw:visited {
+	color: rgb(51, 102, 187);
+}
+a.extiw:active {
+	color: rgb(51, 102, 187);
+}
+a.external {
+	color: rgb(51, 102, 187);
+}
+a.external:visited {
+	color: rgb(51, 102, 187);
+}
+a.external:active {
+	color: rgb(51, 102, 187);
+}
+.central-textlogo {
+	margin: 1em 0px 0.3em; padding: 10px 0px; text-align: center; line-height: 110%; font-family: "Linux Libertine","Hoefler Text",Georgia,"Times New Roman",Times,serif; font-size: 30px;
+}
+.central-featured {
+	margin: 0px auto; width: 42em; height: 26em; text-align: center; vertical-align: middle; position: relative; max-width: 100%;
+}
+.central-featured-logo {
+	left: 50%; top: 50%; width: 0px; height: 0px; position: absolute;
+}
+.central-featured-logo-inner {
+	left: -100px; top: -115px; width: 200px; height: 200px; position: relative;
+}
+.central-featured-lang {
+	position: absolute;
+}
+.central-featured-lang .link-box {
+	padding: 0px; text-decoration: none; display: block;
+}
+.central-featured-lang .link-box:hover strong {
+	text-decoration: underline;
+}
+.central-featured-lang .link-box em {
+	color: black; text-decoration: none;
+}
+.central-featured-lang .link-box small {
+	color: black; text-decoration: none;
+}
+.central-featured-lang strong {
+	font-size: larger;
+}
+.central-featured-lang em {
+	font-style: italic;
+}
+.central-featured-lang em.emNonItalicLang {
+	font-style: normal;
+}
+.lang1 {
+	top: 0%; right: 60%;
+}
+.lang2 {
+	left: 63%; top: 0%;
+}
+.lang3 {
+	left: -2%; top: 20%;
+}
+.lang4 {
+	top: 20%; right: 5%;
+}
+.lang5 {
+	left: 0%; top: 40%;
+}
+.lang6 {
+	top: 40%; right: 0%;
+}
+.lang7 {
+	left: 7%; top: 60%;
+}
+.lang8 {
+	top: 60%; right: 6%;
+}
+.lang9 {
+	top: 80%; right: 64%;
+}
+.lang10 {
+	left: 62%; top: 80%;
+}
+.search-container {
+	margin: 1em auto 1.5em; padding: 0.3em; width: 540px; text-align: center; vertical-align: middle; float: none; max-width: 95%;
+}
+.search-container h5 {
+	white-space: normal;
+}
+.search-container label span {
+	white-space: nowrap;
+}
+.search-form fieldset {
+	padding: 0.7em; border: 1px solid rgb(170, 170, 170); width: auto; margin-top: 0.5em; background-color: rgb(249, 249, 249);
+}
+.search-form #searchInput {
+	margin: 0px; padding: 0px; font-size: 1.2em; vertical-align: top;
+}
+.search-form select {
+	margin: 0px 0.4em; padding: 0px; vertical-align: middle;
+}
+.search-form .searchButton {
+	margin: 0px; padding: 0px; font-size: 1.2em; vertical-align: middle;
+}
+.bookshelf-container {
+	margin: 2em 0px 0.5em; width: 100%; overflow: hidden;
+}
+.bookshelf-container-small {
+	margin: 0.5em 0px;
+}
+.bookshelf {
+	left: -500%; width: 1100%; text-align: center; overflow: hidden; white-space: nowrap; position: relative;
+}
+.langlist {
+	margin: 0.5em 3em 2.5em; text-align: center;
+}
+.langlist-large {
+	font-size: larger;
+}
+.langlist-tiny {
+	margin: 0.5em 3em 3em;
+}
+.langlist-others {
+	margin: 0px 3em 2em; font-weight: bold;
+}
+.otherprojects {
+	margin: 1.5em 0px; width: 100%; text-align: center; font-weight: bold; vertical-align: middle; float: left;
+}
+.otherprojects-item {
+	width: 33%; height: 60px; float: left; min-width: 12em;
+}
+.wm-site-info {
+	margin: 2.5em 0px 2em; text-align: center; clear: both;
+}
+@media print
+{
+body {
+	background-color: transparent;
+}
+a {
+	padding: 0px !important; color: black !important;
+}
+a:link {
+	color: rgb(85, 34, 0);
+}
+a:visited {
+	color: rgb(85, 34, 0);
+}
+img {
+	border: currentColor;
+}
+}

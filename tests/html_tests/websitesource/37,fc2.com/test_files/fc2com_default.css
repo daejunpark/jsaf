@@ -1,0 +1,1092 @@
+body {
+	line-height: 1.5; font-family: Verdana, Helvetica, "£Í£Ó £Ð«´«·«Ã«¯", "MS P Gothic", "«Ò«é«®«ÎÊÇ«´ Pro W3", "Hiragino Kaku Gothic Pro", sans-serif,; background-color: rgb(255, 255, 255);
+}
+a {
+	color: rgb(0, 68, 204); text-decoration: none;
+}
+a:link {
+	color: rgb(0, 68, 204); text-decoration: none;
+}
+a:visited {
+	color: rgb(0, 68, 204); text-decoration: none;
+}
+a:hover {
+	color: rgb(255, 0, 0); text-decoration: underline;
+}
+a:active {
+	color: rgb(255, 0, 0); text-decoration: underline;
+}
+div#container {
+	margin: 0px auto; width: 900px; position: relative;
+}
+#container div#header {
+	height: 140px;
+}
+div#header a {
+	width: 130px; height: 45px; text-indent: -9999px; overflow: hidden; display: block;
+}
+div#header h1 {
+	background: url("../img/fc2_logo.gif.png") no-repeat left top; margin: 20px 0px 0px; width: auto; float: left;
+}
+div#header h1 {
+	
+}
+div.whenIE7below#header {
+	
+}
+div#header h1.h1_plus_search_form {
+	width: 140px;
+}
+.heada_plus_search_form {
+	padding: 32px 0px 0px;
+}
+.heada_plus_search_form_text {
+	background: rgb(255, 255, 255); border-width: 1px; border-style: solid; border-color: rgb(153, 153, 153) rgb(238, 238, 238) rgb(238, 238, 238) rgb(153, 153, 153); width: 186px;
+}
+div#main {
+	width: 680px; text-align: left; clear: both; margin-bottom: 3em; float: right; position: relative; min-height: 0px;
+}
+div#content {
+	
+}
+div#menu {
+	width: 200px; margin-bottom: 3em; float: left;
+}
+.HarfTone {
+	opacity: 0.3;
+}
+#main .content_body {
+	text-align: left;
+}
+#main h2.sh_heading_main_b {
+	
+}
+.content_body p {
+	margin: 13px auto; line-height: 1.7em;
+}
+.heade_ad {
+	top: 48px; width: 468px; height: 60px; right: 0px; position: absolute;
+}
+.text_ad {
+	padding-top: 5px; margin-bottom: 10px; border-top-color: rgb(204, 204, 204); border-bottom-color: rgb(204, 204, 204); border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid;
+}
+.ad_300x250 {
+	top: 0px; width: 300px; height: 250px; right: 0px; position: absolute;
+}
+.ad_300x250 {
+	
+}
+#inf_box {
+	margin: 0px 0px 20px; padding: 0px; width: 370px; height: 250px;
+}
+#inf_box ul {
+	margin: 0px; padding: 0px; line-height: 1.1;
+}
+#inf_box li {
+	margin: 0px; padding: 0px; line-height: 1.1;
+}
+#inf_box p {
+	margin: 0px; padding: 0px; line-height: 1.1;
+}
+#inf_box ul.tab li {
+	background: url("../img/header_menu-back.jpg") repeat-x left bottom; border-width: 1px 1px 1px medium; border-style: solid solid solid none; border-color: rgb(153, 153, 153) rgb(153, 153, 153) rgb(153, 153, 153) currentColor; padding: 4px 10px; top: 1px; width: 73px; text-align: center; float: left; position: relative; cursor: pointer;
+}
+#inf_box ul.tab li.selected {
+	background: url("../img/info_title_back.gif.png") repeat-x left top rgb(255, 255, 255); border-top-color: rgb(255, 0, 0); border-bottom-color: rgb(255, 255, 255); border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid;
+}
+#inf_box ul.tab li.left_side {
+	width: 76px; border-left-color: rgb(153, 153, 153); border-left-width: 1px; border-left-style: solid;
+}
+#inf_box ul.panel li.p_body {
+	background: rgb(255, 255, 255); padding: 0px 10px; border: 1px solid rgb(153, 153, 153); width: 350px; height: 226px; clear: both; -ms-overflow-x: hidden; -ms-overflow-y: scroll;
+}
+#inf_box ul.rss_fc2info li {
+	
+}
+#inf_box li.rss_fc2infolist {
+	line-height: 1em; margin-bottom: 6px;
+}
+#service_body {
+	margin: 0px 0px 39px; overflow: hidden;
+}
+#service_body h3.service_genre_title {
+	color: rgb(68, 68, 68);
+}
+#service_body dl {
+	padding: 6px 0px 10px 45px; width: 295px; height: auto; line-height: 1.2; float: left; position: relative;
+}
+#service_body dt {
+	font-size: 115%;
+}
+#service_body dt a {
+	font-weight: bold;
+}
+#service_body .service_img {
+	left: 0px; top: 0px; width: 45px; height: 50px; color: rgb(255, 255, 255); position: absolute;
+}
+#service_body .free {
+	background: url("../img/fc2_service_icon.png") no-repeat 210px 3px;
+}
+#service_body .charge {
+	background: url("../img/fc2_service_icon.png") no-repeat 210px -87px;
+}
+#service_body .charge_too {
+	background: url("../img/fc2_service_icon.png") no-repeat 190px -176px;
+}
+#service_blog {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_blogranking {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_bj {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_video {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_livechat {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_SayMove {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_himawari {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_web {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_fc2-rentalserver {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_rentalserver {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_domain {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_backup {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_fc2server {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_vps {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_textad {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_affiliate {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_release {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_analysis {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_ranking {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_pr {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_icon {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_k {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_piyo {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_c {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_apps {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_novel {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_bbs {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_cart {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_mall {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_contents {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_form {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_counter {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_vote {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_chat {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_clap {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_seo {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_r {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_spam {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_bookmark {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_keyword {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_rss {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_diary {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_sns {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_wiki {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_network {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_todo {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_knowhow {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_creator {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_translator {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_wifi {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_thebbs {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_directory {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_game {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_talk {
+	background: url("../img/fc2_service_icon.png?1301241519") no-repeat; text-decoration: none;
+}
+#service_blog {
+	background-position: 0px -290px;
+}
+#service_blogranking {
+	background-position: 0px -388px;
+}
+#service_bj {
+	background-position: 0px -492px;
+}
+#service_video {
+	background-position: -515px -995px;
+}
+#service_livechat {
+	background-position: -1060px -2295px;
+}
+#service_SayMove {
+	background-position: -1063px -90px;
+}
+#service_himawari {
+	background-position: -1063px -192px;
+}
+#service_web {
+	background-position: 0px -1090px;
+}
+#service_fc2-rentalserver {
+	background-position: 0px -1190px;
+}
+#service_rentalserver {
+	background-position: 0px -1290px;
+}
+#service_domain {
+	background-position: 0px -1490px;
+}
+#service_backup {
+	background-position: 0px -1391px;
+}
+#service_fc2server {
+	background-position: 0px -2093px;
+}
+#service_vps {
+	background-position: -510px -2193px;
+}
+#service_analysis {
+	background-position: -510px 5px;
+}
+#service_seo {
+	background-position: -510px -792px;
+}
+#service_ranking {
+	background-position: -515px -690px;
+}
+#service_textad {
+	background-position: 5px -692px;
+}
+#service_affiliate {
+	background-position: 0px -892px;
+}
+#service_release {
+	background-position: 0px -995px;
+}
+#service_pr {
+	background-position: 0px -1790px;
+}
+#service_icon {
+	background-position: 0px -1892px;
+}
+#service_k {
+	background-position: 0px -1585px;
+}
+#service_piyo {
+	background-position: 0px -1692px;
+}
+#service_c {
+	background-position: 0px -2191px;
+}
+#service_apps {
+	background-position: 0px -2392px;
+}
+#service_bbs {
+	background-position: -510px -192px;
+}
+#service_novel {
+	background-position: -510px -1692px;
+}
+#service_cart {
+	background-position: 0px -1992px;
+}
+#service_mall {
+	background-position: 0px -793px;
+}
+#service_contents {
+	background-position: 0px -591px;
+}
+#service_form {
+	background-position: -510px -90px;
+}
+#service_counter {
+	background-position: -510px -287px;
+}
+#service_vote {
+	background-position: -514px -392px;
+}
+#service_chat {
+	background-position: -510px -488px;
+}
+#service_clap {
+	background-position: -510px -590px;
+}
+#service_r {
+	background-position: -504px -2092px;
+}
+#service_spam {
+	background-position: -510px -1192px;
+}
+#service_bookmark {
+	background-position: -510px -1390px;
+}
+#service_keyword {
+	background-position: -510px -1292px;
+}
+#service_rss {
+	background-position: -510px -1492px;
+}
+#service_diary {
+	background-position: -510px -1592px;
+}
+#service_sns {
+	background-position: -513px -892px;
+}
+#service_wiki {
+	background-position: -510px -1093px;
+}
+#service_network {
+	background-position: -510px -1988px;
+}
+#service_todo {
+	background-position: 0px -2292px;
+}
+#service_knowhow {
+	background-position: -510px -2296px;
+}
+#service_creator {
+	background-position: -510px -1784px;
+}
+#service_translator {
+	background-position: -510px -1889px;
+}
+#service_wifi {
+	background-position: -1063px -292px;
+}
+#service_thebbs {
+	background-position: -1062px -490px;
+}
+#service_directory {
+	background-position: -1062px -590px;
+}
+#service_game {
+	background-position: -1062px -394px;
+}
+#service_talk {
+	background-position: -1062px -690px;
+}
+ul.privacy_main {
+	margin-bottom: 39px;
+}
+ul.privacy_main li {
+	margin: 6px 0px 0px 26px;
+}
+ol.privacy_sub li {
+	list-style: decimal; margin-left: 26px;
+}
+#recruit_table {
+	width: 100%; margin-bottom: 26px; border-top-color: rgb(170, 170, 170); border-right-color: rgb(170, 170, 170); border-left-color: rgb(170, 170, 170); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; border-collapse: collapse;
+}
+#recruit_table td {
+	padding: 6px 13px; border-bottom-color: rgb(170, 170, 170); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#recruit_table td.back_gray {
+	background: rgb(246, 246, 246); border-right-color: rgb(170, 170, 170); border-right-width: 1px; border-right-style: solid;
+}
+#company_outline dl {
+	margin: 3px auto 26px; border-top-color: rgb(170, 170, 170); border-right-color: rgb(170, 170, 170); border-left-color: rgb(170, 170, 170); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;
+}
+#company_outline dt {
+	background: rgb(246, 246, 246); padding: 5px 5px 4px; width: 130px; height: auto; border-right-color: rgb(170, 170, 170); border-bottom-color: rgb(170, 170, 170); border-right-width: 1px; border-bottom-width: 1px; border-right-style: solid; border-bottom-style: solid; float: left; display: block;
+}
+#company_outline dd {
+	padding: 5px 5px 4px; margin-left: 140px; border-bottom-color: rgb(170, 170, 170); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#histry_list_table {
+	width: 100%; border-collapse: collapse;
+}
+#histry_list_table td {
+	padding: 6px 0px; border-bottom-color: rgb(153, 153, 153); border-bottom-width: 1px; border-bottom-style: dotted;
+}
+#histry_list_table .year_and_month_td {
+	width: 160px; height: auto; overflow: hidden;
+}
+#histry_list_table ul li {
+	list-style-type: disc;
+}
+#login-content {
+	width: 250px; text-align: left; float: left; display: block;
+}
+#login-content .input_fc2id_login {
+	width: 100%;
+}
+#login-content .icon_help {
+	margin-bottom: -0.4em;
+}
+#login-content div.regist_new_around {
+	padding: 0.5em 0px; border: 1px dotted rgb(255, 0, 0); width: 100%;
+}
+#ad-content {
+	width: 600px; float: right; display: block;
+}
+#ad-content ul#ad {
+	margin: 0px auto; clear: both;
+}
+#ad-content ul#ad li.pr {
+	padding: 5px 0px; color: rgb(102, 102, 102); font-weight: bold; background-color: rgb(246, 246, 246);
+}
+#ad-content ul#ad li {
+	margin: 1em; text-align: center;
+}
+.info_left_menu_p {
+	color: rgb(102, 102, 102); line-height: 135%; font-size: 11px;
+}
+#info_left_menu_ul {
+	line-height: 2em;
+}
+.fc2help_icon_margin {
+	margin-bottom: -0.5em;
+}
+.btnlnk {
+	margin: 10px 0px 20px;
+}
+.btnlnk li {
+	margin: 0px; width: 200px; text-align: center; float: left;
+}
+.chartbtn p {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support.png") no-repeat bottom; margin: 0px auto 10px; width: 170px; height: 56px; display: block;
+}
+div#info_guide02 ul {
+	margin: 0px; padding: 0px; list-style-type: none;
+}
+div#info_guide02 ul li {
+	margin: 0px; padding: 0px; font-size: 12px;
+}
+div#info_guide02 ul li p {
+	margin: 4px 0px -4px;
+}
+.chartbtn #trouble_news {
+	color: rgb(254, 79, 138);
+}
+.chartbtn #inquiry {
+	color: rgb(60, 160, 254);
+}
+.chartbtn #others {
+	height: 46px; color: rgb(47, 162, 45); padding-top: 10px;
+}
+.browser_ie {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support.png") no-repeat 0px 0px; width: 20px; height: 20px;
+}
+.browser_fox {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support.png") no-repeat 0px -33px; width: 20px; height: 20px;
+}
+.browser_opera {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support.png") no-repeat 0px -63px; width: 20px; height: 20px;
+}
+.browser_safari {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support.png") no-repeat -1px -92px; width: 22px; height: 20px;
+}
+.browser_chrome {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support.png") no-repeat -80px 0px; width: 22px; height: 20px;
+}
+.round_solid {
+	padding: 12px 0px 12px 36px; border: 1px dotted rgb(255, 0, 0); font-weight: bold;
+}
+.round_solid_qa {
+	text-align: center; line-height: 150%;
+}
+.bttn_kochira {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support.png") no-repeat -1px -125px; margin: -2px 0px 0px; width: 78px; height: 23px;
+}
+.totop {
+	text-align: right; margin-right: 30px;
+}
+table#support_form_php {
+	width: 100%; margin-bottom: 2em;
+}
+table#support_form_php td {
+	padding-bottom: 1em;
+}
+table#support_form_php h4 a:link {
+	color: rgb(68, 68, 68);
+}
+table#support_form_php h4 a:visited {
+	color: rgb(68, 68, 68);
+}
+table#support_form_php .icon_mail {
+	margin: 0px 0.25em -0.2em 0px;
+}
+table#support_form_php .icon_comunity {
+	background: url("http://static.fc2.com/share/fc2parts/image/share_mini_icons.png") no-repeat 0px -850px; width: 16px; height: 20px; margin-bottom: -0.5em;
+}
+table.service_list {
+	margin: 10px auto 0px; width: 100%;
+}
+table.service_list td {
+	width: 100px; text-align: left; overflow: visible; border-bottom-color: rgb(204, 204, 204); border-bottom-width: 1px; border-bottom-style: dotted;
+}
+table.service_list td.no_bottom_border {
+	border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px; border-bottom-style: dotted;
+}
+table.service_list td.lst_tt {
+	padding: 6px 0px 0px; width: 180px; text-align: left;
+}
+table.service_list td.lst_m {
+	text-align: right;
+}
+table.service_list td.qa {
+	width: 670px; text-align: left;
+}
+.FC2_unicorn {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_blank {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_blog {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_blogranking {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_bj {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_video {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_livechat {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_SayMove {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_himawari {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_contents {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_textad {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_mall {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_affiliate {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_release {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_web {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_fc2-rentalserver {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_rentalserver {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_vps {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_fc2server {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_domain {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_backup {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_k {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_pr {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_piyo {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_icon {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_apps {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_cart {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_analysis {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_form {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_bbs {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_counter {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_vote {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_chat {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_clap {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_ranking {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_seo {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_spam {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_bookmark {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_rss {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_todo {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_keyword {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_wiki {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_knowhow {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_diary {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_sns {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_network {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_novel {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_creator {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_translator {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_game {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_wifi {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_thebbs {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.service_directory {
+	background: url("../img/fc2_service_icon.png?20120925") no-repeat; width: 40px; height: 40px;
+}
+.FC2_unicorn {
+	background-position: -1065px 0px;
+}
+.service_blank {
+	background-position: 0px -40px;
+}
+.service_blog {
+	background-position: 0px -300px;
+}
+.service_blogranking {
+	background-position: 0px -398px;
+}
+.service_bj {
+	background-position: 0px -500px;
+}
+.service_video {
+	background-position: -517px -1000px;
+}
+.service_livechat {
+	background-position: -1065px -2305px;
+}
+.service_SayMove {
+	background-position: -1065px -95px;
+}
+.service_himawari {
+	background-position: -1065px -200px;
+}
+.service_contents {
+	background-position: 0px -598px; height: 42px;
+}
+.service_textad {
+	background-position: 0px -700px;
+}
+.service_mall {
+	background-position: 0px -800px; height: 40px;
+}
+.service_affiliate {
+	background-position: 0px -898px;
+}
+.service_release {
+	background-position: 0px -1000px;
+}
+.service_web {
+	background-position: 0px -1100px;
+}
+.service_fc2-rentalserver {
+	background-position: 0px -1200px;
+}
+.service_rentalserver {
+	background-position: 0px -1300px;
+}
+.service_vps {
+	background-position: -510px -2200px;
+}
+.service_fc2server {
+	background-position: 0px -2098px; height: 40px;
+}
+.service_domain {
+	background-position: 0px -1498px;
+}
+.service_backup {
+	background-position: 0px -1400px;
+}
+.service_k {
+	background-position: 0px -1600px;
+}
+.service_pr {
+	background-position: 0px -1800px;
+}
+.service_piyo {
+	background-position: 0px -1700px;
+}
+.service_icon {
+	background-position: 0px -1900px;
+}
+.service_apps {
+	background-position: 0px -2400px;
+}
+.service_cart {
+	background-position: 0px -2000px;
+}
+.service_analysis {
+	background-position: -510px 0px;
+}
+.service_form {
+	background-position: -510px -100px;
+}
+.service_bbs {
+	background-position: -510px -200px;
+}
+.service_counter {
+	background-position: -510px -294px;
+}
+.service_vote {
+	background-position: -515px -400px;
+}
+.service_chat {
+	background-position: -510px -500px;
+}
+.service_clap {
+	background-position: -510px -600px;
+}
+.service_ranking {
+	background-position: -515px -697px; height: 40px;
+}
+.service_seo {
+	background-position: -512px -800px;
+}
+.service_spam {
+	background-position: -512px -1200px;
+}
+.service_bookmark {
+	background-position: -512px -1395px; height: 40px;
+}
+.service_rss {
+	background-position: -512px -1500px;
+}
+.service_todo {
+	background-position: -512px -1600px;
+}
+.service_keyword {
+	background-position: -512px -1300px;
+}
+.service_wiki {
+	background-position: -512px -1100px;
+}
+.service_knowhow {
+	background-position: -510px -2305px;
+}
+.service_diary {
+	background-position: -512px -1600px;
+}
+.service_sns {
+	background-position: -515px -900px;
+}
+.service_network {
+	background-position: -510px -1996px;
+}
+.service_novel {
+	background-position: -510px -1700px;
+}
+.service_creator {
+	background-position: -510px -1792px;
+}
+.service_translator {
+	background-position: -510px -1900px;
+}
+.service_game {
+	background-position: -1062px -400px;
+}
+.service_wifi {
+	background-position: -1063px -300px;
+}
+.service_thebbs {
+	background-position: -1062px -497px;
+}
+.service_directory {
+	background-position: -1062px -598px;
+}
+.click {
+	margin-bottom: 10px;
+}
+.q {
+	color: rgb(25, 65, 194); font-size: 140%; margin-bottom: 10px; display: block; cursor: pointer;
+}
+.a {
+	padding: 5px; border: 1px dotted rgb(255, 0, 0); line-height: 200%; display: none;
+}
+.icon {
+	margin: 5px 0px; border: currentColor; width: 19px; height: 15px;
+}
+.close {
+	text-align: right;
+}
+.bttn_to_FC2help {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support.png") no-repeat 0px -161px; width: 254px; height: 48px;
+}
+.bttn_to_form {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support.png") no-repeat -273px -161px; width: 254px; height: 48px;
+}
+.help-search h2 {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support_blog.png") no-repeat 0px 0px; margin: 20px 0px 15px; height: 28px;
+}
+.help-search div {
+	margin: 0px 0px 40px 6px; padding: 20px; border-radius: 8px; border: 1px solid rgb(198, 198, 198); width: 625px; box-shadow: 0px 1px 3px 0px #ccc; -webkit-border-radius: 8px; -moz-border-radius: 8px; -webkit-box-shadow: 0px 1px 3px 0px #CCC; -moz-box-shadow: 0px 1px 3px 0px #CCC;
+}
+.help-search ul {
+	text-align: center; padding-bottom: 15px; margin-bottom: 15px; border-bottom-color: rgb(204, 204, 204); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.help-search li {
+	margin: 0px auto; width: 475px; text-align: left;
+}
+.help-search li input[type='text'] {
+	padding: 10px; border-radius: 4px; border: 1px solid rgb(204, 204, 204); width: 350px; margin-right: 15px; box-shadow: inset 0px 0px 2px 0px #ccc; -webkit-border-radius: 4px; -moz-border-radius: 4px; -webkit-box-shadow: inset 0px 0px 2px 0px #CCC; -moz-box-shadow: inset 0px 0px 2px 0px #CCC;
+}
+.help-search li input[type='submit'] {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support_blog.png") no-repeat 0px -40px; margin: 0px; padding: 0px; border: currentColor; width: 85px; height: 38px; text-indent: -9999px;
+}
+.help-search li input[type='submit']:hover {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support_blog.png") no-repeat 0px -80px; cursor: pointer;
+}
+.help-search li.help-search-sample {
+	margin-top: 5px;
+}
+.help-search dl::after {
+	height: 0px; clear: both; display: block; visibility: hidden; content: "";
+}
+.help-search dt {
+	width: 216px; height: 60px; float: right;
+}
+.help-search dt a {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support_blog.png") no-repeat 0px -120px; width: 216px; height: 60px; display: block;
+}
+.help-search dt a:hover {
+	background-position: 0px -180px;
+}
+.help-search dd {
+	width: 390px; height: 60px; vertical-align: middle; display: table-cell;
+}
+.form-link li {
+	margin: 0px 0px 20px 7px;
+}
+.form-link li:first-child {
+	margin-top: 20px;
+}
+.form-link li a {
+	background: url("http://static.fc2cn.com/support_fc2com/img/images_support_blog.png") no-repeat -250px -40px; width: 665px; height: 62px; display: block;
+}
+.form-link li.form-inquiry a {
+	background-position: -250px -40px;
+}
+.form-link li.form-inquiry a:hover {
+	background-position: -250px -110px;
+}
+.form-link li.form-improper a {
+	background-position: -250px -180px;
+}
+.form-link li.form-improper a:hover {
+	background-position: -250px -250px;
+}
+.form-link li.form-blogimport a {
+	background-position: -250px -320px;
+}
+.form-link li.form-blogimport a:hover {
+	background-position: -250px -390px;
+}
+.form-link li.form-blomaga a {
+	background-position: -250px -460px;
+}
+.form-link li.form-blomaga a:hover {
+	background-position: -250px -530px;
+}
+.JSmessage {
+	padding: 13px; border: 2px dotted rgb(255, 0, 0); color: rgb(255, 0, 0); line-height: 1.5; font-size: large !important;
+}
+#contents ol {
+	padding-left: 30px;
+}
+#contents ol li {
+	list-style-type: decimal; list-style-position: outside;
+}
+#seo_fc2com {
+	line-height: 1.7em;
+}
+#seo_fc2com ul#index_list li {
+	background: url("http://seo.fc2.com/images/bl_arrow.gif") no-repeat left 4px; line-height: 1.7em; padding-left: 15px;
+}
+#seo_fc2com .ad_img01 {
+	background: url("http://seo.fc2.com/images/ad_e-machi.png") no-repeat -218px -105px; border: 1px solid rgb(221, 221, 221); width: 280px; height: 210px;
+}
+#seo_fc2com .ad_img02 {
+	background: url("http://seo.fc2.com/images/ad_e-machi.png") no-repeat -218px -363px; border: 1px solid rgb(221, 221, 221); width: 280px; height: 283px;
+}
+#seo_fc2com .ad_h2 {
+	background: url("http://seo.fc2.com/images/h2_title.gif") no-repeat left top; margin: 0px; width: auto; height: 32px; color: rgb(73, 73, 73); clear: both; font-size: 16px;
+}
+#seo_fc2com #ad_table {
+	color: rgb(102, 102, 102); line-height: 175%;
+}
+.ad_roundStart {
+	background: url("http://seo.fc2.com/images/ad_e-machi.png") no-repeat -509px -100px; height: 16px;
+}
+#seo_fc2com .ad_roundFix {
+	background: url("http://seo.fc2.com/images/ad_e-machi.png") no-repeat -509px -230px; height: 24px;
+}
+#seo_fc2com .ad_border1px {
+	width: 394px; border-right-color: rgb(221, 221, 221); border-left-color: rgb(221, 221, 221); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid;
+}
+#seo_fc2com .ad_h3 {
+	margin: 0px 0px 0px 48px; font-size: 16px;
+}
+#seo_fc2com .ad_h4 {
+	margin: 24px 0px 6px; height: 20px; border-bottom-color: rgb(235, 31, 36); border-bottom-width: 2px; border-bottom-style: solid;
+}
+#seo_fc2com .bttn_to_form {
+	background: url("http://seo.fc2.com/images/ad_e-machi.png") no-repeat -365px -702px; width: 313px; height: 85px;
+}
+#menu .sh_info {
+	padding-left: 32px;
+}
+.clearfix {
+	min-height: 0px;
+}
+.clearfix::after {
+	height: 0px; clear: both; display: block; visibility: hidden; content: ".";
+}
+* html .clearfix {
+	height: 1px;
+}
+#ad-footer {
+	margin: 0px auto 20px; padding: 3px 0px; border: 1px solid rgb(238, 238, 238); width: 900px;
+}

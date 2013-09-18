@@ -1,0 +1,1482 @@
+.dlg {
+	background: rgb(255, 255, 255); border-radius: 5px; border: 3px solid transparent; position: fixed; box-shadow: 0px 0px 18px rgba(0,0,0,0.4); -webkit-border-radius: 5px; -moz-border-radius: 5px;
+}
+.dlg .clz {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -193px -125px; top: 10px; width: 20px; height: 20px; right: 7px; text-indent: 110%; overflow: hidden; white-space: nowrap; position: absolute; z-index: 100; cursor: pointer;
+}
+.dlg .clz:hover {
+	background-position: -172px -125px;
+}
+.dlg .cap {
+	margin: 0px 0px 0px 10px; padding: 15px 10px 10px; text-align: left; font-size: 28px;
+}
+.dlg .hide {
+	display: none;
+}
+.dlg .ftrbar {
+	padding: 0px 10px; height: 110px;
+}
+.dlg .dvid {
+	background: -ms-linear-gradient(left, rgb(255, 255, 255), rgb(232, 232, 232), rgb(232, 232, 232), rgb(232, 232, 232), rgb(255, 255, 255)); margin: 0px 20px; height: 2px;
+}
+.dlg .sub {
+	margin: 0px 0px 15px 10px; padding: 0px 10px 19px; text-align: left; font-size: 13px;
+}
+.feed-button {
+	background: rgb(247, 247, 247); padding: 6px; outline: 0px; border-radius: 3px; border: 1px solid rgb(204, 204, 204); text-align: center; color: rgb(6, 84, 186); font-size: 12px; font-weight: normal; display: inline-block; cursor: pointer; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.feed-button:visited {
+	color: rgb(6, 84, 186); text-decoration: none;
+}
+.feed-button:hover {
+	color: rgb(6, 84, 186); text-decoration: none;
+}
+.notice-close {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -217px -130px; width: 14px; height: 14px; right: 20px; text-indent: 110%; overflow: hidden; white-space: nowrap; cursor: pointer;
+}
+.feed-close-button {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -217px -130px; width: 14px; height: 14px; right: 20px; text-indent: 110%; overflow: hidden; white-space: nowrap; cursor: pointer;
+}
+.notice-close:hover {
+	background-position: -156px -130px;
+}
+.feed-close-button:hover {
+	background-position: -156px -130px;
+}
+.feed-alert {
+	border-radius: 3px; width: 100%; text-align: center; color: rgb(255, 255, 255); position: relative; box-shadow: 0px 1px 2px rgba(0,0,0,0.3); background-color: rgb(55, 156, 204); -webkit-border-radius: 3px; -moz-border-radius: 3px; -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.feed-alert h3 {
+	padding: 8px 30px; line-height: 24px; font-family: "Helvetica Neue","Helvetica","Arial",hirakakupro-w3,osaka,"ms pgothic",sans-serif; font-size: 16px; font-weight: 400;
+}
+.feed-alert .feed-close-button {
+	top: 15px; position: absolute;
+}
+.feed-clear {
+	clear: both;
+}
+body {
+	margin: 0px; padding: 0px;
+}
+body > img {
+	top: -100px; position: absolute; opacity: 0;
+}
+button {
+	padding: 0px; border: 0px currentColor;
+}
+.middle > .main {
+	margin: 0px auto; padding: 0px 10px; overflow: hidden; position: relative;
+}
+.sz980 .middle > .main {
+	width: 980px;
+}
+.sz1200 .middle > .main {
+	width: 1200px;
+}
+.middle > .main > .top {
+	background: url("data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAABVAAD/4QMraHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjAtYzA2MCA2MS4xMzQ3NzcsIDIwMTAvMDIvMTItMTc6MzI6MDAgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgTWFjaW50b3NoIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjM5RDRDOEYzQ0QzNjExRTFBRTIwRkUzMzM4MTZCOEQzIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjM5RDRDOEY0Q0QzNjExRTFBRTIwRkUzMzM4MTZCOEQzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MzlENEM4RjFDRDM2MTFFMUFFMjBGRTMzMzgxNkI4RDMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MzlENEM4RjJDRDM2MTFFMUFFMjBGRTMzMzgxNkI4RDMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7/7gAOQWRvYmUAZMAAAAAB/9sAhAACAQEBAQECAQECAwIBAgMDAgICAgMDAwMDAwMDBQMEBAQEAwUFBQYGBgUFBwcICAcHCgoKCgoMDAwMDAwMDAwMAQICAgQDBAcFBQcKCAcICgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAkACADAREAAhEBAxEB/8QAYwABAQEBAAAAAAAAAAAAAAAAAAECCQEBAAAAAAAAAAAAAAAAAAAAABABAAEDAgUDAwUAAAAAAAAAAREhAhIAMfBBYSIyUaETsfFiccFCggMRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AO7clpAhbVm52g330EItG1cY2PRd3f25aCN6DyBneh1WePoFvcWRxibt5x3Jo1H04AXXBbyMav49YmpoDfbatygWmRWIGksJOgJbOUtpbNyz4+q1roF1y0tO47pOSi5RPN5cAR/0ttEUyt7m6dq71emgo3TksJ3JK4k7+VR9NBcriniFd9q7oPtoM8isNvd3MxMzc1J/TQLh/wAysW2i3TPi1J326aCyQj2x7MzO+gWsXYzEBcfjNDnz46AVtFaB4k+LUlh9uADnT49pccs4y+2gM/w8o7fKc6z+0fbQZPlxcfCH45zjOXj6aDT8s2/HM/2jLrFNB//Z") 0px 0px rgb(248, 248, 248); margin: 0px auto; position: relative; z-index: 300;
+}
+.content {
+	width: 1200px; overflow: hidden; font-family: helvetica,arial; position: relative;
+}
+.sz980 .content {
+	width: 980px;
+}
+.content .wintr {
+	margin: -47px 0px 0px;
+}
+.footer {
+	background: rgb(255, 255, 255);
+}
+.blue {
+	color: rgb(38, 149, 202);
+}
+a.blue {
+	color: rgb(38, 149, 202);
+}
+a.blue:link {
+	color: rgb(38, 149, 202);
+}
+table.gh-tbl {
+	margin: auto;
+}
+.sz980 table.gh-tbl {
+	width: 980px;
+}
+.sz1200 table.gh-tbl {
+	width: 1200px;
+}
+.left {
+	float: left;
+}
+.right {
+	float: right;
+}
+.br {
+	margin-bottom: 8px;
+}
+.br-top {
+	margin-top: 8px;
+}
+.dim-a a {
+	color: rgb(120, 192, 242);
+}
+a.dim {
+	color: rgb(120, 192, 242);
+}
+.dim-a a:hover {
+	color: rgb(0, 130, 220);
+}
+a.dim:hover {
+	color: rgb(0, 130, 220);
+}
+.dim-a a:active {
+	color: rgb(0, 0, 0);
+}
+a.dim:active {
+	color: rgb(0, 0, 0);
+}
+.dim {
+	color: rgb(119, 119, 119);
+}
+.small {
+	font-size: 11px;
+}
+.main .stage {
+	width: 100%; position: relative; z-index: 10;
+}
+.main .stage .loadingIcn {
+	left: 545px; top: 20px; position: absolute; z-index: 300000;
+}
+.sz980 .main .stage .loadingIcn {
+	left: 437px;
+}
+.stage .plchodler {
+	margin: 0px 0px 0px 210px; height: 900px; position: relative;
+}
+.sz1200 .stage .plchodler {
+	width: 990px;
+}
+.sz980 .stage .plchodler {
+	width: 770px;
+}
+.footer .handler {
+	background: -ms-linear-gradient(rgba(255, 255, 255, 0.8) 15%, rgb(255, 255, 255) 90%); border-width: 1px 1px 0px; border-style: solid; border-color: rgb(204, 204, 204); margin: -30px 0px 0px; border-radius: 3px 3px 0px 0px; width: 140px; height: 30px; text-align: center; line-height: 30px; font-size: 13px; font-weight: normal; float: left; cursor: pointer;
+}
+body.ru_RU .footer .handler {
+	width: 190px;
+}
+body.de_DE .footer .handler {
+	width: 190px;
+}
+body.it_IT .footer .handler {
+	width: 210px;
+}
+body.fr_FR .footer .handler {
+	width: 265px;
+}
+body.fr_CA .footer .handler {
+	width: 265px;
+}
+body #gh-bt {
+	z-index: 1000;
+}
+.footer .handler i {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -299px -302px; margin: 0px 0px 0px 5px; width: 20px; height: 15px; display: inline-block;
+}
+.footer .up.handler i {
+	background-position: -263px -302px;
+}
+#initFeeds {
+	display: none;
+}
+.bn {
+	box-shadow: 0px 3px 0px 0px #e5e5e5; corner-radius: 3px;
+}
+.bng {
+	background: rgb(82, 158, 24); color: rgb(255, 255, 255); box-shadow: 0px 3px 0px 0px #e5e5e5; corner-radius: 3px;
+}
+.bnb {
+	background: rgb(0, 102, 177); color: rgb(255, 255, 255); box-shadow: 0px 3px 0px 0px #e5e5e5; corner-radius: 3px;
+}
+a.flw {
+	padding: 10px; border-radius: 3px; text-align: center; color: rgb(255, 255, 255); font-weight: bold; text-decoration: none; display: block; cursor: pointer;
+}
+a.flw:link {
+	padding: 10px; border-radius: 3px; text-align: center; color: rgb(255, 255, 255); font-weight: bold; text-decoration: none; display: block; cursor: pointer;
+}
+.flw {
+	padding: 10px; border-radius: 3px; text-align: center; color: rgb(255, 255, 255); font-weight: bold; text-decoration: none; display: block; cursor: pointer;
+}
+.flwing a.flw {
+	background: rgb(123, 123, 123);
+}
+.flwing .flw {
+	background: rgb(123, 123, 123);
+}
+.flwing a.flw:hover {
+	background: rgb(238, 129, 0);
+}
+.flwing .flw:hover {
+	background: rgb(238, 129, 0);
+}
+a {
+	color: rgb(6, 84, 186); text-decoration: none;
+}
+a:link {
+	color: rgb(6, 84, 186); text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+.errmsg {
+	background: rgb(255, 255, 255); border-width: 3px 1px 1px; border-style: solid; border-color: rgb(210, 23, 37) rgb(204, 204, 204) rgb(204, 204, 204); padding: 10px 15px 10px 40px; width: 500px; text-align: left; color: rgb(210, 23, 37); line-height: 18px; display: none; position: relative;
+}
+.errmsg .icon {
+	background: url("http://p.ebaystatic.com/aw/pics/cmp/ds3/sprds3_11.png") no-repeat -140px -10px; left: 10px; top: 1px; width: 25px; height: 30px; position: absolute;
+}
+.warn {
+	background: rgb(255, 255, 255); border-width: 3px 1px 1px; border-style: solid; border-color: rgb(240, 135, 0) rgb(204, 204, 204) rgb(204, 204, 204); padding: 10px 25px 10px 50px; width: 500px; text-align: left; line-height: 18px; display: none; position: relative;
+}
+.warn .icon {
+	background: url("http://p.ebaystatic.com/aw/pics/cmp/ds3/sprds3_11.png") no-repeat -230px -10px; left: 10px; top: 7px; width: 25px; height: 30px; position: absolute;
+}
+.warn .clz {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -193px -125px; top: 0px; width: 20px; height: 20px; right: 0px; text-indent: 110%; overflow: hidden; white-space: nowrap; position: absolute; z-index: 100; cursor: pointer;
+}
+.warn .clz:hover {
+	background-position: -172px -125px;
+}
+.stop-scrolling {
+	height: 100%; overflow: hidden;
+}
+#loggerScreen {
+	width: 600px; height: 400px; right: 0px; overflow: hidden; position: fixed; z-index: 100000;
+}
+#loggerScreen .screen {
+	width: 100%; height: 95%; overflow: auto;
+}
+#iehack {
+	width: 600px; height: 400px; right: 0px; overflow: hidden; position: fixed; z-index: -1;
+}
+.input-wrapper {
+	display: inline-block; position: relative; -ms-zoom: 1;
+}
+.input-wrapper input.text {
+	margin: 0px; border: 0px currentColor; z-index: 2;
+}
+.input-wrapper textarea {
+	margin: 0px; border: 0px currentColor; z-index: 2;
+}
+.input-wrapper label {
+	padding: 1px 10px; top: 0px; width: 271px; height: 54px; text-align: left; right: 0px; color: rgb(153, 153, 153); line-height: 54px; overflow: hidden; font-size: 20px; vertical-align: middle; position: absolute; z-index: 1;
+}
+.focus.input-wrapper label {
+	opacity: 0.4;
+}
+.filled.input-wrapper label {
+	display: none !important;
+}
+.autocomplete-w1 {
+	margin: 8px 0px 0px 6px; left: 0px; top: 0px; position: absolute; _background: 0; _margin: 0;
+}
+.autocomplete {
+	background: rgb(255, 255, 255); margin: -6px 6px 6px -6px; border: 1px solid rgb(153, 153, 153); text-align: left; overflow: auto; font-family: Arial; font-size: 13px; cursor: default; max-height: 350px; _margin: 0; _height: 350px; _overflow-x: hidden;
+}
+.autocomplete .bold {
+	color: rgb(6, 84, 186); font-weight: bold;
+}
+.autocomplete .cat {
+	color: rgb(241, 142, 0) !important; font-weight: bold;
+}
+.autocomplete .selected {
+	background: rgb(228, 237, 253);
+}
+.autocomplete div {
+	padding: 2px 5px; white-space: nowrap;
+}
+.vip {
+	padding: 20px 20px 10px; display: none;
+}
+.vip .tl {
+	padding: 0px 0px 18px;
+}
+.vip .itmtl {
+	color: rgb(51, 51, 51); font-size: 16px; font-weight: bold;
+}
+.vip .icn {
+	border: 1px solid rgb(204, 204, 204); width: 300px; text-align: center; vertical-align: middle; float: left; display: inline-block;
+}
+.vip .absTime {
+	font-weight: bold;
+}
+.vip .itmicnwpr {
+	width: 300px; height: 300px; overflow: hidden;
+}
+.vip .hide {
+	display: none;
+}
+.vip .dvid {
+	margin: 0px 0px 10px;
+}
+.vip .icn a {
+	width: 300px; height: 300px; vertical-align: middle; display: inline-block;
+}
+.vip .icn img {
+	max-height: 300px; max-width: 300px;
+}
+.vip .info {
+	margin: 0px 0px 0px 320px; text-align: left;
+}
+.vip .prc {
+	margin: 20px 0px 0px; overflow: auto;
+}
+.vip .info .price {
+	text-align: right; line-height: 20px; font-size: 24px; float: left;
+}
+.vip .unitPrice {
+	color: rgb(119, 119, 119); font-size: 12px; display: block;
+}
+.vip .info .format {
+	padding: 0px 0px 0px 10px; line-height: 26px; font-size: 16px;
+}
+.vip .smlr {
+	margin: 15px 0px 0px; padding: 15px 0px 0px; clear: both; position: relative;
+}
+.vip .smlr .txt {
+	top: 49px; right: 467px; color: rgb(102, 102, 102); line-height: 14px; font-size: 12px; position: absolute;
+}
+.vip .smlrlnk {
+	display: none;
+}
+.vip .share {
+	margin: 15px 0px 0px; padding: 15px 0px 0px; border-top-color: rgb(204, 204, 204); border-top-width: 1px; border-top-style: solid;
+}
+.vip .share .txt {
+	margin: 5px 0px 0px; float: left;
+}
+.vip .share b {
+	margin: 0px 0px 0px 10px; width: 20px; height: 22px; display: inline-block; position: relative; cursor: pointer; background-image: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png");
+}
+.vip .share a {
+	margin: 0px 0px 0px 10px; width: 20px; height: 22px; display: inline-block; position: relative; cursor: pointer; background-image: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png");
+}
+.vip .fb {
+	background-position: -221px -346px;
+}
+.vip .tw {
+	background-position: -301px -346px;
+}
+.vip .pin {
+	background-position: -260px -346px;
+}
+.vip .email {
+	background-position: -357px -346px;
+}
+.vip .smy {
+	padding: 20px 0px;
+}
+.vip .smy .g {
+	color: rgb(91, 167, 27);
+}
+.vip .smy div {
+	padding: 5px 0px; font-weight: bold;
+}
+.vip .smy b {
+	text-align: right; color: rgb(102, 102, 102); font-weight: normal; display: inline-block;
+}
+.vip .sim {
+	list-style: none; margin: 0px 0px 0px 295px; padding: 0px; height: 70px;
+}
+.vip .sim .cell {
+	margin: 0px 0px 0px 6px; border: 1px solid rgb(204, 204, 204); width: 65px; height: 65px; float: left;
+}
+.vip .cell .simitm {
+	width: 65px; height: 65px; text-align: center; vertical-align: middle; display: table-cell; border-collapse: collapse; cursor: pointer; border-spacing: 0;
+}
+.vip .cell span {
+	margin: 8px 0px 0px; font-size: 12px; display: block;
+}
+.vip .cell img {
+	max-height: 65px; max-width: 65px;
+}
+.vip .nosim {
+	font-size: 12px; font-weight: normal; position: relative;
+}
+.vip .btns a {
+	border-radius: 3px; width: 120px; height: 40px; text-align: center; line-height: 40px; font-weight: bold; text-decoration: none; display: inline-block;
+}
+body.ru_RU .vip .btns a {
+	width: 130px;
+}
+.vip .btns .vi {
+	background: rgb(24, 137, 195); margin: 0px 20px 0px 0px; color: rgb(255, 255, 255);
+}
+.vip .btns .unwatch {
+	background: rgb(213, 150, 60); color: rgb(255, 255, 255) !important; vertical-align: middle;
+}
+.vip .btns .watch {
+	border: 1px solid rgb(204, 204, 204); text-align: center; color: rgb(1, 119, 210);
+}
+.vip .btns .watched {
+	border: 1px solid rgb(204, 204, 204); text-align: center; color: rgb(1, 119, 210);
+}
+.vip .btns .disable.watch {
+	color: rgb(204, 204, 204); cursor: default;
+}
+.vip .btns .disable.watched {
+	color: rgb(204, 204, 204); cursor: default;
+}
+.vip .btns .watched i {
+	left: 22px;
+}
+.vip .mulpics {
+	height: 60px; border-top-color: rgb(204, 204, 204); border-top-width: 1px; border-top-style: solid;
+}
+.vip .mulpics .mulpic {
+	padding: 7px 0px 0px 12px; border-radius: 2px; width: 47px; text-align: right; overflow: hidden; float: left;
+}
+.vip .mulpics b {
+	border: 3px solid rgb(255, 255, 255); width: 40px; height: 40px; text-align: center; vertical-align: middle; display: table-cell; cursor: pointer;
+}
+.vip .mulpics .sel.mulpic b {
+	border: 3px solid rgb(51, 51, 51);
+}
+.vip .mulpics b img {
+	max-height: 40px; max-width: 40px;
+}
+.vip .back {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -32px -400px; margin: -8px 0px 0px -23px; width: 175px; height: 80px; float: left; display: none; position: relative; cursor: pointer;
+}
+* + html .vip .back {
+	margin: -8px 0px 0px -20px;
+}
+.vip .show.back {
+	display: block;
+}
+.vip .back .arw {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -325px -432px; left: 5px; top: 32px; width: 10px; height: 20px; position: absolute;
+}
+.vip .origitmwpr {
+	left: 24px; top: 7px; width: 65px; height: 65px; position: absolute;
+}
+.vip .origitm {
+	background: rgb(255, 255, 255); width: 65px; height: 65px; text-align: center; vertical-align: middle; display: table-cell;
+}
+.vip .origitm img {
+	max-height: 65px; max-width: 65px;
+}
+.vip .back span {
+	left: 100px; top: 34px; color: rgb(102, 102, 102); font-size: 12px; position: absolute;
+}
+.vip .loadingIcn {
+	padding: 3px; left: 364px; top: 198px; display: block; position: absolute;
+}
+.vip .smlritms {
+	text-align: center;
+}
+.vip .watchmsg {
+	width: auto; line-height: 18px; margin-bottom: 10px;
+}
+.vip .watchNLImsg {
+	width: auto; line-height: 18px; margin-bottom: 10px;
+}
+.vip *:focus {
+	outline: 0px;
+}
+.carousel {
+	padding: 0px 20px; position: relative;
+}
+.carousel .abtn {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat 0px 0px; top: 55px; width: 15px; height: 21px; position: absolute; cursor: pointer;
+}
+.carousel .disable.abtn {
+	cursor: default;
+}
+.carousel .pre {
+	background-position: -194px -97px; left: 0px;
+}
+.carousel .pre:hover {
+	background-position: -194px -97px;
+}
+.carousel .disable.pre {
+	background-position: -174px -66px;
+}
+.carousel .nxt {
+	background-position: -196px -68px; right: 0px;
+}
+.carousel .nxt:hover {
+	background-position: -196px -68px;
+}
+.carousel .disable.nxt {
+	background-position: -175px -97px;
+}
+.carousel .window {
+	overflow: hidden; position: relative;
+}
+.carousel .slider {
+	position: absolute;
+}
+.top .lftnav {
+	margin: 0px 10px 10px 0px; float: left; z-index: 20000;
+}
+.top .mfbb {
+	float: left;
+}
+.main .edtItrlyr {
+	left: 1200px; top: -1px; z-index: 10;
+}
+.mfbb {
+	z-index: 10;
+}
+.actvbar {
+	width: 100%; z-index: 20;
+}
+.promo {
+	display: none;
+}
+.msgCntr {
+	margin: 0px 0px 0px 360px; position: relative; z-index: 3000;
+}
+.header {
+	transition:top 0.2s ease-out; top: -100px; -webkit-transition-property: top; -webkit-transition-duration: .2s; -webkit-transition-timing-function: ease-out; -webkit-transition-delay: 0s; -moz-transition-property: top; -moz-transition-duration: .2s; -moz-transition-timing-function: ease-out; -moz-transition-delay: 0s; -o-transition-property: top; -o-transition-duration: .2s; -o-transition-timing-function: ease-out; -o-transition-delay: 0s;
+}
+.header .ribbon {
+	background: rgb(0, 101, 176); transition:background 0.2s ease-out; width: 36px; height: 70px; right: 46px; bottom: -70px; display: none; position: absolute; cursor: pointer; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; box-shadow: 0px 4px 8px rgba(0,0,0,0.2); -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); -moz-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); -webkit-transition-property: background; -webkit-transition-duration: .2s; -webkit-transition-timing-function: ease-out; -webkit-transition-delay: 0s; -moz-transition-property: background; -moz-transition-duration: .2s; -moz-transition-timing-function: ease-out; -moz-transition-delay: 0s; -o-transition-property: background; -o-transition-duration: .2s; -o-transition-timing-function: ease-out; -o-transition-delay: 0s; -webkit-border-bottom-left-radius: 3px; -moz-border-bottom-left-radius: 3px; -webkit-border-bottom-right-radius: 3px; -moz-border-bottom-right-radius: 3px;
+}
+.header .ribbon .icon {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -348px -375px; left: 11px; top: 44px; width: 17px; height: 17px; position: absolute;
+}
+.old.header {
+	top: -180px;
+}
+body.docked .old.header {
+	top: -130px;
+}
+body.docked .hover.old.header {
+	top: -115px;
+}
+body.docked .open.old.header {
+	top: 0px;
+}
+body.docked .open.hover.old.header {
+	top: 0px;
+}
+body.zh_HK .old.header .gh-w {
+	margin: 0px auto; width: 840px;
+}
+body.docked .header {
+	background: url("data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAABVAAD/4QMraHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjAtYzA2MCA2MS4xMzQ3NzcsIDIwMTAvMDIvMTItMTc6MzI6MDAgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgTWFjaW50b3NoIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjM5RDRDOEYzQ0QzNjExRTFBRTIwRkUzMzM4MTZCOEQzIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjM5RDRDOEY0Q0QzNjExRTFBRTIwRkUzMzM4MTZCOEQzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MzlENEM4RjFDRDM2MTFFMUFFMjBGRTMzMzgxNkI4RDMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MzlENEM4RjJDRDM2MTFFMUFFMjBGRTMzMzgxNkI4RDMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7/7gAOQWRvYmUAZMAAAAAB/9sAhAACAQEBAQECAQECAwIBAgMDAgICAgMDAwMDAwMDBQMEBAQEAwUFBQYGBgUFBwcICAcHCgoKCgoMDAwMDAwMDAwMAQICAgQDBAcFBQcKCAcICgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAkACADAREAAhEBAxEB/8QAYwABAQEBAAAAAAAAAAAAAAAAAAECCQEBAAAAAAAAAAAAAAAAAAAAABABAAEDAgUDAwUAAAAAAAAAAREhAhIAMfBBYSIyUaETsfFiccFCggMRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AO7clpAhbVm52g330EItG1cY2PRd3f25aCN6DyBneh1WePoFvcWRxibt5x3Jo1H04AXXBbyMav49YmpoDfbatygWmRWIGksJOgJbOUtpbNyz4+q1roF1y0tO47pOSi5RPN5cAR/0ttEUyt7m6dq71emgo3TksJ3JK4k7+VR9NBcriniFd9q7oPtoM8isNvd3MxMzc1J/TQLh/wAysW2i3TPi1J326aCyQj2x7MzO+gWsXYzEBcfjNDnz46AVtFaB4k+LUlh9uADnT49pccs4y+2gM/w8o7fKc6z+0fbQZPlxcfCH45zjOXj6aDT8s2/HM/2jLrFNB//Z") 0px 0px rgb(248, 248, 248); left: 0px; top: -80px; width: 100%; border-bottom-color: rgb(170, 170, 170); border-bottom-width: 1px; border-bottom-style: solid; position: fixed; z-index: 500; box-shadow: 0px 4px 8px rgba(0,0,0,0.2); -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); -moz-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+body.docked .hover.header {
+	top: -60px;
+}
+body.docked .open.header {
+	top: 0px;
+}
+body.docked .open.hover.header {
+	top: 0px;
+}
+body.docked .open.header .ribbon {
+	background: rgb(119, 119, 119);
+}
+body.docked .open.hover.header .ribbon {
+	background: rgb(119, 119, 119);
+}
+body.docked .open.header .ribbon .icon {
+	background-position: -217px -130px; left: 12px; top: 46px; width: 14px; height: 14px; right: 20px;
+}
+body.docked .open.hover.header .ribbon .icon {
+	background-position: -217px -130px; left: 12px; top: 46px; width: 14px; height: 14px; right: 20px;
+}
+body.docked .header #gh {
+	padding: 10px 0px;
+}
+body.docked .header #gh #gh-top {
+	display: none !important;
+}
+body.docked .header #gh #gh-doodleL {
+	display: none !important;
+}
+body.docked .header #gh #gh-sbc-o {
+	top: 55px;
+}
+body.docked .header .gh-qaMsg {
+	display: none;
+}
+body.docked .header .ribbon {
+	display: block;
+}
+body.docked .middle {
+	padding-top: 93px;
+}
+body.docked #gAC {
+	z-index: 600 !important;
+}
+.sz980 .msgCntr {
+	margin: 0px 0px 0px 265px;
+}
+.sz980 .header {
+	margin: 0px auto; width: 980px;
+}
+.sz1200 .header {
+	margin: 0px auto; width: 1200px;
+}
+#watchwarning {
+	width: 530px; position: absolute;
+}
+#watchNLIwarning {
+	width: 530px; position: absolute;
+}
+#removeNLIwarning {
+	width: 530px; position: absolute;
+}
+* + html .actvbar .bdr {
+	height: 50px;
+}
+* + html .above.promo {
+	margin: 0px 0px 0px 50px; width: 448px;
+}
+* + html .sz980 .above.promo {
+	margin: 0px;
+}
+.tooltip {
+	border-width: 3px 1px 1px; border-style: solid; border-color: rgb(241, 142, 0) rgb(204, 204, 204) rgb(204, 204, 204); padding: 15px 15px 15px 50px; border-radius: 3px; width: 150px; color: rgb(0, 0, 0); line-height: 18px; font-size: 12px; display: none; position: absolute; z-index: 301; box-shadow: 5px 5px 10px rgba(0,0,0,0.3); background-color: rgb(255, 255, 255); -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.tooltip .notch {
+	margin: 0px; padding: 0px; border: 1px solid rgb(204, 204, 204); width: 0px; height: 0px; line-height: 0; font-size: 0px; position: absolute; _border-right-color: #fff; _border-left-color: #fff;
+}
+.tooltip .icon {
+	background: url("http://p.ebaystatic.com/aw/pics/cmp/ds3/sprds3_11.png") no-repeat -230px -10px; left: 15px; top: 9px; width: 25px; height: 30px; position: absolute;
+}
+.right-middle.tooltip {
+	margin-left: 10px;
+}
+.right-middle.tooltip .notch {
+	border-width: 10px 10px 10px 0px; border-style: solid solid solid none; border-color: transparent rgb(255, 255, 255) transparent currentColor; left: -10px; top: 50%; margin-top: -10px;
+}
+.right-middle.tooltip .notch-border.notch {
+	left: -11px; border-right-color: rgb(204, 204, 204);
+}
+.right-bottom.tooltip {
+	margin-left: 10px; border-top-left-radius: 0px;
+}
+.right-bottom.tooltip .notch {
+	border-width: 5px; border-style: solid; border-color: rgb(255, 255, 255) rgb(255, 255, 255) transparent transparent; left: -10px; top: 0px;
+}
+.right-bottom.tooltip .notch-border.notch {
+	left: -11px; border-top-color: rgb(204, 204, 204); border-right-color: rgb(204, 204, 204);
+}
+.bottom-center.tooltip {
+	margin-top: 10px;
+}
+.bottom-center.tooltip .notch {
+	border-width: 0px 10px 10px; border-style: none solid solid; border-color: currentColor transparent rgb(255, 255, 255); left: 50%; top: -10px; margin-left: -10px;
+}
+.bottom-center.tooltip .notch-border.notch {
+	top: -14px; border-bottom-color: rgb(241, 142, 0); border-bottom-width: 11px; border-bottom-style: solid;
+}
+.bottom-left.tooltip {
+	margin-left: -10px; border-top-right-radius: 0px;
+}
+.bottom-left.tooltip .notch {
+	border-width: 5px; border-style: solid; border-color: rgb(255, 255, 255) transparent transparent rgb(255, 255, 255); top: 0px; right: -10px;
+}
+.bottom-left.tooltip .notch-border.notch {
+	right: -11px; border-top-color: rgb(204, 204, 204); border-left-color: rgb(204, 204, 204);
+}
+.left-middle.tooltip {
+	margin-left: -10px;
+}
+.left-middle.tooltip .notch {
+	border-width: 10px 0px 10px 10px; border-style: solid none solid solid; border-color: transparent currentColor transparent rgb(255, 255, 255); top: 50%; right: -10px; margin-top: -10px;
+}
+.left-middle.tooltip .notch-border.notch {
+	right: -11px; border-left-color: rgb(204, 204, 204);
+}
+.left-top.tooltip {
+	margin-left: -10px; border-bottom-right-radius: 0px;
+}
+.left-top.tooltip .notch {
+	border-width: 5px; border-style: solid; border-color: transparent transparent rgb(255, 255, 255) rgb(255, 255, 255); right: -10px; bottom: 0px;
+}
+.left-top.tooltip .notch-border.notch {
+	right: -11px; border-bottom-color: rgb(204, 204, 204); border-left-color: rgb(204, 204, 204);
+}
+.top-center.tooltip {
+	margin-top: -10px;
+}
+.top-center.tooltip .notch {
+	border-width: 10px 10px 0px; border-style: solid solid none; border-color: rgb(255, 255, 255) transparent currentColor; left: 50%; bottom: -10px; margin-left: -10px;
+}
+.top-center.tooltip .notch-border.notch {
+	bottom: -11px; border-top-color: rgb(204, 204, 204);
+}
+.top-right.tooltip {
+	margin-left: 10px; border-bottom-left-radius: 0px;
+}
+.top-right.tooltip .notch {
+	border-width: 5px; border-style: solid; border-color: transparent rgb(255, 255, 255) rgb(255, 255, 255) transparent; left: -10px; bottom: 0px;
+}
+.top-right.tooltip .notch-border.notch {
+	left: -11px; border-right-color: rgb(204, 204, 204); border-bottom-color: rgb(204, 204, 204);
+}
+.notice {
+	padding: 8px 30px; border-radius: 3px; width: auto; text-align: center; color: rgb(255, 255, 255); line-height: 24px; font-family: "Helvetica Neue","Helvetica","Arial",hirakakupro-w3,osaka,"ms pgothic",sans-serif; font-size: 16px; font-weight: 400; margin-bottom: 15px; display: none; position: relative; box-shadow: 0px 1px 2px rgba(0,0,0,0.3); background-color: rgb(55, 156, 204); -webkit-border-radius: 3px; -moz-border-radius: 3px; -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.notice .notice-close {
+	top: 15px; position: absolute;
+}
+.lftnav {
+	width: 210px; position: relative;
+}
+.lftnav a {
+	color: rgb(51, 51, 51);
+}
+.lftnav ul {
+	list-style: none; padding: 0px;
+}
+.lftnav .cat {
+	width: 210px; height: 34px; font-size: 12px; position: relative; z-index: 10; magin: 0;
+}
+.lftnav .scat {
+	width: 210px; height: 34px; font-size: 12px; position: relative; z-index: 10; magin: 0;
+}
+body.ru_RU .lftnav .cat {
+	height: auto;
+}
+body.ru_RU .lftnav .scat {
+	height: auto;
+}
+.lftnav .rt {
+	padding: 10px 0px 10px 5px; width: 200px; color: rgb(51, 51, 51); font-size: 13px; text-decoration: none; border-bottom-color: rgb(248, 248, 248); border-bottom-width: 1px; border-bottom-style: solid; display: block; position: relative;
+}
+.lftnav .rt:hover {
+	color: rgb(6, 84, 186); text-decoration: underline;
+}
+body.ru_RU .lftnav .rt {
+	padding: 6px 20px 6px 5px; width: 180px;
+}
+.lftnav .show.cat .rt {
+	background: rgb(255, 255, 255); width: 180px; border-bottom-color: rgb(204, 204, 204); border-bottom-width: 1px; border-bottom-style: solid; z-index: 200; box-shadow: 0px 4px 6px -4px #ccc;
+}
+body.ru_RU .lftnav .show.cat .rt {
+	padding: 6px 0px 6px 5px;
+}
+.lftnav .cat .rt i {
+	background: url("http://p.ebaystatic.com/aw/pics/homepage/hpspr2.png") no-repeat -154px -35px; top: 6px; width: 12px; height: 15px; right: 5px; display: block; position: absolute;
+}
+.lftnav .show.cat .rt i {
+	display: none;
+}
+.lftnav .col {
+	margin: 25px 0px 25px 25px; width: 130px; float: left;
+}
+.lftnav .col .title {
+	padding: 0px 0px 10px; color: rgb(85, 85, 85); font-size: 12px; font-weight: bold; border-bottom-color: rgb(218, 218, 218); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.lftnav .col li {
+	padding: 15px 0px 0px;
+}
+.lftnav .col li.folc {
+	margin: 10px 0px 0px; padding: 10px 0px 0px; border-top-color: rgb(204, 204, 204); border-top-width: 1px; border-top-style: solid;
+}
+.lftnav .show.cat {
+	z-index: 1000;
+}
+.lftnav .cat .sub {
+	background: rgb(255, 255, 255); left: 185px; top: 0px; width: 335px; display: none; position: absolute; z-index: 100; box-shadow: 0px 4px 6px 0px #ccc;
+}
+.lftnav .show.cat .sub {
+	display: block;
+}
+.lftnav .icn a {
+	padding: 5px 0px 5px 38px; display: block; position: relative;
+}
+.lftnav .col a {
+	color: rgb(85, 85, 85);
+}
+.lftnav .col a:visited {
+	color: rgb(85, 85, 85);
+}
+.lftnav .icn img {
+	left: 0px; top: 2px; position: absolute;
+}
+.exp.lftnav {
+	background: rgb(255, 255, 255); border-radius: 3px; border: 1px solid rgb(204, 204, 204); height: 175px; z-index: 200; box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.3);
+}
+.lftnav .expdr {
+	background: rgb(253, 253, 253); left: 0px; width: 100%; height: 35px; bottom: 0px; line-height: 35px; font-weight: bold; border-top-color: rgb(204, 204, 204); border-top-width: 1px; border-top-style: solid; position: absolute; cursor: pointer;
+}
+.exp.lftnav .lw {
+	display: none;
+}
+.lftnav .expdr span {
+	margin: 0px 0px 0px 15px;
+}
+.lftnav .expdr b {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -209px -390px; width: 30px; height: 30px; right: 7px; bottom: 4px; position: absolute;
+}
+.open.exp.lftnav .expdr b {
+	background-position: -259px -390px;
+}
+body.ru_RU .lftnav .cat .sub {
+	width: 360px;
+}
+body.ru_RU .lftnav .col {
+	width: 150px;
+}
+html.ie8 .lftnav .cat .sub {
+	z-index: 1000;
+}
+html.ie8 .exp.lftnav {
+	
+}
+html.ie8 .lftnav .show.cat .rt {
+	
+}
+.mfbb {
+	width: 760px; height: 271px; overflow: hidden; position: relative;
+}
+.sz1200 .mfbb {
+	width: 980px;
+}
+.mfbb .frms {
+	list-style: none; margin: 0px; padding: 0px; position: relative;
+}
+.mfbb .frms li {
+	height: 271px; position: absolute; z-index: 10;
+}
+.mfbb .frm {
+	display: none;
+}
+.mfbb .frms .fst {
+	display: block; z-index: 20;
+}
+.mfbb .pngwp {
+	right: 20px; bottom: 10px; display: none; position: absolute; z-index: 100;
+}
+.mfbb .pngwp .pg {
+	background: rgb(255, 255, 255); margin: 0px 0px 0px 10px; border: 1px solid rgb(214, 213, 211); width: 16px; height: 16px; text-align: center; color: rgb(71, 71, 71); line-height: 16px; font-size: 13px; font-weight: bold; float: left; cursor: pointer;
+}
+.mfbb .pngwp .sel.pg {
+	background: rgb(171, 171, 171);
+}
+.mfbb .frms iframe {
+	margin: 0px; padding: 0px; border: 0px currentColor; height: 280px; overflow: hidden;
+}
+.sz1200 .mfbb .frms iframe {
+	width: 995px;
+}
+.sz980 .mfbb .frms iframe {
+	width: 775px;
+}
+.mfbb_dd_db_vr_tme_760 .tl {
+	left: 88px; top: -5px; font-weight: bold; position: absolute;
+}
+.mfbb_dd_db_vr_tme_980 .tl {
+	left: 88px; top: -5px; font-weight: bold; position: absolute;
+}
+.actvbar {
+	margin: 0px 0px 15px; padding: 15px 0px 0px; clear: both; position: relative;
+}
+.actvbar ul.btns {
+	list-style: none; margin: 7px 0px; padding: 0px; float: left;
+}
+.actvbar ul.btns li {
+	padding: 7px 16px; outline: 0px; color: rgb(6, 84, 186); font-family: "Helvetica Neue","Helvetica","Arial",hirakakupro-w3,osaka,"ms pgothic",sans-serif; border-left-color: rgb(204, 204, 204); border-left-width: 1px; border-left-style: solid; float: left; display: inline-block; position: relative; z-index: 100; cursor: pointer;
+}
+.actvbar ul.btns li span {
+	font-size: 18px; font-weight: normal;
+}
+.actvbar ul.btns li.first {
+	padding-left: 0px; border-left-color: currentColor; border-left-width: 0px; border-left-style: none;
+}
+.actvbar ul.btns li.sel {
+	color: rgb(85, 85, 85);
+}
+.actvbar ul.btns li.sel span {
+	top: -1px; font-weight: bold; position: relative;
+}
+.actvbar ul.btns li.sel span:hover {
+	text-decoration: none;
+}
+.actvbar ul.btns li.inedit {
+	color: rgb(6, 84, 186);
+}
+.actvbar ul.btns li.unclkable {
+	color: rgb(204, 204, 204); cursor: default;
+}
+.actvbar ul.btns li.unclkable span:hover {
+	text-decoration: none;
+}
+.actvbar ul.btns li span:hover {
+	text-decoration: underline;
+}
+.actvbar ul.btns li a.edit {
+	background: -ms-linear-gradient(rgb(255, 255, 255), rgb(236, 236, 236)); margin: 0px 0px 0px 10px; padding: 7px 15px 7px 35px; outline: 0px; border-radius: 3px; border: 1px solid rgb(204, 204, 204); top: -1px; text-align: center; font-size: 12px; font-weight: normal; display: inline; position: relative; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.actvbar ul.btns li a.disable.edit {
+	background: -ms-linear-gradient(rgb(81, 81, 81), rgb(102, 102, 102)); color: rgb(255, 255, 255); cursor: default;
+}
+.actvbar ul.btns li a.disable.edit b {
+	background-position: -300px -463px;
+}
+.actvbar ul.btns li a.disable.edit:hover {
+	text-decoration: none;
+}
+.actvbar ul.btns li a.edit b {
+	background: url("http://p.ebaystatic.com/aw/home/feed/feedSprite_temp14.png") no-repeat -272px -463px; left: 11px; top: 7px; width: 16px; height: 16px; position: absolute;
+}
+.actvbar a.unclkable:visited {
+	color: rgb(153, 153, 153);
+}
+.actvbar .cnt {
+	background: rgb(51, 51, 51); border-radius: 3px; top: 20px; width: 23px; height: 16px; text-align: center; right: 8px; color: rgb(255, 255, 255); line-height: 16px; font-size: 10px; font-weight: bold; position: absolute;
+}
+.actvbar .sel.my {
+	border-left-color: currentColor; border-left-width: medium; border-left-style: none;
+}
+.actvbar .arrw {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -84px -83px; top: 56px; width: 44px; height: 18px; position: absolute;
+}
+.actvbar .anchor {
+	top: 0px; height: 1px; display: block; position: absolute;
+}
+.actvbar .float-right {
+	float: right;
+}
+.disable.actvbar li {
+	color: rgb(153, 153, 153); cursor: default;
+}
+.disable.actvbar .sel span {
+	color: rgb(6, 84, 186);
+}
+.dock.actvbar {
+	margin: 0px; top: 0px; position: fixed; z-index: 30000;
+}
+.sz1200 .dock.actvbar {
+	width: 1200px;
+}
+.sz980 .dock.actvbar {
+	width: 980px; padding-right: 450px;
+}
+.dock.actvbar .sortby {
+	display: none;
+}
+.actvbar .line {
+	background: -ms-linear-gradient(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0)); margin: 7px 0px 0px; width: 100%; height: 10px; border-top-left-radius: 1px; border-top-right-radius: 1px; -webkit-border-top-left-radius: 1px; -moz-border-top-left-radius: 1px; -webkit-border-top-right-radius: 1px; -moz-border-top-right-radius: 1px;
+}
+body.interest .actvbar .container {
+	padding: 10px 0px; height: 25px; position: relative;
+}
+body.interest .actvbar .container h2 {
+	color: rgb(51, 51, 51); font-family: "Helvetica Neue","Helvetica","Arial",hirakakupro-w3,osaka,"ms pgothic",sans-serif; font-size: 24px; font-weight: normal; display: inline;
+}
+body.interest .actvbar .container .flwbtn {
+	margin: 0px 0px 0px 10px; padding: 5px 15px; border-radius: 3px; top: -3px; height: 20px; text-align: center; color: rgb(255, 255, 255); line-height: 20px; font-weight: bold; display: inline-block; position: relative; cursor: pointer;
+}
+body.interest .actvbar .container .flw {
+	background: -ms-linear-gradient(rgb(106, 175, 42), rgb(56, 129, 14));
+}
+body.interest .actvbar .container .flwing {
+	background: -ms-linear-gradient(rgb(160, 160, 160), rgb(115, 115, 115));
+}
+body.interest .actvbar .container .flwing:hover {
+	background: -ms-linear-gradient(rgb(243, 158, 0), rgb(237, 121, 0));
+}
+body.interest .actvbar .container > a {
+	padding: 5px 0px; top: -2px; color: rgb(6, 84, 186); font-size: 16px; position: relative;
+}
+body.interest .actvbar .container > a.back {
+	padding-right: 10px; text-decoration: none; margin-right: 10px; border-right-color: rgb(221, 221, 221); border-right-width: 1px; border-right-style: solid;
+}
+body.interest .actvbar .container > a.back .arrow {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -150px -70px; margin: 0px 5px 0px 0px; top: 1px; width: 9px; height: 13px; display: inline-block; position: relative;
+}
+body.interest .actvbar .container > a.back:hover .text {
+	text-decoration: underline;
+}
+body.interest .actvbar .container > a.search {
+	padding-left: 10px; margin-left: 10px; border-left-color: rgb(221, 221, 221); border-left-width: 1px; border-left-style: solid;
+}
+body.docked.interest .actvbar {
+	height: 62px;
+}
+body.docked.interest .actvbar .container {
+	background: url("data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAABVAAD/4QMraHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjAtYzA2MCA2MS4xMzQ3NzcsIDIwMTAvMDIvMTItMTc6MzI6MDAgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDUzUgTWFjaW50b3NoIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjM5RDRDOEYzQ0QzNjExRTFBRTIwRkUzMzM4MTZCOEQzIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjM5RDRDOEY0Q0QzNjExRTFBRTIwRkUzMzM4MTZCOEQzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MzlENEM4RjFDRDM2MTFFMUFFMjBGRTMzMzgxNkI4RDMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MzlENEM4RjJDRDM2MTFFMUFFMjBGRTMzMzgxNkI4RDMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7/7gAOQWRvYmUAZMAAAAAB/9sAhAACAQEBAQECAQECAwIBAgMDAgICAgMDAwMDAwMDBQMEBAQEAwUFBQYGBgUFBwcICAcHCgoKCgoMDAwMDAwMDAwMAQICAgQDBAcFBQcKCAcICgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAkACADAREAAhEBAxEB/8QAYwABAQEBAAAAAAAAAAAAAAAAAAECCQEBAAAAAAAAAAAAAAAAAAAAABABAAEDAgUDAwUAAAAAAAAAAREhAhIAMfBBYSIyUaETsfFiccFCggMRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AO7clpAhbVm52g330EItG1cY2PRd3f25aCN6DyBneh1WePoFvcWRxibt5x3Jo1H04AXXBbyMav49YmpoDfbatygWmRWIGksJOgJbOUtpbNyz4+q1roF1y0tO47pOSi5RPN5cAR/0ttEUyt7m6dq71emgo3TksJ3JK4k7+VR9NBcriniFd9q7oPtoM8isNvd3MxMzc1J/TQLh/wAysW2i3TPi1J326aCyQj2x7MzO+gWsXYzEBcfjNDnz46AVtFaB4k+LUlh9uADnT49pccs4y+2gM/w8o7fKc6z+0fbQZPlxcfCH45zjOXj6aDT8s2/HM/2jLrFNB//Z") 0px 0px rgb(248, 248, 248); padding: 25px 0px 15px; top: 0px; position: fixed; box-shadow: 0px 5px 10px -6px rgba(0,0,0,0.2); -webkit-box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.2); -moz-box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.2);
+}
+body.sz1200.docked.interest .actvbar .container {
+	width: 1200px;
+}
+body.sz980.docked.interest .actvbar .container {
+	width: 980px;
+}
+body.ru_RU .actvbar .flwbtn {
+	width: 150px;
+}
+body.de_DE .actvbar .flwbtn {
+	width: 150px;
+}
+body.fr_FR .actvbar .flwbtn {
+	width: 150px;
+}
+body.fr_CA .actvbar .flwbtn {
+	width: 150px;
+}
+body.interest.en_US_MAIN .actvbar h2 {
+	text-transform: capitalize;
+}
+.stby {
+	display: inline;
+}
+.sortby {
+	margin-top: 17px; position: relative;
+}
+.sortby .txt {
+	margin: 0px 5px 0px 0px; color: rgb(119, 119, 119); line-height: 17px; font-size: 12px; float: left;
+}
+.sortby .txt span {
+	margin: 0px 10px 0px 0px;
+}
+.sortby label {
+	margin: 0px 0px 0px 2px;
+}
+.sortby label select {
+	padding: 0px; outline: 0px; border-radius: 0px; border: 1px solid rgb(204, 204, 204); color: rgb(6, 84, 186); font-size: 12px; font-weight: bold; cursor: pointer; max-width: 200px; -webkit-border-radius: 0; -moz-border-radius: 0;
+}
+@media not all
+{
+.sortby label {
+	position: relative;
+}
+.sortby label select {
+	border: 0px currentColor; padding-right: 14px; -webkit-appearance: none;
+}
+.sortby label::after {
+	border-width: 4px; border-style: solid; border-color: rgb(6, 84, 186) transparent transparent; top: 5px; width: 0px; height: 0px; right: 0px; position: absolute; content: " ";
+}
+}
+.promo {
+	line-height: 55px;
+}
+.above.promo {
+	margin: 0px 0px 15px; position: relative;
+}
+.bottom.promo {
+	margin: 0px 0px 0px 405px; width: 380px; bottom: 0px;
+}
+.sz980 .bottom.promo {
+	margin: 0px 0px 0px 290px;
+}
+.promo .create {
+	font-weight: bold; text-decoration: none; border-bottom-color: currentColor; border-bottom-width: 2px; border-bottom-style: solid; cursor: pointer;
+}
+.promo .create:hover {
+	border-bottom-color: transparent;
+}
+.alert {
+	padding: 50px 0px; text-align: center; color: rgb(153, 153, 153);
+}
+.alert h2 {
+	margin: 0px 0px 20px; color: rgb(209, 209, 209); line-height: 36px; font-family: "Helvetica Neue","Helvetica","Arial",hirakakupro-w3,osaka,"ms pgothic",sans-serif; font-weight: bold;
+}
+.alert > a {
+	background: -ms-linear-gradient(rgb(254, 254, 254), rgb(248, 248, 248)); padding: 18px 32px 17px; border-radius: 3px; border: 1px solid rgb(221, 221, 221); text-align: center; color: rgb(6, 84, 186); font-size: 18px; font-weight: 500; text-decoration: none; vertical-align: baseline; display: inline-block; box-shadow: 0px 2px 1px rgba(0,0,0,0.1); -webkit-border-radius: 3px; -moz-border-radius: 3px; -webkit-box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
+}
+.alert > a .icon {
+	display: inline-block;
+}
+.alert > a .reload.icon {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -193px -306px; margin: 0px 0px 0px 10px; top: 2px; width: 19px; height: 16px; position: relative;
+}
+.alert > a:visited {
+	color: rgb(6, 84, 186);
+}
+.alert > a:hover {
+	text-decoration: underline;
+}
+.footer {
+	left: 0px; width: 100%; height: 0px; bottom: -1px; color: rgb(153, 153, 153); border-top-color: rgb(222, 222, 222); border-top-width: 1px; border-top-style: solid; position: fixed; z-index: 1000;
+}
+.sz980 .hpftr {
+	width: 980px;
+}
+.sz1200 .hpftr {
+	width: 1200px;
+}
+.hpftr {
+	margin: 10px auto; position: relative;
+}
+.hpftr #glbfooter {
+	border-top-color: currentColor; border-top-width: 0px; border-top-style: none;
+}
+.feed {
+	background: rgb(255, 255, 255); border-radius: 5px; border: 1px solid rgb(212, 212, 212); width: 225px; position: relative; box-shadow: 0px 1px 2px rgba(0,0,0,0.07); -webkit-border-radius: 5px; -moz-border-radius: 5px; -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07); -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
+}
+.feedNoInteract {
+	background: rgb(255, 255, 255); border-radius: 5px; border: 1px solid rgb(212, 212, 212); width: 225px; position: relative; box-shadow: 0px 1px 2px rgba(0,0,0,0.07); -webkit-border-radius: 5px; -moz-border-radius: 5px; -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07); -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
+}
+.feed .icn {
+	text-align: center; display: block; min-height: 150px;
+}
+.feed .icn img {
+	vertical-align: middle; max-width: 225px; border-top-left-radius: 5px; border-top-right-radius: 5px; -webkit-border-top-left-radius: 5px; -moz-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-top-right-radius: 5px;
+}
+.feed .icn img.fadein {
+	transition:opacity 550ms ease-out; opacity: 0; -webkit-transition-property: opacity; -webkit-transition-duration: 550ms; -webkit-transition-timing-function: ease-out; -webkit-transition-delay: 0s; -moz-transition-property: opacity; -moz-transition-duration: 550ms; -moz-transition-timing-function: ease-out; -moz-transition-delay: 0s; -o-transition-property: opacity; -o-transition-duration: 550ms; -o-transition-timing-function: ease-out; -o-transition-delay: 0s;
+}
+.feed .icn img.loaded.fadein {
+	opacity: 1;
+}
+.prwpr .feed .icn {
+	min-height: 100px;
+}
+.demo .feed .icn {
+	min-height: 100px;
+}
+.feed .description {
+	border-bottom-color: rgb(221, 221, 221); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.feed a.vi {
+	padding: 10px 9px 15px; height: 40px; color: rgb(51, 51, 51); line-height: 16px; font-size: 12px; text-decoration: none; display: block;
+}
+.feed .overlay {
+	background: rgba(255, 255, 255, 0.8); border-radius: 5px; left: 0px; top: 0px; width: 100%; height: 100%; text-align: center; display: none; position: absolute; z-index: 100; -webkit-border-radius: 5px; -moz-border-radius: 5px;
+}
+.feed .overlay:hover a.restore {
+	display: inline-block; opacity: 1;
+}
+.feed .more {
+	padding: 15px 10px 10px; position: relative; min-height: 27px;
+}
+.feed .more .info {
+	color: rgb(85, 85, 85); line-height: 13px; font-size: 12px;
+}
+.feed .more .info a {
+	color: rgb(0, 119, 210); display: inline-block; white-space: nowrap; position: relative; max-width: 195px;
+}
+.feed .more .info a::after {
+	border-width: 4px; border-style: solid; border-color: transparent transparent transparent rgb(0, 119, 210); top: 2px; width: 0px; height: 0px; right: -14px; position: absolute; content: " ";
+}
+.feed .more .info img {
+	width: 24px; height: 24px; margin-right: 5px; float: left;
+}
+.feed .more .prc {
+	top: 11px; text-align: right; right: 10px; color: rgb(153, 153, 153); font-size: 14px; font-weight: 400; display: inline; position: absolute;
+}
+.feed .more .prc .unitPrice {
+	color: rgb(119, 119, 119); line-height: 19px; font-size: 11px; display: block;
+}
+.feed .fmt {
+	margin: 0px 0px 0px 5px; color: rgb(153, 153, 153); font-size: 12px;
+}
+.feed .btns {
+	left: 0px; top: 0px; width: 100%; display: none; position: absolute; z-index: 2;
+}
+.feed .highlight {
+	border-radius: 5px; border: 2px solid rgb(48, 155, 206); left: -2px; top: -2px; width: 100%; height: 100%; position: absolute; z-index: 1; -webkit-border-radius: 5px; -moz-border-radius: 5px;
+}
+.moving.feed .btns {
+	display: none !important;
+}
+.removed.feed {
+	box-shadow: none; -webkit-box-shadow: 0; -moz-box-shadow: 0;
+}
+.removed.feed .overlay {
+	display: block;
+}
+.removed.feed:hover {
+	border: 1px solid rgb(212, 212, 212); box-shadow: none; -webkit-box-shadow: 0; -moz-box-shadow: 0;
+}
+.removed.feed:hover .hvrnfo {
+	display: none;
+}
+.removed.feed:hover .btns {
+	display: none;
+}
+.rtmfeed {
+	border: 1px solid rgb(221, 221, 221); width: 225px; height: 271px; overflow: hidden; box-shadow: 0px 1px 2px rgba(0,0,0,0.07); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07); -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
+}
+.feed:hover {
+	border: 1px solid rgb(170, 170, 170); box-shadow: 0px 2px 2px rgba(50,50,50,0.1); -webkit-box-shadow: 0 2px 2px rgba(50, 50, 50, 0.1); -moz-box-shadow: 0 2px 2px rgba(50, 50, 50, 0.1);
+}
+.fcs.feed {
+	border: 1px solid rgb(170, 170, 170); box-shadow: 0px 2px 2px rgba(50,50,50,0.1); -webkit-box-shadow: 0 2px 2px rgba(50, 50, 50, 0.1); -moz-box-shadow: 0 2px 2px rgba(50, 50, 50, 0.1);
+}
+.feedNoInteract:hover {
+	border: 1px solid rgb(170, 170, 170); box-shadow: 0px 2px 2px rgba(50,50,50,0.1); -webkit-box-shadow: 0 2px 2px rgba(50, 50, 50, 0.1); -moz-box-shadow: 0 2px 2px rgba(50, 50, 50, 0.1);
+}
+.feed:hover a.vi {
+	color: rgb(0, 119, 210);
+}
+.fcs.feed a.vi {
+	color: rgb(0, 119, 210);
+}
+.feed a.vi {
+	display: none;
+}
+.feed .fmt {
+	display: none;
+}
+.feed .btns a {
+	background: -ms-linear-gradient(rgb(254, 254, 254), rgb(248, 248, 248)); margin: 4px; padding: 7px 17px 6px; border-radius: 3px; border: 1px solid rgb(221, 221, 221); text-align: center; color: rgb(6, 84, 186); line-height: 18px; font-size: 14px; font-weight: 500; text-decoration: none; vertical-align: baseline; display: inline-block; cursor: pointer; box-shadow: 1px 2px 0px rgba(0,0,0,0.1); -webkit-border-radius: 3px; -moz-border-radius: 3px; -webkit-box-shadow: 1px 2px 0 rgba(0, 0, 0, 0.1); -moz-box-shadow: 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+.feed .overlay a {
+	background: -ms-linear-gradient(rgb(254, 254, 254), rgb(248, 248, 248)); margin: 4px; padding: 7px 17px 6px; border-radius: 3px; border: 1px solid rgb(221, 221, 221); text-align: center; color: rgb(6, 84, 186); line-height: 18px; font-size: 14px; font-weight: 500; text-decoration: none; vertical-align: baseline; display: inline-block; cursor: pointer; box-shadow: 1px 2px 0px rgba(0,0,0,0.1); -webkit-border-radius: 3px; -moz-border-radius: 3px; -webkit-box-shadow: 1px 2px 0 rgba(0, 0, 0, 0.1); -moz-box-shadow: 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+.feed .btns a.left {
+	margin-right: 0px; float: left;
+}
+.feed .overlay a.left {
+	margin-right: 0px; float: left;
+}
+.feed .btns a.right {
+	margin-left: 0px; float: right;
+}
+.feed .overlay a.right {
+	margin-left: 0px; float: right;
+}
+.feed .btns a.watch {
+	float: left;
+}
+.feed .overlay a.watch {
+	float: left;
+}
+.feed .btns a.rmv {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -363px -426px rgb(255, 255, 255); padding: 0px; width: 28px; height: 28px; float: right;
+}
+.feed .overlay a.rmv {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -363px -426px rgb(255, 255, 255); padding: 0px; width: 28px; height: 28px; float: right;
+}
+.feed .btns a.restore {
+	top: 35%; display: none; position: relative; box-shadow: 0px 1px 2px rgba(0,0,0,0.1); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.feed .overlay a.restore {
+	top: 35%; display: none; position: relative; box-shadow: 0px 1px 2px rgba(0,0,0,0.1); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.feed .btns a.restore:hover {
+	box-shadow: 0px 0px 2px rgba(0,0,0,0.1); -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+.feed .overlay a.restore:hover {
+	box-shadow: 0px 0px 2px rgba(0,0,0,0.1); -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+.feed .btns a i {
+	color: rgb(0, 119, 210); font-style: normal; font-weight: bold;
+}
+.feed .overlay a i {
+	color: rgb(0, 119, 210); font-style: normal; font-weight: bold;
+}
+body.featured-page .item .rmv {
+	display: none;
+}
+body.watching-page .item .rmv {
+	display: none;
+}
+body.recently-viewed-page .item .rmv {
+	display: none;
+}
+.feed:hover .btns {
+	display: block;
+}
+.hover.feed .btns {
+	display: block;
+}
+.fcs.feed .btns {
+	display: block;
+}
+#editInterestLayer .feed .btns {
+	display: none;
+}
+#editInterestLayer .feed .btns {
+	display: none;
+}
+.feed .btns .watch:hover {
+	border: 1px solid rgb(170, 170, 170);
+}
+.feed .btns .watched:hover {
+	border: 1px solid rgb(170, 170, 170);
+}
+.feed .btns .rmv:hover {
+	border: 1px solid rgb(170, 170, 170);
+}
+.feed .hvrnfo {
+	display: none; position: relative; cursor: pointer;
+}
+.feed .hvrnfo .pdd {
+	background: rgb(255, 255, 255); left: 0px; width: 100%; bottom: 0px; line-height: 12px; font-size: 12px; border-top-color: rgb(221, 221, 221); border-top-width: 1px; border-top-style: solid; position: absolute;
+}
+.feed .hvrnfo .pdd p {
+	margin: 15px 10px 0px; color: rgb(119, 119, 119); line-height: 14px; padding-bottom: 13px; font-size: 12px; border-bottom-color: rgb(221, 221, 221); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.feed .hvrnfo .pdd p:hover {
+	text-decoration: underline;
+}
+.feed .btm.hvrnfo {
+	bottom: 0px;
+}
+.feed:hover .hvrnfo {
+	display: block;
+}
+.fcs.feed .hvrnfo {
+	display: block;
+}
+.feedCntr {
+	background: rgb(255, 255, 255); height: 15px; text-align: center; color: rgb(255, 102, 0); line-height: 15px; position: absolute;
+}
+.prom {
+	padding: 12px 0px 0px; text-align: center; right: 128px; color: rgb(255, 255, 255); overflow: hidden; position: absolute;
+}
+.prom140 {
+	left: -5px; top: -6px; width: 106px; height: 82px;
+}
+.prom span.gspr {
+	background-position: -42px -240px; font-size: 13px; font-weight: bold; position: relative; transform: rotate(-40deg); -webkit-transform: rotate(-40deg); -moz-transform: rotate(-40deg); -o-transform: rotate(-40deg);
+}
+it .prom .gspr {
+	line-height: 20px; font-size: 11px;
+}
+.prom140 span.gspr {
+	margin: 1px 0px 0px 1px; left: -30px; top: 12px; width: 142px; height: 24px; padding-top: 4px;
+}
+.prom140 i {
+	background-position: -10px -216px; width: 5px; height: 16px; bottom: 0px; position: absolute;
+}
+.prom140 i.folw {
+	background-position: -18px -206px; top: -5px; width: 10px; height: 11px; right: 0px;
+}
+.gspr {
+	display: block; background-image: url("http://p.ebaystatic.com/aw/cmp/ds3/sprds3_11.png") !important;
+}
+.plus {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -578px -366px; width: 32px; height: 32px; display: none; position: absolute; z-index: 1000000;
+}
+.ie8 div.prom span.gspr {
+	left: -23px; top: -30px;
+}
+.ie8 div.prom140 span.gspr {
+	height: 22px;
+}
+.feeds {
+	margin: 30px 0px 0px 20px;
+}
+.feeds .feed {
+	margin: 0px 20px 20px 0px; float: left;
+}
+#skyscrape {
+	background: rgb(255, 255, 255); border-radius: 5px; border: 1px solid rgb(212, 212, 212); width: 225px; height: 661px; overflow: hidden; box-shadow: 0px 1px 2px rgba(0,0,0,0.07);
+}
+#rtm_skyscraper {
+	margin: 25px 37px; width: 160px; height: 615px; overflow: hidden;
+}
+.dydl {
+	background: rgb(255, 255, 255); border-radius: 5px; border: 1px solid rgb(204, 204, 204); width: 225px; overflow: hidden; display: none;
+}
+.dydl .cap {
+	background: url("http://p.ebaystatic.com/aw/pics/promo/deals/logo_eBayDeals_RGB.png") no-repeat 0px 0px; margin: 10px 0px 0px 10px; width: 200px; height: 50px;
+}
+.dydl .ddcrd {
+	padding: 15px 5px 0px; border-bottom-color: rgb(204, 204, 204); border-bottom-width: 1px; border-bottom-style: solid;
+}
+body.ss .dydl {
+	height: 1525px; position: absolute;
+}
+body.en_CA .dydl .cap {
+	background: url("http://p.ebaystatic.com/aw/pics/promo/deals/logo_eBayDeals_RGB.png") no-repeat 0px 0px; width: 156px; height: 41px;
+}
+body.fr_CA .dydl .cap {
+	background: url("http://p.ebaystatic.com/aw/pics/promo/deals/eBayCAFRLogo.png") no-repeat 0px 0px; width: 195px; height: 30px;
+}
+body.fr_CA .prom140 {
+	width: 111px;
+}
+body.fr_CA .prom140 .gspr {
+	left: -25px;
+}
+body.it_IT .dydl .cap {
+	background: url("http://p.ebaystatic.com/aw/it/deals/it_big_deal_logo.png") no-repeat 0px 0px; width: 156px; height: 60px;
+}
+body.it_IT .prom140 {
+	width: 113px;
+}
+body.it_IT .prom140 .gspr {
+	left: -23px;
+}
+body.it_IT .prom .gspr {
+	font-size: 12px;
+}
+html.ie8 body.it_IT .prom140 {
+	width: 111px;
+}
+html.ie8 body.fr_CA .prom140 {
+	width: 111px;
+}
+html.ie8 body.it_IT .prom140 .gspr {
+	left: -17px;
+}
+html.ie8 body.fr_CA .prom140 .gspr {
+	left: -17px;
+}
+.dydl .ddcrd {
+	padding: 15px 5px 0px; border-bottom-color: rgb(204, 204, 204); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.all {
+	padding: 10px 0px; text-align: center; font-size: 13px; font-weight: normal; display: block;
+}
+.dhr {
+	margin: 8px 0px 0px; height: 1px; color: rgb(204, 204, 204);
+}
+.ddcrd {
+	width: 220px; height: 268px; position: relative;
+}
+.ddcrd .icon {
+	width: 220px; height: 220px; text-align: center; line-height: 220px; vertical-align: middle; display: block;
+}
+.ddcrd .icon img {
+	vertical-align: middle; max-height: 220px; max-width: 220px;
+}
+.ddcrd .tl {
+	margin: 0px 10px; height: 12px; color: rgb(0, 0, 0); overflow: hidden; font-size: 12px; display: block;
+}
+.ddcrd .tl:hover {
+	color: rgb(6, 84, 186);
+}
+.ddcrd .info {
+	margin: 8px 10px 0px;
+}
+.ddcrd .prc {
+	color: rgb(91, 167, 27); font-size: 16px; font-weight: bold;
+}
+.ddcrd .off {
+	color: rgb(91, 167, 27); font-size: 16px; font-weight: bold;
+}
+.ddcrd .blast {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat -22px -210px; top: -10px; width: 89px; height: 86px; text-align: center; right: -3px; position: absolute;
+}
+.ddcrd .time {
+	top: 50px; color: rgb(255, 255, 255); font-size: 14px; position: relative;
+}
+html.ie8 .ddcrd .icon {
+	overflow: hidden;
+}
+.tip {
+	background: rgb(255, 235, 122); padding: 18px; border-radius: 2px; border: 2px solid rgb(241, 173, 28); color: rgb(51, 51, 51); line-height: 20px; font-family: helvetica,arial; font-size: 18px; display: none; position: absolute; z-index: 2000000; opacity: 0;
+}
+.tip .arr {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat 0px 0px;
+}
+.tip .clz {
+	background: url("http://p.ebaystatic.com/aw/home/feed/sprite_201306271800.png") no-repeat 0px 0px;
+}
+.tip .arr {
+	background-position: -103px -125px; top: -16px; width: 32px; height: 20px; position: absolute;
+}
+.tip .clz {
+	background-position: -193px -125px; top: 0px; width: 20px; height: 20px; right: 0px; text-indent: 110%; overflow: hidden; white-space: nowrap; position: absolute; z-index: 100; cursor: pointer;
+}
+.tip .clz:hover {
+	background-position: -172px -125px;
+}
+.tipcnt {
+	display: none;
+}

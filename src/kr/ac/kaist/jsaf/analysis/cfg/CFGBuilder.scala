@@ -371,7 +371,7 @@ class CFGBuilder (ir: IRRoot) {
       /* PEI : fun == "<>toObject" */
       case SIRInternalCall(irinfo, lhs, fun@(SIRTmpId(_, originalName, uniqueName, _)), arg1, arg2) =>
         val n1 = getTail(cfg, nodes, fid)
-        val (addr,lm) = if (uniqueName.equals("<>Global<>toObject")) (Some(cfg.newProgramAddr), lmap.updated("#throw", lmap("#throw")+n1)) else (None,lmap)
+        val (addr,lm) = if (uniqueName.equals("<>Global<>toObject") || uniqueName.equals("<>Global<>iteratorInit")) (Some(cfg.newProgramAddr), lmap.updated("#throw", lmap("#throw")+n1)) else (None,lmap)
         val argslist = arg2 match {
           case None => List(ir2cfgExpr(arg1))
           case Some(arg) => List(ir2cfgExpr(arg1), id2cfgExpr(arg))
@@ -494,7 +494,21 @@ class CFGBuilder (ir: IRRoot) {
         cfg.addInst(n, CFGThrow(cfg.newInstId, irinfo, ir2cfgExpr(expr)))
         (Nil, lmap.updated("#throw", lmap("#throw") + n))
       case SIRWhile(irinfo, cond, body) =>
-        if(Config.defaultUnrollingCount == 0) {
+        // Checks whether this while loop is originated from for-in or not.
+        // TODO Need to find more graceful way.
+        val bForin = body match {
+          case SIRSeq(_, stmts) if stmts.size > 0 => stmts(0) match {
+            case SIRInternalCall(_, _, fun@(SIRTmpId(_, _, "<>Global<>iteratorNext", _)), _, _) => true
+            case _ => false
+          }
+          case _ => false
+        }
+
+        val unrollingCount =
+          if (bForin) Config.defaultForinUnrollingCount
+          else Config.defaultUnrollingCount
+
+        if(unrollingCount == 0) {
           /* tail node */
           val n1 = getTail(cfg, nodes, fid)
           /* while loop head */
@@ -572,7 +586,6 @@ class CFGBuilder (ir: IRRoot) {
           /* tail node */
           var tailNode: Node = getTail(cfg, nodes, fid)
           /* unrolling */
-          val unrollingCount = Config.defaultUnrollingCount // Set this value dynamically
           for(i <- 0 until unrollingCount) {
             /* (loop body, loop out, loop body's leaf nodes) */
             val (bodyNode, outNode, leafNodes) = newBranchBlocks(tailNode)

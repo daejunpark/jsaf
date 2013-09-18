@@ -1,9 +1,7 @@
 ################################################################################
 #    Copyright (c) 2013, KAIST.
-#    All rights reserved.
-#
-#    Use is subject to license terms.
-#
+#    All rights reserved.\n#
+#    Use is subject to license terms.\n#
 #    This distribution may include materials developed by third parties.
 ################################################################################
 tests=defaultValue1
@@ -13,22 +11,22 @@ bug-detector_out_WCIequals=\
  \n\
 * Bug Detector * \n\
 defaultValue1.js:1:1~1:12: [Warning] Assigning a non-function value to 'valueOf' may cause a TypeError. \n\
-defaultValue1.js:1:1~1:12: [Warning] Value assigned to variable 'valueOf' is never read. \n\
 defaultValue1.js:2:1~2:17: [Warning] Assigning a non-function value to 'toString' may cause a TypeError. \n\
-defaultValue1.js:2:1~2:17: [Warning] Value assigned to variable 'toString' is never read. \n\
 defaultValue1.js:5:1~5:10: [Warning] Assigning a non-function value to 'valueOf' may cause a TypeError. \n\
 defaultValue1.js:6:1~6:11: [Warning] Assigning a non-function value to 'toString' may cause a TypeError. \n\
-defaultValue1.js:8:11~8:25: [Warning] Function 'valueOf' is never called. \n\
-defaultValue1.js:9:12~9:26: [Warning] Function 'toString' is never called. \n\
  \n\
 ============== Total Count ============== \n\
+|  RangeErrors       :      0 (  0.00%) | \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
+|  SyntaxErrors      :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      8 (100.00%) | \n\
+|  URIErrors         :      0 (  0.00%) | \n\
+|  Warnings          :      4 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
 |  BinaryOperator          :      0 | \n\
+|  BuiltinTypeError        :      0 | \n\
 |  BuiltinWrongArgType     :      0 | \n\
 |  CallConstFunc           :      0 | \n\
 |  CallNonConstructor      :      0 | \n\
@@ -41,12 +39,16 @@ defaultValue1.js:9:12~9:26: [Warning] Function 'toString' is never called. \n\
 |  ImplicitTypeConversion  :      0 | \n\
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
+|  RangeError              :      0 | \n\
 |  Shadowing               :      0 | \n\
-|  UncalledFuction         :      2 | \n\
+|  StrictMode              :      0 | \n\
+|  UncalledFunction        :      0 | \n\
 |  UnreachableCode         :      0 | \n\
-|  ValueNeverRead          :      2 | \n\
+|  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
+|  RegularExpression       :      0 | \n\
+|  WrongArgument           :      0 | \n\
 ===================================== \n\
 \n
 bug-detector_err_equals=

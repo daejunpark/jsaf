@@ -1,0 +1,63 @@
+#riTopGenreShowAll {
+	width: 200px; display: none; position: relative; z-index: 120 !important;
+}
+#riTopGenreShowAll .normalTop {
+	margin: 2px 0px 0px; padding: 2px 3px 3px 13px; border: 1px solid rgb(204, 204, 204); width: 183px; color: rgb(29, 84, 167); cursor: pointer; background-color: rgb(255, 255, 255);
+}
+#ritServiceHeader #ritShopsProducts #riTopGenreList {
+	margin: 2px 0px 0px; padding: 2px 3px 2px 16px; border: 1px solid rgb(204, 204, 204); width: 140px; color: rgb(29, 84, 167); font-weight: bold; cursor: pointer; min-height: 15px;
+}
+#ritServiceHeader #ritShopsProducts #riTopGenreList a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#ritServiceHeader #ritShopsProducts #riTopGenreList a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}
+#riTopGenreColumn {
+	background: rgb(240, 240, 240); padding: 8px 0px; border: 1px solid rgb(204, 204, 204); width: 642px; display: none; position: absolute;
+}
+#riTopGenreColumn a {
+	font-weight: bold;
+}
+#riTopGenreColumn #riTopGenreCont {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008_newtop/genre/top_genre_bg_middle.gif") repeat-y left top; overflow: hidden; clear: both; _zoom: 1;
+}
+#riTopGenreColumn .riTopGenreLeft {
+	padding: 0px 0px 0px 16px; width: 193px; float: left;
+}
+#riTopGenreColumn .riTopGenreCenter {
+	padding: 0px 0px 0px 16px; width: 193px; float: left;
+}
+#riTopGenreColumn .riTopGenreRight {
+	padding: 0px 0px 0px 16px; width: 193px; float: left;
+}
+#riTopGenreColumn #riTopGenreCont .mb5 {
+	overflow: hidden; padding-bottom: 5px !important;
+}
+#riTopGenreColumn #riTopGenreCont .mb10 {
+	overflow: hidden; padding-bottom: 5px !important;
+}
+#riTopGenreColumn li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_f2ab00.gif") no-repeat 0px 6px; padding: 0px 0px 1px 7px; width: 185px;
+}
+#ritServiceHeader #ritShopsProducts .riTopBackTop {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201103/top_back_bg_top.gif") no-repeat left top; width: 201px;
+}
+#ritServiceHeader #ritShopsProducts .riTopBackTop p {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201103/top_back_bg_btm.gif") no-repeat left bottom;
+}
+#ritServiceHeader #ritShopsProducts .riTopBackTop a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201103/normaltop_02.gif") no-repeat 9px 5px; padding: 4px 9px 4px 29px; width: 161px; display: block; min-height: 15px;
+}
+#ritServiceHeader #ritShopsProducts .riTopBackTop a {
+	color: rgb(29, 84, 167); font-weight: bold; text-decoration: none;
+}
+#ritServiceHeader #ritShopsProducts .riTopBackTop a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}
+#riTopGenreList .iconBoxArrowB {
+	margin-right: 7px; vertical-align: middle;
+}
+#ritShopsProducts .normalTop .iconBoxArrowB {
+	margin-right: 7px; vertical-align: middle;
+}

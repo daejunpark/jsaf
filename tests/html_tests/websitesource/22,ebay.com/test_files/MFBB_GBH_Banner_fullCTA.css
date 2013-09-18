@@ -1,0 +1,99 @@
+#mfbb-gbh * {
+	margin: 0px; padding: 0px; border: 0px currentColor;
+}
+#mfbb-gbh a img {
+	outline: 0px; border: 0px currentColor;
+}
+#mfbb-gbh {
+	height: 270px; overflow: hidden; font-family: Arial,Helvetica,sans-serif; font-size: 12px; display: block !important; position: relative;
+}
+.w980#mfbb-gbh {
+	width: 980px;
+}
+.w760#mfbb-gbh {
+	width: 760px;
+}
+#mfbb-gbh .cta {
+	left: 0px; top: 0px; width: 100%; height: 100%; position: absolute;
+}
+#mfbb-gbh h2 {
+	left: 0px; top: 43px; width: 193px; height: 139px; position: absolute;
+}
+#mfbb-gbh .item {
+	top: 15px; width: 163px; height: 219px; position: absolute;
+}
+.w980#mfbb-gbh .item1 {
+	left: 271px;
+}
+.w980#mfbb-gbh .item2 {
+	left: 448px;
+}
+.w980#mfbb-gbh .item3 {
+	left: 625px;
+}
+.w980#mfbb-gbh .item4 {
+	left: 802px;
+}
+.w760#mfbb-gbh .item1 {
+	left: 237px;
+}
+.w760#mfbb-gbh .item2 {
+	left: 409px;
+}
+.w760#mfbb-gbh .item3 {
+	left: 581px;
+}
+#mfbb-gbh .i {
+	left: 12px; top: 5px; width: 140px; height: 140px; text-align: center; overflow: hidden; display: block; position: absolute;
+}
+#mfbb-gbh .i span {
+	width: inherit; height: inherit; text-align: center; vertical-align: middle; display: table-cell;
+}
+#mfbb-gbh .i img {
+	text-align: center; vertical-align: middle;
+}
+#mfbb-gbh .i b {
+	width: 0px; height: 100%; text-align: center; vertical-align: middle; display: inline-block;
+}
+#mfbb-gbh .t {
+	left: 10px; top: 163px; width: 143px; text-align: left; color: rgb(51, 51, 51); line-height: 13px !important; overflow: hidden; font-size: 11px; font-weight: bold; display: block; position: absolute; -ms-word-wrap: break-word; max-height: 26px;
+}
+.mfbb-gbh-de#mfbb-gbh .t {
+	top: 158px;
+}
+#mfbb-gbh .w {
+	left: 10px; top: 198px; color: rgb(51, 51, 51); line-height: 13px !important; font-size: 11px; position: absolute;
+}
+.mfbb-gbh-de#mfbb-gbh .w {
+	top: 204px;
+}
+#mfbb-gbh .w del {
+	color: rgb(255, 51, 153);
+}
+#mfbb-gbh .w del span {
+	color: rgb(51, 51, 51);
+}
+#mfbb-gbh .p {
+	left: 10px; top: 190px; color: red; line-height: 16px; font-size: 14px; font-weight: bold; display: block; position: absolute;
+}
+#mfbb-gbh .s {
+	left: 10px; top: 208px; color: rgb(117, 117, 117); line-height: 12px; font-size: 10px; font-weight: bold; display: block; position: absolute;
+}
+.mfbb-gbh-de#mfbb-gbh .p {
+	top: 186px;
+}
+#mfbb-gbh .d {
+	left: 10px; top: 211px; color: rgb(153, 153, 153); line-height: 13px !important; font-size: 10px; display: block; position: absolute;
+}
+#mfbb-gbh .item a {
+	outline: 0px; border: 0px currentColor; left: 0px; top: 0px; width: 100%; height: 100%; position: absolute;
+}
+#mfbb-gbh .item a img {
+	outline: 0px; border: 0px currentColor; width: 100%; height: 100%;
+}
+#mfbb-gbh .cta img {
+	width: 100%; height: 100%;
+}
+#mfbb-gbh h2 img {
+	width: 100%; height: 100%;
+}

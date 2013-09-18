@@ -796,35 +796,13 @@ object PreHelper {
   }
 
   def toString(pv: PValue): AbsString = {
-    val pv1 = pv._1 match {
-      case UndefTop => OtherStrSingle("undefined")
-      case _ => StrBot }
-    val pv2 = pv._2 match {
-      case NullTop => OtherStrSingle("null")
-      case _ => StrBot }
-    val pv3 = pv._3 match {
-      case BoolTop => OtherStr
-      case BoolBot => StrBot
-      case BoolTrue => OtherStrSingle("true")
-      case BoolFalse => OtherStrSingle("false") }
-    val pv4 = pv._4 match {
-      case NumTop => NumStr
-      case NumBot => StrBot
-      case Infinity => NumStr
-      case PosInf => NumStrSingle("Infinity")
-      case NegInf => NumStrSingle("-Infinity")
-      case NaN => NumStrSingle("NaN")
-      case UInt => NumStr
-      case NUInt => NumStr
-      case UIntSingle(n) => NumStrSingle(n.toInt.toString)
-      case NUIntSingle(n) =>
-          if (0 == (n - n.toInt))
-            AbsString.alpha(n.toInt.toString)
-          else
-            AbsString.alpha(n.toString) }
+    val pv1 = absUndefToString(pv._1)
+    val pv2 = absNullToString(pv._2)
+    val pv3 = absBoolToString(pv._3)
+    val pv4 = absNumberToString(pv._4)
     val pv5 = pv._5
 
-    (pv1 + pv2 + pv3 + pv4 + pv5)
+    pv1 + pv2 + pv3 + pv4 + pv5
   }
 
   def toStringSet(pv: PValue): Set[AbsString] = {

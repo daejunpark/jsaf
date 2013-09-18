@@ -5,7 +5,7 @@
     Use is subject to license terms.
 
     This distribution may include materials developed by third parties.
- ***************************************************************************** */
+ ******************************************************************************/
 package kr.ac.kaist.jsaf.tests
 
 import java.io.File
@@ -27,6 +27,7 @@ import kr.ac.kaist.jsaf.compiler.Translator
 import kr.ac.kaist.jsaf.compiler.WithRewriter
 import kr.ac.kaist.jsaf.nodes.IRRoot
 import kr.ac.kaist.jsaf.nodes.Program
+import kr.ac.kaist.jsaf.nodes_util.NodeRelation
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
 
 class SemanticsTest(dir: String, tc: String, typing_mode: String) extends TestCase(tc) {
@@ -85,6 +86,8 @@ class SemanticsTest(dir: String, tc: String, typing_mode: String) extends TestCa
     val builder = new CFGBuilder(ir);
     val cfg: CFG = builder.build();
 
+    NodeRelation.set(program, ir, cfg, true)
+
     // initialize heap
     //val model = new BuiltinModel(cfg)
     //model.initialize()
@@ -107,6 +110,7 @@ class SemanticsTest(dir: String, tc: String, typing_mode: String) extends TestCa
       case "1tajs"     => Config.setContextSensitivityMode(Config.Context_OneObjectTAJS)
     }
     
+    Config.setTypingInterface(typing)
     Config.setAssertMode(true)
     //typing.analyze(init_heap)
 

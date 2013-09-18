@@ -37,6 +37,12 @@ object WIDLHelper {
     for(param <- params) if(isOptional(param)) count+= 1
     count
   }
+  def getOptionalParameterCount(params: JList[WArgument]): Int = {
+    var count = 0
+    val i = params.iterator()
+    while(i.hasNext) if(isOptional(i.next())) count+= 1
+    count
+  }
   def hasStrAttr(attrs: JList[WEAttribute], str1: String): Boolean = {
     val i = attrs.iterator()
     while(i.hasNext) {

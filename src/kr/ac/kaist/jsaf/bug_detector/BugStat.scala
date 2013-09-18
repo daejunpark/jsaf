@@ -9,9 +9,7 @@
 
 package kr.ac.kaist.jsaf.bug_detector
 
-import java.util.{HashMap => JMap}
-import kr.ac.kaist.jsaf.nodes_util.Span
-import kr.ac.kaist.jsaf.bug_detector._
+
 
 class BugStat(bugDetector: BugDetector) {
   val lib : Boolean = bugDetector.libMode
@@ -19,56 +17,102 @@ class BugStat(bugDetector: BugDetector) {
   private var endTime   : Long = 0L
 
   private var totalCount           : Int = 0
-  private var warningCount         : Int = 0
-  private var typeErrorCount       : Int = 0
+  private var rangeErrorCount      : Int = 0
   private var referenceErrorCount  : Int = 0
-  private val BugCount: Array[Int] = new Array(MAX_BUG_COUNT)
+  private var syntaxErrorCount     : Int = 0
+  private var typeErrorCount       : Int = 0
+  private var uriErrorCount        : Int = 0
+  private var warningCount         : Int = 0
+  private var bugCount             : Array[Int] = null
 
-  def increaseBugCounter(bugKind: BugKind, bugType: BugType): Unit = {
+  def createBugCountArray: Unit = if(bugCount == null) bugCount = new Array(BugKindCounter + 1)
+  def decreaseBugCounter(bugKind: BugKind, bugType: BugType): Unit = {
+    createBugCountArray
+    totalCount-= 1
     bugType match {
-      case Warning => warningCount = warningCount + 1
-      case TypeError => typeErrorCount = typeErrorCount + 1
-      case ReferenceError => referenceErrorCount = referenceErrorCount + 1
+      case RangeError => rangeErrorCount-= 1
+      case ReferenceError => referenceErrorCount-= 1
+      case SyntaxError => syntaxErrorCount-= 1
+      case TypeError => typeErrorCount-= 1
+      case URIError => uriErrorCount-= 1
+      case Warning => warningCount-= 1
+      case _ => System.out.println(bugType)
     }
-    BugCount(bugKind) += 1
+    bugCount(bugKind) -= 1
   }
+  def increaseBugCounter(bugKind: BugKind, bugType: BugType): Unit = {
+    createBugCountArray
+    totalCount+= 1
+    bugType match {
+      case RangeError => rangeErrorCount+= 1
+      case ReferenceError => referenceErrorCount+= 1
+      case SyntaxError => syntaxErrorCount+= 1
+      case TypeError => typeErrorCount+= 1
+      case URIError => uriErrorCount+= 1
+      case Warning => warningCount+= 1
+      case _ => System.out.println(bugType)
+    }
+    bugCount(bugKind) += 1
+  }
+  def getErrorCount: Int = totalCount - warningCount
 
-  private def countTotalBugs: Unit = totalCount = referenceErrorCount + typeErrorCount + warningCount
   private def printDetectingTime: Unit = System.out.println("# Time for bug Detection(s): %.2f".format((endTime - startTime) / 1000000000.0))
-  private def divideByZeroCheck(flag: BugType): Float = if (totalCount <= 0) 0 toFloat else 
-    (flag match {case ReferenceError => referenceErrorCount; case TypeError => typeErrorCount; case Warning => warningCount}).toFloat/totalCount*100
+  private def divideByZeroCheck(flag: BugType): Float = {
+    if (totalCount <= 0) 0 toFloat
+    else (flag match {
+      case RangeError => rangeErrorCount
+      case ReferenceError => referenceErrorCount
+      case SyntaxError => syntaxErrorCount
+      case TypeError => typeErrorCount
+      case URIError => uriErrorCount
+      case Warning => warningCount
+    }).toFloat/totalCount*100
+  }
   private def printTotalBugCount: Unit = {
-    countTotalBugs
     System.out.println
     System.out.println("============== Total Count ==============")
-    System.out.println("|  ReferenceErrors   : %6d (%6.2f%%) |".format(referenceErrorCount, divideByZeroCheck(ReferenceError))) 
+    System.out.println("|  RangeErrors       : %6d (%6.2f%%) |".format(rangeErrorCount, divideByZeroCheck(RangeError)))
+    System.out.println("|  ReferenceErrors   : %6d (%6.2f%%) |".format(referenceErrorCount, divideByZeroCheck(ReferenceError)))
+    System.out.println("|  SyntaxErrors      : %6d (%6.2f%%) |".format(syntaxErrorCount, divideByZeroCheck(SyntaxError)))
     System.out.println("|  TypeErrors        : %6d (%6.2f%%) |".format(typeErrorCount, divideByZeroCheck(TypeError)))
+    System.out.println("|  URIErrors         : %6d (%6.2f%%) |".format(uriErrorCount, divideByZeroCheck(URIError)))
     System.out.println("|  Warnings          : %6d (%6.2f%%) |".format(warningCount, divideByZeroCheck(Warning)))
     System.out.println("=========================================")
   }
-  private def getUnusedFunctionCount: Int = (if (lib) BugCount(UnreferencedFunction) else 0) + BugCount(UncalledFunction)
+  private def getStrictModeCount: Int = {
+    var count = 0
+    for(i <- StrictModeR1 until StrictModeLastDummy) count+= bugCount(i)
+    count
+  }
+  private def getUnusedFunctionCount: Int = (if (lib) bugCount(UnreferencedFunction) else 0) + bugCount(UncalledFunction)
   private def printBugStatistics: Unit = {
+    createBugCountArray
     System.out.println("============ Statistics =============")
-    System.out.println("|  AbsentRead              : %6d |".format(BugCount(AbsentReadProperty) + BugCount(AbsentReadVariable)))
-    System.out.println("|  BinaryOperator          : %6d |".format(BugCount(BinaryOpSecondType)))
-    System.out.println("|  BuiltinWrongArgType     : %6d |".format(BugCount(BuiltinWrongArgType)))
-    System.out.println("|  CallConstFunc           : %6d |".format(BugCount(CallConstFunc)))
-    System.out.println("|  CallNonConstructor      : %6d |".format(BugCount(CallNonConstructor)))
-    System.out.println("|  CallNonFunction         : %6d |".format(BugCount(CallNonFunction)))
-    System.out.println("|  ConditionalBranch       : %6d |".format(BugCount(CondBranch)))
-    System.out.println("|  ConvertToNumber         : %6d |".format(BugCount(ConvertUndefToNum)))
-    System.out.println("|  DefaultValue            : %6d |".format(BugCount(DefaultValue)))
-    System.out.println("|  FunctionArgSize         : %6d |".format(BugCount(FunctionArgSize)))
-    System.out.println("|  GlobalThis              : %6d |".format(BugCount(GlobalThis)))
-    System.out.println("|  ImplicitTypeConversion  : %6d |".format(/*BugCount(ImplicitCallToString) + BugCount(ImplicitCallValueOf) +*/ BugCount(ImplicitTypeConvert)))
-    System.out.println("|  AccessingNullOrUndef    : %6d |".format(BugCount(ObjectNullOrUndef)))
-    System.out.println("|  PrimitiveToObject       : %6d |".format(BugCount(PrimitiveToObject)))
-    System.out.println("|  Shadowing               : %6d |".format(BugCount(ShadowedFuncByFunc) + BugCount(ShadowedParamByFunc) + BugCount(ShadowedVarByFunc) + BugCount(ShadowedVarByParam) + BugCount(ShadowedVarByVar) + BugCount(ShadowedParamByParam) + BugCount(ShadowedFuncByVar) + BugCount(ShadowedParamByVar)))
-    System.out.println("|  UncalledFuction         : %6d |".format(getUnusedFunctionCount))
-    System.out.println("|  UnreachableCode         : %6d |".format(BugCount(UnreachableCode)))
-    System.out.println("|  ValueNeverRead          : %6d |".format(BugCount(UnusedVarProp)))
-    System.out.println("|  VaryingTypeArguments    : %6d |".format(BugCount(VaryingTypeArguments)))
-    System.out.println("|  WrongThisType           : %6d |".format(BugCount(WrongThisType)))
+    System.out.println("|  AbsentRead              : %6d |".format(bugCount(AbsentReadProperty) + bugCount(AbsentReadVariable)))
+    System.out.println("|  BinaryOperator          : %6d |".format(bugCount(BinaryOpSecondType)))
+    System.out.println("|  BuiltinTypeError        : %6d |".format(bugCount(BuiltinCallable) + bugCount(BuiltinRegExpConst) + bugCount(BuiltinThisType)))
+    System.out.println("|  BuiltinWrongArgType     : %6d |".format(bugCount(BuiltinWrongArgType)))
+    System.out.println("|  CallConstFunc           : %6d |".format(bugCount(CallConstFunc)))
+    System.out.println("|  CallNonConstructor      : %6d |".format(bugCount(CallNonConstructor)))
+    System.out.println("|  CallNonFunction         : %6d |".format(bugCount(CallNonFunction)))
+    System.out.println("|  ConditionalBranch       : %6d |".format(bugCount(CondBranch)))
+    System.out.println("|  ConvertToNumber         : %6d |".format(bugCount(ConvertUndefToNum)))
+    System.out.println("|  DefaultValue            : %6d |".format(bugCount(DefaultValue)))
+    System.out.println("|  FunctionArgSize         : %6d |".format(bugCount(FunctionArgSize)))
+    System.out.println("|  GlobalThis              : %6d |".format(bugCount(GlobalThis)))
+    System.out.println("|  ImplicitTypeConversion  : %6d |".format(/*BugCount(ImplicitCallToString) + BugCount(ImplicitCallValueOf) +*/ bugCount(ImplicitTypeConvert)))
+    System.out.println("|  AccessingNullOrUndef    : %6d |".format(bugCount(ObjectNullOrUndef)))
+    System.out.println("|  PrimitiveToObject       : %6d |".format(bugCount(PrimitiveToObject)))
+    System.out.println("|  RangeError              : %6d |".format(bugCount(ArrayConstLength) + bugCount(BuiltinRange) + bugCount(Range15_4_5_1) + bugCount(Range15_9_5_43)))
+    System.out.println("|  Shadowing               : %6d |".format(bugCount(ShadowedFuncByFunc) + bugCount(ShadowedParamByFunc) + bugCount(ShadowedVarByFunc) + bugCount(ShadowedVarByParam) + bugCount(ShadowedVarByVar) + bugCount(ShadowedParamByParam) + bugCount(ShadowedFuncByVar) + bugCount(ShadowedParamByVar)))
+    System.out.println("|  StrictMode              : %6d |".format(getStrictModeCount))
+    System.out.println("|  UncalledFunction        : %6d |".format(getUnusedFunctionCount))
+    System.out.println("|  UnreachableCode         : %6d |".format(bugCount(UnreachableCode)))
+    System.out.println("|  ValueNeverRead          : %6d |".format(bugCount(UnusedVarProp)))
+    System.out.println("|  VaryingTypeArguments    : %6d |".format(bugCount(VaryingTypeArguments)))
+    System.out.println("|  WrongThisType           : %6d |".format(bugCount(WrongThisType)))
+    System.out.println("|  RegularExpression       : %6d |".format(bugCount(RegExp2_5)+bugCount(RegExp2_9_1)+bugCount(RegExp2_9_2)+bugCount(RegExp2_15_2)+bugCount(RegExp4_1_1)+bugCount(RegExp4_1_2)+bugCount(RegExp2_19)))
+    System.out.println("|  WrongArgument           : %6d |".format(bugCount(EvalArgSyntax)+bugCount(ParseFunctionBody)+bugCount(ParseFunctionParams)+bugCount(ParseJSON)+bugCount(URIErrorArg)+bugCount(ToPropertyDescriptor)+bugCount(ToPropertyDescriptors)+bugCount(JSONStringify)+bugCount(ArrayReduce1)+bugCount(ArrayReduce2)+bugCount(ArrayReduceRight1)+bugCount(ArrayReduceRight2)+bugCount(ToLocaleString)))
     System.out.println("=====================================")
   }
 

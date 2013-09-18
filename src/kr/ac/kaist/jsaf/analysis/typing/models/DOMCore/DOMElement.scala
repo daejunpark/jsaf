@@ -17,14 +17,8 @@ import org.w3c.dom.Node
 import org.w3c.dom.Element
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLDocument
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject.{ClientRect, ClientRectList}
 import kr.ac.kaist.jsaf.analysis.typing._
-import scala.Some
-import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
@@ -73,8 +67,16 @@ object DOMElement extends DOM {
     ("setIdAttribute",         AbsBuiltinFunc("DOMElement.setIdAttribute", 2)),
     ("setIdAttributeNS",       AbsBuiltinFunc("DOMElement.setIdAttributeNS", 3)),
     ("setIdAttributeNode",     AbsBuiltinFunc("DOMElement.setIdAttributeNode", 2)),
-    ("querSelector",           AbsBuiltinFunc("DOMDocument.querSelector", 0)),
-    ("querSelectorAll",        AbsBuiltinFunc("DOMDocument.querSelectorAll", 0))
+    ("querySelector",           AbsBuiltinFunc("DOMElement.querySelector", 0)),
+    ("querySelectorAll",        AbsBuiltinFunc("DOMElement.querySelectorAll", 0)),
+    // WHATWG DOM
+    ("getElementsByClassName",      AbsBuiltinFunc("DOMElement.getElementsByClassName", 2)),
+    // W3C CSSOM View Module
+    ("getClientRects",      AbsBuiltinFunc("DOMElement.getClientRects", 0)),
+    ("getBoundingClientRect",      AbsBuiltinFunc("DOMElement.getBoundingClientRect", 0)),
+    ("scrollInfoView",      AbsBuiltinFunc("DOMElement.scrollIntoView", 1)),
+    // Non-standard
+    ("webkitMatchesSelector",           AbsBuiltinFunc("DOMElement.webkitMatchesSelector", 1))
   )
 
   /* global */
@@ -92,7 +94,7 @@ object DOMElement extends DOM {
       ("DOMElement.getAttribute" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0"))).toLowerCase()
           // get attribute
           val v_ret = DOMHelper.getAttribute(h, lset_this, attr_name)
           if(v_ret </ ValueBot)
@@ -110,6 +112,7 @@ object DOMElement extends DOM {
           val addr2 = cfg.getAPIAddress(addr_env, 1)
           val addr3 = cfg.getAPIAddress(addr_env, 2)
           val addr4 = cfg.getAPIAddress(addr_env, 3)
+          val addr5 = cfg.getAPIAddress(addr_env, 4)
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           // For 'Attr' node
           val l_attr = addrToLoc(addr1, Recent)
@@ -118,23 +121,39 @@ object DOMElement extends DOM {
           // For NamedNodeList for 'childNodes' of the Attr and text nodes
           val l_child1 = addrToLoc(addr3, Recent)
           val l_child2 = addrToLoc(addr4, Recent)
+          // For classTable look-up entry
+          val l_classentry = addrToLoc(addr5, Recent)
           val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
           val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
           val (h_3, ctx_3) = Helper.Oldify(h_2, ctx_2, addr3)
           val (h_4, ctx_4) = Helper.Oldify(h_3, ctx_3, addr4)
+          val (h_5, ctx_5) = Helper.Oldify(h_4, ctx_4, addr5)
           /* arguments */
-          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h_4, ctx, args, "0")))
-          val attr_val = Helper.toString(Helper.toPrimitive(getArgValue(h_4, ctx, args, "1")))
+          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h_5, ctx_5, args, "0"))).toLowerCase()
+          val attr_val = Helper.toString(Helper.toPrimitive(getArgValue(h_5, ctx_5, args, "1")))
 
           /* imprecise semantics : no exception handling */
           if(attr_name </ StrBot || attr_val </StrBot) {
-            val h_5 = DOMHelper.setAttribute(h_4, lset_this, l_attr, l_text, l_child1, l_child2, attr_name, attr_val)
-            ((h_5, ctx_4), (he, ctxe))
+            val h_6 = DOMHelper.setAttribute(h_5, lset_this, l_attr, l_text, l_child1, l_child2, l_classentry, attr_name, attr_val)
+            ((h_6, ctx_5), (he, ctxe))
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
         })),
-      //case "DOMElement.removeAttribute" => ((h, ctx), (he, ctxe))
+      ("DOMElement.removeAttribute" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          /* arguments */
+          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0"))).toLowerCase()
+          if(attr_name </ StrBot){
+            // remove attribute
+            val h1 = DOMHelper.removeAttribute(h, lset_this, attr_name)
+            ((Helper.ReturnStore(h1, Value(UndefTop)), ctx), (he, ctxe))
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        })),
+
       //case "DOMElement.getAttributeNode" => ((h, ctx), (he, ctxe))
       //case "DOMElement.setAttributeNode" => ((h, ctx), (he, ctxe))
       //case "DOMElement.removeAttributeNode" => ((h, ctx), (he, ctxe))
@@ -204,7 +223,7 @@ object DOMElement extends DOM {
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           /* arguments */
-          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0"))).toLowerCase()
           if(attr_name </ StrBot) {
             val attr_val = lset_this.foldLeft(ValueBot)((v, l_this) => {
               // read the list of attributes in the current node
@@ -277,6 +296,53 @@ object DOMElement extends DOM {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
+        })),
+      ("DOMElement.getElementsByClassName" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+          /* arguments */
+          val s_class = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          if (s_class </ StrBot) {
+            val propv_element = h(ClassTableLoc)(s_class)
+            val (h_1, ctx_1, v_empty) =
+              if (propv_element._2 </ AbsentBot) {
+                val l_r = addrToLoc(addr1, Recent)
+                val (_h, _ctx)  = Helper.Oldify(h, ctx, addr1)
+                /* empty NodeList */
+                val o_empty = Obj(DOMNodeList.getInsList(0).foldLeft(ObjEmpty.map)((o,pv) =>
+                  o.updated(pv._1, (pv._2, AbsentBot))))
+                val _h1 = _h.update(l_r, o_empty)
+                (_h1, _ctx, Value(l_r))
+              } else (h, ctx, ValueBot)
+            /* imprecise semantic */
+            ((Helper.ReturnStore(h_1, propv_element._1._1._1 + v_empty), ctx_1), (he, ctxe))
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        })),
+      ("DOMElement.getClientRects" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+           ((Helper.ReturnStore(h, Value(ClientRectList.loc_ins)), ctx), (he, ctxe))
+        })),
+
+      ("DOMElement.getBoundingClientRect" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+           ((Helper.ReturnStore(h, Value(ClientRect.loc_ins)), ctx), (he, ctxe))
+        })),
+
+      // could be more precise
+      ("DOMElement.webkitMatchesSelector" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          /* argument */
+          val selector = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          if(selector </ StrBot)
+            ((Helper.ReturnStore(h, Value(BoolTop)), ctx), (he, ctxe))
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
         }))
     )
   }
@@ -289,7 +355,7 @@ object DOMElement extends DOM {
           val PureLocalLoc = cfg.getPureLocal(cp)
           val lset_this = h(PureLocalLoc)("@this")._1._2._2
           /* arguments */
-          val attr_name = PreHelper.toString(PreHelper.toPrimitive(getArgValue_pre(h, ctx, args, "0", PureLocalLoc)))
+          val attr_name = PreHelper.toString(PreHelper.toPrimitive(getArgValue_pre(h, ctx, args, "0", PureLocalLoc))).toLowerCase()
           if(attr_name </ StrBot) {
             val attr_val = lset_this.foldLeft(ValueBot)((v, l_this) => {
               // read the list of attributes in the current node
@@ -338,7 +404,7 @@ object DOMElement extends DOM {
           val (h_3, ctx_3) = PreHelper.Oldify(h_2, ctx_2, addr3)
           val (h_4, ctx_4) = PreHelper.Oldify(h_3, ctx_3, addr4)
           /* arguments */
-          val attr_name = PreHelper.toString(PreHelper.toPrimitive(getArgValue_pre(h_4, ctx, args, "0", PureLocalLoc)))
+          val attr_name = PreHelper.toString(PreHelper.toPrimitive(getArgValue_pre(h_4, ctx, args, "0", PureLocalLoc))).toLowerCase()
           val attr_val = PreHelper.toString(PreHelper.toPrimitive(getArgValue_pre(h_4, ctx, args, "1", PureLocalLoc)))
 
           /* imprecise semantics : no exception handling */
@@ -476,7 +542,7 @@ object DOMElement extends DOM {
           val PureLocalLoc = cfg.getPureLocal(cp)
           val lset_this = h(PureLocalLoc)("@this")._1._2._2
           /* arguments */
-          val attr_name = PreHelper.toString(PreHelper.toPrimitive(getArgValue_pre(h, ctx, args, "0", PureLocalLoc)))
+          val attr_name = PreHelper.toString(PreHelper.toPrimitive(getArgValue_pre(h, ctx, args, "0", PureLocalLoc))).toLowerCase()
           if(attr_name </ StrBot) {
             val attr_val = lset_this.foldLeft(ValueBot)((v, l_this) => {
               // read the list of attributes in the current node
@@ -534,7 +600,7 @@ object DOMElement extends DOM {
           val LP4 = set_addr.foldLeft(LPBot)((lp, a) =>
             lp ++ AccessHelper.Oldify_def(h, ctx, cfg.getAPIAddress(a, 3)))
           /* arguments */
-          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0"))).toLowerCase()
           val attr_val = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "1")))
 
           /* imprecise semantics : no exception handling */
@@ -712,7 +778,7 @@ object DOMElement extends DOM {
           val LP4 = set_addr.foldLeft(LPBot)((lp, a) =>
             lp ++ AccessHelper.Oldify_use(h, ctx, cfg.getAPIAddress(a, 3)))
           /* arguments */
-          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0"))).toLowerCase()
           val attr_val = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "1")))
 
           val LP5 = getArgValue_use(h, ctx, args, "0") ++ getArgValue_use(h, ctx, args, "1")
@@ -791,7 +857,7 @@ object DOMElement extends DOM {
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           /* arguments */
-          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          val attr_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0"))).toLowerCase()
           val LP1 = getArgValue_use(h, ctx, args, "0")
           if(attr_name </ StrBot) {
             val LP2 = lset_this.foldLeft(LPBot)((lpset, l_this) => {
@@ -822,8 +888,24 @@ object DOMElement extends DOM {
       DOMNode.getInsList(node) ++ List(
         // DOM Level 1
         ("tagName",   PropValue(ObjectValue(AbsString.alpha(e.getTagName), F, T, T))),
-        // DOM Level 2 Style
-        ("style",   PropValue(ObjectValue(TempStyleLoc, T, T, T))))
+        // non-standard
+        ("scrollTop", PropValue(ObjectValue(UInt, T, T, T))),
+        ("scrollLeft", PropValue(ObjectValue(UInt, T, T, T))),
+        ("scrollWidth", PropValue(ObjectValue(UInt, F, T, T))),
+        ("scrollHeight", PropValue(ObjectValue(UInt, F, T, T))),
+        ("offsetParent", PropValue(ObjectValue(NullTop, F, T, T))),
+        ("offsetTop", PropValue(ObjectValue(UInt, F, T, T))),
+        ("offsetLeft", PropValue(ObjectValue(UInt, F, T, T))),
+        ("offsetWidth", PropValue(ObjectValue(UInt, F, T, T))),
+        ("offsetHeight", PropValue(ObjectValue(UInt, F, T, T))),
+        ("clientTop", PropValue(ObjectValue(UInt, F, T, T))),
+        ("clientLeft", PropValue(ObjectValue(UInt, F, T, T))),
+        ("clientWidth", PropValue(ObjectValue(UInt, F, T, T))),
+        ("clientHeight", PropValue(ObjectValue(UInt, F, T, T))),
+        ("onclick", PropValue(ObjectValue(NullTop, T, T, T))),
+        ("onload", PropValue(ObjectValue(NullTop, T, T, T)))
+        // 'style' property is updated in the DOMBuilder module
+      )
     // TODO: schemaTypeInfo in DOM Level 3
     case _ => {
       System.err.println("* Warning: " + node.getNodeName + " cannot have instance objects.")
@@ -851,7 +933,22 @@ object DOMElement extends DOM {
     DOMNode.getInsList(nodeName, nodeValue, nodeType, parentNode, childNodes, firstChild, lastChild,
       previousSibling, nextSibling, ownerDocument, namespaceURI, prefix, localName, textContent) ++ List(
       ("tagName", tagName),
-      ("style",   PropValue(ObjectValue(TempStyleLoc, T, T, T))))
+      ("scrollTop", PropValue(ObjectValue(UInt, T, T, T))),
+      ("scrollLeft", PropValue(ObjectValue(UInt, T, T, T))),
+      ("scrollWidth", PropValue(ObjectValue(UInt, F, T, T))),
+      ("scrollHeight", PropValue(ObjectValue(UInt, F, T, T))),
+      ("offsetParent", PropValue(ObjectValue(NullTop, F, T, T))),
+      ("offsetTop", PropValue(ObjectValue(UInt, F, T, T))),
+      ("offsetLeft", PropValue(ObjectValue(UInt, F, T, T))),
+      ("offsetWidth", PropValue(ObjectValue(UInt, F, T, T))),
+      ("offsetHeight", PropValue(ObjectValue(UInt, F, T, T))),
+      ("clientTop", PropValue(ObjectValue(UInt, F, T, T))),
+      ("clientLeft", PropValue(ObjectValue(UInt, F, T, T))),
+      ("clientWidth", PropValue(ObjectValue(UInt, F, T, T))),
+      ("clientHeight", PropValue(ObjectValue(UInt, F, T, T))),
+      ("onclick", PropValue(ObjectValue(NullTop, T, T, T))),
+      ("onload", PropValue(ObjectValue(NullTop, T, T, T)))
+     )
     // TODO: schemaTypeInfo in DOM Level 3
   }
 }

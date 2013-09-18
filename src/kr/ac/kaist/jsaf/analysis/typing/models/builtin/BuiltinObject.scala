@@ -20,6 +20,9 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.domain.OtherStrSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.NumStrSingle
+import kr.ac.kaist.jsaf.bug_detector.BugKind
+import kr.ac.kaist.jsaf.bug_detector.ToPropertyDescriptor
+import kr.ac.kaist.jsaf.bug_detector.ToPropertyDescriptors
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil
 
 object BuiltinObject extends ModelData {
@@ -68,6 +71,68 @@ object BuiltinObject extends ModelData {
   def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (ConstLoc, prop_const), (ObjProtoLoc, prop_proto)
   )
+
+  def toPropertyDescriptor(h: Heap, v_2: Value, toDescriptor: BugKind) =
+    // 8.10.5 1.
+    if (v_2._2.isEmpty && Config.typingInterface != null) {
+      Config.typingInterface.signal(Config.typingInterface.getSpan, toDescriptor, v_2._1.toString, null)
+      Set[Exception](TypeError)
+    // 8.10.5 7.b.
+    } else {
+      v_2._2.toSet.find(l => if (BoolTrue <= Helper.HasProperty(h, l, AbsString.alpha("get"))) {
+                               val getter = Helper.Proto(h, l, AbsString.alpha("get"))
+                               getter._2.toSet.find(ll =>
+                                         BoolFalse <= Helper.IsCallable(h, ll) &&
+                                         getter._1._1 <= UndefBot).isDefined ||
+                                         getter._1._1 <= UndefBot && getter._1._1 <= UndefBot
+                             } else false) match {
+        case Some(l) =>
+          val getter = Helper.Proto(h, l, AbsString.alpha("get"))
+          val get = getter._2.toSet.find(ll => BoolFalse <= Helper.IsCallable(h, ll) &&
+                                               getter._1._1 <= UndefBot) match {
+                      case Some(ll) => h(ll).toString
+                      case None => getter._1.toString
+                    }
+          Config.typingInterface.signal(Config.typingInterface.getSpan, toDescriptor, get, null)
+          Set[Exception](TypeError)
+        case _ =>
+          // 8.10.5 8.b.
+          v_2._2.toSet.find(l => if (BoolTrue <= Helper.HasProperty(h, l, AbsString.alpha("set"))) {
+                                   val setter = Helper.Proto(h, l, AbsString.alpha("set"))
+                                   setter._2.toSet.find(ll =>
+                                         BoolFalse <= Helper.IsCallable(h, ll) &&
+                                         setter._1._1 <= UndefBot).isDefined ||
+                                         setter._2.isEmpty && setter._1._1 <= UndefBot
+                                 } else false) match {
+            case Some(l) =>
+              val setter = Helper.Proto(h, l, AbsString.alpha("set"))
+              val set = setter._2.toSet.find(ll => BoolFalse <= Helper.IsCallable(h, ll) &&
+                                                   setter._1._1 <= UndefBot) match {
+                          case Some(ll) => h(ll).toString
+                          case None => setter._1.toString
+                        }
+              Config.typingInterface.signal(Config.typingInterface.getSpan, toDescriptor, set, null)
+              Set[Exception](TypeError)
+            case _ =>
+              // 8.10.5 9.a.
+              v_2._2.toSet.find(l => BoolTrue <= Helper.HasProperty(h, l, AbsString.alpha("value"))) match {
+                case Some(l) =>
+                  Config.typingInterface.signal(Config.typingInterface.getSpan, toDescriptor,
+                                                Helper.Proto(h, l, AbsString.alpha("value"))._1.toString, null)
+                  Set[Exception](TypeError)
+                case _ =>
+                  v_2._2.toSet.find(l => BoolTrue <= Helper.HasProperty(h, l, AbsString.alpha("writable"))) match {
+                    case Some(l) =>
+                      Config.typingInterface.signal(Config.typingInterface.getSpan, toDescriptor,
+                                                    Helper.Proto(h, l, AbsString.alpha("writable"))._1.toString, null)
+                      Set[Exception](TypeError)
+                    case _ =>
+                      ExceptionBot
+                  }
+              }
+            }
+          }
+    }
 
   def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
@@ -299,17 +364,25 @@ object BuiltinObject extends ModelData {
           val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es_1 ++ es_2)
           ((Helper.ReturnStore(h_3, Value(LocSet(l_r))), ctx_1), (he+h_e, ctxe+ctx_e))
         })),
+      // 15.2.3.6
       ("Object.defineProperty" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val v_1 = getArgValue(h, ctx, args, "0")
+          // 1.
           val es_1 =
             if (v_1._1 </ PValueBot) Set[Exception](TypeError)
             else ExceptionBot
+          // 2.
           val s_name = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "1")))
+          // 3.
           val v_2 = getArgValue(h, ctx, args, "2")
           val es_2 =
-            if (v_2._1 </ PValueBot) Set[Exception](TypeError)
-            else ExceptionBot
+            if (v_2._1 </ PValueBot) {
+              if (Config.typingInterface != null)
+                Config.typingInterface.signal(Config.typingInterface.getSpan, ToPropertyDescriptor, v_2._1.toString, null)
+              Set[Exception](TypeError)
+            } else toPropertyDescriptor(h, v_2, ToPropertyDescriptor)
+          // 4.
           val h_1 =
             v_1._2.foldLeft(HeapBot)((_h, l_1) =>
               _h + v_2._2.foldLeft(HeapBot)((__h, l_2) =>
@@ -320,16 +393,28 @@ object BuiltinObject extends ModelData {
           else
             ((HeapBot, ContextBot), (he+h_e, ctxe+ctx_e))
         })),
+      // 15.2.3.7
       ("Object.defineProperties" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val v_1 = getArgValue(h, ctx, args, "0")
+          // 1.
           val es_1 =
             if (v_1._1 </ PValueBot) Set[Exception](TypeError)
             else ExceptionBot
+          // 2.
           val v_2 = getArgValue(h, ctx, args, "1")
           val es_2 =
-            if (v_2._1 </ PValueBot) Set[Exception](TypeError)
-            else ExceptionBot
+            if (v_2._1 </ PValueBot) {
+              if (Config.typingInterface != null)
+                Config.typingInterface.signal(Config.typingInterface.getSpan, ToPropertyDescriptor, v_2._1.toString, null)
+              Set[Exception](TypeError)
+            } else {
+              v_2._2.foldLeft(ExceptionBot)((x, l) =>
+                                          h(l).getProps.foldLeft(x)((x, s) => {
+                                               val prop = AbsString.alpha(s)
+                                               val v__1 = Helper.Proto(h, l, prop)
+                                               v__1._2.foldLeft(x)((x, ll) => x++toPropertyDescriptor(h, v__1, ToPropertyDescriptors))}))
+            }
           val h_1 =
             v_1._2.foldLeft(HeapBot)((_h, l_1) =>
               v_2._2.foldLeft(HeapBot)((__h, l_2) => _h + Helper.DefineProperties(h, l_1, l_2)))
@@ -472,7 +557,7 @@ object BuiltinObject extends ModelData {
           else
             ((HeapBot, ContextBot), (he+h_e, ctxe+ctx_e))
         })),
-      ("Object.keys" -> (
+      "Object.keys" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
           val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
@@ -480,35 +565,53 @@ object BuiltinObject extends ModelData {
           val addr_env = set_addr.head
           val addr1 = cfg.getAPIAddress(addr_env, 0)
           val l_r = addrToLoc(addr1, Recent)
-          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
-          val v = getArgValue(h_1, ctx_1, args, "0")
+
+          val v = getArgValue(h, ctx, args, "0")
+          // 1. If the Type(O) is not Object, throw a TypeError exception.
           val es =
             if (v._1 </ PValueBot) Set[Exception](TypeError)
             else ExceptionBot
-          val o = v._2.foldLeft(ObjBot)((_o, l) => {
-            val map_enum = h_1(l).map.filter((kv)=> BoolTrue <= kv._2._1._1._3 && !kv._1.take(1).equals("@"))
-            val o_new = Helper.NewArrayObject(AbsNumber.alpha(map_enum.size))
-            val o_1 = map_enum.foldLeft(o_new)((_o, kv) => _o.update(NumStr, PropValue(ObjectValue(AbsString.alpha(kv._1),BoolTrue,BoolTrue,BoolTrue))))
-            val o_2 =
-              if (h_1(l)("@default_number")._1 </ PropValueBot)
-                o_new.update(NumStr, PropValue(ObjectValue(NumStr,BoolTrue,BoolTrue,BoolTrue)))
-              else
-                ObjBot
-            val o_3 =
-              if (h_1(l)("@default_other")._1 </ PropValueBot)
-                o_new.update(NumStr, PropValue(ObjectValue(OtherStr,BoolTrue,BoolTrue,BoolTrue)))
-              else
-                ObjBot
-            o_1 + o_2 + o_3
-          })
-          val (h_e, ctx_e) = Helper.RaiseException(h_1, ctx_1, es)
-          if (o </ ObjBot) {
-            val h_2 = h_1.update(l_r, o)
-            ((Helper.ReturnStore(h_2, Value(l_r)), ctx_1), (he+h_e, ctxe+ctx_e))
-          }
-          else
-            ((HeapBot, ContextBot), (he+h_e, ctxe+ctx_e))
-        })),
+
+          val (h_2, ctx_2) =
+            if (!v._2.isEmpty) {
+              val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+              val o = try {
+                val list = Helper.CollectOwnProps(h, v._2).toArray
+                val o_new = Helper.NewArrayObject(AbsNumber.alpha(list.size))
+
+                val o_1 = (0 to list.length - 1).foldLeft(o_new)((_o, i) => {
+                  _o.update(AbsString.alpha(i.toString), PropValue(ObjectValue(AbsString.alpha(list(i)), BoolTrue, BoolTrue, BoolTrue)))
+                })
+                o_1
+              } catch {
+                case e: InternalError => {
+                  v._2.foldLeft(ObjBot)((_o, l) => {
+                    val map_enum = h_1(l).map.filter((kv) => BoolTrue <= kv._2._1._1._3 && !kv._1.take(1).equals("@"))
+                    val o_new = Helper.NewArrayObject(UInt)
+                    val o_1 = map_enum.foldLeft(o_new)((_o, kv) => _o.update(NumStr, PropValue(ObjectValue(AbsString.alpha(kv._1), BoolTrue, BoolTrue, BoolTrue))))
+                    val o_2 =
+                      if (h_1(l)("@default_number")._1 </ PropValueBot)
+                        o_new.update(NumStr, PropValue(ObjectValue(NumStr, BoolTrue, BoolTrue, BoolTrue)))
+                      else
+                        ObjBot
+                    val o_3 =
+                      if (h_1(l)("@default_other")._1 </ PropValueBot)
+                        o_new.update(NumStr, PropValue(ObjectValue(OtherStr, BoolTrue, BoolTrue, BoolTrue)))
+                      else
+                        ObjBot
+                    o_1 + o_2 + o_3
+                  })
+                }
+              }
+              val h_2 = h_1.update(l_r, o)
+              ((Helper.ReturnStore(h_2, Value(l_r)), ctx_1))
+            } else {
+              (HeapBot, ContextBot)
+            }
+
+          val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
+          ((h_2, ctx_2), (he + h_e, ctxe + ctx_e))
+        }),
       ("Object.prototype.toString"-> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2

@@ -1,0 +1,117 @@
+#billboard a.full {
+	background: url("http://images.apple.com/global/elements/blank.gif"); left: 0px; top: 60px; right: 0px; bottom: 0px; text-indent: -9999px; overflow: hidden; display: block; position: absolute; z-index: 3;
+}
+#billboard .image {
+	top: 50%; position: absolute; z-index: 2;
+}
+#billboard .image img {
+	display: none;
+}
+#billboard .image img.short {
+	display: block;
+}
+#billboard .text {
+	top: 50%; position: absolute; z-index: 3;
+}
+#billboard .text h2 {
+	overflow: hidden; margin-bottom: 0px;
+}
+#billboard .text h2 a {
+	overflow: hidden; display: block;
+}
+#billboard .watch {
+	margin: 0px 36px 0px 0px; width: 148px; height: 35px; overflow: hidden; display: inline-block; cursor: pointer; zoom: 1;
+}
+#billboard .learn {
+	margin: 0px 36px 0px 0px; width: 148px; height: 35px; overflow: hidden; display: inline-block; cursor: pointer; zoom: 1;
+}
+#billboard .watch:hover img {
+	margin-top: -35px;
+}
+#billboard .learn:hover img {
+	margin-top: -35px;
+}
+#billboard .watch {
+	width: 255px;
+}
+#billboard {
+	background: url("http://images.apple.com/v/home/y/images/fallback_bg.png") repeat-x 0px 100% rgb(255, 255, 255);
+}
+#billboard .fade {
+	top: 0px; width: 2560px; bottom: 0px; position: absolute;
+}
+#billboard .left.fade {
+	right: 50%; margin-right: 512px;
+}
+#billboard .right.fade {
+	left: 50%; margin-left: 512px;
+}
+#billboard .ios .text {
+	width: 400px; margin-top: -204px; margin-left: 64px;
+}
+#billboard .ios .text h2 a {
+	width: 500px; height: 194px;
+}
+#billboard .ios .text .small {
+	display: none;
+}
+#billboard .ios .image {
+	width: 860px; height: 545px; margin-top: -184px; margin-left: 280px;
+}
+html {
+	min-height: 887px;
+}
+body {
+	min-height: 887px;
+}
+#billboard .ios .text {
+	margin-top: -174px;
+}
+#billboard .ios .text img {
+	display: none;
+}
+#billboard .ios .text img.small {
+	display: block;
+}
+#billboard .ios .text h2 a {
+	height: 174px;
+}
+#billboard .watch {
+	height: 30px;
+}
+#billboard .learn {
+	height: 30px;
+}
+#billboard .watch:hover img {
+	margin-top: -30px;
+}
+#billboard .learn:hover img {
+	margin-top: -30px;
+}
+#billboard .image img {
+	display: none;
+}
+#billboard .image img.shorter {
+	display: block;
+}
+#billboard .ios .text {
+	margin-top: -288px;
+}
+#billboard .ios .image {
+	width: 1025px; height: 675px; margin-top: -254px; margin-left: 45px;
+}
+#billboard .image img {
+	display: block;
+}
+#billboard .image img.short {
+	display: none;
+}
+#billboard .image img.shorter {
+	display: none;
+}
+#billboard .ios .text {
+	margin-top: -300px;
+}
+#billboard .ios .image {
+	margin-top: -204px;
+}

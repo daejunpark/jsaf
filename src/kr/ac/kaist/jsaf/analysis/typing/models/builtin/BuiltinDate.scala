@@ -15,6 +15,8 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
+import kr.ac.kaist.jsaf.bug_detector.Range15_9_5_43
+import scala.collection.immutable.HashSet
 
 object BuiltinDate extends ModelData {
 
@@ -165,10 +167,40 @@ object BuiltinDate extends ModelData {
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           ((Helper.ReturnStore(h, Value(StrTop)), ctx), (he, ctxe))
         })),
-      ("Date.prototype.toISOString" -> (
+      "Date.prototype.toISOString" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((Helper.ReturnStore(h, Value(StrTop)), ctx), (he, ctxe))
-        })),
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          val v = lset_this.foldLeft(ValueBot)((_v, l) => _v + h(l)("@primitive")._1._2)
+          val num_v = v._1._4
+
+          val v_1 =
+            if ((num_v <> UInt) </ NumBot && (num_v <> NUInt) </ NumBot) {
+              Value(StrTop)
+            } else {
+              ValueBot
+            }
+
+          // If the time value of this object is not a finite Number a RangeError exception is thrown.
+          val es =
+            if (PosInf <= num_v || NegInf <= num_v || NaN <= num_v) {
+              if (Config.typingInterface != null)
+                Config.typingInterface.signal(Config.typingInterface.getSpan, Range15_9_5_43, num_v.toString, null)
+              HashSet[Exception](RangeError)
+            } else {
+              ExceptionBot
+            }
+
+          val (he_1, ctxe_1) = Helper.RaiseException(h, ctx, es)
+
+          val (h_1, ctx_1) =
+            if (v_1 </ ValueBot) {
+              (Helper.ReturnStore(h, v_1), ctx)
+            } else {
+              (HeapBot, ContextBot)
+            }
+
+          ((h_1, ctx_1), (he + he_1, ctxe + ctxe_1))
+        }),
       ("Date.prototype.valueOf" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
@@ -495,10 +527,19 @@ object BuiltinDate extends ModelData {
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           ((PreHelper.ReturnStore(h, cfg.getPureLocal(cp), Value(StrTop)), ctx), (he, ctxe))
         })),
-      ("Date.prototype.toISOString" -> (
+      "Date.prototype.toISOString" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          ((PreHelper.ReturnStore(h, cfg.getPureLocal(cp), Value(StrTop)), ctx), (he, ctxe))
-        })),
+          val PureLocalLoc = cfg.getPureLocal(cp)
+
+          val v_1 = Value(StrTop)
+          // If the time value of this object is not a finite Number a RangeError exception is thrown.
+          val es = HashSet[Exception](RangeError)
+
+          val (h_1, ctx_1) = (PreHelper.ReturnStore(h, PureLocalLoc, v_1), ctx)
+          val (he_1, ctxe_1) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es)
+
+          ((h_1, ctx_1), (he + he_1, ctxe + ctxe_1))
+        }),
       ("Date.prototype.valueOf" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
@@ -813,10 +854,14 @@ object BuiltinDate extends ModelData {
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           LPSet((SinglePureLocalLoc, "@return"))
         })),
-      ("Date.prototype.toISOString" -> (
+      "Date.prototype.toISOString" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
-          LPSet((SinglePureLocalLoc, "@return"))
-        })),
+          val es = HashSet[Exception](RangeError)
+
+          val LP_1 = AH.RaiseException_def(es)
+          val LP_2 = LPSet((SinglePureLocalLoc, "@return"))   // defs by ReturnStore
+          LP_1 ++ LP_2
+        }),
       ("Date.prototype.valueOf" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           LPSet((SinglePureLocalLoc, "@return"))
@@ -1038,10 +1083,18 @@ object BuiltinDate extends ModelData {
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           LPSet((SinglePureLocalLoc, "@return"))
         })),
-      ("Date.prototype.toISOString" -> (
+      "Date.prototype.toISOString" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
-          LPSet((SinglePureLocalLoc, "@return"))
-        })),
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          val es = HashSet[Exception](RangeError)
+
+          val LP_1 = LPSet(SinglePureLocalLoc, "@this")
+          val LP_2 = lset_this.foldLeft(LPBot)((lpset, l) => lpset +(l, "@primitive"))
+          val LP_3 = AH.RaiseException_use(es)
+          val LP_4 = LPSet((SinglePureLocalLoc, "@return"))
+
+          LP_1 ++ LP_2 ++ LP_3 ++ LP_4
+        }),
       ("Date.prototype.valueOf" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2

@@ -16,12 +16,13 @@ import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
 import kr.ac.kaist.jsaf.nodes.{ASTNode, FunDecl}
 import kr.ac.kaist.jsaf.nodes_util.{NodeRelation, JSAstToConcrete, Span}
 import kr.ac.kaist.jsaf.scala_src.nodes._
+import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 
 class FinalDetect(bugDetector: BugDetector) {
   val cfg           = bugDetector.cfg
   val typing        = bugDetector.typing
   val callGraph     = bugDetector.callGraph
-  val shadowings    = bugDetector.shadowings
+  val fromHoister   = bugDetector.fromHoister
   val semantics     = bugDetector.semantics
   val bugStorage    = bugDetector.bugStorage
   val bugOption     = bugDetector.bugOption
@@ -41,11 +42,13 @@ class FinalDetect(bugDetector: BugDetector) {
   def check(): Unit = {
     callConstFuncCheck
     conditionalBranchCheck
-    shadowingCheck
+    fromHoisterCheck
+    strictModeCheck
     unreachableCodeCheck
-    unusedFunctionCheck
     unusedVarPropCheck
     varyingTypeArgumentsCheck
+    otherCheck
+    unusedFunctionCheck // Must be last
   }
 
 
@@ -150,16 +153,29 @@ class FinalDetect(bugDetector: BugDetector) {
 
 
   ////////////////////////////////////////////////////////////////
-  // Shadowing Check
+  // FromHoister Check
   ////////////////////////////////////////////////////////////////
 
-  private def shadowingCheck(): Unit = {
-    if(!bugOption.Shadowing_Check) return
+  private def fromHoisterCheck(): Unit =
+    fromHoister.foreach((bug) => bugStorage.addMessage(bug.span, bug.bugKind, null, null, bug.arg1, bug.arg2))
 
-    shadowings.foreach((bug) => bugStorage.addMessage(bug.span, bug.bugKind, null, null, bug.arg1, bug.arg2))
+  ////////////////////////////////////////////////////////////////
+  // Other Checks by the Analyzer
+  ////////////////////////////////////////////////////////////////
+
+  private def otherCheck(): Unit =
+    toList(typing.getErrors).foreach((bug) => bugStorage.addMessage(bug.span, bug.bugKind, null, null, bug.arg1, bug.arg2))
+
+  ////////////////////////////////////////////////////////////////
+  // StrictMode Check
+  ////////////////////////////////////////////////////////////////
+
+  private def strictModeCheck(): Unit = {
+    if(!bugOption.StrictMode_Check) return
+
+    for(b <- StrictModeChecker.bugList)
+      bugStorage.addMessage(b.span, b.bugKind, null, null, b.arg1, b.arg2)
   }
-
-
 
   ////////////////////////////////////////////////////////////////
   // UnreachableCode Check
@@ -178,7 +194,7 @@ class FinalDetect(bugDetector: BugDetector) {
       ast match
       {
         // If only the function body is unreachable (function declaration is reachable)
-        case SFunDecl(info, SFunctional(fds, vds, body, name, params)) if bugStorage.reachableAST.contains(ast) =>
+        case SFunDecl(info, SFunctional(fds, vds, SSourceElements(_, body, _), name, params), _) if bugStorage.reachableAST.contains(ast) =>
           // Get function code
           val sb = new StringBuilder
           JSAstToConcrete.prFtn(sb, fds, vds, body)
@@ -253,6 +269,9 @@ class FinalDetect(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////
 
   private def unusedFunctionCheck(): Unit = {
+    if(!bugOption.UncalledFunction_Check) return
+    if(bugStorage.bugStat.getErrorCount > 0) return
+
     val fidSet = cfg.getFunctionIds.filterNot(fid => typing.builtinFset.contains(fid))
     for (fid <- bugStorage.filterUsedFunctions(fidSet.toList)) {
       if (typing.getStateAtFunctionEntry(fid).isEmpty) {
@@ -283,6 +302,8 @@ class FinalDetect(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////
 
   private def unusedVarPropCheck(): Unit = {
+    if(!bugOption.UnusedVarProp_Check) return
+
     var worklist: List[Node] = List()
     var fixpoint: RWMap = Map()
     var count = 0

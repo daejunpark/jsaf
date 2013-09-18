@@ -1,0 +1,927 @@
+.fn-hide {
+	display: none;
+}
+.hidden {
+	display: none;
+}
+.alieditContainer * {
+	vertical-align: bottom;
+}
+.alieditContainer {
+	width: 184px; height: 24px; vertical-align: bottom; display: inline-block; zoom: 1;
+}
+.alieditContainer a.aliedit-install {
+	border: 1px solid rgb(174, 174, 174); width: 100%; height: 100%; text-align: center; color: rgb(0, 102, 255) !important; line-height: 24px; display: block;
+}
+.alieditContainer object {
+	width: 100%; height: 24px;
+}
+.promptText_PTA {
+	display: none;
+}
+.aliedit-dn {
+	background: rgb(255, 255, 255); margin: -24px 0px 0px; border: 1px solid red; width: 165px; height: 100%; text-align: center; color: rgb(255, 0, 0); line-height: 24px; font-size: 12px; display: block; position: relative;
+}
+.aliedit-xbox {
+	background: rgb(255, 255, 255); border: 6px solid rgb(118, 117, 118); left: 10%; top: 5%; width: 600px; height: 370px; overflow: hidden; position: absolute; z-index: 9999; -moz-box-shadow: 3px 2px 6px #333; -webkit-box-shadow: #333 2px 2px 6px;
+}
+.aliedit-xbox iframe {
+	width: 100%; height: 100%;
+}
+.aliedit-box-shadow iframe {
+	width: 100%; height: 100%;
+}
+.aliedit-box-shadow {
+	background: rgb(0, 0, 0); left: 0px; top: 0px; width: 100%; height: 100%; filter: alpha(opacity=20); position: absolute; z-index: 9998; opacity: 0.2;
+}
+.aliedit-box-shadow iframe {
+	filter: alpha(opacity=0); opacity: 0;
+}
+.aliedit-load {
+	z-index: 9999;
+}
+.aliedit-tips {
+	background: url("https://img.alipay.com/pa/global/home/bg-aliedit.png") no-repeat 0px -36px; width: 192px; height: 37px; margin-top: -61px; display: block; position: relative; _position: absolute;
+}
+.aliedit-tips-update {
+	background-position: 0px -76px;
+}
+.pop-aliedit .container {
+	background: rgb(243, 243, 243); padding: 20px; border: 3px solid rgb(162, 162, 162); overflow: hidden;
+}
+html {
+	background: rgb(255, 255, 255); color: rgb(77, 77, 77);
+}
+body {
+	margin: 0px; padding: 0px;
+}
+div {
+	margin: 0px; padding: 0px;
+}
+dl {
+	margin: 0px; padding: 0px;
+}
+dt {
+	margin: 0px; padding: 0px;
+}
+dd {
+	margin: 0px; padding: 0px;
+}
+ul {
+	margin: 0px; padding: 0px;
+}
+ol {
+	margin: 0px; padding: 0px;
+}
+li {
+	margin: 0px; padding: 0px;
+}
+h1 {
+	margin: 0px; padding: 0px;
+}
+h2 {
+	margin: 0px; padding: 0px;
+}
+h3 {
+	margin: 0px; padding: 0px;
+}
+h4 {
+	margin: 0px; padding: 0px;
+}
+h5 {
+	margin: 0px; padding: 0px;
+}
+h6 {
+	margin: 0px; padding: 0px;
+}
+pre {
+	margin: 0px; padding: 0px;
+}
+code {
+	margin: 0px; padding: 0px;
+}
+form {
+	margin: 0px; padding: 0px;
+}
+fieldset {
+	margin: 0px; padding: 0px;
+}
+legend {
+	margin: 0px; padding: 0px;
+}
+input {
+	margin: 0px; padding: 0px;
+}
+textarea {
+	margin: 0px; padding: 0px;
+}
+p {
+	margin: 0px; padding: 0px;
+}
+blockquote {
+	margin: 0px; padding: 0px;
+}
+th {
+	margin: 0px; padding: 0px;
+}
+td {
+	margin: 0px; padding: 0px;
+}
+hr {
+	margin: 0px; padding: 0px;
+}
+button {
+	margin: 0px; padding: 0px;
+}
+article {
+	margin: 0px; padding: 0px;
+}
+aside {
+	margin: 0px; padding: 0px;
+}
+details {
+	margin: 0px; padding: 0px;
+}
+figcaption {
+	margin: 0px; padding: 0px;
+}
+figure {
+	margin: 0px; padding: 0px;
+}
+footer {
+	margin: 0px; padding: 0px;
+}
+header {
+	margin: 0px; padding: 0px;
+}
+hgroup {
+	margin: 0px; padding: 0px;
+}
+menu {
+	margin: 0px; padding: 0px;
+}
+nav {
+	margin: 0px; padding: 0px;
+}
+section {
+	margin: 0px; padding: 0px;
+}
+article {
+	display: block;
+}
+aside {
+	display: block;
+}
+details {
+	display: block;
+}
+figcaption {
+	display: block;
+}
+figure {
+	display: block;
+}
+footer {
+	display: block;
+}
+header {
+	display: block;
+}
+hgroup {
+	display: block;
+}
+menu {
+	display: block;
+}
+nav {
+	display: block;
+}
+section {
+	display: block;
+}
+body {
+	font: 12px/1.5 tahoma, arial, αδ?; font-size-adjust: none; font-stretch: normal;
+}
+button {
+	font: 12px/1.5 tahoma, arial, αδ?; font-size-adjust: none; font-stretch: normal;
+}
+input {
+	font: 12px/1.5 tahoma, arial, αδ?; font-size-adjust: none; font-stretch: normal;
+}
+select {
+	font: 12px/1.5 tahoma, arial, αδ?; font-size-adjust: none; font-stretch: normal;
+}
+textarea {
+	font: 12px/1.5 tahoma, arial, αδ?; font-size-adjust: none; font-stretch: normal;
+}
+input {
+	font-size: 100%;
+}
+select {
+	font-size: 100%;
+}
+textarea {
+	font-size: 100%;
+}
+table {
+	border-collapse: collapse; border-spacing: 0;
+}
+th {
+	text-align: inherit;
+}
+fieldset {
+	border: 0px currentColor;
+}
+img {
+	border: 0px currentColor;
+}
+a img {
+	border: 0px currentColor;
+}
+iframe {
+	display: block;
+}
+abbr {
+	border: 0px currentColor; font-variant: normal;
+}
+acronym {
+	border: 0px currentColor; font-variant: normal;
+}
+del {
+	text-decoration: line-through;
+}
+address {
+	font-style: normal; font-weight: 500;
+}
+caption {
+	font-style: normal; font-weight: 500;
+}
+cite {
+	font-style: normal; font-weight: 500;
+}
+code {
+	font-style: normal; font-weight: 500;
+}
+dfn {
+	font-style: normal; font-weight: 500;
+}
+em {
+	font-style: normal; font-weight: 500;
+}
+th {
+	font-style: normal; font-weight: 500;
+}
+var {
+	font-style: normal; font-weight: 500;
+}
+ol {
+	list-style: none;
+}
+ul {
+	list-style: none;
+}
+caption {
+	text-align: left;
+}
+th {
+	text-align: left;
+}
+h1 {
+	font-size: 100%; font-weight: 500;
+}
+h2 {
+	font-size: 100%; font-weight: 500;
+}
+h3 {
+	font-size: 100%; font-weight: 500;
+}
+h4 {
+	font-size: 100%; font-weight: 500;
+}
+h5 {
+	font-size: 100%; font-weight: 500;
+}
+h6 {
+	font-size: 100%; font-weight: 500;
+}
+q::before {
+	content: "";
+}
+q::after {
+	content: "";
+}
+sup {
+	vertical-align: text-top;
+}
+sub {
+	vertical-align: text-bottom;
+}
+a:hover {
+	text-decoration: underline;
+}
+ins {
+	text-decoration: none;
+}
+a {
+	text-decoration: none;
+}
+.fn-clear::after {
+	height: 0px; clear: both; font-size: 0px; display: block; visibility: hidden; content: " ";
+}
+.fn-clear {
+	zoom: 1;
+}
+body .fn-hide {
+	display: none;
+}
+.fn-left {
+	display: inline;
+}
+.fn-right {
+	display: inline;
+}
+.fn-left {
+	float: left;
+}
+.fn-right {
+	float: right;
+}
+.ui-form-item {
+	padding-left: 90px; margin-bottom: 15px;
+}
+.ui-form-label {
+	width: 60px; height: 22px; text-align: right; line-height: 22px; margin-left: -70px; float: left; display: inline-block;
+}
+.ui-form-explain {
+	color: rgb(178, 178, 178); padding-top: 2px; display: block; _padding-left: 4px;
+}
+.ui-form-error .ui-form-explain {
+	background: url("https://apimg.alipay.com/sys/authcenter/style/renew_20110718/common.png") no-repeat -386px 5px; color: rgb(255, 82, 67); padding-left: 20px;
+}
+.ui-form-explain a {
+	color: rgb(0, 119, 255);
+}
+.ui-form-explain a:hover {
+	color: rgb(0, 119, 255);
+}
+.ui-input-current {
+	color: rgb(204, 204, 204);
+}
+.ui-input {
+	border-width: 1px; border-style: solid; border-color: rgb(170, 170, 170) rgb(221, 221, 221) rgb(221, 221, 221) rgb(170, 170, 170); padding: 4px 3px; border-radius: 2px; width: 170px; height: 14px; line-height: 1.2; box-shadow: inset 1px 1px 1px #ddd; -moz-box-shadow: 1px 1px 1px #ddd inset; -webkit-box-shadow: 1px 1px 1px #ddd inset; -moz-border-radius: 2px; -webkit-border-radius: 2px;
+}
+.ui-input:hover {
+	border-color: rgb(153, 153, 153) rgb(204, 204, 204) rgb(204, 204, 204) rgb(153, 153, 153);
+}
+.ui-input-hover {
+	border-color: rgb(153, 153, 153) rgb(204, 204, 204) rgb(204, 204, 204) rgb(153, 153, 153);
+}
+.ui-input:focus {
+	box-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none;
+}
+.ui-form-error .ui-input {
+	border-color: rgb(255, 0, 0) rgb(255, 102, 102) rgb(255, 102, 102) rgb(255, 0, 0); box-shadow: inset 1px 1px 1px #faa; -moz-box-shadow: 1px 1px 1px #faa inset; -webkit-box-shadow: 1px 1px 1px #faa inset;
+}
+.ui-input-radio {
+	margin-right: 5px; vertical-align: middle;
+}
+.ui-button {
+	text-align: left; line-height: 100%; font-size: 12px; text-decoration: none; vertical-align: middle; display: inline-block; cursor: pointer; zoom: 1;
+}
+.ui-button {
+	outline: 0px; font-family: Tahoma; cursor: pointer; background-image: url("https://apimg.alipay.com/sys/authcenter/style/renew_20110718/common.png"); background-repeat: repeat-x;
+}
+.ui-button .ui-button-text {
+	outline: 0px; font-family: Tahoma; cursor: pointer; background-image: url("https://apimg.alipay.com/sys/authcenter/style/renew_20110718/common.png"); background-repeat: repeat-x;
+}
+.ui-button {
+	font-family: SimSun;
+}
+.ui-button:hover {
+	text-decoration: none;
+}
+.ui-button .ui-button-text {
+	border: 0px currentColor;
+}
+body .ui-button .ui-button-text {
+	vertical-align: baseline;
+}
+.ui-button span {
+	text-decoration: none; float: left; display: block;
+}
+.ui-button:hover span {
+	text-decoration: none; float: left; display: block;
+}
+.ui-button-ok {
+	padding: 1px; font-size: 14px;
+}
+.ui-button-ok-hover {
+	padding: 1px; font-size: 14px;
+}
+.ui-button-cancel {
+	padding: 1px; font-size: 14px;
+}
+.ui-button-ok-disabled {
+	padding: 1px; font-size: 14px;
+}
+.ui-button button {
+	padding: 1px; font-size: 14px;
+}
+.ui-button-ok {
+	background-position: -210px -153px; border: 1px solid rgb(215, 76, 0);
+}
+.ui-button-ok-hover {
+	padding: 1px; border: 1px solid rgb(229, 81, 0);
+}
+.ui-button-ok:hover {
+	padding: 1px; border: 1px solid rgb(229, 81, 0);
+}
+.ui-button-ok-disabled {
+	background-position: -210px -257px; border: 1px solid rgb(170, 170, 170);
+}
+.ui-button-cancel {
+	background-position: -210px -255px; border: 1px solid rgb(168, 168, 168);
+}
+.ui-button-ok .ui-button-text {
+	padding: 0px 16px; height: 28px; color: rgb(255, 255, 255); line-height: 28px; font-weight: bold;
+}
+.ui-button-ok-hover .ui-button-text {
+	padding: 0px 16px; height: 28px; color: rgb(255, 255, 255); line-height: 28px; font-weight: bold;
+}
+.ui-button-cancel .ui-button-text {
+	padding: 0px 16px; height: 28px; color: rgb(255, 255, 255); line-height: 28px; font-weight: bold;
+}
+.ui-button-ok-disabled .ui-button-text {
+	padding: 0px 16px; height: 28px; color: rgb(255, 255, 255); line-height: 28px; font-weight: bold;
+}
+.ui-button-ok .ui-button-text {
+	background-position: -210px -222px;
+}
+.ui-button-ok span.ui-button-text {
+	height: 25px; padding-bottom: 3px; _padding-bottom: 1px; _line-height: 28px;
+}
+.ui-button-ok-hover span.ui-button-text {
+	height: 25px; padding-bottom: 3px; _padding-bottom: 1px; _line-height: 28px;
+}
+.ui-button-ok:hover span.ui-button-text {
+	height: 25px; padding-bottom: 3px; _padding-bottom: 1px; _line-height: 28px;
+}
+.ui-button-cancel span.ui-button-text {
+	height: 25px; padding-bottom: 3px; _padding-bottom: 1px; _line-height: 28px;
+}
+.ui-button-ok-hover {
+	text-decoration: none;
+}
+.ui-button-ok:hover {
+	text-decoration: none;
+}
+.ui-button-ok-disabled .ui-button-text {
+	background: rgb(204, 204, 204); cursor: default;
+}
+.ui-button-ok-hover .ui-button-text {
+	background-position: -210px -189px;
+}
+.ui-button-ok .ui-button-text:hover {
+	background-position: -210px -189px;
+}
+.ui-button-ok:hover span.ui-button-text {
+	background-position: -210px -189px;
+}
+.ui-button-cancel .ui-button-text {
+	background-position: -210px -255px; color: rgb(102, 102, 102);
+}
+.sl-aliedit .alieditContainer {
+	width: 180px; height: 26px;
+}
+.sl-aliedit .alieditContainer embed {
+	width: 180px; height: 26px;
+}
+.sl-aliedit .alieditContainer object {
+	width: 180px; height: 26px;
+}
+.sl-aliedit .alieditContainer {
+	border-width: 1px 0px 0px 1px; border-style: solid; border-color: rgb(238, 238, 238) rgb(255, 255, 255) rgb(255, 255, 255) rgb(238, 238, 238); border-radius: 2px; margin-left: -2px; -moz-border-radius: 2px; -webkit-border-radius: 2px;
+}
+.ui-form-error .alieditContainer {
+	border-width: 1px; border-style: solid; border-color: rgb(255, 0, 0) rgb(255, 102, 102) rgb(255, 102, 102) rgb(255, 0, 0);
+}
+.error-box {
+	background: url("https://apimg.alipay.com/sys/authcenter/style/renew_20110718/common.png") no-repeat -381px 8px rgb(255, 255, 208); margin: 0px auto 10px; padding: 5px 10px 5px 25px; border: 1px solid rgb(255, 173, 119); width: 200px; color: rgb(255, 0, 0); line-height: 1.6;
+}
+.logonId-tip {
+	padding: 3px 4px; left: 101px; top: 0px; width: 170px; height: 14px; display: none; position: absolute;
+}
+.logonId-tip-default {
+	color: rgb(153, 153, 153); display: block;
+}
+.logonId-tip-current {
+	color: rgb(204, 204, 204); display: block;
+}
+.sl-checkcode::after {
+	height: 0px; clear: both; font-size: 0px; display: block; visibility: hidden; content: " ";
+}
+.sl-checkcode {
+	zoom: 1;
+}
+.sl-checkcode-input {
+	width: 50px; margin-top: 2px; margin-right: 4px;
+}
+.sl-checkcode-img {
+	margin-right: 4px; float: left;
+}
+.sl-checkcode-link {
+	width: 38px; line-height: 30px; float: left;
+}
+.sl-chacha-parent {
+	position: relative;
+}
+.sl-chacha {
+	background: url("https://apimg.alipay.com/sys/authcenter/style/renew_20110718/common.png") no-repeat -56px -167px; border-radius: 8px; left: 246px; top: 4px; width: 17px; height: 17px; text-indent: -9999px; display: block; position: absolute; cursor: pointer; -moz-border-radius: 8px; -webkit-border-radius: 8px; -webkit-transition: all .5s ease-in-out; -moz-transition: all .5s ease-in-out; -o-transition: all .5s ease-in-out; transition: all .5s ease-in-out; -webkit-transform: translateZ(0);
+}
+.sl-chacha::before {
+	background: rgb(188, 187, 187); border-radius: 2px; left: 7px; top: 3px; width: 3px; height: 11px; display: none; position: relative; content: ""; transform: rotate(-45deg); -moz-border-radius: 2px; -webkit-border-radius: 2px; -webkit-transform: rotate(-45deg); -moz-transform: rotate(-45deg); -o-transform: rotate(-45deg);
+}
+.sl-chacha::after {
+	background: rgb(188, 187, 187); border-radius: 2px; left: 7px; top: 3px; width: 3px; height: 11px; display: none; position: relative; content: ""; transform: rotate(-45deg); -moz-border-radius: 2px; -webkit-border-radius: 2px; -webkit-transform: rotate(-45deg); -moz-transform: rotate(-45deg); -o-transform: rotate(-45deg);
+}
+.sl-chacha::after {
+	top: -8px; transform: rotate(45deg); -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -o-transform: rotate(45deg);
+}
+.sl-chacha:hover {
+	box-shadow: 0px 0px 4px #aaa; -moz-box-shadow: 0 0 4px #aaa; -webkit-box-shadow: 0 0 4px #aaa;
+}
+body .placeholder {
+	color: rgb(153, 153, 153);
+}
+.sl-checkcodeIcon {
+	left: 95px; top: 10px; width: 14px; height: 14px; position: absolute;
+}
+.checkcodeIcon {
+	width: 14px; height: 14px; display: none;
+}
+.sl-checkcodeIcon .checkcodeIcon-right {
+	background: url("https://i.alipayobjects.com/e/201204/2StBjKGSa9.png") no-repeat 0px -17px; display: inline-block;
+}
+.sl-checkcodeIcon .checkcodeIcon-wrong {
+	background: url("https://i.alipayobjects.com/e/201204/2StBjKGSa9.png") no-repeat 0px 0px; display: inline-block;
+}
+.aliLogin-icon {
+	background-position: 0px 9999999px; outline: 0px; width: 17px; height: 17px; text-indent: -99999px; overflow: hidden; margin-top: 8px; background-image: url("https://i.alipayobjects.com/e/201301/22VSqwZdET.png"); background-repeat: no-repeat;
+}
+.aliLogin-icon-taobao {
+	
+}
+.aliLogin-icon-aliyun {
+	background-position: 0px -19px;
+}
+.aliLogin-icon-aliyunOs {
+	background-position: 0px -19px;
+}
+.aliLogin-icon-cbu {
+	background-position: 0px -38px;
+}
+.aliLogin-icon-icbu {
+	background-position: 0px -38px;
+}
+.aliLogin-icon-yahoo {
+	background-position: 0px -60px;
+}
+.aliLogin-icon-laiwang {
+	background-position: 0px -79px;
+}
+body {
+	color: rgb(77, 77, 77);
+}
+a {
+	color: rgb(102, 102, 102);
+}
+a:hover {
+	color: rgb(102, 102, 102);
+}
+.copyright {
+	color: rgb(102, 102, 102); text-shadow: 1px 0 0 #ddd;
+}
+.server {
+	color: rgb(255, 255, 255);
+}
+#forgetPsw {
+	color: rgb(0, 119, 255);
+}
+#forgetPsw:hover {
+	color: rgb(0, 119, 255);
+}
+.ime-disabled {
+	ime-mode: disabled;
+}
+.umidWrapper {
+	width: 1px; height: 1px; display: block;
+}
+#umFlash {
+	width: 1px; height: 1px; display: block;
+}
+.error-box a {
+	color: rgb(0, 119, 255);
+}
+.error-box a:hover {
+	color: rgb(0, 119, 255);
+}
+.container {
+	margin: 0px auto; width: 800px;
+}
+body .head-notice {
+	margin: 5px 0px 0px; padding: 6px 0px; width: 800px;
+}
+.auth-header {
+	height: 60px; padding-top: 10px; position: relative;
+}
+.auth-header-logo {
+	left: 0px; top: 20px; line-height: 37px; position: absolute;
+}
+.auth-header-taobao {
+	background: url("https://apimg.alipay.com/sys/authcenter/style/renew_20110718/common.png") no-repeat; text-indent: -99px; overflow: hidden; float: left; display: block;
+}
+.auth-header-alipay {
+	background: url("https://apimg.alipay.com/sys/authcenter/style/renew_20110718/common.png") no-repeat; text-indent: -99px; overflow: hidden; float: left; display: block;
+}
+.auth-header-taobao:hover {
+	text-decoration: none;
+}
+.auth-header-alipay:hover {
+	text-decoration: none;
+}
+.auth-header-taobao {
+	background-position: -117px -102px; width: 140px; height: 35px;
+}
+.auth-header-alipay {
+	background-position: -2px -97px; width: 96px; height: 37px; margin-right: 15px;
+}
+.auth-header-title {
+	font-family: "Microsoft YaHei"; font-size: 16px;
+}
+.auth-header-link {
+	top: 20px; right: 0px; position: absolute;
+}
+.auth-footer {
+	text-align: center; line-height: 25px; padding-top: 20px; margin-top: 40px; border-top-color: rgb(245, 245, 245); border-top-width: 1px; border-top-style: solid;
+}
+.auth-footer-taobao a {
+	padding: 0px 7px;
+}
+fieldset {
+	position: relative; zoom: 1;
+}
+.fn-hide {
+	display: none;
+}
+html {
+	
+}
+body {
+	font-family: tahoma,arial,"Hiragino Sans GB",αδ?;
+}
+button {
+	font-family: tahoma,arial,"Hiragino Sans GB",αδ?;
+}
+input {
+	font-family: tahoma,arial,"Hiragino Sans GB",αδ?;
+}
+select {
+	font-family: tahoma,arial,"Hiragino Sans GB",αδ?;
+}
+textarea {
+	font-family: tahoma,arial,"Hiragino Sans GB",αδ?;
+}
+.ui-login-aside {
+	background: rgba(0, 0, 0, 0.4); width: 284px; color: rgb(255, 255, 255); overflow: hidden; filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#66000000',EndColorStr='#66000000');
+}
+#userSSOLogined {
+	background: rgba(0, 0, 0, 0.4); width: 284px; color: rgb(255, 255, 255); overflow: hidden; filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#66000000',EndColorStr='#66000000');
+}
+.ui-form-title {
+	margin: 10px 24px 5px; padding: 0px 0px 5px; border-bottom-color: rgb(187, 187, 187); border-bottom-width: 1px; border-bottom-style: solid; position: relative; zoom: 1;
+}
+.ui-form-title h1 {
+	line-height: 21px; font-size: 16px; zoom: 1; _display: inline;
+}
+.ui-form-title #il-tblink {
+	top: 5px; right: 0px; position: absolute; z-index: 20;
+}
+.ui-login-aside a {
+	color: rgb(255, 255, 255);
+}
+.ui-login-aside a:hover {
+	color: rgb(255, 255, 255);
+}
+:root .ui-login-aside {
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#00000000',EndColorStr='#00000000')\9;
+}
+:root #userSSOLogined {
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#00000000',EndColorStr='#00000000')\9;
+}
+.server {
+	display: none;
+}
+.login-form-cnt {
+	padding: 10px 24px; position: relative;
+}
+label.ui-form-label {
+	margin: 0px; padding: 0px 0px 8px; width: auto; height: auto; text-align: left; line-height: 12px; float: none; display: block;
+}
+.ui-form {
+	overflow: hidden; position: relative;
+}
+.ui-form-item {
+	margin: 0px; padding: 0px;
+}
+.sl-aliedit {
+	position: relative;
+}
+.fm-link {
+	top: -3px; right: 0px; position: absolute;
+}
+.alieditContainer {
+	margin-bottom: 10px;
+}
+.ui-input {
+	padding: 7px 3px; border: 1px solid rgb(160, 158, 153); width: 228px; height: 15px; font-size: 12px; margin-bottom: 10px;
+}
+.i-text-authcode {
+	width: 73px; float: left;
+}
+.sl-checkcode {
+	position: relative;
+}
+#checkCodeImg {
+	width: 80px; height: 30px; margin-top: 3px; margin-right: 0px; margin-left: 5px; float: left; cursor: pointer; zoom: 1; _margin-left: 2px;
+}
+.checkcode-link {
+	background: url("https://i.alipayobjects.com/e/201306/SbPsCDj2N.png") no-repeat -21px 0px; width: 16px; height: 30px; line-height: 30px; text-indent: -2222em; overflow: hidden; padding-right: 5px; padding-left: 6px; margin-top: 3px; margin-left: 5px; border-right-color: rgb(171, 171, 171); border-right-width: 1px; border-right-style: solid; float: left; display: block; zoom: 1; hight: 30px; _background-image: url(https://i.alipayobjects.com/e/201306/T2udWdXz5.png);
+}
+.checkcode-link-noaudio {
+	background: 0px; border: 0px currentColor; width: 40px; line-height: 14px; text-indent: 0px;
+}
+.checkcode-link-audio {
+	background: url("https://i.alipayobjects.com/e/201306/SbPsCDj2N.png") no-repeat 3px 0px; width: 16px; height: 30px; line-height: 30px; text-indent: -9999em; overflow: hidden; padding-right: 3px; padding-left: 7px; margin-top: 2px; float: left; display: block; zoom: 1; _background-image: url(https://i.alipayobjects.com/e/201306/T2udWdXz5.png);
+}
+.checkcode-link-audio-abc {
+	background: url("https://i.alipayobjects.com/e/201306/SbPsCDj2N.png") no-repeat -42px 0px; _background-image: url(https://i.alipayobjects.com/e/201306/T2udWdXz5.png);
+}
+#J-voicePress {
+	background: rgb(255, 255, 255); width: 80px; height: 30px; color: rgb(136, 136, 136); line-height: 30px; overflow: hidden; margin-top: 3px; margin-right: 0px; margin-left: 5px; float: left; position: relative; zoom: 1; _margin-left: 2px;
+}
+.J-voiceCheckcode {
+	cursor: pointer;
+}
+#J-voicePress .process {
+	background: 0px 0px rgb(253, 152, 39); left: 0px; top: 0px; width: 0px; height: 30px; overflow: hidden; display: block; position: absolute; zoom: 1;
+}
+#J-voicePress .text {
+	left: 0px; top: 0px; width: 100%; height: 30px; text-align: center; position: absolute;
+}
+#J-voicePress .text {
+	background: url("https://i.alipayobjects.com/e/201306/SbPsCDj2N.png") no-repeat -65px -2px; width: 100%; height: 30px; text-indent: 20px; overflow: hidden; float: left; display: block;
+}
+#J-voicePress .text-end {
+	color: rgb(253, 152, 39); text-indent: 0px;
+}
+#J_safeSignCheck {
+	margin-bottom: 5px;
+}
+#safeSignCheck {
+	font-weight: bold; margin-right: 5px; vertical-align: middle; display: inline-block; position: relative; zoom: 1; _position: relative; _left: -4px; _font-weight: bold;
+}
+:root #safeSignCheck {
+	left: 0px;
+}
+.ui-btn-cnt {
+	margin: 10px 0px;
+}
+input.btn-login {
+	border: 0px currentColor; width: 100%; height: 35px; color: rgb(249, 249, 249); line-height: 35px; font-size: 18px; font-weight: bold; display: block; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFA600',endColorstr='#FE9200'); cursor: pointer; background-size: cover; background-color: rgb(245, 170, 43); text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2); _font-weight: bold;
+}
+input.btn-login-hover {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFB91C',endColorstr='#FFA700'); background-size: cover; background-color: rgb(245, 170, 43);
+}
+a.ui-button-reg {
+	color: rgb(255, 170, 0); font-size: 14px; font-weight: 600;
+}
+a.ui-button-reg:hover {
+	color: rgb(255, 170, 0); text-decoration: none;
+}
+.login-help-cnt a {
+	margin-right: 8px; _margin-right: 5px;
+}
+span.sl-chacha {
+	left: 210px; top: 27px;
+}
+.sl-aliedit .alieditContainer {
+	border: 0px currentColor; width: 236px; margin-left: 0px;
+}
+.sl-aliedit .alieditContainer embed {
+	border: 0px currentColor; width: 236px; margin-left: 0px;
+}
+.sl-aliedit .alieditContainer object {
+	border: 0px currentColor; width: 236px; margin-left: 0px;
+}
+.alieditContainer a.aliedit-install {
+	width: 100% !important;
+}
+.font-alpha {
+	filter: alpha(opacity=60); zoom: 1; opacity: 0.6; -moz-opacity: .6;
+}
+.font-alpha:hover {
+	filter: alpha(opacity=60); zoom: 1; opacity: 0.6; -moz-opacity: .6;
+}
+#J_safeSignCheck label {
+	filter: alpha(opacity=60); zoom: 1; opacity: 0.6; -moz-opacity: .6;
+}
+.fm-link a {
+	filter: alpha(opacity=60); zoom: 1; opacity: 0.6; -moz-opacity: .6;
+}
+.fm-link a:hover {
+	filter: alpha(opacity=60); zoom: 1; opacity: 0.6; -moz-opacity: .6;
+}
+.login-help-cnt .font-alpha {
+	display: inline-block;
+}
+#J_safeSignCheck label {
+	display: inline-block;
+}
+.fm-link a {
+	display: inline-block;
+}
+#userSSOLogined {
+	margin-top: 70px;
+}
+#userSSOLogined .aliLogin-content {
+	padding: 25px 25px 40px;
+}
+#userSSOLogined .aliLogin-title {
+	font-size: 14px;
+}
+#userSSOLogined .aliLogin-account {
+	margin: 4px 0px 0px 10px; width: 200px; color: rgb(255, 151, 0); font-family: Tahoma; font-size: 16px; font-weight: 700; word-break: break-all; word-wrap: break-word;
+}
+#userSSOLogined .ui-button-ok {
+	background: 0px; padding: 0px; border: 0px currentColor;
+}
+#userSSOLogined .aliLogin-button {
+	margin-top: 15px; display: block; position: relative; zoom: 1;
+}
+#userSSOLogined #aliLogin_login {
+	padding: 0px; outline: 0px; width: 234px; height: 35px; text-align: center; color: rgb(249, 249, 249); line-height: 35px; overflow: hidden; font-size: 18px; font-weight: bold; display: block; zoom: 1; text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+#userSSOLogined #aliLogin_login:hover {
+	text-decoration: none;
+}
+#userSSOLogined .ui-button-ok .aliLogin_login {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFB91C',endColorstr='#FFA700'); background-color: rgb(245, 170, 43);
+}
+#userSSOLogined .ui-button-ok-disabled .aliLogin_login {
+	background: rgb(130, 130, 130); cursor: default;
+}
+#userSSOLogined .ui-button-ok-disabled {
+	background: 0px; border: 0px currentColor;
+}
+#userSSOLogined #aliLogin_loading {
+	left: 0px; top: 43px; position: absolute;
+}
+#userSSOLogined #aliLogin_change {
+	left: 0px; top: 43px; position: absolute;
+}
+#userSSOLogined #aliLogin_change {
+	color: rgb(255, 255, 255);
+}
+#userSSOLogined #aliLogin_loading {
+	color: rgb(42, 156, 65);
+}
+#forgetPsw {
+	color: rgb(255, 255, 255);
+}
+#forgetPsw:hover {
+	color: rgb(255, 255, 255);
+}
+.sl-account {
+	position: relative;
+}
+.sl-account .ui-form-explain {
+	left: 0px; bottom: 45px; display: none; position: absolute;
+}
+.sl-account .ui-form-explain a {
+	color: rgb(0, 119, 255);
+}
+.sl-account .ui-form-explain a:hover {
+	color: rgb(0, 119, 255);
+}
+.error-box {
+	background: url("https://apimg.alipay.com/sys/authcenter/style/renew_20110718/common.png") no-repeat -381px 5px rgb(255, 255, 208); margin: 10px auto 0px; padding: 5px 5px 5px 25px; width: 202px; line-height: 1.3;
+}
+.sl-checkcode label {
+	display: none;
+}
+#aliedit-tips {
+	z-index: 99;
+}
+#J-bgsound {
+	display: none;
+}

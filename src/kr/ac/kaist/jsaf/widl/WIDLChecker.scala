@@ -19,10 +19,11 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.bug_detector.StateManager
 import kr.ac.kaist.jsaf.nodes._
 import kr.ac.kaist.jsaf.nodes.{ Node => ANode }
-import kr.ac.kaist.jsaf.nodes_util.{ NodeFactory => NF, NodeUtil => NU, NodeRelation, Span, SourceLocRats }
+import kr.ac.kaist.jsaf.nodes_util.{NodeFactory => NF, NodeUtil => NU, Walkers, NodeRelation, Span, SourceLocRats}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import edu.rice.cs.plt.tuple.{ Option => JOption }
+import java.util.{List => JList}
 
 // libraries = ["webapis.tv.channel", ...]
 object WIDLChecker extends Walker {
@@ -37,10 +38,11 @@ object WIDLChecker extends Walker {
   ////////////////////////////////////////////////////////////////////////////////
   // WIDL Nodes
   ////////////////////////////////////////////////////////////////////////////////
-  val enumMap = new MHashMap[String, WEnum]
-  val interfaceMap = new MHashMap[String, WInterface]
-  val implementsMap = new MHashMap[String, MListBuffer[WImplementsStatement]]
-  val typedefMap = new MHashMap[String, WTypedef]
+  var constructorMap = new MHashMap[String, MListBuffer[WEAConstructor]]
+  var enumMap = new MHashMap[String, WEnum]
+  var interfaceMap = new MHashMap[String, WInterface]
+  var implementsMap = new MHashMap[String, MListBuffer[WImplementsStatement]]
+  var typedefMap = new MHashMap[String, WTypedef]
   // interface |-> parent interfaces
   var impdbs: MMap[String, List[String]] = MHashMap[String, List[String]]()
   // interface |-> variables
@@ -63,7 +65,7 @@ object WIDLChecker extends Walker {
   ////////////////////////////////////////////////////////////////////////////////
   // Function Argument Size
   ////////////////////////////////////////////////////////////////////////////////
-  val argSizeMap = new MHashMap[String, (Int, Int)]
+  var argSizeMap = new MHashMap[String, (Int, Int)]
 
   ////////////////////////////////////////////////////////////////////////////////
   // Soundness for argument type cheching
@@ -302,6 +304,12 @@ object WIDLChecker extends Walker {
     // Initialize variables
     dbs = MHashMap[String, List[WDefinition]]()
     current = None
+    constructorMap = new MHashMap[String, MListBuffer[WEAConstructor]]
+    enumMap = new MHashMap[String, WEnum]
+    interfaceMap = new MHashMap[String, WInterface]
+    implementsMap = new MHashMap[String, MListBuffer[WImplementsStatement]]
+    typedefMap = new MHashMap[String, WTypedef]
+    argSizeMap = new MHashMap[String, (Int, Int)]
     impdbs = MHashMap[String, List[String]]()
     vardbs = MHashMap[String, List[(String, WInterfaceMember)]]()
     typedbs = MHashMap[(String, String), String]()
@@ -332,19 +340,27 @@ object WIDLChecker extends Walker {
   }
 
   def walkWIDL(): Unit = {
-    object widlWalker extends WIDLWalker {
-      override def walk(node: Any): Unit = {
+    object WIDLWalker extends Walkers {
+      override def walkWIDL(parent: Any, node: Any): Unit = {
         node match {
-          case node@SWInterface(info, attrs, name, parent, members) => interfaceMap.put(name, node)
+          case node@SWInterface(info, attrs, name, parent, members) =>
+            for(attr <- attrs) {
+              attr match {
+                case const: WEAConstructor => constructorMap.getOrElseUpdate(name, new MListBuffer).append(const)
+                case _ =>
+              }
+            }
+            if(interfaceMap.get(name).isDefined) System.out.println("* \"" + name + "\" has multiple definitions.")
+            interfaceMap.put(name, node)
           case node@SWEnum(info, attrs, name, enumValueList) => enumMap.put(name, node)
           case node@SWTypedef(info, attrs, typ, name) => typedefMap.put(name, node)
           case node@SWImplementsStatement(info, attrs, name, parent) => implementsMap.getOrElseUpdate(name, new MListBuffer).append(node)
           case _ =>
         }
-        super.walk(node)
+        super.walkWIDL(parent, node)
       }
     }
-    for((dbNames, widlList) <- dbs) for(widl <- widlList) widlWalker.walk(widl)
+    for((dbNames, widlList) <- dbs) WIDLWalker.walkWIDL(null, widlList)
 
     // Debug
     /*def getId(id: JOption[WId]): String = if(id.isSome) id.unwrap().getName else ""
@@ -412,6 +428,60 @@ object WIDLChecker extends Walker {
     case _ => false
   }
 
+  def checkArgs(fa: LHS, name: String, params: JList[WArgument], args: List[Expr]) = {
+    NodeRelation.ast2cfgMap.get(fa) match {
+      case Some(cfgList) =>
+        for (cfgInst <- cfgList) {
+          cfgInst match {
+            case inst@CFGCall(_, _, _, _, arguments, _) =>
+              val cfgNode = cfg.findEnclosingNode(inst)
+              val cstate = stateManager.getInputCState(cfgNode, inst.getInstId, _MOST_SENSITIVE)
+              for ((callContext, state) <- cstate) {
+                val argLocSet = SE.V(arguments, state.heap, state.context)._1.locset
+                for (argLoc <- argLocSet) {
+                  argState = state
+                  argObj = state.heap(argLoc)
+                }
+              }
+            case _ =>
+          }
+        }
+      case None =>
+    }
+    var numOfOptional = 0
+    var numOfArgument = params.size
+    toList(params).zipWithIndex.foreach(pair => pair._1 match {
+      case SWArgument(_, attrs, t, _, _) =>
+        if (pair._2 < args.length) {
+          var result = (false, "?")
+          if (argObj != null && argObj.map != null) {
+            (argObj.map.get(pair._2.toString), getType(t)) match {
+              case (Some(objTuple), Some(typ)) => result = checkArgumentType(objTuple._1, typ)
+              case _ =>
+            }
+          }
+          if (!result._1) {
+            if (soundness)
+              printWarnMsg(fa, warning_AT.format(pair._2 + 1, name, result._2, pair._2 + 1))
+            else
+              printErrMsg(fa, error_AT.format(pair._2 + 1, name, result._2, pair._2 + 1))
+          }
+        }
+        if (!attrs.filter(attr => isOptional(attr)).isEmpty) {
+          numOfOptional = numOfOptional + 1
+          if (pair._2 >= args.length && isErrorCallback(t))
+            printWarnMsg(fa, warning_EC.format(name))
+        }
+      case _ =>
+    })
+    if (numOfArgument - numOfOptional > args.length || args.length > numOfArgument)
+      if (numOfOptional != 0)
+        printErrMsg(fa, error_AN.format(name, args.length,
+                                        numOfArgument - numOfOptional, numOfArgument))
+      else
+        printErrMsg(fa, error_AN.format(name, args.length, numOfArgument))
+  }
+
   override def walkUnit(node: Any): Unit = node match {
     /*
      * webapis.tv.channel.tuneUp
@@ -426,7 +496,7 @@ object WIDLChecker extends Walker {
     case fa@SDot(_, obj, SId(_, x, _, _)) if (isAPI(obj)) =>
       getAPI(obj, x) match {
         case Some(typ) =>
-          (getMembers(typ).find(p => p._2._1.equals(x))) match {
+          getMembers(typ).find(p => p._2._1.equals(x)) match {
             case Some(pair) => current = Some(pair._2)
             case None => printErrMsgLHS(obj, x)
           }
@@ -440,60 +510,19 @@ object WIDLChecker extends Walker {
         case Some((_, op: WOperation)) =>
           if (!op.getExns.isEmpty && nestedTries == 0)
             printWarnMsg(fa, warning_EH.format(dotToStr(fun).getOrElse(x)))
-          NodeRelation.ast2cfgMap.get(fa) match {
-            case Some(cfgList) =>
-              for (cfgInst <- cfgList) {
-                cfgInst match {
-                  case inst@CFGCall(iid, info, fun, thisArg, arguments, addr) =>
-                    val cfgNode = cfg.findEnclosingNode(inst)
-                    val cstate = stateManager.getInputCState(cfgNode, inst.getInstId, _MOST_SENSITIVE)
-                    for ((callContext, state) <- cstate) {
-                      val argLocSet = SE.V(arguments, state.heap, state.context)._1.locset
-                      for (argLoc <- argLocSet) {
-                        argState = state
-                        argObj = state.heap(argLoc)
-                      }
-                    }
-                  case _ =>
-                }
-              }
-            case None =>
-          }
-          var numOfOptional = 0
-          var numOfArgument = op.getArgs.size
-          toList(op.getArgs).zipWithIndex.foreach(pair => pair._1 match {
-            case SWArgument(_, attrs, t, _, _) =>
-              if (pair._2 < args.length) {
-                var result = (false, "?")
-                if (argObj != null && argObj.map != null) {
-                  (argObj.map.get(pair._2.toString), getType(t)) match {
-                    case (Some(objTuple), Some(typ)) => result = checkArgumentType(objTuple._1, typ)
-                    case _ =>
-                  }
-                }
-                if (!result._1) {
-                  if (soundness)
-                    printWarnMsg(fa, warning_AT.format(pair._2 + 1, dotToStr(fun).getOrElse(x), result._2, pair._2 + 1))
-                  else
-                    printErrMsg(fa, error_AT.format(pair._2 + 1, dotToStr(fun).getOrElse(x), result._2, pair._2 + 1))
-                }
-              }
-              if (!attrs.filter(attr => isOptional(attr)).isEmpty) {
-                numOfOptional = numOfOptional + 1
-                if (pair._2 >= args.length && isErrorCallback(t))
-                  printWarnMsg(fa, warning_EC.format(dotToStr(fun).getOrElse(x)))
-              }
-            case _ =>
-          })
-          if (numOfArgument - numOfOptional > args.length || args.length > numOfArgument)
-            if (numOfOptional != 0)
-              printErrMsg(fa, error_AN.format(dotToStr(fun).getOrElse(x), args.length,
-                numOfArgument - numOfOptional, numOfArgument))
-            else
-              printErrMsg(fa, error_AN.format(dotToStr(fun).getOrElse(x), args.length, numOfArgument))
+          checkArgs(fa, dotToStr(fun).getOrElse(x), op.getArgs, args)
         case _ =>
       }
       current = None
+      args.foreach(walkUnit)
+
+    case SNew(_, fa@SFunApp(_, SVarRef(_, SId(_, f, _, _)), args)) if f.startsWith("<>webapis_") =>
+      constructorMap.get(f.drop(10)) match {
+        case Some(constructorList) =>
+          for (constructor <- constructorList)
+            checkArgs(fa, f.drop(10), constructor.getArgs, args)
+        case None =>
+      }
       args.foreach(walkUnit)
 
     case STry(_, body, catchB, _) =>

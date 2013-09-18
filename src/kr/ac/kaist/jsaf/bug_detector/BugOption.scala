@@ -15,7 +15,12 @@ class BugOption(defaultForUser: Boolean = true) {
   ////////////////////////////////////////////////////////////////////////////////
   // Settings
   ////////////////////////////////////////////////////////////////////////////////
-  val contextSensitive:                         Array[CallContext.SensitivityFlagType] = new Array(MAX_BUG_COUNT)
+  val contextSensitive: Array[CallContext.SensitivityFlagType] = new Array(BugKindCounter + 1)
+
+  var ArrayConstructor_Check                                    = true
+  var ArrayConstructor_ArgumentMustBeUIntInEveryState           = false
+  var ArrayConstructor_ArgumentMustBeUIntInEveryLocation        = false
+  var ArrayConstructor_ArgumentMustBeUIntDefinitely             = false
 
   var AbsentReadProperty_Check                                  = true
   var AbsentReadProperty_PropertyMustExistInEveryState          = false
@@ -32,6 +37,15 @@ class BugOption(defaultForUser: Boolean = true) {
   var BinaryOpSecondType_OperandMustBeCorrectInEveryState       = false
   var BinaryOpSecondType_OperandMustBeCorrectInEveryLocation    = false
   var BinaryOpSecondType_OperandMustBeCorrectForAllValue        = false
+
+  var BuiltinThrow_Check                                        = true
+  var BuiltinThrow_MustBeThrownInEveryState                     = false
+  var BuiltinThrow_MustBeThrownDefinitely                       = false
+
+  var BuiltinRange_Check                                        = true
+  var BuiltinRange_ArgumentMustBeCorrectInEveryState            = false
+  var BuiltinRange_ArgumentMustBeCorrectInEveryLocation         = false
+  var BuiltinRange_ArgumentMustBeCorrectDefinitely              = false
 
   var BuiltinWrongArgType_Check                                 = true
   var BuiltinWrongArgType_TypeMustBeCorrectInEveryState         = false
@@ -103,9 +117,17 @@ class BugOption(defaultForUser: Boolean = true) {
 
   var Shadowing_Check                                           = true
 
-  var UnreachableCode_Check                                     = true
+  var StrictMode_Check                                          = true
 
-  var VaryingTypeArguments_Check                                = true
+  var UnreachableCode_Check                                     = false
+
+  var UnreferencedFunction_Check                                = false
+
+  var UncalledFunction_Check                                    = false
+
+  var UnusedVarProp_Check                                       = false
+
+  var VaryingTypeArguments_Check                                = false
   var VaryingTypeArguments_CheckUndefined                       = false
 
   var WrongThisType_Check                                       = true
@@ -127,10 +149,15 @@ class BugOption(defaultForUser: Boolean = true) {
   ////////////////////////////////////////////////////////////////////////////////
   // For user
   def setToDefaultForUser(): Unit = {
-    for(i <- 0 until MAX_BUG_COUNT) {
+    for(i <- 0 until BugKindCounter) {
       //soundnessLevel(i) = SOUNDNESS_LEVEL_LOW
       contextSensitive(i) = CallContext._MOST_SENSITIVE
     }
+
+    // ArrayConstructor
+    ArrayConstructor_ArgumentMustBeUIntInEveryState = false
+    ArrayConstructor_ArgumentMustBeUIntInEveryLocation = false
+    ArrayConstructor_ArgumentMustBeUIntDefinitely = false
 
     // AbsentReadProperty
     AbsentReadProperty_PropertyMustExistInEveryState = false
@@ -147,6 +174,16 @@ class BugOption(defaultForUser: Boolean = true) {
     BinaryOpSecondType_OperandMustBeCorrectInEveryState = false
     BinaryOpSecondType_OperandMustBeCorrectInEveryLocation = false
     BinaryOpSecondType_OperandMustBeCorrectForAllValue = false
+
+    // BuiltinCallable
+    BuiltinThrow_MustBeThrownInEveryState = false
+    BuiltinThrow_MustBeThrownDefinitely = false
+
+    // BuiltinRange
+    BuiltinRange_Check = true
+    BuiltinRange_ArgumentMustBeCorrectInEveryState = false
+    BuiltinRange_ArgumentMustBeCorrectInEveryLocation = false
+    BuiltinRange_ArgumentMustBeCorrectDefinitely = false
 
     // BuiltinWrongArgType
     BuiltinWrongArgType_TypeMustBeCorrectInEveryState = false
@@ -224,10 +261,15 @@ class BugOption(defaultForUser: Boolean = true) {
 
   // For SAFE developer
   def setToDefaultForDeveloper(): Unit = {
-    for(i <- 0 until MAX_BUG_COUNT) {
+    for(i <- 0 until BugKindCounter) {
       //soundnessLevel(i) = SOUNDNESS_LEVEL_HIGH
       contextSensitive(i) = CallContext._MOST_SENSITIVE
     }
+
+    // ArrayConstructor
+    ArrayConstructor_ArgumentMustBeUIntInEveryState = true
+    ArrayConstructor_ArgumentMustBeUIntInEveryLocation = true
+    ArrayConstructor_ArgumentMustBeUIntDefinitely = true
 
     // AbsentReadProperty
     AbsentReadProperty_PropertyMustExistInEveryState = true
@@ -244,6 +286,16 @@ class BugOption(defaultForUser: Boolean = true) {
     BinaryOpSecondType_OperandMustBeCorrectInEveryState = true
     BinaryOpSecondType_OperandMustBeCorrectInEveryLocation = true
     BinaryOpSecondType_OperandMustBeCorrectForAllValue = true
+
+    // BuiltinCallable
+    BuiltinThrow_MustBeThrownInEveryState = true
+    BuiltinThrow_MustBeThrownDefinitely = true
+
+    // BuiltinRange
+    BuiltinRange_Check = true
+    BuiltinRange_ArgumentMustBeCorrectInEveryState = true
+    BuiltinRange_ArgumentMustBeCorrectInEveryLocation = true
+    BuiltinRange_ArgumentMustBeCorrectDefinitely = true
 
     // BuiltinWrongArgType
     BuiltinWrongArgType_TypeMustBeCorrectInEveryState = true

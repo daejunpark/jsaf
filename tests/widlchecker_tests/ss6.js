@@ -15,8 +15,8 @@ channelInfo.sourceID = 4;
 channelInfo.programNumber = 5;
 channelInfo.transportStreamID = 6;
 channelInfo.originalNetworkID = 7;
-channelInfo.serviceName = "8";
-channelInfo.channelName = "9";
+channelInfo.servicelName = 8;
+channelInfo.channelName = 9;
 
 var startTime = 10;
 var duration = 11;

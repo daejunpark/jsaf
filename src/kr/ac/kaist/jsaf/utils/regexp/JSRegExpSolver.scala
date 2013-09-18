@@ -9,6 +9,8 @@
 
 package kr.ac.kaist.jsaf.utils.regexp
 
+import kr.ac.kaist.jsaf.analysis.typing.Config
+import kr.ac.kaist.jsaf.bug_detector._
 import kr.ac.kaist.jsaf.nodes.{RegExpAbstractNode, RegExpNode, RegExpDecimalEscape, RegExpCharacterEscape, RegExpCharacterClassEscape}
 import scala.collection.mutable.{HashMap => MHashMap, HashSet => MHashSet}
 import kr.ac.kaist.jsaf.exceptions.ParserError
@@ -289,8 +291,11 @@ object JSRegExpSolver {
           }
           (min, max, greedy)
       }
-      if (max.isDefined && max.get < min)
+      if (max.isDefined && max.get < min) {
+        if (Config.typingInterface != null)
+          Config.typingInterface.signal(null, RegExp2_5, max.get.toString, min.toString)
         throw new SyntaxErrorException
+      }
       (x: RegExpState, c: Continuation) => {
         repeatMatcher(m, min, max, greedy, x, c, parenIndex, parenCount)
       }
@@ -329,6 +334,12 @@ object JSRegExpSolver {
           characterSetMatcher(a, false, env, in)
         case IntEscapeValue(n) =>
           if (n == 0 || n > env.nCapturingParens) {
+            if (Config.typingInterface != null) {
+              if (n.toString.equals("0"))
+                Config.typingInterface.signal(null, RegExp2_9_1, null, null)
+              else
+                Config.typingInterface.signal(null, RegExp2_9_2, n.toString, env.nCapturingParens.toString)
+            }
             throw new SyntaxErrorException
           } else {
             (x: RegExpState, c: Continuation) => {
@@ -477,16 +488,20 @@ object JSRegExpSolver {
   }
 
   def characterRange(as: CharSet, bs: CharSet): (CharSet, (CharSet, Char) => Boolean) = {
-    if (as.size != 1 || bs.size != 1)
+    if (as.size != 1 || bs.size != 1) {
+      // 15.10.2.15
+      // syntactically illegal rejected by the parser
       throw new SyntaxErrorException
-    else {
+    } else {
       val a: Char = as.head
       val b: Char = bs.head
       val i: Int = a.toInt
       val j: Int = b.toInt
-      if (i > j)
+      if (i > j) {
+        if (Config.typingInterface != null)
+          Config.typingInterface.signal(null, RegExp2_15_2, a.toString, b.toString)
         throw new SyntaxErrorException
-      else {
+      } else {
         val c = new MHashSet[Char]
         for (ch <- i.toChar to j.toChar) {
           c += ch
@@ -583,6 +598,7 @@ object JSRegExpSolver {
           a += ch
           (a, in)
         case IntEscapeValue(n) =>
+          Config.typingInterface.signal(null, RegExp2_19, n.toString, null)
           throw new SyntaxErrorException
       }
     case SRegExpClassEscapeB(_) =>
@@ -600,11 +616,13 @@ object JSRegExpSolver {
 
   def parse(pattern: String, flags: String) : (MatchFunc, Boolean, Boolean, Boolean, Int) = {
     val abstractPattern = try {
-      RegExpParser.parsePattern(pattern, "RegExp")
+      RegExpParser.parsePattern(pattern, if ("".equals(Config.fileName)) "RegExp" else Config.fileName)
     } catch {
       case e: ParserError => {
         // 15.10.4.1. "If the characters of P do not have the syntactic form *Pattern*,
         // then throw a **SyntaxError** exception."
+        if (Config.typingInterface != null)
+          Config.typingInterface.signal(null, RegExp4_1_1, pattern, null)
         throw new SyntaxErrorException
       }
       case e =>
@@ -617,6 +635,8 @@ object JSRegExpSolver {
       // 15.10.4.1. "If F contains any character other than 'g', 'i', or 'm',
       // or if it contains the same character more then once,
       // then throw a **SyntaxError** exception."
+        if (Config.typingInterface != null)
+          Config.typingInterface.signal(null, RegExp4_1_2, flags, null)
       throw new SyntaxErrorException
     }
 

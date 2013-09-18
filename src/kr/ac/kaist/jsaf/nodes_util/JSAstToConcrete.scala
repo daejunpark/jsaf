@@ -117,7 +117,7 @@ object JSAstToConcrete extends Walker {
         increaseIndent
         s.append(getIndent)
         vds.foreach(vd => vd match {
-                    case SVarDecl(_,n,_) =>
+                    case SVarDecl(_,n,_,_) =>
                       s.append("var "+n.getText+";\n"+getIndent)})
         decreaseIndent
         s.append("\n").append(getIndent)
@@ -330,13 +330,13 @@ object JSAstToConcrete extends Walker {
       s.append(join(args, ", ", new StringBuilder("")))
       s.append(")")
       s.toString
-    case SFunDecl(info, SFunctional(fds, vds, body, name, params)) =>
+    case SFunDecl(info, SFunctional(fds, vds, body, name, params), _) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append("function ").append(walk(name)).append("(")
       s.append(join(params, ", ", new StringBuilder("")))
       s.append(") \n").append(getIndent).append("{\n")
-      prFtn(s, fds, vds, body)
+      prFtn(s, fds, vds, toList(body.getBody))
       s.append("\n").append(getIndent).append("}")
       s.toString
     case SFunExpr(info, SFunctional(fds, vds, body, name, params)) =>
@@ -347,14 +347,14 @@ object JSAstToConcrete extends Walker {
       s.append("(")
       s.append(join(params, ", ", new StringBuilder("")))
       s.append(") \n").append(getIndent).append("{\n")
-      prFtn(s, fds, vds, body)
+      prFtn(s, fds, vds, toList(body.getBody))
       s.append("\n").append(getIndent).append("})")
       s.toString
     case SGetProp(info, prop, SFunctional(fds, vds, body, _, _)) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append("get ").append(walk(prop)).append("()\n").append(getIndent).append("{\n")
-      prFtn(s, fds, vds, body)
+      prFtn(s, fds, vds, toList(body.getBody))
       s.append("\n").append(getIndent).append("}")
       s.toString
     case SId(info, text, Some(uniq), _) =>
@@ -387,7 +387,12 @@ object JSAstToConcrete extends Walker {
       s.append(walk(right))
       s.toString
     case SIntLiteral(info, intVal, radix) =>
-      walk(info)+intVal.toString
+      val str = radix match {
+        case 8 => "0" + intVal.toString(8)
+        case 16 => "0x" + intVal.toString(16)
+        case _ => intVal.toString
+      }
+      walk(info)+str
     case SLabel(info, id) =>
       walk(info)+walk(id)
     case SLabelStmt(info, label, stmt) =>
@@ -422,7 +427,7 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SProgram(info, STopLevel(fds, vds, program)) =>
       val s: StringBuilder = new StringBuilder
-      prFtn(s, fds, vds, program)
+      prFtn(s, fds, vds, NU.toStmts(program))
       s.append(walk(info))
       s.toString
     case SPropId(info, id) =>
@@ -445,7 +450,7 @@ object JSAstToConcrete extends Walker {
       s.append(walk(info))
       s.append("set ").append(walk(prop)).append("(")
       s.append(walk(id)).append(") \n").append(getIndent).append("{\n")
-      prFtn(s, fds, vds, body)
+      prFtn(s, fds, vds, toList(body.getBody))
       s.append("\n").append(getIndent).append("}")
       s.toString
     case SStringLiteral(info, quote, txt) =>
@@ -505,7 +510,7 @@ object JSAstToConcrete extends Walker {
       s.append(walk(info))
       s.append(walk(lhs)).append(" ").append(walk(op))
       s.toString
-    case SVarDecl(info, name, expr) =>
+    case SVarDecl(info, name, expr, _) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append(walk(name))
@@ -548,7 +553,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append("module ").append(name.getText).append(" {\n")
-      prFtn(s, fds, vds, program)
+      prFtn(s, fds, vds, NU.toStmts(program))
       s.append("\n}")
       s.toString
     case SModExpVarStmt(info, vds) =>

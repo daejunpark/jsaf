@@ -146,7 +146,10 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       IF.dummyIRId(id)
     case Some(n) if id.getText.equals(argName) && isLocal =>
       if (debug) System.out.println("before getE:id2ir-"+id.getText+" "+id.getUniqueName)
-      getE(env, argName)
+      env.find(p => p._1.equals(argName)) match {
+        case None => IF.makeUId(argName, argName, isLocal, id, getSpan(id), false)
+        case Some((_, id)) => id
+      }
     case Some(n) if id.isWith =>
       IF.makeWId(id.getText, n, !isLocal(n), id, getSpan(id))
     case Some(n) if NU.isInternal(id.getText) =>
@@ -165,7 +168,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
   }
 
   def functional(name: Id, params: List[Id], fds: List[FunDecl],
-                 vds: List[VarDecl], body: List[SourceElement], env: Env,
+                 vds: List[VarDecl], body: SourceElements, env: Env,
                  fe: Option[IRId], isMember: Boolean) = {
     val oldIsLocal = isLocal
     val oldLocals = locals
@@ -200,7 +203,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
     val new_vds = vds.filterNot(_.getName.getText.equals(argName)).map(walkVd(_, new_env))
     new_env = new_vds.foldLeft(new_env)((e, vd) => addE(e, vd.getLhs.getUniqueName, vd.getLhs))
     val new_name = fe match { case Some(n) => n case None if isMember => mid2ir(env, name) case None => id2ir(env, name) }
-    val new_body = body.map(s => walkStmt(s.asInstanceOf[Stmt], new_env))
+    val new_body = toList(body.getBody).map(s => walkStmt(s.asInstanceOf[Stmt], new_env))
     isLocal = oldIsLocal
     locals = oldLocals
     (new_name, List(IF.makeTId(name, paramsspan, thisName), new_arg),
@@ -264,10 +267,6 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
   def isObject(ast: ASTNode, span: Span, lhs: IRId, id: IRId) =
     IF.makeInternalCall(ast, span, lhs, IF.makeTId(ast, span, NU.freshGlobalName("isObject"), true), id)
 
-  def isEval(n: Expr) = n match {
-    case SVarRef(info, SId(_, _, Some(id), _)) => id.equals("eval")
-    case _ => false
-  }
   def isPrint(n: Expr) = n match {
     case SVarRef(info, SId(_, id, _, _)) => id.equals(NU.internalPrint)
     case _ => false
@@ -319,14 +318,14 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
     case SProgram(info, STopLevel(fds, vds, sts)) =>
       val env = List()
       IF.makeRoot(true, pgm, getSpan(info), fds.map(walkFd(_, env)), vds.map(walkVd(_, env)),
-                  sts.map(s => walkStmt(s.asInstanceOf[Stmt], env)))
+                  NU.toStmts(sts).map(s => walkStmt(s, env)))
   }
 
   /*
    * AST2IR_FD : FunDecl -> Env -> IRFunDecl
    */
   def walkFd(fd: FunDecl, env: Env): IRFunDecl = fd match {
-    case SFunDecl(info, SFunctional(fds, vds, body, name, params)) =>
+    case SFunDecl(info, SFunctional(fds, vds, body, name, params), _) =>
       val (new_name, new_params, args, new_fds, new_vds, new_body) =
           functional(name, params, fds, vds, body, env, None, false)
       IF.makeFunDecl(true, fd, getSpan(info), new_name, new_params, args,
@@ -337,7 +336,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
    * AST2IR_VD : VarDecl -> Env -> IRVarStmt
    */
   def walkVd(vd: VarDecl, env: Env): IRVarStmt = vd match {
-    case SVarDecl(info, name, expr) =>
+    case SVarDecl(info, name, expr, _) =>
       expr match {
         case None =>
         case _ =>
@@ -520,7 +519,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
                                 List(IF.makeLabelStmt(false, s, bodyspan, cont, walkStmt(body, new_env)),
                                      IF.makeSeq(s, bodyspan, iteratorCheck)))
       val stmt = IF.makeSeq(s, span,
-                            List(IF.makeSeq(s, span, ss++List(toObject(expr, objspan, obj, r),
+                            List(IF.makeSeq(s, span, ss++List(mkExprS(expr, obj, r),
                                                               iteratorInit(s, span, iterator, obj),
                                                               iteratorCheck)),
                                  IF.makeWhile(true, s, bodyspan, condone, new_body)))
@@ -742,13 +741,13 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
             val tmpBracket = setUID(SBracket(sinfo, obj, NF.makeStringLiteral(getSpan(member), member.getText, "\"")), dot.getUID)
             val tmpPrefixOpApp = setUID(SPrefixOpApp(info, op, tmpBracket), e.getUID)
             walkExpr(tmpPrefixOpApp, env, res)
-          case SBracket(_, lhs, e) =>
+          case SBracket(_, lhs, e2) =>
             val objspan = getSpan(lhs)
             val obj1 = freshId(lhs, objspan, "obj1")
-            val field1 = freshId(e, getSpan(e), "field1")
+            val field1 = freshId(e2, getSpan(e2), "field1")
             val obj = freshId(lhs, objspan, "obj")
             val (ss1, r1) = walkExpr(lhs, env, obj1)
-            val (ss2, r2) = walkExpr(e, env, field1)
+            val (ss2, r2) = walkExpr(e2, env, field1)
             ((ss1:+toObject(lhs, objspan, obj, r1))++ss2:+
              IF.makeDeleteProp(true, e, span, res, obj, r2), res)
           case _ =>
@@ -900,7 +899,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val (ss, r) = walkExpr(arg, env, freshId(arg, getSpan(arg), "new1"))
       (ss:+toObject(fun, getSpan(fun), res, r), res)
 
-    case SFunApp(info, fun, List(arg)) if (isEval(fun)) =>
+    case SFunApp(info, fun, List(arg)) if (NU.isEval(fun)) =>
       val newone = freshId(arg, getSpan(arg), "new1")
       val (ss, r) = walkExpr(arg, env, newone)
       (ss:+IF.makeEval(true, e, getSpan(info), res, r), res)

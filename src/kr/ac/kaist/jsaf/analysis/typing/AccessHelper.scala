@@ -28,6 +28,11 @@ object AccessHelper {
   var NewBoolean_def = Set("@class", "@proto", "@extensible", "@primitive", "@default_number", "@default_other")
   var NewNumber_def = Set("@class", "@proto", "@extensible", "@primitive", "@default_number", "@default_other")
   var NewDate_def = Set("@class", "@proto", "@extensible", "@primitive", "@default_number", "@default_other")
+  val NewRegExp_def =
+    Set("@class", "@proto", "@extensible", "source", "global",
+      "ignoreCase", "multiline", "lastIndex", "@default_number", "@default_other"
+    )
+
   def NewString_def(v: AbsString): Set[String] = {
     val s = v
     val v_len = s.length()
@@ -177,7 +182,6 @@ object AccessHelper {
       LPSet(Set((SinglePureLocalLoc, "@exception_all"), (SinglePureLocalLoc, "@exception")))
     }
   }
-  
   /* built-in helper */
   def DefineProperties_def(h: Heap, l_1: Loc, l_2: Loc): LPSet = {
     val props = h(l_2).getProps
@@ -356,6 +360,10 @@ object AccessHelper {
     LPSet((l, "@function"))
   }
 
+  def IsCallable_use(h: Heap, v: Value): LPSet = {
+    v._2.foldLeft(LPBot)((S, l) => S + (l, "@function"))
+  }
+
   def HasConstruct_use(h: Heap, l: Loc): LPSet = {
     LPSet((l, "@construct"))
   }
@@ -455,6 +463,13 @@ object AccessHelper {
 
   def PropStore_use(h: Heap, l: Loc, s: AbsString): LPSet = {
     absPair(h, l, s)
+  }
+
+  def defaultToString(h: Heap, lset: LocSet): LPSet = {
+    val props = List("@class", "@primitive", "source", "global", "ignoreCase", "multiline")
+    lset.foldLeft(LPBot)((S, l) => {
+      props.foldLeft(S)((S_, p) => S_ + ((l, p)))
+    })
   }
 
   def CanPutVar_use(h: Heap, x: String): LPSet = {
@@ -629,5 +644,40 @@ object AccessHelper {
   
   def IsArray_use(h: Heap, l: Loc) : LPSet =  {
     LPSet((l, "@class"))
+  }
+
+  def CollectProps_use(h: Heap, lset: LocSet) : LPSet = {
+    val lset_proto = lset.foldLeft(LocSetBot)((lset_proto_, l) => lset_proto_ ++ h(l)("@proto")._1._1._1._2)
+
+    val LP_1 = lset.foldLeft(LPBot)((lp, l) => lp ++ absPair(h, l, StrTop))
+    val LP_2 = lset.foldLeft(LPBot)((lp, l) => lp ++ LPSet((l, "@proto")))
+    val LP_3 = lset_proto.foldLeft(LPBot)((lp, l_proto) => lp ++ CollectProps_use(h, lset_proto))
+
+    LP_1 ++ LP_2 ++ LP_3
+  }
+
+  def toPrimitive_use(h: Heap, v: Value): LPSet = {
+    v._2.foldLeft(LPBot)((S, l) => S + ((l, "@class")))
+  }
+
+  def DetectCycle_use(h: Heap, l: Loc): LPSet = {
+    var LP = LPBot
+
+    def detectCycle_(l: Loc, visited: LocSet): Unit = {
+      val o = h(l)
+
+      val s_set = o.getProps.filter(s => {
+        LP += (l, s)
+        BoolTrue <= o(s)._1._1._3
+      })
+      s_set.foreach(s => {
+        val lset = o(s)._1._1._1._2
+        val lset_2 = lset -- visited
+        lset_2.foreach(l => detectCycle_(l, visited + l))
+      })
+    }
+
+    detectCycle_(l, LocSetBot)
+    LP
   }
 }

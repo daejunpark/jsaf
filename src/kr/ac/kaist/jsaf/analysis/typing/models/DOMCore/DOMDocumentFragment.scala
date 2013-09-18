@@ -15,6 +15,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLDocument
 
 
 object DOMDocumentFragment extends DOM {
@@ -70,6 +71,28 @@ object DOMDocumentFragment extends DOM {
   // no function
 
   /* instance */
-  //def instantiate() = Unit // not yet implemented
-  // intance of DOMDocumentFragment should have no property
+
+  def getInsList(): List[(String, PropValue)] = {
+    val nodeName = PropValue(ObjectValue(AbsString.alpha("#document-fragment"), F, T, T))
+    val nodeValue = PropValue(ObjectValue(NullTop, F, T, T))
+    val nodeType = PropValue(ObjectValue(AbsNumber.alpha(DOMNode.DOCUMENT_FRAGMENT_NODE), F, T, T))
+    val parentNode = PropValue(ObjectValue(NullTop, F, T, T))
+    val childNodes = PropValue(ObjectValue(NullTop, F, T, T))
+    val firstChild = PropValue(ObjectValue(NullTop, F, T, T))
+    val lastChild = PropValue(ObjectValue(NullTop, F, T, T))
+    val previousSibling = PropValue(ObjectValue(NullTop, F, T, T))
+    val nextSibling = PropValue(ObjectValue(NullTop, F, T, T))
+    val ownerDocument = PropValue(ObjectValue(HTMLDocument.getInstance().get, F, T, T))
+    val namespaceURI = PropValue(ObjectValue(NullTop, F, T, T))
+    val prefix = PropValue(ObjectValue(NullTop, T, T, T))
+    val localName = PropValue(ObjectValue(NullTop, F, T, T))
+    val textContent = PropValue(ObjectValue(AbsString.alpha(""), T, T, T))
+    val attributes = PropValue(ObjectValue(NullTop, F, T, T))
+    // This instance object has all properties of the Node object
+    DOMNode.getInsList(nodeName, nodeValue, nodeType, parentNode, childNodes, firstChild, lastChild,
+           previousSibling, nextSibling, ownerDocument, namespaceURI, prefix, localName, textContent, attributes) ++ List(
+      ("@class",  PropValue(AbsString.alpha("Object"))),
+      ("@proto",  PropValue(ObjectValue(loc_proto, F, F, F))),
+      ("@extensible", PropValue(BoolTrue)))
+  }
 }

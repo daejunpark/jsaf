@@ -16,7 +16,6 @@ import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.scala_src.useful.WorkTrait
 import scala.collection.immutable.HashMap
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMEvent.{Event, MouseEvent, KeyboardEvent}
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.domain.State
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
@@ -180,7 +179,7 @@ object Access {
         val LP_2 = AH.NewObject_def.foldLeft(LPBot)((S,p) => S + ((l_r, p)))
         val LP_3 = AH.VarStore_def(h,h(SinglePureLocalLoc)("@env")._1._2._2,x)
         val LP_4 = AH.RaiseException_def(es)
-        LP_1 ++ LP_2 ++ LP_3
+        LP_1 ++ LP_2 ++ LP_3 ++ LP_4
       }
       case CFGAllocArray(_, _, x, n, a_new) => {
         val l_r = addrToLoc(a_new, Recent)
@@ -461,14 +460,34 @@ object Access {
           case ("<>Global<>getBase", List(expr_2), None) => {
             AH.VarStore_def(h,h(SinglePureLocalLoc)("@env")._1._2._2,lhs)
           }
-          case ("<>Global<>iteratorInit", List(expr), None) => {
-            LPBot
+          case ("<>Global<>iteratorInit", List(expr), Some(a_new)) => {
+            if (Config.defaultForinUnrollingCount == 0) {
+              LPBot
+            } else {
+              val l_new = addrToLoc(a_new, Recent)
+              val LP_1 = LPSet(Set((l_new, "index"), (l_new, "length")))
+              val LP_2 = AH.absPair(h, l_new, AbsString.NumTop)
+              val LP_3 = AH.VarStore_def(h, h(SinglePureLocalLoc)("@env")._1._2._2, lhs)
+              LP_1 ++ LP_2 ++ LP_3
+            }
           }
           case ("<>Global<>iteratorHasNext", List(expr_2, expr_3), None) => {
-            AH.VarStore_def(h,h(SinglePureLocalLoc)("@env")._1._2._2,lhs)
+            if (Config.defaultForinUnrollingCount == 0) {
+              AH.VarStore_def(h,h(SinglePureLocalLoc)("@env")._1._2._2,lhs)
+            } else {
+              AH.VarStore_def(h,h(SinglePureLocalLoc)("@env")._1._2._2,lhs)
+            }
           }
           case ("<>Global<>iteratorNext", List(expr_2, expr_3), None) => {
-            AH.VarStore_def(h,h(SinglePureLocalLoc)("@env")._1._2._2,lhs)
+            if (Config.defaultForinUnrollingCount == 0) {
+              AH.VarStore_def(h,h(SinglePureLocalLoc)("@env")._1._2._2,lhs)
+            } else {
+              val (v_iter, _) = SE.V(expr_3, h, ctx)
+              val lset = v_iter._2
+              val LP_1 = lset.foldLeft(LPBot)((lp, l) => lp + ((l, "index")))
+              val LP_2 = AH.VarStore_def(h, h(SinglePureLocalLoc)("@env")._1._2._2, lhs)
+              LP_1 ++ LP_2
+            }
           }
           case _ => {
             if (!Config.quietMode)
@@ -762,12 +781,12 @@ object Access {
 
         LP_1 ++ LP_2 + ((SinglePureLocalLoc, "@exception_all"))
       }
-      case CFGInternalCall(_, _, x, fun, arguments, loc) => {
+      case CFGInternalCall(_, _, lhs, fun, arguments, loc) => {
         (fun.toString, arguments, loc)  match {
           case ("<>Global<>toObject", List(expr), Some(a_new)) => {
             val (v,es) = SE.V(expr, h, ctx)
             val LP_1 = V_use(expr, h, ctx)
-            val LP_2 = AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, x)
+            val LP_2 = AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, lhs)
             val LP_3 = AH.toObject_use(h, ctx, v, a_new)
             val LP_4 = AH.RaiseException_use(es)
 
@@ -776,7 +795,7 @@ object Access {
           case ("<>Global<>isObject", List(expr), None) => {
             val (v,es) = SE.V(expr, h, ctx)
             val LP_1 = V_use(expr, h, ctx)
-            val LP_2 = AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, x)
+            val LP_2 = AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, lhs)
             val LP_3 = AH.RaiseException_use(es)
 
             LP_1 ++ LP_2 ++ LP_3 + ((SinglePureLocalLoc, "@env"))
@@ -784,7 +803,7 @@ object Access {
           case ("<>Global<>toNumber", List(expr), None) => {
             val (v,es) = SE.V(expr, h, ctx)
             val LP_1 = V_use(expr, h, ctx)
-            val LP_2 = AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, x)
+            val LP_2 = AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, lhs)
             val LP_3 = AH.RaiseException_use(es)
 
             LP_1 ++ LP_2 ++ LP_3 + ((SinglePureLocalLoc, "@env"))
@@ -792,19 +811,54 @@ object Access {
           case ("<>Global<>getBase", List(expr_2), None) => {
             val x_2 = expr_2.asInstanceOf[CFGVarRef].id
 
-            val LP_1 = AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, x)
+            val LP_1 = AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, lhs)
             val LP_2 = AH.LookupBase_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, x_2)
 
             LP_1 ++ LP_2 + ((SinglePureLocalLoc, "@env"))
           }
-          case ("<>Global<>iteratorInit", List(expr), None) => {
-            LPBot
+          case ("<>Global<>iteratorInit", List(expr), Some(a_new)) => {
+            if (Config.defaultForinUnrollingCount == 0) {
+              LPBot
+            } else {
+              val (v,_) = SE.V(expr, h, ctx)
+              val v_obj = Value(PValue(UndefBot, NullBot, v._1._3, v._1._4, v._1._5), v._2)
+              val (v_1, h_1, _, _) = Helper.toObject(h, ctx, v_obj, a_new)
+              val lset = v_1._2
+
+              val LP_1 = V_use(expr, h, ctx)
+              val LP_2 = AH.toObject_use(h, ctx, v_obj, a_new)
+              val LP_3 = AH.CollectProps_use(h_1, lset)
+              val LP_4 = AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, lhs)
+
+              LP_1 ++ LP_2 ++ LP_3 ++ LP_4
+            }
           }
           case ("<>Global<>iteratorHasNext", List(expr_2, expr_3), None) => {
-            AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, x) + ((SinglePureLocalLoc, "@env"))
+            if (Config.defaultForinUnrollingCount == 0) {
+              AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, lhs) + ((SinglePureLocalLoc, "@env"))
+            } else {
+              val (v,_) = SE.V(expr_3, h, ctx)
+              val lset = v._2
+
+              val LP_1 = V_use(expr_3, h, ctx)
+              val LP_2 = lset.foldLeft(LPBot)((lp, l) => lp ++ AH.absPair(h, l, AbsString.NumTop) + ((l, "index")))
+              val LP_3 = AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, lhs)
+
+              LP_1 ++ LP_2 ++ LP_3
+            }
           }
           case ("<>Global<>iteratorNext", List(expr_2, expr_3), None) => {
-            AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, x) + ((SinglePureLocalLoc, "@env"))
+            if (Config.defaultForinUnrollingCount == 0) {
+              AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, lhs) + ((SinglePureLocalLoc, "@env"))
+            } else {
+              val (v,_) = SE.V(expr_3, h, ctx)
+              val lset = v._2
+
+              val LP_1 = V_use(expr_3, h, ctx)
+              val LP_2 = lset.foldLeft(LPBot)((lp, l) => lp ++ AH.absPair(h, l, AbsString.NumTop) + ((l, "index")))
+              val LP_3 = AH.VarStore_use(h, h(SinglePureLocalLoc)("@env")._1._2._2, lhs)
+              LP_1 ++ LP_2 ++ LP_3
+            }
           }
           case _ => {
             if (!Config.quietMode)

@@ -1,0 +1,69 @@
+.fn-hide {
+	display: none;
+}
+.hidden {
+	display: none;
+}
+.alieditContainer * {
+	vertical-align: bottom;
+}
+.alieditContainer {
+	width: 184px; height: 24px; vertical-align: bottom; display: inline-block; position: relative; zoom: 1;
+}
+.alieditContainer a.aliedit-install {
+	border: 1px solid rgb(174, 174, 174); height: 100%; text-align: center; color: rgb(0, 102, 255) !important; line-height: 24px; display: block; min-width: 184px; _width: 184px;
+}
+.edit-tips {
+	background: rgb(168, 168, 168); left: 0px; top: 0px; width: 180px; height: 28px; margin-top: -64px; position: relative;
+}
+.edit-tips-two-lines {
+	background: 0px 0px rgb(168, 168, 168); left: 0px; top: -84px; width: 180px; height: 48px; position: relative;
+}
+.edit-tips-text {
+	background: 0px 0px rgb(255, 255, 141); padding: 3px 5px; border: 1px solid rgb(222, 169, 12); left: -2px; top: -2px; width: 168px; line-height: 20px; display: block; position: relative;
+}
+.edit-tips-angle {
+	background: url("https://img.alipay.com/pa/frame/v2/ico-pa.png") no-repeat -40px -128px; left: 20px; top: 100%; width: 10px; height: 11px; line-height: 11px; overflow: hidden; margin-top: -3px; display: block; position: absolute;
+}
+.light-dialog {
+	background: rgb(255, 255, 255); border: 6px solid rgb(118, 117, 118); left: 10%; top: 5%; width: 600px; height: 370px; overflow: hidden; visibility: hidden; position: absolute; z-index: 9999; -moz-box-shadow: 3px 2px 6px #333; -webkit-box-shadow: #333 2px 2px 6px;
+}
+.light-dialog iframe {
+	width: 100%; height: 100%;
+}
+.light-dialog-shadow {
+	background: rgb(0, 0, 0); left: 0px; top: 0px; width: 100%; height: 100%; visibility: hidden; filter: alpha(opacity=20); position: absolute; z-index: 9998; opacity: 0.2;
+}
+.light-dialog-shadow iframe {
+	filter: alpha(opacity=0); opacity: 0;
+}
+.light-load {
+	visibility: hidden; position: absolute; z-index: 9999;
+}
+.light-dialog-top {
+	padding: 20px;
+}
+.light-dialog-title {
+	width: 100%; overflow: hidden; padding-bottom: 3px; margin-bottom: 3px; border-bottom-color: rgb(219, 219, 219); border-bottom-width: 1px; border-bottom-style: solid; position: relative;
+}
+.light-dialog-title h2 {
+	font: 18px/22px SimHei; float: left; font-size-adjust: none; font-stretch: normal;
+}
+.light-dialog-title a {
+	top: 0px; right: 0px; line-height: 22px; text-decoration: none; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px; border-bottom-style: solid; display: block; position: absolute;
+}
+.light-dialog-title s {
+	background: url("https://img.alipay.com/pa/frame/v2/ico-text.png") no-repeat -2px -76px; top: 6px; width: 11px; height: 11px; overflow: hidden; vertical-align: middle; display: inline-block; position: absolute; cursor: pointer; -moz-transition: all .2s ease-in-out 0s;
+}
+.light-dialog-title em {
+	width: 30px; text-align: right; font-size: 12px; font-style: normal; font-weight: normal; margin-left: 11px; display: inline-block; cursor: pointer;
+}
+.light-dialog-title a:hover {
+	text-decoration: none;
+}
+.light-dialog-title a:hover em {
+	text-decoration: underline;
+}
+.light-dialog-title a:hover s {
+	-moz-transform: rotate(90deg);
+}

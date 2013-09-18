@@ -9,56 +9,151 @@
 
 package kr.ac.kaist.jsaf.analysis.typing
 
-import kr.ac.kaist.jsaf.analysis.cfg._
 import scala.collection.immutable.{ TreeMap, TreeSet, HashSet, HashMap }
+import scala.collection.mutable.{HashMap => MHashMap, HashSet => MHashSet, Stack => MStack}
+import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.lib.graph.DGraph
-import kr.ac.kaist.jsaf.analysis.lib.Utils
 import kr.ac.kaist.jsaf.analysis.lib.WorkTreeSet
+import kr.ac.kaist.jsaf.Shell
+import kr.ac.kaist.jsaf.scala_src.useful.WorkTrait
 
 /**
  * Worklist manager
  */
 class Worklist(order: OrderMap, quiet: Boolean) {
-  var headorder: OrderMap = TreeMap[Node, Int]()
-  var backedges: HashMap[Node, HashSet[Node]] = HashMap()
+  private var headorder: OrderMap = TreeMap[Node, Int]()
+  private var backedges: HashMap[Node, HashSet[Node]] = HashMap()
 
-  var worklist = WorkTreeSet.Empty
+  private var worklist = WorkTreeSet.Empty
+  def getWorkList = worklist
+  def head = this.synchronized { worklist.head._2 }
 
-  def isEmpty = worklist.isEmpty
+  private var useWorkManager = false
+  private var workTrait: WorkTrait = null
+  def setUseWorkManager(_useWorkManager: Boolean, _workTrait: WorkTrait): Unit = {
+    useWorkManager = _useWorkManager
+    workTrait = _workTrait
+  }
+
+  // Caller ControlPoint stack set
+  class CPStackSetRef {
+    var refCount = 1
+    var cpStackSet: CPStackSet = null
+  }
+  private val callerCPMap = new MHashMap[ControlPoint, CPStackSetRef]
+  private val cpStackSetRefPool = new MStack[CPStackSetRef]
+  private def getNewCPStackSetRef(_cpStackSet: CPStackSet = null): CPStackSetRef = {
+    val cpStackSetRef = if(cpStackSetRefPool.isEmpty) new CPStackSetRef else cpStackSetRefPool.pop()
+    cpStackSetRef.refCount = 1
+    cpStackSetRef.cpStackSet = _cpStackSet
+    cpStackSetRef
+  }
+
+  def isEmpty = this.synchronized { worklist.isEmpty }
+  def getSize = this.synchronized { worklist.size }
 
   def init(map: TreeMap[Node, Int], backmap: HashMap[Node, HashSet[Node]]): Unit = {
     headorder = map
     backedges = backmap
   }
 
-  def getHead(): ControlPoint = {
+  def getHead(): (ControlPoint, Option[CPStackSet]) = this.synchronized {
     val (head, tail) = worklist.headAndTail
     worklist = tail
-    head._2
+    val callerCPStackSet = callerCPMap.get(head._2) match {
+      case Some(callerCPStackSetRef) =>
+        if(callerCPStackSetRef.refCount == 1) {
+          callerCPMap.remove(head._2)
+          cpStackSetRefPool.push(callerCPStackSetRef)
+        }
+        else callerCPStackSetRef.refCount-= 1
+        if(callerCPStackSetRef.cpStackSet != null) Some(callerCPStackSetRef.cpStackSet) else None
+      case None =>
+        callerCPMap.remove(head._2)
+        None
+    }
+    (head._2, callerCPStackSet)
   }
 
-  def add(cp: ControlPoint): Unit = {
+  def add(cp: ControlPoint, callerCPSetOpt: Option[CPStackSet], increaseRefCount: Boolean): Unit = this.synchronized {
     val ov =
       order.get(cp._1) match {
         case Some(o) => o
         case None => 0 // case for an empty block
       }
     worklist += ((ov, cp))
+    addCallerCPSet(cp, callerCPSetOpt, increaseRefCount)
+    if(useWorkManager) Shell.workManager.pushWork(workTrait)
   }
 
-  def add(origin: Node, cp: ControlPoint): Unit = {
+  def add(origin: Node, cp: ControlPoint, callerCPSetOpt: Option[CPStackSet], increaseRefCount: Boolean): Unit = this.synchronized {
     backedges.get(cp._1) match {
-      case Some(backnodes) if backnodes.contains(origin) => worklist += ((headorder(cp._1), cp))
-      case Some(backnodes) => add(cp)
-      case _ => add(cp)
+      case Some(backnodes) if backnodes.contains(origin) =>
+        worklist += ((headorder(cp._1), cp))
+        addCallerCPSet(cp, callerCPSetOpt, increaseRefCount)
+        if(useWorkManager) Shell.workManager.pushWork(workTrait)
+      case Some(backnodes) => add(cp, callerCPSetOpt, increaseRefCount)
+      case _ => add(cp, callerCPSetOpt, increaseRefCount)
     }
   }
 
-  def getOrder() = { order }
+  def add(cp_pred: ControlPoint, cp: ControlPoint, cfg: CFG, callerCPSetOpt: Option[CPStackSet], increaseRefCount: Boolean): Boolean = this.synchronized {
+    var isWorkAdded = false
+    callerCPSetOpt match {
+      case Some(callerCPSet) =>
+        for(callerCPStack <- callerCPSet) {
+          cp match {
+            // Call -> Entry
+            case ((_, LEntry), _) =>
+              val newCallerCPStack = callerCPStack.clone()
+              newCallerCPStack.push(cp_pred)
+              add(cp, Some(MHashSet(newCallerCPStack)), increaseRefCount); isWorkAdded = true
+            // Exit or ExitExc -> Aftercall
+            case _ =>
+              val topCP = callerCPStack.top
+              if(cp._1 == cfg.getAftercallFromCallMap.getOrElse(topCP._1, null) ||
+                cp._1 == cfg.getAftercatchFromCallMap.getOrElse(topCP._1, null)) {
+                if(callerCPStack.size <= 1) add(cp, None, increaseRefCount)
+                else {
+                  val newCallerCPStack = callerCPStack.clone()
+                  newCallerCPStack.pop()
+                  add(cp, Some(MHashSet(newCallerCPStack)), increaseRefCount)
+                }
+                isWorkAdded = true
+              }
+          }
+        }
+      case None =>
+        cp match {
+          // Call -> Entry
+          case ((_, LEntry), _) => add(cp, Some(MHashSet(MStack(cp_pred))), increaseRefCount); isWorkAdded = true
+          // Exit or ExitExc -> Aftercall
+          case _ => add(cp, None, increaseRefCount); isWorkAdded = true
+        }
+    }
+    isWorkAdded
+  }
+
+  private def addCallerCPSet(cp: ControlPoint, callerCPSetOpt: Option[CPStackSet], increaseRefCount: Boolean): Unit = {
+    callerCPSetOpt match {
+      case Some(callerCPSet) =>
+        callerCPMap.get(cp) match {
+          case Some(prevCallerCPSetRef) =>
+            if(increaseRefCount) prevCallerCPSetRef.refCount+= 1
+            if(prevCallerCPSetRef.cpStackSet == null) prevCallerCPSetRef.cpStackSet = callerCPSet
+            else prevCallerCPSetRef.cpStackSet++= callerCPSet
+          case None => callerCPMap.put(cp, getNewCPStackSetRef(callerCPSet))
+        }
+      case None => callerCPMap.put(cp, getNewCPStackSetRef())
+    }
+  }
+
+  def getOrder() = this.synchronized { order }
 
   def dump() {
-    if (!quiet)
+    if (!quiet) this.synchronized {
       System.out.print("next: "+worklist.head._2._1+"   ")
+    }
   }
 }
 

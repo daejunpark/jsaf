@@ -14,9 +14,10 @@ import _root_.java.util.{List => JList}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.CallContext._
+import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.bug_detector.StateManager
-import kr.ac.kaist.jsaf.concolic.ConstraintForm
+import kr.ac.kaist.jsaf.concolic.{ConstraintForm, FunctionInfo}
 import kr.ac.kaist.jsaf.nodes._
 import kr.ac.kaist.jsaf.nodes_util.{NodeRelation => NR}
 import kr.ac.kaist.jsaf.scala_src.nodes._
@@ -34,67 +35,75 @@ class Coverage() {
   var input = List[Int]()
   var inum = 0
   var constraints = List[ConstraintForm]()
-  var functions = List[String]()
-  var targetFunc = ""
-  var coveredFunc = ""
+  var target:String = null
 
   // For analysis
   var cfg: CFG = null
   var typing: TypingInterface = null
   var semantics: Semantics = null
   var stateManager: StateManager = null
+  var functions: HashMap[String, FunctionInfo] = HashMap[String,FunctionInfo]()
+  //functions.put("<>Concolic<>Main", new FunctionInfo)
 
-  def toInt(n: JInteger):Int = 
-    n.intValue()
-
+  def toInt(n: JInteger):Int = n.intValue()
   def setInput(result: JList[JInteger]) = { 
     var tmp = map(result, toInt)
     input = toList(tmp)
   }
-
-  def getConstraints:JList[ConstraintForm] = 
-    toJavaList(constraints)
-    
-  def continue() = constraints.nonEmpty
-
-  def existCandidate() = functions.nonEmpty
-
+  def getConstraints:JList[ConstraintForm] = toJavaList(constraints)
+  def continue = constraints.nonEmpty
+  def existCandidate = functions.filter(x => x._2.isCandidate).nonEmpty
   def removeTarget() = {
-    coveredFunc = functions(0)
-    functions = functions diff List(coveredFunc)
-    if (functions.nonEmpty)
-        targetFunc = functions(0)
+    functions.get(target) match {
+      case Some(info) => info.done
+      case None => println("Target should be function type")
+    }
+    if (functions.nonEmpty) {
+      var filters = functions.filter(x => x._2.isCandidate)
+      if (filters.nonEmpty)
+        target = filters.head._1
+      else
+        target = null
+    }
   }
 
   // using static analysis, store function information
-  def storeFuncInfo(node: Any): Unit = node match {
-    case f@SIRCall(info, lhs, fun, thisB, args) =>
-      NR.ir2cfgMap.get(f) match {
-        case Some(cfgList) => 
-          for (cfgInst <- cfgList) {
-            cfgInst match {
-              case inst@CFGCall(iid, info, fun, thisArg, arguments, addr) =>
-                println("StoreFuncInfo => IRCall[" + f.getUID +']' + NR.cfgToString(cfgInst))
-                val cfgNode = cfg.findEnclosingNode(inst)
-                val cstate = stateManager.getInputCState(cfgNode, inst.getInstId, _MOST_SENSITIVE)
-                for ((callContext, state) <- cstate) {
-                  val argLocSet = SE.V(arguments, state.heap, state.context)._1.locset
-                  for (argLoc <- argLocSet) {
-                    println("* for argument loc #" + argLoc)
-                    /*for (i <- 0 until args.length) {
-                      val argObj = state.heap(argLoc)
-                      argObj.map.get(i.toString) match {
-                        case Some((propValue, _)) =>
-                          println(" [" + i +"] = " + propValue.objval.value)
-                        case None => println(" [" + i + "] = ")
-                      }
-                    }*/
+  def updateFunction() = {
+    for (k <- NodeRelation.cfg2irMap.keySet) {
+      k match {
+        case inst@CFGCall(iid, info, fun, thisArg, arguments, addr) =>
+          val cfgNode = cfg.findEnclosingNode(inst)
+          val cstate = stateManager.getInputCState(cfgNode, inst.getInstId, _MOST_SENSITIVE)
+          for ((callContext, state) <- cstate) {
+            val controlPoint: ControlPoint = (cfgNode, callContext)  
+            semantics.getIPSucc(controlPoint) match {
+              case Some(succMap) => 
+                for ((succCP, (succContext, succObj)) <- succMap) {
+                  val fid = succCP._1._1
+                  if (!functions.contains(cfg.getFuncName(fid))) {
+                    var finfo = new FunctionInfo
+                    val argvars = cfg.getArgVars(fid)
+                    for ((callContext, state) <- stateManager.getOutputCState(succCP._1, inst.getInstId, _MOST_SENSITIVE)) {
+                      val arglset = state._1(SinglePureLocalLoc)(cfg.getArgumentsName(fid))._1._1._1._2
+                      var i = 0
+                      val h_n = argvars.foldLeft(state._1)((hh, x) => {
+                        val v_i = arglset.foldLeft(ValueBot)((vv, argloc) => {
+                          vv + Helper.Proto(hh, argloc, AbsString.alpha(i.toString))
+                        })
+                        finfo.storeParam(i, v_i.typeKinds)
+                        i += 1
+                        Helper.CreateMutableBinding(hh, x, v_i)
+                      })
+                    }
+                    functions.put(cfg.getFuncName(fid), finfo)
                   }
                 }
-              case _ =>
+              case None =>
             }
           }
-        case None =>
+        case _ =>
       }
+    }
+    println("updateFunction: "+functions)
   }
 }

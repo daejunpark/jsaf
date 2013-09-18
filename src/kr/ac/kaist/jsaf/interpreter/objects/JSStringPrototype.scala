@@ -253,7 +253,7 @@ class JSStringPrototype(_I: Interpreter, _proto: JSObject)
                       I.IS.tb = oldTb
                       val thisIndex: Int = I.IH.toUint32(sv._get("lastIndex")).toInt
                       if (thisIndex == previousLastIndex) {
-                        // TODO:
+                        // TODO: {FireFox, IE, Safari, Chrome} do not update lastIndex here.
                         sv._put("lastIndex", PVal(I.IH.mkIRNum(thisIndex + 1)), true)
                         previousLastIndex = thisIndex + 1
                       } else {

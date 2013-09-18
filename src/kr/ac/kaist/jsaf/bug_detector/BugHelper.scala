@@ -31,7 +31,7 @@ object BugHelper {
       case Some(as) => return as
       case None =>
     }
-    println("* Unknown argument size of \"" + funcName + "\".")
+    // println("* Unknown argument size of \"" + funcName + "\".")
     (-1, -1)
   }
 
@@ -40,6 +40,7 @@ object BugHelper {
   ////////////////////////////////////////////////////////////////
 
   def getFuncName(funcName: String, varManager: VarManager = null, expr: CFGNode = null): String = {
+    if (funcName.startsWith("<>arguments<>")) return "arguments"
     if (!NU.isFunExprName(funcName)) return funcName
     if (varManager != null && expr != null) {
       expr match {
@@ -113,6 +114,20 @@ object BugHelper {
 
 
   ////////////////////////////////////////////////////////////////
+  // IsCallable for locations
+  ////////////////////////////////////////////////////////////////
+
+  def isCallable(heap: Heap, locSet: LocSet): AbsBool = {
+    if(locSet.size == 0) return BoolFalse
+
+    var isCallable: AbsBool = BoolBot
+    for(loc <- locSet) isCallable+= Helper.IsCallable(heap, loc)
+    isCallable
+  }
+
+
+
+  ////////////////////////////////////////////////////////////////
   // Get a set of property names (String) from an AbsString
   ////////////////////////////////////////////////////////////////
 
@@ -146,5 +161,26 @@ object BugHelper {
       }
     })
     result
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // 9.6 ToUint32: (Unsigned 32 Bit Integer)
+  ////////////////////////////////////////////////////////////////
+  def toUint32(n: Double): Long = {
+    def modulo(x: Double, y: Long): Long = {
+      val result = math.abs(x.toLong) % math.abs(y)
+      if(math.signum(x) < 0) return math.signum(y) * (math.abs(y) - result)
+      math.signum(y) * result
+    }
+
+    // 1. Let number be the result of calling ToNumber on the input argument.
+    // 2. If number is NaN, +0, -0, +INF or -INF, return +0.
+    if(n.isNaN || n == 0 || n.isInfinite) return 0
+    // 3. Let posInt be sign(number) * floor(abs(number))
+    val posInt = math.signum(n) * math.floor(math.abs(n))
+    // 4. Let int32bit be posInt modulo 2^32; that is, ...
+    val int32bit = modulo(posInt, 0x100000000L)
+    // 5. Return int32bit.
+    int32bit.toLong
   }
 }

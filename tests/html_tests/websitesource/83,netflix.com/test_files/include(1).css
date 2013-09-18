@@ -1,0 +1,27 @@
+.home-info {
+	background-image: none;
+}
+#page-GLOBAL .global-info .contact-us {
+	width: 119px;
+}
+#page-GLOBAL .global-life .en {
+	font-size: 29px;
+}
+#nf_overview {
+	padding: 0px;
+}
+.ui-dialog {
+	border-color: rgb(185, 9, 11);
+}
+.ui-dialog .ui-dialog-titlebar {
+	background: url("https://netflix.hs.llnwd.net/e1/us/layout/headers/logos/nf_logo.png") no-repeat 5% 50% rgb(185, 9, 11); height: 35px;
+}
+.ui-dialog p {
+	padding: 25px 20px 0px; text-align: justify; line-height: 18px;
+}
+.ui-dialog-buttonpane {
+	margin: 30px 0px; padding: 0px 75px; border: currentColor;
+}
+.ui-widget button {
+	width: 95px; margin-left: 20px;
+}

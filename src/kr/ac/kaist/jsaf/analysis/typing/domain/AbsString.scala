@@ -21,7 +21,10 @@ object AbsString {
   private val dec3 = "[0-9]+(" +exp+ ")?"
   private val dec = "([+-]?(Infinity|(" +dec1+ ")|(" +dec2 + ")|(" +dec3 + ")))"
   val num_regexp = ("NaN|(" +hex+ ")|(" +dec+ ")").r
-  
+
+  // an abstract value which stands for natural numbers(0, 1, 2, ...)
+  val NumTop = NumStr
+
   def initCache: Unit = {
     clearCache
     alpha_cache = new JHashMap()
@@ -243,6 +246,17 @@ sealed abstract class AbsString extends AbsBase {
       case OtherStr => NumTop
       case NumStrSingle(v) => AbsNumber.alpha(v.length)
       case OtherStrSingle(v) => AbsNumber.alpha(v.length)
+    }
+  }
+
+  def toLowerCase(): AbsString = {
+    this match {
+      case StrTop => StrTop
+      case StrBot => StrBot
+      case NumStr => StrTop
+      case OtherStr => OtherStr
+      case NumStrSingle(v) => AbsString.alpha(v.toLowerCase)
+      case OtherStrSingle(v) => AbsString.alpha(v.toLowerCase)
     }
   }
 

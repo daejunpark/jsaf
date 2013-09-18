@@ -1,0 +1,273 @@
+.mnemonic {
+	background-position: left 4px; padding: 2px 0px 2px 22px; display: inline-block; background-repeat: no-repeat;
+}
+.mnemonic-acrobatconnect {
+	background-image: url("/homepage/include/style/default/Mnemonic/acrobat_connect_20x20.jpg");
+}
+.mnemonic-acrobat {
+	background-image: url("/homepage/include/style/default/Mnemonic/acrobat_20x20.png");
+}
+.mnemonic-acrobatcapture {
+	background-image: url("/homepage/include/style/default/Mnemonic/acrobat_capture_20x20.jpg");
+}
+.mnemonic-acrobatcom {
+	background-image: url("/homepage/include/style/default/Mnemonic/acrobatcom_20x20.png");
+}
+.mnemonic-adc {
+	background-image: url("/homepage/include/style/default/Mnemonic/developer_connection_20x20.gif");
+}
+.mnemonic-adobestory {
+	background-image: url("/homepage/include/style/default/Mnemonic/adobe_story_20x20.png");
+}
+.mnemonic-aftereffects {
+	background-image: url("/homepage/include/style/default/Mnemonic/after_effects_20x20.png");
+}
+.mnemonic-air {
+	background-image: url("/homepage/include/style/default/Mnemonic/air_20x20.png");
+}
+.mnemonic-amp {
+	background-image: url("/homepage/include/style/default/Mnemonic/amp_20x20.jpg");
+}
+.mnemonic-audition {
+	background-image: url("/homepage/include/style/default/Mnemonic/audition_20x20.jpg");
+}
+.mnemonic-authorware {
+	background-image: url("/homepage/include/style/default/Mnemonic/authorware_20x20.jpg");
+}
+.mnemonic-bridge {
+	background-image: url("/homepage/include/style/default/Mnemonic/bridge_20x20.png");
+}
+.mnemonic-browserlab {
+	background-image: url("/homepage/include/style/default/Mnemonic/browserlab_20x20.png");
+}
+.mnemonic-captivate {
+	background-image: url("/homepage/include/style/default/Mnemonic/captivate_20x20.png");
+}
+.mnemonic-central {
+	background-image: url("/homepage/include/style/default/Mnemonic/central_20x20.jpg");
+}
+.mnemonic-coldfusion {
+	background-image: url("/homepage/include/style/default/Mnemonic/coldfusion_20x20.png");
+}
+.mnemonic-contentserver {
+	background-image: url("/homepage/include/style/default/Mnemonic/content_server_20x20.jpg");
+}
+.mnemonic-contribute {
+	background-image: url("/homepage/include/style/default/Mnemonic/contribute_20x20.png");
+}
+.mnemonic-creativesuite {
+	background-image: url("/homepage/include/style/default/Mnemonic/creativesuite_20x20.png");
+}
+.mnemonic-csreview {
+	background-image: url("/homepage/include/style/default/Mnemonic/csreview_20x20.png");
+}
+.mnemonic-customerexperience {
+	background-image: url("/homepage/include/style/default/Mnemonic/customer_experience_solutions_16x16.jpg");
+}
+.mnemonic-designpremium {
+	background-image: url("/homepage/include/style/default/Mnemonic/design_premium_20x20.png");
+}
+.mnemonic-designstandard {
+	background-image: url("/homepage/include/style/default/Mnemonic/design_standard_20x20.png");
+}
+.mnemonic-devicecentral {
+	background-image: url("/homepage/include/style/default/Mnemonic/device_central_20x20.png");
+}
+.mnemonic-digitaleditions {
+	background-image: url("/homepage/include/style/default/Mnemonic/digitaleditions_20x20.jpg");
+}
+.mnemonic-digitalenterprise {
+	background-image: url("/homepage/include/style/default/Mnemonic/digital_enterprise_platform_16x16.jpg");
+}
+.mnemonic-digitalpublishing {
+	background-image: url("/homepage/include/style/default/Mnemonic/digital_publishing_suite_16x16.png");
+}
+.mnemonic-director {
+	background-image: url("/homepage/include/style/default/Mnemonic/director_20x20.jpg");
+}
+.mnemonic-distillerserver {
+	background-image: url("/homepage/include/style/default/Mnemonic/distiller_20x20.jpg");
+}
+.mnemonic-dreamweaver {
+	background-image: url("/homepage/include/style/default/Mnemonic/dreamweaver_20x20.png");
+}
+.mnemonic-encore {
+	background-image: url("/homepage/include/style/default/Mnemonic/encore_20x20.png");
+}
+.mnemonic-extensionmanager {
+	background-image: url("/homepage/include/style/default/Mnemonic/extension_manager_20x20.jpg");
+}
+.mnemonic-fireworks {
+	background-image: url("/homepage/include/style/default/Mnemonic/fireworks_20x20.png");
+}
+.mnemonic-flash {
+	background-image: url("/homepage/include/style/default/Mnemonic/flash_20x20.png");
+}
+.mnemonic-flashbuilder {
+	background-image: url("/homepage/include/style/default/Mnemonic/flash_builder_20x20.png");
+}
+.mnemonic-flashcatalyst {
+	background-image: url("/homepage/include/style/default/Mnemonic/flash_catalyst_20x20.png");
+}
+.mnemonic-flashlite {
+	background-image: url("/homepage/include/style/default/Mnemonic/flash_lite_20x20.jpg");
+}
+.mnemonic-flashmediaencoder {
+	background-image: url("/homepage/include/style/default/Mnemonic/media_encoder_20x20.jpg");
+}
+.mnemonic-flashmedialive {
+	background-image: url("/homepage/include/style/default/Mnemonic/flash_media_live_20x20.png");
+}
+.mnemonic-flashmediaserver {
+	background-image: url("/homepage/include/style/default/Mnemonic/flashmediaserver_20x20.jpg");
+}
+.mnemonic-flashpaper {
+	background-image: url("/homepage/include/style/default/Mnemonic/flashpaper_20x20.jpg");
+}
+.mnemonic-flashplatform {
+	background-image: url("/homepage/include/style/default/Mnemonic/flash_platformservices_20x20.png");
+}
+.mnemonic-flashplayer {
+	background-image: url("/homepage/include/style/default/Mnemonic/flash_player_20x20.png");
+}
+.mnemonic-flex {
+	background-image: url("/homepage/include/style/default/Mnemonic/flex_20x20.png");
+}
+.mnemonic-fontfolio {
+	background-image: url("/homepage/include/style/default/Mnemonic/fontfolio_20x20.jpg");
+}
+.mnemonic-framemaker {
+	background-image: url("/homepage/include/style/default/Mnemonic/framemaker_20x20.jpg");
+}
+.mnemonic-freehand {
+	background-image: url("/homepage/include/style/default/Mnemonic/freehand_20x20.jpg");
+}
+.mnemonic-golive {
+	background-image: url("/homepage/include/style/default/Mnemonic/golive_20x20.jpg");
+}
+.mnemonic-homesite {
+	background-image: url("/homepage/include/style/default/Mnemonic/homesite_20x20.jpg");
+}
+.mnemonic-illustrator {
+	background-image: url("/homepage/include/style/default/Mnemonic/illustrator_20x20.png");
+}
+.mnemonic-incopy {
+	background-image: url("/homepage/include/style/default/Mnemonic/incopy_20x20.png");
+}
+.mnemonic-indesign {
+	background-image: url("/homepage/include/style/default/Mnemonic/indesign_20x20.png");
+}
+.mnemonic-indesignserver {
+	background-image: url("/homepage/include/style/default/Mnemonic/indesign_server_20x20.png");
+}
+.mnemonic-jrun {
+	background-image: url("/homepage/include/style/default/Mnemonic/jrun_20x20.jpg");
+}
+.mnemonic-licensemanager {
+	background-image: url("/homepage/include/style/default/Mnemonic/licensemanager_20x20.jpg");
+}
+.mnemonic-lightroom {
+	background-image: url("/homepage/include/style/default/Mnemonic/lightroom_20x20.png");
+}
+.mnemonic-livecycle {
+	background-image: url("/homepage/include/style/default/Mnemonic/livecycle_20x20.png");
+}
+.mnemonic-livecyclees {
+	background-image: url("/homepage/include/style/default/Mnemonic/livecycle_es_20x20.png");
+}
+.mnemonic-mastercollection {
+	background-image: url("/homepage/include/style/default/Mnemonic/master_collection_cs5_20x20.png");
+}
+.mnemonic-onlocation {
+	background-image: url("/homepage/include/style/default/Mnemonic/onlocation_20x20.png");
+}
+.mnemonic-omniture {
+	background-image: url("/homepage/include/style/default/Mnemonic/omniture_suite_20x20.png");
+}
+.mnemonic-pagemaker {
+	background-image: url("/homepage/include/style/default/Mnemonic/pagemaker_20x20.jpg");
+}
+.mnemonic-photoshop {
+	background-image: url("/homepage/include/style/default/Mnemonic/photoshop_20x20.png");
+}
+.mnemonic-photoshopelements {
+	background-image: url("/homepage/include/style/default/Mnemonic/photoshop_elements_20x20.jpg");
+}
+.mnemonic-photoshopexpress {
+	background-image: url("/homepage/include/style/default/Mnemonic/photoshop_express_20x20.jpg");
+}
+.mnemonic-postscript {
+	background-image: url("/homepage/include/style/default/Mnemonic/postscript_20x20.jpg");
+}
+.mnemonic-premiere {
+	background-image: url("/homepage/include/style/default/Mnemonic/premiere_pro_cs5_16x16.png");
+}
+.mnemonic-premiereelements {
+	background-image: url("/homepage/include/style/default/Mnemonic/premiere_elements_20x20.jpg");
+}
+.mnemonic-premiereexpress {
+	background-image: url("/homepage/include/style/default/Mnemonic/premiere_express_20x20.jpg");
+}
+.mnemonic-presenter {
+	background-image: url("/homepage/include/style/default/Mnemonic/presenter_20x20.jpg");
+}
+.mnemonic-productionstudio {
+	background-image: url("/homepage/include/style/default/Mnemonic/productionstudio_20x20.jpg");
+}
+.mnemonic-productionpremium {
+	background-image: url("/homepage/include/style/default/Mnemonic/production_premium_cs5_20x20.png");
+}
+.mnemonic-reader {
+	background-image: url("/homepage/include/style/default/Mnemonic/acrobat_reader_20x20.jpg");
+}
+.mnemonic-robohelp {
+	background-image: url("/homepage/include/style/default/Mnemonic/robohelp_20x20.jpg");
+}
+.mnemonic-roboinfo {
+	background-image: url("/homepage/include/style/default/Mnemonic/roboinfo_20x20.jpg");
+}
+.mnemonic-scene7 {
+	background-image: url("/homepage/include/style/default/Mnemonic/scene7_20x20.jpg");
+}
+.mnemonic-shockwaveplayer {
+	background-image: url("/homepage/include/style/default/Mnemonic/shockwave_player_20x20.png");
+}
+.mnemonic-sitecatalyst {
+	background-image: url("/homepage/include/style/default/Mnemonic/sitecatalyst_netaverages_20x20.png");
+}
+.mnemonic-soundbooth {
+	background-image: url("/homepage/include/style/default/Mnemonic/soundbooth_20x20.png");
+}
+.mnemonic-stockphotos {
+	background-image: url("/homepage/include/style/default/Mnemonic/stockphoto_20x20.jpg");
+}
+.mnemonic-techcommsuite {
+	background-image: url("/homepage/include/style/default/Mnemonic/techcommsuite_20x20.jpg");
+}
+.mnemonic-ultra {
+	background-image: url("/homepage/include/style/default/Mnemonic/ultra_20x20.jpg");
+}
+.mnemonic-versioncue {
+	background-image: url("/homepage/include/style/default/Mnemonic/version_cue_20x20.jpg");
+}
+.mnemonic-visualcommunicator {
+	background-image: url("/homepage/include/style/default/Mnemonic/visual_communicator_20x20.jpg");
+}
+.mnemonic-webpremium {
+	background-image: url("/homepage/include/style/default/Mnemonic/web_premium_cs5_20x20.png");
+}
+.mnemonic-webstandard {
+	background-image: url("/homepage/include/style/default/Mnemonic/web_standard_20x20.jpg");
+}
+.download-reader {
+	background-image: url("/images/shared/product_mnemonics/22x22/reader_black_22x22.png"); _background-image: url(/images/shared/product_mnemonics/22x22/reader_black_8-bit_22x22.png);
+}
+.download-flashplayer {
+	background-image: url("/images/shared/product_mnemonics/22x22/flashplayer_black_22x22.png"); _background-image: url(/images/shared/product_mnemonics/22x22/flashplayer_black_8-bit_22x22.png);
+}
+.download-air {
+	background-image: url("/images/shared/product_mnemonics/22x22/air_black_22x22.png"); _background-image: url(/images/shared/product_mnemonics/22x22/air_black_8-bit_22x22.png);
+}
+.download-shockwaveplayer {
+	background-image: url("/images/shared/product_mnemonics/22x22/shockwave_black_8-bit-22x22.png");
+}

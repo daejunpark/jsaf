@@ -1,0 +1,18 @@
+Context-sensitivity mode is "1-callsite".
+
+* Initialize *
+hRP-sites_test/91,directrev.com/test_files/main.js:443:24-452:24:
+    Warning: the use of FunctionDeclaration as a Statement is not allowed in ECMAScript.
+# Time for IR translation(s): 5.40
+# Time for CFG building(s): 0.71
+# Time for front end(s): 6.11
+
+* Analyze *
+# Initial peak memory(mb): 75.38
+# Basic block(#): 1125(source) + 2475(bulit-in) = 3600
+# Time for initial heap(s): 1.10
+# Time for initial heap with DOM modeling(ms): 217.242333
+The following names are defined in the initial heap of analyzer
+but not in the list of predefined names:
+    jQuery $ 
+Update predefined names at jsaf.compiler.Predefind

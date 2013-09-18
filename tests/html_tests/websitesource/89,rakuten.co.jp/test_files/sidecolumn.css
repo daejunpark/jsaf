@@ -1,0 +1,576 @@
+#riGenreColumn h2 {
+	padding: 0px 2px 3px 10px; width: 158px; color: rgb(255, 255, 255);
+}
+.ttlRed {
+	background: rgb(191, 0, 0); overflow: hidden;
+}
+.ttlTravel {
+	background: rgb(72, 150, 66); overflow: hidden;
+}
+.ttlBooks {
+	background: rgb(0, 102, 0); overflow: hidden;
+}
+.ttlPortal {
+	background: rgb(102, 102, 102); overflow: hidden;
+}
+.ttlKobo {
+	background: rgb(26, 174, 202); overflow: hidden;
+}
+.ttlRed a {
+	float: left; display: block;
+}
+.ttlTravel a {
+	float: left; display: block;
+}
+.ttlBooks a {
+	float: left; display: block;
+}
+.ttlPortal a {
+	float: left; display: block;
+}
+.ttlKobo a {
+	float: left; display: block;
+}
+.ttlRed a.lead {
+	padding: 4px 5px 0px 0px; line-height: 1.3em; font-size: 82%; font-weight: normal; vertical-align: bottom; float: right; display: inline;
+}
+.ttlTravel a.lead {
+	padding: 4px 5px 0px 0px; line-height: 1.3em; font-size: 82%; font-weight: normal; vertical-align: bottom; float: right; display: inline;
+}
+.ttlBooks a.lead {
+	padding: 4px 5px 0px 0px; line-height: 1.3em; font-size: 82%; font-weight: normal; vertical-align: bottom; float: right; display: inline;
+}
+.ttlPortal a.lead {
+	padding: 4px 5px 0px 0px; line-height: 1.3em; font-size: 82%; font-weight: normal; vertical-align: bottom; float: right; display: inline;
+}
+.ttlKobo a.lead {
+	padding: 4px 5px 0px 0px; line-height: 1.3em; font-size: 82%; font-weight: normal; vertical-align: bottom; float: right; display: inline;
+}
+#riGenreColumn a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#riGenreColumn a:hover {
+	color: rgb(192, 0, 0) !important; text-decoration: underline;
+}
+.sideContents {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/sidecontents_bg_right.gif") repeat-y 0px 0px; margin: 0px 0px 10px; padding: 0px 0px 1px; width: 172px; color: rgb(29, 84, 167);
+}
+.sideContents02 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/sidecontents_bg_right.gif") repeat-y 0px 0px; margin: 0px 0px 10px; width: 172px; color: rgb(29, 84, 167);
+}
+.sideContents03 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/sidecontents_bg_right_02.jpg") repeat-y right top; margin: 0px 0px 10px; width: 302px; color: rgb(0, 0, 0);
+}
+.sideContents04 {
+	margin: 0px 2px 10px 0px; padding: 7px 15px; border: 1px solid rgb(217, 100, 100); overflow: hidden; _zoom: 1;
+}
+.entryColumn {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/sidecontents_bg_bottom.gif") no-repeat left bottom; padding: 0px 0px 8px; width: 172px;
+}
+.entryColumn02 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/sidecontents_bg_bottom_02.jpg") no-repeat left bottom; padding: 0px 0px 8px; width: 302px;
+}
+.entrybox {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/h2_ttl_bg_01.jpg") no-repeat left top; padding: 5px 0px 0px;
+}
+.entrybox02 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/sidecontents_bg_top.gif") no-repeat left top; padding: 5px 0px 0px;
+}
+.entrybox03 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/h2_ttl_bg_03.jpg") no-repeat left top; padding: 5px 0px 0px;
+}
+.entrybox04 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/h2_ttl_bg_04.jpg") no-repeat left top; padding: 5px 0px 0px;
+}
+.entrybox05 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/h2_ttl_bg_05.jpg") no-repeat left top; padding: 5px 0px 0px;
+}
+.entrybox06 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/h2_ttl_bg_06.jpg") no-repeat left top; padding: 5px 0px 0px;
+}
+.entrybox07 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/sidecontents_bg_top02.gif") no-repeat left top; padding: 5px 0px 0px;
+}
+.entrybox08 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/h2_ttl_bg_10.gif") no-repeat left top; padding: 5px 0px 0px;
+}
+#riGenreColumn .inner {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; padding: 1px; border-right-color: rgb(200, 200, 200); border-bottom-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-right-style: solid; border-bottom-style: solid; border-left-style: solid;
+}
+#riGenreColumn .inner02 {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; width: 168px; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; _zoom: 1;
+}
+#riServiceColumn .inner03 {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; padding: 6px 15px 0px; width: 268px; overflow: hidden; clear: both; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; _zoom: 1;
+}
+#riServiceColumn .inner04 {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; padding: 6px 15px 0px; width: 268px; overflow: hidden; clear: both; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; _zoom: 1;
+}
+#riServiceColumn .inner05 {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; padding: 6px 15px 0px; width: 268px; overflow: hidden; clear: both; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; _zoom: 1;
+}
+#riServiceColumn .inner07 {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; padding: 6px 15px 0px; width: 268px; overflow: hidden; clear: both; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; _zoom: 1;
+}
+#riServiceColumn .inner05 {
+	padding: 0px 15px;
+}
+#riServiceColumn .inner06 {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; padding: 0px 15px; width: 268px; overflow: hidden; clear: both; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; _zoom: 1;
+}
+#riGenreColumn .entry {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/genrecontents_bg_02.gif") no-repeat left top; padding: 3px;
+}
+#riGenreColumn .entry li {
+	background: rgb(255, 255, 255); padding: 6px 5px 0px 13px;
+}
+#riGenreColumn .entry li a {
+	color: rgb(29, 84, 167);
+}
+#riGenreColumn .entry .last {
+	padding-bottom: 6px;
+}
+#riGenreColumn .entry02 {
+	margin: 1px 1px 0px; padding: 6px 6px 6px 10px;
+}
+#riGenreColumn .specialIcon img {
+	margin: -3px 0px -1px;
+}
+#riGenreColumn .specialIcon02 img {
+	margin: 2px 0px 0px;
+}
+#riGenreColumn .entry03 {
+	padding: 6px;
+}
+#riGenreColumn .entry03 li a {
+	background: rgb(255, 255, 255); padding: 0px 5px 0px 10px;
+}
+#riGenreColumn .entry04 {
+	background: rgb(255, 255, 255); padding: 12px 9px; width: 151px; overflow: hidden; margin-right: 2px; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid;
+}
+#riGenreColumn .entry04 p {
+	padding: 0px 0px 5px;
+}
+#riGenreColumn .entry04 dl {
+	padding: 0px 0px 5px;
+}
+#riGenreColumn .entry04 dt {
+	font-weight: bold;
+}
+#riGenreColumn .entry04 dd {
+	padding: 0px 0px 0px 10px;
+}
+#riGenreColumn .entry04 dd ul li {
+	padding: 0px 5px 0px 0px; line-height: 1em; float: left; display: block; white-space: nowrap;
+}
+#riGenreColumn .entry05 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/genrecontents_bg_02.gif") no-repeat left top; padding: 3px 3px 0px;
+}
+#riGenreColumn .entry05 dt {
+	background: rgb(255, 255, 255); padding: 6px 3px 0px; color: rgb(0, 0, 0); font-weight: bold;
+}
+#riGenreColumn .entry06 dt {
+	background: rgb(255, 255, 255); padding: 6px 3px 0px; color: rgb(0, 0, 0); font-weight: bold;
+}
+#riGenreColumn .entry05 dd {
+	background: rgb(255, 255, 255); padding: 6px 0px 0px;
+}
+#riGenreColumn .entry06 dd {
+	background: rgb(255, 255, 255); padding: 6px 0px 0px;
+}
+#riGenreColumn .entry05 dd ul {
+	padding: 0px 0px 6px; margin-right: 4px;
+}
+#riGenreColumn .entry06 dd ul {
+	padding: 0px 0px 0px 7px;
+}
+#riGenreColumn .entry05 dd ul li {
+	padding: 0px 0px 0px 7px;
+}
+#riGenreColumn .entry06 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/genrecontents_bg_02.gif") no-repeat left top; padding: 3px;
+}
+#riGenreColumn .entry06 dd {
+	padding: 0px 0px 7px;
+}
+#riGenreColumn .entry06 dt {
+	background: rgb(255, 255, 255);
+}
+#riGenreColumn .point01 li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_f2ab00.gif") no-repeat 7px 14px rgb(255, 255, 255); padding: 6px 5px 0px 13px;
+}
+#riGenreColumn .point02 li a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_f2ab00.gif") no-repeat 5px 5px rgb(255, 255, 255); padding: 0px 5px 0px 10px;
+}
+#riGenreColumn .item {
+	padding: 7px 10px 0px 0px; overflow: hidden; _zoom: 1;
+}
+#riGenreColumn .thumb {
+	padding: 0px 5px 10px 10px; width: 40px; float: left;
+}
+#riGenreColumn .text {
+	width: 95px; line-height: 1.1em; float: left; display: inline;
+}
+#riGenreColumn .text dd {
+	color: rgb(0, 0, 0);
+}
+#riGenreColumn .machiraku {
+	padding: 5px 0px; text-align: center;
+}
+#machiraku h2 a {
+	color: rgb(255, 255, 255);
+}
+#machiraku h2 a:hover {
+	color: rgb(255, 255, 255) !important; text-decoration: underline;
+}
+.expertlist {
+	padding: 10px 10px 0px; text-align: right;
+}
+.expertlist a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 0px 2px; padding: 0px 0px 0px 10px; text-align: right;
+}
+#riGenreColumn .point03 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 0px 3px rgb(255, 255, 255); padding: 0px 5px 0px 10px;
+}
+#riGenreColumn .mobile {
+	background: rgb(255, 255, 255); padding: 5px; width: 158px; overflow: hidden; margin-right: 2px; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid;
+}
+#riServiceColumn h2 {
+	padding: 0px 2px 3px 10px; width: 288px; color: rgb(255, 255, 255);
+}
+#riServiceColumn h4 a {
+	color: rgb(191, 0, 0); font-weight: normal; text-decoration: underline;
+}
+#riServiceColumn a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#riServiceColumn .ttlRed {
+	background: rgb(191, 0, 0);
+}
+#riServiceColumn h2 a {
+	color: rgb(255, 255, 255);
+}
+#riServiceColumn a:hover {
+	color: rgb(192, 0, 0) !important; text-decoration: underline;
+}
+#riServiceColumn .forLogout a:hover {
+	color: rgb(255, 243, 160) !important; text-decoration: underline;
+}
+#riServiceColumn h2 a:hover {
+	color: rgb(255, 255, 255) !important;
+}
+#riServiceColumn .inner02 {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; width: 298px; overflow: hidden; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid;
+}
+#riServiceColumn .inner03 dl {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_01.gif") repeat-x left bottom rgb(255, 255, 255); padding: 0px 0px 5px; overflow: hidden; clear: both; _zoom: 1;
+}
+#riServiceColumn .inner03 dt a {
+	color: rgb(191, 0, 0); text-decoration: underline;
+}
+#riServiceColumn .inner03 .comulef a {
+	color: rgb(191, 0, 0); text-decoration: underline;
+}
+#riServiceColumn .inner04 ul {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_01.gif") repeat-x left bottom rgb(255, 255, 255); padding: 0px 0px 5px; overflow: hidden; clear: both; _zoom: 1;
+}
+#riServiceColumn .inner05 ul {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_01.gif") repeat-x left bottom rgb(255, 255, 255); padding: 0px 0px 5px; overflow: hidden; clear: both; _zoom: 1;
+}
+#riServiceColumn .inner06 ul {
+	padding: 0px 0px 5px; overflow: hidden; clear: both; _zoom: 1;
+}
+#riServiceColumn .inner04 .comuright a {
+	color: rgb(0, 0, 0);
+}
+#riServiceColumn .point02 li a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_f2ab00.gif") no-repeat 5px 5px rgb(255, 255, 255); margin: 0px 5px; padding: 0px 5px 0px 10px;
+}
+#riServiceColumn .point03 li a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_f2ab00.gif") no-repeat 5px 5px rgb(255, 255, 255); padding: 0px 5px 0px 10px;
+}
+#riServiceColumn .comulef {
+	padding: 0px 5px 0px 0px; float: left; display: block;
+}
+#riServiceColumn .comulef02 {
+	padding: 0px 15px 0px 0px; float: left; display: block;
+}
+#riServiceColumn .comulef02 a {
+	color: rgb(191, 0, 0) !important; text-decoration: underline;
+}
+#riServiceColumn .comuright {
+	padding: 0px 5px 0px 0px; float: left; display: block;
+}
+.sideContents04 dl dt a {
+	color: rgb(191, 0, 0) !important; text-decoration: underline !important;
+}
+.sideContents04 dl dt {
+	color: rgb(191, 0, 0) !important; text-decoration: underline !important;
+}
+.sideContents04 dl dd a {
+	color: rgb(29, 84, 167);
+}
+.rightcolbtm {
+	padding: 0px;
+}
+.rightcolbtm p {
+	padding: 0px 0px 10px;
+}
+.colrBk {
+	color: rgb(0, 0, 0);
+}
+.latelyUse {
+	background: rgb(255, 255, 255); padding: 5px 0px;
+}
+.latelyUse ul {
+	margin: 0px 0px 0px 5px;
+}
+.latelyUse li {
+	
+}
+.inner01 {
+	padding: 0px !important; left: 118px; top: 2px; width: 200px; display: none; position: absolute;
+}
+.inner01 li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 0px 4px; margin: 0px !important; padding: 0px 0px 3px 9px !important; width: 170px;
+}
+.inner01 li.gmTitle {
+	padding: 0px 0px 3px !important; left: -6px; position: relative;
+}
+.inner01 li.gmTitle a {
+	color: rgb(191, 0, 0) !important; font-weight: bold;
+}
+.onlybg {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201010/menubgtop3.gif") no-repeat top; padding: 2px 0px 0px; width: 200px;
+}
+.bp7 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201010/bigtri.gif") no-repeat 142px 8px rgb(255, 255, 255) !important; padding: 4px 20px 5px 5px !important; color: rgb(29, 84, 166) !important;
+}
+.pb2 {
+	padding-bottom: 3px !important;
+}
+.topbg {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201010/menubgbottom3.gif") no-repeat bottom; width: 200px;
+}
+.onlybg ul {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201010/whitebg.gif") no-repeat 0px 0px; padding: 4px 0px 4px 17px !important; display: block;
+}
+.zindex1 {
+	position: relative; z-index: 514 !important;
+}
+.zindex2 {
+	position: relative; z-index: 513 !important;
+}
+.zindex3 {
+	position: relative; z-index: 512 !important;
+}
+.zindex4 {
+	position: relative; z-index: 511 !important;
+}
+.zindex5 {
+	position: relative; z-index: 510 !important;
+}
+.zindex6 {
+	position: relative; z-index: 509 !important;
+}
+.zindex7 {
+	position: relative; z-index: 508 !important;
+}
+.zindex8 {
+	position: relative; z-index: 507 !important;
+}
+.zindex9 {
+	position: relative; z-index: 506 !important;
+}
+.zindex10 {
+	position: relative; z-index: 505 !important;
+}
+.zindex11 {
+	position: relative; z-index: 504 !important;
+}
+.zindex12 {
+	position: relative; z-index: 503 !important;
+}
+.zindex13 {
+	position: relative; z-index: 502 !important;
+}
+.zindex14 {
+	position: relative; z-index: 501 !important;
+}
+.zindex15 {
+	position: relative; z-index: 500 !important;
+}
+#riGenreColumn .ttlRed a:hover {
+	color: rgb(255, 255, 255) !important;
+}
+#riGenreColumn .ttlRed a {
+	color: rgb(255, 255, 255) !important;
+}
+#riGmClickArea .inner01 {
+	width: 200px;
+}
+#riGmClickArea .onlybg {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201010/menubgtop3.gif") no-repeat top; width: auto;
+}
+#riGmClickArea .topbg {
+	width: auto;
+}
+#riGmClickArea .onlybg ul {
+	padding: 4px 0px !important; margin-right: 3px !important;
+}
+#riGmClickArea .inner01 li {
+	margin: 0px !important; padding: 0px !important; width: auto; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#riGmClickArea .inner01 li a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 19px 4px; margin: 0px !important; padding: 0px 0px 3px 28px !important; display: block;
+}
+#riGmClickArea .inner01 li.ritItemset {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 19px 4px; margin: 0px !important; padding: 0px 0px 3px 28px !important; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px; border-bottom-style: solid; display: block;
+}
+#riGmClickArea .inner01 li.ritItemset a {
+	margin: 0px !important; padding: 0px !important; display: inline;
+}
+.ttlRanking {
+	background: rgb(191, 0, 0); overflow: hidden;
+}
+.ttlRanking span {
+	float: left; display: block;
+}
+.ttlRanking .lead {
+	padding: 4px 5px 0px 0px; line-height: 1.3em; font-size: 82%; font-weight: normal; vertical-align: bottom; float: right; display: inline;
+}
+.riRankInfo ul {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_01.gif") repeat-x left bottom rgb(255, 255, 255); padding: 0px 0px 5px; overflow: hidden; clear: both; _zoom: 1;
+}
+.riRankInfo li {
+	float: left; display: inline;
+}
+.riRankDaily01 {
+	margin: 15px 0px 6px; overflow: hidden; clear: both; _zoom: 1;
+}
+.riRankDailyLef {
+	width: 185px; float: left;
+}
+.riRankDaily01 .riRankttl {
+	color: rgb(191, 0, 0); font-weight: bold; margin-bottom: 2px;
+}
+.riRankDaily01 .riRankFirst {
+	overflow: hidden; clear: both; _zoom: 1;
+}
+.riRankDaily01 .riRankFirst .riRankLink {
+	width: 146px; float: left;
+}
+.riRankDaily01 .riRankThumb {
+	width: 80px; float: right;
+}
+.riRankDaily02 {
+	margin-bottom: 8px;
+}
+.riRankDaily02 li {
+	overflow: hidden; clear: both; margin-bottom: 2px; _zoom: 1;
+}
+.riRankPrize {
+	margin: 0px 0px 0px 5px; width: 34px; color: rgb(191, 0, 0); font-weight: bold; float: left;
+}
+.riRankLink {
+	width: 226px; float: left;
+}
+.expertlist01 {
+	padding: 10px 0px 0px 10px; text-align: right;
+}
+.expertlist01 a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 0px 2px; padding: 0px 0px 0px 10px; text-align: right;
+}
+#semiPoint {
+	padding: 0px 0px 3px !important; color: rgb(0, 0, 0); font-weight: bold; margin-top: 3px !important;
+}
+#semiPointno {
+	color: rgb(0, 0, 0); font-weight: bold;
+}
+.tokuCont {
+	line-height: normal; margin-left: 0px !important;
+}
+.tokuTtl {
+	color: rgb(191, 0, 0); font-weight: bold;
+}
+.tokuBtn {
+	margin: 0px 0px 6px; line-height: 1em; padding-left: 0px !important; display: block;
+}
+#riInformation {
+	background: rgb(255, 255, 221); margin: 0px 0px 7px; padding: 3px; border: 1px solid rgb(206, 206, 206);
+}
+#riInformation p {
+	margin: 0px; padding: 0px; color: rgb(0, 0, 0);
+}
+#riMnScene li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_01.gif") repeat-x left bottom; padding: 0px 0px 6px; margin-bottom: 6px;
+}
+#riMnScene li.last {
+	padding: 0px; margin-bottom: 0px;
+}
+#riMnScene dl {
+	display: inline;
+}
+#riMnScene dt {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/liquid/css/cmn_ic_side_title.gif") no-repeat left top; margin: 3px 0px 3px -4px; color: rgb(68, 68, 68); padding-left: 10px; font-weight: bold;
+}
+#riServiceColumn .editSection {
+	overflow: hidden; padding-bottom: 5px;
+}
+#riServiceColumn .editSection .editImg {
+	width: 100px; float: left;
+}
+#riServiceColumn .editSection .editCont {
+	width: 160px; float: right;
+}
+#riServiceColumn .editSection .editMain {
+	
+}
+#riServiceColumn .editSection .editTtl {
+	padding-bottom: 5px; font-size: 110%; font-weight: bold;
+}
+#riServiceColumn .editSection .editTtl a {
+	color: rgb(191, 0, 0); text-decoration: none;
+}
+#riServiceColumn .editSection .editTtl a:hover {
+	text-decoration: underline;
+}
+#riServiceColumn .editSection .editSub li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_f2ab00.gif") no-repeat 5px 5px; padding-left: 13px;
+}
+#riServiceColumn .inner08 {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; padding: 10px 10px 0px; width: 278px; overflow: hidden; clear: both; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; _zoom: 1;
+}
+#riServiceColumn .inner09 {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; padding: 10px 10px 0px; width: 278px; overflow: hidden; clear: both; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; _zoom: 1;
+}
+#riServiceColumn .inner08 ul {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_01.gif") repeat-x left bottom rgb(255, 255, 255); padding: 0px 0px 1px; overflow: hidden; -ms-zoom: 1;
+}
+#riServiceColumn .inner09 ul {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_01.gif") repeat-x left bottom rgb(255, 255, 255); padding: 0px 0px 1px; overflow: hidden; -ms-zoom: 1;
+}
+#riServiceColumn .inner08 ul li {
+	width: 114px; float: left; display: inline;
+}
+#riServiceColumn .inner08 ul li.thumb {
+	padding: 0px 10px 10px 0px; width: 154px;
+}
+#riServiceColumn .inner08 ul li .txt {
+	padding-bottom: 10px;
+}
+#riServiceColumn .inner08 ul li .disc {
+	text-align: left; color: rgb(191, 0, 0); font-weight: bold;
+}
+#riServiceColumn .inner08 ul li .price {
+	text-align: right; color: rgb(191, 0, 0); font-weight: bold;
+}
+#riServiceColumn .inner09 ul li {
+	width: 218px; float: left; display: inline;
+}
+#riServiceColumn .inner09 ul li.thumb {
+	padding: 0px 10px 5px 0px; width: 50px;
+}
+#riServiceColumn .inner09 ul li .txt {
+	font-weight: bold;
+}

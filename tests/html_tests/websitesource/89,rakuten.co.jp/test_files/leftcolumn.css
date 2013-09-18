@@ -1,0 +1,228 @@
+#ritMenuArea {
+	width: 172px; margin-left: -100%; float: left;
+}
+#ritMenuArea .ritMenuCnt {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/sidecontents_bg_right.gif") repeat-y 0px 0px; margin: 0px 0px 10px; width: 172px;
+}
+#ritMenuArea h2 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201105/bg_boxes.gif") no-repeat -10px 0px; width: 170px; color: rgb(255, 255, 255); padding-top: 5px; border-right-color: rgb(255, 255, 255); border-right-width: 2px; border-right-style: solid;
+}
+#ritMenuArea h2 a {
+	color: rgb(255, 255, 255);
+}
+#ritMenuArea h2 a:hover {
+	color: rgb(255, 255, 255); text-decoration: underline;
+}
+#ritMenuArea h2 span {
+	background: rgb(191, 0, 0); padding: 0px 5px 3px 10px; display: block;
+}
+#ritMenuArea .ritLy1Inr {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; padding: 1px; border-right-color: rgb(200, 200, 200); border-bottom-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-right-style: solid; border-bottom-style: solid; border-left-style: solid;
+}
+#ritMenuArea .ritUseCnt {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/genrecontents_bg_02.gif") no-repeat left top; padding: 3px;
+}
+#ritMenuArea .ritUse {
+	background: rgb(255, 255, 255); padding: 5px 0px;
+}
+#ritMenuArea .ritUse ul {
+	margin: 0px 0px 0px 5px;
+}
+#ritMenuArea #ritGenreList {
+	margin: 0px 6px 10px 0px; text-align: right;
+}
+#pulldownMenu .ritMenuCnt {
+	margin-bottom: 3px !important;
+}
+#ritMenuArea .ritLy2Inr {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; width: 168px; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; -ms-zoom: 1;
+}
+#ritMenuArea .ritLy2Inr ul {
+	margin: 0px 1px; padding: 6px 10px 6px 9px;
+}
+#ritMenuArea .ritLy2Inr ul li {
+	padding: 0px 0px 0px 1px;
+}
+#ritMenuArea .ritLy2Inr dl {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_01.gif") repeat-x left bottom; margin: 0px 11px; padding: 6px 0px;
+}
+#ritMenuArea .ritLy2Inr dl dt {
+	color: rgb(191, 0, 0); font-weight: bold;
+}
+#ritMenuArea .ritLy2Inr dl dd ul {
+	padding: 0px;
+}
+#ritMenuArea .ritLy2Inr dl dd ul li {
+	padding: 0px;
+}
+#ritMenuArea .ritMenuBtm {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/sidecontents_bg_bottom.gif") no-repeat left bottom; padding: 0px 0px 8px; width: 172px;
+}
+#ritMenuArea .ritLy2Inr p.ritMobileTxt {
+	padding: 5px;
+}
+#ritMenuArea .ritLy2Inr p.ritMobileThmb {
+	text-align: center; padding-bottom: 5px;
+}
+#ritMenuArea .ritLy3Inr {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; width: 168px; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; -ms-zoom: 1;
+}
+#ritMenuArea .ritLy3Inr ul {
+	padding: 7px 7px 0px 0px; overflow: hidden; -ms-zoom: 1;
+}
+#ritMenuArea .ritLy3Inr ul li {
+	width: 95px; line-height: 1.1em; float: left; display: inline;
+}
+#ritMenuArea .ritLy3Inr ul li.thumb {
+	padding: 0px 5px 10px 10px; width: 40px;
+}
+#ritMenuArea .ritLy4Inr {
+	background: rgb(255, 255, 255); padding: 12px 9px; width: 151px; overflow: hidden; margin-right: 2px; border-right-color: rgb(200, 200, 200); border-left-color: rgb(200, 200, 200); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid;
+}
+#ritMenuArea .ritSubSrList {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/sidecontents_bg_top.gif") no-repeat left top; padding: 5px 0px 0px;
+}
+#ritMenuArea .ritLy4Inr dl {
+	padding-bottom: 5px;
+}
+#ritMenuArea .ritLy4Inr dl dt {
+	font-weight: bold;
+}
+#ritMenuArea .ritLy4Inr dl dd {
+	padding: 0px 0px 0px 10px;
+}
+#ritMenuArea .ritLy4Inr dl dd ul {
+	overflow: hidden; -ms-zoom: 1;
+}
+#ritMenuArea .ritLy4Inr dl dd ul li {
+	padding: 0px 5px 0px 0px; float: left; display: block; white-space: nowrap;
+}
+#ritMenuArea dl.ritBtm {
+	
+}
+#ritMenuArea .ritMoreLink {
+	padding: 10px 10px 0px; text-align: right;
+}
+#ritMenuArea .ritGenre {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/genrecontents_bg_02.gif") no-repeat left top; padding: 3px 3px 0px;
+}
+#ritMenuArea .ritGenre dt {
+	background: rgb(255, 255, 255); padding: 4px 10px 5px 5px; color: rgb(29, 84, 166); overflow: hidden; font-weight: bold; display: block; cursor: pointer; -ms-zoom: 1;
+}
+#ritMenuArea .latelyUseCont dt {
+	background: rgb(255, 255, 255); padding: 4px 10px 5px 5px; color: rgb(29, 84, 166); overflow: hidden; font-weight: bold; display: block; cursor: pointer; -ms-zoom: 1;
+}
+#ritMenuArea .ritGenre dt img {
+	margin: 4px 0px 0px; float: right; display: inline;
+}
+#ritMenuArea .latelyUseCont dt img {
+	margin: 4px 0px 0px; float: right; display: inline;
+}
+#ritMenuArea .ritGnrCategory {
+	width: 130px; float: left; display: inline;
+}
+#ritMenuArea .ritGenre dd {
+	background: rgb(255, 255, 255); padding: 6px 0px 0px;
+}
+#ritMenuArea .ritGenre dd.inner01 {
+	padding: 0px; left: 118px; top: 2px; width: 200px; display: none; position: absolute;
+}
+#ritMenuArea .ritOnlybg {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201010/menubgtop3.gif") no-repeat top; padding: 2px 0px 0px; width: auto;
+}
+#ritMenuArea .ritTopbg {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201010/menubgbottom3.gif") no-repeat bottom; width: auto;
+}
+#ritMenuArea .ritOnlybg ul {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201010/whitebg.gif") no-repeat 0px 0px; padding: 4px 0px; margin-right: 3px !important; display: block;
+}
+#ritMenuArea .ritGenre dd li {
+	padding: 0px 0px 0px 7px; width: auto; display: block;
+}
+#ritMenuArea .ritGenre dd.inner01 li {
+	margin: 0px !important; padding: 0px !important; width: auto; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#ritMenuArea .ritOnlybg a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 19px 4px; margin: 0px !important; padding: 0px 0px 0px 28px !important; display: block;
+}
+#ritMenuArea .ritGenre .ritOnlybg li.ritItemset {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 19px 4px; margin: 0px !important; padding: 0px 0px 3px 28px !important; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px; border-bottom-style: solid; display: block;
+}
+#ritMenuArea .ritGenre .ritOnlybg li.ritItemset a {
+	margin: 0px !important; padding: 0px !important; display: inline;
+}
+#ritMenuArea .ritPb {
+	padding-bottom: 3px;
+}
+.zindex1 {
+	position: relative; z-index: 510;
+}
+.zindex2 {
+	position: relative; z-index: 509;
+}
+.zindex3 {
+	position: relative; z-index: 508;
+}
+.zindex4 {
+	position: relative; z-index: 507;
+}
+.zindex5 {
+	position: relative; z-index: 506;
+}
+.zindex6 {
+	position: relative; z-index: 505;
+}
+.zindex7 {
+	position: relative; z-index: 504;
+}
+.zindex8 {
+	position: relative; z-index: 503;
+}
+.zindex9 {
+	position: relative; z-index: 502;
+}
+.zindex10 {
+	position: relative; z-index: 501;
+}
+.zindex11 {
+	position: relative; z-index: 500;
+}
+#ritMnSupertv .ritSuperTvTopText {
+	padding: 5px 0px 5px 8px;
+}
+#ritMnSupertv dt {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/liquid/css/supertv_img_bg.gif") no-repeat center; margin: 0px auto 5px; padding: 8px 2px; width: 80px; height: 60px;
+}
+#ritMnSupertv dd {
+	padding: 0px 10px; width: 148px; text-align: left; _width: 128px;
+}
+#ritMnSupertv .ritMoreLink {
+	padding: 5px 10px 0px;
+}
+#ritMnArea .ritMoreLink {
+	padding: 0px 10px;
+}
+#ritMenuArea .ritGenre dd.inner01 li.ritScGenreBdr {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_01.gif") repeat-x left top !important; margin: 0px 0px 0px 15px !important; padding: 10px 0px 7px !important; width: 85%;
+}
+#ritMenuArea .ritGenre dd.inner01 li.ritScGenreBdr a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 4px 8px rgb(255, 255, 221); padding: 5px 0px 5px 13px !important;
+}
+#ritMenuArea .ritGenre dd.inner01 li.ritBigGenreBdr {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_01.gif") repeat-x left top !important; margin: 4px 0px 0px 15px !important; padding: 8px 0px 0px !important; width: 85%; line-height: 1.3em;
+}
+#ritMenuArea .ritGenre dd.inner01 li.ritBigGenreBdr a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 4px 3px; padding: 0px 0px 0px 13px !important;
+}
+#ritMenuArea .ritGenre dd.inner01 li.ritBigGenreDetail {
+	padding: 0px 10px 10px 29px !important; line-height: 1.3em; font-size: 82%;
+}
+#pulldownMenu .ritSubItem {
+	padding-left: 10px !important;
+}
+#pulldownMenu .ritSubItem li a {
+	width: 150px; display: block;
+}
+#ritMenuArea .ritGenre dd.inner01 li.ritSubItemDetail {
+	padding: 0px 10px 3px 28px !important; line-height: 1.3em; font-size: 82%;
+}

@@ -63,6 +63,7 @@ abstract class Model(cfg: CFG) {
 
     (fid)
   }
+
   def makeAftercallAPICFG(modelName: String, funName: String) : FunctionId = {
     val nameArg = freshName("arguments")
     val rtn = freshName("temp")
@@ -92,6 +93,45 @@ abstract class Model(cfg: CFG) {
     (fid)
   }
 
+  def makeCallbackLoopAPICFG(modelName: String, funName: String) : FunctionId = {
+    val nameArg = freshName("arguments")
+    val rtn = "temp"
+    val fid = cfg.newFunction(nameArg, List[CFGId](), List[CFGId](), funName, dummyInfo)
+    val init_node = cfg.newBlock(fid)
+    val call_node = cfg.newBlock(fid)
+    val return_node = cfg.newAfterCallBlock(fid, CFGTempId(rtn, PureLocalVar))
+    val return_exc_node = cfg.newAfterCatchBlock(fid)
+
+    cfg.addEdge((fid, LEntry), init_node)
+    cfg.addEdge(init_node, call_node)
+    cfg.addCall(call_node, return_node, return_exc_node)
+    cfg.addExcEdge(init_node, (fid,LExitExc))
+    cfg.addExcEdge(call_node, (fid,LExitExc))
+    cfg.addEdge(return_exc_node, (fid,LExitExc))
+    cfg.addEdge(return_node, call_node)
+    cfg.addEdge(return_node, (fid,LExit))
+
+    // []built-in-init
+    cfg.addInst(init_node,
+      CFGAPICall(cfg.newInstId,
+        modelName, funName+".init",
+        CFGVarRef(dummyInfo, CFGTempId(nameArg, PureLocalVar))))
+
+    // []built-in-call
+    cfg.addInst(call_node,
+      CFGAPICall(cfg.newInstId,
+        modelName, funName+".call",
+        CFGVarRef(dummyInfo, CFGTempId(nameArg, PureLocalVar))))
+
+    // after-call(x)
+    // return x;
+    cfg.addInst(return_node,
+      CFGReturn(cfg.newInstId, dummyInfo,
+        Some(CFGVarRef(dummyInfo, CFGTempId(rtn, PureLocalVar)))))
+
+    (fid)
+  }
+
   /**
    * Preparing the given AbsProperty to be updated.
    * If a property is a built-in function, create a new function object and pass it to name, value and object pair.
@@ -110,6 +150,12 @@ abstract class Model(cfg: CFG) {
       }
       case AbsBuiltinFuncAftercall(id, length) => {
         val fid = makeAftercallAPICFG(model, id)
+        val loc = newPredefLoc(id)
+        val obj = Helper.NewFunctionObject(Some(fid), None, Value(NullTop), None, AbsNumber.alpha(length))
+        (name, PropValue(ObjectValue(loc, T, F, T)), Some(loc, obj), Some(fid, id))
+      }
+      case AbsBuiltinFuncCallback(id, length) => {
+        val fid = makeCallbackLoopAPICFG(model, id)
         val loc = newPredefLoc(id)
         val obj = Helper.NewFunctionObject(Some(fid), None, Value(NullTop), None, AbsNumber.alpha(length))
         (name, PropValue(ObjectValue(loc, T, F, T)), Some(loc, obj), Some(fid, id))

@@ -52,6 +52,7 @@ This is the main Ant build file.
   <property name="nekohtml" location="${JS}/third_party/nekohtml"/>
   <property name="xerces" location="${JS}/third_party/xerces2"/>
   <property name="z3" location="${JS}/third_party/z3"/>
+  <property name="jline" location="${JS}/third_party/jline"/>
 
   <!-- Scala jar files 2.9.1 -->
   <property name="scala-version" value="2.9.1"/>
@@ -138,6 +139,7 @@ This is the main Ant build file.
     <pathelement location="${xerces}/xercesImpl.jar"/>
     <pathelement location="${xerces}/xml-apis.jar"/>
     <pathelement location="${z3}/com.microsoft.z3.jar"/>
+    <pathelement location="${jline}/jline-2.12.jar"/>
   </path>
 
   <!--
@@ -669,14 +671,14 @@ This is the main Ant build file.
     <fail message="Tests expected to pass are failing!" if="tests.failed"/>
   </target>
 
-  <target name="test" depends="compileAll, testParser, testUnparser, testStrict,
+  <target name="test" depends="compileAll, testParser, testUnparser,
                                testDisambiguator, testCompiler, testInterpreter,
                                testWith, testCFG, testTyping, testAssert, testBugDetector,
                                testWIDLParser, testWIDLChecker"
           description="Clean, compile everything, and run all unit and system tests.">
   </target>
 
-  <target name="testWOcompile" depends="testParser, testUnparser, testStrict,
+  <target name="testWOcompile" depends="testParser, testUnparser,
                                testDisambiguator, testCompiler, testInterpreter,
                                testWith, testCFG, testTyping, testAssert, testBugDetector,
                                testWIDLParser, testWIDLChecker"
@@ -799,35 +801,6 @@ This is the main Ant build file.
     <fail message="Tests expected to pass are failing!" if="tests.failed"/>
   </target>
 
-  <target name="testStrict"
-          description="Run the strict-checker tests">
-    <mkdir dir="${test.results}"/>
-    <mkdir dir="${JS}/test-tmp" />
-    <junit printsummary="on"
-           haltonerror="off"
-           haltonfailure="off"
-           showoutput="yes"
-           fork="true"
-           maxmemory="${junitMem}"
-           errorProperty="tests.failed"
-           failureProperty="tests.failed">
-      <classpath refid="compile.classpath"/>
-      <jvmarg value="-Djava.io.tmpdir=${JS}/test-tmp" />
-      <jvmarg value="${bigStack}" />
-      <formatter type="plain" usefile="true"/>
-      <batchtest fork="true" todir="${junit.dir}">
-        <formatter type="brief" usefile="false" />
-        <formatter type="xml" />
-        <fileset dir="${build}">
-          <include name="**/StrictJUTest.class"/>
-          <exclude name="**/*$*.class"/>
-        </fileset>
-      </batchtest>
-    </junit>
-    <delete dir="${JS}/test-tmp" />
-    <fail message="Tests expected to pass are failing!" if="tests.failed"/>
-  </target>
-
   <target name="testDisambiguator"
           description="Run the disambiguator tests">
     <mkdir dir="${test.results}"/>
@@ -937,7 +910,6 @@ This is the main Ant build file.
         <fileset dir="${build}">
           <include name="**/NightlyParserJUTest.class"/>
           <include name="**/UnparserJUTest.class"/>
-          <include name="**/StrictJUTest.class"/>
           <include name="**/WithJUTest.class"/>
           <include name="**/DisambiguatorJUTest.class"/>
           <include name="**/TranslatorJUTest.class"/>

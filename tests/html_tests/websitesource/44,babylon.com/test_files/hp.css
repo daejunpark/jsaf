@@ -1,0 +1,90 @@
+.wrapcontiner {
+	HEIGHT: 1149px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/homepage/bg_img.jpg); BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: center 105px; MARGIN-TOP: 35px; background-size: 2050px 1149px
+}
+.wrap_footer {
+	BACKGROUND-COLOR: transparent
+}
+.wrapNav {
+	POSITION: absolute; FILTER: alpha(opacity=90); TOP: -36px; -webkit-opacity: 0.9; -moz-opacity: 0.9
+}
+.content {
+	HEIGHT: 850px
+}
+.continer {
+	MARGIN: 0px auto; WIDTH: 960px
+}
+.goglobal {
+	FONT-SIZE: 144px; FONT-FAMILY: "Museo-500", arial; FONT-WEIGHT: 500; COLOR: #18496d; TEXT-ALIGN: center; PADDING-TOP: 190px; MARGIN-TOP: -36px; LETTER-SPACING: -6px
+}
+.slogenH2 {
+	FONT-SIZE: 22px; FONT-FAMILY: "MuseoSans-500", arial; FONT-WEIGHT: 500; COLOR: #0b5891; TEXT-ALIGN: center; MARGIN-TOP: -14px
+}
+[lang='ger'].slogenH2 {
+	FONT-SIZE: 16px
+}
+[lang='fre'].goglobal {
+	FONT-SIZE: 93px
+}
+[lang='spa'].goglobal {
+	FONT-SIZE: 110px; LETTER-SPACING: 0px
+}
+[lang='ita'].goglobal {
+	MARGIN-BOTTOM: 10px; FONT-SIZE: 135px
+}
+[lang='ptg'].goglobal {
+	MARGIN-BOTTOM: 10px; FONT-SIZE: 135px
+}
+[lang='jpn'].goglobal {
+	MARGIN-BOTTOM: 10px; FONT-SIZE: 90px
+}
+[lang='ptg'].slogenH2 {
+	FONT-SIZE: 18px
+}
+.wrapDownloadLeft {
+	HEIGHT: 70px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/homepage/hr_shadow_left.png); BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: left 35px; MARGIN: 0px auto; WIDTH: 570px
+}
+.wrapDownloadRight {
+	HEIGHT: 70px; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/homepage/hr_shadow_right.png); BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: right 35px; WIDTH: 570px
+}
+.download {
+	CURSOR: pointer; FONT-SIZE: 21px; BORDER-TOP: #cfcfcf 5px solid; HEIGHT: 60px; FONT-FAMILY: "MuseoSans-500", arial; BORDER-RIGHT: #cfcfcf 5px solid; BORDER-BOTTOM: #cfcfcf 5px solid; COLOR: #fff; TEXT-ALIGN: center; MARGIN: 15px auto 0px; BORDER-LEFT: #cfcfcf 5px solid; LINE-HEIGHT: 1.2; WIDTH: 240px; BACKGROUND-COLOR: #80b946; -webkit-transition: all .2s ease; -moz-transition: all .2s ease; -ms-transition: all .2s ease; -o-transition: all .2s ease; transition: all .2s ease; border-radius: 5px
+}
+[lang='ger'].download {
+	FONT-SIZE: 22px; LINE-HEIGHT: 1.3
+}
+[lang='fre'].download {
+	FONT-SIZE: 22px; LINE-HEIGHT: 1.3
+}
+[lang='spa'].download {
+	FONT-SIZE: 22px; LINE-HEIGHT: 1.3
+}
+[lang='eng'].download {
+	LINE-HEIGHT: 2.8
+}
+[lang='ara'].download {
+	LINE-HEIGHT: 2.8
+}
+[lang='ita'].download {
+	LINE-HEIGHT: 2.8
+}
+[lang='ptg'].download {
+	LINE-HEIGHT: 2.8
+}
+[lang='heb'].download {
+	LINE-HEIGHT: 2.8
+}
+[lang='jpn'].download {
+	LINE-HEIGHT: 2.8
+}
+.download:hover {
+	BACKGROUND-COLOR: #6da436
+}
+.facebook_fotter:hover {
+	BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/facebook_footer_hover_hp.png)
+}
+.liveChat {
+	DISPLAY: none
+}
+.ajaxLoaderClass {
+	HEIGHT: 100%; BACKGROUND-IMAGE: url(http://img.babylon.com/site/images/babylon10/nav/ajax-loader-site.gif); BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: center center; WIDTH: 100%
+}

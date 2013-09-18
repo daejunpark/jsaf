@@ -19,6 +19,7 @@ import kr.ac.kaist.jsaf.nodes.IRRoot
 import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.useful.Pair
 import edu.rice.cs.plt.tuple.{Option => JOption}
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMBuilder
 
 ////////////////////////////////////////////////////////////////////////////////
 // CFG Builder
@@ -48,6 +49,10 @@ object CFGMain {
       Config.setLibMode(Shell.params.opt_Library)
       System.out.println("Library mode enabled.")
     }
+    // Unrolling count
+    Config.setDefaultUnrollingCount(Shell.params.opt_unrollingCount)
+    // For-in Unrolling count
+    Config.setDefaultForinUnrollingCount(Shell.params.opt_forinunrollingCount)
 
     var return_code = 0
     val irOpt: JOption[IRRoot] = Shell.fileToIR(fileNames, Shell.toOption(Shell.params.opt_OutFileName))

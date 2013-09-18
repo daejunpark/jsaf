@@ -1,0 +1,516 @@
+article {
+	display: block;
+}
+aside {
+	display: block;
+}
+details {
+	display: block;
+}
+figcaption {
+	display: block;
+}
+figure {
+	display: block;
+}
+footer {
+	display: block;
+}
+header {
+	display: block;
+}
+hgroup {
+	display: block;
+}
+menu {
+	display: block;
+}
+nav {
+	display: block;
+}
+section {
+	display: block;
+}
+body {
+	background: rgb(255, 255, 255); font: 0.7em/1.3em Verdana, Arial, Helvetica, sans-serif; margin: 10px; font-size-adjust: none; font-stretch: normal;
+}
+.sp {
+	background: url("/static/img/latest.png") no-repeat; margin: 0px 0px -3px; width: 11px; height: 12px; display: inline-block;
+}
+.dl-torrent {
+	background-position: -36px -111px; margin: 0px 3px -3px 0px;
+}
+.dl-magnet {
+	background-position: -46px -111px; margin: 0px 3px -1px 0px; width: 13px;
+}
+.vip {
+	background-position: -13px -99px;
+}
+.trus {
+	background-position: -1px -99px;
+}
+.help {
+	background-position: -25px -99px;
+}
+.admin {
+	width: 28px; height: 11px;
+}
+.mod {
+	width: 28px; height: 11px;
+}
+.smod {
+	width: 28px; height: 11px;
+}
+.admin {
+	background-position: 0px -87px;
+}
+.smod {
+	background-position: -27px -87px;
+}
+.mod {
+	background-position: -54px -87px;
+}
+.twitter {
+	background-position: -44px -123px; width: 16px; height: 16px;
+}
+#write_comment {
+	background-position: -25px -110px; margin: 0px 4px -1px 0px; height: 10px;
+}
+#tools {
+	margin: 1em auto -1em; text-align: right; line-height: 30px; overflow: hidden; clear: both; max-width: 728px;
+}
+#tools form {
+	background: rgb(246, 241, 238); padding: 0px 5px; float: left;
+}
+#delete a {
+	color: rgb(255, 0, 0);
+}
+#check a {
+	color: rgb(0, 0, 0);
+}
+#check a:hover {
+	color: rgb(0, 153, 0);
+}
+#checked {
+	color: rgb(0, 153, 0);
+}
+a {
+	color: rgb(0, 0, 153); text-decoration: none; border-bottom-color: rgb(0, 0, 0); border-bottom-width: 1px; border-bottom-style: dotted;
+}
+a:link {
+	color: rgb(0, 0, 153); text-decoration: none; border-bottom-color: rgb(0, 0, 0); border-bottom-width: 1px; border-bottom-style: dotted;
+}
+a:visited {
+	color: rgb(0, 0, 153); text-decoration: none; border-bottom-color: rgb(0, 0, 0); border-bottom-width: 1px; border-bottom-style: dotted;
+}
+a:focus {
+	color: rgb(0, 0, 153); text-decoration: none; border-bottom-color: rgb(0, 0, 0); border-bottom-width: 1px; border-bottom-style: dotted;
+}
+a:hover {
+	border-bottom-color: rgb(0, 0, 153); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#icons a {
+	border-bottom-color: currentColor !important; border-bottom-width: 0px !important; border-bottom-style: none !important;
+}
+h1 a:hover {
+	border-bottom-color: currentColor !important; border-bottom-width: 0px !important; border-bottom-style: none !important;
+}
+.sp {
+	border-bottom-color: currentColor !important; border-bottom-width: 0px !important; border-bottom-style: none !important;
+}
+tr a {
+	border-bottom-color: currentColor !important; border-bottom-width: 0px !important; border-bottom-style: none !important;
+}
+#logo a {
+	border-bottom-color: currentColor !important; border-bottom-width: 0px !important; border-bottom-style: none !important;
+}
+.promoimglink {
+	border-bottom-color: currentColor !important; border-bottom-width: 0px !important; border-bottom-style: none !important;
+}
+table a:hover {
+	text-decoration: underline;
+}
+.download a:hover {
+	border-color: rgb(0, 153, 0); text-decoration: none !important;
+}
+img {
+	border-bottom-color: currentColor !important; border-bottom-width: 0px !important; border-bottom-style: none !important;
+}
+img:hover {
+	border-bottom-color: currentColor !important; border-bottom-width: 0px !important; border-bottom-style: none !important;
+}
+table {
+	border-collapse: collapse; empty-cells: show;
+}
+th {
+	padding: 4px; border-right-color: rgb(255, 255, 255); border-right-width: 1px; border-right-style: solid;
+}
+td {
+	padding: 4px;
+}
+ul {
+	list-style: none;
+}
+hr {
+	border-width: 1px 0px 0px; border-style: solid none none; border-color: rgb(221, 221, 221) currentColor currentColor;
+}
+fieldset {
+	border: 0px currentColor;
+}
+legend {
+	display: none;
+}
+#error {
+	border-width: 1px 0px; border-style: solid; border-color: rgb(246, 241, 238); margin: 2em auto; padding: 9px 20px; color: rgb(68, 68, 68);
+}
+#error span {
+	margin: 3px 0px 5px; color: rgb(170, 0, 0); font-weight: bold; display: block;
+}
+#info {
+	
+}
+h1 {
+	
+}
+h2 {
+	background: rgb(246, 241, 238); padding: 4px 0.5%; width: 98%; clear: both; font-size: 125%; border-bottom-color: rgb(210, 185, 166); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#logo a {
+	background: url("/static/img/latest.png") no-repeat 0px 0px; margin: -12px 10px 0px 0px; width: 82px; height: 86px; float: left;
+}
+#logo span {
+	display: none;
+}
+header nav {
+	margin: -5px 0px 0px -8px; padding: 0px; float: left;
+}
+header nav ul {
+	margin: 0px; padding: 0px;
+}
+header nav ul li {
+	padding: 0px 9px; line-height: 11px; border-right-color: rgb(51, 51, 51); border-right-width: 1px; border-right-style: solid; float: left;
+}
+header nav ul li:last-child {
+	border: 0px currentColor;
+}
+#topsearch {
+	margin: 0px; padding: 0px; float: left;
+}
+#topsearch form > input {
+	margin-bottom: 5px;
+}
+#topsearch label {
+	margin: 0px 5px 0px 0px; padding: 0px;
+}
+#topsearch label input {
+	margin: 0px 3px 0px 0px; top: 5px; vertical-align: top; position: relative;
+}
+.ads {
+	margin: 0px; padding: 0px; overflow: hidden; z-index: -999;
+}
+.ads iframe {
+	margin: 0px; padding: 0px; overflow: hidden; z-index: -999;
+}
+#top468 {
+	margin: -15px 1em -25px 0px; width: 468px; float: right;
+}
+#right-sky {
+	width: 180px; margin-top: 2em;
+}
+#left-sky {
+	width: 180px; margin-top: 2em;
+}
+#right-sky {
+	float: right;
+}
+#left-sky {
+	float: left;
+}
+#right-sky iframe {
+	text-align: left; margin-left: 20px;
+}
+#left-sky iframe {
+	text-align: right; margin-right: 20px; float: right;
+}
+#bottom728 {
+	margin: auto; width: 728px;
+}
+#top728 {
+	margin: auto; width: 728px;
+}
+footer {
+	margin: 0em auto; text-align: center;
+}
+footer #stats {
+	margin: 2em 0px; color: rgb(102, 102, 102); clear: both; font-size: 0.9em;
+}
+.rss span {
+	display: none;
+}
+.kopimi span {
+	display: none;
+}
+.rss {
+	background-position: 0px -124px; width: 16px; height: 16px;
+}
+.kopimi {
+	background-position: -60px -111px; margin: 1em 0px 0px; width: 21px; height: 21px;
+}
+.ssl {
+	background-position: -36px -99px;
+}
+#fp {
+	margin: 0px auto 20px; text-align: center; display: block;
+}
+#fp h1 a {
+	background: url("/static/img/tpb.jpg") no-repeat; margin: 0px auto; border: 0px currentColor; width: 275px; height: 295px; display: block;
+}
+#fp h1 a span {
+	visibility: hidden;
+}
+#fp #bnr a {
+	border: 0px currentColor; top: 0px; width: 205px; height: 205px; right: 0px; position: absolute;
+}
+#fp #bnr img {
+	border: 0px currentColor;
+}
+#fp #navlinks {
+	white-space: nowrap;
+}
+#fp #navlinks a {
+	margin: 0px 2px;
+}
+#fp #inp input {
+	padding: 3px; width: 390px;
+}
+.https_form {
+	background: url("/static/img/icon-https.gif") no-repeat 100% 50% rgb(255, 255, 224);
+}
+#fp #inp span {
+	padding: 0px 15px; width: 1em; line-height: 12px; font-size: 9px; float: right; position: absolute;
+}
+#fp #howdl a {
+	border: 0px currentColor; line-height: 20px; font-size: 13px;
+}
+#details {
+	background: rgb(246, 241, 238); margin: 2em auto; padding: 0px 1.5em 0.5em; overflow: hidden; max-width: 625px;
+}
+#upload {
+	background: rgb(246, 241, 238); margin: 2em auto; padding: 0px 1.5em 0.5em; overflow: hidden; max-width: 625px;
+}
+#details h1 {
+	background: rgb(210, 185, 166); margin: 0px -1.5em; padding: 0.4em 1em 0.6em 1.5em; letter-spacing: 0.07em; font-size: 1.2em; font-weight: bold; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#upload h1 {
+	background: rgb(210, 185, 166); margin: 0px -1.5em; padding: 0.4em 1em 0.6em 1.5em; letter-spacing: 0.07em; font-size: 1.2em; font-weight: bold; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#details h1 span {
+	float: right;
+}
+#details dl {
+	margin: 0.9em 3%; width: 43%; line-height: 140%; clear: right; float: left;
+}
+#details dt {
+	color: rgb(123, 86, 58); font-weight: bold; float: left;
+}
+#details #col1 dd {
+	padding: 0px 0px 0px 20%;
+}
+#details #col2 dd {
+	padding: 0px 0px 0px 30%;
+}
+#delete a {
+	background: rgb(210, 185, 166); padding: 3px 9px; font-weight: bold;
+}
+#check a {
+	background: rgb(210, 185, 166); padding: 3px 9px; font-weight: bold;
+}
+#checked {
+	background: rgb(210, 185, 166); padding: 3px 9px; font-weight: bold;
+}
+#edit a {
+	background: rgb(210, 185, 166); padding: 3px 9px; font-weight: bold;
+}
+#details #write_comment_div {
+	padding: 2em 0px 0px; text-align: right; clear: both; display: none;
+}
+#details #write_comment_div textarea {
+	resize: both;
+}
+#social {
+	padding: 10px 0px; line-height: 12px; float: left;
+}
+#social * {
+	border: 0px currentColor; margin-right: 5px; float: left;
+}
+#social .flattr {
+	float: right;
+}
+#details .download {
+	width: 460px; clear: both;
+}
+#details #social {
+	width: 460px; clear: both;
+}
+#details .download a {
+	font: bold 1em/2.5em Verdana; color: rgb(0, 153, 0); text-transform: uppercase; margin-right: 10px; font-size-adjust: none; font-stretch: normal;
+}
+#details .download a:hover {
+	text-decoration: underline;
+}
+#details .download a.dl-torrent {
+	background-position: 0px -398px;
+}
+#details .download a.dl-magnet {
+	background-position: 0px -421px; margin-left: 1em;
+}
+#details #nfo pre {
+	background: rgb(255, 255, 255); margin: 0px; padding: 10px; border: 1px solid rgb(210, 185, 166); width: 600px; line-height: 0.9em; font-family: "Courier New", Courier, monospace; font-size: 11px; white-space: pre-wrap; min-height: 50px; overflow-wrap: break-word;
+}
+#upload .nfo {
+	background: rgb(255, 255, 255); margin: 0px; padding: 10px; border: 1px solid rgb(210, 185, 166); width: 600px; line-height: 0.9em; font-family: "Courier New", Courier, monospace; font-size: 11px; white-space: pre-wrap; min-height: 50px; overflow-wrap: break-word;
+}
+#torrentpic {
+	margin: 1em 1em 0px 0px; float: right;
+}
+#comments {
+	font-size: 0.9em;
+}
+#comments header {
+	margin: 1.5em 0px 0.3em;
+}
+#details #comments time {
+	color: rgb(187, 150, 122);
+}
+#details #comments time::before {
+	content: "at ";
+}
+#details #comments time::after {
+	content: ":";
+}
+#details #comments div {
+	background: rgb(255, 255, 255);
+}
+#comments h2 {
+	margin: 1em 0px; padding: 0px; border: 0px currentColor; color: rgb(123, 86, 58);
+}
+#upload table {
+	width: 100%;
+}
+#upload td {
+	padding: 0.7em 1em 0.9em 0px; width: 20%; border-bottom-color: rgb(232, 220, 210); border-bottom-width: 1px; border-bottom-style: dashed;
+}
+#upload tr:nth-last-child(-n+2) td {
+	border: 0px currentColor;
+}
+#upload td + td {
+	border-color: rgb(239, 227, 217); width: 70%;
+}
+#upload label {
+	color: rgb(123, 86, 58); font-weight: bold;
+}
+#upload #tname {
+	width: 83.5%;
+}
+#upload #torrent {
+	width: 83.5%;
+}
+#upload .moreinfo {
+	font-size: 80%; display: block; position: absolute;
+}
+#upload select {
+	width: 200px;
+}
+#upload input#torrent {
+	width: 300px;
+}
+#upload textarea.nfo {
+	overflow: auto; margin-top: 10px; min-height: 300px; resize: vertical;
+}
+table#list {
+	margin: 2em auto; width: 100%; max-width: 999px;
+}
+table#list th {
+	background: rgb(210, 185, 166); height: 1em; text-align: left; white-space: nowrap;
+}
+table#list th a {
+	color: rgb(0, 0, 0);
+}
+table#list tr {
+	background: rgb(246, 241, 238);
+}
+table#list tr:hover {
+	background: rgb(255, 255, 255);
+}
+.tar {
+	text-align: right;
+}
+.tal {
+	text-align: right;
+}
+#viewswitch {
+	font-weight: normal;
+}
+#viewswitch a {
+	font-weight: bold;
+}
+table#list span.has-cover {
+	background-position: 0px -111px; width: 12px;
+}
+table#list span.has-comment {
+	background-position: -13px -111px;
+}
+table#list a.dl-torrent span {
+	display: none;
+}
+table#list a.dl-magnet span {
+	display: none;
+}
+table#list span.has-comment span {
+	display: none;
+}
+table#list span.has-cover span {
+	display: none;
+}
+table#list .dl-torrent {
+	margin: 0px -1px -3px 0px;
+}
+table#list .dl-magnet {
+	margin: 0px 0px -2px;
+}
+#login {
+	margin: 0px auto 3em; max-width: 330px;
+}
+#register {
+	margin: 0px auto 3em; max-width: 330px;
+}
+#recover {
+	margin: 0px auto 3em; max-width: 330px;
+}
+.form input {
+	float: right;
+}
+.form input[type='submit'] {
+	margin-top: 0.5em;
+}
+.form_msg {
+	text-align: right;
+}
+#settings table {
+	margin: 0px auto 3em; border: 0px solid rgb(51, 51, 51);
+}
+#settings table tr > * {
+	padding: 0.2em 1em; text-align: left;
+}
+#pubpro {
+	border: 1px solid rgb(51, 51, 51); min-height: 300px;
+}
+#pubpro ul {
+	text-align: center;
+}
+#pubpro ul li {
+	padding: 0px 5px; float: left;
+}
+#pubpro #pic {
+	padding: 5px; border: 1px solid rgb(244, 244, 244); clear: both; float: left;
+}

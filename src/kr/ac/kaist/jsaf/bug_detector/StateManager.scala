@@ -20,7 +20,10 @@ import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.CallContext._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.nodes.{Node => ANode}
+import kr.ac.kaist.jsaf.nodes.ASTNode
+import kr.ac.kaist.jsaf.nodes_util.NodeFactory
 import kr.ac.kaist.jsaf.nodes_util.NodeRelation
+import kr.ac.kaist.jsaf.nodes_util.NodeUtil
 
 class StateManager(cfg: CFG, typing: TypingInterface, semantics: Semantics, varManager: VarManager = null) {
 /*

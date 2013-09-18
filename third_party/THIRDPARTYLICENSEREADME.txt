@@ -6,9 +6,6 @@ This directory includes the following third_party software:
 * ASTGen (The BSD License)
   See http://sourceforge.net/projects/astgen
 
-* CLOC (The GNU General Public License (GPL) Version 2.0)
-  See http://cloc.sourceforge.net/#License
-
 * Commons IO (The Apache Software License Version 2.0)
   See http://commons.apache.org/io/
 
@@ -20,6 +17,9 @@ This directory includes the following third_party software:
 
 * JUnit 3.8.1 (The Common Public License Version 1.0)
   See http://prdownloads.sourceforge.net/junit/junit
+
+* JLine 2.12 (The BSD License)
+  See http://jline.github.io/jline2/
 
 * Lift (The Apache Software License Version 2.0)
   See https://www.assembla.com/spaces/liftweb/wiki/JSON_Support

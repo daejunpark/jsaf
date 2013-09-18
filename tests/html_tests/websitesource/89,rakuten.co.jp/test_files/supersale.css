@@ -1,0 +1,15 @@
+#ritMenuArea .ritGenre dd.inner01 li.ritSpGenreTtl {
+	padding: 0px 0px 3px 15px !important; color: rgb(191, 0, 0); font-weight: bold;
+}
+#ritMenuArea .ritGenre dd.inner01 li.ritSpGenreBdr {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_01.gif") repeat-x left bottom !important; margin: 0px 15px 5px !important; width: 85%;
+}
+#ritMenuArea .ritGenre dd.inner01 li.ritSpGenreBdr a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 4px 4px; margin: 0px 0px 5px !important; padding-left: 13px !important;
+}
+.ritSpTimeSale {
+	background: rgb(255, 255, 255); margin: 0px 2px 0px 0px; padding: 10px 0px 8px 13px; border-left-color: rgb(200, 200, 200); border-left-width: 1px; border-left-style: solid;
+}
+.ritSpTimeSaleritSpTimeSale a {
+	display: block;
+}

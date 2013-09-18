@@ -22,6 +22,7 @@ class ModInstWalker(env: Env, var path: Path, program: Any) extends Walker {
 
   override def walk(node: Any): Any = node match {
     case SProgram(_, STopLevel(_, _, stmts)) => walk(stmts)
+    case SSourceElements(_, stmts, _) => walk(stmts)
     case SModDecl(_, name, STopLevel(_, _, stmts)) =>
       // TODO: Arguments
       path = name.getText :: path
@@ -31,7 +32,9 @@ class ModInstWalker(env: Env, var path: Path, program: Any) extends Walker {
       val exp: List[SourceElement] = (new ModExpWalker(env, path, stmts)).doit
       val upd: List[SourceElement] = (new ModUpdWalker(env, path, stmts)).doit
       path = path.tail
-      val f: LHS = SFunExpr(MH.defInfo, SFunctional(Nil, Nil, fds ::: vds ::: exp ::: upd ::: inst, SId(MH.defInfo, "", None, false), List(MH.argumentsId)))
+      val f: LHS = SFunExpr(MH.defInfo, SFunctional(Nil, Nil,
+                                                    SSourceElements(MH.defInfo, fds ::: vds ::: exp ::: upd ::: inst, false),
+                                                    SId(MH.defInfo, "", None, false), List(MH.argumentsId)))
       SBlock(MH.defInfo, List(
         SExprStmt(MH.defInfo, SAssignOpApp(MH.defInfo,
           SVarRef(MH.defInfo, SId(MH.defInfo, name.getText, None, false)),

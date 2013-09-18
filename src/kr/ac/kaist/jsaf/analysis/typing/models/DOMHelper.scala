@@ -166,9 +166,10 @@ object DOMHelper {
     // HTML5
     case "CANVAS"  =>
       HTMLCanvasElement.default_getInsList
+    case "DATALIST"  =>
+      HTMLDataListElement.default_getInsList
     case _ =>
-      System.err.println("* Warning: " + tagname + " - not a valid tag name.")
-      List()
+      HTMLUnknownElement.default_getInsList
   }
   
   def RaiseDOMException(h:Heap, ctx:Context, es:Set[Int]): (Heap,Context) = {
@@ -243,12 +244,13 @@ object DOMHelper {
     val propv_fun = PropValue(v_fun)
     val propv_target = PropValue(v_target)
     val event_list = s match {
-      case StrTop | OtherStr => List("#LOAD", "#UNLOAD", "#KEYBOARD", "#MOUSE", "#OTHER")
+      case StrTop | OtherStr => List("#LOAD", "#UNLOAD", "#KEYBOARD", "#MOUSE", "#MESSAGE", "#OTHER")
       case OtherStrSingle(s_ev) =>
         if (isLoadEventAttribute(s_ev)) List("#LOAD")
         else if (isUnloadEventAttribute(s_ev)) List("#UNLOAD")
         else if (isKeyboardEventAttribute(s_ev) || isKeyboardEventProperty(s_ev)) List("#KEYBOARD")
         else if (isMouseEventAttribute(s_ev) || isMouseEventProperty(s_ev)) List("#MOUSE")
+        else if (isMessageEventAttribute(s_ev) || isMessageEventProperty(s_ev)) List("#MESSAGE")
         else if (isOtherEventAttribute(s_ev) || isOtherEventProperty(s_ev))List("#OTHER")
         else List()
       case NumStrSingle(_) => /* Error ?*/ List()
@@ -334,7 +336,14 @@ object DOMHelper {
     attr=="click" || attr=="dbclick" || attr=="mousedown" || attr=="mouseup" ||
     attr=="mouseover" || attr=="mousemove" || attr=="mouseout" ||
       // for jQuery
-    attr=="scroll" || attr=="mouseleave" ||attr=="mouseenter"
+    attr=="scroll" || attr=="mouseleave" || attr=="mouseenter"
+  }
+
+  def isMessageEventAttribute(attr: String): Boolean = {
+    attr=="onmessage"
+  }
+  def isMessageEventProperty(attr: String): Boolean = {
+    attr=="message"
   }
 
   def isOtherEventAttribute(attr: String): Boolean = {
@@ -349,6 +358,8 @@ object DOMHelper {
     attr=="compositionstart" || attr=="compositionend" || 
     // HTML 5
     attr=="hashchange" ||
+    // input
+    attr=="input" ||
     // for jQuery
     attr=="error" || attr == "focusin" || attr =="focusout"
   }
@@ -356,7 +367,28 @@ object DOMHelper {
   def isReadyEventProperty(attr: String): Boolean = {
     attr == "DOMContentLoaded" || attr == "onreadystatechange"
   }
-
+  
+  /* DOM Tree API */
+  // check if a dom node with the location 'l_target' is an inclusive descendant of the node with the locaiton 'l_root'
+  def contains(h: Heap, lset_visited: LocSet, l_root: Loc, l_target: Loc): Boolean = {
+    if (!lset_visited.contains(l_root)) {
+      if(l_root == l_target)
+        true
+      else {
+        // check childrens of 'l_root'next elements
+        val lset_children = Helper.Proto(h, l_root, AbsString.alpha("childNodes"))._2.foldLeft(LocSetBot)((lset, l_n) =>
+          lset ++ Helper.Proto(h, l_n, NumStr)._2)
+        lset_children.foldLeft(false)((b, l_child) => 
+          if(contains(h, lset_visited + l_root, l_child, l_target)==false) 
+            b
+          else
+            true
+         )
+      }
+    }
+    else
+      false
+  }
 
   def findByAttr(h: Heap, l_root: Loc, attr_name: String, s: AbsString, contain: Boolean): LocSet = {
     def search(lset_visited: LocSet, l_this: Loc): LocSet = {
@@ -535,11 +567,18 @@ object DOMHelper {
   private val reg_blank_combi = """"^([\s]+|>|\+|~)$""".r
   // tokens
   private val reg_token = """\*|[\w]+|>|\+|~|#[\w\-]+|\.[\w\-]+|\[[\w\-]+\]|[\s]+""".r
+  // tokenizer for jQuery
+  private val jq_token = """\*|[\w]+|>|\+|~|#[\w\-]+|\.[\w\-]+|\[[\w\-]+\]|[\s]+|:[\w\-]+""".r
+  // tokenizer for options of jQuery
+  private val jq_options = """^:([\w\-_]+)$""".r
+  // jQuery filter
+  private val jq_filter = """^(#[\w\-]+|\.[\w\-]+|:[\w\-]+|\[[\w\-]+\])$""".r
 
 
   /* simple, partial implementation of querySelectorAll */
   def querySelectorAll(h: Heap, l_root: Loc, s_selector: String): LocSet = {
-    val tokens = reg_token.findAllIn(s_selector.trim).toList
+//    val tokens = reg_token.findAllIn(s_selector.trim).toList
+    val tokens = jq_token.findAllIn(s_selector.trim).toList
 
     def filterByTag(lset: LocSet, name: String):LocSet = {
       if (name == "*")
@@ -565,6 +604,7 @@ object DOMHelper {
         case "#" => filterById(lset, filter.drop(1))
         case "." => filterByClass(lset, filter.drop(1))
         case "[" => filterByAttr(lset, filter.drop(1).dropRight(1))
+        case ":" => lset
         case _ =>  filterByTag(lset, filter)
       }
     }
@@ -599,9 +639,23 @@ object DOMHelper {
           if (prev.isEmpty) {
             token match {
               case ">"|"+"|"~" => LocSetBot // syntax error
+              // alphabet
               case reg_tag(name) =>
-                val lset_next = findByTag(h, HTMLDocument.GlobalDocumentLoc, AbsString.alpha(token))
+                val lset_next = findByTag(h, HTMLDocument.GlobalDocumentLoc, AbsString.alpha(name))
                 iter(tail, lset_next, Some(token))
+              // start with '.'
+              case reg_class(name) =>
+                val lset_next = findByClass(h, HTMLDocument.GlobalDocumentLoc, AbsString.alpha(name))
+                iter(tail, lset_next, Some(token))
+              // start with '#'
+              case reg_id(name) =>
+                val lset_next = findById(h, HTMLDocument.GlobalDocumentLoc, AbsString.alpha(name))
+                iter(tail, lset_next, Some(token))
+              // start with ':'
+              case jq_options(_) =>
+                val lset_all = findByTag(h, HTMLDocument.GlobalDocumentLoc, AbsString.alpha("*"))
+                iter(tail, lset_all, Some(token))
+              // others
               case reg_filter(f) =>
                 val lset_all = findByTag(h, HTMLDocument.GlobalDocumentLoc, AbsString.alpha("*"))
                 val lset_next = filter(lset_all, f)
@@ -661,7 +715,7 @@ object DOMHelper {
    }  */
   }
   val lset_ret = iter(tokens, LocSetBot, None)
-  println("return: " + lset_ret)
+  //println("return: " + lset_ret)
   lset_ret
 }
 
@@ -702,29 +756,109 @@ object DOMHelper {
     h.update(l_tag, o_tag).update(l_child, o_child)
   }
 
-  def appendChild(h: Heap, lset_target: LocSet, lset_child: LocSet): Heap = {
-    if (!lset_target.isEmpty && !lset_child.isEmpty) {
-      val h_1 = lset_target.foldLeft(h)((hh, l_node) => {
-        /* current childNodes */
-        val lset_ns = Helper.Proto(hh, l_node, AbsString.alpha("childNodes"))._2
-        val h_append = lset_ns.foldLeft(hh)((hhh, l_ns) => {
-          /* length of current childNodes */
-          val n_len = Operator.ToUInt32(Helper.Proto(hhh, l_ns, AbsString.alpha("length")))
+  // check the HIERARCHY_REQUEST_ERR exception in the DOM tree 
+  def checkHierarchyException(funname: String, h: Heap, lset_target: LocSet, lset_child: LocSet): Unit = {
+    println(funname + " - CHECK: HIERARCHY_REQUEST_ERR exception")
+    /*
+    checkHRE(h, lset_target, lset_child) match {
+      case BoolTop =>
+        println(funname + " - WARNING: HIERARCHY_REQUEST_ERR exception: you are trying to attach a parent of a target node as a child")
+      case BoolTrue =>
+        println(funname + " - ERROR: HIERARCHY_REQUEST_ERR exception: you are trying to attach a parent of a target node as a child")
+      case _ => ()
+    }
+    */
+  }
+
+
+  private def checkNFE(h: Heap, lset_target: LocSet, lset_child: LocSet): AbsBool = {
+   
+    if(!lset_target.isEmpty) {     
+      lset_target.foldLeft[AbsBool](BoolBot)((b, l_node) => {
+        // childNodes
+        val lset_childNodes = Helper.Proto(h, l_node, AbsString.alpha("childNodes"))._2
+        lset_childNodes.foldLeft(b)((bb, l_child) => {
+          val n_len = Operator.ToUInt32(Helper.Proto(h, l_child, AbsString.alpha("length")))
           n_len match {
             case UIntSingle(n) =>
+              val n_index = (0 until n.toInt).indexWhere((i) => {                
+                BoolTrue <= Operator.bopSEq(Helper.Proto(h, l_child, AbsString.alpha(i.toString)), Value(lset_child))._1._3
+                }
+              )
+              // exception
+              if(n_index < 0)
+                b + BoolTrue
+              // no exception
+              else
+                b + BoolFalse
+            // exception may occur
+            case NumTop | UInt => BoolTop
+            // cannot fall into this case
+            case _ =>
+              println("INTERNAL ERROR : childnodes.length is not either of UIntSingle, NumTop, and UInt") 
+              bb
+          }
+        })
+      })
+    }
+    else BoolTrue
+ 
+  }
+
+  // check the NOT_FOUND_ERR exception in the DOM tree 
+  def checkNotFoundException(funname: String, h: Heap, lset_target: LocSet, lset_child: LocSet): Unit = {
+    println(funname + " - CHECK: NOT_FOUND_ERR exception")
+    checkNFE(h, lset_target, lset_child) match {
+      case BoolTop =>
+        println(funname + " - WARNING: NOT_FOUND_ERR exception: the argument node is not a child of a target node")
+      case BoolTrue =>
+        println(funname + " - ERROR: NOT_FOUND_ERR exception: the argument node is not a child of a target node")
+      case _ => ()
+    }
+  }
+
+
+
+  def appendChild(h: Heap, lset_target: LocSet, lset_child: LocSet): Heap = {
+    if (!lset_target.isEmpty && !lset_child.isEmpty) {
+      val (h_1, lastC_lset) = lset_target.foldLeft((h, LocSetBot))((d, l_node) => {
+        /* lastChild */
+        val l_childlset = Helper.Proto(d._1, l_node, AbsString.alpha("lastChild"))._2
+        /* current childNodes */
+        val lset_ns = Helper.Proto(d._1, l_node, AbsString.alpha("childNodes"))._2
+        val (h_append, f_childlset) = lset_ns.foldLeft((d._1, LocSetBot))((dd, l_ns) => {
+          /* length of current childNodes */
+          val n_len = Operator.ToUInt32(Helper.Proto(dd._1, l_ns, AbsString.alpha("length")))
+          val hhh_2 = n_len match {
+            case UIntSingle(n) =>
               /* childNodes[length] := new_child */
-              val hhh_1 = Helper.PropStore(hhh, l_ns, AbsString.alpha(n.toInt.toString), Value(lset_child))
+              val hhh_1 = Helper.PropStore(dd._1, l_ns, AbsString.alpha(n.toInt.toString), Value(lset_child))
               /* childNodes["length"] := length + 1 */
               Helper.PropStore(hhh_1, l_ns, AbsString.alpha("length"), Value(AbsNumber.alpha(n+1)))
             case NumTop | UInt =>
-              Helper.PropStore(hhh, l_ns, NumStr, Value(lset_child))
-            case _ => hhh /* exception ?? */
+              Helper.PropStore(dd._1, l_ns, NumStr, Value(lset_child))
+            case _ => dd._1 /* exception ?? */
           }
+          val firstChild_lset =  Helper.Proto(hhh_2, l_ns, AbsString.alpha(0.toInt.toString))._2
+          (hhh_2, dd._2 ++ firstChild_lset)
         })
-        val o_target = h_append(l_node).update("lastChild", PropValue(ObjectValue(Value(lset_child),F,T,F)))
-        h_append.update(l_node, o_target)
+        // 'firstChild' update
+        val h_append_1 = Helper.PropStore(h_append, l_node, AbsString.alpha("firstChild"),Value(f_childlset))
+        // 'lastChild' update
+        val h_append_2 = Helper.PropStore(h_append_1, l_node, AbsString.alpha("lastChild"), Value(lset_child))
+        (h_append_2, d._2 ++ l_childlset)
       })
-      h_1
+      // 'nextSibling' update'
+      val h_2 = lastC_lset.foldLeft(h_1)((_h, l) => Helper.PropStore(_h, l, AbsString.alpha("nextSibling"),Value(lset_child)))
+      // 'parentNode', 'previousSibling' update of the appended child
+      lset_child.foldLeft(h_2)((_h, l) => {
+        val _h_1 = Helper.PropStore(_h, l, AbsString.alpha("parentNode"),Value(lset_target))
+        if(!lastC_lset.isEmpty)
+          Helper.PropStore(_h_1, l, AbsString.alpha("previousSibling"), Value(lastC_lset))
+        else
+          Helper.PropStore(_h_1, l, AbsString.alpha("previousSibling"), Value(NullTop))
+
+      })
     }
     else
       HeapBot
@@ -807,7 +941,27 @@ object DOMHelper {
           }
         })
       })
-      h_1
+      /* 'parentNode', 'previousSibling', 'nextSibling' update of the removed child */
+      val (h_2, preSib, nextSib) = lset_child.foldLeft((h_1, ValueBot, ValueBot))((d, l) => {
+        val preS = Helper.Proto(d._1, l, AbsString.alpha("previousSibling"))
+        val nextS = Helper.Proto(d._1, l, AbsString.alpha("nextSibling"))
+        val h_2_1 = Helper.PropStore(d._1, l, AbsString.alpha("parentNode"), Value(NullTop))
+        val h_2_2 = Helper.PropStore(h_2_1, l, AbsString.alpha("previousSibling"), Value(NullTop))
+        val h_3_3 = Helper.PropStore(h_2_2, l, AbsString.alpha("nextSibling"), Value(NullTop))
+        (h_3_3, preS + d._2, nextS + d._3)
+      })
+
+      /* 'nextSibling' update of the previous sibling of the removed child */
+      val h_3 = preSib._2.foldLeft(h_2)((_h, l) =>
+        Helper.PropStore(_h, l, AbsString.alpha("nextSibling"), nextSib)
+      )
+      
+      /* 'previousSibling' update of the next sibling of the removed child */
+      val h_4 = nextSib._2.foldLeft(h_3)((_h, l) =>
+        Helper.PropStore(_h, l, AbsString.alpha("previousSibling"), preSib)
+      )
+
+      h_4
     }
     else
       HeapBot
@@ -853,6 +1007,26 @@ object DOMHelper {
         v + v_attr_1
       })
   }
+
+  def removeAttribute(h: Heap, lset_elem: LocSet, s_attr: AbsString): Heap = {
+    lset_elem.foldLeft(h)((_h, l_elem) => {
+      // read the list of attributes in the current node
+      val lset_attrs = Helper.Proto(_h, l_elem, AbsString.alpha("attributes"))._2
+      lset_attrs.foldLeft(_h)((__h, l_attr) => {
+        var h_1 = Helper.Delete(__h, l_attr, s_attr)._1
+        val attributes_obj = h_1(l_attr)
+        val length_pval = attributes_obj("length")._1._1._1._1
+        // decrease 'length' of 'attributes' by 1
+        val length_val = Helper.toNumber(length_pval) match {
+          case UIntSingle(v) => UIntSingle(v-1)
+          case _ => Helper.toNumber(length_pval)
+        }
+        val attributes_obj_new = attributes_obj.update(AbsString.alpha("length"), PropValue(ObjectValue(length_val, T, T, T)))
+        h_1.update(l_attr, attributes_obj_new)
+      })
+    })
+  }
+
   def setAttribute(h: Heap, l_elem: Loc ,l_attr: Loc, l_text: Loc, l_child1: Loc, l_child2: Loc, attr_name:AbsString, attr_val: AbsString): Heap = {
     /* imprecise semantics : no exception handling */
     if(attr_name </ StrBot || attr_val </StrBot) {
@@ -915,7 +1089,7 @@ object DOMHelper {
       HeapBot
   }
 
-  def setAttribute(h: Heap, lset_elem: LocSet ,l_attr: Loc, l_text: Loc, l_child1: Loc, l_child2: Loc, attr_name:AbsString, attr_val: AbsString): Heap = {
+  def setAttribute(h: Heap, lset_elem: LocSet ,l_attr: Loc, l_text: Loc, l_child1: Loc, l_child2: Loc, l_classentry: Loc, attr_name:AbsString, attr_val: AbsString): Heap = {
     /* imprecise semantics : no exception handling */
     if(attr_name </ StrBot || attr_val </StrBot) {
       val name = PropValue(ObjectValue(attr_name, F, T, T))
@@ -929,8 +1103,7 @@ object DOMHelper {
 
       // objects for 'childNodes' of the Attr node
       val child_obj_list1 = DOMNamedNodeMap.getInsList(1)
-      val child_obj1 = child_obj_list1.foldLeft(ObjEmpty.update(AbsString.alpha("0"), PropValue(ObjectValue(l_text, T, T, T))))((obj, v) =>
-        obj.update(AbsString.alpha(v._1), v._2))
+      val child_obj1 = child_obj_list1.foldLeft(ObjEmpty.update(AbsString.alpha("0"), PropValue(ObjectValue(l_text, T, T, T))))((attr_nameobj, v) => attr_nameobj.update(AbsString.alpha(v._1), v._2))
       // objects for 'childNodes' of the Text node
       val child_obj_list2 = DOMNamedNodeMap.getInsList(0)
       val child_obj2 = child_obj_list2.foldLeft(ObjEmpty)((obj, v) => obj.update(AbsString.alpha(v._1), v._2))
@@ -973,7 +1146,8 @@ object DOMHelper {
           h_in2.update(l_attr, attr_obj).update(l_text, text_obj).update(l_attributes, attributes_obj_new).update(l_child1, child_obj1).update(l_child2, child_obj2)
         })
       })
-      h_5
+      // ClassTable update
+      classTableUpdate(h_5, attr_name, lset_elem, l_classentry)
     }
     else
       HeapBot
@@ -1004,5 +1178,44 @@ object DOMHelper {
       }
     }
     iter(l)
+  }
+
+  // update classTable used by getElementsByClassName
+  def classTableUpdate(h: Heap, className: AbsString, target: LocSet, newNode_loc: Loc): Heap = {
+    /* class look-up table update */
+    val class_table = h(ClassTableLoc)
+    val new_heap =
+      if(className </ StrBot){
+       val mapped_node = class_table(className)
+       // in case that the mapping does not exist
+       if(mapped_node._2 </ AbsentBot) {
+         val nodelist_proplist = DOMNodeList.getInsList(1) ++ List(
+           ("0", PropValue(ObjectValue(Value(target), T, T, T))))
+         val nodelist_obj = nodelist_proplist.foldLeft(ObjEmpty)((o, p) => o.update(p._1, p._2))
+         val new_class_table = class_table.update(className, PropValue(ObjectValue(newNode_loc, T, T, T)))
+         h.update(newNode_loc, nodelist_obj).update(ClassTableLoc, new_class_table)
+       }
+       // in case that the mapping already exists
+       else {
+         // we know only a single location can be mapped for a class name in the inital heap  
+         val loc_nodelist = mapped_node._1._1._1._2
+         val new_h = loc_nodelist.foldLeft(h)((_h, l) => {
+           val obj_nodelist = h(l)
+           val new_nodelist = AbsNumber.concretize(obj_nodelist("length")._1._1._1._1._4) match {
+             case Some(n) => 
+               val len = n.toInt
+               obj_nodelist.update(
+                 AbsString.alpha(len.toString), PropValue(ObjectValue(Value(target), T, T, T))).update(
+                 AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(len + 1), T, T, T)))
+             case None => obj_nodelist.update(NumStr, PropValue(ObjectValue(Value(target), T, T, T)))
+           }
+           _h.update(l, new_nodelist)
+         })
+         new_h
+       }
+     }
+     else h
+
+     new_heap
   }
 }

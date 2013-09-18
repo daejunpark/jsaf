@@ -17,57 +17,24 @@ import kr.ac.kaist.jsaf.analysis.asserts._
 import kr.ac.kaist.jsaf.analysis.asserts.{ASSERTHelper => AH}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
+import kr.ac.kaist.jsaf.bug_detector.Range15_4_5_1
 import kr.ac.kaist.jsaf.nodes_util.EJSOp
 import kr.ac.kaist.jsaf.nodes_util.IRFactory
+import kr.ac.kaist.jsaf.nodes_util.NodeFactory
+import kr.ac.kaist.jsaf.nodes_util.NodeRelation
+import kr.ac.kaist.jsaf.nodes_util.NodeUtil
+import kr.ac.kaist.jsaf.nodes.ASTNode
 import kr.ac.kaist.jsaf.nodes.IROp
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.analysis.typing.{PreSemanticsExpr => PSE}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolTrue => BTrue, BoolFalse => BFalse}
 import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
-import kr.ac.kaist.jsaf.utils.regexp._
-import kr.ac.kaist.jsaf.analysis.cfg.CFGNoOp
-import kr.ac.kaist.jsaf.analysis.cfg.CFGAPICall
-import scala.Some
-import kr.ac.kaist.jsaf.analysis.cfg.CFGAllocArg
-import kr.ac.kaist.jsaf.analysis.cfg.CFGNull
-import kr.ac.kaist.jsaf.analysis.cfg.CFGLoad
-import kr.ac.kaist.jsaf.analysis.cfg.CFGVarRef
-import kr.ac.kaist.jsaf.analysis.cfg.CFGStore
-import kr.ac.kaist.jsaf.analysis.cfg.CFGExprStmt
-import kr.ac.kaist.jsaf.analysis.cfg.CFGDelete
-import kr.ac.kaist.jsaf.analysis.asserts.Id
-import kr.ac.kaist.jsaf.analysis.cfg.CFGBin
-import kr.ac.kaist.jsaf.analysis.cfg.CFGUserId
-import kr.ac.kaist.jsaf.analysis.cfg.CFGConstruct
-import kr.ac.kaist.jsaf.analysis.cfg.CFGAllocArray
-import kr.ac.kaist.jsaf.analysis.asserts.Prop
-import kr.ac.kaist.jsaf.analysis.cfg.CFGThrow
-import kr.ac.kaist.jsaf.analysis.cfg.CFGUn
-import kr.ac.kaist.jsaf.analysis.cfg.CFGAlloc
-import kr.ac.kaist.jsaf.analysis.cfg.CFGCall
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
-import kr.ac.kaist.jsaf.analysis.typing.domain.OtherStrSingle
-import kr.ac.kaist.jsaf.analysis.cfg.CFGInternalCall
-import kr.ac.kaist.jsaf.analysis.cfg.CFGDeleteProp
-import kr.ac.kaist.jsaf.analysis.cfg.CFGAsyncCall
-import kr.ac.kaist.jsaf.analysis.cfg.CFGNumber
-import kr.ac.kaist.jsaf.analysis.cfg.CFGFunExpr
-import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
-import kr.ac.kaist.jsaf.analysis.asserts.RelExpr
-import kr.ac.kaist.jsaf.analysis.cfg.CFGReturn
-import kr.ac.kaist.jsaf.analysis.cfg.Block
-import kr.ac.kaist.jsaf.analysis.typing.domain.State
-import kr.ac.kaist.jsaf.analysis.cfg.CFGCatch
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.cfg.CFGAssert
-import kr.ac.kaist.jsaf.analysis.typing.domain.NumStrSingle
-
 
 class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
   // Inter-procedural edge set.
   // These edges are added while processing call instruction.
   val ipSuccMap: MMap[ControlPoint, MMap[ControlPoint, (Context,Obj)]] = MHashMap()
-  def getIPSucc(cp: ControlPoint): Option[MMap[ControlPoint, (Context,Obj)]] = ipSuccMap.get(cp)
+  def getIPSucc(cp: ControlPoint): Option[MMap[ControlPoint, (Context,Obj)]] = ipSuccMap.synchronized { ipSuccMap.get(cp) }
 
   val dummyInfo = IRFactory.makeInfo(IRFactory.dummySpan("CFGSemantics"))
 
@@ -181,7 +148,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
     }
   }
 
-  def C(cp: ControlPoint, c: Cmd, s: State): (State, State) = {
+  def C(cp: ControlPoint, c: Cmd, s: State, cps: Option[CPStackSet] = None): (State, State) = {
     val h = s._1
     val ctx = s._2
 
@@ -213,7 +180,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
         case Block(insts) => {
           insts.foldLeft(((h, ctx), (HeapBot, ContextBot)))(
             (states, inst) => {
-              val ((h_new, ctx_new), (he_new, ctxe_new)) = I(cp, inst, states._1._1, states._1._2, states._2._1, states._2._2)
+              val ((h_new, ctx_new), (he_new, ctxe_new)) = I(cp, inst, states._1._1, states._1._2, states._2._1, states._2._2, cps)
               // System.out.println("##### Instruction : " + inst)
               // System.out.println("in heap#####\n" + DomainPrinter.printHeap(4, states._1._1, cfg))
               // System.out.println("out heap#####\n" + DomainPrinter.printHeap(4, h_new, cfg))
@@ -352,11 +319,11 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
     }
   }
 
-  def I(cp: ControlPoint, i: CFGInst, h: Heap, ctx: Context, he: Heap, ctxe: Context) = {
+  def I(cp: ControlPoint, i: CFGInst, h: Heap, ctx: Context, he: Heap, ctxe: Context, cps: Option[CPStackSet] = None) = {
     // for debug
-    // System.out.println("\nInstruction: "+i)
-    // System.out.println("in heap#####\n" + DomainPrinter.printHeap(4, h, cfg))
-    // System.out.println("in context#####\n" + DomainPrinter.printContext(4, ctx))
+//    System.out.println("\nInstruction: "+i)
+//    System.out.println("in heap#####\n" + DomainPrinter.printHeap(4, h, cfg))
+//    System.out.println("in context#####\n" + DomainPrinter.printContext(4, ctx))
     if (h == HeapBot) {
       ((h, ctx), (he, ctxe))
     } else {
@@ -461,7 +428,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
           val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
           ((h_2, ctx_2), (he + h_e, ctxe + ctx_e))
         }
-        case CFGStore(_, _, obj, index, rhs) => {
+        case CFGStore(_, info, obj, index, rhs) => {
           // TODO: toStringSet should be used in more optimized way
           val (h_1, ctx_1, es_1) = {
             val (v_index, es_index) = SE.V(index, h, ctx)
@@ -506,8 +473,11 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                         // 3.d
                         val n_value = Helper.toNumber(v_rhs._1) + Helper.toNumber(Helper.objToPrimitive(v_rhs._2, "Number"))
                         val ex_len =
-                          if (BFalse <= (n_value === v_newLen._1._4)) Set[Exception](RangeError)
-                          else Set[Exception]()
+                          if (BFalse <= (n_value === v_newLen._1._4)) {
+                            if (Config.typingInterface != null)
+                              Config.typingInterface.signal(info.getSpan, Range15_4_5_1, v_newLen._1._4.toString, n_value.toString)
+                            Set[Exception](RangeError)
+                          } else Set[Exception]()
                         val h_normal =
                           if (BTrue <= (n_value === v_newLen._1._4)) {
                             // 3.f
@@ -622,7 +592,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
           val h_7 = Helper.VarStore(h_6, lhs, fvalue)
           ((h_7, ctx_3), (he, ctxe))
         }
-        case CFGConstruct(_, _, cons, thisArg, arguments, a_new) => {
+        case CFGConstruct(_, info, cons, thisArg, arguments, a_new) => {
           // cons, thisArg and arguments must not be bottom
           val l_r = addrToLoc(a_new, Recent)
           val (h_1, ctx_1) = Helper.Oldify(h, ctx, a_new)
@@ -644,6 +614,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
             val o_f = h_1(l_f)
             val fids = o_f("@construct")._1._3
             fids.foreach {fid => {
+              if (Config.typingInterface != null && !cfg.isUserFunction(fid))
+                Config.typingInterface.setSpan(info.getSpan)
               val ccset = cc_caller.NewCallContext(cfg, fid, l_r, lset_this)
               ccset.foreach {case (cc_new, o_new) => {
                 val value = PropValue(ObjectValue(v_arg, BTrue, BFalse, BFalse))
@@ -652,8 +624,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                     update(cfg.getArgumentsName(fid), value).
                     update("@scope", o_f("@scope")._1)
                 addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
-                addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_1, o_old)
-                addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_1, o_old)
+                addReturnEdge(((fid,LExit), cc_new), cp_aftercall, cp, ctx_1, o_old, cps)
+                addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, cp, ctx_1, o_old, cps)
               }}
             }}
           }}
@@ -682,7 +654,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
 
           ((h_3, ctx_1), s_1)
         }}
-        case CFGCall(_, _, fun, thisArg, arguments, a_new) => {
+        case CFGCall(_, info, fun, thisArg, arguments, a_new) => {
           // cons, thisArg and arguments must not be bottom
           val l_r = addrToLoc(a_new, Recent)
           val (h_1, ctx_1) = Helper.Oldify(h, ctx, a_new)
@@ -704,6 +676,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
             val o_f = h_1(l_f)
             val fids = o_f("@function")._1._3
             fids.foreach {fid => {
+              if (Config.typingInterface != null && !cfg.isUserFunction(fid))
+                Config.typingInterface.setSpan(info.getSpan)
               val ccset = cc_caller.NewCallContext(cfg, fid, l_r, lset_this)
               ccset.foreach {case (cc_new, o_new) => {
                 val value = PropValue(ObjectValue(v_arg, BTrue, BFalse, BFalse))
@@ -712,8 +686,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                     update(cfg.getArgumentsName(fid), value).
                     update("@scope", o_f("@scope")._1)
                 addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
-                addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_1, o_old)
-                addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_1, o_old)
+                addReturnEdge(((fid,LExit), cc_new), cp_aftercall, cp, ctx_1, o_old, cps)
+                addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, cp, ctx_1, o_old, cps)
               }}
             }}
           }}
@@ -788,7 +762,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
 
           ((HeapBot, ContextBot), (h_1 + h_e, ctx + ctx_e))
         }
-        case CFGInternalCall(_, _, lhs, fun, arguments, loc) => {
+        case CFGInternalCall(_, info, lhs, fun, arguments, loc) => {
           (fun.toString, arguments, loc)  match {
             case ("<>Global<>toObject", List(expr), Some(a_new)) => {
               val (v,es_1) = SE.V(expr, h, ctx)
@@ -854,14 +828,128 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
               val lset_base = Helper.LookupBase(h, x_2)
               ((Helper.VarStore(h, lhs, Value(lset_base)), ctx), (he, ctxe))
             }
-            case ("<>Global<>iteratorInit", List(expr), None) => {
-              ((h, ctx), (he, ctxe))
+            case ("<>Global<>iteratorInit", List(expr), Some(a_new)) => {
+              if (Config.defaultForinUnrollingCount == 0) {
+                ((h, ctx), (he, ctxe))
+              } else {
+                // Works only if for-in loops are unrolled.
+                val (v,_) = SE.V(expr, h, ctx)
+                val v_obj = Value(PValue(UndefBot, NullBot, v._1._3, v._1._4, v._1._5), v._2)
+                val (v_1, h_1, ctx_1, _) = Helper.toObject(h, ctx, v_obj, a_new)
+                if (!(h_1 <= HeapBot)) {
+                  val lset = v_1._2
+                  val init_obj = ObjEmpty.update("index", PropValue(AbsNumber.alpha(0)))
+
+                  val list_obj: Obj =
+                    if (lset.size > 0) {
+                      try {
+                        val props = Helper.CollectProps(h_1, lset)
+                        //                    System.out.println("* iteratorInit size: "+props.size)
+                        // TODO The order of properties should be fixed.
+                        val array = props.toArray
+                        (0 to array.length - 1).foldLeft(init_obj)((o, i) => {
+                          o.update(i.toString, PropValue(AbsString.alpha(array(i))))
+                        })
+                      } catch {
+                        // not a concrete case
+                        case e: InternalError => {
+                          init_obj.update(AbsString.NumTop, PropValue(StrTop))
+                        }
+                      }
+                    } else {
+                      init_obj.update(AbsString.NumTop, PropValue(StrTop))
+                    }
+
+                  val list_obj_2 = if (v._1._1 </ UndefBot || v._1._2 </ NullBot) {
+                    // if a given object is nullable, the first iteration can be canceled.
+                    val ov = list_obj("0")
+                    list_obj.update("0", ov._1, AbsentTop)
+                  } else {
+                    list_obj
+                  }
+
+                  // reuse a_new. therefore, drop 'h_1, ctx_1'.
+                  val l_new = addrToLoc(a_new, Recent)
+                  val h_2 = h.update(l_new, list_obj_2)
+                  val h_3 = Helper.VarStore(h_2, lhs, Value(l_new))
+                  ((h_3, ctx), (he, ctxe))
+                } else {
+                  ((HeapBot, ContextBot), (HeapBot, ContextBot))
+                }
+              }
             }
             case ("<>Global<>iteratorHasNext", List(expr_2, expr_3), None) => {
-              ((Helper.VarStore(h, lhs, Value(PValue(BoolTop))), ctx), (he, ctxe))
+              if (Config.defaultForinUnrollingCount == 0) {
+                ((Helper.VarStore(h, lhs, Value(PValue(BoolTop))), ctx), (he, ctxe))
+              } else {
+                // exception can be ignored since expr_3 is a temporal variable.
+                val (v_iter, _) = SE.V(expr_3, h, ctx)
+                val lset = v_iter._2
+
+                if (lset.size > 0) {
+                  // lset must be a single location.
+                  assert(lset.size == 1)
+                  val l_obj = lset.head
+                  val o = h(l_obj)
+
+                  val idx = o("index")._1._2._1._4
+                  val s_idx: AbsString = Helper.toString(PValue(idx))
+                  val pv = o(s_idx)
+                  val name = pv._1._2._1._5
+                  val absent = pv._2
+
+                  val b_1 =
+                    if (!(name <= StrBot)) AbsBool.alpha(true)
+                    else BoolBot
+                  val b_2 =
+                    if (!(absent <= AbsentBot)) AbsBool.alpha(false)
+                    else BoolBot
+                  val b = b_1 + b_2
+
+                  val (h_1, ctx_1) =
+                    if (b </ BoolBot) {
+                      (Helper.VarStore(h, lhs, Value(PValue(b))), ctx)
+                    } else {
+                      (HeapBot, ContextBot)
+                    }
+
+                  ((h_1, ctx_1), (he, ctxe))
+                } else {
+                  ((HeapBot, ContextBot), (HeapBot, ContextBot))
+                }
+              }
             }
             case ("<>Global<>iteratorNext", List(expr_2, expr_3), None) => {
-              ((Helper.VarStore(h, lhs, Value(PValue(StrTop))), ctx), (he, ctxe))
+              if (Config.defaultForinUnrollingCount == 0) {
+                ((Helper.VarStore(h, lhs, Value(PValue(StrTop))), ctx), (he, ctxe))
+              } else {
+                val (v_iter, _) = SE.V(expr_3, h, ctx)
+                val lset = v_iter._2
+
+                if (lset.size > 0) {
+                  // lset must be a single location.
+                  assert(lset.size == 1)
+                  val l_obj = lset.head
+                  val o = h(l_obj)
+
+                  // increasing iterator index
+                  val idx = o("index")._1._2._1._4
+                  val s_idx: AbsString = Helper.toString(PValue(idx))
+                  val next_idx = idx.getConcreteValue() match {
+                    case Some(n) => AbsNumber.alpha(n + 1)
+                    case None => idx
+                  }
+                  // index strong update
+                  val h_1 = h.update(l_obj, h(l_obj).update("index", PropValue(next_idx)))
+
+                  val name = o(s_idx)._1._2._1._5
+                  val h_2 = Helper.VarStore(h_1, lhs, Value(name))
+
+                  ((h_2, ctx), (he, ctxe))
+                } else {
+                  ((HeapBot, ContextBot), (HeapBot, ContextBot))
+                }
+              }
             }
             case _ => {
               if (!Config.quietMode)
@@ -873,7 +961,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
         case CFGNoOp(_, _, _) => {
           ((h, ctx), (he, ctxe))
         }
-        case CFGAPICall(_, model, fun, args) => {
+        case CFGAPICall(info, model, fun, args) => {
           val semantics = ModelManager.getModel(model).getSemanticMap()
           semantics.get(fun) match {
             case Some(f) =>
@@ -896,16 +984,18 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
 
   // Adds inter-procedural call edge from call-node cp1 to entry-node cp2.
   // Edge label ctx records callee context, which is joined if the edge existed already.
-  def addCallEdge(cp1: ControlPoint, cp2: ControlPoint, ctx: Context, obj: Obj) = {
+  def addCallEdge(cp1: ControlPoint, cp2: ControlPoint, ctx: Context, obj: Obj) = ipSuccMap.synchronized {
     ipSuccMap.get(cp1) match {
       case None =>
         ipSuccMap.update(cp1, MHashMap((cp2, (ctx, obj))))
       case Some(map2) =>
-        map2.get(cp2) match {
-          case None =>
-            map2.update(cp2, (ctx, obj))
-          case Some((old_ctx, old_obj)) =>
-            map2.update(cp2, (old_ctx + ctx, old_obj + obj))
+        map2.synchronized {
+          map2.get(cp2) match {
+            case None =>
+              map2.update(cp2, (ctx, obj))
+            case Some((old_ctx, old_obj)) =>
+              map2.update(cp2, (old_ctx + ctx, old_obj + obj))
+          }
         }
     }
   }
@@ -913,34 +1003,50 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
   // Adds inter-procedural return edge from exit or exit-exc node cp1 to after-call node cp2.
   // Edge label ctx records caller context, which is joined if the edge existed already.
   // If change occurs, cp1 is added to worklist as side-effect.
-  def addReturnEdge(cp1: ControlPoint, cp2: ControlPoint, ctx: Context, obj: Obj) = {
+  def addReturnEdge(cp1: ControlPoint, cp2: ControlPoint, cp3: ControlPoint, ctx: Context, obj: Obj, cps: Option[CPStackSet]): Unit = {
+    cps match {
+      case Some(cps) =>
+        val newCPSet = new CPStackSet
+        for(cpStack <- cps) {
+          val newCPStack = cpStack.clone()
+          newCPStack.push(cp3)
+          newCPSet.add(newCPStack)
+        }
+        addReturnEdge(cp1, cp2, ctx, obj, Some(newCPSet))
+        //addReturnEdge(cp1, cp2, ctx, obj, None)
+      case None => addReturnEdge(cp1, cp2, ctx, obj, None)
+    }
+  }
+  def addReturnEdge(cp1: ControlPoint, cp2: ControlPoint, ctx: Context, obj: Obj, cps: Option[CPStackSet] = None): Unit = ipSuccMap.synchronized {
     ipSuccMap.get(cp1) match {
       case None =>
         ipSuccMap.update(cp1, MHashMap((cp2, (ctx, obj))))
-        worklist.add(cp1)
+        worklist.add(cp1, cps, true)
       case Some(map2) =>
-        map2.get(cp2) match {
-          case None =>
-            map2.update(cp2, (ctx, obj))
-            worklist.add(cp1)
-          case Some((old_ctx, old_obj)) =>
-            var changed = false
-            val new_ctx =
-              if (ctx <= old_ctx) old_ctx
-              else {
-                changed = true
-                old_ctx + ctx
+        map2.synchronized {
+          map2.get(cp2) match {
+            case None =>
+              map2.update(cp2, (ctx, obj))
+              worklist.add(cp1, cps, true)
+            case Some((old_ctx, old_obj)) =>
+              var changed = false
+              val new_ctx =
+                if (ctx <= old_ctx) old_ctx
+                else {
+                  changed = true
+                  old_ctx + ctx
+                }
+              val new_obj =
+                if (obj <= old_obj) old_obj
+                else {
+                  changed = true
+                  old_obj + obj
+                }
+              if (changed) {
+                map2.update(cp2, (new_ctx, new_obj))
+                worklist.add(cp1, cps, true)
               }
-            val new_obj =
-              if (obj <= old_obj) old_obj
-              else {
-                changed = true
-                old_obj + obj
-              }
-            if (changed) {
-              map2.update(cp2, (new_ctx, new_obj))
-              worklist.add(cp1)
-            }
+          }
         }
     }
   }
@@ -979,7 +1085,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
 
   def X(re: RelExpr, h: Heap, ctx: Context):(Heap, Context) = {
     re match {
-      case RelExpr(first, op, second) if AH.isConstantPruing(op, second) => 
+      case RelExpr(first, op, second) if AH.isConstantPruing(op, second) =>
         val v1 = SE.V(first, h, ctx)._1
         PruningConst(first match {
           case id@CFGVarRef(_, _) => Id(id)
@@ -1819,14 +1925,128 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
             val lset_base = PreHelper.LookupBase(h, PureLocalLoc, x_2)
             (PreHelper.VarStore(h, PureLocalLoc, lhs, Value(lset_base)), ctx)
           }
-          case ("<>Global<>iteratorInit", List(expr), None) => {
-            (h, ctx)
+          case ("<>Global<>iteratorInit", List(expr), Some(a_new)) => {
+            if (Config.defaultForinUnrollingCount == 0) {
+              (h, ctx)
+            } else {
+              // Works only if for-in loops are unrolled.
+              val (v,_) = PSE.V(expr, h, ctx, PureLocalLoc)
+              val v_obj = Value(PValue(UndefBot, NullBot, v._1._3, v._1._4, v._1._5), v._2)
+              val (v_1, h_1, _, _) = PreHelper.toObject(h, ctx, v_obj, a_new)
+              if (!(h_1 <= HeapBot)) {
+                val lset = v_1._2
+                val init_obj = ObjEmpty.update("index", PropValue(AbsNumber.alpha(0)))
+
+                val list_obj: Obj =
+                  if (lset.size > 0) {
+                    try {
+                      val props = Helper.CollectProps(h_1, lset)
+                      //                    System.out.println("* iteratorInit size: "+props.size)
+                      // TODO The order of properties should be fixed.
+                      val array = props.toArray
+                      (0 to array.length - 1).foldLeft(init_obj)((o, i) => {
+                        o.update(i.toString, PropValue(AbsString.alpha(array(i))))
+                      })
+                    } catch {
+                      // not a concrete case
+                      case e: InternalError => {
+                        init_obj.update(AbsString.NumTop, PropValue(StrTop))
+                      }
+                    }
+                  } else {
+                    init_obj.update(AbsString.NumTop, PropValue(StrTop))
+                  }
+
+                val list_obj_2 = if (v._1._1 </ UndefBot || v._1._2 </ NullBot) {
+                  // if a given object is nullable, the first iteration can be canceled.
+                  val ov = list_obj("0")
+                  list_obj.update("0", ov._1, AbsentTop)
+                } else {
+                  list_obj
+                }
+
+                // reuse a_new. therefore, drop 'h_1, ctx_1'.
+                val l_new = addrToLoc(a_new, Recent)
+                val h_2 = h.update(l_new, list_obj_2)
+                val h_3 = PreHelper.VarStore(h_2, PureLocalLoc, lhs, Value(l_new))
+                (h_3, ctx)
+              } else {
+                (HeapBot, ContextBot)
+              }
+            }
           }
           case ("<>Global<>iteratorHasNext", List(expr_2, expr_3), None) => {
-            (PreHelper.VarStore(h, PureLocalLoc, lhs, Value(PValue(BoolTop))), ctx)
+            if (Config.defaultForinUnrollingCount == 0) {
+              (PreHelper.VarStore(h, PureLocalLoc, lhs, Value(PValue(BoolTop))), ctx)
+            } else {
+              // exception can be ignored since expr_3 is a temporal variable.
+              val (v_iter, _) = PSE.V(expr_3, h, ctx, PureLocalLoc)
+              val lset = v_iter._2
+
+              if (lset.size > 0) {
+                // lset must be a single location.
+                assert(lset.size == 1)
+                val l_obj = lset.head
+                val o = h(l_obj)
+
+                val idx = o("index")._1._2._1._4
+                val s_idx: AbsString = PreHelper.toString(PValue(idx))
+                val pv = o(s_idx)
+                val name = pv._1._2._1._5
+                val absent = pv._2
+
+                val b_1 =
+                  if (!(name <= StrBot)) AbsBool.alpha(true)
+                  else BoolBot
+                val b_2 =
+                  if (!(absent <= AbsentBot)) AbsBool.alpha(false)
+                  else BoolBot
+                val b = b_1 + b_2
+
+                val (h_1, ctx_1) =
+                  if (b </ BoolBot) {
+                    (PreHelper.VarStore(h, PureLocalLoc, lhs, Value(PValue(b))), ctx)
+                  } else {
+                    (HeapBot, ContextBot)
+                  }
+
+                (h_1, ctx_1)
+              } else {
+                (HeapBot, ContextBot)
+              }
+            }
           }
           case ("<>Global<>iteratorNext", List(expr_2, expr_3), None) => {
-            (PreHelper.VarStore(h, PureLocalLoc, lhs, Value(PValue(StrTop))), ctx)
+            if (Config.defaultForinUnrollingCount == 0) {
+              (PreHelper.VarStore(h, PureLocalLoc, lhs, Value(PValue(StrTop))), ctx)
+            } else {
+              val (v_iter, _) = PSE.V(expr_3, h, ctx, PureLocalLoc)
+              val lset = v_iter._2
+
+              if (lset.size > 0) {
+                // lset must be a single location.
+                assert(lset.size == 1)
+                val l_obj = lset.head
+                val o = h(l_obj)
+
+                // increasing iterator index
+                val idx = o("index")._1._2._1._4
+                val s_idx: AbsString = PreHelper.toString(PValue(idx))
+                val next_idx = idx.getConcreteValue() match {
+                  case Some(n) => AbsNumber.alpha(n + 1)
+                  case None => idx
+                }
+                // index strong update
+                val h_1 = h.update(l_obj, h(l_obj).update("index", PropValue(next_idx)))
+
+                val name = o(s_idx)._1._2._1._5
+                val h_2 = PreHelper.VarStore(h_1, PureLocalLoc, lhs, Value(name))
+
+                (h_2, ctx)
+              } else {
+                (HeapBot, ContextBot)
+              }
+            }
           }
           case _ => {
             if (!Config.quietMode)

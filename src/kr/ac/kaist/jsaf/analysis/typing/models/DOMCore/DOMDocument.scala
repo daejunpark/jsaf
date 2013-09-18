@@ -19,6 +19,7 @@ import org.w3c.dom.Node
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5.DOMLocation
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLTopElement
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject.{CSSStyleDeclaration, StyleSheetList}
 import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -75,8 +76,8 @@ object DOMDocument extends DOM {
     ("adoptNode",                   AbsBuiltinFunc("DOMDocument.adoptNode", 1)),
     ("normalizeDocument",           AbsBuiltinFunc("DOMDocument.normalizeDocument", 0)),
     ("renameNode",                  AbsBuiltinFunc("DOMDocument.renameNode", 3)),
-    ("querSelector",                AbsBuiltinFunc("DOMDocument.querSelector", 0)),
-    ("querSelectorAll",             AbsBuiltinFunc("DOMDocument.querSelectorAll", 0))
+    ("querySelector",               AbsBuiltinFunc("DOMDocument.querySelector", 0)),
+    ("querySelectorAll",            AbsBuiltinFunc("DOMDocument.querySelectorAll", 0))
   )
 
   /* global */
@@ -100,18 +101,21 @@ object DOMDocument extends DOM {
           val addr1 = cfg.getAPIAddress(addr_env, 0)
           val addr2 = cfg.getAPIAddress(addr_env, 1)
           val addr3 = cfg.getAPIAddress(addr_env, 2)
+          val addr4 = cfg.getAPIAddress(addr_env, 3)
           val l_r = addrToLoc(addr1, Recent)
           val l_nodes = addrToLoc(addr2, Recent)
           val l_attributes = addrToLoc(addr3, Recent)
+          val l_style = addrToLoc(addr4, Recent)
           val (h_1, ctx_1)  = Helper.Oldify(h, ctx, addr1)
           val (h_2, ctx_2)  = Helper.Oldify(h_1, ctx_1, addr2)
           val (h_3, ctx_3)  = Helper.Oldify(h_2, ctx_2, addr3)
+          val (h_4, ctx_4)  = Helper.Oldify(h_3, ctx_3, addr4)
 
-          val s_tag = Helper.toString(Helper.toPrimitive(getArgValue(h_3, ctx_3, args, "0")))
+          val s_tag = Helper.toString(Helper.toPrimitive(getArgValue(h_4, ctx_4, args, "0")))
 
           // DOMException object with the INVALID_CHARACTER_ERR exception code
           val es = Set(DOMException.INVALID_CHARACTER_ERR)
-          val (he_1, ctxe_1) = DOMHelper.RaiseDOMException(h_3, ctx_3, es)
+          val (he_1, ctxe_1) = DOMHelper.RaiseDOMException(h_4, ctx_4, es)
 
           // object for 'childNodes' property
           val childNodes_list = DOMNodeList.getInsList(0)
@@ -120,6 +124,10 @@ object DOMDocument extends DOM {
           // object for 'attributes' property
           val attributes_list = DOMNamedNodeMap.getInsList(0)
           val attributes = attributes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+
+          // object for 'style' property
+          val style_list = CSSStyleDeclaration.getInsList()
+          val style = style_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
           
           /* imprecise semantics */
           s_tag match {
@@ -127,11 +135,12 @@ object DOMDocument extends DOM {
             case StrTop | OtherStr =>
               val element_obj_proplist = HTMLTopElement.default_getInsList()
               val element_obj = element_obj_proplist.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2, AbsentTop))
-              // 'childNodes' and 'attributes' update
+              // 'childNodes', 'attributes', 'style' update
               val element_obj_up = element_obj.update("childNodes", PropValue(ObjectValue(l_nodes, F, T, T))).update(
-                                                      "attributes", PropValue(ObjectValue(l_attributes, F, T, T)))
-              val h_4= h_3.update(l_nodes, childNodes).update(l_attributes, attributes).update(l_r, element_obj_up)
-              ((Helper.ReturnStore(h_4, Value(l_r)), ctx_3), (he + he_1, ctxe + ctxe_1))
+                                                      "attributes", PropValue(ObjectValue(l_attributes, F, T, T))).update(
+                                                      "style", PropValue(ObjectValue(l_style, T, T, T)))
+              val h_5= h_4.update(l_nodes, childNodes).update(l_attributes, attributes).update(l_style, style).update(l_r, element_obj_up)
+              ((Helper.ReturnStore(h_5, Value(l_r)), ctx_4), (he + he_1, ctxe + ctxe_1))
             // cause the INVALID_CHARACTER_ERR exception
             case NumStr | NumStrSingle(_) =>
               ((HeapBot, ContextBot), (he + he_1, ctxe + ctxe_1))
@@ -140,11 +149,12 @@ object DOMDocument extends DOM {
               // if(DOMHelper.isValidHtmlTag(tag_name)) {
                 val element_obj_proplist = DOMElement.getInsList(PropValue(ObjectValue(AbsString.alpha(tag_name), F, T, T))):::DOMHelper.getInsList(tag_name)
                 val element_obj = element_obj_proplist.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
-                // 'childNodes' and 'attributes' update
+                // 'childNodes', 'attributes', 'style' update
                 val element_obj_up = element_obj.update("childNodes", PropValue(ObjectValue(l_nodes, F, T, T))).update(
-                                                        "attributes", PropValue(ObjectValue(l_attributes, F, T, T)))
-                val h_4= h_3.update(l_nodes, childNodes).update(l_attributes, attributes).update(l_r, element_obj_up)
-                ((Helper.ReturnStore(h_4, Value(l_r)), ctx_3), (he + he_1, ctxe + ctxe_1))
+                                                        "attributes", PropValue(ObjectValue(l_attributes, F, T, T))).update(
+                                                        "style", PropValue(ObjectValue(l_style, T, T, T)))
+                val h_5= h_4.update(l_nodes, childNodes).update(l_attributes, attributes).update(l_style, style).update(l_r, element_obj_up)
+                ((Helper.ReturnStore(h_5, Value(l_r)), ctx_4), (he + he_1, ctxe + ctxe_1))
               //}
               // An invalid tag name causes the INVALID_CHARACTER_ERR exception
               //else
@@ -153,8 +163,62 @@ object DOMDocument extends DOM {
               ((HeapBot, ContextBot), (he, ctxe))
           }
         })),
-      //case "DOMDocument.createDocumentFragment" => ((h, ctx), (he, ctxe))
-      //case "DOMDocument.createTextNode" => ((h, ctx), (he, ctxe))
+      ("DOMDocument.createDocumentFragment" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+          val addr2 = cfg.getAPIAddress(addr_env, 1)
+          val l_r = addrToLoc(addr1, Recent)
+          val l_nodes = addrToLoc(addr2, Recent)
+          val (h_1, ctx_1)  = Helper.Oldify(h, ctx, addr1)
+          val (h_2, ctx_2)  = Helper.Oldify(h_1, ctx_1, addr2)
+
+          val obj_proplist = DOMDocumentFragment.getInsList
+          val obj = obj_proplist.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+          // 'childNodes' update
+          val childNodes_list = DOMNodeList.getInsList(0)
+          val childNodes = childNodes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+          val obj_up = obj.update("childNodes", PropValue(ObjectValue(l_nodes, F, T, T)))
+          // heap update
+          val h_3= h_2.update(l_nodes, childNodes).update(l_r, obj_up)
+          // returns a DocumentFragment node
+          ((Helper.ReturnStore(h_3, Value(l_r)), ctx_2), (he, ctxe))
+         })),
+      ("DOMDocument.createTextNode" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+          val addr2 = cfg.getAPIAddress(addr_env, 1)
+          val l_r = addrToLoc(addr1, Recent)
+          val l_nodes = addrToLoc(addr2, Recent)
+          val (h_1, ctx_1)  = Helper.Oldify(h, ctx, addr1)
+          val (h_2, ctx_2)  = Helper.Oldify(h_1, ctx_1, addr2)
+
+          // argument
+          val s_data = Helper.toString(Helper.toPrimitive(getArgValue(h_2, ctx_2, args, "0")))
+
+          if(s_data </ StrBot) {
+            val text_obj_proplist = DOMText.default_getInsList(PropValue(ObjectValue(s_data, T, T, T)),
+                PropValue(ObjectValue(NullTop, F, T, T)), PropValue(ObjectValue(Value(l_nodes), F, T, T)))
+            val text_obj = text_obj_proplist.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+            // 'childNodes' update
+            val childNodes_list = DOMNodeList.getInsList(0)
+            val childNodes = childNodes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+            // heap update
+            val h_3= h_2.update(l_nodes, childNodes).update(l_r, text_obj)
+            // returns a comment node
+            ((Helper.ReturnStore(h_3, Value(l_r)), ctx_2), (he, ctxe))
+          }
+          else 
+            ((HeapBot, ContextBot), (he, ctxe))
+         })),
+
       ("DOMDocument.createComment" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
@@ -163,13 +227,10 @@ object DOMDocument extends DOM {
           val addr_env = set_addr.head
           val addr1 = cfg.getAPIAddress(addr_env, 0)
           val addr2 = cfg.getAPIAddress(addr_env, 1)
-          val addr3 = cfg.getAPIAddress(addr_env, 2)
           val l_r = addrToLoc(addr1, Recent)
           val l_nodes = addrToLoc(addr2, Recent)
-          val l_attributes = addrToLoc(addr3, Recent)
           val (h_1, ctx_1)  = Helper.Oldify(h, ctx, addr1)
           val (h_2, ctx_2)  = Helper.Oldify(h_1, ctx_1, addr2)
-          val (h_3, ctx_3)  = Helper.Oldify(h_2, ctx_2, addr3)
 
           // argument
           val s_data = Helper.toString(Helper.toPrimitive(getArgValue(h_2, ctx_2, args, "0")))
@@ -181,14 +242,10 @@ object DOMDocument extends DOM {
             val childNodes_list = DOMNodeList.getInsList(0)
             val childNodes = childNodes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
             val comment_obj_up = comment_obj.update("childNodes", PropValue(ObjectValue(l_nodes, F, T, T)))
-            // 'attributes' update
-            val attributes_list = DOMNamedNodeMap.getInsList(0)
-            val attributes = attributes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
-            val comment_obj_up2 = comment_obj.update("attributes", PropValue(ObjectValue(l_attributes, F, T, T)))
             // heap update
-            val h_4= h_3.update(l_nodes, childNodes).update(l_attributes, attributes).update(l_r, comment_obj_up2)
+            val h_3= h_2.update(l_nodes, childNodes).update(l_r, comment_obj_up)
             // returns a comment node
-            ((Helper.ReturnStore(h_4, Value(l_r)), ctx_3), (he, ctxe))
+            ((Helper.ReturnStore(h_3, Value(l_r)), ctx_2), (he, ctxe))
           }
           else 
             ((HeapBot, ContextBot), (he, ctxe))
@@ -263,7 +320,7 @@ object DOMDocument extends DOM {
           val s_id = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
           if (s_id </ StrBot) {
             val lset_find = DOMHelper.findById(h, s_id)
-            val v_null = if (lset_find.isEmpty) Value(NullTop) else ValueBot
+            val v_null = if (lset_find.isEmpty || !s_id.isConcrete) Value(NullTop) else ValueBot
             /* imprecise semantic */
             ((Helper.ReturnStore(h, Value(lset_find) + v_null), ctx), (he, ctxe))
           }
@@ -321,7 +378,8 @@ object DOMDocument extends DOM {
                   .update("0", PropValue(ObjectValue(Value(lset_find), T,T,T)))
                   .update("length", PropValue(ObjectValue(AbsNumber.alpha(0), T,T,T)))
                 val h_2 = h_1.update(l_result, o_result)
-                (h_2, Value(lset_find))
+                val v_null = if (!s_selector.isConcrete) Value(NullTop) else ValueBot
+                (h_2, Value(lset_find) + v_null)
               }
             ((Helper.ReturnStore(h_ret, v_ret), ctx_1), (he, ctxe))
           }
@@ -349,7 +407,8 @@ object DOMDocument extends DOM {
                   .update(NumStr, PropValue(ObjectValue(Value(lset_find), T,T,T)))
                   .update("length", PropValue(ObjectValue(Value(UInt), T,T,T)))
                 val h_2 = h_1.update(l_result, o_result)
-                (h_2, Value(lset_find))
+                val v_null = if (!s_selector.isConcrete) Value(NullTop) else ValueBot
+                (h_2, Value(lset_find) + v_null)
               }
             ((Helper.ReturnStore(h_ret, v_ret), ctx_1), (he, ctxe))
           }
@@ -493,7 +552,7 @@ object DOMDocument extends DOM {
           if (s_id </ StrBot) {
             val obj_table = h(IdTableLoc)
             val propv_element = obj_table(s_id)
-            val v_null = if (propv_element._2 </ AbsentBot) Value(NullTop) else ValueBot
+            val v_null = if (propv_element._2 </ AbsentBot || !s_id.isConcrete) Value(NullTop) else ValueBot
             /* imprecise semantic */
             ((PreHelper.ReturnStore(h, PureLocalLoc, propv_element._1._1._1 + v_null), ctx), (he, ctxe))
           }
@@ -703,10 +762,24 @@ object DOMDocument extends DOM {
         ("xmlStandalone",   PropValue(ObjectValue((if(d.getXmlStandalone==true) T else F), T, T, T))),
         ("xmlVersion",   PropValue(ObjectValue(AbsString.alpha(d.getXmlVersion), T, T, T))),
         ("strictErrorChecking",   PropValue(ObjectValue((if(d.getStrictErrorChecking==true) T else F), F, T, T))),
-        ("documentURI",   PropValue(ObjectValue(AbsString.alpha(d.getDocumentURI), T, T, T))),
-        // HTML5 : location object
-        ("location",   PropValue(ObjectValue(DOMLocation.getInstance.get, F, T, T))))
-    // 'documentElement' in DOM Level 1 is updated after the HTMLHtmlElement node is created
+        ("documentURI",   PropValue(ObjectValue(OtherStr, F, T, T))),
+        // WHATWG HTML5 : location object
+        ("location",   PropValue(ObjectValue(DOMLocation.getInstance.get, F, T, T))),
+        
+        ("defaultView", PropValue(ObjectValue(Value(GlobalLoc), F, T, T))),
+        ("readyState", PropValue(ObjectValue(OtherStr, F, T, T))),
+        ("domain", PropValue(ObjectValue(OtherStr, T, T, T))),
+        // WHATWG DOM
+        ("head", PropValue(ObjectValue(NullTop, F, T, T))),
+        ("lastModified", PropValue(ObjectValue(StrTop, F, T, T))),
+        ("characterSet", PropValue(ObjectValue(OtherStr, F, T, T))),
+        ("URL", PropValue(ObjectValue(OtherStr, F, T, T))),
+        // DOM Style
+        ("styleSheets", PropValue(ObjectValue(StyleSheetList.loc_ins, F, T, T))),
+        // Non-standard
+        ("webkitVisibilityState", PropValue(ObjectValue(OtherStr, T, T, T)))
+      )
+    // 'documentElement' is updated after the HTMLHtmlElement node is created
     // TODO: 'implementation' in DOM Level 1, 'doctype' in DOM Level 3
     case _ => {
       System.err.println("* Warning: " + node.getNodeName + " cannot be an instance of Document.")

@@ -1,0 +1,39 @@
+.bbccom_module {
+	WIDTH: 111px
+}
+#mostPopular .bbccom_module {
+	MARGIN: 10px 0px 7px; WIDTH: 320px
+}
+#spotlight .heroLink SPAN {
+	CURSOR: pointer
+}
+.blq-js #mostPopular .livestats .panel {
+	MARGIN-LEFT: 10px; WIDTH: 326px
+}
+.blq-js #mostPopular .livestats .panel LI {
+	FLOAT: right; MARGIN-LEFT: 5px !important; WIDTH: 304px
+}
+.blq-js .livestats .panel LI A {
+	PADDING-RIGHT: 20px !important
+}
+#royalWeddingLeadUp .heroLink SPAN {
+	DISPLAY: block
+}
+BODY.bbccom_slot_module_00064 #australianOpen .bbccom_module {
+	WIDTH: 206px
+}
+BODY.bbccom_slot_module_00049 #wimbledon .bbccom_module {
+	WIDTH: 206px
+}
+BODY.bbccom_slot_module_00064 #australianOpen .bbccom_module .bbccom_text {
+	TEXT-ALIGN: left
+}
+BODY.bbccom_slot_module_00049 #wimbledon .bbccom_module .bbccom_text {
+	TEXT-ALIGN: left
+}
+BODY.bbccom_slot_module_00064 #australianOpen .bbccom_module .bbccom_image {
+	FLOAT: right
+}
+BODY.bbccom_slot_module_00049 #wimbledon .bbccom_module .bbccom_image {
+	FLOAT: right
+}

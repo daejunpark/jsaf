@@ -1,0 +1,273 @@
+#index_css {
+	display: none;
+}
+#index {
+	line-height: 160%;
+}
+#ij_block {
+	line-height: 160%;
+}
+#index p {
+	margin: 15px 0px;
+}
+#index .content {
+	padding: 5px 30px 10px;
+}
+#ij_block .content {
+	padding: 5px 30px 10px;
+}
+#index .reg {
+	padding: 0px 0px 20px;
+}
+#ij_block .reg {
+	padding: 0px 0px 20px;
+}
+#index .reg h2 {
+	margin: 0px 30px 10px;
+}
+#ij_block .reg h2 {
+	margin: 0px 30px 10px;
+}
+#index_log_after_reg {
+	width: 20px; overflow: hidden; position: absolute;
+}
+#index .reg_row {
+	padding-top: 6px;
+}
+#index .label {
+	padding: 4px 16px 0px; width: 174px; color: rgb(102, 102, 102);
+}
+#index .labeled input.text {
+	margin: 0px; width: 192px;
+}
+#index .details {
+	margin: 0px 10px; width: 190px; color: rgb(119, 119, 119); font-size: 0.9em;
+}
+#index_reg_wrap {
+	margin: 0px 196px; padding: 10px;
+}
+#index_reg_wrap .progress {
+	margin: 6px 10px 0px;
+}
+#index .terms_accepted {
+	text-align: center; color: rgb(119, 119, 119); font-size: 0.9em;
+}
+.reg_content {
+	padding: 0px 50px; line-height: 150%;
+}
+.index_terms {
+	padding: 10px 20px 20px; line-height: 170%;
+}
+.index_terms .wikiSubHeader {
+	color: rgb(69, 104, 142); font-size: 1.09em; font-weight: bold; margin-bottom: 5px; border-bottom-color: rgb(218, 225, 232); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.ij_button {
+	margin: 10px auto; width: 158px;
+}
+.ij_scr {
+	padding: 0px 20px 20px;
+}
+#ij_screens {
+	margin: 0px auto 25px;
+}
+.ijs_img {
+	width: 132px; height: 100px;
+}
+.ij_phone {
+	text-align: center;
+}
+.ij_reg_row {
+	margin: 0px auto; width: 160px; padding-top: 10px; position: relative;
+}
+#ijp_input {
+	width: 150px;
+}
+#ij_first_name {
+	width: 150px;
+}
+#ij_last_name {
+	width: 150px;
+}
+#ij_full_name {
+	width: 150px;
+}
+#ij_msg {
+	margin: 20px 0px 10px; display: none;
+}
+#ij_sex_row {
+	display: none;
+}
+#ij_sex_row .selector_container td.selector {
+	padding-top: 3px; padding-bottom: 2px;
+}
+.ij_with_arr {
+	background: url("/images/backlink.gif?4") no-repeat right -127px; padding-right: 25px;
+}
+.is_rtl1 .ij_with_arr {
+	background: url("/images/backlink.gif?4") no-repeat left -97px; padding-right: 0px; padding-left: 25px;
+}
+#ij_submit {
+	padding-right: 2px;
+}
+.is_rtl1 #ij_submit {
+	padding-right: 14px; padding-left: 2px;
+}
+.ij_form {
+	padding: 1px 0px 23px;
+}
+#ij_error {
+	margin: 5px 49px 15px; display: none;
+}
+.jpv_fixed {
+	left: 0px; top: 0px; width: 100%; z-index: 601;
+}
+.jpv_fixed div {
+	position: absolute; z-index: 630;
+}
+.jpv_fixed div div {
+	position: static;
+}
+.jpv_dark#layer_bg {
+	background: rgb(0, 0, 0); opacity: 0.7;
+}
+.jpv_dark #layer {
+	padding-bottom: 1px;
+}
+.jpv_wrap {
+	overflow: auto; z-index: 610;
+}
+.jpv_left {
+	background: url("/images/photonav.gif?1") no-repeat; top: 25px; width: 17px; height: 17px; z-index: 630; cursor: pointer; opacity: 0.4;
+}
+.jpv_close {
+	background: url("/images/photonav.gif?1") no-repeat; top: 25px; width: 17px; height: 17px; z-index: 630; cursor: pointer; opacity: 0.4;
+}
+.jpv_left {
+	
+}
+.jpv_close {
+	background-position: 0px -19px;
+}
+.jpv_cont {
+	margin: 0px auto; padding: 10px 0px 0px; width: 758px; position: relative;
+}
+.jpv_cont table {
+	margin: 0px auto;
+}
+.jpv_cont .sidesh {
+	background: rgb(0, 0, 0); width: 1px;
+}
+.jpv_cont .sidesh div {
+	width: 1px; overflow: hidden;
+}
+.jpv_cont .bottomsh {
+	background: rgb(0, 0, 0); height: 1px;
+}
+.jpv_cont .bottomsh div {
+	height: 1px; overflow: hidden;
+}
+.jpv_cont .s1 {
+	opacity: 0.05;
+}
+.jpv_cont .s2 {
+	opacity: 0.15;
+}
+.jpv_cont .s3 {
+	opacity: 0.25;
+}
+#jpv_box {
+	background: rgb(255, 255, 255); padding: 1px 0px 25px; position: relative;
+}
+#jpv_summary {
+	margin: 15px auto 0px; padding: 0px 27px; width: 600px; height: 13px;
+}
+#jpv_summary .summary {
+	color: rgb(43, 88, 122); font-weight: bold;
+}
+.jpv_data {
+	position: relative;
+}
+#jpv_comments_data {
+	margin: 25px auto 0px; width: 604px; display: none;
+}
+#jpv_desc {
+	text-align: center; color: rgb(69, 104, 142); line-height: 120%; padding-bottom: 10px; font-size: 1.18em; font-weight: bold; margin-left: 70px;
+}
+.jpv_cont .wide_column {
+	width: 394px;
+}
+#jpv_photo {
+	padding: 15px 25px; text-align: center; display: block;
+}
+#jpv_photo img {
+	margin: 0px auto; vertical-align: top;
+}
+#jpv_left_nav {
+	left: 0px; top: 11px; position: absolute; z-index: 620; cursor: pointer;
+}
+#jpv_right_nav {
+	left: 0px; top: 11px; position: absolute; z-index: 620; cursor: pointer;
+}
+.jpv_close_link {
+	padding: 15px 27px 0px;
+}
+#index_fbsign {
+	display: none; position: relative;
+}
+#index_fbsign_box {
+	display: none; position: relative;
+}
+.index_or {
+	width: 204px; text-align: center; margin-left: 185px;
+}
+.index_or_l {
+	width: 204px; height: 9px; border-bottom-color: rgb(218, 225, 232); border-bottom-width: 1px; border-bottom-style: solid; position: absolute; z-index: -1;
+}
+.index_or_s {
+	background: rgb(255, 255, 255); margin: 0px auto; padding: 0px 4px; color: rgb(136, 136, 136); display: inline-block; z-index: 2; -ms-zoom: 1;
+}
+#index_fbsign_box {
+	padding-top: 10px;
+}
+#index_fbsign_box .index_fbb {
+	width: auto;
+}
+#index_fbsign_box .index_or {
+	margin: 0px -22px;
+}
+#index_fbsign_box .index_or_s {
+	background: rgb(247, 247, 247); position: relative; z-index: 1006;
+}
+#index_fbsign_box .index_or_l {
+	z-index: 1004;
+}
+.index_fb_b button {
+	
+}
+.index_fbb {
+	width: 567px; height: 54px; bottom: 0px; position: absolute;
+}
+.index_fb_btn {
+	border-color: rgb(82, 108, 146);
+}
+.index_fb_btn button {
+	border-color: rgb(122, 148, 186) rgb(108, 135, 177) rgb(91, 120, 164); padding: 0px; text-align: left; background-image: url("/images/fb_button.png");
+}
+.index_fb_logo {
+	background: url("/images/icons/facebook_btn_icon.png") no-repeat 10px 6px; margin: -2px; width: 26px; height: 28px; vertical-align: top; border-right-color: rgb(81, 114, 149); border-right-width: 1px; border-right-style: solid; position: absolute;
+}
+.index_fb_l {
+	padding: 5px 5px 6px 10px; text-align: left; margin-left: 25px; border-left-color: rgb(89, 128, 169); border-left-width: 1px; border-left-style: solid;
+}
+.index_fb_btn button:hover .index_fb_logo {
+	border-right-color: rgb(85, 119, 160); border-right-width: 1px; border-right-style: solid;
+}
+.index_fb_btn button:active .index_fb_logo {
+	width: 25px; border-right-color: rgb(99, 133, 169); border-right-width: 1px; border-right-style: solid;
+}
+.index_fb_btn button:active .index_fb_l {
+	padding-left: 11px; margin-left: 24px; border-left-color: rgb(81, 114, 149); border-left-width: 1px; border-left-style: solid;
+}
+.index_fb_btn button:active {
+	background: rgb(94, 124, 169);
+}

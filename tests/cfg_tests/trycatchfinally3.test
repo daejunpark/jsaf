@@ -129,8 +129,8 @@ cfg_out_WCIequals=\
 \n\
 \n\
 (0,LBlock(14))\n\
-    [38] <>obj<>15 := <>Global<>toObject(y) @ #20\n\
-    [39] <>Global<>ignore6 := alloc() @ #21\n\
+    [38] <>obj<>15 := <>Global<>toObject(y) @ #22\n\
+    [39] <>Global<>ignore6 := alloc() @ #23\n\
     [40] <>Global<>ignore6["test"] := - 23.8\n\
     [41] <>obj<>15["d"] := <>Global<>ignore6\n\
 \n\
@@ -148,8 +148,8 @@ cfg_out_WCIequals=\
 \n\
 \n\
 (0,LBlock(10))\n\
-    [34] <>obj<>15 := <>Global<>toObject(y) @ #18\n\
-    [35] <>Global<>ignore6 := alloc() @ #19\n\
+    [34] <>obj<>15 := <>Global<>toObject(y) @ #20\n\
+    [35] <>Global<>ignore6 := alloc() @ #21\n\
     [36] <>Global<>ignore6["test"] := - 23.8\n\
     [37] <>obj<>15["d"] := <>Global<>ignore6\n\
 \n\

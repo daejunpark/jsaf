@@ -1,0 +1,1059 @@
+.UIContentTopper {
+	margin: 50px auto 15px; padding: 14px 0px 0px 17px; border-top-color: rgb(211, 218, 230); border-top-width: 2px; border-top-style: solid;
+}
+.UIContentTopperSlim {
+	margin: 0px auto 15px; padding: 0px 0px 0px 17px;
+}
+.UIContentTopper_footer {
+	margin: 5px auto 0px; width: 578px; font-size: 9px;
+}
+.UIContentTopper_text_container {
+	width: 465px; margin-top: 6px; float: left;
+}
+.UIContentTopper_text_headline {
+	font-size: 15px; font-weight: bold;
+}
+.UIContentTopper_text {
+	font-size: 11px; margin-top: 4px;
+}
+.UIContentTopper_large .UIContentTopper_text {
+	width: 400px;
+}
+.UIContentTopper_text_bold {
+	font-weight: bold;
+}
+.UIContentTopper_thumbnail {
+	margin: 0px 15px 0px 0px; float: left;
+}
+.UIContentTopper .verticalAlign {
+	margin-top: 8px;
+}
+.fbForBusinessWrapper {
+	margin: 0px auto; width: 980px;
+}
+.fbForBusinessContent {
+	border-bottom-color: rgb(242, 242, 242); border-bottom-width: 1px; border-bottom-style: solid; position: relative;
+}
+.fbForBusinessNoBorder {
+	border-bottom-color: currentColor; border-bottom-width: medium; border-bottom-style: none;
+}
+.fbForBusinessRightCol img {
+	padding: 1px; border: 5px solid rgb(249, 249, 249); float: right; background-color: rgb(204, 204, 204);
+}
+.fbBusinessHomeVideo {
+	border: 1px solid rgb(204, 204, 204); background-color: rgb(255, 255, 255);
+}
+.fbForBusinessContent img {
+	float: left; display: block;
+}
+.fbForBusinessFloatedLeft {
+	float: left; display: block;
+}
+.fbForBusinessPageHeader {
+	margin-top: 40px;
+}
+.fbForBusinessHomePageHeaderText {
+	margin-top: 50px;
+}
+.fbMarketingMenu {
+	list-style: none; margin: 0px 0px 20px; padding: 0px;
+}
+.fbMarketingMenu a {
+	font-size: 13px; border-top-color: rgb(229, 229, 229); border-top-width: 1px; border-top-style: solid; display: block;
+}
+.fbForBusinessMenuLast a {
+	border-bottom-color: rgb(229, 229, 229); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.fbMarketingMenu a.currentPage {
+	background: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yE/r/JQgQHls27pw.png") no-repeat right rgb(249, 249, 249); text-decoration: none;
+}
+.fbMarketingMenu a:hover {
+	background: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yE/r/JQgQHls27pw.png") no-repeat right rgb(249, 249, 249); text-decoration: none;
+}
+.fbForBusinessHelpfulLinks ul {
+	list-style: none; padding-left: 0px; margin-left: 0px;
+}
+.fbForBusinessHelpfulLinks ul li {
+	line-height: 1.5; font-size: 11px;
+}
+.fbForBusinessHelpfulLinks div {
+	color: rgb(102, 102, 102); font-size: 11px;
+}
+.fbForBusinessTip {
+	background: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yb/r/qt94E91uvnk.png") no-repeat 15px 10px rgb(249, 249, 249); border: 1px solid rgb(204, 204, 204); padding-left: 40px;
+}
+.fbForBusinessList li div {
+	color: rgb(153, 153, 153); line-height: 20px; font-size: 15px;
+}
+.fbForBusinessBold {
+	color: rgb(51, 51, 51);
+}
+.fbForBusinessList li .fbForBusinessBold {
+	color: rgb(51, 51, 51);
+}
+.fbForBusinessEdit {
+	border: 1px solid rgb(255, 255, 255); right: 0px; bottom: 0px; color: rgb(51, 51, 51); font-size: 9px; position: absolute; background-color: rgb(241, 241, 241);
+}
+.fbForBusinessEdit:hover {
+	color: rgb(255, 255, 255); text-decoration: none; background-color: rgb(153, 153, 153);
+}
+.fbForBusinessNoBorder .fbForBusinessEdit {
+	display: none;
+}
+.fbForBusinessWrapper .fbForBusinessAttachments {
+	background: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yK/r/PVoadHmz34X.png") no-repeat top; list-style: none; width: 448px; padding-top: 47px; padding-left: 0px; margin-left: 0px;
+}
+.fbForBusinessAttachmentsEnclosure {
+	background: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yw/r/rlgjEUjSSWK.png") no-repeat bottom; width: 448px; padding-bottom: 37px;
+}
+.fbForBusinessAttachments li {
+	background: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yn/r/MLZBR-n8e2A.png") no-repeat left; line-height: 21px;
+}
+.fbForBusinessAttachments li a {
+	padding-left: 40px; display: inline-block;
+}
+.fbForBusinessAttachments li.pdf a {
+	background: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yV/r/XDUpQ0U94hl.png") no-repeat 10px;
+}
+.fbForBusinessSmallList li a {
+	line-height: 16px; font-size: 11px;
+}
+.fbForBusinessFooter {
+	background-color: rgb(249, 249, 249);
+}
+.fbForBusinessFooterLink {
+	line-height: 25px; font-size: 13px;
+}
+.fbForBusinessOrderedList {
+	color: rgb(153, 153, 153); padding-left: 0px; margin-left: 12px;
+}
+.videoSessionsLink {
+	background: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/ym/r/M3p_bgUFRB7.png") no-repeat left; padding-left: 20px; display: block; min-height: 15px;
+}
+.fbForBusinessBigButton {
+	width: 200px;
+}
+.fbForBusinessBlock {
+	width: 150px;
+}
+#captcha fieldset {
+	margin: 0px; padding: 10px; border-top-color: rgb(192, 192, 192); border-bottom-color: rgb(192, 192, 192); border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid;
+}
+#captcha legend {
+	color: gray;
+}
+#captcha .divider {
+	display: none;
+}
+#captcha .captcha_refresh {
+	color: gray; font-size: 9px;
+}
+#captcha .recaptcha_text {
+	line-height: 16px; font-size: 11px;
+}
+#captcha .captcha_optout {
+	padding: 10px 0px 5px; font-size: 11px;
+}
+#captcha #recaptcha_image {
+	margin: 10px 0px 0px; font-weight: bold;
+}
+#captcha #recaptcha_image a.recaptcha_audio_cant_hear_link {
+	font-size: 9px; font-weight: normal;
+}
+#captcha .captcha_loading {
+	border: 0px currentColor;
+}
+#captcha .captcha_image img {
+	border: 1px solid rgb(192, 192, 192);
+}
+#captcha .captcha_input input {
+	width: 137px; margin-top: 4px; direction: ltr;
+}
+#captcha .captcha_input label {
+	margin-right: 4px;
+}
+.register #captcha .captcha_input label {
+	color: rgb(102, 102, 102); font-weight: bold;
+}
+.captcha#generic_dialog .generic_dialog_popup {
+	width: 340px;
+}
+.captcha#generic_dialog #generic_dialog_popup {
+	margin: auto; border: 0px solid white;
+}
+.captcha#generic_dialog #generic_dialog_popup legend {
+	display: none;
+}
+.audiocaptcha {
+	margin: 0px; padding: 0px; overflow: hidden; display: block;
+}
+.audiocaptcha a {
+	display: block;
+}
+.recaptcha_is_showing_audio .recaptcha_only_if_image {
+	display: none !important;
+}
+.recaptcha_is_showing_audio .recaptcha_only_if_audio {
+	display: inline !important;
+}
+.captcha_interstitial {
+	margin: 20px auto; padding: 20px; border: 1px solid rgb(204, 204, 204); width: 555px;
+}
+.tfbcaptcha_inline_throbber {
+	height: 11px; display: inline-block;
+}
+form.checkpoint {
+	margin: auto; width: 100%; padding-bottom: 40px;
+}
+.checkpointThumbnail {
+	width: 515px;
+}
+div.checkpointInterstitialSmall {
+	width: 445px;
+}
+div.checkpointInterstitialLarge {
+	width: 555px;
+}
+div.checkpointInterstitialXlarge {
+	width: 665px;
+}
+div.checkpointInterstitialFriendPhoto {
+	width: 1100px; margin-left: -81px;
+}
+div.checkpointInterstitialPhotoTagMemory {
+	width: 830px;
+}
+a.checkpointFeedbackLink {
+	margin-top: -15px; position: absolute;
+}
+a.checkpointInterstitialSmall {
+	padding-left: 245px;
+}
+a.checkpointInterstitialLarge {
+	padding-left: 190px;
+}
+a.checkpointInterstitialXlarge {
+	padding-left: 135px;
+}
+.checkpoint #friendphotocaptcha_intro {
+	width: inherit;
+}
+.checkpoint_me_landing_buttons {
+	text-align: center; padding-top: 10px;
+}
+.checkpoint .subsection {
+	margin-left: 30px;
+}
+.checkpoint .hideCheckpointButton .uiButton {
+	display: none;
+}
+.fbIndex .uiWashLayoutBlueWash {
+	background-color: rgb(221, 226, 237);
+}
+.fbIndex .contentContainer {
+	margin: 0px auto; width: 980px;
+}
+.fbIndex .bodyWash {
+	margin-bottom: 0px;
+}
+.fbIndex .locales {
+	margin: 10px auto 0px; width: 980px;
+}
+.fbIndex .gradient {
+	background: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yB/r/TwAHgQi2ZPB.png") repeat-x 0px bottom;
+}
+.fbIndex .gradient {
+	min-width: 980px;
+}
+.fbIndex .gradient .gradientContent {
+	margin: 0px auto; width: 980px;
+}
+.fbIndexMap .title {
+	width: 450px; color: rgb(14, 56, 95); line-height: 29px; font-size: 20px; margin-top: 40px; word-spacing: -1px;
+}
+.fbIndexMap .map {
+	background: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yi/r/OBaVg52wtTZ.png") no-repeat; height: 195px;
+}
+.fbIndexMobile {
+	background: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yK/r/BFOd681AL3h.png") no-repeat left bottom; width: 537px; height: 295px; padding-top: 45px;
+}
+.fbIndexMobile .phoneImage {
+	margin-left: 50px;
+}
+.fbIndexMobile .rightSide {
+	width: 370px;
+}
+.fbIndexMobile .title {
+	color: rgb(32, 51, 96);
+}
+.fbIndexMobile .subtitle {
+	color: rgb(32, 51, 96);
+}
+.fbIndexMobile .title {
+	font-size: 20px; font-weight: normal;
+}
+.fbIndexMobile .subtitle {
+	font-size: 15px;
+}
+.fbIndexMobile .mobileButton {
+	margin-top: 55px;
+}
+.fbIndexFeaturedRegistration .feature {
+	width: 550px;
+}
+.fbIndexFeaturedRegistration .signupForm {
+	padding: 43px 0px 0px 15px; width: 383px;
+}
+.fbIndexFeaturedRegistration .headerTextContainer {
+	border-bottom-color: rgb(154, 175, 202); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.fbIndexFeaturedRegistration .mainTitle {
+	color: rgb(14, 56, 95); font-size: 18px;
+}
+.fbIndexFeaturedRegistration .subtitle {
+	color: rgb(14, 56, 95); font-size: 15px;
+}
+.fbIndexFeaturedRegistration #reg_box .large_form label {
+	font-weight: normal;
+}
+._50dz .detailColumn {
+	width: 312px; text-align: center; display: inline-block;
+}
+._50dz .notLast.detailColumn {
+	margin-right: 22px;
+}
+._50dz .detailText {
+	padding: 0px 20px; line-height: 20px; font-size: 15px;
+}
+._50dz .more {
+	margin: 20px 0px 40px; padding: 20px 0px; text-align: center;
+}
+._50dz .more h3 {
+	padding-top: 20px;
+}
+._50dz .moreLinks {
+	line-height: 22px; font-size: 17px;
+}
+._50dz .aboutPageContent h3 {
+	margin: 10px 0px; line-height: 126%; font-size: 19px;
+}
+._50dz .aboutPageContent {
+	margin: 20px auto; width: 980px;
+}
+.localeSelectorList a.showMore {
+	padding: 0px 6px 2px; background-color: rgb(236, 239, 245);
+}
+.localeSelectorList a.showMore:hover {
+	color: rgb(255, 255, 255); text-decoration: none; background-color: rgb(109, 132, 180);
+}
+.login_page .title_header {
+	margin: 0px 0px 10px; padding: 0px 0px 10px;
+}
+.login_page .login_page_spacer {
+	height: 35px;
+}
+.login_page .title_header h2.no_icon {
+	background: 0px; margin: 0px; padding: 0px;
+}
+.login_page #loginform {
+	margin: auto; padding: 15px 0px; width: 380px; text-align: left; clear: left;
+}
+.login_page #signup_area {
+	margin: auto; width: 380px; clear: left;
+}
+.login_page .signup_button {
+	float: left;
+}
+.login_page .fbLoginNuxTrackingPixel {
+	width: 0px; height: 0px; display: inline;
+}
+.login_page .signup_text {
+	margin: 0px 0px 20px 10px; width: 200px; float: left;
+}
+.login_page hr {
+	width: 280px; margin-left: 0px;
+}
+.login_page #loginform p {
+	margin: 10px 0px; text-align: left; line-height: 16px;
+}
+.login_page #loginform p.reset_password {
+	padding-bottom: 0px; margin-bottom: 0px;
+}
+.login_page .apinote {
+	background: rgb(255, 255, 255); margin: 10px auto; width: 450px;
+}
+.login_page .apinote h2 {
+	font-size: 12px; margin-bottom: 6px;
+}
+.login_page .login_form_container .dialog_buttons {
+	margin: 0px; padding: 8px 10px; left: 0px; text-align: right; right: 0px; bottom: 0px; border-top-color: rgb(204, 204, 204); border-top-width: 1px; border-top-style: solid; position: absolute; background-color: rgb(242, 242, 242);
+}
+.login_page .dialog_buttons .logged_in_as {
+	width: 240px; text-align: left; margin-top: 3px; float: left;
+}
+.login_page .dialog_buttons .register_link {
+	text-align: left; font-weight: bold; margin-top: 4px; float: left;
+}
+.login_page #email {
+	direction: ltr;
+}
+.login_page #error {
+	margin-top: 20px;
+}
+div.login_page_interstitial {
+	width: 640px; margin-bottom: 0px;
+}
+.login_page .localeSelectorList {
+	margin: 0px auto 40px; width: 640px;
+}
+.login_page #booklet #content {
+	padding: 15px 30px 20px; width: auto; margin-bottom: 46px; float: none;
+}
+.login_page #booklet #loginform {
+	padding-top: 0px; margin-top: 20px;
+}
+.login_page #booklet #dialog_buttons input {
+	margin: 0px;
+}
+.form_row {
+	padding: 0px 0px 8px; text-align: left;
+}
+.form_row .login_form_label {
+	padding: 3px 0px; width: 100px; float: left; display: block;
+}
+.form_row input {
+	margin: 0px;
+}
+.form_row .inputtext {
+	width: 175px;
+}
+.inputpassword {
+	width: 175px;
+}
+.form_row .checkbox {
+	margin: 5px 4px 2px 0px; width: 15px; float: left;
+}
+.persistent {
+	padding: 3px 0px 3px 100px;
+}
+#login_button_inline {
+	margin-right: 5px; margin-bottom: 5px; float: left;
+}
+#register_link {
+	margin-top: 5px; float: left;
+}
+#buttons {
+	padding: 5px 0px 0px 100px; text-align: left;
+}
+#buttons .uiButton {
+	margin-right: 2px;
+}
+#buttons label {
+	width: auto; float: none;
+}
+.reset_password {
+	padding-left: 100px;
+}
+.not_me_link {
+	padding-left: 100px;
+}
+.reset_password label {
+	width: auto; font-weight: normal; float: none;
+}
+.reset #content {
+	padding: 20px;
+}
+.login_error_box {
+	margin-top: 10px;
+}
+._4--d {
+	text-align: center; background-color: rgb(231, 235, 242);
+}
+._4--e {
+	padding: 10px 0px 0px; color: rgb(160, 160, 160); font-size: 14px; font-weight: bold; cursor: default;
+}
+._4--f {
+	margin: 0px auto; width: 100%; text-align: center; border-top-color: rgb(206, 210, 217); border-bottom-color: rgb(206, 210, 217); border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid; position: relative;
+}
+._4--g {
+	padding: 20px; text-align: center; color: rgb(102, 102, 102); font-size: 14px; font-weight: bold; vertical-align: top; display: inline-block; position: relative; cursor: pointer;
+}
+._4--g .userBox {
+	width: 110px; overflow: hidden; display: inline-block;
+}
+._4--g a {
+	color: rgb(102, 102, 102); font-size: 14px; font-weight: bold; text-decoration: none;
+}
+._4--h {
+	border-radius: 2px; border: 4px solid rgb(255, 255, 255);
+}
+._4--h:hover {
+	opacity: 0.6;
+}
+._4--i {
+	background: white; border-radius: 3px; border: 1px solid rgb(204, 204, 204); margin-bottom: 7px; position: relative; box-shadow: 0px 1px 1px rgba(0,0,0,0.07);
+}
+._507d {
+	color: rgb(78, 86, 101); font-family: helvetica; font-size: 14px; font-weight: bold; position: relative;
+}
+._4--l {
+	color: red; font-weight: bold;
+}
+._27-r {
+	top: 8px; right: 6px; display: none; position: absolute;
+}
+._4--g:hover ._27-r {
+	display: block;
+}
+._27-r .closeButton {
+	margin: 0px; padding: 0px; width: 34px; height: 34px; display: inline-block; cursor: pointer; -ms-zoom: 1; background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yL/r/kVz_bitZN5p.png"); background-repeat: no-repeat;
+}
+._27-r:hover .closeButton {
+	background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yo/r/KOUl7L9dl_E.png");
+}
+._27-r:active .closeButton {
+	background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yr/r/Bid30QmAAcB.png");
+}
+._27-r .closeButton input {
+	padding: 18px; cursor: pointer; opacity: 0;
+}
+._4--j .menuDivider {
+	background: rgb(221, 221, 221); margin: 6px 1px; height: 1px;
+}
+._4--j .navSubmenu {
+	padding: 0px 2px; height: 18px; color: rgb(51, 51, 51); line-height: 18px; overflow: hidden; font-family: "Helvetica Neue", Helvetica, Arial, "lucida grande",tahoma,verdana,arial,sans-serif; font-size: 12px; border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid; display: block; white-space: nowrap; -ms-word-wrap: normal; -ms-text-overflow: ellipsis;
+}
+._4--j .navSubmenu input {
+	height: 16px; color: rgb(51, 51, 51); font-family: "Helvetica Neue", Helvetica, Arial, "lucida grande",tahoma,verdana,arial,sans-serif; font-size: 12px; margin-top: 1px; display: block;
+}
+._4--j .navSubmenu:hover {
+	background: rgb(239, 242, 247); color: rgb(51, 51, 51); text-decoration: none;
+}
+._4--j .navSubmenu input:hover {
+	text-decoration: none;
+}
+._4--j .navSubmenu input:focus {
+	text-decoration: none;
+}
+._50nu {
+	left: 0px; top: 0px; width: 100%; height: auto; right: 0px; position: fixed; z-index: 400; min-height: 100%; background-color: rgba(0, 0, 0, 0.5);
+}
+._50nt {
+	position: relative;
+}
+._50nr {
+	z-index: 405;
+}
+._50ns {
+	color: rgb(255, 255, 255); z-index: 405;
+}
+.UIPage_LoggedOut .uiContextualLayerPositioner {
+	z-index: 401;
+}
+.lo_user li.objectListItem {
+	padding-top: 0px; padding-bottom: 0px; list-style-type: none;
+}
+.loginhelp_search_list li.objectListItem {
+	width: 400px; list-style-type: none;
+}
+.louser_badpw li.objectListItem {
+	width: 400px; list-style-type: none;
+}
+.loginhelp_isitme li.objectListItem {
+	width: 400px;
+}
+.fbLoggedOutAccountBlock td {
+	vertical-align: middle;
+}
+.fbLoggedOutAccountInfo {
+	width: 10000px;
+}
+.fbLoggedOutAccountAuxContent {
+	width: 50%;
+}
+.menu_login_container table tr {
+	vertical-align: top;
+}
+.menu_login_container table tr td {
+	padding: 0px 0px 0px 14px;
+}
+.menu_login_container .html7magic {
+	padding-bottom: 4px;
+}
+.menu_login_container .inputtext {
+	border-color: rgb(29, 42, 91); margin: 0px; width: 142px;
+}
+.menu_login_container .inputpassword {
+	border-color: rgb(29, 42, 91); margin: 0px; width: 142px;
+}
+.menu_login_container .login_form_label_field label {
+	color: rgb(152, 169, 202); font-weight: normal;
+}
+.menu_login_container .login_form_label_field a {
+	color: rgb(152, 169, 202); font-weight: normal;
+}
+.menu_login_container .login_form_label_field {
+	padding-top: 4px;
+}
+.menu_login_container .html7magic label {
+	color: rgb(255, 255, 255); padding-left: 1px; font-weight: normal;
+}
+.menu_login_container #email {
+	direction: ltr;
+}
+.login_form_standalone_labels .inputtext {
+	border-color: rgb(150, 166, 197); padding: 6px; width: 250px; font-size: 16px;
+}
+.login_form_standalone_labels .inputpassword {
+	border-color: rgb(150, 166, 197); padding: 6px; width: 250px; font-size: 16px;
+}
+.login_form_standalone_labels label {
+	color: rgb(29, 42, 91); font-size: 13px; font-weight: normal;
+}
+.login_form_standalone_labels .login_form_label_field a {
+	color: rgb(59, 89, 152); font-size: 13px;
+}
+.login_form_standalone_labels td.html7magic {
+	text-align: right;
+}
+.login_form_standalone_labels .uiButton input {
+	padding: 3px 25px 5px; font-size: 13px;
+}
+table.login_form_standalone_labels tr td {
+	padding: 0px; height: 30px; vertical-align: middle;
+}
+._6_ {
+	vertical-align: top; display: inline-block;
+}
+._70 {
+	width: 67px;
+}
+._71 {
+	width: 150px;
+}
+._72 {
+	width: 233px;
+}
+._73 {
+	width: 316px;
+}
+._74 {
+	width: 399px;
+}
+._75 {
+	width: 482px;
+}
+._76 {
+	width: 565px;
+}
+._77 {
+	width: 648px;
+}
+._78 {
+	width: 731px;
+}
+._79 {
+	width: 814px;
+}
+._7a {
+	width: 897px;
+}
+._7b {
+	width: 980px;
+}
+._7c {
+	margin-left: 15.99px !important;
+}
+._7d {
+	margin-right: 15.99px !important;
+}
+._6j {
+	border-radius: 5px; border: 1px solid currentColor; color: rgb(255, 255, 255); letter-spacing: 1px; display: inline-block; position: relative; cursor: pointer; text-shadow: 0px 1px 2px rgba(0,0,0,0.5);
+}
+._6nw ._6j {
+	font-size: 23px;
+}
+._6j:hover {
+	text-decoration: none;
+}
+._6wk {
+	padding: 20px 30px;
+}
+._6wl {
+	border-color: rgb(59, 110, 34) rgb(59, 110, 34) rgb(44, 81, 21); box-shadow: inset 0px 1px 1px #a4e388; background-color: rgb(105, 167, 78);
+}
+._6wl:hover {
+	
+}
+._6wm {
+	border-width: 0px; box-shadow: inset 0px 1px 1px #acee8f, 0px 1px 5px #000;
+}
+._6wm:active {
+	box-shadow: inset 0px 1px 1px #acee8f, 0px 0px 3px #000;
+}
+._6wn {
+	border-color: rgb(41, 72, 124) rgb(41, 72, 124) rgb(26, 58, 109); box-shadow: inset 0px 1px 1px #96b7f1; background-color: rgb(96, 121, 174);
+}
+._6wn:hover {
+	
+}
+._6wo {
+	border-width: 0px; box-shadow: inset 0px 1px 1px #96b7f1, 0px 1px 5px #000;
+}
+._6wo:active {
+	box-shadow: inset 0px 1px 1px #96b7f1, 0px 0px 3px #000;
+}
+._6j:active {
+	top: 1px;
+}
+._67u {
+	border-color: rgb(166, 166, 166) rgb(149, 149, 149) rgb(149, 149, 149); top: 0px; color: rgb(184, 184, 184); cursor: default; box-shadow: inset 0px 1px 1px #fff; text-shadow: none; background-color: rgb(253, 253, 253);
+}
+._67u:hover {
+	border-color: rgb(166, 166, 166) rgb(149, 149, 149) rgb(149, 149, 149); top: 0px; color: rgb(184, 184, 184); cursor: default; box-shadow: inset 0px 1px 1px #fff; text-shadow: none; background-color: rgb(253, 253, 253);
+}
+._67u:active {
+	border-color: rgb(166, 166, 166) rgb(149, 149, 149) rgb(149, 149, 149); top: 0px; color: rgb(184, 184, 184); cursor: default; box-shadow: inset 0px 1px 1px #fff; text-shadow: none; background-color: rgb(253, 253, 253);
+}
+._6wp {
+	box-shadow: inset 0px 1px 1px #fff, 0px 0px 3px #000;
+}
+._50qd {
+	padding-top: 9px; position: absolute;
+}
+._6n {
+	line-height: 120%; font-size: 23px;
+}
+._6o {
+	line-height: 126%; font-size: 19px;
+}
+._6p {
+	line-height: 22px; font-size: 17px;
+}
+._6q {
+	line-height: 20px; font-size: 15px;
+}
+._6r {
+	line-height: 16px; font-size: 11px;
+}
+._6s {
+	color: rgb(51, 51, 51);
+}
+._6t {
+	color: rgb(102, 102, 102);
+}
+._6u {
+	color: rgb(153, 153, 153);
+}
+._7g {
+	color: rgb(255, 255, 255);
+}
+._6v {
+	font-weight: bold;
+}
+._mf {
+	font-weight: normal;
+}
+._6w {
+	text-align: left;
+}
+._6x {
+	text-align: center;
+}
+._6y {
+	text-align: right;
+}
+._6z {
+	text-align: justify;
+}
+.loggedout_menubar_container {
+	height: 82px; min-width: 980px; background-color: rgb(59, 89, 152);
+}
+.loggedout_menubar {
+	margin: 0px auto; width: 980px; padding-top: 13px;
+}
+.loggedout_menubar .fb_logo {
+	margin-top: 17px;
+}
+.loggedout_menubar label.menu_login_show_link {
+	top: 19px; color: rgb(152, 169, 202); position: relative;
+}
+.fbProfileScalableThumb {
+	overflow: hidden;
+}
+.fbProfileScalableThumb .cropped {
+	background-position: top; display: block; background-repeat: no-repeat;
+}
+._59dx {
+	background: rgb(237, 239, 244); height: 100%;
+}
+._59dy {
+	margin: 0px auto 30px; width: 400px;
+}
+._59dz {
+	margin: 0px auto; width: 980px;
+}
+._58mq select {
+	padding: 5px; height: 30px; font-size: 13px;
+}
+._58mr {
+	color: rgb(51, 51, 51); font-size: 18px; font-weight: normal;
+}
+._59zo ._58mr {
+	color: rgb(137, 143, 156); font-size: 16px; margin-bottom: 4px;
+}
+._59zo ._58mq {
+	margin-right: -20px;
+}
+._59zo ._58mq ._55pe {
+	width: 85px; text-align: left; color: rgb(173, 178, 187); font-size: 16px; font-weight: normal;
+}
+._59zo ._58mq .selected ._55pe {
+	color: rgb(255, 255, 255);
+}
+._58ms {
+	font-size: 11px; max-width: 150px;
+}
+._59zo ._58ms {
+	text-align: right; padding-top: 5px; font-size: 12px; max-width: 230px;
+}
+._59zo ._58ms a {
+	color: rgb(137, 143, 156);
+}
+._58mw {
+	line-height: 16px; padding-top: 10px;
+}
+._58mw h2 {
+	padding-bottom: 3px;
+}
+._58mw .captcha_input {
+	margin: 5px 0px;
+}
+._58mx {
+	margin-right: 50px;
+}
+._58my {
+	line-height: 14px; font-size: 12px; font-weight: bold; margin-top: 6px; float: left;
+}
+._58mz {
+	background-position: -171px -481px; width: 12px; height: 17px; margin-top: 5px; float: left; background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yh/r/xQ0DwmqUr-m.png"); background-repeat: no-repeat; background-size: auto;
+}
+#captcha_response {
+	padding: 3px;
+}
+._58mf {
+	margin: 0px auto; padding-bottom: 30px;
+}
+._58mf._59zo {
+	margin: 0px 40px; width: 408px; padding-bottom: 5px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.timelineSignUpDialog ._58mf {
+	padding-bottom: 0px;
+}
+._58mi {
+	padding: 7px 20px; text-align: center; min-width: 194px;
+}
+._59zo ._58mi {
+	background: linear-gradient(rgb(99, 123, 173), rgb(79, 103, 164)); padding: 0px; border-radius: 3px; border: 1px solid rgb(29, 56, 113); width: 406px; height: 51px; color: rgb(255, 255, 255); line-height: 51px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 18px; font-weight: normal; box-shadow: inset 0px 1px 0px #6f85b3, 0px 2px 1px rgba(0,0,0,0.18); text-shadow: 0px -1px 1px rgba(0,0,0,0.4);
+}
+._59zo ._58mi:active {
+	background: linear-gradient(rgb(82, 106, 165), rgb(84, 108, 166)); box-shadow: none;
+}
+._58mj {
+	font-size: 16px;
+}
+._58mk {
+	color: rgb(102, 102, 102); padding-top: 15px; font-size: 13px; font-weight: bold; margin-top: 10px; border-top-color: rgb(160, 169, 192); border-top-width: 1px; border-top-style: solid;
+}
+._58ml {
+	top: 3px; margin-left: 10px; position: relative;
+}
+._59zo ._58ml {
+	top: auto; margin-top: 15px; margin-left: 371px; position: absolute;
+}
+._58mm {
+	float: left;
+}
+._58mn {
+	background: rgb(255, 235, 232); margin: 10px 0px 0px; border: 1px solid rgb(221, 60, 16); text-align: center; line-height: 15px; overflow: hidden;
+}
+._58mo {
+	padding: 7px 3px;
+}
+._58mt {
+	padding: 0px 10px 0px 3px; color: rgb(51, 51, 51); line-height: 18px; font-size: 18px; font-weight: normal;
+}
+._59zo ._58mt {
+	color: rgb(137, 143, 156); font-size: 16px;
+}
+._59zo ._58mt span {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.ie10 ._59zo ._58mt > input + span::before {
+	width: 18px; height: 19px; background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yh/r/xQ0DwmqUr-m.png"); background-repeat: no-repeat; background-size: auto;
+}
+.ie10 ._59zo ._58mt > input:active + span::before {
+	background-position: 0px -20px; background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yh/r/xQ0DwmqUr-m.png"); background-repeat: no-repeat; background-size: auto;
+}
+.ie10 ._59zo ._58mt > input:focus + span::before {
+	background-position: 0px -40px; background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yh/r/xQ0DwmqUr-m.png"); background-repeat: no-repeat; background-size: auto;
+}
+.ie10 ._59zo ._58mt > input:disabled + span::before {
+	background-position: 0px -60px; background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yh/r/xQ0DwmqUr-m.png"); background-repeat: no-repeat; background-size: auto;
+}
+.ie10 ._59zo ._58mt > input:checked + span::before {
+	background-position: -20px 0px; background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yh/r/xQ0DwmqUr-m.png"); background-repeat: no-repeat; background-size: auto;
+}
+.ie10 ._59zo ._58mt > input:checked:active + span::before {
+	background-position: -20px -20px; background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yh/r/xQ0DwmqUr-m.png"); background-repeat: no-repeat; background-size: auto;
+}
+.ie10 ._59zo ._58mt > input:checked:focus + span::before {
+	background-position: -20px -40px; background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yh/r/xQ0DwmqUr-m.png"); background-repeat: no-repeat; background-size: auto;
+}
+.ie10 ._59zo ._58mt > input:checked:disabled + span::before {
+	background-position: -20px -60px; background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yh/r/xQ0DwmqUr-m.png"); background-repeat: no-repeat; background-size: auto;
+}
+._58mf ._58mg {
+	border-color: rgb(189, 199, 216); margin: 0px; border-radius: 5px; width: 377px;
+}
+._58mf._59zo ._58mg {
+	border-color: rgb(201, 202, 205); border-radius: 3px; width: 386px;
+}
+._58mf .uiStickyPlaceholderInput {
+	background: white; border-radius: 5px; width: 399px;
+}
+._59zo._59zo .uiStickyPlaceholderInput {
+	border-radius: 5px; width: 408px;
+}
+._58mf .uiStickyPlaceholderInput .placeholder {
+	overflow: hidden; padding-left: 11px; white-space: nowrap; -ms-word-wrap: normal; -ms-text-overflow: ellipsis; box-sizing: border-box;
+}
+._58mf ._58mg {
+	padding: 8px 10px; font-size: 18px;
+}
+._58mf .uiStickyPlaceholderInput .placeholder {
+	padding: 8px 10px; font-size: 18px;
+}
+._58mf._59zo .uiStickyPlaceholderInput .placeholder {
+	color: rgb(173, 178, 187);
+}
+._58mf._59zo ._58mg {
+	padding: 10px; font-size: 16px;
+}
+._58mf._59zo .uiStickyPlaceholderInput .placeholder {
+	padding: 10px; font-size: 16px;
+}
+._58mh {
+	width: 399px;
+}
+._59zo ._58mh {
+	width: 408px;
+}
+._58mh ._58mg {
+	width: 172px;
+}
+._59zo ._58mh ._58mg {
+	width: 177px;
+}
+._58mh .uiStickyPlaceholderInput {
+	width: 194px;
+}
+._59zo ._58mh .uiStickyPlaceholderInput {
+	width: 199px;
+}
+._58mu {
+	width: 399px;
+}
+._59zo ._58mu {
+	width: 408px; padding-top: 3px;
+}
+._58mu ._58mv {
+	width: 316px; color: rgb(119, 119, 119); font-size: 11px;
+}
+._59zo ._58mu ._58mv {
+	width: 340px; text-align: center; color: rgb(137, 143, 156); font-size: 12px; margin-right: auto; margin-left: auto;
+}
+._5bmw ._58mv {
+	padding: 4px; border: 1px solid rgb(137, 143, 156); -ms-overflow-y: scroll; max-height: 120px;
+}
+._52lp {
+	webkit-font-smoothing: antialiased;
+}
+._52lp ._52lq {
+	color: rgb(20, 24, 35); font-family: "Freight Sans Bold", "lucida grande",tahoma,verdana,arial,sans-serif; font-size: 40px; font-weight: normal; white-space: nowrap;
+}
+._59d-._52lp ._52lq {
+	font-size: 36px;
+}
+._59zm._52lp ._52lq {
+	text-align: center; color: rgb(20, 24, 35); padding-top: 3px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 30px;
+}
+._52lp ._52lr {
+	color: rgb(78, 86, 101); line-height: 28px; font-family: "Freight Sans", "lucida grande",tahoma,verdana,arial,sans-serif; font-size: 22px; font-weight: normal;
+}
+._59d-._52lp ._52lr {
+	color: rgb(20, 24, 35); font-size: 19px;
+}
+._59zm._52lp ._52lr {
+	text-align: center; color: rgb(142, 152, 158); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 16px;
+}
+.signupBanner div.signup_bar_container {
+	background-color: transparent;
+}
+.signupBanner .signup_box {
+	margin: 0px auto; padding: 0px; width: 980px; position: relative;
+}
+.signupBanner .signup_btn {
+	left: 180px; top: -42px; position: absolute;
+}
+.sp_459faa {
+	width: 640px; height: 480px; display: inline-block; background-image: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/yh/r/xQ0DwmqUr-m.png"); background-repeat: no-repeat; background-size: auto;
+}
+.sx_13a9f8 {
+	background-position: -171px -481px; width: 11px; height: 15px;
+}
+.sx_306acc {
+	background-position: -183px -481px; width: 9px; height: 9px;
+}
+.sx_955643 {
+	background-position: 0px -481px; width: 170px; height: 36px;
+}
+.sx_7e81cf {
+	
+}
+.uiInterstitial {
+	border-radius: 4px; margin-right: auto; margin-left: auto;
+}
+.uiInterstitialSmall {
+	width: 445px;
+}
+.uiInterstitialLarge {
+	width: 555px;
+}
+.uiInterstitial .interstitialHeader {
+	border-color: rgb(204, 204, 204); padding-bottom: 0.5em;
+}
+.fullBleed .interstitialHeader {
+	margin: 0px; padding: 4px 12px 10px;
+}
+.uiInterstitialContent {
+	margin-bottom: 15px;
+}
+.fullBleed .uiInterstitialContent {
+	margin: 0px; padding: 0px;
+}
+.uiInterstitialBar {
+	padding: 8px 10px; line-height: 16px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;
+}
+div.uiInterstitialWithStripes {
+	background: url("https://fbstatic-a.akamaihd.net/rsrc.php/v2/y9/r/y7MG8IZpiC8.gif") repeat-x; padding-top: 15px;
+}
+.UIPage_LoggedOut .UIFullPage_Container {
+	margin-top: 26px;
+}
+.UIPage_LoggedOut .UIStandardFrame_Container {
+	margin-top: 26px;
+}
+#bootloader_nWpTV {
+	height: 42px;
+}

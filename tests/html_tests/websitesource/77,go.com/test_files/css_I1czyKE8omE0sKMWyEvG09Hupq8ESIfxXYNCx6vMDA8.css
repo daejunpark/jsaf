@@ -1,0 +1,534 @@
+#comments {
+	margin-top: 15px;
+}
+.indented {
+	margin-left: 25px;
+}
+.comment-unpublished {
+	background-color: rgb(255, 244, 244);
+}
+.comment-preview {
+	background-color: rgb(255, 255, 234);
+}
+.container-inline-date {
+	clear: both;
+}
+.container-inline-date .form-item {
+	margin: 0px; padding: 0px; float: none;
+}
+.container-inline-date > .form-item {
+	margin-right: 0.5em; margin-bottom: 10px; vertical-align: top; display: inline-block;
+}
+.container-inline-date .form-item .form-item {
+	float: left;
+}
+.container-inline-date .form-item {
+	width: auto;
+}
+.container-inline-date .form-item input {
+	width: auto;
+}
+.container-inline-date .description {
+	clear: both;
+}
+.container-inline-date .form-item input {
+	margin-right: 5px;
+}
+.container-inline-date .form-item select {
+	margin-right: 5px;
+}
+.container-inline-date .form-item option {
+	margin-right: 5px;
+}
+.container-inline-date .date-spacer {
+	margin-left: -5px;
+}
+.views-right-60 .container-inline-date div {
+	margin: 0px; padding: 0px;
+}
+.container-inline-date .date-timezone .form-item {
+	width: auto; clear: both; float: none;
+}
+.container-inline-date .date-padding {
+	padding: 10px; float: left;
+}
+.views-exposed-form .container-inline-date .date-padding {
+	padding: 0px;
+}
+#calendar_div {
+	margin: 0px; padding: 0px;
+}
+#calendar_div td {
+	margin: 0px; padding: 0px;
+}
+#calendar_div th {
+	margin: 0px; padding: 0px;
+}
+#calendar_div {
+	margin: 0px; width: 185px; border-collapse: separate;
+}
+.calendar_control {
+	margin: 0px; width: 185px; border-collapse: separate;
+}
+.calendar_links {
+	margin: 0px; width: 185px; border-collapse: separate;
+}
+.calendar_header {
+	margin: 0px; width: 185px; border-collapse: separate;
+}
+.calendar {
+	margin: 0px; width: 185px; border-collapse: separate;
+}
+.calendar td {
+	padding: 0px;
+}
+span.date-display-single {
+	
+}
+span.date-display-start {
+	
+}
+span.date-display-end {
+	
+}
+.date-prefix-inline {
+	display: inline-block;
+}
+.date-clear {
+	clear: both; float: none; display: block;
+}
+.date-no-float {
+	width: 98%; clear: both; float: none;
+}
+.date-float {
+	width: auto; clear: none; float: left;
+}
+.date-float .form-type-checkbox {
+	padding-right: 1em;
+}
+.form-type-date-select [class$=hour].form-type-select {
+	margin-left: 0.75em;
+}
+.date-container .date-format-delete {
+	margin-top: 1.8em; margin-left: 1.5em; float: left;
+}
+.date-container .date-format-name {
+	float: left;
+}
+.date-container .date-format-type {
+	padding-left: 10px; float: left;
+}
+.date-container .select-container {
+	clear: left; float: left;
+}
+div.date-calendar-day {
+	background: rgb(243, 243, 243); border-width: 1px; border-style: solid; border-color: rgb(238, 238, 238) rgb(187, 187, 187) rgb(187, 187, 187) rgb(238, 238, 238); margin: 6px 10px 0px 0px; width: 40px; text-align: center; color: rgb(153, 153, 153); line-height: 1; float: left;
+}
+div.date-calendar-day span {
+	text-align: center; display: block;
+}
+div.date-calendar-day span.month {
+	padding: 2px; color: white; text-transform: uppercase; font-size: 0.9em; background-color: rgb(181, 190, 190);
+}
+div.date-calendar-day span.day {
+	font-size: 2em; font-weight: bold;
+}
+div.date-calendar-day span.year {
+	padding: 2px; font-size: 0.9em;
+}
+.form-item-instance-widget-settings-input-format-custom.form-item {
+	margin-left: 1.3em;
+}
+.form-item-field-settings-enddate-required.form-item {
+	margin-left: 1.3em;
+}
+#edit-field-settings-granularity .form-type-checkbox {
+	margin-right: 0.6em;
+}
+.date-year-range-select {
+	margin-right: 1em;
+}
+#ui-datepicker-div {
+	background: rgb(238, 238, 238); font-family: Verdana,sans-serif; font-size: 100%; border-right-color: rgb(102, 102, 102); border-bottom-color: rgb(102, 102, 102); border-right-width: 2px; border-bottom-width: 2px; border-right-style: solid; border-bottom-style: solid; z-index: 9999;
+}
+.ui-datepicker {
+	padding: 0.2em 0.2em 0px; width: 17em;
+}
+.ui-datepicker .ui-datepicker-header {
+	padding: 0.2em 0px; position: relative;
+}
+.ui-datepicker .ui-datepicker-prev {
+	top: 2px; width: 1.8em; height: 1.8em; position: absolute;
+}
+.ui-datepicker .ui-datepicker-next {
+	top: 2px; width: 1.8em; height: 1.8em; position: absolute;
+}
+.ui-datepicker .ui-datepicker-prev-hover {
+	top: 1px;
+}
+.ui-datepicker .ui-datepicker-next-hover {
+	top: 1px;
+}
+.ui-datepicker .ui-datepicker-prev {
+	left: 2px;
+}
+.ui-datepicker .ui-datepicker-next {
+	right: 2px;
+}
+.ui-datepicker .ui-datepicker-prev-hover {
+	left: 1px;
+}
+.ui-datepicker .ui-datepicker-next-hover {
+	right: 1px;
+}
+.ui-datepicker .ui-datepicker-prev span {
+	left: 50%; top: 50%; margin-top: -8px; margin-left: -8px; display: block; position: absolute;
+}
+.ui-datepicker .ui-datepicker-next span {
+	left: 50%; top: 50%; margin-top: -8px; margin-left: -8px; display: block; position: absolute;
+}
+.ui-datepicker .ui-datepicker-title {
+	margin: 0px 2.3em; text-align: center; line-height: 1.8em;
+}
+.ui-datepicker .ui-datepicker-title select {
+	margin: 1px 0px; font-size: 1em; float: left;
+}
+.ui-datepicker select.ui-datepicker-month-year {
+	width: 100%;
+}
+.ui-datepicker select.ui-datepicker-month {
+	width: 49%;
+}
+.ui-datepicker select.ui-datepicker-year {
+	width: 49%;
+}
+.ui-datepicker .ui-datepicker-title select.ui-datepicker-year {
+	float: right;
+}
+.ui-datepicker table {
+	margin: 0px 0px 0.4em; width: 100%; font-size: 0.9em; border-collapse: collapse;
+}
+.ui-datepicker th {
+	padding: 0.7em 0.3em; border: 0px currentColor; text-align: center; font-weight: bold;
+}
+.ui-datepicker td {
+	padding: 1px; border: 0px currentColor;
+}
+.ui-datepicker td span {
+	padding: 0.2em; text-align: right; text-decoration: none; display: block;
+}
+.ui-datepicker td a {
+	padding: 0.2em; text-align: right; text-decoration: none; display: block;
+}
+.ui-datepicker .ui-datepicker-buttonpane {
+	margin: 0.7em 0px 0px; padding: 0px 0.2em; border-right-color: currentColor; border-bottom-color: currentColor; border-left-color: currentColor; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-right-style: none; border-bottom-style: none; border-left-style: none; background-image: none;
+}
+.ui-datepicker .ui-datepicker-buttonpane button {
+	margin: 0.5em 0.2em 0.4em; padding: 0.2em 0.6em 0.3em; width: auto; overflow: visible; float: right; cursor: pointer;
+}
+.ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
+	float: left;
+}
+.ui-datepicker-multi.ui-datepicker {
+	width: auto;
+}
+.ui-datepicker-multi .ui-datepicker-group {
+	float: left;
+}
+.ui-datepicker-multi .ui-datepicker-group table {
+	margin: 0px auto 0.4em; width: 95%;
+}
+.ui-datepicker-multi-2 .ui-datepicker-group {
+	width: 50%;
+}
+.ui-datepicker-multi-3 .ui-datepicker-group {
+	width: 33.3%;
+}
+.ui-datepicker-multi-4 .ui-datepicker-group {
+	width: 25%;
+}
+.ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header {
+	border-left-width: 0px;
+}
+.ui-datepicker-multi .ui-datepicker-group-middle .ui-datepicker-header {
+	border-left-width: 0px;
+}
+.ui-datepicker-multi .ui-datepicker-buttonpane {
+	clear: left;
+}
+.ui-datepicker-row-break {
+	width: 100%; clear: both;
+}
+.ui-datepicker-rtl {
+	direction: rtl;
+}
+.ui-datepicker-rtl .ui-datepicker-prev {
+	left: auto; right: 2px;
+}
+.ui-datepicker-rtl .ui-datepicker-next {
+	left: 2px; right: auto;
+}
+.ui-datepicker-rtl .ui-datepicker-prev:hover {
+	left: auto; right: 1px;
+}
+.ui-datepicker-rtl .ui-datepicker-next:hover {
+	left: 1px; right: auto;
+}
+.ui-datepicker-rtl .ui-datepicker-buttonpane {
+	clear: right;
+}
+.ui-datepicker-rtl .ui-datepicker-buttonpane button {
+	float: left;
+}
+.ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current {
+	float: right;
+}
+.ui-datepicker-rtl .ui-datepicker-group {
+	float: right;
+}
+.ui-datepicker-rtl .ui-datepicker-group-last .ui-datepicker-header {
+	border-right-width: 0px; border-left-width: 1px;
+}
+.ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header {
+	border-right-width: 0px; border-left-width: 1px;
+}
+.block-dimg-forced-timestamp#block-dimg-forced-timestamp-dimg-timewarp-popup {
+	padding: 10px; border: 2px solid rgb(0, 0, 0); top: 30px; right: 150px; display: none; position: fixed; z-index: 999; background-color: rgb(255, 255, 255);
+}
+.form-type-date-popup label {
+	background-color: rgb(238, 238, 238);
+}
+#block-dimg-forced-timestamp-dimg-timewarp-popup div.form-actions {
+	margin: 5px 30px 0px 0px;
+}
+#block-dimg-forced-timestamp-dimg-timewarp-popup input.form-submit {
+	margin: 5px 30px 0px 0px;
+}
+.block-dimg-forced-timestamp#block-dimg-forced-timestamp-dimg-timewarp {
+	margin-right: 7px; float: right; display: inline-block;
+}
+.form-item-forced-timestamp {
+	color: rgb(255, 255, 255); font-size: 0.84em !important; font-weight: normal; margin-right: 5px !important; float: left;
+}
+.form-item-forced-timestamp label {
+	color: rgb(255, 255, 255); font-size: 0.84em !important; font-weight: normal; margin-right: 5px !important; float: left;
+}
+#timewarp-submit {
+	display: none;
+}
+#edit-forced-timestamp {
+	background-image: none; -webkit-appearance: menulist;
+}
+.view .node-unpublished {
+	display: none;
+}
+.front .node-unpublished {
+	display: none;
+}
+#dimg-forced-timestamp-timewarp-form .ajax-progress-throbber {
+	display: none;
+}
+#dimg-forced-timestamp-timewarp-popup-form .ajax-progress-throbber {
+	display: none;
+}
+.field .field-label {
+	font-weight: bold;
+}
+.field-label-inline .field-label {
+	float: left;
+}
+.field-label-inline .field-items {
+	float: left;
+}
+form .field-multiple-table {
+	margin: 0px;
+}
+form .field-multiple-table th.field-label {
+	padding-left: 0px;
+}
+form .field-multiple-table td.field-multiple-drag {
+	width: 30px; padding-right: 0px;
+}
+form .field-multiple-table td.field-multiple-drag a.tabledrag-handle {
+	padding-right: 0.5em;
+}
+form .field-add-more-submit {
+	margin: 0.5em 0px 0px;
+}
+.node-unpublished {
+	background-color: rgb(255, 244, 244);
+}
+.preview .node {
+	background-color: rgb(255, 255, 234);
+}
+td.revision-current {
+	background: rgb(255, 255, 204);
+}
+.search-form {
+	margin-bottom: 1em;
+}
+.search-form input {
+	margin-top: 0px; margin-bottom: 0px;
+}
+.search-results {
+	list-style: none;
+}
+.search-results p {
+	margin-top: 0px;
+}
+.search-results .title {
+	font-size: 1.2em;
+}
+.search-results li {
+	margin-bottom: 1em;
+}
+.search-results .search-snippet-info {
+	padding-left: 1em;
+}
+.search-results .search-info {
+	font-size: 0.85em;
+}
+.search-advanced .criterion {
+	margin-right: 2em; float: left;
+}
+.search-advanced .action {
+	clear: left; float: left;
+}
+#permissions td.module {
+	font-weight: bold;
+}
+#permissions td.permission {
+	padding-left: 1.5em;
+}
+#permissions tr.odd .form-item {
+	white-space: normal;
+}
+#permissions tr.even .form-item {
+	white-space: normal;
+}
+#user-admin-settings fieldset .fieldset-description {
+	padding-bottom: 0.5em; font-size: 0.85em;
+}
+#user-admin-roles td.edit-name {
+	clear: both;
+}
+#user-admin-roles .form-item-name {
+	margin-right: 1em; float: left;
+}
+.password-strength {
+	width: 17em; margin-top: 1.4em; float: right;
+}
+.password-strength-title {
+	display: inline;
+}
+.password-strength-text {
+	font-weight: bold; float: right;
+}
+.password-indicator {
+	width: 100%; height: 0.3em; background-color: rgb(196, 196, 196);
+}
+.password-indicator div {
+	width: 0%; height: 100%; background-color: rgb(71, 201, 101);
+}
+input.password-confirm {
+	width: 16em; margin-bottom: 0.4em;
+}
+input.password-field {
+	width: 16em; margin-bottom: 0.4em;
+}
+div.password-confirm {
+	width: 17em; margin-top: 1.5em; float: right; visibility: hidden;
+}
+div.form-item div.password-suggestions {
+	margin: 0.7em 0px; padding: 0.2em 0.5em; border: 1px solid rgb(180, 180, 180); width: 38.5em;
+}
+div.password-suggestions ul {
+	margin-bottom: 0px;
+}
+.confirm-parent {
+	margin: 0px; width: 36.3em; clear: left;
+}
+.password-parent {
+	margin: 0px; width: 36.3em; clear: left;
+}
+.profile {
+	margin: 1em 0px; clear: both;
+}
+.profile .user-picture {
+	margin: 0px 1em 1em 0px; float: right;
+}
+.profile h3 {
+	border-bottom-color: rgb(204, 204, 204); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.profile dl {
+	margin: 0px 0px 1.5em;
+}
+.profile dt {
+	margin: 0px 0px 0.2em; font-weight: bold;
+}
+.profile dd {
+	margin: 0px 0px 1em;
+}
+.container-inline-date > .form-item {
+	border: currentColor; margin-top: 1em;
+}
+.form-actions input {
+	margin-right: 1em;
+}
+.form-type-date-popup label {
+	
+}
+.container-inline-date .date-padding {
+	padding: 0px;
+}
+#edit-options--2 #edit-ers-select-schedule {
+	display: none;
+}
+#edit-options--2 .container-inline-date {
+	display: none;
+}
+#edit-ers-select-schedule {
+	padding-top: 10px;
+}
+td.revision-current {
+	background-color: rgb(235, 250, 228);
+}
+td.revision-future-current {
+	background-color: rgb(250, 222, 182);
+}
+input[type='submit'][disabled] {
+	background: 0px 0px rgb(102, 102, 102); color: rgb(255, 255, 255);
+}
+.views-exposed-form .views-exposed-widget {
+	padding: 0.5em 1em 0px 0px; float: left;
+}
+.views-exposed-form .views-exposed-widget .form-submit {
+	margin-top: 1.6em;
+}
+.views-exposed-form .form-item {
+	margin-top: 0px; margin-bottom: 0px;
+}
+.views-exposed-form .form-submit {
+	margin-top: 0px; margin-bottom: 0px;
+}
+.views-exposed-form label {
+	font-weight: bold;
+}
+.views-exposed-widgets {
+	margin-bottom: 0.5em;
+}
+.views-align-left {
+	text-align: left;
+}
+.views-align-right {
+	text-align: right;
+}
+.views-align-center {
+	text-align: center;
+}
+.views-view-grid tbody {
+	border-top-color: currentColor; border-top-width: medium; border-top-style: none;
+}
+.view .progress-disabled {
+	float: none;
+}

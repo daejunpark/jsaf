@@ -13,9 +13,10 @@
  * Whitespace Convention in grammar productions:
  * Every production which can be empty "owns" its leading whitespace.
  */
-module kr.ac.kaist.jsaf.parser.Spacing(Symbol);
+module kr.ac.kaist.jsaf.parser.Spacing(Symbol, Identifier);
 
 import Symbol;
+import Identifier;
 
 transient void EndOfFile  = "\u001a"? w !_ ;
 
@@ -80,10 +81,10 @@ transient private String MultiLineCommentCharNoLB =
      !("*/" / LineTerminator) a1:_ { yyValue = a1+""; } ;
 
 transient void SingleLineComment =
-     "//" a1s:SingleLineCommentChar*
+     a1:("//" / "<!--") a2s:SingleLineCommentChar*
      { StringBuilder buf = new StringBuilder();
-       buf.append("//");
-       for (String s : a1s.list()) buf.append(s);
+       buf.append(a1);
+       for (String s : a2s.list()) buf.append(s);
        NodeFactory.commentLog(createSpan(yyStart,yyCount), buf.toString());
      };
 
@@ -126,6 +127,7 @@ transient private void Space =
    / void:" "
    / [\u00A0]
    / [\uFEFF]
+   / "-->" !(idstart / [0-9])
    / SingleLineComment
    / MultiLineCommentNoLB ;
 

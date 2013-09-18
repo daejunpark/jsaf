@@ -1,0 +1,75 @@
+#banner {
+	position: absolute;
+}
+.oneByOne1 {
+	margin: 0px; left: 0px; top: 0px; width: 990px; height: 397px; overflow: hidden; position: relative;
+}
+#banner .oneByOne_item {
+	width: 990px; height: 397px; overflow: hidden; position: absolute;
+}
+#banner .oneByOne_item img.bigImage {
+	left: 0px; top: 0px; position: absolute;
+}
+#banner .oneByOne_item span.slideh2 {
+	font: bold 44px/46px "Open Sans", Arial, Helvetica, sans-serif; margin: 52px 12px 0px 562px; padding: 8px; color: rgb(34, 34, 34); float: left; position: relative; font-size-adjust: none; font-stretch: normal;
+}
+#banner .oneByOne_item span.slideh3 {
+	font: 300 24px/26px "Merriweather", Arial, Helvetica, sans-serif; margin: 3px 12px 0px 562px; padding: 8px; float: left; position: relative; font-size-adjust: none; font-stretch: normal;
+}
+#banner .oneByOne_item span.slideparagraph {
+	font: 14px/18px "Open Sans", Arial, Helvetica, sans-serif; margin: 1px 12px 0px 562px; padding: 8px; color: rgb(119, 119, 119); float: left; position: relative; font-size-adjust: none; font-stretch: normal;
+}
+#banner .oneByOne_item span.slidebutton a {
+	font: bold 14px/40px "Open Sans", Arial, Helvetica, sans-serif; margin: 13px 12px 0px 570px; padding: 0px 18px; color: rgb(255, 255, 255); text-transform: uppercase; vertical-align: top; float: left; display: inline-block; position: relative; font-size-adjust: none; font-stretch: normal; text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+}
+#banner .oneByOne_item span.slidebutton a:hover {
+	color: rgb(255, 255, 255);
+}
+#banner .oneByOne_item span.slideh2_left {
+	font: bold 44px/46px "Open Sans", Arial, Helvetica, sans-serif; margin: 52px 570px 0px 32px; padding: 8px; color: rgb(34, 34, 34); float: left; position: relative; font-size-adjust: none; font-stretch: normal;
+}
+#banner .oneByOne_item span.slideh3_left {
+	font: 300 24px/26px "Merriweather", Arial, Helvetica, sans-serif; margin: 3px 12px 0px 32px; padding: 8px; float: left; position: relative; font-size-adjust: none; font-stretch: normal;
+}
+#banner .oneByOne_item span.slideparagraph_left {
+	font: 14px/18px "Open Sans", Arial, Helvetica, sans-serif; margin: 1px 570px 0px 32px; padding: 8px; color: rgb(119, 119, 119); float: left; position: relative; font-size-adjust: none; font-stretch: normal;
+}
+#banner .oneByOne_item span.slidebutton_left a {
+	font: bold 14px/40px "Open Sans", Arial, Helvetica, sans-serif; margin: 13px 570px 0px 40px; padding: 0px 18px; color: rgb(255, 255, 255); text-transform: uppercase; vertical-align: top; float: left; display: inline-block; position: relative; font-size-adjust: none; font-stretch: normal; text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+}
+#banner .oneByOne_item span.slidebutton_left a:hover {
+	color: rgb(255, 255, 255);
+}
+.oneByOne_item img {
+	-webkit-transform: translate3d(0, 0, 0);
+}
+.oneByOne_item span.slideh2 {
+	-webkit-transform: translate3d(0, 0, 0);
+}
+.oneByOne_item span.slideh3 {
+	-webkit-transform: translate3d(0, 0, 0);
+}
+.oneByOne_item span.slideparagraph {
+	-webkit-transform: translate3d(0, 0, 0);
+}
+.oneByOne_item span.slidebutton {
+	-webkit-transform: translate3d(0, 0, 0);
+}
+.oneByOne_item span.slidebutton a {
+	-webkit-transform: translate3d(0, 0, 0);
+}
+.oneByOne_item span.slideh2_left {
+	-webkit-transform: translate3d(0, 0, 0);
+}
+.oneByOne_item span.slideh3_left {
+	-webkit-transform: translate3d(0, 0, 0);
+}
+.oneByOne_item span.slideparagraph_left {
+	-webkit-transform: translate3d(0, 0, 0);
+}
+.oneByOne_item span.slidebutton_left {
+	-webkit-transform: translate3d(0, 0, 0);
+}
+.oneByOne_item span.slidebutton_left a {
+	-webkit-transform: translate3d(0, 0, 0);
+}

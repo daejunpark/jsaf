@@ -34,11 +34,13 @@ class ModImpWalker(var env: Env, var path: Path, program: Any) extends Walker {
     case SModExpVarStmt(info, vds) => walk(SVarStmt(info, vds))
     case SModExpFunDecl(info, fd) => walk(fd)
     case _: Module | _: ModImpDecl => null
-    case SFunDecl(info, SFunctional(fds, vds, stmts, name, params)) =>
+    case SFunDecl(info, SFunctional(fds, vds, stmts, name, params), strict) =>
       val hoisted = Hoister.doit(stmts).asInstanceOf[List[Id]]
       val names = name :: hoisted ::: params
-      val vd = SVarStmt(info, hoisted.map(x => SVarDecl(x.getInfo, x, None)))
-      SFunDecl(info, SFunctional(fds, vds, vd :: bind(stmts, "arguments" :: names.map(_.getText)).asInstanceOf[List[SourceElement]], name, params))
+      val vd = SVarStmt(info, hoisted.map(x => SVarDecl(x.getInfo, x, None, strict)))
+      SFunDecl(info, SFunctional(fds, vds,
+                                 SSourceElements(info, vd :: bind(stmts, "arguments" :: names.map(_.getText)).asInstanceOf[List[SourceElement]], false),
+                                 name, params), strict)
     case SVarStmt(info, vds) =>
       SBlock(info, walk(vds).asInstanceOf[List[Stmt]], false)
     case SForVar(info, vds, cond, action, body) =>
@@ -49,9 +51,9 @@ class ModImpWalker(var env: Env, var path: Path, program: Any) extends Walker {
         SForIn(info, walk(SVarRef(vd.getInfo, vd.getName)).asInstanceOf[LHS], expr, body)), false)
     case _: With => MH.warnWith
     case SLabelStmt(info, SLabel(_, id), stmt) => bind(node, List(id.getText))
-    case SVarDecl(info, name, Some(expr)) =>
+    case SVarDecl(info, name, Some(expr), strict) =>
       SExprStmt(info, SAssignOpApp(info, walk(SVarRef(info, name)).asInstanceOf[LHS], SOp(info, "="), expr), false)
-    case SVarDecl(info, name, None) => null
+    case SVarDecl(info, name, None, strict) => null
     case SCatch(info, id, body) => bind(node, List(id.getText))
     case SVarRef(info, id) =>
       env.get(QualIntName(path, id.getText)) match {

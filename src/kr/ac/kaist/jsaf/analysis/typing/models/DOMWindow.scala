@@ -14,38 +14,58 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import kr.ac.kaist.jsaf.analysis.typing._
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5.{Navigator, DOMLocation}
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5.{Navigator, DOMLocation, History, Storage}
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLDocument
 
-
+// Modeled based on WHATWG Living Standard
+// Section 6.2 The Window object 
 object DOMWindow extends DOM {
 
   val WindowLoc = GlobalLoc
 
   private val prop_window: List[(String, AbsProperty)] = List(
-    // DOM Level 0
+    ("window",        AbsConstValue(PropValue(ObjectValue(GlobalLoc, F, T, T)))),
+    ("self",          AbsConstValue(PropValue(ObjectValue(GlobalLoc, F, T, T)))),
+    ("document",      AbsConstValue(PropValue(ObjectValue(HTMLDocument.GlobalDocumentLoc, F, T, T)))),
+    ("name",          AbsConstValue(PropValue(ObjectValue(StrTop, T, T, T)))),
+    // Location object
+    ("location",      AbsConstValue(PropValue(ObjectValue(DOMLocation.getInstance.get, F, T, T)))),
+    // History object
+    ("history",      AbsConstValue(PropValue(ObjectValue(History.getInstance.get, F, T, T)))),
+    ("status",        AbsConstValue(PropValue(ObjectValue(StrTop, T, T, T)))),
+    ("frames",          AbsConstValue(PropValue(ObjectValue(GlobalLoc, F, T, T)))),
+    ("length",        AbsConstValue(PropValue(ObjectValue(UInt, F, T, T)))),
+    // 6.1.1.1 Navigating nested browing contexts in the DOM
+    // Limitation : we do not support nested documents
+    ("top",           AbsConstValue(PropValue(ObjectValue(GlobalLoc, F, T, T)))),
+    ("opener",        AbsConstValue(PropValue(ObjectValue(NullTop, F, T, T)))),
+    ("parent",        AbsConstValue(PropValue(ObjectValue(GlobalLoc, F, T, T)))),
+    ("frameElement",        AbsConstValue(PropValue(ObjectValue(NullTop, F, T, T)))),
+    // Navigator object
+    ("navigator",     AbsConstValue(PropValue(ObjectValue(Navigator.getInstance.get, F, T, T)))),
     ("innerHeight",   AbsConstValue(PropValue(ObjectValue(UInt, T, T, T)))),
     ("innerWidth",    AbsConstValue(PropValue(ObjectValue(UInt, T, T, T)))),
-    ("length",        AbsConstValue(PropValue(ObjectValue(UInt, T, T, T)))),
-    ("name",          AbsConstValue(PropValue(ObjectValue(StrTop, T, T, T)))),
     ("outerHeight",   AbsConstValue(PropValue(ObjectValue(UInt, T, T, T)))),
     ("outerWidth",    AbsConstValue(PropValue(ObjectValue(UInt, T, T, T)))),
     ("pageXOffset",   AbsConstValue(PropValue(ObjectValue(UInt, T, T, T)))),
     ("pageYOffset",   AbsConstValue(PropValue(ObjectValue(UInt, T, T, T)))),
-    ("parent",        AbsConstValue(PropValue(ObjectValue(GlobalLoc, T, T, T)))),
-    ("self",          AbsConstValue(PropValue(ObjectValue(GlobalLoc, T, T, T)))),
     ("scrollMaxX",    AbsConstValue(PropValue(ObjectValue(UInt, T, T, T)))),
     ("scrollMaxY",    AbsConstValue(PropValue(ObjectValue(UInt, T, T, T)))),
     ("scrollX",       AbsConstValue(PropValue(ObjectValue(UInt, T, T, T)))),
     ("scrollY",       AbsConstValue(PropValue(ObjectValue(UInt, T, T, T)))),
     ("screenX",       AbsConstValue(PropValue(ObjectValue(UInt,T, T, T)))),
     ("screenY",       AbsConstValue(PropValue(ObjectValue(UInt, T, T, T)))),
-    ("status",        AbsConstValue(PropValue(ObjectValue(StrTop, T, T, T)))),
-    ("top",           AbsConstValue(PropValue(ObjectValue(GlobalLoc, T, T, T)))),
-    ("window",        AbsConstValue(PropValue(ObjectValue(GlobalLoc, T, T, T)))),
-    // Navigator object
-    ("navigator",     AbsConstValue(PropValue(ObjectValue(Navigator.getInstance.get, F, T, T)))),
-    // Location object
-    ("location",      AbsConstValue(PropValue(ObjectValue(DOMLocation.getInstance.get, F, T, T)))),
+    // WHATWG Living Standard Section 11.2.2 The sessionStorage attribute
+    // Window implements WindowSessionStorage
+    ("sessionStorage",      AbsConstValue(PropValue(ObjectValue(Storage.loc_ins2, F, T, T)))),
+    // WHATWG Living Standard Section 11.2.3 The localStorage attribute
+    // Window implements WindowLocalStorage
+    ("localStorage",      AbsConstValue(PropValue(ObjectValue(Storage.getInstance.get, F, T, T)))),
+    // Window implements GlobalEventHandlers
+    ("onerror",      AbsConstValue(PropValue(ObjectValue(NullTop, T, T, T)))),
+    ("onload",      AbsConstValue(PropValue(ObjectValue(NullTop, T, T, T)))),
+    // non-standard
+    ("devicePixelRatio",      AbsConstValue(PropValue(ObjectValue(NumTop, T, T, T)))),
     // API
     ("alert",         AbsBuiltinFunc("DOMWindow.alert", 1)),
     ("atob",          AbsBuiltinFunc("DOMWindow.atob", 1)),
@@ -65,6 +85,7 @@ object DOMWindow extends DOM {
     ("moveBy",        AbsBuiltinFunc("DOMWindow.moveBy", 2)),
     ("moveTo",        AbsBuiltinFunc("DOMWindow.moveTo", 2)),
     ("open",          AbsBuiltinFunc("DOMWindow.open", 1)),
+    ("postMessage",   AbsBuiltinFunc("DOMWindow.postMessage", 3)),
     ("print",         AbsBuiltinFunc("DOMWindow.print", 0)),
     ("prompt",        AbsBuiltinFunc("DOMWindow.prompt", 1)),
     ("resizeBy",      AbsBuiltinFunc("DOMWindow.resizeBy", 2)),
@@ -77,7 +98,9 @@ object DOMWindow extends DOM {
     ("setInterval",   AbsBuiltinFunc("DOMWindow.setInterval", 2)),
     ("setTimeout",    AbsBuiltinFunc("DOMWindow.setTimeout", 2)),
     ("stop",          AbsBuiltinFunc("DOMWindow.stop", 0)),
-    ("unescape",      AbsBuiltinFunc("DOMWindow.unescape", 1))
+    ("unescape",      AbsBuiltinFunc("DOMWindow.unescape", 1)),
+    // DOM Level 2 Style
+    ("getComputedStyle",      AbsBuiltinFunc("DOMWindow.getComputedStyle", 2))
   )
 
   def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
@@ -146,11 +169,25 @@ object DOMWindow extends DOM {
             System.err.println("* Warning: Semantics of the DOM API function '"+fun+"' are not defined.")
             ((h,ctx), (he, ctxe))
           })),
+      */
         ("DOMWindow.escape" -> (
           (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-            System.err.println("* Warning: Semantics of the DOM API function '"+fun+"' are not defined.")
-            ((h,ctx), (he, ctxe))
+            /* arguments */
+            val str = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+            if (str </ StrBot){
+              val encodedStr = str.getConcreteValue match {
+                case Some(v) =>
+                  // encoding
+                  StrTop
+                case None => StrTop
+              }
+              ((Helper.ReturnStore(h, Value(encodedStr)), ctx), (he, ctxe))
+            }
+            else
+              ((HeapBot, ContextBot), (he, ctxe))
+
           })),
+      /*
         ("DOMWindow.focus" -> (
           (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
             System.err.println("* Warning: Semantics of the DOM API function '"+fun+"' are not defined.")
@@ -190,7 +227,13 @@ object DOMWindow extends DOM {
           (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
             System.err.println("* Warning: Semantics of the DOM API function '"+fun+"' are not defined.")
             ((h,ctx), (he, ctxe))
-          })),
+          })),*/
+        ("DOMWindow.postMessage" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          // unsound semantics : should handle exceptions.
+          ((Helper.ReturnStore(h, Value(UndefTop)), ctx), (he, ctxe))
+        })),
+        /*
         ("DOMWindow.print" -> (
           (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
             System.err.println("* Warning: Semantics of the DOM API function '"+fun+"' are not defined.")
@@ -210,12 +253,18 @@ object DOMWindow extends DOM {
           (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
             System.err.println("* Warning: Semantics of the DOM API function '"+fun+"' are not defined.")
             ((h,ctx), (he, ctxe))
-          })),
+          })),*/ 
         ("DOMWindow.scroll" -> (
           (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-            System.err.println("* Warning: Semantics of the DOM API function '"+fun+"' are not defined.")
-            ((h,ctx), (he, ctxe))
+            /* argument */
+            val x_coord = getArgValue(h, ctx, args, "0")
+            val y_coord = getArgValue(h, ctx, args, "1")
+            if(x_coord </ ValueBot && y_coord </ ValueBot)
+              ((Helper.ReturnStore(h, Value(UndefTop)), ctx), (he, ctxe))
+            else
+            ((HeapBot, ContextBot), (he, ctxe))
           })),
+        /*
         ("DOMWindow.scrollBy" -> (
           (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
             System.err.println("* Warning: Semantics of the DOM API function '"+fun+"' are not defined.")
@@ -286,19 +335,43 @@ object DOMWindow extends DOM {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        }))
+        })),
       /*
         ("DOMWindow.stop" -> (
           (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
             System.err.println("* Warning: Semantics of the DOM API function '"+fun+"' are not defined.")
             ((h,ctx), (he, ctxe))
           })),
+       */
         ("DOMWindow.unescape" -> (
-          (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-            System.err.println("* Warning: Semantics of the DOM API function '"+fun+"' are not defined.")
-            ((h,ctx), (he, ctxe))
-          }))
-          */
+         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+            /* arguments */
+            val str = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+            if (str </ StrBot) {
+              val encodedStr = str.getConcreteValue match {
+                case Some(v) =>
+                  // encoding
+                  StrTop
+                case None => StrTop
+              }
+              ((Helper.ReturnStore(h, Value(encodedStr)), ctx), (he, ctxe))
+            }
+            else
+              ((HeapBot, ContextBot), (he, ctxe))
+          })),
+         
+      ("DOMWindow.getComputedStyle" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          /* arguments */
+          val elements = getArgValue(h, ctx, args, "0")
+          val nullval = if(Value(NullTop) <= elements) Value(NullTop) else ValueBot
+
+          val el_lset = elements._2
+          val returnval = el_lset.foldLeft(ValueBot)((v, l) =>
+            v + Helper.Proto(h, l, AbsString.alpha("style")))
+          ((Helper.ReturnStore(h, returnval + nullval), ctx), (he, ctxe))
+        }))
+
     )
   }
 

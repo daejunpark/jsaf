@@ -662,7 +662,7 @@ object Operator {
             BoolBot
         val b8_str =
           if (left._1._5 </ StrBot)
-            left._1._5 === Helper.objToPrimitive(right._2, "Number")._5
+            left._1._5 === Helper.objToPrimitive(right._2, "String")._5
           else
             BoolBot
         b8_num + b8_str
@@ -679,7 +679,7 @@ object Operator {
             BoolBot
         val b9_str =
           if (right._1._5 </ StrBot)
-            right._1._5 === Helper.objToPrimitive(left._2, "Number")._5
+            right._1._5 === Helper.objToPrimitive(left._2, "String")._5
           else
             BoolBot
         b9_num + b9_str

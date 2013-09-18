@@ -20,7 +20,8 @@ import kr.ac.kaist.jsaf.analysis.typing.Helper
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.{DOMElement, DOMNodeList}
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.{DOMElement, DOMNodeList, DOMNamedNodeMap}
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject.CSSStyleDeclaration
 
 object HTMLImageElement extends DOM {
   private val name = "HTMLImageElement"
@@ -71,16 +72,22 @@ object HTMLImageElement extends DOM {
           if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
           val addr_env = set_addr.head
           val addr1 = cfg.getAPIAddress(addr_env, 0)
+          val addr2 = cfg.getAPIAddress(addr_env, 1)
+          val addr3 = cfg.getAPIAddress(addr_env, 2)
 
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           
-          // location for childNodes property of a new created element
+          // locations for 'childNodes', 'attributes', and 'style' property of a new created element
           val l_childNodes = addrToLoc(addr1, Recent)
+          val l_attributes = addrToLoc(addr2, Recent)
+          val l_style = addrToLoc(addr3, Recent)
           val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+          val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
+          val (h_3, ctx_3) = Helper.Oldify(h_2, ctx_2, addr3)
           
           /* arguments */
           // argument length
-          val arglen = Operator.ToUInt32(getArgValue(h_1, ctx, args, "length"))
+          val arglen = Operator.ToUInt32(getArgValue(h_3, ctx_3, args, "length"))
           // optional arguments for width and height
           val (width, height) = arglen match {
             // no arguments 
@@ -88,17 +95,17 @@ object HTMLImageElement extends DOM {
               (AbsNumber.alpha(0), AbsNumber.alpha(0))
             // one argument for width 
             case UIntSingle(n) if n ==1 =>
-              (Helper.toNumber(Helper.toPrimitive(getArgValue(h_1, ctx, args, "0"))), AbsNumber.alpha(0))
+              (Helper.toNumber(Helper.toPrimitive(getArgValue(h_3, ctx_3, args, "0"))), AbsNumber.alpha(0))
             // two arguments for width and height 
             case UIntSingle(n) if n > 1 =>
-              (Helper.toNumber(Helper.toPrimitive(getArgValue(h_1, ctx, args, "0"))), 
-               Helper.toNumber(Helper.toPrimitive(getArgValue(h_1, ctx, args, "1"))))
+              (Helper.toNumber(Helper.toPrimitive(getArgValue(h_3, ctx_3, args, "0"))), 
+               Helper.toNumber(Helper.toPrimitive(getArgValue(h_3, ctx_3, args, "1"))))
             case NumBot => (NumBot, NumBot)
             case _ => (NumTop, NumTop)
           }
           // create a new HTMLImageElement
           if(width </ NumBot && height </ NumBot) {
-            val h_2 = lset_this.foldLeft(h_1)((_h, l) => {
+            val h_4 = lset_this.foldLeft(h_3)((_h, l) => {
               val newimgobj_list = default_getInsList:::DOMElement.getInsList(PropValue(ObjectValue(AbsString.alpha("IMG"), F, T, T)))
               val newimgobj = newimgobj_list.foldLeft(ObjEmpty)((obj, prop) => 
                 if(prop._1=="width") 
@@ -111,10 +118,19 @@ object HTMLImageElement extends DOM {
               // 'childNodes' update
               val childNodes_list = DOMNodeList.getInsList(0)
               val childNodes = childNodes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
-              val newimgobj_up = newimgobj.update("childNodes", PropValue(ObjectValue(l_childNodes, F, T, T)))
-              _h.update(l_childNodes, childNodes).update(l, newimgobj_up)
+              // 'attibutes' update
+              val attributes_list = DOMNamedNodeMap.getInsList(0)
+              val attributes = attributes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+              // 'style' update
+              val style_list = CSSStyleDeclaration.getInsList()
+              val style = style_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+              val newimgobj_up = newimgobj.update("childNodes", PropValue(ObjectValue(l_childNodes, F, T, T))).update(
+                                                  "attributes", PropValue(ObjectValue(l_attributes, F, T, T))).update(
+                                                  "style", PropValue(ObjectValue(l_style, T, T, T)))
+
+              _h.update(l_childNodes, childNodes).update(l_attributes, attributes).update(l_style, style).update(l, newimgobj_up)
             })
-            ((Helper.ReturnStore(h_2, Value(lset_this)), ctx_1), (he, ctxe))
+            ((Helper.ReturnStore(h_4, Value(lset_this)), ctx_3), (he, ctxe))
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))

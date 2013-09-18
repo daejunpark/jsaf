@@ -86,8 +86,14 @@ object MouseEvent extends DOM {
       // Introduced in DOM Level 2
       ("screenX", PropValue(ObjectValue(Value(NumTop), F,T,F))),
       ("screenY", PropValue(ObjectValue(Value(NumTop), F,T,F))),
+      ("pageX", PropValue(ObjectValue(Value(NumTop), F,T,F))),
+      ("pageY", PropValue(ObjectValue(Value(NumTop), F,T,F))),
       ("clientX", PropValue(ObjectValue(Value(NumTop), F,T,F))),
       ("clientY", PropValue(ObjectValue(Value(NumTop), F,T,F))),
+      ("x", PropValue(ObjectValue(Value(NumTop), F,T,F))),
+      ("y", PropValue(ObjectValue(Value(NumTop), F,T,F))),
+      ("offsetX", PropValue(ObjectValue(Value(NumTop), F,T,F))),
+      ("offsetY", PropValue(ObjectValue(Value(NumTop), F,T,F))),
       ("ctrlKey", PropValue(ObjectValue(Value(BoolTop), F,T,F))),
       ("shiftKey", PropValue(ObjectValue(Value(BoolTop), F,T,F))),
       ("altKey", PropValue(ObjectValue(Value(BoolTop), F,T,F))),
@@ -97,5 +103,5 @@ object MouseEvent extends DOM {
     )
   }
   
-  val instProps = Set("screenX", "screenY", "clientX", "clientY", "ctrlKey", "shiftKey", "altKey", "metaKey", "button")
+  val instProps = Set("screenX", "screenY", "pageX", "pageY", "clientX", "clientY", "x", "y", "offsetX", "offsetY", "ctrlKey", "shiftKey", "altKey", "metaKey", "button")
 }

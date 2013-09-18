@@ -18,13 +18,14 @@ import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMEvent._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5._
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject._
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU, IRFactory}
 import kr.ac.kaist.jsaf.analysis.typing.models.jquery.JQueryHelper
 
 
 object DOMModel {
-  val async_calls : List[String] = List("#LOAD", "#UNLOAD", "#KEYBOARD", "#MOUSE", "#OTHER", "#READY", "#TIME")
-  val async_fun_names = List("__LOADEvent__", "__UNLOADEvent__", "__KEYBOARDEvent__", "__MOUSEEvent__", "__OTHEREvent__", "__READYEvent__")
+  val async_calls : List[String] = List("#LOAD", "#UNLOAD", "#KEYBOARD", "#MOUSE", "#OTHER", "#READY", "#MESSAGE", "#TIME")
+  val async_fun_names = List("__LOADEvent__", "__UNLOADEvent__", "__KEYBOARDEvent__", "__MOUSEEvent__", "__OTHEREvent__", "__READYEvent__", "__MESSAGEEvent__")
 }
 
 class DOMModel(cfg: CFG) extends Model(cfg) {
@@ -38,7 +39,7 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
     DOMNotation, DOMProcessingInstruction, DOMStringList, DOMText, DOMTypeInfo, DOMUserDataHandler,
     // DOM Event
     DocumentEvent, Event, EventException, EventListener, EventTarget, MouseEvent, MutationEvent, UIEvent,
-    KeyboardEvent,
+    KeyboardEvent, MessageEvent,
     // DOM Html
     HTMLAnchorElement, HTMLAppletElement, HTMLAreaElement, HTMLBaseElement, HTMLBaseFontElement, HTMLBodyElement,
     HTMLBRElement, HTMLButtonElement, HTMLCollection, HTMLDirectoryElement, HTMLDivElement, HTMLDListElement,
@@ -51,10 +52,17 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
     HTMLTableCaptionElement, HTMLTableCellElement, HTMLTableColElement, HTMLTableElement, HTMLTableRowElement,
     HTMLTableSectionElement, HTMLTextAreaElement, HTMLTitleElement, HTMLUListElement,
     DOMWindow,
+    // DOM Style,
+    CSSStyleDeclaration, CSSStyleSheet, StyleSheetList, StyleSheet,
     // HTML 5
     HTMLCanvasElement, HTMLUnknownElement, CanvasRenderingContext2D, Navigator, CanvasGradient, DOMLocation,
+    PluginArray, Plugin, History, MimeTypeArray, MimeType, Storage, HTMLDataListElement,
+    // AJAX
+    XMLHttpRequest,
+    // W3C CSSOM View Module
+    ClientRect, ClientRectList,
     // non-standard
-    Console
+    Console, Screen, HTMLAllCollection
   )
 
   private var map_fid = Map[FunctionId, String]()
@@ -193,7 +201,7 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
             // delegate
             val selector_table = h(EventSelectorTableLoc)
             val s_selector = selector_table(name)._1._2._1._5
-            val lset_target = DOMHelper.querySelectorAll(h, s_selector)
+            val lset_target = DOMHelper.querySelectorAll(h, s_selector) ++ target_table(name)._1._2._2 
             (fun_table(name)._1._2._2 , lset_target)
           }
           else
@@ -252,6 +260,13 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
         proplist.foldLeft(Helper.NewObject(KeyboardEvent.loc_proto))((o, pv) =>
           o.update(pv._1, pv._2)
         )
+      case "#MESSAGE" =>
+        // MessageEvent object
+        val proplist = MessageEvent.getInstList(lset_target)
+        proplist.foldLeft(Helper.NewObject(MessageEvent.loc_proto))((o, pv) =>
+          o.update(pv._1, pv._2)
+        )
+
       case _ =>
         // Event object
         Event.getInstList(lset_target).foldLeft(Helper.NewObject(Event.loc_proto))((o, pv) =>

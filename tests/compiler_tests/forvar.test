@@ -15,7 +15,7 @@ var y\n\
 var z\n\
 <>break<>1 : {\n\
   {\n\
-    <>obj<>2 = <>Global<>toObject(collection)\n\
+    <>obj<>2 = collection\n\
     <>iterator<>3 = <>Global<>iteratorInit(<>obj<>2)\n\
     <>cond1<>4 = <>Global<>iteratorHasNext(<>obj<>2, <>iterator<>3)\n\
   }\n\

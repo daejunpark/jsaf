@@ -260,7 +260,7 @@ class JSAstVectorGenerator(program: Program, minT: Int) extends Walker {
       DebugPrint(info.getSpan.getCharVector.toString + "SFunApp" + " " + info.getSpan.getCharVector.getNumOfTokens + " " + info.getSpan.getCharVector.isMergeable)
       info.getSpan.getCharVector.getVector
 
-    case SFunDecl(info, ftn) =>
+    case SFunDecl(info, ftn, _) =>
       DebugPrint("SFunDecl")
       info.getSpan.getCharVector.merge(walk(ftn.getName))
       info.getSpan.getCharVector.merge(walk(ftn))
@@ -285,7 +285,7 @@ class JSAstVectorGenerator(program: Program, minT: Int) extends Walker {
       var v = new CharVector
       vds.foreach(vd => v.merge(walk(vd)))
       fds.foreach(fd => v.merge(walk(fd)))
-      pgm.foreach(s => v.merge(walk(s)))
+      v.merge(walk(pgm))
       params.foreach(p => v.merge(walk(p)))
       if (isRelevant(node)) v.addAt(Util.name2id(node))
       if (isSignificant(node) && v.containsEnoughTokens(minT))
@@ -485,6 +485,12 @@ class JSAstVectorGenerator(program: Program, minT: Int) extends Walker {
       DebugPrint(span.getCharVector.toString + "SpanInfo" + " " + span.getCharVector.isMergeable)
       span.getCharVector.getVector
       
+    case SSourceElements(info, body, _) =>
+      DebugPrint("SSourceElements")
+      var v = new CharVector
+      body.foreach(s => v.merge(walk(s)))
+      v.getVector
+
     case SStringLiteral(info, quote, txt) =>
       val str = NU.unescapeJava(txt)
       DebugPrint("SStringLiteral \"" + str + "\"")
@@ -553,7 +559,7 @@ class JSAstVectorGenerator(program: Program, minT: Int) extends Walker {
       DebugPrint(info.getSpan.getCharVector.toString + "SUnaryAssignOpApp" + " " + info.getSpan.getCharVector.getNumOfTokens + " " + info.getSpan.getCharVector.isMergeable)
       info.getSpan.getCharVector.getVector
 
-    case SVarDecl(info, name, expr) =>
+    case SVarDecl(info, name, expr, _) =>
       DebugPrint("SVarDecl")
       info.getSpan.getCharVector.merge(walk(name))
       info.getSpan.getCharVector.merge(walk(expr))

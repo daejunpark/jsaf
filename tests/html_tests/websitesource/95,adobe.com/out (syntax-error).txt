@@ -1,0 +1,17 @@
+Context-sensitivity mode is "1-callsite".
+
+* Initialize *
+hRP-sites_test/95,adobe.com/test_files/homepage.js:3852:117-3853:113:
+    Warning: the use of FunctionDeclaration as a Statement is not allowed in ECMAScript.
+hRP-sites_test/95,adobe.com/test_files/homepage.js:3854:1-202:
+    Warning: the use of FunctionDeclaration as a Statement is not allowed in ECMAScript.
+hRP-sites_test/95,adobe.com/test_files/homepage.js:3855:1-3859:196:
+    Warning: the use of FunctionDeclaration as a Statement is not allowed in ECMAScript.
+hRP-sites_test/95,adobe.com/test_files/homepage.js:3860:1-38:
+    Warning: the use of FunctionDeclaration as a Statement is not allowed in ECMAScript.
+hRP-sites_test/95,adobe.com/test_files/homepage.js:3861:1-57:
+    Warning: the use of FunctionDeclaration as a Statement is not allowed in ECMAScript.
+hRP-sites_test/95,adobe.com/test_files/homepage.js:3862:1-87:
+    Warning: the use of FunctionDeclaration as a Statement is not allowed in ECMAScript.
+hRP-sites_test/95,adobe.com/test_files/homepage.js:3863:1-93:
+    Warning: the use of FunctionDeclaration as a Statement is not allowed in ECMAScript.

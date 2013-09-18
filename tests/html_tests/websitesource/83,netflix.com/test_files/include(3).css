@@ -1,0 +1,168 @@
+html {
+	background-color: rgb(225, 225, 225);
+}
+body {
+	width: 960px;
+}
+body > header {
+	margin: 15px 15px 20px; left: 0px; right: 0px; font-size: 13px; position: fixed; z-index: 100; min-height: 70px; min-width: 965px; box-shadow: 0px 1px 6px black; background-color: rgb(185, 9, 11);
+}
+body > .content {
+	box-shadow: 0px 2px 10px #999;
+}
+header .logo a {
+	height: 70px;
+}
+header #masthead {
+	margin: 0px auto; padding: 0px 10px 0px 18px;
+}
+#masthead ul > li {
+	margin: 0px 0px 10px; text-align: right; display: block;
+}
+header #masthead {
+	height: 70px;
+}
+header #masthead .logo {
+	width: 115px; height: 70px; line-height: 7.75; float: left;
+}
+header #masthead .hlinks {
+	margin-top: 10px; float: right;
+}
+#masthead ul ul li {
+	text-align: left;
+}
+#masthead ul li.nm {
+	display: inline-block;
+}
+#masthead ul li.first.nm {
+	margin-right: 15px;
+}
+#masthead li#msil {
+	padding: 0px; margin-bottom: 15px; background-color: transparent;
+}
+#msil a {
+	padding: 5px 20px; border-radius: 5px; font-size: 15px; font-weight: 700; background-color: rgb(111, 6, 4);
+}
+#masthead .csphone {
+	color: rgb(255, 255, 255); font-size: 13px; font-weight: bold;
+}
+#masthead li.csphone img {
+	margin-right: 2px; vertical-align: middle;
+}
+#masthead li.anonopts {
+	margin-bottom: 0px;
+}
+.anonopts > ul > li {
+	display: inline-block;
+}
+#masthead .anonopts > ul > li {
+	display: inline-block;
+}
+#nav::after {
+	margin: 0px 10px; content: "|";
+}
+#fixedHeaderLayer {
+	left: 0px; top: 0px; height: 15px; right: 0px; position: fixed; z-index: 100; background-color: rgb(225, 225, 225);
+}
+#paddedHeaderLayer {
+	padding-top: 115px;
+}
+footer {
+	color: rgb(85, 85, 85);
+}
+footer a {
+	color: rgb(85, 85, 85); text-decoration: none;
+}
+footer a:hover {
+	color: rgb(85, 85, 85); text-decoration: none;
+}
+footer ul li strong {
+	font-weight: normal;
+}
+footer ul li .emphasis {
+	font-weight: normal;
+}
+#nav {
+	background: rgb(185, 9, 11); list-style: none; position: relative; z-index: 5;
+}
+li#nav {
+	padding-bottom: 1px; position: relative;
+}
+#nav a {
+	background: rgb(185, 9, 11); color: rgb(255, 255, 255); text-decoration: none;
+}
+#nav a:hover {
+	color: rgb(255, 255, 255);
+}
+#nav .ddown {
+	left: -9999px; position: absolute;
+}
+#nav ul ul {
+	background: rgb(255, 255, 255); list-style: none; padding: 15px 20px 5px; min-width: 50px; box-shadow: 1px 1px 3px #999; -moz-box-shadow: 1px 1px 3px #999; -webkit-box-shadow: 1px 1px 3px #999;
+}
+#nav ul li {
+	float: none; display: block;
+}
+#nav ul a {
+	background: rgb(255, 255, 255); color: rgb(0, 0, 0); display: block; white-space: nowrap;
+}
+#nav li:hover a {
+	text-decoration: underline;
+}
+#nav li:hover a {
+	background: rgb(255, 255, 255); color: rgb(0, 0, 0); text-decoration: none;
+}
+#nav li:hover a:hover {
+	color: rgb(0, 0, 0); text-decoration: underline;
+}
+header .hlinks #nav ul {
+	text-align: left;
+}
+#nav ul.ddown .imgcont {
+	min-width: 100px;
+}
+#nav ul.ddown .imgcont img {
+	padding: 5px 0px 0px 25px; display: block;
+}
+header #masthead ul#header_links_primary {
+	height: 70px; margin-right: 450px; margin-left: 130px; white-space: nowrap; min-width: 380px;
+}
+.en header #masthead ul#header_links_primary {
+	margin-right: 340px;
+}
+.fr header #masthead ul#header_links_primary {
+	min-width: 360px;
+}
+.pt header #masthead ul#header_links_primary {
+	margin-right: 380px;
+}
+.fi header #masthead ul#header_links_primary {
+	margin-right: 420px;
+}
+.es header #masthead ul#header_links_primary {
+	margin-right: 420px;
+}
+.nb header #masthead ul#header_links_primary {
+	margin-right: 370px;
+}
+.sv header #masthead ul#header_links_primary {
+	margin-right: 370px;
+}
+.da header #masthead ul#header_links_primary {
+	margin-right: 370px;
+}
+header #masthead ul#header_links_primary li {
+	margin: 0px; padding: 0px 10px; width: 25%; text-align: center; line-height: 5.5; display: inline-block; white-space: normal; position: relative; max-width: 150px;
+}
+.fr header #masthead ul#header_links_primary li {
+	width: 30%; max-width: 190px;
+}
+header #masthead ul#header_links_primary li a {
+	color: rgb(204, 201, 196); line-height: 1.2; font-family: arial; font-size: 15px; font-weight: bold; text-decoration: none; vertical-align: middle; display: inline-block; text-shadow: 0px 1px 1px rgba(0,0,0,0.5);
+}
+header #masthead ul#header_links_primary li a:hover {
+	color: rgb(255, 255, 255);
+}
+header #masthead ul#header_links_primary li a.active {
+	color: rgb(255, 255, 255);
+}

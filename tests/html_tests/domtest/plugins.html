@@ -1,0 +1,19 @@
+<!-- test for window.navigator.plugins -->
+<html>
+  <body>
+    <script>
+      var plugins = window.navigator.plugins; // PluginArray
+      var __result1 = plugins.length;
+      var __expect1 = "__UInt";
+      var __result2 = plugins.refresh(false);
+      var __expect2 = undefined;
+      var plugin = plugins[3];   // Plugin
+      var __result3 = plugin.description;
+      var __expect3 = "__StrTop";
+      var __result4 = plugin.filename;
+      var __expect4 = "__StrTop";
+      var __result5 = plugin.name;
+      var __expect5 = "__StrTop";
+    </script>
+  </body>
+</html>

@@ -9,10 +9,13 @@
 
 package kr.ac.kaist.jsaf.analysis.typing
 
+import java.util.{List => JList}
 import scala.collection.mutable.{HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.models.BuiltinModel
+import kr.ac.kaist.jsaf.bug_detector.BugInfo
+import kr.ac.kaist.jsaf.nodes_util.Span
 
 trait TypingInterface {
   def env: Environment
@@ -23,6 +26,10 @@ trait TypingInterface {
   def dump(): Unit
   def dump_callgraph(): Unit = {}
   def statistics(statdump: Boolean): Unit = {}
+  def getErrors: JList[BugInfo]
+  def signal(span: Span, bugKind: Int, msg1: String, msg2: String): Unit
+  def setSpan(span: Span): Unit
+  def getSpan: Span
 
   def builtinFset(): Map[FunctionId, String]
   def getTable: Table = MHashMap()

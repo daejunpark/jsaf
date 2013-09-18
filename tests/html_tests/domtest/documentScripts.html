@@ -1,0 +1,30 @@
+<!-- test for 'scripts' in Document object -->
+
+<body>
+  <script id="script11">  </script>
+  <div name=ccc for="bbb" type="submit"> ttt </div>
+  <script id="222">  </script>
+  <A id="A1" href="http://news.naver.com/">www.naver.com </A>
+  <script id="bbb"> </script>
+  <script id="ccc"> </script>
+  <script id="ddd">
+    var __result1 = document.scripts.length;     
+    var __expect1 = 5;
+
+    var __result2 = document.scripts[0].id;
+    var __expect2 = "script11";
+
+    var __result3 = document.scripts[1].id;
+    var __expect3 = "222";
+    
+    var __result4 = document.scripts[2].id;
+    var __expect4 = "bbb";
+
+    var __result5 = document.scripts[3].id;
+    var __expect5 = "ccc";
+    
+    var __result6 = document.scripts[4].id;
+    var __expect6 = "ddd";
+     
+  </script>
+</body>

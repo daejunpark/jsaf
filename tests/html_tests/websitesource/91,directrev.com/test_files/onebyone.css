@@ -1,0 +1,39 @@
+.buttonArea {
+	left: 50%; top: 100%; margin-top: -32px; float: left; position: relative;
+}
+.buttonCon {
+	left: -50%; float: left; position: relative;
+}
+.buttonCon .theButton {
+	background: url("../images/circlebutton.png") no-repeat; border: 0px currentColor; width: 20px; height: 22px; color: rgb(178, 34, 34); text-indent: -9999px; margin-right: 3px; float: left; display: block;
+}
+.buttonArea a.active {
+	background-position: 0px -22px;
+}
+.arrowButton {
+	cursor: pointer;
+}
+.arrowButton .prevArrow {
+	background: url("../images/prev.png") no-repeat; left: 12px; top: 170px; width: 40px; height: 80px; position: absolute;
+}
+.arrowButton .nextArrow {
+	background: url("../images/next.png") no-repeat; top: 170px; width: 40px; height: 80px; right: 12px; position: absolute;
+}
+.animate0 {
+	animation-duration: 0.6s; animation-timing-function: ease; animation-delay: 0s; animation-fill-mode: both; -webkit-animation-duration: .6s; -webkit-animation-delay: 0s; -webkit-animation-timing-function: ease; -webkit-animation-fill-mode: both; -moz-animation-duration: .6s; -moz-animation-delay: 0s; -moz-animation-timing-function: ease; -moz-animation-fill-mode: both;
+}
+.animate1 {
+	animation-duration: 0.6s; animation-timing-function: ease; animation-delay: 0.2s; animation-fill-mode: both; -webkit-animation-duration: .6s; -webkit-animation-delay: .2s; -webkit-animation-timing-function: ease; -webkit-animation-fill-mode: both; -moz-animation-duration: .6s; -moz-animation-delay: .2s; -moz-animation-timing-function: ease; -moz-animation-fill-mode: both;
+}
+.animate2 {
+	animation-duration: 0.6s; animation-timing-function: ease; animation-delay: 0.4s; animation-fill-mode: both; -webkit-animation-duration: .6s; -webkit-animation-delay: .4s; -webkit-animation-timing-function: ease; -webkit-animation-fill-mode: both; -moz-animation-duration: .6s; -moz-animation-delay: .4s; -moz-animation-timing-function: ease; -moz-animation-fill-mode: both;
+}
+.animate3 {
+	animation-duration: 0.6s; animation-timing-function: ease; animation-delay: 0.6s; animation-fill-mode: both; -webkit-animation-duration: .6s; -webkit-animation-delay: .6s; -webkit-animation-timing-function: ease; -webkit-animation-fill-mode: both; -moz-animation-duration: .6s; -moz-animation-delay: .6s; -moz-animation-timing-function: ease; -moz-animation-fill-mode: both;
+}
+.animate4 {
+	animation-duration: 0.6s; animation-timing-function: ease; animation-delay: 0.8s; animation-fill-mode: both; -webkit-animation-duration: .6s; -webkit-animation-delay: .8s; -webkit-animation-timing-function: ease; -webkit-animation-fill-mode: both; -moz-animation-duration: .6s; -moz-animation-delay: .8s; -moz-animation-timing-function: ease; -moz-animation-fill-mode: both;
+}
+.animate5 {
+	animation-duration: 0.6s; animation-timing-function: ease; animation-delay: 1s; animation-fill-mode: both; -webkit-animation-duration: .6s; -webkit-animation-delay: 1s; -webkit-animation-timing-function: ease; -webkit-animation-fill-mode: both; -moz-animation-duration: .6s; -moz-animation-delay: 1s; -moz-animation-timing-function: ease; -moz-animation-fill-mode: both;
+}

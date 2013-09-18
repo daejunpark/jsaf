@@ -1,0 +1,84 @@
+#footer_global * {
+	margin: 0px; padding: 0px; border: currentColor; text-decoration: none;
+}
+#footer_global {
+	background: url("../../image/footerbg.png") repeat-x 0px 0px rgb(255, 255, 255); width: 100%; text-align: center; font-size: 12px;
+}
+#footer_global a {
+	border: currentColor; text-decoration: none; float: none;
+}
+#footer_global a img {
+	border: currentColor; text-decoration: none; float: none;
+}
+#footer_global img {
+	border: currentColor; text-decoration: none; float: none;
+}
+#footer_global p {
+	border: currentColor; text-decoration: none; float: none;
+}
+#footer_global ul {
+	border: currentColor; text-decoration: none; float: none;
+}
+#footer_global ol {
+	border: currentColor; text-decoration: none; float: none;
+}
+#footer_global li {
+	border: currentColor; text-decoration: none; float: none;
+}
+#footer_global dl {
+	border: currentColor; text-decoration: none; float: none;
+}
+#footer_global dt {
+	border: currentColor; text-decoration: none; float: none;
+}
+#footer_global dd {
+	border: currentColor; text-decoration: none; float: none;
+}
+#footer_global a:link {
+	text-decoration: none;
+}
+#footer_global a:visited {
+	text-decoration: none;
+}
+#footer_global a:focus {
+	text-decoration: underline;
+}
+#footer_global a:hover {
+	text-decoration: underline;
+}
+#footer_global a:active {
+	text-decoration: underline;
+}
+#fc2menu_global {
+	margin: 0px auto; padding: 10px 0px; width: 900px; text-align: left; clear: both; position: relative;
+}
+#fc2menu_global .fc2top {
+	background: url("../../image/fc2_logo.png") no-repeat -6px 0px; left: 0px; top: 15px; width: 100px; height: 45px; position: absolute;
+}
+#fc2menu_global ul {
+	padding: 45px 0px 0px;
+}
+#fc2menu_global li {
+	width: 910px; text-align: left; overflow: hidden; clear: both; margin-bottom: 10px; margin-left: -10px; -ms-zoom: 100%;
+}
+html > #fc2menu_global dl {
+	font-size: 10px;
+}
+#fc2menu_global dl {
+	padding: 0px 0px 0px 10px; width: 290px !important; float: left;
+}
+#fc2menu_global dd {
+	overflow: hidden; font-size: 85%; -ms-word-break: normal; -ms-word-wrap: break-word;
+}
+#footer_outline {
+	margin: 0px auto; width: 900px;
+}
+#footer_outline ul {
+	padding: 20px 0px 10px; text-align: center; font-size: 100%; border-top-color: rgb(215, 215, 215); border-top-width: 1px; border-top-style: dotted;
+}
+#footer_outline ul li {
+	margin: 0px 15px; display: inline;
+}
+#footer_outline p.copyright {
+	padding: 0px 0px 10px; text-align: center; font-style: normal;
+}

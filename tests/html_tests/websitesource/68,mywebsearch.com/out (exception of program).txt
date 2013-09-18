@@ -1,0 +1,16 @@
+Context-sensitivity mode is "1-callsite".
+
+* Initialize *
+# Time for IR translation(s): 11.14
+# Time for CFG building(s): 1.41
+# Time for front end(s): 12.54
+
+* Analyze *
+# Initial peak memory(mb): 174.92
+# Basic block(#): 4892(source) + 2475(bulit-in) = 7367
+# Time for initial heap(s): 1.16
+# Time for initial heap with DOM modeling(ms): 238.91296
+The following names are defined in the initial heap of analyzer
+but not in the list of predefined names:
+    jQuery $ 
+Update predefined names at jsaf.compiler.Predefind

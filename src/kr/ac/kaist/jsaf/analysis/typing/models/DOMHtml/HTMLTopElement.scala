@@ -16,7 +16,7 @@ import kr.ac.kaist.jsaf.analysis.typing.models._
 import org.w3c.dom.Node
 import org.w3c.dom.Element
 import kr.ac.kaist.jsaf.analysis.cfg.CFG
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5.HTMLCanvasElement
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMElement
 
 object HTMLTopElement extends DOM {
@@ -62,7 +62,7 @@ object HTMLTopElement extends DOM {
       HTMLStyleElement, HTMLTableCaptionElement, HTMLTableCellElement, HTMLTableColElement, HTMLTableElement, HTMLTableRowElement,
       HTMLTableSectionElement, HTMLTextAreaElement, HTMLTitleElement, HTMLUListElement,
       // HTML 5
-      HTMLCanvasElement)
+      HTMLCanvasElement, HTMLDataListElement, HTMLUnknownElement)
     val proplist = elementList.foldLeft[List[(String, PropValue)]](List())((propl, ele) =>
       propl:::ele.default_getInsList()
     )

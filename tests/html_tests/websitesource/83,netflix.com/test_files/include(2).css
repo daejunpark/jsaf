@@ -1,0 +1,126 @@
+.page-HOWITWORKS #overview_block {
+	border-width: 20px 0px; border-style: solid; border-color: rgb(51, 51, 51);
+}
+#overview_block {
+	background: rgb(253, 245, 214); padding: 10px;
+}
+#overview_block .header {
+	padding: 3px 0px 10px; text-align: center;
+}
+#overview_block .header h2 {
+	line-height: 1.1; font-size: 34px; font-weight: bold;
+}
+#overview_block .tagline {
+	font-size: 24px; font-weight: normal;
+}
+#overview_block h3 {
+	text-align: center; font-size: 14px;
+}
+#overview_block .button-cont {
+	margin-top: 10px;
+}
+#overview_block .blue-button {
+	text-align: center; display: inline-block; background-image: url("https://netflix.hs.llnwd.net/e1/us/layout/ecweb/overview/blue_gradient.jpg"); background-repeat: repeat-x; background-color: rgb(0, 107, 172); _display: inline;
+}
+#overview_block .blue-button span {
+	margin: 1px; padding: 4px 3px; border: 1px solid rgb(255, 255, 255); display: inline-block; min-width: 92px;
+}
+#overview_block .blue-button em {
+	width: 0px; height: 0px; text-indent: -2000em; overflow: hidden; position: absolute;
+}
+#overview_block section ul {
+	overflow: hidden;
+}
+#overview_block section li {
+	list-style: none; margin: 0px 0px -200px; width: 302px; text-align: center; padding-bottom: 200px; float: left; position: relative; background-color: rgb(255, 255, 255);
+}
+#overview_block section li h3 {
+	font-size: 14px; font-weight: bold; margin-bottom: 20px;
+}
+#overview_block a {
+	display: block;
+}
+#overview_block a:hover {
+	color: rgb(51, 51, 51); text-decoration: none;
+}
+#overview_block a:hover img {
+	color: rgb(51, 51, 51); text-decoration: none;
+}
+#overview_block a {
+	color: rgb(51, 51, 51); text-decoration: none;
+}
+#overview_block a .blue-button {
+	color: rgb(255, 255, 255);
+}
+#overview_block .header h2 {
+	font-size: 30px;
+}
+#overview_block section li.mid {
+	width: 306px; margin-right: 10px; margin-left: 10px;
+}
+#overview_block section .lipad {
+	padding: 10px;
+}
+#overview_block section .dconsole {
+	width: 282px;
+}
+#overview_block section .dconsole .es {
+	margin: 0px auto; width: 60px;
+}
+#overview_block section .dbox {
+	margin: 15px 0px 0px 20px; border: 3px solid rgb(136, 136, 136); width: 98px; text-align: center; font-size: 9px; font-weight: normal; float: left;
+}
+#overview_block section .nmt.dbox {
+	margin-top: 0px;
+}
+#overview_block section .dboxpadd {
+	padding: 5px;
+}
+#overview_block section .dbox img {
+	padding: 2px 0px;
+}
+#overview_block section .nmt.dbox img {
+	padding: 1px 0px;
+}
+#overview_block section .exp.dbox img {
+	padding: 20px 0px;
+}
+#overview_block section .dconnector {
+	width: 35px; float: left;
+}
+#overview_block section .connector {
+	height: 3px; color: rgb(136, 136, 136); margin-top: 45px; background-color: rgb(136, 136, 136);
+}
+#overview_block section .ddevice {
+	width: 106px; float: left;
+}
+#overview_block .seeother {
+	text-align: center; padding-top: 10px; font-weight: bold;
+}
+#overview_block .seeother a {
+	color: rgb(0, 153, 255); display: inline-block;
+}
+.global-info {
+	position: relative; min-height: 330px; background-image: url("https://netflix.hs.llnwd.net/e1/us/layout/ecweb/bg_nmhome.jpg"); background-repeat: no-repeat; background-color: rgb(0, 0, 0);
+}
+.global-info .global-life {
+	margin: 0px; padding: 5px 20px; left: 0px; top: 0px; right: 0px; bottom: 0px; color: rgb(255, 255, 255); overflow: hidden; position: absolute;
+}
+.global-life h1 {
+	margin: 5px 0px 10px; font-size: 30px;
+}
+.global-life h1 .en {
+	font-size: 27px;
+}
+.global-life ul {
+	width: 500px;
+}
+.global-life ul li {
+	background: url("https://netflix.hs.llnwd.net/e1/us/layout/ecweb/check.png") no-repeat 0px 50%; list-style: none; margin: 0px; padding: 7px 0px 7px 22px; text-shadow: 1px 1px #000000;
+}
+.global-info .contact-us {
+	background: rgba(0, 0, 0, 0.5); padding: 4px; width: 8em; text-align: right; right: 390px; bottom: 20px; position: absolute; text-shadow: 1px 1px 0px #000;
+}
+.global-info .landing-reg {
+	margin: 68px 20px 20px 0px; width: 30em; float: right; position: relative; min-height: 255px; min-width: 360px;
+}

@@ -10,6 +10,7 @@
 package kr.ac.kaist.jsaf.analysis.typing
 
 import java.io.File
+import java.util.{List => JList}
 
 import scala.collection.immutable.HashMap
 import scala.collection.mutable.{HashMap => MHashMap}
@@ -51,6 +52,12 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Value
 import kr.ac.kaist.jsaf.analysis.typing.models.{ModelManager, BuiltinModel}
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
+import kr.ac.kaist.jsaf.bug_detector.BugInfo
+import kr.ac.kaist.jsaf.nodes_util.Span
+import kr.ac.kaist.jsaf.nodes_util.NodeFactory
+import kr.ac.kaist.jsaf.nodes_util.NodeRelation
+import kr.ac.kaist.jsaf.nodes_util.NodeUtil
+import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 
 class DSparseTyping(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingInterface {
   val _env = new DSparseEnv(_cfg)
@@ -62,6 +69,21 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends Typing
   var fset_builtin: Map[FunctionId, String] = Map()
   var state = StateBot
   override def getMergedState = state
+
+  var errors = List[BugInfo]()
+  def getErrors: JList[BugInfo] = toJavaList(errors)
+  def signal(span: Span, bugKind: Int, msg1: String, msg2: String): Unit =
+    errors ++= List(new BugInfo(span, bugKind, msg1, msg2))
+  var _span: Span = null
+  def getSpan = _span
+  def setSpan(span: Span): Unit = {
+    _span = span
+    val num = errors.reverse.takeWhile(e => (e.span == null || NodeUtil.isDummySpan(e.span))).length
+    if (num > 0) {
+      val (front, back) = errors.splitAt(errors.length - num)
+      errors = front ++ back.map(e => new BugInfo(span, e.bugKind, e.arg1, e.arg2))
+    }
+  }
 
   def checkTable(dense: Table): Unit = {
     System.out.println("== Check Table ==")
@@ -942,6 +964,16 @@ class DSparseTyping(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends Typing
 
               System.out.println("- Heap " + ccStr)
               System.out.println(DomainPrinter.printHeap(4, state._1, cfg))
+/*
+              val out_s = sem.get.C((node,cc), cfg.getCmd(node), state)
+
+              System.out.println("- Out Normal Heap " + ccStr)
+              System.out.println(DomainPrinter.printHeap(4, out_s._1._1, cfg))
+              if(out_s._2._1 != HeapBot) {
+                System.out.println("- Out Exc Heap " + ccStr)
+                System.out.println(DomainPrinter.printHeap(4, out_s._2._1, cfg))
+              }
+*/
               first = false
               prevBottom = false
             }

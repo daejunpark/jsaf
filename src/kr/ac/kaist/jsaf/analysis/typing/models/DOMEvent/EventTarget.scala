@@ -12,6 +12,7 @@ package kr.ac.kaist.jsaf.analysis.typing.models.DOMEvent
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMNode
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject.XMLHttpRequest
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
@@ -28,10 +29,12 @@ object EventTarget extends DOM {
 
   /* initial property list */
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
-    // Node interface should implements EnventTarget
+    // Node interface should implements EventTarget
     (DOMNode.loc_proto, prop_node_proto),
-    // window interface should implements EnventTarget
-    (DOMWindow.WindowLoc, prop_window)
+    // window interface should implements EventTarget
+    (DOMWindow.WindowLoc, prop_window),
+    // XMLHttpRequest
+    (XMLHttpRequest.loc_proto, prop_ajax)
   )
 
   def getPropList = prop_node_proto
@@ -42,6 +45,12 @@ object EventTarget extends DOM {
     ("dispatchEvent",       AbsBuiltinFunc("EventTarget.dispatchEvent", 1))
   )
   private val prop_window: List[(String, AbsProperty)] = List(
+    ("addEventListener",    AbsBuiltinFunc("window.EventTarget.addEventListener", 3)),
+    ("removeEventListener", AbsBuiltinFunc("window.EventTarget.removeEventListener", 3)),
+    ("dispatchEvent",       AbsBuiltinFunc("window.EventTarget.dispatchEvent", 1))
+  )
+  
+  private val prop_ajax: List[(String, AbsProperty)] = List(
     ("addEventListener",    AbsBuiltinFunc("window.EventTarget.addEventListener", 3)),
     ("removeEventListener", AbsBuiltinFunc("window.EventTarget.removeEventListener", 3)),
     ("dispatchEvent",       AbsBuiltinFunc("window.EventTarget.dispatchEvent", 1))
@@ -64,7 +73,21 @@ object EventTarget extends DOM {
           else
             ((HeapBot, ContextBot), (he, ctxe))
         })),
-        // case "EventTarget.removeEventListener" =>
+      // do nothing : could be more precise
+      ("EventTarget.removeEventListener" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          /* arguments */
+          val s_type = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          val v_fun = getArgValue(h, ctx, args, "1")
+          val b_capture = Helper.toBoolean(getArgValue(h, ctx, args, "2"))
+          if (s_type </ StrBot) {
+            ((Helper.ReturnStore(h, Value(UndefTop)), ctx), (he, ctxe))
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        })),
+
         // case "EventTarget.dispatchEvent" =>
 
 
@@ -82,8 +105,21 @@ object EventTarget extends DOM {
             }
             else
               ((HeapBot, ContextBot), (he, ctxe))
-          }))
-      // case "window.EventTarget.removeEventListener" =>
+          })),
+      // do nothing : could be more precise
+      ("window.EventTarget.removeEventListener" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
+          /* arguments */
+          val s_type = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+          val v_fun = getArgValue(h, ctx, args, "1")
+          val b_capture = Helper.toBoolean(getArgValue(h, ctx, args, "2"))
+          if (s_type </ StrBot) {
+            ((Helper.ReturnStore(h, Value(UndefTop)), ctx), (he, ctxe))
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        }))
       // case "window.EventTarget.dispatchEvent" =>
     )
   }

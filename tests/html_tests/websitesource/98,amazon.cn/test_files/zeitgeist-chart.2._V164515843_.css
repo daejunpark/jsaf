@@ -1,0 +1,141 @@
+div.zgChart div.storeTitle {
+	font-weight: bold;
+}
+div.zgChart div.subheadText {
+	padding: 2px 0px 8px; font-size: 11px;
+}
+div.zgChart .learnMore {
+	padding-left: 2px; font-size: 11px; font-weight: normal; text-decoration: none;
+}
+div.zgChart .learnMore a:visited {
+	color: rgb(0, 75, 145);
+}
+div.zgChart .rankedItemImage {
+	margin-bottom: 10px; position: relative;
+}
+div.zgChart .rankedItemNarrowImage {
+	padding-bottom: 5px;
+}
+div.zgChart span.rank {
+	line-height: 10px; font-family: Arial; font-size: 16px; font-weight: bold;
+}
+div.zgChart div.rankedItemInfo {
+	line-height: 16px; margin-bottom: 5px;
+}
+div.zgChart a.titleLink {
+	font-family: Arial; font-size: 12px; font-weight: normal; text-decoration: none;
+}
+div.zgChart a.titleLink:hover {
+	text-decoration: underline;
+}
+div.zgChart a.playbackTitleLink:hover {
+	text-decoration: underline;
+}
+div.zgChart a.playbackTitleLink {
+	font-weight: normal; text-decoration: none;
+}
+div.zgChart .byline {
+	font-size: 11px;
+}
+div.zgChart .byline a {
+	text-decoration: none;
+}
+div.zgChart .byline a:hover {
+	text-decoration: underline;
+}
+div.zgChart .priceBlock {
+	padding-top: 2px; font-size: 11px; position: relative;
+}
+div.zgChart .priceBlock .pricePerUnit {
+	color: rgb(153, 0, 0);
+}
+div.zgChart .mapOrRangePrice {
+	padding-top: 2px;
+}
+div.zgChart strong.price {
+	font-size: 14px; font-weight: normal;
+}
+div.zgChart .listprice {
+	color: rgb(102, 102, 102); font-family: verdana,arial,helvetica,sans-serif;
+}
+div.zgChart .moverRank {
+	color: rgb(51, 153, 0);
+}
+div.zgChart .dilText {
+	color: rgb(102, 102, 102); font-size: 11px;
+}
+div.zgChart .noDil {
+	line-height: 8px; display: inline;
+}
+div.zgChart div.platformBinding {
+	color: rgb(102, 102, 102); padding-top: 2px; font-size: 11px;
+}
+div.zgChart div.mp3AsinContainer {
+	left: 0px; top: 52px; width: 75px; height: 24px; overflow: hidden; position: absolute; cursor: pointer;
+}
+div.zgChart div.mp3AsinPlayHover {
+	background: rgb(255, 255, 255); opacity: 0.9;
+}
+div.zgChart div.mp3AsinText {
+	left: 24px; top: 0px; width: 50px; height: 24px; line-height: 24px; font-size: 10px; display: none; position: absolute;
+}
+div.zgChart div.mp3AsinPlayHover div.mp3AsinText {
+	display: block;
+}
+div.zg_seeAll {
+	position: relative;
+}
+div.zg_seeAll div {
+	top: 0px; right: 5px; position: absolute;
+}
+.arrowSprite {
+	background: url("http://g-ec4.images-amazon.com/images/G/28/x-locale/common/icons/up_down_arrows.png") no-repeat; margin: 0px; padding: 0px; overflow: hidden; vertical-align: middle; display: inline-block; position: relative;
+}
+.arrowSprite span {
+	top: -9999px; position: absolute;
+}
+.arrowUp_s {
+	background-position: 0px -8px; width: 15px; height: 15px;
+}
+.arrowDown_s {
+	background-position: -19px -8px; width: 15px; height: 15px;
+}
+div.zg_chart_tab_container {
+	margin: 0px -6px;
+}
+div.zg_chart_tab_container_narrow {
+	margin: 0px -6px; width: 175px; line-height: 0;
+}
+div.zg_explore_tabs {
+	margin: 0px 0px 10px; padding: 0px; width: 100%; font-weight: bold; border-bottom-color: rgb(175, 206, 226); border-bottom-width: 1px; border-bottom-style: solid;
+}
+div.zg_explore_tabs ul {
+	list-style: none; margin: 0px; padding-left: 2px;
+}
+div.zg_explore_tabs li {
+	background: url("http://g-ec4.images-amazon.com/images/G/28/zeitgeist/tabs/tab_left._V168573615_.gif") no-repeat left top rgb(235, 241, 255); padding: 0px; top: 1px; color: rgb(0, 75, 145); margin-top: 0px; margin-right: 2px; margin-bottom: 0px; float: left; position: relative;
+}
+div.zg_explore_tabs li div {
+	background: url("http://g-ec4.images-amazon.com/images/G/28/zeitgeist/tabs/tab_right._V168573607_.gif") no-repeat right top; padding: 5px 5px 4px; color: rgb(0, 75, 145); font-family: Arial, sans-serif; font-size: 12px; border-bottom-color: rgb(175, 206, 226); border-bottom-width: 1px; border-bottom-style: solid; white-space: nowrap;
+}
+div.zg_explore_tabs li div a {
+	color: inherit; font-family: Arial, sans-serif; font-size: 12px; text-decoration: none;
+}
+div.zg_explore_tabs li div a:link {
+	color: inherit; font-family: Arial, sans-serif; font-size: 12px; text-decoration: none;
+}
+div.zg_explore_tabs li div a:visited {
+	color: inherit; font-family: Arial, sans-serif; font-size: 12px; text-decoration: none;
+}
+div.zg_explore_tabs li.zg_explore_currentTab {
+	color: rgb(228, 121, 17); cursor: default; background-image: url("http://g-ec4.images-amazon.com/images/G/28/zeitgeist/tabs/tab_selected_left._V168573628_.gif"); background-color: rgb(255, 255, 255);
+}
+div.zg_explore_tabs li.zg_explore_currentTab div {
+	color: rgb(228, 121, 17); padding-bottom: 4px; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px; border-bottom-style: solid; background-image: url("http://g-ec4.images-amazon.com/images/G/28/zeitgeist/tabs/tab_selected_right._V168573620_.gif");
+}
+div.zg_explore_tabs li.zg_explore_currentTab div a {
+	color: rgb(228, 121, 17);
+}
+a.zg_whyfree:visited {
+	color: rgb(0, 75, 145);
+}

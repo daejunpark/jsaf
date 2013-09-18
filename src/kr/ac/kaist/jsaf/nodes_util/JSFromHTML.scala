@@ -34,6 +34,7 @@ import kr.ac.kaist.jsaf.analysis.typing.models.DOMHelper
 class JSFromHTML(filename: String) extends Walker {
   val file = new File(filename)
   val source : Source  = new Source(file)
+  source.fullSequentialParse
   val scriptelements : JList[Element] = source.getAllElements(HTMLElementName.SCRIPT)
   def getSource(): Source = source
 
@@ -60,7 +61,8 @@ class JSFromHTML(filename: String) extends Walker {
     // filter out modeled library and enable model
     val nonmodeled_scriptelements = filtered_scriptelements.filter((e) => {
       val srcname = e.getAttributeValue("src")
-      if (srcname != null && isModeledLibrary(srcname)) {
+      //if (srcname != null && isModeledLibrary(srcname)) {
+      if (srcname != null && Config.jqMode && isModeledLibrary(srcname)) {
         enableModel(srcname); // side-effect
         false
       }
@@ -111,6 +113,7 @@ class JSFromHTML(filename: String) extends Walker {
     var unloadevent_count = 1
     var keyboardevent_count = 1
     var mouseevent_count = 1
+    var messageevent_count = 1
     var otherevent_count = 1
     val elementsList = toList(source.getAllElements)
     val eventsources: JList[Triple[String, JInteger, String]] =
@@ -148,6 +151,13 @@ class JSFromHTML(filename: String) extends Walker {
               mouseevent_count += 1
               e_list.add(new Triple(filename, new JInteger(attr.getRowColumnVector().getRow()), eventsource))
             }
+            // message event attribute
+            else if(DOMHelper.isMessageEventAttribute(name) && value!=null){
+              val eventsource = "function __MESSAGEEvent__" + messageevent_count + "(event) { " + value + "}\n"
+              messageevent_count += 1
+              e_list.add(new Triple(filename, new JInteger(attr.getRowColumnVector().getRow()), eventsource))
+            }
+
             // other event attribute
             else if(DOMHelper.isOtherEventAttribute(name) && value!=null){
               val eventsource = "function __OTHEREvent__" + otherevent_count + "(event) { " + value + "}\n"
@@ -166,10 +176,10 @@ class JSFromHTML(filename: String) extends Walker {
   private val regex_jquery = """.*jquery[^/]*\.js""".r
   private val regex_mobile = """.*mobile[^/]*\.js""".r
 
-  /* eable model */
+  /* enable model */
   def enableModel(srcname: String): Unit = {
     if (regex_jquery.findFirstIn(srcname).nonEmpty && regex_mobile.findFirstIn(srcname).isEmpty)
-      Config.setJQueryMode
+    {}  // Config.setJQueryMode
   }
 
   private def list_regex_lib = List(

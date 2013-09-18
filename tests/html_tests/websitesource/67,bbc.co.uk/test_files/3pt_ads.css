@@ -1,0 +1,1473 @@
+BODY#travel .bbccom_wallpaper #blq-container-inner {
+	OVERFLOW: visible
+}
+#bbccom_slot_wallpaper_left {
+	HEIGHT: 600px; POSITION: absolute; LEFT: -310px; TOP: -40px; WIDTH: 300px
+}
+#bbccom_slot_wallpaper_right {
+	HEIGHT: 600px; POSITION: absolute; TOP: -40px
+}
+.bbccom_us_election .bbccom_slot_leaderboard #blq-container {
+	BACKGROUND-POSITION: center 258px
+}
+.bbccom_us_election2 .bbccom_slot_leaderboard #blq-container {
+	BACKGROUND-POSITION: center 258px
+}
+.bbccom_us_election2 .bbccom_slot_leaderboard #main-content {
+	MARGIN-TOP: 14px
+}
+.bbccom_us_election .bbccom_slot_leaderboard #bbccom_leaderboard {
+	HEIGHT: 116px
+}
+.bbccom_us_election2 .bbccom_slot_leaderboard #bbccom_leaderboard {
+	HEIGHT: 116px
+}
+#blq-pre-mast {
+	Z-INDEX: 9999
+}
+.bbccom_display_none {
+	DISPLAY: none !important
+}
+.bbccom_visibility_hidden {
+	HEIGHT: 60px; VISIBILITY: hidden
+}
+.bbccom_text {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.bbccom_text A {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.bbccom_text A:hover {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.bbccom_text A:active {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.bbccom_text A:visited {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.lhs .bbccom_text A:link {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.lhs .bbccom_text A:visited {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.lhs .bbccom_text A:active {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.lhs .bbccom_text A:hover {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.lhs #bbccom_button .bbccom_text A {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.lhs #bbccom_button .bbccom_text A:hover {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#bbccom_sponsor_section_text {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.bbccom_sponsor_text {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.photo_gallery #bbccom_sponsor_section_text {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.bbccom_companion_text {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.bbccom_companion_text A {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#bbccom_mpu A {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#bbccom_mpu_high A {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#bbccom_mpu_bottom A {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#bbccom_leaderboard A {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#bbccom_leaderboard_bottom A {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#galothercontentbox .bbccom_text A:link {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#navigation .bbccom_text A:link {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#secondary-content .bbccom_text A:link {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#secondary-content .bbccom_text A:visited {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#secondary-content .bbccom_text A:active {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#secondary-content .bbccom_text A:hover {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#secondary-content .bbccom_text A:focus {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#travel #bbccom_sponsor_section_text {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#bbccom_sponsor_section_news {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.bbccom_slot_companion.newsbeat #blq-main #blq_content .bbccom_text A {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+#blq-main .bbccom_adsense H3 A {
+	BACKGROUND-IMAGE: none; TEXT-TRANSFORM: uppercase; COLOR: #505050; FONT: bold 10px/23px helvetica, arial, sans-serif; LETTER-SPACING: 0px !important; BACKGROUND-COLOR: transparent
+}
+.bbccom_text A {
+	TEXT-DECORATION: none
+}
+.bbccom_text A:hover {
+	TEXT-DECORATION: underline
+}
+#travel .bbccom_adsense H4 A {
+	TEXT-TRANSFORM: none; COLOR: #000; FONT: bold 13px/13px arial, helvetica, sans-serif
+}
+#travel .bbccom_adsense H4 P A {
+	TEXT-TRANSFORM: none; COLOR: #000; FONT: bold 13px/13px arial, helvetica, sans-serif
+}
+#travel #blq-main .bbccom_adsense P {
+	COLOR: #505050
+}
+#travel #blq-main .bbccom_adsense P A {
+	TEXT-TRANSFORM: none; COLOR: #78b200
+}
+#bbccom_sponsor_section_text {
+	COLOR: #fff; TEXT-DECORATION: none
+}
+#bbccom_module_special-reports .bbccom_text {
+	COLOR: #fff; TEXT-DECORATION: none
+}
+#bbccom_module_programme-breakout .bbccom_text {
+	COLOR: #fff; TEXT-DECORATION: none
+}
+.news #header-wrapper #bbccom_sponsor_section .bbccom_text {
+	COLOR: #fff; TEXT-DECORATION: none
+}
+.bbccom_text {
+	TEXT-ALIGN: right
+}
+.bbccom_text {
+	TEXT-ALIGN: right
+}
+#bbccom_module_range-most-popular_text {
+	TEXT-ALIGN: right
+}
+.adimg {
+	BORDER-TOP-STYLE: none; BORDER-LEFT-STYLE: none; BORDER-BOTTOM-STYLE: none; BORDER-RIGHT-STYLE: none
+}
+.news .bbccom-advert {
+	MARGIN-TOP: -1px
+}
+.bbccom_slot_mpu .more-galleries LI.last-child {
+	DISPLAY: none
+}
+.news .partner_buttons_2cols {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 10px; PADDING-LEFT: 23px; PADDING-RIGHT: 23px; WIDTH: 288px
+}
+.news #bbccom_partner_button1 {
+	WIDTH: 334px
+}
+.news .correspondent-bbccom #bbccom_leaderboard {
+	MARGIN-BOTTOM: 18px
+}
+.news .bbccom_adsense {
+	BORDER-TOP: #999 1px solid; FONT-FAMILY: arial, sans-serif !important; BORDER-RIGHT: #999 1px solid; BORDER-BOTTOM: #999 1px solid; BORDER-LEFT: #999 1px solid; BACKGROUND-COLOR: #fff
+}
+.torchrelay .bbccom_adsense {
+	BORDER-TOP: #999 1px solid; FONT-FAMILY: arial, sans-serif !important; BORDER-RIGHT: #999 1px solid; BORDER-BOTTOM: #999 1px solid; BORDER-LEFT: #999 1px solid; BACKGROUND-COLOR: #fff
+}
+.blogs .bbccom_adsense {
+	BORDER-TOP: #999 1px solid; FONT-FAMILY: arial, sans-serif !important; BORDER-RIGHT: #999 1px solid; BORDER-BOTTOM: #999 1px solid; BORDER-LEFT: #999 1px solid; BACKGROUND-COLOR: #fff
+}
+.blq-worldservice-worldwide .bbccom_adsense {
+	BORDER-TOP: #999 1px solid; FONT-FAMILY: arial, sans-serif !important; BORDER-RIGHT: #999 1px solid; BORDER-BOTTOM: #999 1px solid; BORDER-LEFT: #999 1px solid; BACKGROUND-COLOR: #fff
+}
+.blq-worldservice-domestic .bbccom_adsense {
+	BORDER-TOP: #999 1px solid; FONT-FAMILY: arial, sans-serif !important; BORDER-RIGHT: #999 1px solid; BORDER-BOTTOM: #999 1px solid; BORDER-LEFT: #999 1px solid; BACKGROUND-COLOR: #fff
+}
+.news #blq-main .bbccom_adsense H3 A {
+	COLOR: #505050
+}
+.news #blq-main .bbccom_adsense P {
+	COLOR: #505050
+}
+.torchrelay #blq-main .bbccom_adsense H3 A {
+	COLOR: #505050
+}
+.torchrelay #blq-main .bbccom_adsense P {
+	COLOR: #505050
+}
+.blogs #blq-main .bbccom_adsense H3 A {
+	COLOR: #505050
+}
+.blogs #blq-main .bbccom_adsense P {
+	COLOR: #505050
+}
+.news #blq-main .bbccom_adsense A {
+	COLOR: #174f82
+}
+.torchrelay #blq-main .bbccom_adsense A {
+	COLOR: #174f82
+}
+.blogs #blq-main .bbccom_adsense A {
+	COLOR: #174f82
+}
+#travel #bbccom_leaderboard {
+	BACKGROUND-COLOR: #e8e8e8
+}
+#travel #bbccom_leaderboard_bottom {
+	BACKGROUND-COLOR: #e8e8e8
+}
+#travel #bbccom_mpu {
+	BACKGROUND-COLOR: #e8e8e8
+}
+#travel #bbccom_mpu_bottom {
+	BACKGROUND-COLOR: #e8e8e8
+}
+#travel #bbccom_button {
+	BACKGROUND-COLOR: #e8e8e8
+}
+#travel #bbccom_promo_feature_1 {
+	BACKGROUND-COLOR: #e8e8e8
+}
+#travel .gallery #bbccom_leaderboard {
+	BACKGROUND-COLOR: #212121
+}
+#travel .gallery #bbccom_mpu {
+	BACKGROUND-COLOR: #212121
+}
+#travel .gallery #bbccom_button {
+	BACKGROUND-COLOR: #212121
+}
+#travel .gallery #bbccom_promo_feature_1 {
+	BACKGROUND-COLOR: #212121
+}
+#travel .gallery .bbccom_text A {
+	COLOR: #878787
+}
+#travel #bbccom_leaderboard {
+	PADDING-BOTTOM: 8px; PADDING-TOP: 0px; PADDING-LEFT: 8px; LINE-HEIGHT: 1; PADDING-RIGHT: 8px
+}
+#travel #bbccom_leaderboard_bottom {
+	PADDING-BOTTOM: 8px; PADDING-TOP: 0px; PADDING-LEFT: 8px; LINE-HEIGHT: 1; PADDING-RIGHT: 8px
+}
+#travel #bbccom_mpu {
+	MARGIN-BOTTOM: 20px; PADDING-BOTTOM: 0px; TEXT-ALIGN: center; PADDING-TOP: 0px; PADDING-LEFT: 8px; PADDING-RIGHT: 8px
+}
+#travel #bbccom_mpu_bottom {
+	MARGIN-BOTTOM: 20px; PADDING-BOTTOM: 0px; TEXT-ALIGN: center; PADDING-TOP: 0px; PADDING-LEFT: 8px; PADDING-RIGHT: 8px
+}
+.bbccom_slot_mpu336 #promo-content #bbccom_mpu {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px
+}
+.bbccom_slot_mpu336#travel #bbccom_mpu {
+	WIDTH: 336px
+}
+.bbccom_slot_xxl .feature #promo-content DIV {
+	MARGIN: 0px auto
+}
+#travel #bbccom_button {
+	PADDING-BOTTOM: 8px; PADDING-TOP: 0px; PADDING-LEFT: 8px; LINE-HEIGHT: 1; PADDING-RIGHT: 8px
+}
+#travel #bbccom_button A {
+	DISPLAY: inline-block; LINE-HEIGHT: 1
+}
+#travel #bbccom_sponsor_section {
+	RIGHT: 0px; TOP: auto; BOTTOM: 22px
+}
+#travel #promo-content .bbccom_text {
+	PADDING-RIGHT: 8px
+}
+#travel .promo_feature {
+	MARGIN-BOTTOM: 24px; LINE-HEIGHT: 0; WIDTH: 336px
+}
+#travel #blq-main .bbccom_adsense {
+	BACKGROUND-COLOR: #e8e8e8
+}
+#travel #blq-main .bbccom_adsense H3 {
+	BORDER-BOTTOM: #ababab 1px solid; PADDING-BOTTOM: 0px; TEXT-ALIGN: right; PADDING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px 8px; PADDING-RIGHT: 0px
+}
+#travel #bbccom_adsense_mpu {
+	MARGIN-TOP: 0px
+}
+#bbccom_leaderboard {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 2px; MARGIN: 0px auto; PADDING-RIGHT: 2px; WIDTH: 728px
+}
+#bbccom_leaderboard_below_nav {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 2px; MARGIN: 0px auto; PADDING-RIGHT: 2px; WIDTH: 728px
+}
+#bbccom_leaderboard_bottom {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 2px; MARGIN: 0px auto; PADDING-RIGHT: 2px; WIDTH: 728px
+}
+#bbccom_leaderboard_container #bbccom_leaderboard {
+	PADDING-BOTTOM: 8px
+}
+.bbccom_slot_leaderboard970 #bbccom_leaderboard {
+	HEIGHT: auto; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; WIDTH: auto
+}
+.bbccom_slot_leaderboard97066 #bbccom_leaderboard {
+	HEIGHT: auto; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; WIDTH: auto
+}
+.bbccom_slot_leaderboard97090 #bbccom_leaderboard {
+	HEIGHT: auto; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; WIDTH: auto
+}
+.bbccom_slot_leaderboard970250 #bbccom_leaderboard {
+	HEIGHT: auto; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; WIDTH: auto
+}
+.bbccom_slot_leaderboard_bottom970 #bbccom_leaderboard_bottom {
+	HEIGHT: auto; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; WIDTH: auto
+}
+.bbccom_slot_leaderboard_bottom97066 #bbccom_leaderboard_bottom {
+	HEIGHT: auto; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; WIDTH: auto
+}
+.bbccom_slot_leaderboard_bottom97090 #bbccom_leaderboard_bottom {
+	HEIGHT: auto; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; WIDTH: auto
+}
+.bbccom_slot_leaderboard_bottom970250 #bbccom_leaderboard_bottom {
+	HEIGHT: auto; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; WIDTH: auto
+}
+.bbccom_slot_leaderboard970 #blq-main #bbccom_leaderboard {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px
+}
+.bbccom_slot_leaderboard97066 #blq-main #bbccom_leaderboard {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px
+}
+.bbccom_slot_leaderboard97090 #blq-main #bbccom_leaderboard {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px
+}
+.bbccom_slot_leaderboard970250 #blq-main #bbccom_leaderboard {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px
+}
+.bbccom_slot_leaderboard_bottom970 #blq-main #bbccom_leaderboard_bottom {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px
+}
+.bbccom_slot_leaderboard_bottom97066 #blq-main #bbccom_leaderboard_bottom {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px
+}
+.bbccom_slot_leaderboard_bottom97090 #blq-main #bbccom_leaderboard_bottom {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px
+}
+.bbccom_slot_leaderboard_bottom970250 #blq-main #bbccom_leaderboard_bottom {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px
+}
+.bbccom_programme_dark #blq-main #bbccom_leaderboard .bbccom_text A {
+	COLOR: #fff !important
+}
+#bbccom_button .bbccom_text {
+	TEXT-ALIGN: right
+}
+#bbccom_button {
+	BORDER-TOP: 0px; BORDER-RIGHT: 0px; BORDER-BOTTOM: 0px; FLOAT: left; PADDING-BOTTOM: 8px; PADDING-TOP: 0px; PADDING-LEFT: 20px; BORDER-LEFT: 0px; PADDING-RIGHT: 0px; WIDTH: 120px
+}
+.lhs #bbccom_button A:link {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px
+}
+.lhs #bbccom_button A:visited {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px
+}
+.lhs #bbccom_button A:active {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px
+}
+#blq-main .companion_v4 {
+	HEIGHT: 60px; PADDING-TOP: 10px; WIDTH: auto
+}
+.bbccom_companion {
+	OVERFLOW: hidden; HEIGHT: 0px; MARGIN: auto; WIDTH: 300px
+}
+.bbccom_companion DIV {
+	HEIGHT: auto; FLOAT: right; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px
+}
+#blq-main .companion_v4 DIV.bbccom_companion_text {
+	WIDTH: auto
+}
+#story-body .companion_v4 {
+	PADDING-BOTTOM: 10px
+}
+.videoInStoryA .bbccom_visibility_show {
+	HEIGHT: auto; MARGIN-TOP: 8px
+}
+.videoInStoryB .bbccom_visibility_show {
+	HEIGHT: auto; MARGIN-TOP: 8px
+}
+#blq-main .companion_parent {
+	HEIGHT: auto; PADDING-BOTTOM: 10px; TEXT-ALIGN: center; MARGIN-TOP: -3px; BACKGROUND-COLOR: #d5d5d5
+}
+#blq-main .companion_parent .bbccom_companion_text {
+	HEIGHT: auto; FLOAT: none; PADDING-BOTTOM: 0px; TEXT-ALIGN: right; PADDING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px auto; DISPLAY: block; PADDING-RIGHT: 0px; WIDTH: 300px
+}
+#blq-main .companion_parent .bbccom_companion_text A {
+	BACKGROUND-IMAGE: none; FLOAT: none; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px
+}
+#blq-main .companion_parent DIV {
+	HEIGHT: 60px
+}
+#blq-main .companion_parent DIV.bbccom_companion_text {
+	HEIGHT: 24px
+}
+#bbccom_sponsor_section {
+	HEIGHT: 31px; BACKGROUND: 0px 50%; RIGHT: 85px; POSITION: absolute; TEXT-ALIGN: right; TOP: 27px; WIDTH: auto
+}
+.bbccom_sponsor .bbccom_text {
+	DISPLAY: inline; PADDING-RIGHT: 3px
+}
+.sportbanner #bbccom_sponsor_section {
+	RIGHT: -11px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; TOP: -2px; PADDING-RIGHT: 28px
+}
+.sportbanner #bbccom_sponsor_section_text {
+	FLOAT: left; MARGIN-TOP: 15px
+}
+.wodban #bbccom_sponsor_section {
+	RIGHT: 0px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; TOP: -3px; PADDING-RIGHT: 13px
+}
+#bbccom_sponsor_section DIV {
+	BACKGROUND: 0px 50%; FLOAT: none; MARGIN: 0px; DISPLAY: inline-block
+}
+#bbccom_sponsor_section_text {
+	WIDTH: 130px
+}
+#bbccom_sponsor_section_image {
+	WIDTH: 96px
+}
+#bbccom_sponsor_section_image A {
+	WIDTH: 96px
+}
+#bbccom_sponsor_section_image {
+	PADDING-LEFT: 10px
+}
+.banner #bbccom_sponsor_section DIV {
+	HEIGHT: auto
+}
+.news #header-wrapper #bbccom_sponsor_section {
+	RIGHT: 0px; LEFT: auto; TOP: 17px; WIDTH: 205px
+}
+.bbccom_sponsor {
+	HEIGHT: 31px
+}
+#bbccom_sponsor_section_news {
+	FLOAT: left; MARGIN: 0px 0px 0px 10px
+}
+#bbccom_sponsor_section_news P {
+	FLOAT: left; MARGIN: 20px 5px 0px 0px
+}
+#bbccom_sponsor_section_news IMG {
+	DISPLAY: block
+}
+#travel #bbccom_sponsor_weather {
+	HEIGHT: 62px
+}
+.news .photo-gallery #bbccom_sponsor_section {
+	RIGHT: 0px; LEFT: auto; TOP: 30px
+}
+.header-formula-1 #bbccom_sponsor_section .bbccom_text {
+	COLOR: #fff
+}
+.bbccom_programme_dark #bbccom_sponsor_section .bbccom_text {
+	COLOR: #fff !important
+}
+.bbccom_programme_dark #bbccom_sponsor_section {
+	RIGHT: 0px; LEFT: auto; TOP: 24px; WIDTH: 220px
+}
+.bbccom_programme_light #bbccom_sponsor_section {
+	RIGHT: 0px; LEFT: auto; TOP: 24px; WIDTH: 220px
+}
+.bbccom_programme_dark #bbccom_sponsor_section .bbccom_text {
+	TEXT-DECORATION: none; PADDING-RIGHT: 8px
+}
+.bbccom_programme_light #bbccom_sponsor_section .bbccom_text {
+	TEXT-DECORATION: none; PADDING-RIGHT: 8px
+}
+#socialBookMarks IFRAME {
+	BORDER-TOP: 0px; BORDER-RIGHT: 0px; BORDER-BOTTOM: 0px; BORDER-LEFT: 0px
+}
+#bbccom_module_page-bookmark-links {
+	HEIGHT: 31px; RIGHT: 0px; POSITION: absolute; TEXT-ALIGN: right; TOP: -11px; WIDTH: 230px
+}
+.photo-gallery #bbccom_module_page-bookmark-links {
+	TOP: -3px
+}
+.bbccom_slot_xxl #bbccom_module_page-bookmark-links {
+	TOP: -32px; WIDTH: 160px
+}
+.bbccom_slot_xxl #bbccom_module_page-bookmark-links .bbccom_text {
+	FLOAT: none; MARGIN: 0px 0px -1px; DISPLAY: block
+}
+.bbccom_slot_module_page-bookmark-links .share-tools-bottombar {
+	POSITION: relative
+}
+.story-related {
+	MARGIN: 0px 0px 24px
+}
+#bbccom_module_hyper-promotional-content {
+	BORDER-TOP: #fff 1px solid; BACKGROUND: #d1700e; POSITION: static; PADDING-BOTTOM: 8px; TEXT-ALIGN: right; PADDING-TOP: 8px; PADDING-LEFT: 8px; MARGIN-TOP: 0px; PADDING-RIGHT: 8px
+}
+.bbccom_slot_module_special-reports .special-reports .top-report {
+	PADDING-BOTTOM: 4em
+}
+.bbccom_slot_module_special-reports .more-special-reports {
+	DISPLAY: none
+}
+#bbccom_module_special-reports {
+	RIGHT: 0px; POSITION: absolute; PADDING-BOTTOM: 5px; TEXT-ALIGN: right; PADDING-TOP: 8px; PADDING-LEFT: 0px; MIN-HEIGHT: 1px; Z-INDEX: 1; PADDING-RIGHT: 8px; WIDTH: 100%; BOTTOM: 0px
+}
+#bbccom_storyprintsponsorship {
+	OVERFLOW: auto; BORDER-TOP: #eee 1px solid; BORDER-RIGHT: #eee 1px solid; BORDER-BOTTOM: #eee 1px solid; FLOAT: right; PADDING-BOTTOM: 4px; PADDING-TOP: 4px; PADDING-LEFT: 0px; MARGIN: 9px 0px 29px; BORDER-LEFT: #eee 1px solid; PADDING-RIGHT: 0px; WIDTH: 251px
+}
+#bbccom_storyprintsponsorship P {
+	FONT-SIZE: 0.8em; TEXT-TRANSFORM: uppercase; FLOAT: left; PADDING-BOTTOM: 6px; PADDING-TOP: 6px; PADDING-LEFT: 6px; PADDING-RIGHT: 0px; MARGIN-RIGHT: 10px
+}
+#bbccom_storyprintsponsorship DIV {
+	HEIGHT: 31px
+}
+#bbccom_storyprintsponsorship A {
+	BACKGROUND-IMAGE: none; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px
+}
+#bbccom_storyprintsponsorship .bbccom_text {
+	DISPLAY: none
+}
+#bbccom_printable {
+	FLOAT: right; MARGIN-TOP: 27px
+}
+#bbccom_module_most-popular {
+	OVERFLOW: hidden; HEIGHT: 31px; POSITION: relative; TEXT-ALIGN: right; PADDING-TOP: 8px; CLEAR: both
+}
+#bbccom_module_programme-breakout {
+	OVERFLOW: hidden; HEIGHT: 31px; POSITION: relative; TEXT-ALIGN: right; PADDING-TOP: 8px; CLEAR: both
+}
+#bbccom_module_range-most-popular {
+	OVERFLOW: hidden; HEIGHT: 31px; POSITION: relative; TEXT-ALIGN: right; PADDING-TOP: 8px; CLEAR: both
+}
+#bbccom_module_most-popular-category {
+	OVERFLOW: hidden; HEIGHT: 31px; POSITION: relative; TEXT-ALIGN: right; PADDING-TOP: 8px; CLEAR: both
+}
+.bbccom_slot_xxl #bbccom_module_programme-breakout {
+	FLOAT: right; PADDING-BOTTOM: 8px; WIDTH: 336px
+}
+.bbccom_slot_xxl LI.no-image #bbccom_module_programme-breakout {
+	RIGHT: auto; POSITION: relative; WIDTH: auto; BOTTOM: auto
+}
+#bbccom_module_market-data-include {
+	BORDER-TOP: #fff 1px solid; BACKGROUND: #ededed; PADDING-BOTTOM: 8px; TEXT-ALIGN: right; PADDING-TOP: 8px; PADDING-LEFT: 0px; MARGIN: -16px 0px 16px; PADDING-RIGHT: 8px
+}
+#main-content .story-actions {
+	FLOAT: left; WIDTH: 468px
+}
+#bbccom_mpu {
+	BORDER-TOP: 0px; BORDER-RIGHT: 0px; BORDER-BOTTOM: 0px; MARGIN: 0px auto; BORDER-LEFT: 0px; WIDTH: 300px
+}
+#bbccom_mpu_high {
+	BORDER-TOP: 0px; BORDER-RIGHT: 0px; BORDER-BOTTOM: 0px; MARGIN: 0px auto; BORDER-LEFT: 0px; WIDTH: 300px
+}
+#bbccom_mpu_bottom {
+	BORDER-TOP: 0px; BORDER-RIGHT: 0px; BORDER-BOTTOM: 0px; MARGIN: 0px auto; BORDER-LEFT: 0px; WIDTH: 300px
+}
+.news #bbccom_mpu {
+	MARGIN: -8px auto 13px
+}
+.torchrelay #bbccom_mpu {
+	MARGIN: -8px auto 13px
+}
+.news .media-asset #bbccom_mpu {
+	MARGIN-TOP: 0px
+}
+.torchrelay .media-asset #bbccom_mpu {
+	MARGIN-TOP: 0px
+}
+#bbccom_mpu_high {
+	MARGIN: -6px auto 13px
+}
+.news #bbccom_mpu IMG {
+	MARGIN-BOTTOM: -6px
+}
+.news #bbccom_mpu_high IMG {
+	MARGIN-BOTTOM: -6px
+}
+.torchrelay #bbccom_mpu IMG {
+	MARGIN-BOTTOM: -6px
+}
+.torchrelay #bbccom_mpu_high IMG {
+	MARGIN-BOTTOM: -6px
+}
+.wgreylinebottom #bbccom_mpu {
+	MARGIN: -14px auto 11px
+}
+TD #bbccom_mpu {
+	MARGIN-BOTTOM: 16px
+}
+#main-content DIV#bbccom_mpu {
+	MARGIN-RIGHT: 20px
+}
+#main-content DIV#bbccom_adsense_middle {
+	BORDER-TOP: #999 1px solid; BORDER-RIGHT: #999 1px solid; BORDER-BOTTOM: #999 1px solid; BORDER-LEFT: #999 1px solid; WIDTH: auto
+}
+.blq_hp #bbccom_mpu {
+	MARGIN: 0px
+}
+.blq_hp #bbccom_mpu_bottom {
+	MARGIN: 0px
+}
+#galothercontentbox #bbccom_mpu {
+	MARGIN-TOP: -12px
+}
+.bbccom_slot_xxl #bbccom_mpu {
+	MARGIN-LEFT: 15px; WIDTH: 468px
+}
+.bbccom_slot_xxl #bbccom_mpu_high {
+	MARGIN-LEFT: 15px; WIDTH: 468px
+}
+.bbccom_slot_mpu336 #bbccom_mpu {
+	WIDTH: auto
+}
+.bbccom_slot_mpu336 #bbccom_mpu_high {
+	WIDTH: auto
+}
+.bbccom_slot_mpu_skyscraper #bbccom_mpu {
+	HEIGHT: 644px; WIDTH: 160px
+}
+.bbccom_slot_mpu_skyscraper #bbccom_mpu_high {
+	HEIGHT: 644px; WIDTH: 160px
+}
+.bbccom_slot_mpu_skyscraper #main-content #bbccom_mpu {
+	MARGIN-RIGHT: 88px
+}
+.bbccom_slot_mpu_skyscraper #main-content #bbccom_mpu_high {
+	MARGIN-RIGHT: 88px
+}
+.news #bbccom_mpu_bottom {
+	MARGIN-BOTTOM: 9px
+}
+.torchrelay #bbccom_mpu_bottom {
+	MARGIN-BOTTOM: 9px
+}
+.mpu_v4 {
+	MARGIN: 0px 0px 20px 3px
+}
+#bbccom_adsense_mpu {
+	MARGIN-TOP: 10px
+}
+#secondary-content #bbccom_adsense_mpu {
+	MARGIN-TOP: 10px
+}
+#secondary-content #bbccom_mpu {
+	BORDER-BOTTOM: 0px
+}
+#secondary-content #bbccom_mpu DIV {
+	BORDER-BOTTOM: 0px
+}
+#secondary-content #bbccom_mpu_high {
+	BORDER-BOTTOM: 0px
+}
+#secondary-content #bbccom_mpu_high DIV {
+	BORDER-BOTTOM: 0px
+}
+#secondary-content #bbccom_adsense_mpu {
+	BORDER-BOTTOM: 0px
+}
+#secondary-content #bbccom_adsense_mpu DIV {
+	BORDER-BOTTOM: 0px
+}
+#secondary-content #bbccom_mpu {
+	BORDER-BOTTOM: 0px; PADDING-BOTTOM: 0px; WIDTH: 300px
+}
+#secondary-content #bbccom_mpu DIV {
+	BORDER-BOTTOM: 0px; PADDING-BOTTOM: 0px; WIDTH: 300px
+}
+#secondary-content #bbccom_mpu_high {
+	BORDER-BOTTOM: 0px; PADDING-BOTTOM: 0px; WIDTH: 300px
+}
+#secondary-content #bbccom_mpu_high DIV {
+	BORDER-BOTTOM: 0px; PADDING-BOTTOM: 0px; WIDTH: 300px
+}
+#bbccom_skyscraper {
+	BORDER-TOP: 0px; HEIGHT: 600px; BORDER-RIGHT: 0px; BORDER-BOTTOM: 0px; POSITION: absolute; TEXT-ALIGN: center; BORDER-LEFT: 0px; WIDTH: 160px
+}
+.skyscraper_v4 {
+	LEFT: 1000px; TOP: 156px
+}
+.skyscraper_v3_5 {
+	LEFT: 815px; TOP: 104px
+}
+.skyscraper_v3 {
+	LEFT: 770px; TOP: 256px
+}
+#bbccom_bottom {
+	HEIGHT: 71px; WIDTH: 470px
+}
+.bottom_v3 {
+	PADDING-BOTTOM: 8px; PADDING-TOP: 8px; PADDING-LEFT: 0px; MARGIN: 0px 0px 0px 215px; PADDING-RIGHT: 0px
+}
+.bottom_v3_5 {
+	PADDING-BOTTOM: 8px; PADDING-TOP: 8px; PADDING-LEFT: 0px; MARGIN: 0px 0px 0px 215px; PADDING-RIGHT: 0px
+}
+#bbccom_adsense_mpu {
+	FONT-FAMILY: arial, sans-serif; DISPLAY: inline-block
+}
+#bbccom_adsense_middle {
+	FONT-FAMILY: arial, sans-serif; DISPLAY: inline-block
+}
+#bbccom_adsense_mpu {
+	MARGIN-BOTTOM: 10px
+}
+#bbccom_adsense_middle {
+	MARGIN-BOTTOM: 20px; WIDTH: 466px
+}
+#main-content #bbccom_adsense_middle {
+	MARGIN-BOTTOM: 20px; MARGIN-TOP: 22px
+}
+.bbccom_adsense H3 {
+	FONT-SIZE: 14px
+}
+.bbccom_adsense H4 {
+	FONT-SIZE: 14px
+}
+#blq-main .bbccom_adsense H3 {
+	MARGIN-BOTTOM: 0px; PADDING-BOTTOM: 6px; PADDING-TOP: 6px; PADDING-LEFT: 6px; TOP: 0px; PADDING-RIGHT: 6px
+}
+.blq-worldservice-worldwide #blq-main .bbccom_adsense H3 {
+	PADDING-BOTTOM: 0px
+}
+.blq-worldservice-domestic #blq-main .bbccom_adsense H3 {
+	PADDING-BOTTOM: 0px
+}
+#blq-main .bbccom_adsense LI {
+	BACKGROUND-IMAGE: none; PADDING-BOTTOM: 6px; PADDING-TOP: 6px; PADDING-LEFT: 6px; PADDING-RIGHT: 6px
+}
+#blq-main .bbccom_adsense H3 A {
+	FONT-FAMILY: arial, sans-serif; BACKGROUND-IMAGE: none
+}
+#blq-main .bbccom_adsense H4 A {
+	FONT-FAMILY: arial, sans-serif; BACKGROUND-IMAGE: none
+}
+#blq-main .bbccom_adsense P A {
+	FONT-FAMILY: arial, sans-serif; BACKGROUND-IMAGE: none
+}
+#blq-main .bbccom_adsense H3 A {
+	FONT-WEIGHT: bold; COLOR: #555; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px
+}
+#blq-main .bbccom_adsense A {
+	BORDER-BOTTOM: 0px; COLOR: #174f82
+}
+#blq-main .bbccom_adsense P {
+	FONT-SIZE: 13px; COLOR: #000; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px
+}
+#blq-main .bbccom_adsense P A {
+	FONT-WEIGHT: normal
+}
+#blq-main .adsense_mpu_weather_top {
+	MARGIN-TOP: 0px
+}
+.adsense_mpu_weather {
+	WIDTH: 296px; BACKGROUND-COLOR: #fff
+}
+.layout-block-a .bbccom_adsense {
+	WIDTH: 462px
+}
+.bbccom_slot_xxl .layout-block-a .bbccom_adsense {
+	WIDTH: 318px
+}
+#secondary-content .adsense_mpu LI {
+	BACKGROUND-IMAGE: none
+}
+#bbccom_partner_buttons {
+	BORDER-TOP: #eaeaea 1px solid; BORDER-RIGHT: #eaeaea 1px solid; BORDER-BOTTOM: #eaeaea 1px solid; POSITION: relative; PADDING-TOP: 10px; MARGIN: 35px 0px 16px; BORDER-LEFT: #eaeaea 1px solid
+}
+#bbccom_partner_buttons A {
+	HEIGHT: 30px; PADDING-BOTTOM: 10px; MARGIN-LEFT: 31px; DISPLAY: inline-block; WIDTH: 120px
+}
+#bbccom_partner_buttons IFRAME {
+	HEIGHT: 30px; PADDING-BOTTOM: 10px; MARGIN-LEFT: 31px; DISPLAY: inline-block; WIDTH: 120px
+}
+#bbccom_partner_buttons IFRAME {
+	PADDING-BOTTOM: 0px
+}
+#bbccom_partner_buttons .partner_buttons_4cols A {
+	MARGIN-LEFT: 27px
+}
+#bbccom_partner_buttons .bbccom_text {
+	RIGHT: 0px; POSITION: absolute; TOP: -26px
+}
+.bbccom_partner_button {
+	DISPLAY: inline
+}
+.bbccom_slot_xxl #bbccom_partner_buttons {
+	WIDTH: 494px
+}
+.sport #bbccom_partner_buttons {
+	WIDTH: 315px
+}
+.sportbanner {
+	POSITION: relative
+}
+#bbccom_bottom_adlabel {
+	COLOR: #bbb
+}
+#bbccom_leaderboard TABLE {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px
+}
+#bbccom_leaderboard TR {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px
+}
+#bbccom_leaderboard TD {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px
+}
+#bbccom_leaderboard TH {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px
+}
+.bbccom_slot_sponsor_section DIV.cg-2010-section {
+	BACKGROUND: url(/sol/shared/img/v4/commonwealth_games_2010/cg_bbccom_banner_sprite2.png) no-repeat 160px 0px
+}
+.cg-2010-section .sportbanner #bbccom_sponsor_section {
+	RIGHT: 0px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 16px
+}
+.cg-2010-section #bbccom_sponsor_section_text {
+	FLOAT: left; COLOR: #000; MARGIN-TOP: 15px
+}
+.bbccom_slot_sponsor_section A#rss-alternative {
+	MARGIN-RIGHT: 340px
+}
+.bbccom_slot_sponsor_section #fixturesLink {
+	BACKGROUND-IMAGE: none; FLOAT: left; MARGIN-LEFT: 10px; LINE-HEIGHT: 1.3em
+}
+.bbccom_slot_sponsor_section .world-cup-2010-section .athleticsbg {
+	MARGIN-TOP: 65px
+}
+.world-cup-2010-section #bbccom_mpu {
+	MARGIN-BOTTOM: 20px
+}
+.bbccom_slot_sponsor_section .world-cup-2010-section .contentwrapper {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 32px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px
+}
+.bbccom_slot_sponsor_section .world-cup-2010-section .contentwrapperwide {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 32px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px
+}
+.world-cup-2010-section #bbccom_sponsor_section {
+	RIGHT: 14px; COLOR: #505050; LEFT: auto; LINE-HEIGHT: 55px; TOP: 118px; WIDTH: 230px
+}
+.world-cup-2010-section #bbccom_sponsor_section DIV {
+	FLOAT: left; LINE-HEIGHT: 53px
+}
+.world-cup-2010-section #bbccom_sponsor_section A {
+	POSITION: relative; LEFT: 0px; TOP: 0px; WIDTH: 100px
+}
+.bbccom_slot_mpu DIV.f1-winter-olympics-2010 #bbccom_mpu {
+	PADDING-BOTTOM: 29px
+}
+DIV.f1-winter-olympics-2010 #bbccom_sponsor_section {
+	LEFT: 531px; TOP: 21px; WIDTH: 260px
+}
+DIV.f1-winter-olympics-2010 #bbccom_sponsor_section DIV {
+	FLOAT: left
+}
+DIV.f1-winter-olympics-2010 #bbccom_sponsor_section_text {
+	PADDING-TOP: 6px
+}
+DIV.f1-winter-olympics-2010 #bbccom_sponsor_section_image {
+	POSITION: relative; WIDTH: 100px
+}
+DIV.f1-winter-olympics-2010 .sportbanner DIV #bbccom_sponsor_section_image A {
+	LEFT: 0px; TOP: 0px; WIDTH: 100px
+}
+.bbccom_slot_companion .embedvideo .latestinfo P {
+	MARGIN-TOP: 350px
+}
+.i #bbccom_leaderboard_adlabel {
+	COLOR: #fff
+}
+#ad {
+	BACKGROUND: none transparent scroll repeat 0% 0%
+}
+#ad .container {
+	BACKGROUND: none transparent scroll repeat 0% 0%
+}
+DIV.contentBlock A.headerSponsor {
+	FONT-SIZE: 0.66em; HEIGHT: 30px; FONT-WEIGHT: normal; PADDING-BOTTOM: 5px; PADDING-TOP: 5px; PADDING-LEFT: 40px; DISPLAY: block; PADDING-RIGHT: 5px; BACKGROUND-COLOR: #efeded
+}
+DIV.contentBlock A.headerSponsor IMG {
+	FLOAT: left
+}
+DIV.contentBlock A.headerSponsor SPAN {
+	FLOAT: left; LINE-HEIGHT: 26px; MARGIN-RIGHT: 5px
+}
+.moduleAdvertContent {
+	CURSOR: default; HEIGHT: 31px; PADDING-BOTTOM: 6px; PADDING-TOP: 6px; PADDING-LEFT: 10px; PADDING-RIGHT: 10px
+}
+.moduleAdvertContent A {
+	FLOAT: left
+}
+.moduleAdvertContent A IMG {
+	FLOAT: left
+}
+DIV.bbccom_module_adlabel {
+	FONT-SIZE: 0.8em; FLOAT: left; COLOR: #666; MARGIN: 6px 10px 0px 0px; WIDTH: 180px
+}
+#bbccom_halfbanner {
+	BORDER-TOP: #dbdbdb 1px solid; TEXT-ALIGN: center
+}
+DIV.bbccom_halfbanner_adlabel {
+	FONT-SIZE: 0.8em; COLOR: #666; TEXT-ALIGN: center; MARGIN: 6px 10px 0px 0px; WIDTH: 300px
+}
+.bbccom_halfbanner_image {
+	PADDING-BOTTOM: 10px; PADDING-TOP: 5px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px
+}
+#international .colB {
+	HEIGHT: auto; PADDING-TOP: 0px; MIN-HEIGHT: 250px
+}
+.blq-js .bbccom_slot_mpu#international .colB {
+	HEIGHT: auto; PADDING-TOP: 7px
+}
+.blq-js .bbcdotcomAdvertsResetMpu#international .colB {
+	HEIGHT: 250px; PADDING-TOP: 0px
+}
+.blq-js .bbccom_slot_mpu .colE {
+	MARGIN-TOP: 0px !important
+}
+.blq-js .bbcdotcomAdvertsResetMpu#international .colE {
+	MARGIN-TOP: -250px
+}
+.bbcdotcomAdvertsResetMpu #bbccom_mpu {
+	DISPLAY: none
+}
+.skylightTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #1778b3
+}
+.doveTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #5b688f
+}
+.tealTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #2383a3
+}
+.aquaTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #158979
+}
+.greenTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #5d891b
+}
+.violetTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #6a5789
+}
+.purpleTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #823892
+}
+.pinkTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #9d1767
+}
+.oliveTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #7c7854
+}
+.suedeTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #695c4a
+}
+.redTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #9e2c1d
+}
+.orangeTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #c55f16
+}
+.blackTheme #bbccom_leaderboard_container {
+	BACKGROUND-COLOR: #3f3f3f
+}
+.module H2 A.headerSponsor {
+	RIGHT: 30px; POSITION: absolute; TOP: 0px; WIDTH: auto
+}
+.module H2 A.headerSponsor {
+	FONT-SIZE: 0.66em; HEIGHT: 30px; FONT-WEIGHT: normal; MARGIN: 5px 0px 0px; DISPLAY: block
+}
+.module H2 A.headerSponsor SPAN {
+	FLOAT: left; LINE-HEIGHT: 26px; MARGIN-RIGHT: 5px
+}
+.module H2 A.headerSponsor IMG {
+	FLOAT: left
+}
+.blogs #bbccom_mpu {
+	FLOAT: left
+}
+.blogs #bbccom_partner_button1 {
+	FLOAT: left
+}
+.blogs #bbccom_adsense_mpu {
+	FLOAT: left
+}
+.blogs #bbccom_partner_button1 {
+	MARGIN: 14px 0px
+}
+.blogs #bbccom_mpu {
+	MARGIN-BOTTOM: 14px
+}
+.bbccom_text#bbccom_leaderboard_adlabel A {
+	COLOR: #666
+}
+.blogs #content #bbccom_mpu_adlabel A {
+	COLOR: #666
+}
+.blogs .adsense_mpu {
+	FONT-SIZE: 1em
+}
+.blogs #content .adsensetitle A:link {
+	COLOR: #555
+}
+.blogs #content .adsenselabel A:link {
+	FONT-SIZE: 1.1em
+}
+.blogs #content .adsenselabel A:link {
+	COLOR: #006
+}
+.blogs #content .adsenseurl A:link {
+	COLOR: #006
+}
+.blogs #content .adsensead SPAN {
+	LINE-HEIGHT: 1.4em
+}
+.blogs #bbccom_sponsor_section {
+	TOP: 20px; WIDTH: auto
+}
+.blogs #bbccom_sponsor_section_text {
+	FONT-SIZE: 0.8em; LINE-HEIGHT: 31px; WIDTH: auto
+}
+.blogs #bbccom_sponsor_section_image {
+	WIDTH: auto
+}
+.blogs #bbccom_sponsor_section_text {
+	FLOAT: left; MARGIN-LEFT: 10px
+}
+.blogs #bbccom_sponsor_section_image {
+	FLOAT: left; MARGIN-LEFT: 10px
+}
+#blq-weather-header #bbccom_sponsor_section {
+	RIGHT: 14px; DISPLAY: block; TOP: -2px
+}
+#blq-weather-header #bbccom_sponsor_section DIV {
+	DISPLAY: block
+}
+#blq-weather-header #bbccom_sponsor_section_text {
+	TEXT-ALIGN: right
+}
+#blq-weather-header #bbccom_sponsor_section_image {
+	WIDTH: auto
+}
+.bbc-weather #bbccom_sponsor_section {
+	RIGHT: 0px; TOP: 55px
+}
+.bbc-weather #bbccom_mpu {
+	MARGIN-BOTTOM: 8px
+}
+.bbc-weather .adsense_mpu {
+	BORDER-TOP: #999 1px solid; BORDER-RIGHT: #999 1px solid; BORDER-BOTTOM: #999 1px solid; BORDER-LEFT: #999 1px solid; WIDTH: 336px
+}
+.bbccom_slot_interstitial #blq-acc {
+	DISPLAY: none !important
+}
+.bbccom_slot_interstitial #blq-mast {
+	DISPLAY: none !important
+}
+.bbccom_slot_interstitial #iePinnedSiteBar {
+	DISPLAY: none !important
+}
+.bbccom_slot_interstitial {
+	OVERFLOW: hidden
+}
+.bbccom_slot_interstitial_300x600 #bbccom_int {
+	WIDTH: 300px
+}
+#bbccom_int_container {
+	HEIGHT: 5000px; POSITION: fixed; TEXT-ALIGN: center; LEFT: 0px; Z-INDEX: 10000; TOP: 0px; WIDTH: 100%
+}
+#bbccom_int_outer {
+	HEIGHT: 100% !important; Z-INDEX: 9999; TOP: 0px; BACKGROUND-COLOR: #ddd
+}
+#bbccom_int_inner {
+	WIDTH: 100%
+}
+#bbccom_int_head {
+	HEIGHT: 39px; BORDER-BOTTOM: #bbb 1px solid; BACKGROUND-COLOR: #fff
+}
+#bbccom_int_link {
+	CURSOR: pointer; FONT-SIZE: 12px; HEIGHT: 39px; BACKGROUND: url(../img/blq-blocks_grey_alpha.png) no-repeat 16px 8px; FONT-WEIGHT: bold; COLOR: black; TEXT-ALIGN: right; TEXT-DECORATION: none; MARGIN: 0px auto; DISPLAY: block; LINE-HEIGHT: 39px; PADDING-RIGHT: 14px; WIDTH: 976px
+}
+#bbccom_int_link SPAN {
+	HEIGHT: 13px; VERTICAL-ALIGN: middle; BACKGROUND: url(../img/arrow.gif) no-repeat 8px 0px; DISPLAY: inline-block; WIDTH: 18px
+}
+#bbccom_int {
+	PADDING-TOP: 20px; DISPLAY: inline-block
+}
+#bbccom_int_outer {
+	BACKGROUND: #ddd
+}
+.blq_hp .pulse-pop {
+	TOP: 103px
+}
+.bbccom_slot_leaderboard .pulse-pop {
+	TOP: 232px
+}
+.bbccom_slot_leaderboard97066 .pulse-pop {
+	TOP: 200px
+}
+.bbccom_slot_leaderboard97090 .pulse-pop {
+	TOP: 224px
+}
+.news #blq-pre-mast .pulse-pop {
+	LEFT: 700px; TOP: 300px
+}
+.centerbody #blq-pre-mast .pulse-pop {
+	LEFT: 700px; TOP: 300px
+}
+.bbc-st-sharepanel UL.bbc-st-all {
+	OVERFLOW: hidden; BORDER-BOTTOM: #fff 1px solid; MARGIN-LEFT: 16px !important; WIDTH: 275px
+}
+.bbc-st-sharepanel UL.bbc-st-all LI {
+	PADDING-BOTTOM: 13px
+}
+.bbc-st-sharepanel .panel-bd UL.bbc-st-all LI A {
+	MARGIN: 0px 10px 0px 11px
+}
+.bbc-st-sharepanel .panel-ft {
+	PADDING-BOTTOM: 10px; PADDING-TOP: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 16px; WIDTH: 295px !important
+}
+.blq-js #international .colB {
+	HEIGHT: 280px; PADDING-TOP: 0px
+}
+.blq-js #international .colE {
+	MARGIN-TOP: -280px
+}
+#blq-main .news .front-page .bbccom_companion {
+	DISPLAY: none
+}
+.london2012 #bbccom_mpu {
+	MARGIN-BOTTOM: 20px
+}
+.london2012 #bbccom_mpu_high {
+	MARGIN-BOTTOM: 20px
+}
+.london2012 .advert {
+	MARGIN-LEFT: 0px
+}
+.london2012 #bbccom_module_hyper-promotional-content {
+	BACKGROUND-COLOR: #069
+}
+.london2012 .bbccom_adsense {
+	BORDER-TOP: #999 1px solid; BORDER-RIGHT: #999 1px solid; BORDER-BOTTOM: #999 1px solid; BORDER-LEFT: #999 1px solid; WIDTH: 621px
+}
+.london2012 #bbccom_sponsor_section {
+	DISPLAY: none
+}
+.videoInStoryA DIV.bbccom_companion_text {
+	HEIGHT: auto; PADDING-TOP: 0px
+}
+.videoInStoryB DIV.bbccom_companion_text {
+	HEIGHT: auto; PADDING-TOP: 0px
+}
+.videoInIndexB DIV.bbccom_companion_text {
+	HEIGHT: auto; PADDING-TOP: 0px
+}
+.bbccom_slot_xxl #main-content .layout-block-a .story-image {
+	WIDTH: 489px
+}
+.bbccom_slot_xxl #main-content .layout-block-a #lead .image IMG {
+	WIDTH: 489px
+}
+.bbccom_slot_xxl #main-content .layout-block-a .story-image {
+	HEIGHT: auto; -MS-INTERPOLATION-MODE: bicubic
+}
+.bbccom_slot_xxl .landscape #lead IMG {
+	HEIGHT: auto; -MS-INTERPOLATION-MODE: bicubic
+}
+.bbccom_slot_xxl #storypage-aside #bbccom_mpu {
+	MARGIN-LEFT: 0px
+}
+.bbccom_slot_xxl #storypage-aside #bbccom_mpu_high {
+	MARGIN-LEFT: 0px
+}
+.bbccom_slot_xxl #lead {
+	PADDING-TOP: 4px !important
+}
+.bbccom_slot_xxl #storypage-container .story-body {
+	WIDTH: 489px !important
+}
+.bbccom_slot_xxl #storypage-container #storypage-aside {
+	FLOAT: right !important
+}
+.bbccom_slot_xxl #storypage-container .story-body .article {
+	PADDING-BOTTOM: 0px !important; PADDING-TOP: 8px !important; PADDING-LEFT: 16px !important; PADDING-RIGHT: 0px !important
+}
+.bbccom_slot_xxl #bbccom_mpu .bbccom_text A {
+	MARGIN-RIGHT: 10px
+}
+.sport #header-wrapper .bbccom_sponsor {
+	RIGHT: 12px; POSITION: absolute; TOP: 16px
+}
+.sport .full-table-wide .table-header {
+	HEIGHT: 25px; PADDING-TOP: 14px
+}
+.sport .full-table-wide .table-header .bbccom_sponsor {
+	RIGHT: 16px; POSITION: absolute; MARGIN: 0px; TOP: 8px
+}
+.sport .photo-gallery {
+	POSITION: relative
+}
+.sport .photo-gallery H1 {
+	FLOAT: left
+}
+.bbccom_slot_sponsor_section.sport .photo-gallery H1 {
+	WIDTH: 620px
+}
+.sport .photo-gallery #bbccom_sponsor_section {
+	POSITION: static; FLOAT: right; MARGIN: 4px 8px 0px 0px
+}
+.sport .photo-gallery #bbccom_sponsor_section DIV {
+	DISPLAY: inline; PADDING-RIGHT: 3px
+}
+.sport .stats #bbccom_sponsor_results {
+	FLOAT: right
+}
+.sport .stats #bbccom_sponsor_fixtures {
+	FLOAT: right
+}
+.sport .stats #bbccom_sponsor_live-scores {
+	FLOAT: right
+}
+.sport .stats #bbccom_sponsor_results {
+	MARGIN: 15px 344px 0px 0px
+}
+.sport .stats #bbccom_sponsor_fixtures {
+	MARGIN: 15px 344px 0px 0px
+}
+.sport .stats #bbccom_sponsor_live-scores {
+	MARGIN: 42px 352px 0px 0px
+}
+.sport .index {
+	POSITION: relative
+}
+.sport .index .bbccom_sponsor {
+	RIGHT: 352px; POSITION: absolute; TOP: 13px
+}
+.sport .sub-index #bbccom_sponsor_subsection {
+	TOP: 39px
+}
+.sport .sub-index#main-content .type-a-container-structural-3 {
+	MARGIN-TOP: 47px
+}
+.sub-index#main-content .type-a-container-tertiary-1 {
+	MARGIN-TOP: 47px
+}
+.bbccom_sport_team_pages #bbccom_sponsor_subsection {
+	TOP: 17px
+}
+.bbccom_sport_team_pages #bbccom_sponsor_subsection .bbccom_text {
+	FLOAT: left; TEXT-ALIGN: left; MARGIN-TOP: 6px; LINE-HEIGHT: 14px !important; WIDTH: 87px
+}
+.bbccom_slot_sponsor_fixtures.sport .stats .share-tools-toolbar {
+	PADDING-TOP: 27px
+}
+.bbccom_slot_sponsor_subsection.sport .share-tools-toolbar {
+	PADDING-TOP: 27px
+}
+.sport #bbccom_module_page-bookmark-links {
+	TOP: -47px
+}
+.sport .live-scores-share-tools .bbccom_sponsor {
+	POSITION: static; FLOAT: right; MARGIN: -17px 0px 0px
+}
+.sport .share-tools-container #bbccom_module_page-bookmark-links {
+	POSITION: static; FLOAT: right; MARGIN: -17px 0px 0px
+}
+.sport .share-tools-container #bbccom_module_page-bookmark-links .bbccom_text {
+	FLOAT: left; PADDING-BOTTOM: 0px; PADDING-TOP: 4px; PADDING-LEFT: 25px; PADDING-RIGHT: 0px
+}
+.sport .share-tools-container .share-tools-bottombar #bbccom_module_page-bookmark-links {
+	MARGIN-TOP: -42px
+}
+.sport .share-tools-container .share-tools-bottombar #bbccom_module_page-bookmark-links .bbccom_text {
+	PADDING-TOP: 15px
+}
+.sport .photo-gallery .share-tools-bottombar {
+	HEIGHT: 31px; MARGIN-TOP: 11px
+}
+.sport .photo-gallery .share-tools-bottombar .share-tools-container {
+	HEIGHT: auto; FLOAT: left; MARGIN-TOP: 12px
+}
+.sport .photo-gallery .share-tools-bottombar .share-help {
+	FLOAT: left; MARGIN-TOP: 12px; WIDTH: 15px
+}
+.sport .photo-gallery .share-tools-bottombar .share-tools-container .share-tools-bottombar {
+	MARGIN-BOTTOM: 0px; FLOAT: left
+}
+.sport .photo-gallery .share-tools-bottombar #bbccom_module_page-bookmark-links {
+	POSITION: relative; FLOAT: left; LEFT: 10px; MARGIN-TOP: 0px; TOP: 0px; WIDTH: auto
+}
+.sport #page-bookmark-links-foot #bbccom_module_page-bookmark-links {
+	POSITION: static; FLOAT: right; MARGIN-RIGHT: 8px
+}
+.sport #indexpage-aside .bbccom_sponsor {
+	POSITION: static; PADDING-BOTTOM: 12px; TEXT-ALIGN: right; MARGIN-RIGHT: 12px
+}
+.sport .stats-aside .bbccom_sponsor {
+	FLOAT: none; TEXT-ALIGN: right; MARGIN: 0px 0px 10px; PADDING-RIGHT: 10px
+}
+.sport .stats-aside .bbccom_sponsor .bbccom_text {
+	MARGIN: 2px 0px 0px 120px
+}
+.sport #bbccom_module_hyper-promotional-content {
+	BACKGROUND-COLOR: #e2e2e2
+}
+.sport #bbccom_module_hyper-promotional-content .bbccom_text {
+	COLOR: #505050
+}
+.sport .bbccom_slot_xxl #promotional-content {
+	WIDTH: 336px
+}
+.sport #bbccom_leaderboard {
+	MARGIN-TOP: 8px
+}
+.sport #bbccom_mpu {
+	MARGIN-BOTTOM: 14px
+}
+.sport #statspage-container #bbccom_mpu {
+	FLOAT: right; MARGIN: 0px 18px 14px 0px
+}
+.sport .stats #bbccom_mpu {
+	FLOAT: right; MARGIN: 0px 18px 14px 0px
+}
+.sport .stats .stats-aside #bbccom_mpu {
+	FLOAT: none; MARGIN-LEFT: 18px
+}
+.sport.bbccom_slot_mpu336 #statspage-container #bbccom_mpu {
+	MARGIN-RIGHT: 0px
+}
+.sport.bbccom_slot_mpu336 #statspage-container #bbccom_mpu .bbccom_text {
+	PADDING-RIGHT: 8px
+}
+.sport.bbccom_slot_mpu_skyscraper #statspage-container #bbccom_mpu {
+	FLOAT: none; MARGIN: auto
+}
+.sport #bbccom_adsense_mpu {
+	BACKGROUND-COLOR: #efefef
+}
+.sport #bbccom_adsense_mpu H3 {
+	BORDER-BOTTOM: #fdfdfd 1px solid; PADDING-BOTTOM: 0px; TEXT-ALIGN: right; PADDING-TOP: 1px; PADDING-LEFT: 0px; PADDING-RIGHT: 7px
+}
+.sport #bbccom_adsense_mpu H3 A {
+	COLOR: #444
+}
+.sport #bbccom_adsense_mpu H4 A {
+	FONT-WEIGHT: bold; COLOR: #1c1c1c
+}
+.sport #bbccom_adsense_mpu A {
+	COLOR: #1659b4
+}
+.sport .accordion-wrapper {
+	OVERFLOW: hidden
+}
+#euro-2012 #section-title {
+	BACKGROUND-IMAGE: none
+}
+.sos2012 #bbccom_mpu {
+	MARGIN-BOTTOM: 15px
+}
+.sos2012 #bbccom_adsense_middle {
+	MARGIN-LEFT: 10px
+}
+.sos2012 #bbccom_adsense_mpu {
+	BACKGROUND-COLOR: #efefef
+}
+.sos2012 #bbccom_adsense_middle {
+	BACKGROUND-COLOR: #efefef
+}
+.sos2012 #bbccom_adsense_mpu H3 {
+	BORDER-BOTTOM: #fdfdfd 1px solid; PADDING-BOTTOM: 0px; TEXT-ALIGN: right; PADDING-TOP: 1px; PADDING-LEFT: 0px; PADDING-RIGHT: 7px
+}
+.sos2012 #bbccom_adsense_middle H3 {
+	BORDER-BOTTOM: #fdfdfd 1px solid; PADDING-BOTTOM: 0px; TEXT-ALIGN: right; PADDING-TOP: 1px; PADDING-LEFT: 0px; PADDING-RIGHT: 7px
+}
+.sos2012 #bbccom_adsense_middle H3 {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 1px; PADDING-LEFT: 0px; PADDING-RIGHT: 20px
+}
+.sos2012 #bbccom_adsense_mpu H3 A {
+	COLOR: #444
+}
+.sos2012 #bbccom_adsense_middle H3 A {
+	COLOR: #444
+}
+.sos2012 #bbccom_adsense_mpu H4 A {
+	FONT-WEIGHT: bold; COLOR: #1c1c1c
+}
+.sos2012 #bbccom_adsense_middle H4 A {
+	FONT-WEIGHT: bold; COLOR: #1c1c1c
+}
+.sos2012 #bbccom_adsense_mpu A {
+	COLOR: #1659b4
+}
+.sos2012 #bbccom_adsense_middle A {
+	COLOR: #1659b4
+}
+.bbccom_slot_companion.newsbeat #main-content .bbccom_companion {
+	PADDING-LEFT: 100px; MARGIN: 0px auto; WIDTH: 300px
+}
+#bbccom_custom_branding {
+	POSITION: relative
+}
+.bbccom_custom_branding {
+	MARGIN: 14px 0px 0px
+}
+#bbccom_custom_branding .bbccom_text {
+	COLOR: #fff
+}
+#bbccom_custom_branding .bbccom_text SPAN {
+	FLOAT: right; CLEAR: both; LINE-HEIGHT: 13px !important; WIDTH: 100%
+}
+#bbccom_custom_branding .bbccom_text SPAN.bbccom_sponsor_only_text {
+	PADDING-TOP: 12px
+}
+#bbccom_custom_branding .bbccom_special_reports {
+	FONT-SIZE: 11px !important; FLOAT: left; FONT-WEIGHT: normal !important; COLOR: #333; PADDING-TOP: 7px; DISPLAY: block; LINE-HEIGHT: 13px !important; PADDING-RIGHT: 7px; WIDTH: 160px
+}
+#blq-main #bbccom_custom_branding .bbccom_tag_line {
+	RIGHT: 4px; POSITION: absolute; TOP: 35px
+}
+#blq-main #bbccom_custom_branding .bbccom_tag_line A {
+	FONT-SIZE: 15px !important; TEXT-TRANSFORM: none !important; FONT-WEIGHT: normal !important; COLOR: #f63
+}
+#bbccom_custom_branding #bbccom_sponsor_subsection {
+	RIGHT: 8px !important; POSITION: absolute; TOP: 10px !important
+}
+.bbccom_slot_leaderboard .special-event-promotion-full-width {
+	MARGIN-TOP: 14px
+}
+#iePinnedSiteBar {
+	FONT-FAMILY: helvetica, arial, sans-serif !important; BACKGROUND: #707070 0px 0px; TEXT-TRANSFORM: uppercase !important; COLOR: #fff; PADDING-BOTTOM: 10px; PADDING-TOP: 10px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; WIDTH: 100%; box-shadow: 0 5px 10px #ccc
+}
+#iePinnedSiteBar P {
+	MARGIN-BOTTOM: 0px !important; FONT-SIZE: 16px !important; COLOR: #fff
+}
+#iePinnedSiteBar #iePinWrap {
+	POSITION: relative; MARGIN: 0px auto; WIDTH: 960px
+}
+#iePinnedSiteBar #iePinWrap IMG {
+	CURSOR: move; HEIGHT: 32px; VERTICAL-ALIGN: middle; WIDTH: 32px
+}
+#iePinnedSiteBar #iePinClose {
+	CURSOR: pointer; FONT-SIZE: 13px; RIGHT: 0px; POSITION: absolute; TEXT-TRANSFORM: capitalize !important; FONT-WEIGHT: normal !important; COLOR: #fff !important; PADDING-BOTTOM: 5px; PADDING-TOP: 2px; PADDING-LEFT: 0px; TEXT-DECORATION: none !important; DISPLAY: block; TOP: 7px; PADDING-RIGHT: 24px
+}
+#iePinnedSiteBar #iePinClose SPAN {
+	HEIGHT: 15px; BACKGROUND: url(http://news.bbcimg.co.uk/shared/img/bbccom/close.png) no-repeat 0px 0px; RIGHT: 0px; POSITION: absolute; DISPLAY: block; TOP: 2px; WIDTH: 15px
+}
+#iePinnedSiteBar #iePinClose:hover {
+	COLOR: #ccc !important; TEXT-DECORATION: none !important
+}
+#iePinnedSiteBar #iePinClose:hover SPAN {
+	BACKGROUND-POSITION: -18px 0px
+}
+BODY.bbccom_iePin {
+	BACKGROUND-POSITION-Y: 28px
+}

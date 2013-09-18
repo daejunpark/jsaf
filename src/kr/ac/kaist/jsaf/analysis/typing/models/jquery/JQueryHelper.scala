@@ -199,7 +199,8 @@ object JQueryHelper {
             // HANDLE: $(expr, $(...))
             // else if ( !context || context.jquery ) {
             val (h1, v1) =
-              if (v_context._1._1 </ UndefBot) {
+//              if (v_context._1._1 </ UndefBot) {
+              if (v_context._2 == LocSetBot) {
                 // prev = rootjQuery
                 val lset_find = DOMHelper.querySelectorAll(h, s)
                 // jQuery object
@@ -213,8 +214,22 @@ object JQueryHelper {
                     o_jq.update(NumStr, PropValue(ObjectValue(Value(lset_find), T, T, T)))
                 (h.update(l_jq, o_jq1), Value(l_jq))
               }
-              else
-                (HeapBot, ValueBot)
+              else {
+                // TODO : we should find elements using selector in the context
+                // prev = rootjQuery
+                val lset_find = DOMHelper.querySelectorAll(h, s)
+                // jQuery object
+                val o_jq =NewJQueryObject(lset_find.size)
+                  .update("selector",   PropValue(ObjectValue(v_selector, T, T, T)))
+                  .update("prevObject", PropValue(ObjectValue(Value(JQuery.RootJQLoc), T, T, T)))
+                val o_jq1 =
+                  if (lset_find.isEmpty)
+                    o_jq
+                  else
+                    o_jq.update(NumStr, PropValue(ObjectValue(Value(lset_find), T, T, T)))
+                (h.update(l_jq, o_jq1), Value(l_jq))
+              }
+//               (HeapBot, ValueBot)
 
             val v_jquery = v_context._2.foldLeft(ValueBot)((v,l) =>
               v + Helper.Proto(h, l, AbsString.alpha("jquery"))

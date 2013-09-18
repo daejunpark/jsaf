@@ -317,7 +317,10 @@ class SparseEnv(cfg: CFG) extends Environment(cfg) {
     }
   }
   def getLocalizationSet(fid: FunctionId) = {
-    usesetForFuncMap(fid)
+    usesetForFuncMap.get(fid) match {
+      case Some(n) => n
+      case None => throw new InternalError("DU set for the following function is an empty: "+cfg.getFuncName(fid)+"("+fid+")")
+    }
   }
 
   def getBypassingSet(cp: ControlPoint) = {

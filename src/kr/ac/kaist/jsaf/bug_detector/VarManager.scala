@@ -20,7 +20,6 @@ import kr.ac.kaist.jsaf.nodes_util.IRFactory
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil
 import kr.ac.kaist.jsaf.nodes_util.SourceLocRats
 import kr.ac.kaist.jsaf.nodes_util.Span
-import kr.ac.kaist.jsaf.analysis.cfg.CFGUserId
 
 class VarManager(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +95,7 @@ class VarManager(bugDetector: BugDetector) {
           funcName.getText match {
             case "<>Global<>toObject" | "<>Global<>toNumber" =>
               if(args.length > 0) insertVarInfo(BugVar0(lhs, null), CFGExprToBugVar0(args.head))
+            case _ => insertVarInfo(BugVar0(lhs, null), null)  // TODO temporal code for <>iteratorInit.
           }
         }
         else insertVarInfo(BugVar0(lhs, null), null)
@@ -161,12 +161,17 @@ class VarManager(bugDetector: BugDetector) {
   }
 
   def getUserVarAssign(id: CFGId): BugVar0 = getUserVarAssign(CFGVarRef(null, id))
+  def getUserVarAssign(obj: CFGExpr, index: CFGExpr): BugVar0 = getUserVarAssign(CFGLoad(null, obj, index))
   def getUserVarAssign(expr: CFGExpr): BugVar0 = {
     var name: BugVar0 = CFGExprToBugVar0(expr)
     while(true) {
       if(name == null) return null
-      if(name.id.isInstanceOf[CFGUserId]) return name
-      else if(name.index != null) {
+      name.id match {
+        case _: CFGUserId => return name
+        case CFGTempId(text, kind) if text.startsWith("<>arguments<>") => return BugVar0(CFGUserId(null, text, GlobalVar, "arguments", false), null)
+        case _ =>
+      }
+      if(name.index != null) {
         val objName = getUserVarAssign(name.id)
         if(objName != null) {
           if(objName.index != null) {

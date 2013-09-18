@@ -10,15 +10,23 @@
 package kr.ac.kaist.jsaf.analysis.typing
 
 import java.io.File
+import java.util.{List => JList}
 import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import scala.collection.immutable.HashSet
 import scala.collection.immutable.HashMap
 import kr.ac.kaist.jsaf.interpreter.InterpreterPredefine
+import kr.ac.kaist.jsaf.nodes.ASTNode
+import kr.ac.kaist.jsaf.nodes_util.NodeFactory
+import kr.ac.kaist.jsaf.nodes_util.NodeRelation
+import kr.ac.kaist.jsaf.nodes_util.NodeUtil
 import kr.ac.kaist.jsaf.nodes_util.IRFactory
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
+import kr.ac.kaist.jsaf.bug_detector.BugInfo
+import kr.ac.kaist.jsaf.nodes_util.Span
+import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 
 class Typing(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingInterface {
   override def env: Environment = null
@@ -26,6 +34,21 @@ class Typing(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingInterfa
   var programNodes = _cfg.getNodes // without built-ins
   val inTable: Table = MHashMap()
   var fset_builtin: Map[FunctionId, String] = Map[FunctionId, String]()
+
+  var errors = List[BugInfo]()
+  def getErrors: JList[BugInfo] = toJavaList(errors)
+  def signal(span: Span, bugKind: Int, msg1: String, msg2: String): Unit =
+    errors ++= List(new BugInfo(span, bugKind, msg1, msg2))
+  var _span: Span = null
+  def getSpan = _span
+  def setSpan(span: Span): Unit = {
+    _span = span
+    val num = errors.reverse.takeWhile(e => (e.span == null || NodeUtil.isDummySpan(e.span))).length
+    if (num > 0) {
+      val (front, back) = errors.splitAt(errors.length - num)
+      errors = front ++ back.map(e => new BugInfo(span, e.bugKind, e.arg1, e.arg2))
+    }
+  }
 
   var numIter = 0;
   var elapsedTime = 0.0d;
@@ -75,7 +98,6 @@ class Typing(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingInterfa
     }
     fixpoint.compute()
     sem = Some(fixpoint.getSemantics)
-    
     numIter = fixpoint.count
     if (!quiet) System.out.println("# Fixpoint iteration(#): "+numIter)
     elapsedTime = (System.nanoTime - s) / 1000000000.0;
@@ -710,6 +732,15 @@ class Typing(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingInterfa
           if (!(fset_builtin.contains(node._1))) {
             for (i <- 0 to 60 - nodeStr.length) sb.append("=")
             System.out.println("========  " + nodeStr + "  " + sb.toString)
+            cfg.getCmd(node) match {
+              case Block(insts) =>
+                System.out.println("- Command")
+                for (inst <- insts) {
+                  System.out.println("    [" + inst.getInstId + "] " + inst.toString)
+                }
+                System.out.println()
+              case _ => ()
+            }
             System.out.println("- Bottom (cc:ALL)")
             System.out.println("=========================================================================")
             System.out.println()

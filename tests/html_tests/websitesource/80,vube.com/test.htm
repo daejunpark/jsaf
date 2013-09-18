@@ -1,0 +1,367 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0016)http://vube.com/ -->
+<!DOCTYPE html PUBLIC "" ""><HTML lang="ko" lang="ko" xml:lang="ko" xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml"><HEAD><META 
+content="IE=10.000" http-equiv="X-UA-Compatible">
+		 
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">		 
+<META name="language" content="ko">		 		 
+<META http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">		 
+<META name="viewport" content="width=1000, initial-scale=1">		 
+<META name="wot-verification" content="5227f7f23b644fd1d5da">		 <LINK href="http://vube.com" 
+rel="canonical">         <LINK href="/favicon.ico" rel="icon" type="image/x-icon"> 
+        <LINK href="/favicon.ico" rel="shortcut icon" type="image/x-icon">		 <!--[if lt IE 8]>
+		<link rel="stylesheet" type="text/css" href="//m1.thestaticvube.com/v/895fc61ac7ae2744a7e3c7c5b71fde72/css/ie.css" media="screen, projection" />
+		<![endif]-->
+								 
+<SCRIPT src="test_files/jquery.min.js" type="text/javascript"></SCRIPT>
+ <TITLE>Vube</TITLE>		 <LINK href="test_files/libs-1.min.css" rel="stylesheet" 
+type="text/css">		 <LINK href="test_files/base-1.min.css" rel="stylesheet" type="text/css">
+		 
+<SCRIPT src="test_files/libs-1.min.js"></SCRIPT>
+		 
+<SCRIPT src="test_files/base-1.min.js"></SCRIPT>
+					 
+<META name="GENERATOR" content="MSHTML 10.00.9200.16618"></HEAD>	 
+<BODY>
+<DIV tabindex="-1" class="modal hide fade" id="loginbox" role="dialog" 
+aria-hidden="true" aria-labelledby="loginModalLabel">
+<FORM class="form-vertical" id="login-form" action="/" method="post">
+<DIV class="modal-header"><BUTTON class="close" aria-hidden="true" type="button" 
+data-dismiss="modal">×</BUTTON>	     
+<H2 id="loginModalLabel">로그인</H2></DIV>
+<DIV class="modal-body">
+<DIV class="alert alert-error" id="modal-login-message" 
+style="display: none;"></DIV>
+<DIV class="signin_left">
+<DIV class="form" onload="new Validator([]);">
+<DIV class="alert alert-error" id="FormUserLogin_error" 
+style="display: none;"></DIV>
+<DIV class="control-group"><INPUT name="FormUserLogin[email_address]" class="input-xlarge" 
+id="FormUserLogin_email_address" type="text" placeholder="이메일 주소" value="" 
+data-error-is-null="Please enter an Email Address" data-error-box="FormUserLogin_email_address_em_">					<SPAN 
+class="help-block error" id="FormUserLogin_email_address_em_" style="display: none;"></SPAN>			 
+   </DIV>
+<DIV class="control-group"><INPUT name="FormUserLogin[password]" class="input-xlarge" 
+id="FormUserLogin_password" type="password" placeholder="암호" value="" 
+data-error-is-null="Please enter a Password" data-error-box="FormUserLogin_password_em_">					<SPAN 
+class="help-block error" id="FormUserLogin_password_em_" 
+style="display: none;"></SPAN>			    </DIV>
+<DIV class="remember-and-forgot"><A class="forgot pull-right" href="http://vube.com/user/forgotpassword">암호 
+분실?</A>			         <LABEL class="checkbox inline remember"><INPUT name="FormUserLogin[rememberMe]" 
+id="ytFormUserLogin_rememberMe" type="hidden" value="0"><INPUT name="FormUserLogin[rememberMe]" 
+id="FormUserLogin_rememberMe" type="checkbox" value="1"> 사용자 이름 및 암호 저장			       
+ </LABEL>			     </DIV>
+<P><INPUT name="yt0" class="btn btn-info sign-in" id="loginSubmitBtn" onclick="login_user();" type="submit" value="로그인">			 
+   </P></DIV></DIV>
+<DIV class="signin_or_line">
+<DIV class="signin_or"><SPAN>또는</SPAN></DIV></DIV>
+<DIV class="signin_right">
+<P>아직 Vube 계정이 없으신가요?</P><A class="btn btn-large btn-info sign-up" href="http://vube.com/user/register">지금 
+바로 등록하십시오!</A>         </DIV>
+<SCRIPT>
+            new Validator([["FormUserLogin_email_address","required"],["FormUserLogin_password","required"],]);
+        </SCRIPT>
+	 </DIV></FORM>
+<SCRIPT>$(document).ready(function(){ new Validator([["FormUserLogin_email_address","required"],["FormUserLogin_password","required"],]); });</SCRIPT>
+</DIV>
+<DIV class="navbar navbar-inverse navbar-fixed-top">
+<DIV class="navbar-inner">
+<DIV class="container">
+<DIV id="starry"><A class="brand" href="http://vube.com/">
+<DIV id="logo"><SPAN id="logo-text">                                    Vube     
+                            </SPAN>                             </DIV></A>
+<DIV class="nav-collapse collapse"><A class="btn pull-right" id="nav-sign-in" 
+role="button" onclick="show_user_login();" href="javascript:void(0);">로그인</A>	   
+                                                  
+<UL class="nav pull-right" id="nav-upload">
+  <LI><A onclick='show_user_login("비디오를 업로드하려면 로그인해야 합니다",attempt_upload);return false' 
+  href="http://vube.com/video/upload">업로드</A></LI></UL>
+<FORM class="navbar-form pull-right" id="nav-search" action="/" 
+method="GET"><INPUT name="q" class="search-query span5 input-xlarge" id="search" 
+type="search">                                 <BUTTON class="btn-link" id="search-btn" 
+style="border: currentColor;" type="submit">&nbsp;</BUTTON>                      
+       </FORM>
+<UL class="nav pull-right" id="nav-browse">
+  <LI class="dropdown"><A class="dropdown-toggle" href="http://vube.com/#" 
+  data-toggle="dropdown">찾아보기 <B class="caret"></B></A>
+  <UL class="dropdown-menu"><SECTION>
+    <LI><A href="http://vube.com/%EC%9D%8C%EC%95%85">음악</A></LI>
+    <LI><A href="http://vube.com/%EC%98%81%ED%99%94">영화</A></LI>
+    <LI><A href="http://vube.com/%EC%8B%9C%EB%A6%AC%EC%A6%88">시리즈</A></LI>
+    <LI><A href="http://vube.com/%EA%B2%8C%EC%9E%84">게임</A></LI>
+    <LI><A href="http://vube.com/%EC%8B%9D%EC%9D%8C%EB%A3%8C">식음료</A></LI>
+    <LI><A href="http://vube.com/%EC%8A%A4%ED%8F%AC%EC%B8%A0">스포츠</A></LI>
+    <LI><A href="http://vube.com/%EC%BD%94%EB%AF%B8%EB%94%94">코미디</A></LI>
+    <LI><A href="http://vube.com/%EA%B1%B4%EA%B0%95+%EB%B0%8F+%ED%94%BC%ED%8A%B8%EB%8B%88%EC%8A%A4">건강 
+    및 피트니스</A></LI>
+    <LI><A href="http://vube.com/%EB%89%B4%EC%8A%A4">뉴스</A></LI>
+    <LI><A 
+    href="http://vube.com/%EC%A0%95%EC%B9%98">정치</A></LI></SECTION><SECTION>
+    <LI><A href="http://vube.com/%ED%8C%A8%EC%85%98+%EB%B0%8F+%EB%AF%B8%EC%9A%A9">패션 
+    및 미용</A></LI>
+    <LI><A href="http://vube.com/%EA%B5%90%EC%9C%A1">교육</A></LI>
+    <LI><A href="http://vube.com/%EB%8F%99%EB%AC%BC">동물</A></LI>
+    <LI><A href="http://vube.com/%EC%82%AC%EB%9E%8C+%26+%EB%B9%84%EB%94%94%EC%98%A4+%EB%B8%94%EB%A1%9C%EA%B7%B8">사람 
+    &amp; 비디오 블로그</A></LI>
+    <LI><A 
+    href="http://vube.com/%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98">애니메이션</A></LI>
+    <LI><A href="http://vube.com/%EA%B3%BC%ED%95%99">과학</A></LI>
+    <LI><A href="http://vube.com/%EA%B8%B0%EC%88%A0">기술</A></LI>
+    <LI><A href="http://vube.com/%EC%97%AC%ED%96%89">여행</A></LI>
+    <LI><A href="http://vube.com/%EC%98%88%EC%88%A0">예술</A></LI>
+    <LI><A href="http://vube.com/%EC%9E%90%EB%8F%99%EC%B0%A8+%EB%B0%8F+%EC%B0%A8%EB%9F%89">자동차 
+    및 차량</A></LI></SECTION><SECTION>
+    <LI><A href="http://vube.com/%EC%9A%B4%EB%8F%99%EA%B0%80+%EB%B0%8F+%EB%B9%84%EC%98%81%EB%A6%AC">운동가 
+    및 비영리</A></LI>
+    <LI><A href="http://vube.com/%EC%9E%90%EC%97%B0">자연</A></LI>
+    <LI><A href="http://vube.com/%EC%A0%9C%ED%92%88">제품</A></LI>
+    <LI><A href="http://vube.com/%ED%99%9C%EB%8F%99+%26+%EB%AA%A8%ED%97%98">활동 
+    &amp; 모험</A></LI>
+    <LI><A href="http://vube.com/%EC%9C%A0%EB%AA%85%EC%9D%B8%EC%82%AC+%26+%EC%97%B0%EC%98%88%EA%B3%84">유명인사 
+    &amp; 연예계</A></LI>
+    <LI><A href="http://vube.com/%EC%98%A4%EB%9D%BD">오락</A></LI>
+    <LI><A href="http://vube.com/%EB%9D%BC%EC%9D%B4%ED%94%84%EC%8A%A4%ED%83%80%EC%9D%BC">라이프스타일</A></LI>
+    <LI><A href="http://vube.com/%EA%B0%80%EC%A1%B1">가족</A></LI>
+    <LI><A 
+href="http://vube.com/%EC%B6%A4">춤</A></LI></SECTION></UL></LI></UL></DIV><!--/.nav-collapse --> 
+                    </DIV></DIV></DIV></DIV>
+<DIV class="body">
+<DIV class="vube-header">
+<DIV class="toolbar">
+<DIV class="container">
+<UL class="pull-left unstyled">
+  <LI class=" "><A class="sort-trending" href="http://vube.com/#" data-tab="trending">유행</A></LI>
+  <LI class=" "><A class="sort-popular" href="http://vube.com/#" data-tab="popular">인기</A></LI>
+  <LI class=" "><A class="sort-recent" href="http://vube.com/#" data-tab="recent">최근 
+  추가</A></LI>
+  <LI class="special "><A href="http://vube.com/contest">월간 콘테스트</A></LI></UL>
+<DIV class="header-message pull-right"><A href="http://vube.com/contest">콘테스트 
+우승자는 $25,000 이상의 상금 획득</A>			 </DIV>
+<DIV class="clearfix"></DIV></DIV></DIV>
+<DIV class="titlebar container">
+<DIV class="social-header pull-right"><A class="twitter-follow-button" href="https://twitter.com/Vubeology" 
+data-align="right" data-show-screen-name="false" data-show-count="true"></A>			 
+<DIV class="fb-like" id="fb-like-box" data-show-faces="false" data-width="450" 
+data-layout="button_count" data-send="false" data-href="http://www.facebook.com/Vubeology"></DIV></DIV>
+<H2 class="auto"></H2>
+<DIV class="clearfix"></DIV></DIV></DIV>
+<DIV class="container"><!-- breadcrumbs -->				 
+<DIV id="messagebox"></DIV>
+<DIV id="resultcontainer_recent">
+<DIV id="results_recent"></DIV><A class="more-bar" id="load-recent" href="http://vube.com/#"></A></DIV><!-- API / Infinite Scroll - Load Before Next Call --> 
+<SCRIPT>
+	/**
+	 * Pulls in recent results, category results or search related results.
+	 *
+	 * @param object config
+	 * @return object new instance of vube.api
+	 */
+	var vubeAPI  = new vube.api({
+		url : {
+			api    : '/api/video',
+			static : '//frame.thestaticvube.com',
+			base   : '/'
+		},
+		initialQuery : {
+			descending : true,
+			sortBy     : 'view_count',
+			limit      : 100
+		},
+		locale       : {
+			LOAD_MORE     : '더 많은 결과 불러오기',
+			LOADING_MORE  : '더 많은 결과 로드 중...',
+			NO_MORE       : '더 결과 없음',
+			ERROR         : '오류가 발생했습니다. 나중에 다시 시도하십시오.',
+			RECENT_ADD    : '최근 추가'
+		},
+		dom : {
+			trigger          : $('#load-recent'),
+			resultsContainer : $('#results_recent'),
+			searchForm       : $('#nav-search'),
+			sortTriggers     : [{
+				element      : $('.sort-trending'),
+				sortProperty : 'trending'
+			}, {
+				element      : $('.sort-popular'),
+				sortProperty : 'view_count'
+			}, {
+				element      : $('.sort-recent'),
+				sortProperty : 'id'
+			}],
+			resultsPerRow	 : 4
+		},
+		query : $('#search').val() || false,
+		modifyWrapper : function(w, v, k, j) {
+			var cash = (v.cash) ? $('<div class="new_contest_money">').css({
+				right : 0
+			}).text(v.cash) : false;
+			var rank = (v.rank) ? $('<div class="new_contest_numbers">').text(v.rank) : false;
+			
+			return w.append(cash, rank);
+		}
+	});
+</SCRIPT>
+                     </DIV>
+<DIV id="push"></DIV></DIV>
+<DIV id="footer">
+<DIV class="container">
+<DIV class="dd pull-right" id="dd_langauge_select"><LABEL class="label_dd" for="langauge_select"><SPAN 
+class="label_dd_icon pull-left"><IMG alt="" src="test_files/world.png">          
+       </SPAN>                 <SPAN class="label_dd_text">한국어</SPAN>            
+     <SPAN class="label_dd_carot"></SPAN>                 <SELECT name="language_preference" 
+class="actual_dd" id="language_preference" onchange="on_change_language(this)" 
+data-sc="langauge_select_selector"><OPTION value="id">Bahasa Indonesia - 
+  인도네시아어</OPTION> <OPTION value="ms">Bahasa Melayu - 말레이어</OPTION> <OPTION 
+  value="bs">bosanski - 보스니아어</OPTION> <OPTION value="da">dansk - 덴마크어</OPTION> 
+  <OPTION value="de">Deutsch - 독일어</OPTION> <OPTION value="et">Eesti - 
+  에스토니아어</OPTION> <OPTION value="en_AU">English (AU/NZ) - 영어(호주)</OPTION> 
+  <OPTION value="en_GB">English (GB/UK/ZA) - 영어(영국식)</OPTION> <OPTION value="en_US">English 
+  (US/Canada) - 영어(미국식)</OPTION> <OPTION value="es">español - 스페인어</OPTION> 
+  <OPTION value="fr">français - 프랑스어</OPTION> <OPTION value="fr_CA">français 
+  (canadien) - 프랑스어(캐나다)</OPTION> <OPTION value="sq">gjuha shqipe - 
+  알바니아어</OPTION> <OPTION value="hr">hrvatski jezik - 크로아티아어</OPTION> <OPTION 
+  value="it">italiano - 이탈리아어</OPTION> <OPTION value="pl">język polski - 
+  폴란드어</OPTION> <OPTION value="sw">Kiswahili - 스와힐리어</OPTION> <OPTION 
+  value="ht">Kreyòl ayisyen - 아이티어</OPTION> <OPTION value="lv">latviešu valoda - 
+  라트비아어</OPTION> <OPTION value="lt">lietuvių kalba - 리투아니아어</OPTION> <OPTION 
+  value="hu">magyar - 헝가리어</OPTION> <OPTION value="nl">Nederlands - 
+  네덜란드어</OPTION> <OPTION value="nl_BE">Nederlands (Belgisch)</OPTION> <OPTION 
+  value="no">norsk - 노르웨이어</OPTION> <OPTION value="uz">Oʻzbek - 우즈베크어</OPTION> 
+  <OPTION value="pt">português - 포르투갈어</OPTION> <OPTION value="pt_BR">português 
+  (do Brasil) - 포르투갈어(브라질)</OPTION> <OPTION value="ro">română - 루마니아어</OPTION> 
+  <OPTION value="sl">slovenski jezik - 슬로베니아어</OPTION> <OPTION 
+  value="sk">slovenčina - 슬로바키아어</OPTION> <OPTION value="fi">Suomen kieli - 
+  핀란드어</OPTION> <OPTION value="sv">svenska - 스웨덴어</OPTION> <OPTION 
+  value="tl">Tagalog - 타갈로그어</OPTION> <OPTION value="vi">Tiếng Việt - 
+  베트남어</OPTION> <OPTION value="tr">Türkçe - 터키어</OPTION> <OPTION 
+  value="cs">čeština - 체코어</OPTION> <OPTION value="el">ελληνικά - 그리스어</OPTION> 
+  <OPTION value="az">Азәрбајҹан - 아제르바이잔어</OPTION> <OPTION value="ky">Кыргызча - 
+  키르기스어</OPTION> <OPTION value="mk">Македонски јазик - 마케도니아어</OPTION> <OPTION 
+  value="uk">Українська мова - 우크라이나어</OPTION> <OPTION value="be">беларуская 
+  мова  - 벨로루시어</OPTION> <OPTION value="bg">български език - 불가리아어</OPTION> 
+  <OPTION value="ru">русский язык - 러시아어</OPTION> <OPTION value="sr">српски - 
+  세르비아어</OPTION> <OPTION value="tg">тоҷикӣ - 타지키스탄어</OPTION> <OPTION 
+  value="kk">қазақ - 카자흐어</OPTION> <OPTION value="hy">հայերեն - 아르메니아어</OPTION> 
+  <OPTION value="he">עִבְרִית - 히브리어</OPTION> <OPTION value="ar">العربية - 
+  아랍어</OPTION> <OPTION value="ur">اُردُو - 우르두어</OPTION> <OPTION 
+  value="fa">فارسی - 페르시아어</OPTION> <OPTION value="ps">پښتو - 파시토어(푸시토)</OPTION> 
+  <OPTION value="ne">नेपाली - 네팔어</OPTION> <OPTION value="mr">मराठी - 
+  마라티어</OPTION> <OPTION value="hi">हिन्दी - 힌디어</OPTION> <OPTION 
+  value="bn">বাংলা - 벵골어</OPTION> <OPTION value="pa">ਪੰਜਾਬੀ - 펀잡어</OPTION> 
+  <OPTION value="gu">ગુજરાતી - 구자라트어</OPTION> <OPTION value="ta">தமிழ் - 
+  타밀어</OPTION> <OPTION value="te">తెలుగు - 텔루구어</OPTION> <OPTION 
+  value="kn">ಕನ್ನಡ - 카나다어</OPTION> <OPTION value="ml">മലയാളം - 말라얄람어</OPTION> 
+  <OPTION value="si">සිංහල - 스리랑카어</OPTION> <OPTION value="th">ภาษาไทย - 
+  태국어</OPTION> <OPTION value="lo">ພາສາລາວ - 라오어</OPTION> <OPTION 
+  value="my">မြန်မာစာ - 버마어</OPTION> <OPTION value="ka">ქართული - 그루지야어</OPTION> 
+  <OPTION value="km">ភាសាខ្មែរ - 캄보디아어</OPTION> <OPTION value="zh_Hans">中文 (简体) 
+  - 중국어(간체)</OPTION> <OPTION value="zh">中文 (繁體) - 중국어(번체)</OPTION> <OPTION 
+  value="ja">日本語 - 일본어</OPTION> <OPTION selected="selected" 
+  value="ko">한국어</OPTION> </SELECT>                
+<SCRIPT type="text/javascript">
+                    {
+                        var select_langauge_select = $("#dd_langauge_select select");
+                        var label_langauge_select = $("#dd_langauge_select .label_dd_text");
+                        select_langauge_select.change(function() {
+                            var selected = select_langauge_select.find(":selected");
+                            var text = selected.text();
+                            var value = selected.val();
+                            label_langauge_select.text(
+                                select_langauge_select.find(":selected").text()
+                            );
+
+                            if (value == "") $("#dd_langauge_select .label_dd").addClass("empty");
+                            else             $("#dd_langauge_select .label_dd").removeClass("empty");
+                        });
+                    }
+                </SCRIPT>
+             </LABEL></DIV>
+<DIV class="footer_nav"><A 
+href="mailto:support@vube.com">문의</A>&nbsp;&nbsp;&nbsp;&nbsp;                    
+<A href="http://vube.com/site/page?view=terms">약관</A>&nbsp;&nbsp;&nbsp;&nbsp;    
+                <A href="http://vube.com/site/page?view=privacy">개인 정보 보호 
+정책</A>&nbsp;&nbsp;&nbsp;&nbsp;                    <A href="http://vube.com/contest/rules">몇 
+가지 기본적인 콘테스트 규칙</A>                    
+<P class="copyright">Copyright (c) 2013 by Vube</P></DIV></DIV></DIV><!-- login system -->
+						 
+<SCRIPT type="text/javascript"></SCRIPT>
+										 
+<SCRIPT type="text/javascript">
+		    var logged_in = 0;
+			var user = new Object;
+			user.is_verified = 0;
+					</SCRIPT>
+		 
+<DIV id="fb-root"></DIV>
+<SCRIPT type="text/javascript">
+				var _gaq = _gaq || [];
+				_gaq.push(['_setAccount', 'UA-38943666-1']);
+				_gaq.push(['_trackPageview']);
+
+				(function() {
+					var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+					ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+				})();
+			</SCRIPT>
+				 
+<SCRIPT id="fb-script-tag">!function(d, s, id) {
+			 if (navigator.appVersion.indexOf('MSIE') != -1) {
+			 	if (parseFloat(navigator.appVersion.split('MSIE')[1]) <= 7) {
+			 		var menu      = $('#nav-browse .dropdown-menu');
+			 		var menuItems = $('li', menu);
+
+			 		if (menuItems.length > 0) {
+			 			var per  = 10;
+			 			var cur  = 0;
+			 			var row  = 0;
+			 			var ctr  = false;
+
+			 			$.each(menuItems, function(k, v) {
+			 				if (cur == 0) {
+			 					ctr = $('<div class="ie7-browse">').appendTo(menu);
+			 				}
+
+			 				ctr.append(v);
+			 				cur++;
+
+			 				if (cur >= per) cur = 0;
+			 			});
+			 		}
+
+			 		return;
+			 	}
+			 }
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk');
+		</SCRIPT>
+		 
+<SCRIPT>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</SCRIPT>
+	 
+<SCRIPT type="text/javascript">
+/*<![CDATA[*/
+jQuery(function($) {
+jQuery('a[rel="tooltip"]').tooltip();
+jQuery('a[rel="popover"]').popover();
+jQuery('#login-form').yiiactiveform({'validateOnSubmit':true,'attributes':[{'id':'FormUserLogin_email_address','inputID':'FormUserLogin_email_address','errorID':'FormUserLogin_email_address_em_','model':'FormUserLogin','name':'FormUserLogin[email_address]','enableAjaxValidation':false,'inputContainer':'div.control-group','clientValidation':function(value, messages, attribute) {
+
+if(jQuery.trim(value)=='') {
+	messages.push("VS_\uc774\uba54\uc77c_\uc8fc\uc18c cannot be blank.");
+}
+
+}},{'id':'FormUserLogin_password','inputID':'FormUserLogin_password','errorID':'FormUserLogin_password_em_','model':'FormUserLogin','name':'FormUserLogin[password]','enableAjaxValidation':false,'inputContainer':'div.control-group','clientValidation':function(value, messages, attribute) {
+
+if(jQuery.trim(value)=='') {
+	messages.push("VS_\uc554\ud638 cannot be blank.");
+}
+
+}}]});
+});
+/*]]>*/
+</SCRIPT>
+ </BODY></HTML>

@@ -1,0 +1,162 @@
+.tumblr_login_link {
+	box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.tumblr_login_link * {
+	box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.tumblr_login_link {
+	padding: 17px 25px; left: auto; top: 0px; text-align: right; right: 0px; bottom: auto; color: rgb(255, 255, 255); line-height: 16px; font-size: 12px; font-weight: bold; position: fixed; opacity: 0.88; text-shadow: 0px 1px 1px rgba(0,0,0,0.8);
+}
+.tumblr_login_link .login_link {
+	color: rgb(255, 255, 255); text-decoration: underline; display: inline-block;
+}
+.tumblr_login_link .policy_link.login_link {
+	padding-right: 12px; font-weight: normal; text-decoration: none; margin-right: 12px; border-right-color: rgba(255, 255, 255, 0.4); border-right-width: 1px; border-right-style: solid;
+}
+.fullscreen_post_bg {
+	background-position: 50% 50%; left: 0px; top: 0px; right: 0px; bottom: 0px; position: fixed; background-size: cover;
+}
+.fullscreen_post_bg::before {
+	background: url("/images/full_page_vignette.png?89b089a4eadabc2379457a943feeab6c") 0% 0% / 100% 100% rgba(0, 0, 0, 0.2); left: 0px; top: 0px; right: 0px; bottom: 0px; position: fixed; content: ""; opacity: 0.5;
+}
+.fullscreen_post_bg::after {
+	left: 0px; top: 0px; right: 0px; bottom: 0px; position: fixed; content: "";
+}
+.fullscreen_post_bg img {
+	display: none;
+}
+.fullscreen_post_footer {
+	left: 0px; top: auto; right: 0px; bottom: 0px; position: fixed;
+}
+.fullscreen_post_posted_by {
+	margin: 0px 0px 25px; padding: 0px 25px; transition:opacity 0.2s linear; line-height: 25px; float: right; z-index: 90210; opacity: 0; -webkit-transition: opacity .2s linear; -moz-transition: opacity .2s linear;
+}
+.show.fullscreen_post_posted_by {
+	opacity: 0.88;
+}
+.fullscreen_post_posted_by {
+	text-align: right; color: rgb(255, 255, 255); font-size: 12px; text-shadow: 0px 1px 1px rgba(0,0,0,0.6);
+}
+.fullscreen_post_posted_by a {
+	text-align: right; color: rgb(255, 255, 255); font-size: 12px; text-shadow: 0px 1px 1px rgba(0,0,0,0.6);
+}
+.fullscreen_post_posted_by .post_info {
+	position: relative;
+}
+.fullscreen_post_posted_by .post_info a {
+	font-weight: bold; text-decoration: none; display: inline-block;
+}
+.fullscreen_post_posted_by .post_avatar {
+	background-position: 50% 50%; margin: 0px; padding: 0px; border-radius: 3px; width: 24px; height: 24px; vertical-align: -8px; display: inline-block; box-shadow: 0px 1px 1px rgba(0,0,0,0.3); background-size: cover; -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3); -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+.fullscreen_post_posted_by .post_avatar > img {
+	display: block; opacity: 0;
+}
+.fullscreen_post_posted_by .root_tumblelog.post_avatar {
+	margin: 0px 0px 0px 8px;
+}
+.fullscreen_post_posted_by .posting_tumblelog.post_avatar {
+	margin: 0px 8px 0px 0px;
+}
+.fullscreen_post_posted_by .source_tumblelog.post_avatar {
+	margin: 0px 8px;
+}
+.dash_b .content_cap {
+	display: none;
+}
+.dash_b #content {
+	background: 0px;
+}
+.dash_b #logo {
+	pointer-events: none;
+}
+.dash_b #logo a {
+	pointer-events: none;
+}
+.dash_b_form_container {
+	margin: 0px auto; top: 25%; width: 245px; position: relative; z-index: 5;
+}
+.with_bg.dash_b_form_container {
+	padding: 20px 30px 30px; border-radius: 13px;
+}
+.dash_b .logo {
+	margin: auto;
+}
+.dash_b .subheading {
+	margin: 8px 0px 18px -250px; left: 50%; width: 500px; text-align: center; color: rgb(255, 255, 255); line-height: 1.2; font-size: 20px; font-weight: bold; white-space: nowrap; position: relative; opacity: 0.88; text-shadow: 0px 2px 2px rgba(0,0,0,0.5);
+}
+.dash_b .signup_forms {
+	padding: 0px; left: 0px; top: 0px; margin-top: 0px; position: relative; opacity: 1;
+}
+.dash_b .forgot_password_link {
+	display: none;
+}
+.dash_b .fullscreen_post_bg::after {
+	margin: 200px 0px 0px -1px; border-radius: 50%; transition:opacity 0.15s linear; left: 50%; top: 25%; width: 2px; height: 2px; position: fixed; content: ""; opacity: 1; box-shadow: 0px 0px 300px 300px rgba(0,0,0,0.2); -webkit-transition: opacity .15s linear; -moz-transition: opacity .15s linear;
+}
+.loading.lodb .fullscreen_post_bg::after {
+	opacity: 0;
+}
+.dash_b .fullscreen_post_footer {
+	background: rgba(0, 0, 0, 0.4); transition:background-color 0.25s linear; -webkit-transition: background-color .25s linear; -moz-transition: background-color .25s linear;
+}
+.dash_b .fullscreen_post_footer .fullscreen_post_posted_by {
+	top: 50%; right: 0px; margin-top: -13px; position: absolute;
+}
+.dash_b .fullscreen_post_footer .dash_b_footer_stats {
+	transition:opacity 0.25s linear; width: 100%; -webkit-transition: opacity .25s linear; -moz-transition: opacity .25s linear;
+}
+.dash_b_footer_stats {
+	text-align: center; white-space: nowrap;
+}
+.dash_b_footer_stats .stat {
+	margin: 15px 0px; padding: 0px 25px; text-align: center; border-left-color: rgba(255, 255, 255, 0.4); border-left-width: 1px; border-left-style: solid; display: inline-block; text-shadow: 0px 1px 2px rgba(0,0,0,0.6);
+}
+.dash_b_footer_stats :first-child.stat {
+	border-left-color: currentColor; border-left-width: medium; border-left-style: none;
+}
+.dash_b_footer_stats .number {
+	margin: 0px 0px 5px; transition:font-size 0.25s linear; color: rgb(255, 255, 255); line-height: 1; font-size: 50px; font-weight: bold; -webkit-transition: font-size .25s linear; -moz-transition: font-size .25s linear;
+}
+.dash_b_footer_stats .description {
+	color: rgb(255, 255, 255); line-height: 1; font-size: 18px;
+}
+.dash_b #signup_forms_submit {
+	position: relative;
+}
+.dash_b #signup_forms_submit::after {
+	background: linear-gradient(rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0.4) 100%); border-radius: 4px; left: 0px; top: 0px; right: 0px; bottom: 0px; display: none; position: absolute; content: ""; -webkit-border-radius: 4px; -moz-border-radius: 4px;
+}
+.dash_b #signup_forms_submit > span {
+	position: relative; z-index: 3;
+}
+.dash_b .signup_forms .signup_forms_errors {
+	background: rgba(0, 0, 0, 0.66);
+}
+@media screen and (max-height:650px)
+{
+.dash_b_footer_stats .number {
+	font-size: 24px;
+}
+}
+@media screen and (max-height:600px)
+{
+.dash_b .fullscreen_post_footer {
+	background-color: rgba(0, 0, 0, 0);
+}
+.dash_b .fullscreen_post_footer .dash_b_footer_stats {
+	opacity: 0;
+}
+}
+@media screen and (max-width:855px) and (min-height:600px)
+{
+.dash_b .fullscreen_post_footer .fullscreen_post_posted_by {
+	top: auto; bottom: 100%;
+}
+}
+@media screen and (max-width:680px) and (max-height:600px)
+{
+.dash_b .fullscreen_post_footer .fullscreen_post_posted_by {
+	display: none;
+}
+}

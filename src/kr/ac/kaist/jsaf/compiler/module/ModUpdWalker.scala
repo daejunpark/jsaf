@@ -22,6 +22,7 @@ class ModUpdWalker(env: Env, var path: Path, program: Any) extends Walker {
 
   override def walk(node: Any): Any = node match {
     case SProgram(_, STopLevel(_, _, stmts)) => walk(stmts)
+    case SSourceElements(_, stmts, _) => walk(stmts)
     case SModDecl(info, name, STopLevel(_, _, stmts)) =>
       val p = name.getText :: path
       val f = SDot(info, MH.initfun(p), SId(info, "call", None, false))
@@ -31,7 +32,9 @@ class ModUpdWalker(env: Env, var path: Path, program: Any) extends Walker {
     case _: Stmt => node
     case xs: List[_] =>
       val stmts = (new ModImpWalker(env, path, xs.map(walk _).filter(_ != null))).doit.asInstanceOf[List[SourceElement]]
-      val f = SFunExpr(MH.defInfo, SFunctional(Nil, Nil, stmts, SId(MH.defInfo, "", None, false), List(SId(MH.defInfo, "arguments", None, false))))
+      val f = SFunExpr(MH.defInfo, SFunctional(Nil, Nil,
+                                               SSourceElements(MH.defInfo, stmts, false),
+                                               SId(MH.defInfo, "", None, false), List(SId(MH.defInfo, "arguments", None, false))))
       val s1 = SExprStmt(MH.defInfo, SAssignOpApp(MH.defInfo, MH.initfun(path), SOp(MH.defInfo, "="), f), false)
       val s2 = SExprStmt(MH.defInfo, SAssignOpApp(MH.defInfo, MH.initarg(path), SOp(MH.defInfo, "="), MH.bypass), false)
       List(s1, s2)

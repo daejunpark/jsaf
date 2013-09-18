@@ -87,24 +87,34 @@ object HTMLElement extends DOM {
       ("title",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("title")), T, T, T))),
       ("lang",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("lang'")), T, T, T))),
       ("dir",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("dir")), T, T, T))),
-      ("className",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("class")), T, T, T))))
+      ("className",   PropValue(ObjectValue(AbsString.alpha(e.getAttribute("class")), T, T, T))),
+      // TODO : setting 'innerHTML' and 'outerHTML' should affect the DOM tree 
+      ("innerHTML",   PropValue(ObjectValue(StrTop, T, T, T))),
+      ("outerHTML",   PropValue(ObjectValue(StrTop, T, T, T)))
+     )
     case _ => {
       System.err.println("* Warning: " + node.getNodeName + " cannot have instance objects.")
       List()
     }
   }
   
-  def getInsList(id: PropValue, title: PropValue, lang: PropValue, dir: PropValue, className: PropValue): List[(String, PropValue)] = {
+  def getInsList(id: PropValue, title: PropValue, lang: PropValue, dir: PropValue, className: PropValue,
+                 innerHTML: PropValue, outerHTML: PropValue): List[(String, PropValue)] = {
     // DOM Level 1
     List(("id", id), 
     ("title", title),
     ("lang", lang), 
     ("dir", dir),
-    ("className", className))
+    ("className", className),
+    ("innerHTML", innerHTML),
+    ("outerHTML", outerHTML)
+    )
   }
 
   override def default_getInsList(): List[(String, PropValue)] =
     getInsList(PropValue(ObjectValue(AbsString.alpha(""), T, T, T)),
+               PropValue(ObjectValue(AbsString.alpha(""), T, T, T)),
+               PropValue(ObjectValue(AbsString.alpha(""), T, T, T)),
                PropValue(ObjectValue(AbsString.alpha(""), T, T, T)),
                PropValue(ObjectValue(AbsString.alpha(""), T, T, T)),
                PropValue(ObjectValue(AbsString.alpha(""), T, T, T)),

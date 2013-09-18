@@ -15,19 +15,22 @@ import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
+import kr.ac.kaist.jsaf.nodes.Program
 
-class BugDetector(_cfg: CFG, _typing: TypingInterface, fileMap: JHashMap[String, String], quiet: Boolean, _shadowings: JList[BugInfo]) {
+class BugDetector(_ast: Program, _cfg: CFG, _typing: TypingInterface, fileMap: JHashMap[String, String], quiet: Boolean, _fromHoister: JList[BugInfo]) {
   val params        = Shell.params
+  val ast           = _ast
   val cfg           = _cfg
   val typing        = _typing
   val callGraph     = typing.computeCallGraph
-  val shadowings    = toList(_shadowings)
+  val fromHoister   = toList(_fromHoister)
   val env           = typing.env
 
   val quietFlag     = quiet
   val analyzeMode   = params.command
   val errorOnly     = params.opt_ErrorOnly
   val locclone      = params.opt_LocClone
+  val trycatch      = params.opt_TryCatch
   val libMode       = params.opt_Library
   val devMode       = params.opt_DeveloperMode
    
@@ -36,6 +39,7 @@ class BugDetector(_cfg: CFG, _typing: TypingInterface, fileMap: JHashMap[String,
   val stateManager  = new StateManager(cfg, typing, semantics, varManager)
   val bugStorage    = new BugStorage(this, fileMap)
   val bugOption     = new BugOption(!devMode)
+  val ASTDetect     = new ASTDetect(this)
   val CommonDetect  = new CommonDetect(this)
   val ExprDetect    = new ExprDetect(this)
   val InstDetect    = new InstDetect(this)
@@ -45,6 +49,7 @@ class BugDetector(_cfg: CFG, _typing: TypingInterface, fileMap: JHashMap[String,
 
   def detectBug(): Unit = {
     bugStorage.recordStartTime(System.nanoTime)
+    ASTDetect.check()
     traverseCFG; FinalDetect.check
     bugStorage.recordEndTime(System.nanoTime)
     bugStorage.reportDetectedBugs(params.opt_ErrorOnly, quiet)
@@ -129,8 +134,8 @@ class BugDetector(_cfg: CFG, _typing: TypingInterface, fileMap: JHashMap[String,
       InstDetect.check(inst, stateMap)
     }
 
-    def V(inst: CFGInst, expr: CFGExpr, stateMap: CState): Unit = {
-      ExprDetect.check(inst, expr, stateMap)
+    def V(inst: CFGInst, expr: CFGExpr, stateMap: CState, typeof: Boolean = false): Unit = {
+      ExprDetect.check(inst, expr, stateMap, typeof)
       expr match {
         case CFGBin(info, first, op, second) => 
           V(inst, first, stateMap)
@@ -139,7 +144,10 @@ class BugDetector(_cfg: CFG, _typing: TypingInterface, fileMap: JHashMap[String,
           V(inst, obj, stateMap)
           V(inst, index, stateMap)
         case CFGThis(info) => Unit
-        case CFGUn(info, op, first) => V(inst, first, stateMap)
+        case CFGUn(info, op, first) => op.getText match {
+          case "typeof" => V(inst, first, stateMap, true) 
+          case _ => V(inst, first, stateMap)
+        }
         case CFGVarRef(info, id) => Unit
         case _ => Unit
       }

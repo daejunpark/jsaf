@@ -1,0 +1,171 @@
+.Area {
+	HEIGHT: auto; CLEAR: both; MARGIN: 0px auto; WIDTH: 950px
+}
+.blank1 {
+	FONT-SIZE: 1px; HEIGHT: 1px; CLEAR: both; MARGIN: 0px auto
+}
+.blank2 {
+	FONT-SIZE: 1px; HEIGHT: 2px; CLEAR: both; MARGIN: 0px auto
+}
+.blank3 {
+	FONT-SIZE: 1px; HEIGHT: 3px; CLEAR: both; MARGIN: 0px auto
+}
+.blank5 {
+	FONT-SIZE: 1px; HEIGHT: 5px; CLEAR: both; MARGIN: 0px auto
+}
+.blank8 {
+	FONT-SIZE: 1px; HEIGHT: 8px; CLEAR: both; MARGIN: 0px auto
+}
+.blank10 {
+	FONT-SIZE: 1px; HEIGHT: 10px; CLEAR: both; MARGIN: 0px auto
+}
+.blank15 {
+	FONT-SIZE: 1px; HEIGHT: 15px; CLEAR: both; MARGIN: 0px auto
+}
+.bodybg {
+	
+}
+.columnA {
+	FLOAT: left; DISPLAY: inline; WIDTH: 140px
+}
+.columnB {
+	FLOAT: left; DISPLAY: inline; WIDTH: 150px
+}
+.columnC {
+	FLOAT: right; DISPLAY: inline; WIDTH: 180px
+}
+.columnD {
+	FLOAT: left; DISPLAY: inline; WIDTH: 211px
+}
+.columnE {
+	FLOAT: right; DISPLAY: inline; WIDTH: 212px
+}
+.columnF {
+	FLOAT: left; DISPLAY: inline; WIDTH: 207px
+}
+.columnG {
+	FLOAT: right; DISPLAY: inline; WIDTH: 207px
+}
+.columnH {
+	FLOAT: left; DISPLAY: inline; WIDTH: 318px
+}
+.columnI {
+	FLOAT: left; DISPLAY: inline; WIDTH: 318px
+}
+.columnJ {
+	FLOAT: left; DISPLAY: inline; WIDTH: 380px
+}
+.columnK {
+	FLOAT: right; DISPLAY: inline; WIDTH: 380px
+}
+.columnL {
+	FLOAT: right; DISPLAY: inline; WIDTH: 434px
+}
+.columnM {
+	FLOAT: left; DISPLAY: inline; WIDTH: 465px
+}
+.columnN {
+	FLOAT: left; DISPLAY: inline; WIDTH: 760px
+}
+.border {
+	BORDER-TOP: #f00 1px solid; BORDER-RIGHT: #f00 1px solid; BORDER-BOTTOM: #f00 1px solid; BORDER-LEFT: #f00 1px solid
+}
+.bord {
+	BORDER-TOP: #d9d9d9 1px solid; BORDER-RIGHT: #d9d9d9 1px solid; BORDER-BOTTOM: #d9d9d9 1px solid; BORDER-LEFT: #d9d9d9 1px solid
+}
+.bord01 {
+	BORDER-TOP: #ffe890 1px solid
+}
+.bord02 {
+	BORDER-TOP: #d9d9d9 1px solid
+}
+.bord03 {
+	BORDER-BOTTOM: #d9d9d9 1px solid
+}
+.bord04 {
+	BORDER-LEFT: #d9d9d9 1px solid
+}
+.bord05 {
+	BORDER-RIGHT: #d9d9d9 1px solid
+}
+.BotA {
+	FONT-SIZE: 1px; HEIGHT: 1px; BORDER-BOTTOM: #ffe585 1px solid; CLEAR: both
+}
+.aBot {
+	OVERFLOW: hidden; FONT-SIZE: 1px; HEIGHT: 1px; BACKGROUND: url(../images9_18/bg.png) -1424px 0px; CLEAR: both
+}
+.bBot {
+	OVERFLOW: hidden; FONT-SIZE: 0px; HEIGHT: 1px; BACKGROUND: url(../images20130624/bg.png) no-repeat -1424px -5px; CLEAR: both
+}
+.cBot {
+	FONT-SIZE: 1px; HEIGHT: 6px; BACKGROUND: url(../images20130624/sohubg01.png) repeat-x 0px -181px; CLEAR: both; MARGIN: 0px auto; WIDTH: 758px
+}
+.dBot {
+	OVERFLOW: hidden; FONT-SIZE: 1px; HEIGHT: 10px; BACKGROUND: url(../images20130624/bg.png) -1424px -3px; CLEAR: both
+}
+.eBot {
+	OVERFLOW: hidden; FONT-SIZE: 1px; HEIGHT: 1px; BACKGROUND: url(../images20130624/bg.png) -1424px -13px; CLEAR: both
+}
+.fBot {
+	OVERFLOW: hidden; FONT-SIZE: 1px; HEIGHT: 1px; BACKGROUND: url(../images20130624/bg.png) -1424px 0px; CLEAR: both
+}
+.bBot170 {
+	OVERFLOW: hidden; HEIGHT: 1px; BACKGROUND: url(../images20130624/sohubg01.png) 0px -149px; MARGIN: 0px auto
+}
+.bBot203 {
+	OVERFLOW: hidden; HEIGHT: 1px; BACKGROUND: url(../images20130624/sohubg01.png) 0px -149px; MARGIN: 0px auto
+}
+.bBot304 {
+	OVERFLOW: hidden; HEIGHT: 1px; BACKGROUND: url(../images20130624/sohubg01.png) 0px -149px; MARGIN: 0px auto
+}
+.bBot374 {
+	OVERFLOW: hidden; HEIGHT: 1px; BACKGROUND: url(../images20130624/sohubg01.png) 0px -149px; MARGIN: 0px auto
+}
+.bBot420 {
+	OVERFLOW: hidden; HEIGHT: 1px; BACKGROUND: url(../images20130624/sohubg01.png) 0px -149px; MARGIN: 0px auto
+}
+.bBot760 {
+	OVERFLOW: hidden; HEIGHT: 1px; BACKGROUND: url(../images20130624/sohubg01.png) 0px -149px; MARGIN: 0px auto
+}
+.bBot170 {
+	WIDTH: 170px
+}
+.bBot203 {
+	WIDTH: 203px
+}
+.bBot304 {
+	WIDTH: 304px
+}
+.bBot374 {
+	WIDTH: 374px
+}
+.bBot420 {
+	WIDTH: 420px
+}
+.bBot760 {
+	WIDTH: 758px
+}
+.iconA {
+	OVERFLOW: hidden; HEIGHT: 13px; BACKGROUND: url(../images/icon01.png) -80px -33px; FLOAT: left; MARGIN: 1px 0px 0px 7px; WIDTH: 13px
+}
+.iconB {
+	OVERFLOW: hidden; HEIGHT: 7px; BACKGROUND: url(../images/icon01.png) -94px -24px; FLOAT: left; MARGIN: 10px 0px 0px 11px; WIDTH: 4px
+}
+.iconC {
+	OVERFLOW: hidden; HEIGHT: 13px; BACKGROUND: url(../images/icon01.png) -95px -33px; FLOAT: left; MARGIN: 1px 0px 0px 7px; WIDTH: 13px
+}
+.iconD {
+	OVERFLOW: hidden; HEIGHT: 13px; BACKGROUND: url(../images/icon01.png) -110px -33px; FLOAT: left; MARGIN: 1px 0px 0px 7px; WIDTH: 13px
+}
+.iconE {
+	OVERFLOW: hidden; HEIGHT: 13px; BACKGROUND: url(../images/icon01.png) -125px -33px; FLOAT: left; MARGIN: 1px 0px 0px 7px; WIDTH: 13px
+}
+.iconF {
+	OVERFLOW: hidden; HEIGHT: 13px; BACKGROUND: url(../images/icon01.png) -140px -33px; FLOAT: left; MARGIN: 1px 0px 0px 7px; WIDTH: 13px
+}
+.iconG {
+	OVERFLOW: hidden; HEIGHT: 13px; BACKGROUND: url(../images/icon01.png) -155px -33px; FLOAT: left; MARGIN: 1px 0px 0px 7px; WIDTH: 13px
+}
+.iconM {
+	OVERFLOW: hidden; HEIGHT: 4px; BACKGROUND: url(../images/icon01.png) -113px -71px; FLOAT: left; WIDTH: 8px
+}

@@ -1,0 +1,165 @@
+#topBasketContainer {
+	
+}
+#shopCartPopUpContainer {
+	position: absolute; z-index: 9999;
+}
+* + html #shopCartTopRightBox {
+	right: 211px !important;
+}
+* + html #shopCartMousePlane {
+	left: 0px !important;
+}
+* + html #shopCartPopUp {
+	right: 0px !important;
+}
+* + html #shopCartTitle {
+	right: 0px !important;
+}
+* + html #shopCartPopUp .mCSB_dragger {
+	right: 0px;
+}
+* + html .mCSB_scrollTools .mCSB_buttonUp + .mCSB_draggerContainer {
+	padding-bottom: 0px;
+}
+* html #shopCartTopRightBox {
+	right: 211px !important;
+}
+* html #shopCartMousePlane {
+	left: 0px !important;
+}
+* html #shopCartPopUp {
+	right: 0px;
+}
+* html #shopCartTitle {
+	right: 0px;
+}
+#shopCartTopRightBox {
+	top: 0px; width: 112px; height: 34px; right: -1px; border-right-color: rgb(242, 150, 150); border-bottom-color: rgb(242, 150, 150); border-right-width: 1px; border-bottom-width: 1px; border-right-style: solid; border-bottom-style: solid; position: absolute; z-index: 1; background-color: rgb(255, 255, 255);
+}
+#shopCartMousePlane {
+	left: 212px; top: 33px; width: 16px; height: 343px; display: inline-block; position: absolute; opacity: 0; background-color: rgb(255, 255, 255); -moz-opacity: 0;
+}
+#shopCartPopUp {
+	top: 64px; width: 322px; right: -212px; border-right-color: rgb(242, 150, 150); border-bottom-color: rgb(242, 150, 150); border-left-color: rgb(242, 150, 150); border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; position: absolute; z-index: -1; -ms-overflow-y: auto; background-color: rgb(255, 255, 255);
+}
+#shopCartTitle {
+	top: 33px; width: 322px; right: -212px; padding-top: 10px; padding-bottom: 5px; padding-left: 0px; font-size: 13px; font-weight: bold; border-right-color: rgb(242, 150, 150); border-bottom-color: rgb(222, 222, 222); border-left-color: rgb(242, 150, 150); border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; position: absolute; background-color: rgb(255, 255, 255);
+}
+#shopCartTitle span {
+	margin-left: 5px;
+}
+#shopCartList::after {
+	height: 0px; clear: both; font-size: 0px; display: block; visibility: hidden; content: ".";
+}
+#shopCartList {
+	width: 100%;
+}
+#shopCartList .shopCart {
+	clear: both; border-top-color: rgb(222, 222, 222); border-top-width: 1px; border-top-style: solid;
+}
+#shopCartList .shopCartHeader {
+	height: 22px; padding-top: 7px; padding-bottom: 7px; margin-right: 10px; margin-left: 10px; position: relative;
+}
+#shopCartList .shopName {
+	top: 2px; font-size: 13px; font-weight: bold; text-decoration: none; position: relative;
+}
+#shopCartList .shopName:hover {
+	color: rgb(191, 0, 0); text-decoration: underline;
+}
+#shopCartList .orderBttn {
+	right: 0px; position: absolute;
+}
+#shopCartList .itemList {
+	margin-right: 10px; margin-left: 10px;
+}
+#shopCartList .item {
+	margin: 7px; width: 80px; float: left;
+}
+#shopCartList .itemUrl {
+	width: 80px; height: 80px; text-align: center; display: block;
+}
+#shopCartList .price {
+	text-align: right; color: rgb(199, 0, 0); font-size: 12px; margin-top: 5px;
+}
+#shopCartList .img {
+	
+}
+#shopCartViewAll {
+	margin: 0px auto 7px; padding: 5px; border: 1px solid rgb(222, 222, 222); width: 80%; text-align: center;
+}
+#shopCartViewAll a {
+	font-size: 12px; text-decoration: none;
+}
+.mCSB_container {
+	width: auto; overflow: hidden; margin-right: 15px;
+}
+.mCS_no_scrollbar.mCSB_container {
+	margin-right: 0px;
+}
+.mCustomScrollBox .mCSB_scrollTools {
+	background: url("bg_scroll.gif") repeat-y; top: 0px; width: 13px; height: 100%; right: 0px;
+}
+.mCSB_scrollTools .mCSB_draggerContainer {
+	height: 100%; box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.mCSB_scrollTools .mCSB_buttonUp + .mCSB_draggerContainer {
+	padding-bottom: 26px;
+}
+.mCSB_scrollTools .mCSB_dragger {
+	width: 100%; height: 30px; cursor: pointer;
+}
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+	margin: 0px auto; border-radius: 10px; width: 9px; height: 100%; text-align: center; -webkit-border-radius: 10px; -moz-border-radius: 10px;
+}
+.mCSB_scrollTools .mCSB_buttonUp {
+	margin: 0px auto; height: 13px; overflow: hidden; cursor: pointer;
+}
+.mCSB_scrollTools .mCSB_buttonDown {
+	margin: 0px auto; height: 13px; overflow: hidden; cursor: pointer;
+}
+.mCSB_scrollTools .mCSB_buttonDown {
+	bottom: 0px; margin-top: -26px;
+}
+.mCustomScrollBox .mCSB_scrollTools {
+	opacity: 0.75;
+}
+.mCustomScrollBox:hover .mCSB_scrollTools {
+	opacity: 1;
+}
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+	background: rgb(192, 192, 192);
+}
+.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar {
+	background: rgba(192, 192, 192, 0.85);
+}
+.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar {
+	background: rgba(192, 192, 192, 0.9);
+}
+.mCSB_scrollTools .mCSB_dragger_onDrag.mCSB_dragger .mCSB_dragger_bar {
+	background: rgba(192, 192, 192, 0.9);
+}
+* + html .mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar {
+	background: rgb(208, 208, 208);
+}
+.mCSB_scrollTools .mCSB_dragger_onDrag.mCSB_dragger .mCSB_dragger_bar {
+	background: rgb(208, 208, 208);
+}
+.mCSB_scrollTools .mCSB_buttonUp {
+	background-image: url("arrow_top.gif"); background-repeat: no-repeat;
+}
+.mCSB_scrollTools .mCSB_buttonDown {
+	background-image: url("arrow_bottom.gif"); background-repeat: no-repeat;
+}
+.mCSB_scrollTools .mCSB_buttonUp {
+	
+}
+.mCSB_scrollTools .mCSB_buttonDown {
+	
+}
+.mCSB_scrollTools .mCSB_buttonUp:hover {
+	opacity: 0.75;
+}
+.mCSB_scrollTools .mCSB_buttonDown:hover {
+	opacity: 0.75;
+}

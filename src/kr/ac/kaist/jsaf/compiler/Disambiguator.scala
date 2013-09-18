@@ -205,7 +205,7 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
     labEnv = (labEnv._1, labEnv._4++labEnv._2, labEnv._3, labEnv._4)
   }
   def functional(span: Span, name: Id, params: List[Id], fds: List[FunDecl],
-                 vds: List[VarDecl], body: List[SourceElement]) = {
+                 vds: List[VarDecl], body: SourceElements) = {
     val old_toplevel = toplevel
     toplevel = false
     labEnv = emptyLabEnv
@@ -214,17 +214,20 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
     pairs_params.foreach(p => addEnv(p._1, p._2))
     fds.foreach(fd => addEnv(fd.getFtn.getName, newId(fd.getFtn.getName)))
     val new_vds = vds.foldLeft(List[VarDecl]())((vds, vd) => vd match {
-        case SVarDecl(info, id, _) => params.find(p => p.getText.equals(id.getText)) match {
+        case SVarDecl(info, id, _, strict) => params.find(p => p.getText.equals(id.getText)) match {
           case None =>
             val new_id = newId(id)
             addEnv(id, new_id)
-            vds:+SVarDecl(info, new_id, None)
+            vds:+SVarDecl(info, new_id, None, strict)
           case _ => vds
         }})
     val new_fds = fds.map(walk).asInstanceOf[List[FunDecl]]
     val oldInFunctionBody = inFunctionBody
     inFunctionBody = true
-    val new_body = body.map(walk).asInstanceOf[List[SourceElement]]
+    val new_body = body match {
+      case SSourceElements(i, stmts, strict) =>
+        SSourceElements(i, stmts.map(walk).asInstanceOf[List[SourceElement]], strict)
+    }
     inFunctionBody = oldInFunctionBody
     toplevel = old_toplevel
     SFunctional(new_fds, new_vds, new_body, name, pairs_params.map(p => p._2))
@@ -234,22 +237,26 @@ class Disambiguator(program: Program, disambiguateOnly: Boolean) extends Walker 
     case SProgram(info, STopLevel(fds, vds, body)) =>
       fds.foreach(fd => addEnv(fd.getFtn.getName, newId(fd.getInfo.getSpan, fd.getFtn.getName.getText)))
       val new_vds = vds.map(p => p match {
-          case SVarDecl(i, id, _) =>
+          case SVarDecl(i, id, _, strict) =>
             val new_id = newId(i.getSpan, id.getText)
             addEnv(id, new_id)
-            SVarDecl(info, new_id, None)})
+            SVarDecl(info, new_id, None, strict)})
       val new_fds = fds.map(walk).asInstanceOf[List[FunDecl]]
       toplevel = true
       SProgram(info,
                STopLevel(new_fds,
                          new_vds,
-                         body.map(walk).asInstanceOf[List[Stmt]]))
+                         body.map(walk).asInstanceOf[List[SourceElements]]))
 
-    case SFunDecl(info, SFunctional(fds, vds, body, name, params)) =>
+    case SSourceElements(info, stmts, strict) =>
+      SSourceElements(info,
+                      stmts.map(walk).asInstanceOf[List[Stmt]], strict)
+
+    case SFunDecl(info, SFunctional(fds, vds, body, name, params), strict) =>
       val old_env = (env, labEnv)
       val new_name = newId(name, getEnvNoCheck(name))
       val result = SFunDecl(info,
-                            functional(info.getSpan, new_name, params, fds, vds, body))
+                            functional(info.getSpan, new_name, params, fds, vds, body), strict)
       setEnv(old_env._1, old_env._2)
       result
 

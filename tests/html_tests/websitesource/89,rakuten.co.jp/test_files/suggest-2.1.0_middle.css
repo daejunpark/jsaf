@@ -1,0 +1,81 @@
+html {
+	
+}
+#suggest {
+	background: 0px 0px rgb(255, 255, 255); margin: 0px; border: 1px solid rgb(0, 0, 0); width: 290px; line-height: 18px; overflow: hidden; position: absolute; z-index: 2; cursor: default;
+}
+#suggest .sggstKeyword {
+	background: 0px 0px rgb(255, 255, 255); width: 284px; text-align: left; overflow: hidden; padding-right: 3px; padding-left: 3px; font-size: 15px; float: left; white-space: nowrap;
+}
+#suggest .sggstSelect .sggstKeyword {
+	background: 0px 0px rgb(51, 102, 204); color: rgb(255, 255, 255); cursor: pointer;
+}
+#suggest .sggstComment {
+	padding: 0px 5px;
+}
+#suggest .sggstComment .sggstCommentbox {
+	color: rgb(128, 128, 128); padding-top: 2px; clear: both; font-size: 12px; border-top-color: rgb(174, 174, 174); border-top-width: 1px; border-top-style: dotted; background-color: rgb(255, 255, 255);
+}
+#suggest .sggstBetabtn01 {
+	float: left; display: inline;
+}
+#suggest .sggstBetabtn02 {
+	width: 101px; float: right; display: inline;
+}
+#suggest .sggstHidetext {
+	float: left; display: inline;
+}
+#suggest .sggstHideimg {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/suggest/new_on_4.gif") no-repeat left top; width: 102px; height: 0px; overflow: hidden; padding-top: 17px; display: block; cursor: pointer;
+}
+#suggest .sggstHideimg:hover {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/suggest/new_hover_4.gif") no-repeat left top;
+}
+#suggest .sggstHideimg {
+	float: right; display: inline;
+}
+.sggstInputWrap .openSuggest {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/suggest/new_off_23.gif") no-repeat center; top: 2px; width: 112px; height: 27px; right: 3px; display: block; position: absolute; cursor: pointer;
+}
+.sggstInputWrap .openSuggest:hover {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/suggest/new_hover_23.gif") no-repeat center;
+}
+.sggstInputWrap {
+	width: 100%; position: relative;
+}
+#suggest .sggstNoselect strong {
+	color: rgb(0, 0, 0); font-style: normal; font-weight: bold;
+}
+#suggest .sggstKeyword span {
+	font-size: 13px; font-weight: normal; margin-left: 12px;
+}
+#suggest .sggstNoselect .sggstKeyword span {
+	color: rgb(131, 131, 131);
+}
+#suggest .cnaviRow .cnaviLink {
+	text-align: left; color: black; line-height: 2em; overflow: hidden; clear: both; text-decoration: none; float: left; display: block; white-space: nowrap; cursor: pointer;
+}
+#suggest .cnaviRow .sggstKeyword {
+	font-weight: bold;
+}
+#suggest .sggstNoselect .sggstKeyword .cnaviEm {
+	color: rgb(191, 0, 0);
+}
+#suggest .sggstSelect .sggstKeyword .cnaviEm {
+	color: rgb(255, 255, 255);
+}
+#suggest .cnaviRow .cnaviImg {
+	width: 30px; height: 30px; padding-left: 3px; margin-right: 8px; float: left;
+}
+#suggest .sggstKeyword .cnaviEm {
+	margin: 0px; font-size: 15px; font-weight: bold;
+}
+#suggest .sggstNoselect.cnaviRow .cnaviLink {
+	background-color: white;
+}
+#suggest .sggstSelect.cnaviRow .cnaviLink {
+	background-color: rgb(51, 102, 204);
+}
+#suggest .cnaviRow .cnaviBorder {
+	border-width: 1px medium medium; border-style: dotted none none; border-color: rgb(174, 174, 174) currentColor currentColor; margin: 0px 5px; height: 1px; color: rgb(255, 255, 255);
+}

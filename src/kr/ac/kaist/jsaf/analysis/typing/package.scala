@@ -9,7 +9,7 @@
 
 package kr.ac.kaist.jsaf.analysis
 
-import scala.collection.mutable.{Map=>MMap}
+import scala.collection.mutable.{Map=>MMap, HashSet => MHashSet, Stack => MStack}
 import collection.immutable.{HashSet, Map, TreeMap}
 import kr.ac.kaist.jsaf.analysis.cfg.Node
 import kr.ac.kaist.jsaf.analysis.typing.domain._
@@ -18,7 +18,9 @@ import kr.ac.kaist.jsaf.analysis.cfg.CFGId
 package object typing {
   type ControlPoint = (Node, CallContext)
   type CPEdgeList = List[(ControlPoint, ControlPoint)]
-  
+  type CPStack = MStack[ControlPoint]
+  type CPStackSet = MHashSet[CPStack]
+
   type CState = Map[CallContext, State]
   type Table = MMap[Node, CState]
   

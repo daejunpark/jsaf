@@ -20,16 +20,17 @@ import kr.ac.kaist.jsaf.analysis.cfg.{Block => CBlock, Node => CNode}
 import kr.ac.kaist.jsaf.analysis.typing.CallContext
 import kr.ac.kaist.jsaf.analysis.typing.ControlPoint
 import kr.ac.kaist.jsaf.analysis.typing.domain._
+import kr.ac.kaist.jsaf.nodes.{Node => ASTRootNode}
 import kr.ac.kaist.jsaf.nodes._
 import kr.ac.kaist.jsaf.nodes.{Block => ABlock, Node => ANode}
-import kr.ac.kaist.jsaf.nodes_util.NodeRelation
-import kr.ac.kaist.jsaf.nodes_util.Span
+import kr.ac.kaist.jsaf.nodes_util.{NodeHashMap, NodeRelation, Span}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 
 class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   val cfg          = bugDetector.cfg
   val semantics    = bugDetector.semantics
   val stateManager = bugDetector.stateManager
+  val trycatch     = bugDetector.trycatch
 
 
 
@@ -37,10 +38,11 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   //  BugMessage helper functions
   ////////////////////////////////////////////////////////////////
 
+  val bugStat: BugStat                = new BugStat(bugDetector)
   private var bugList: BugList        = List()
-  private var bugStat: BugStat        = new BugStat(bugDetector)
   private var isSorted: Boolean       = false
   private var traceMap: TraceMap      = Map()
+  private var tryList: List[BugId]    = List()
 
   private def sortMessage(): Unit = if (!isSorted) {
     bugList = bugList.sortBy((bug) => (bug._2, bug._5, bug._3.getLine, bug._3.column))
@@ -48,10 +50,15 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   }
 
   private def formatMsg(bugType: BugType, msg: String): String = {
-    if (bugType == Warning) "[Warning] " + msg
-    else if (bugType == TypeError) "[TypeError] " + msg
-    else if (bugType == ReferenceError) "[ReferenceError] " + msg
-    else msg
+    bugType match {
+      case RangeError => "[RangeError] " + msg
+      case ReferenceError => "[ReferenceError] " + msg
+      case SyntaxError => "[SyntaxError] " + msg
+      case TypeError => "[TypeError] " + msg
+      case URIError => "[URIError] " + msg
+      case Warning => "[Warning] " + msg
+      case _ => msg
+    }
   }
 
   private def isRedundant(span: Span, bugType: BugType, bugMsg: String): Boolean = 
@@ -64,7 +71,7 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
     val (bugType, bugMsg, argNum) = bugTable(bugKind)
 
     // Check argument count
-    if (args.length != argNum) {
+    if (args.filter(a => a != null).length != argNum) {
       System.out.println("Warning, addMessage@BugStorage. Bug #" + bugKind + " provides " + (if (args.length < argNum) "less" else "more") + " arguments to addMessage.")
       return
     }
@@ -82,6 +89,26 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
 
     if (!isRedundant(span, bugType, fullBugMsg)) {
       val newBId = newBugId
+
+      /* Find bugs in Try-Catch Statement */
+      if (!trycatch && inst != null && bugType != Warning) {
+        NodeRelation.cfg2astMap.get(inst) match {
+          case Some(astNode) =>
+            var node = astNode
+            while(node != null) {
+              node match {
+                case _: Try =>
+                  tryList = tryList :+ newBId
+                  bugStat.decreaseBugCounter(bugKind, bugType)
+                  node = null
+                case _ => node = NodeRelation.astParentMap.getOrElse(node, null)
+              }
+            }
+          case None => throw new InternalError("NodeRelation is not properly implemented.")
+        }
+      }
+
+      /* Add Bug Message */
       bugStat.increaseBugCounter(bugKind, bugType)
       bugList = bugList :+ (newBId, span.getFileNameOnly, span.getBegin, span.getEnd, bugType, fullBugMsg)
       if (inst != null && callContext != null) traceMap += (newBId -> (inst, callContext)) 
@@ -95,13 +122,16 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
     // Sort message list if not.
     if (!isSorted) sortMessage
 
-    val errorList = bugList.filterNot((bug) => bug._4 == Warning)
+    // Filter messages in try-catch.
+    val filteredList = if (!trycatch) bugList.foldLeft[BugList](List())((buglist, msg) => if (!(tryList contains msg._1)) buglist :+ msg else buglist) else bugList 
+
+    val errorList = filteredList.filterNot((bug) => bug._4 == Warning)
     if (errorOnly && !errorList.isEmpty) {  // Show error messages only.
-      val warningCount = bugList.size - errorList.size
+      val warningCount = filteredList.size - errorList.size
       errorList.foreach((bug) => printBug(bug))
       System.out.println("%d warnings will be shown after errors are fixed...".format(warningCount))
     } else {  // Show all messages.
-      bugList.foreach((bug) => printBug(bug))
+      filteredList.foreach((bug) => printBug(bug))
     }
     // Report Statistics.
     bugStat.reportBugStatistics(quiet)
@@ -257,7 +287,7 @@ class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
   //  UnreachableCode
   ////////////////////////////////////////////////////////////////
 
-  type ReachabilityMap = NodeRelation.MHashMapEx[ANode, MHashSet[CNode]]
+  type ReachabilityMap = NodeHashMap[ANode, MHashSet[CNode]]
   val reachableAST = new ReachabilityMap
   val unreachableAST = new ReachabilityMap
 

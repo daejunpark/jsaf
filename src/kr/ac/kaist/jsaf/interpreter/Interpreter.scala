@@ -65,14 +65,13 @@ class Interpreter extends IRWalker {
 
     var SIRRoot(_, vds, fds, irs) = program
     if (IS.coverage.isDefined) {
-      val cov = IS.coverage.get
-      cov.inum = 0
-      SH.initialize(cov.input, cov.coveredFunc, cov.targetFunc)
+      val coverage = IS.coverage.get
+      coverage.inum = 0
+      SH.initialize(coverage.input, coverage)
       walkIRs(vds ++ fds ++ irs.filterNot(_.isInstanceOf[IRNoOp]))
       SH.print
-      cov.functions = SH.function_info.filter(!_._2.is_covered).keySet.toList
       CE.extract(SH.report)
-      cov.constraints = CE.constraint
+      coverage.constraints = CE.constraint
       CE.print()
     }
     else 
@@ -362,8 +361,10 @@ class Interpreter extends IRWalker {
        */
       case SIRVarStmt(info, id: IRId, fromParam) =>
         IS.span = info.getSpan
-        if(fromParam) IH.createBinding(id, true, false)
-        else IH.createBinding(id, true, IS.eval)
+        if(!IH.hasBinding(id.getOriginalName)) {
+          if(fromParam) IH.createBinding(id, true, false)
+          else IH.createBinding(id, true, IS.eval)
+        }
         IS.comp.setNormal()
 
       /*
@@ -923,8 +924,6 @@ class Interpreter extends IRWalker {
               case _ => SH.executeCondition(arg1, None, None, None, arg2.get)
             }
           }
-          case "<>Concolic<>AddFunction" =>
-            SH.addFunction(arg1.asInstanceOf[IRId])
           case "<>Concolic<>WalkVarStmt" =>
             SH.walkVarStmt(arg1.asInstanceOf[IRId], arg2.get)
 
@@ -969,6 +968,7 @@ class Interpreter extends IRWalker {
             IH.valError2NormalCompletion(IH.putValue(lhs, PVal(IH.mkIRNum(System.currentTimeMillis())), IS.strict))
           }
           case "<>Global<>iteratorInit" => walkExpr(arg1) match {
+            // TODO case for null or undefined
             case v: JSObject =>
               // (H', A, tb), x = l
               IH.valError2NormalCompletion(IH.putValue(lhs, IH.iteratorInit(IH.collectProps(v)), IS.strict))

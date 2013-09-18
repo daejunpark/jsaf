@@ -12,7 +12,7 @@ package kr.ac.kaist.jsaf.analysis.typing.models.DOMEvent
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.ControlPoint
+import kr.ac.kaist.jsaf.analysis.typing.{ControlPoint, Helper, Semantics}
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
@@ -62,8 +62,15 @@ object Event extends DOM {
 
   def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
-      //case "Event.stopPropagation"
-      //case "Event.preventDefault"
+      // do nothing : we do not consider the event bubbling and capturing
+      ("Event.stopPropagation" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          ((Helper.ReturnStore(h, Value(UndefTop)), ctx), (he, ctxe))
+        })),
+      ("Event.preventDefault" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          ((Helper.ReturnStore(h, Value(UndefTop)), ctx), (he, ctxe))
+        }))
       //case "Event.initEvent"
     )
   }
@@ -99,12 +106,15 @@ object Event extends DOM {
       ("target", PropValue(ObjectValue(Value(HTMLTopElement.getInsLoc), F,T,F))),
       ("currentTarget", PropValue(ObjectValue(Value(lset_target), F,T,F))),
       ("eventPhase", PropValue(ObjectValue(Value(UInt), F,T,F))),
-      ("bubbles", PropValue(ObjectValue(Value(BoolTop), F,T,F))),
-      ("cancelable", PropValue(ObjectValue(Value(BoolTop), F,T,F))),
-      ("timeStamp", PropValue(ObjectValue(Value(DOMEventTimeLoc), F,T,F)))
+      ("bubbles", PropValue(ObjectValue(Value(BoolFalse), F,T,F))),
+      ("cancelable", PropValue(ObjectValue(Value(BoolFalse), F,T,F))),
+      ("defaultPrevented", PropValue(ObjectValue(Value(BoolFalse), F,T,F))),
+      ("timeStamp", PropValue(ObjectValue(Value(DOMEventTimeLoc), F,T,F))),
+      // Non-standard : used by IE
+      ("srcElement", PropValue(ObjectValue(Value(HTMLTopElement.getInsLoc), F,T,F))),
+      ("returnValue", PropValue(ObjectValue(Value(BoolTrue), F,T,F)))
     )
   }
-  val instProps = Set("type", "target", "currentTarget", "eventPhase", "bubbles", "cancelable", "timeStamp")
-  // intance of Event should have 'type', 'target', 'currentTarget', 'eventPhase', 'bubbles', 'cancelable', 'timeStamp' property
+  val instProps = Set("type", "target", "currentTarget", "eventPhase", "bubbles", "cancelable", "defaultPrevented", "timeStamp", "srcElement")
 
 }

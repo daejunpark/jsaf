@@ -1,0 +1,33 @@
+<html>
+  <head>
+     <title> test for setAttribute </title>
+  </head>
+  <body> 
+    <div id="div1" a1="222"> div1 
+      <div id="div2"> div2 </div>
+    </div>
+    <script> 
+      var divnode = document.getElementById("div1"); // HTMLDivElement
+      var __result1 = divnode.attributes.length; // 2
+      var __expect1 = 2;
+      var __result2 = divnode.attributes["a1"].value; // "222"
+      var __expect2 = "222";
+      divnode.setAttribute("newattr", "newattrval");
+      var __result3 = divnode.attributes.length; // 3
+      var __expect3 = 3;
+      var __result4 = divnode.attributes.newattr.name ; // "newattr"
+      var __expect4 = "newattr";
+      var __result4 = divnode.attributes[2].value; // "newattrval"
+      var __expect4 = "newattrval";
+      
+      divnode.removeAttribute("newattr");
+      var __result5 = divnode.attributes.length; // 2
+      var __expect5 = 2;
+      var __result6 = divnode.attributes.newattr; // 
+      var __expect6 = undefined;
+      var __result7 = divnode.getAttribute("newattr"); // "newattrval"
+      var __expect7 = null;
+
+    </script>
+  </body>
+</html>

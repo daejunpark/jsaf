@@ -186,7 +186,7 @@ class JSAstSerializer (program: Program, st: java.util.Vector[ASTNode], minT: In
       st.add(node.asInstanceOf[ASTNode])
       walk(fun)
       walk(args)
-    case SFunDecl(info, ftn) =>
+    case SFunDecl(info, ftn, _) =>
       DebugPrint("SFunDecl")
       DebugPrint(info.getSpan.getCharVector.toString + info.getSpan.getCharVector.isMergeable)
       info.getSpan.getCharVector.setNodeKind(Util.name2id(node))
@@ -204,7 +204,7 @@ class JSAstSerializer (program: Program, st: java.util.Vector[ASTNode], minT: In
       DebugPrint("SFunctional")
       vds.foreach(walk)
       fds.foreach(walk)
-      pgm.foreach(walk)
+      walk(pgm)
       params.foreach(walk)
     case SGetProp(info, prop, ftn) =>
       DebugPrint("SGetProp")
@@ -334,6 +334,9 @@ class JSAstSerializer (program: Program, st: java.util.Vector[ASTNode], minT: In
       DebugPrint(span.getCharVector.toString + span.getCharVector.isMergeable)
       span.getCharVector.setNodeKind(Util.name2id(node))
       st.add(node.asInstanceOf[ASTNode])
+    case SSourceElements(info, body, _) =>
+      DebugPrint("SSourceElements")
+      body.foreach(walk)
     case SStringLiteral(info, _, txt) =>
       val str = NU.unescapeJava(txt)
       DebugPrint("SStringLiteral \"" + str + "\"")
@@ -380,7 +383,7 @@ class JSAstSerializer (program: Program, st: java.util.Vector[ASTNode], minT: In
       st.add(node.asInstanceOf[ASTNode])
       walk(lhs)
       walk(op)
-    case SVarDecl(info, name, expr) =>
+    case SVarDecl(info, name, expr, _) =>
       DebugPrint("SVarDecl")
       DebugPrint(info.getSpan.getCharVector.toString + info.getSpan.getCharVector.isMergeable)
       info.getSpan.getCharVector.setNodeKind(Util.name2id(node))

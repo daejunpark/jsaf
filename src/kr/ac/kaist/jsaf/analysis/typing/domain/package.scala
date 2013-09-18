@@ -9,21 +9,13 @@
 
 package kr.ac.kaist.jsaf.analysis.typing
 
-import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.cfg.FunctionId
 import scala.collection.immutable.HashSet
 import scala.collection.immutable.HashMap
-import scala.collection.immutable.TreeMap
-import scala.collection.immutable.TreeSet
 import scala.collection.mutable.{Map => MMap}
 import scala.collection.mutable.{HashMap => MHashMap}
 import kr.ac.kaist.jsaf.analysis.lib.{HeapTreeMap, ObjTreeMap, LocTreeSet, IntTreeSet}
-import kr.ac.kaist.jsaf.analysis.typing.models.builtin._
-import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
-import scala.Some
-import kr.ac.kaist.jsaf.analysis.typing.domain.State
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
+import scala.util.matching.Regex
 
 package object domain {
   /* abstract location */
@@ -32,6 +24,49 @@ package object domain {
   type RecencyTag = Int
   val Recent = 0
   val Old = 1
+
+  // interface between two abstract domains.
+  def absUndefToString(au: AbsUndef): AbsString = {
+    au match {
+      case UndefTop => OtherStrSingle("undefined") // AbsString.alpha("undefined")
+      case _ => StrBot
+    }
+  }
+  def absNullToString(an: AbsNull): AbsString = {
+    an match {
+      case NullTop => OtherStrSingle("null") // AbsString.alpha("null")
+      case _ => StrBot
+    }
+  }
+
+  def absBoolToString(ab: AbsBool): AbsString = {
+    ab match {
+      case BoolTop => OtherStr // AbsString.alpha("true") + AbsString.alpha("false")
+      case BoolBot => StrBot
+      case BoolTrue => OtherStrSingle("true") // AbsString.alpha("true")
+      case BoolFalse => OtherStrSingle("false") // AbsString.alpha("false")
+    }
+  }
+
+  def absNumberToString(an: AbsNumber): AbsString = {
+    an match {
+      case NumTop => NumStr
+      case NumBot => StrBot
+      case Infinity => NumStr
+      case PosInf => NumStrSingle("Infinity")
+      case NegInf => NumStrSingle("-Infinity")
+      case NaN => NumStrSingle("NaN")
+      case UInt => NumStr
+      case NUInt => NumStr
+      case UIntSingle(n) => NumStrSingle(n.toInt.toString)
+      case NUIntSingle(n) =>
+        if (0 == (n - n.toInt))
+          AbsString.alpha(n.toInt.toString)
+        else
+          AbsString.alpha(n.toString)
+    }
+  }
+
 
   // To filter out refined location
   var posMask: Option[Int] = None 
@@ -46,11 +81,11 @@ package object domain {
   
   def locToAddr(loc: Loc): Address = loc >> 1
   
-  def oldifyLoc(loc: Address): Loc = loc | 1
+  def oldifyLoc(loc: Loc): Loc = loc | 1
   
-  def isRecentLoc(loc: Address): Boolean = ((loc & 1) == Recent)
+  def isRecentLoc(loc: Loc): Boolean = ((loc & 1) == Recent)
   
-  def isOldLoc(loc: Address): Boolean = ((loc & 1) == Old)
+  def isOldLoc(loc: Loc): Boolean = ((loc & 1) == Old)
 
   // Note that location range is -2^30 ~ (2^30 - 1)
   def compareLoc(a: Loc, b: Loc): Int = a - b
@@ -60,7 +95,12 @@ package object domain {
   
   /* location name */
   val predefTable: MMap[Address, String] = MHashMap()
+  // String name to predefined address table to ensure same address between analysis runs.
+  // This approach assumes that all predefined names are distinct.
+  val reversePredefTable: MMap[String, Address] = MHashMap()
+
   def registerPredefLoc(addr: Address, recency: RecencyTag, name: String): Loc = {
+    reversePredefTable(name) = addr
     predefTable(addr) = name
     addrToLoc(addr, recency)
   }
@@ -76,6 +116,32 @@ package object domain {
     predefTable.get(addr) match {
       case Some(name) => name
       case None => addr.toString
+    }
+  }
+
+  def parseLocName(s: String): Option[Loc] = {
+    val pattern = new Regex("""(#|##)([0-9a-zA-Z.]+)""", "prefix", "locname")
+    def find(addrName: String): Option[Address] = {
+      reversePredefTable.get(addrName)
+    }
+    try {
+      val pattern(prefix, locname) = s
+      val r = prefix match {
+        case "#" => Recent
+        case "##" => Old
+      }
+      val address = find(locname) match {
+        case Some(addr) => addr
+        case None => locname.toInt
+      }
+      Some(addrToLoc(address, r))
+    } catch {
+      case e: MatchError => {
+        None
+      }
+      case e: NumberFormatException => {
+        None
+      }
     }
   }
   // builtinTable.get(addr) match {
@@ -171,17 +237,12 @@ package object domain {
   // Do not change or explicitly reset this address.
   private var predefStartAddr = -60
 
-  // String name to predefined address table to ensure same address between analysis runs.
-  // This approach assumes that all predefined names are distinct.
-  val reversePredefTable: MMap[String, Address] = MHashMap()
-  
   def newPredefLoc(name: String): Loc = {
     reversePredefTable.get(name) match {
       case Some(addr) => addrToLoc(addr, Recent)
       case None =>
         val addr = predefStartAddr
         predefStartAddr -= 1
-        reversePredefTable(name) = addr
         registerPredefLoc(addr, Recent, name)
     }
   }
@@ -192,7 +253,6 @@ package object domain {
       case None =>
         val addr = predefStartAddr
         predefStartAddr -= 1
-        reversePredefTable(name) = addr
         registerPredefLoc(addr, tag, name)
     }
   }

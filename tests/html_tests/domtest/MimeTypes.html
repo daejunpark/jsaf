@@ -1,0 +1,24 @@
+<!-- test for window.navigator.mimeTypes -->
+<html>
+  <body>
+    <script>
+      var mime = window.navigator.mimeTypes;
+      var mimet = mime[3];
+      var __result1 = mime.length;
+      var __expect1 = "__UInt";
+
+      var __result2 = mimet.type;
+      var __expect2 = "__StrTop";
+      var __result3 = mimet.description;
+      var __expect3 = "__StrTop";
+      var __result4 = mimet.suffixes;
+      var __expect4 = "__StrTop";
+
+      var plug = mimet.enabledPlugin;
+      var __result5 = plug.name;
+      var __expect5 = "__StrTop";
+      var __result6 = plug.length;
+      var __expect6 = "__UInt";
+    </script>
+  </body>
+</html>

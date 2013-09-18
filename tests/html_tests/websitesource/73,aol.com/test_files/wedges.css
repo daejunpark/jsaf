@@ -1,0 +1,15 @@
+#pgbg {
+	background: url("http://portal.aolcdn.com/p5/forms/2079/2055e899-7935-4fe1-ad2c-4920b02a6985.jpg") no-repeat center 0px;
+}
+.grid10#pgbg {
+	background: url("http://portal.aolcdn.com/p5/forms/2079/0e19c9d4-72cf-4d96-a1f4-07ddc068b800.gif") no-repeat center 0px;
+}
+#global-header-light #pgbg {
+	background: url("http://portal.aolcdn.com/p5/forms/2079/1aa8ba6d-bc69-467f-a743-7bdded1fcfcb.gif") no-repeat center 0px;
+}
+#global-header-light .grid10#pgbg {
+	background: url("http://portal.aolcdn.com/p5/forms/2079/3a2884c6-b120-4ddb-9299-c1aaab0e5a31.gif") no-repeat center 0px;
+}
+#style_watcher_wedges {
+	font-family: wedges;
+}

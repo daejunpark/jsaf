@@ -65,12 +65,14 @@ class WithRewriter(program: Program, forTest: Boolean) extends Walker {
   val typeofCall =
     Some(SFunApp(toObjectInfo, mkVarRef(mkId("typeof")), List(paramExpr)))
   val toObjectBody =
-    List(SVarStmt(toObjectInfo,
-                  List(SVarDecl(toObjectInfo, mkId("type"), typeofCall))),
-         mkIf("number", mkVarRef(mkId("Number")), false1))
+    SSourceElements(toObjectInfo,
+                    List(SVarStmt(toObjectInfo,
+                                  List(SVarDecl(toObjectInfo, mkId("type"), typeofCall, false))),
+                         mkIf("number", mkVarRef(mkId("Number")), false1)), false)
   val toObjectFnDecl =
-    SFunDecl(toObjectInfo,
-             SFunctional(List(), List(), toObjectBody, toObjectFnId, List(mkId("x"))))
+      SFunDecl(toObjectInfo,
+               SFunctional(List(), List(), toObjectBody, toObjectFnId, List(mkId("x"))),
+               false)
 
   // For SAFE
   val internalSymbol = NU.internalSymbol
@@ -89,19 +91,24 @@ class WithRewriter(program: Program, forTest: Boolean) extends Walker {
     case _ => (Nil, Nil)
   }
   def mkBody(fds: List[FunDecl], vds: List[VarDecl], name: Id,
-             params: List[Id], body: List[SourceElement], env: Env, node: HasAt) = env match {
+             params: List[Id], body: SourceElements, env: Env, node: HasAt) = env match {
     case EmptyEnv() =>
-      walk(body, env).asInstanceOf[List[SourceElement]]
+      SSourceElements(body.getInfo,
+                      walk(toList(body.getBody), env).asInstanceOf[List[SourceElement]],
+                      body.isStrict)
     case ConsEnv(withs, names, isNested) =>
       val (first, rest) = splitNames(names)
       var ids = params.map(_.getText)++
-                fds.map(fd => fd match { case SFunDecl(_,f) => f.getName.getText })++
-                vds.map(vd => vd match { case SVarDecl(_,n,_) => n.getText })++first
+                fds.map(fd => fd match { case SFunDecl(_,f,_) => f.getName.getText })++
+                vds.map(vd => vd match { case SVarDecl(_,n,_,_) => n.getText })++first
       ids = (List(name.getText))++ids
-      walk(body, new ConsEnv(withs,ids::rest,isNested)).asInstanceOf[List[SourceElement]]
+      SSourceElements(body.getInfo,
+                      walk(toList(body.getBody),
+                           new ConsEnv(withs,ids::rest,isNested)).asInstanceOf[List[SourceElement]],
+                      body.isStrict)
   }
   def mkFunctional(fds: List[FunDecl], vds: List[VarDecl], name: Id,
-                   params: List[Id], body: List[SourceElement], env: Env, node: HasAt) =
+                   params: List[Id], body: SourceElements, env: Env, node: HasAt) =
     SFunctional(fds.map(fd => walk(fd, env).asInstanceOf[FunDecl]),
                 vds.map(vd => walk(vd, env).asInstanceOf[VarDecl]),
                 mkBody(fds, vds, name, params, body, env, node), name, params)
@@ -263,8 +270,8 @@ class WithRewriter(program: Program, forTest: Boolean) extends Walker {
           }
         }
     }
-    case fd@SFunDecl(info, SFunctional(fds, vds, body, name, params)) =>
-      SFunDecl(info, mkFunctional(fds, vds, name, params, body, env, fd))
+    case fd@SFunDecl(info, SFunctional(fds, vds, body, name, params), strict) =>
+      SFunDecl(info, mkFunctional(fds, vds, name, params, body, env, fd), strict)
     case fe@SFunExpr(info, SFunctional(fds, vds, body, name, params)) =>
       SFunExpr(info, mkFunctional(fds, vds, name, params, body, env, fe))
     case gp@SGetProp(info, prop, SFunctional(fds, vds, body, name, params)) =>
@@ -341,7 +348,9 @@ class WithRewriter(program: Program, forTest: Boolean) extends Walker {
       SProgram(info, STopLevel((if (forTest) List(toObjectFnDecl) else Nil)++
                                fds.map(fd => walk(fd, env).asInstanceOf[FunDecl]),
                                vds.map(vd => walk(vd, env).asInstanceOf[VarDecl]),
-                               walk(ses, env).asInstanceOf[List[SourceElement]]))
+                               ses.map(s => walk(s, env).asInstanceOf[SourceElements])))
+    case SSourceElements(info, stmts, strict) =>
+      SSourceElements(info, stmts.map(s => walk(s, env).asInstanceOf[SourceElement]), strict)
     case SReturn(info, expr) =>
       SReturn(info, walk(expr, env).asInstanceOf[Option[Expr]])
     case sp@SSetProp(info, prop, SFunctional(fds, vds, body, name, params)) =>
@@ -382,8 +391,8 @@ class WithRewriter(program: Program, forTest: Boolean) extends Walker {
         }
       }
     }
-    case SVarDecl(info, name, expr) =>
-      SVarDecl(info, name, walk(expr, env).asInstanceOf[Option[Expr]])
+    case SVarDecl(info, name, expr, strict) =>
+      SVarDecl(info, name, walk(expr, env).asInstanceOf[Option[Expr]], strict)
     case vr@SVarRef(info, id) => env match {
       case EmptyEnv() => vr
       case ConsEnv(withs, names, isNested) => withs match {
@@ -430,7 +439,8 @@ class WithRewriter(program: Program, forTest: Boolean) extends Walker {
             SVarStmt(info,
                      List(SVarDecl(info, fresh,
                                    Some(SFunApp(info, SVarRef(info, toObjectFnId),
-                                                List(walk(expr, env)).asInstanceOf[List[Expr]])))))
+                                                List(walk(expr, env)).asInstanceOf[List[Expr]])),
+                                   false)))
           else SExprStmt(info,
                          SAssignOpApp(info, SVarRef(info, fresh), assignOp(info),
                                       SFunApp(info, SVarRef(info, toObjectId(info)),

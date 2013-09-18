@@ -32,7 +32,7 @@ instantiate kr.ac.kaist.jsaf.parser.Identifier(Symbol, Keyword, Unicode)
             as Identifier;
 instantiate kr.ac.kaist.jsaf.parser.Symbol(Identifier, Keyword, Spacing)
             as Symbol;
-instantiate kr.ac.kaist.jsaf.parser.Spacing(Symbol)
+instantiate kr.ac.kaist.jsaf.parser.Spacing(Symbol, Identifier)
             as Spacing;
 instantiate kr.ac.kaist.jsaf.parser.Keyword(Identifier)
             as Keyword;

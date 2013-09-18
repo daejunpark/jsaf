@@ -12,9 +12,8 @@ package kr.ac.kaist.jsaf.concolic
 import _root_.java.util.{List => JList}
 import kr.ac.kaist.jsaf.interpreter.Interpreter
 import kr.ac.kaist.jsaf.nodes._
-import kr.ac.kaist.jsaf.nodes_util.EJSOp
-import kr.ac.kaist.jsaf.nodes_util.{IRFactory => IF}
-import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU}
+import kr.ac.kaist.jsaf.nodes_util.{EJSOp, Coverage}
+import kr.ac.kaist.jsaf.nodes_util.{IRFactory => IF, NodeUtil => NU}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
@@ -55,16 +54,10 @@ class SymbolicHelper(I: Interpreter) {
   var max_depth = 3
   var depth = 0
 
-  // Function information
-  val function_info = new HashMap[String, FunctionInfo]
-  function_info("<>Concolic<>Main") = new FunctionInfo()
-  function_info("<>Concolic<>Main").is_target = true
-  function_info("<>Concolic<>Main").is_candidate = true
-
   // Mapping symbolic helper function to environment in which the function is defined
   var environments = new HashMap[String, IRId]
-
-  def initialize(I: List[Int], covered: String, target: String) = {
+  var coverage: Coverage = null
+  def initialize(I: List[Int], cov: Coverage) = {
     System.out.println("Initialize()")
     input = I
     index = 0
@@ -72,13 +65,8 @@ class SymbolicHelper(I: Interpreter) {
     symbolic_memory.clear()
     report = List[Info]()
 
-    if (covered.length != 0)
-      function_info(covered).is_covered = true
-
-    if (target.length != 0) {
-      function_info(target).is_target = true
-      System.out.println("target: ", target, function_info(target).is_target)
-    }
+    coverage = cov
+    System.out.println("Current target function: "+ coverage.target)
   }
  
   def storeEnvironment(v: IRId, env: IRId) =
@@ -301,7 +289,6 @@ class SymbolicHelper(I: Interpreter) {
   //TODO: Don't need to be option type
   //TODO: need rewriter to modify the expressions syntatically accepted to the expressions supported by symbolic helper
     System.out.println("EXECUTE_CONDITION()")
-    //System.out.println(env.getUniqueName, function_info.contains(env.getUniqueName), checkFocus(env))
     if (checkFocus(env)) {
       expr match {
         case SIRBin(_, first, op, second) => first match {
@@ -354,23 +341,11 @@ class SymbolicHelper(I: Interpreter) {
           }
       }
     }
-    else  
-      function_info(env.getUniqueName).is_candidate = true;
   }
 
-  def addFunction(f: IRId) = {
-    System.out.println("ADD_FUNCTION()")
-    if (!function_info.contains(f.getUniqueName)) {
-      function_info(f.getUniqueName) = new FunctionInfo()
-    }
-  }
-  
   def checkFocus(f: IRId):Boolean = {
     System.out.println("CHECK_FOCUS()")
-    if (function_info.contains(f.getUniqueName))
-      return function_info(f.getUniqueName).is_target
-    else
-      return false;
+    return coverage.target == f.getUniqueName
   }
 
   def checkLoop():Boolean = {

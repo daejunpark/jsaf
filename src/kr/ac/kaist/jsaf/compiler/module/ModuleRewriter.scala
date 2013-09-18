@@ -27,7 +27,8 @@ class ModuleRewriter(program: Program) extends Walker {
     //val init: List[SourceElement] = (new ModInitWalker(env, Nil, program)).doit
     val stmt: List[SourceElement] = (new ModStmtWalker(env, Nil, program)).doit
     SProgram(program.getInfo,
-             STopLevel(Nil, Nil, fds ::: vds ::: inst ::: stmt))
+             STopLevel(Nil, Nil,
+                       List(SSourceElements(program.getInfo, fds ::: vds ::: inst ::: stmt, false))))
              //STopLevel(Nil, Nil, fds ::: vds ::: inst ::: init ::: stmt))
   }
 }

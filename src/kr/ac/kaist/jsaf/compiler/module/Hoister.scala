@@ -25,12 +25,13 @@ object Hoister extends Walker {
   }
 
   override def walk(node: Any): Any = node match {
-    case SFunDecl(_, SFunctional(_, _, _, name, _)) =>
+    case SFunDecl(_, SFunctional(_, _, _, name, _), _) =>
       l ::= name
       node
-    case SVarDecl(_, name, _) =>
+    case SVarDecl(_, name, _, _) =>
       l ::= name
       node
+    case SSourceElements(_, stmts, _) => walk(stmts)
     case xs: List[_] => xs.map(walk _)
     case _: Stmt => super.walk(node)
     case _ => node

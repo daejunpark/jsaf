@@ -1,0 +1,195 @@
+#ritFooterArea {
+	font-size: 82%;
+}
+:not(:target)#ritFooterArea {
+	font-size: 80%;
+}
+#ritFooterArea .ritfootTtl {
+	padding: 7px; border: 1px solid rgb(206, 206, 206); overflow: hidden; font-weight: bold; background-color: rgb(238, 238, 238); _zoom: 1;
+}
+#ritFooterArea .ritFootBox {
+	border-width: medium 1px 1px; border-style: none solid solid; border-color: currentColor rgb(206, 206, 206) rgb(206, 206, 206); padding: 13px 0px; overflow: hidden; clear: both; _zoom: 1;
+}
+#ritFooterArea .ritFootBoxBg {
+	font-weight: bold; border-bottom-color: rgb(206, 206, 206); border-bottom-width: 1px; border-bottom-style: dotted;
+}
+#ritFooterArea #ritSpecialContents {
+	margin: 0px 0px 13px;
+}
+#ritFooterArea #ritSpecialContents a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#ritFooterArea #ritSpecialContents a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntMain {
+	width: 100%; float: left;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntMain li {
+	margin: 0px 0px 0px 20px; width: 22%; float: left; display: inline;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntMain li img {
+	margin: 4px 0px;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntMain li.ritDoubleRow {
+	width: 40%;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntHead {
+	padding-left: 5px; float: left;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntHead li {
+	margin: 0px 0px 0px 17px; float: left; display: inline;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntHead li img {
+	margin: 4px 0px;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntHead li.ritDoubleRow {
+	width: 40%;
+}
+#ritFooterArea #ritGuide {
+	margin: 0px 0px 39px;
+}
+#ritFooterArea #ritGuide a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#ritFooterArea #ritGuide a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}
+#ritFooterArea #ritGuide .ritFootCntInr {
+	width: 23%; float: left;
+}
+#ritFooterArea #ritGuide .ritFootRtInr {
+	padding: 3px 0px 0px 23px; width: 48%; height: auto !important; border-left-color: rgb(174, 174, 174); border-left-width: 1px; border-left-style: dotted; float: left; display: inline; min-height: 95px;
+}
+#ritFooterArea #ritGuide .ritFootLfInr {
+	width: 23%; float: left;
+}
+#ritFooterArea #ritGuide li {
+	margin: 0px 0px 0px 15px; padding: 0px 0px 3px 7px; _margin: 3px 0 3px 15px;
+}
+#ritFooterArea #ritGuide li .iconArrowR {
+	margin-top: 1px;
+}
+#ritFooterArea #ritGuide dl {
+	float: left; display: inline;
+}
+#ritFooterArea #ritGuide dt {
+	margin: 0px 0px 3px 15px; padding: 0px 0px 0px 7px;
+}
+#ritFooterArea #ritGuide dl dd {
+	margin: 0px 0px 0px 15px; padding: 0px 0px 0px 19px; _margin: 3px 0 3px 15px;
+}
+#ritFooterArea #ritGuide .ritFootRtInr p {
+	margin: 0px 0px 12px; font-weight: bold;
+}
+#ritFooterArea #ritGuide .riGbr {
+	margin-bottom: 3px; float: none; display: block;
+}
+#ritFooterArea #ritGuide #riMail {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201011/dotto.gif") repeat-x left bottom; padding-bottom: 10px;
+}
+#ritFooterArea #ritGuide #riAttention dl dt {
+	margin: 0px; padding: 0px;
+}
+#ritFooterArea #ritGuide #riAttention dl dd {
+	margin: 0px; padding: 0px;
+}
+#ritFooterArea #ritGuide #riAttention {
+	font-size: 82%;
+}
+#ritFooterArea #ritGuide #riAttention dl {
+	padding: 10px 0px; width: 100%;
+}
+#ritFooterArea #ritGuide #riAttention p {
+	font-weight: normal;
+}
+#ritFooterArea #ritFooter {
+	margin: 0px 10px; text-align: left;
+}
+#ritFooterArea #ritFooter #ritPrArea {
+	text-align: center; margin-bottom: 10px;
+}
+#ritFooterArea #ritFooter #ritPrArea span {
+	vertical-align: middle; display: inline-block;
+}
+#ritFooterArea #ritFooter #ritPrArea .ritClogo {
+	padding: 0px 20px 0px 149px;
+}
+#ritFooterArea #ritFooter #ritInfo {
+	background: rgb(191, 0, 0); padding: 5px 0px; text-align: center; overflow: hidden; margin-bottom: 10px; -ms-zoom: 1;
+}
+#ritFooterArea #ritFooter #ritInfo li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/opt/css/info_line.gif") no-repeat right 5px; padding: 0px 15px 0px 4px; color: rgb(255, 255, 255); font-weight: bold; display: inline;
+}
+#ritFooterArea #ritFooter #ritInfo li a {
+	color: rgb(255, 255, 255); font-weight: bold; text-decoration: underline;
+}
+#ritFooterArea #ritFooter #ritInfo li.ritInfoLt {
+	padding-right: 0px;
+}
+#ritFooterArea #ritCountry {
+	text-align: center; overflow: hidden; -ms-zoom: 1;
+}
+#ritFooterArea #ritCountry ul {
+	margin: 0px auto; width: 480px; text-align: center; overflow: hidden; -ms-zoom: 1;
+}
+#ritFooterArea #ritCountry ul li {
+	padding: 0px 6px; border-right-color: rgb(0, 0, 0); border-right-width: 1px; border-right-style: solid; display: inline;
+}
+#ritFooterArea #ritCountry ul li a {
+	white-space: nowrap;
+}
+#ritFooterArea #ritCountry ul li.ritCountryLt {
+	border: currentColor; padding-right: 0px;
+}
+#ritFooterArea #ritCountry a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#ritFooterArea #ritCountry a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}
+#ritFooterArea #ritCopy {
+	padding: 5px 0px 10px; text-align: center; color: rgb(102, 102, 102); font-size: 90%;
+}
+#ritFooterArea #ritSpecialContents a {
+	white-space: nowrap;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntMainCtg dl {
+	overflow: hidden; padding-left: 22px; position: relative; -ms-zoom: 1;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntMainCtg dl dt {
+	width: 140px; padding-right: 5px; font-weight: bold; float: left;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntMainCtg dl dd {
+	width: 83%; float: left;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntMainCtg li {
+	padding-right: 10px; padding-bottom: 7px; float: left;
+}
+#ritFooterArea #ritSpecialContents .ritSpCntGpSvc {
+	text-align: right; padding-right: 10px;
+}
+#ritShopsProducts {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201011/dotto.gif") repeat-x left bottom; overflow: hidden; padding-bottom: 10px;
+}
+#ritShopsProducts .ritProducts {
+	margin: 0px;
+}
+#ritShopsProducts .ritProducts a {
+	color: rgb(191, 0, 0);
+}
+#ritShopsProducts .ritBackTop {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201103/top_back_bg_top.gif") no-repeat left top; width: 201px;
+}
+#ritShopsProducts .ritBackTop p {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201103/top_back_bg_btm.gif") no-repeat left bottom;
+}
+#ritShopsProducts .ritBackTop a {
+	padding: 4px 9px 4px 10px; color: rgb(29, 84, 167); font-weight: bold; text-decoration: none; display: block; min-height: 15px;
+}
+#ritShopsProducts .ritBackTop a .iconOldTop {
+	padding-right: 3px; vertical-align: middle;
+}
+#ritShopsProducts .ritBackTop a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}

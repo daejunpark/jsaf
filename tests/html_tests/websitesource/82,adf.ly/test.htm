@@ -1,0 +1,585 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0014)http://adf.ly/ -->
+<!DOCTYPE html PUBLIC "" ""><!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]--><!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]--><!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]--><!--[if gt IE 8]><!--><HTML 
+class="no-js" lang="en"><!--<![endif]--><HEAD><META content="IE=10.000" 
+http-equiv="X-UA-Compatible">
+ 
+<META http-equiv="content-type" content="text/html; charset=UTF-8"> 
+<SCRIPT type="text/javascript">var NREUMQ=NREUMQ||[];NREUMQ.push(["mark","firstbyte",new Date().getTime()]);</SCRIPT>
+ <TITLE>AdFly - The URL shortener service that pays you! Earn money for every 
+visitor to your links.</TITLE> 
+<META name="keywords" content="adfly, adf.ly, short links, tinyurl, bitly, bit.ly, earn money, link advertising, tiny url, url shortener"> 
+<META name="description" content="Earn money for each visitor to your shortened links with adf.ly! Use a URL shortener service that pays."> 
+<META http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<META http-equiv="content-style-type" content="text/css"> 
+<META http-equiv="cache-control" content="max-age=0"> 
+<META http-equiv="cache-control" content="no-cache"> 
+<META http-equiv="expires" content="0"> 
+<META http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT"> 
+<META http-equiv="pragma" content="no-cache"> 
+<META name="viewport" content="width=device-width, initial-scale=1.0"> <LINK 
+href="http://cdn.adf.ly/static/image/favicon.ico" rel="icon" type="image/ico"> 
+<LINK href="http://cdn.adf.ly/static/image/favicon.ico" rel="shortcut icon">  
+<LINK href="test_files/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css" 
+media="screen"> <LINK href="test_files/jquery.loadmask.css" rel="stylesheet" 
+type="text/css" media="screen"> <LINK href="test_files/core15.css" rel="stylesheet" 
+type="text/css" media="screen"> 
+<SCRIPT src="test_files/jquery.min.js"></SCRIPT>
+ 
+<SCRIPT>window.jQuery || document.write('<script src="http://cdn.adf.ly/static/js/jquery-1.7.1.min.js">\x3C/script>');</SCRIPT>
+ 
+<SCRIPT src="test_files/jquery.browserdetect.min.js" type="text/javascript"></SCRIPT>
+ 
+<SCRIPT src="test_files/common.js" type="text/javascript"></SCRIPT>
+ 
+<SCRIPT src="test_files/jquery.placeholder.min.js" type="text/javascript"></SCRIPT>
+ 
+<SCRIPT src="test_files/jquery.loadmask.min.js" type="text/javascript"></SCRIPT>
+ 
+<SCRIPT src="test_files/chosen.jquery.min.js" type="text/javascript"></SCRIPT>
+ 
+<SCRIPT src="test_files/jquery.form.min.js" type="text/javascript"></SCRIPT>
+ 
+<SCRIPT src="test_files/ZeroClipboard.js" type="text/javascript"></SCRIPT>
+ 
+<SCRIPT src="test_files/modernizr.js" type="text/javascript"></SCRIPT>
+ 
+<SCRIPT src="test_files/ie6-warning.js" type="text/javascript"></SCRIPT>
+  
+<SCRIPT src="test_files/jquery-ui-1.9m7.min.js" type="text/javascript"></SCRIPT>
+ 
+<SCRIPT src="test_files/spin.js" type="text/javascript"></SCRIPT>
+ 
+<SCRIPT src="test_files/home.js" type="text/javascript"></SCRIPT>
+ 
+<SCRIPT src="test_files/jquery.ulightbox.js" type="text/javascript"></SCRIPT>
+ <LINK href="test_files/jquery.ulightbox.css" rel="stylesheet" type="text/css"> 
+<SCRIPT type="text/javascript">
+			var IS_LOGGED_IN = false;
+		</SCRIPT>
+ 
+<META name="GENERATOR" content="MSHTML 10.00.9200.16618"></HEAD> 
+<BODY><NOSCRIPT>&lt;div class="noscriptWarning"&gt;You do not have JavaScript 
+enabled. This site will have limited functionality.&lt;/div&gt; </NOSCRIPT> <!--[if lte IE 6]><script src="http://cdn.adf.ly/static/js/ie6-warning.js"></script><script>window.onload=function(){e("http://cdn.adf.ly/static/image/ie6-warning/")}</script><![endif]--> 
+<DIV class="home " id="container"><HEADER id="header">
+<DIV id="top_bar">
+<DIV class="container"><NAV id="v1Adfly"><A id="v1Link" 
+href="http://adf.ly/#">Problems? Go to the old AdF.ly version.</A> </NAV>
+<DIV title="Adf.ly v1" id="v1_dialog">
+<P>Sorry if you are experiencing problems with the new website. We would 
+appreciate if you could leave a comment below (with your email address) about 
+the problem before continuing back to the old version.</P>
+<FORM action="/index/v1Switcher" method="POST"><TEXTAREA name="comment" id="commentV1switcher" rows="8" cols="40"></TEXTAREA> 
+<P>Email Address: <INPUT name="email_v1" id="email_v1" style="width: 358px;" 
+type="text" size="20"></P>
+<P id="emailerrorV1switcher" style="color: red; display: none;">If reporting a 
+problem, please enter your email address so we can contact you.</P>
+<P style="float: left;">Human Check:
+<P>
+<P style="margin-left: 50px; float: left;">3 + 2 = <INPUT name="humancheck_v1" 
+id="humancheck_v1" style="width: 50px;" type="text" size="5"></P>
+<P id="humancheckerrorV1switcher" style="color: red; clear: both; display: none;">Please 
+enter the correct 
+answer.</P><INPUT class="yellowButton" id="submitV1switcher" style="clear: both;" type="submit" value="Continue"> 
+</FORM></DIV>
+<SCRIPT>
+        $(document).ready(function() {
+            $('#v1_dialog').dialog({
+                autoOpen: false,
+                width: $('body').hasClass('msie7') ? 400 : 400,
+                minHeight: 400,
+                modal: true,
+                resizable: false,
+                open: function() {
+                    jQuery('.ui-widget-overlay').bind('click', function() {
+                        jQuery('#v1_dialog').dialog('close');
+                    })
+                }
+            });
+            
+            $('#submitV1switcher').click(function(e) {
+                if ($('#commentV1switcher').val() && $('#email_v1').val() == false) {
+                    $('#emailerrorV1switcher').show();
+                    return false;
+                }
+                if ($('#commentV1switcher').val() && $('#humancheck_v1').val() != '5') {
+                    $('#humancheckerrorV1switcher').show();
+                    return false;
+                }                              
+            });
+
+            $('#v1Link').click(function(e) {
+                $('#v1_dialog').dialog("open");
+                e.preventDefault();
+            });
+        });
+    </SCRIPT>
+ 
+<DIV class="language_switcher">
+<H5 class="en">English<SPAN></SPAN></H5>
+<UL>
+  <LI class="es"><A href="http://adf.ly/?lang=es">Español</A></LI></UL></DIV>
+<SCRIPT>
+    $(document).ready(function() {
+        var shouldHide = false;
+        function hide(){
+            if(shouldHide){
+                $('.language_switcher ul').slideUp('fast',function(){
+                    $('.language_switcher').removeClass('hover');
+                });
+            }
+        }
+
+        $('.language_switcher').hover(function(){
+            shouldHide = false;
+            $('.language_switcher').addClass('hover');
+            $(this).find('ul').slideDown('fast');
+        },function(){
+            shouldHide = true;
+            setTimeout(hide,1000);
+        });
+    });
+</SCRIPT>
+ <NAV>
+<P>Already have an account?</P><A class="login blueButton" href="https://adf.ly/login" 
+target="_top">Log In</A></NAV></DIV></DIV>
+<DIV class="container">
+<FORM id="shrink" onsubmit="return false;">
+<H1 class="ir" id="logo"><A href="http://adf.ly/" 
+target="_top">Adfly</A></H1><INPUT name="shrink_link" id="shrink_link" 
+placeholder="http://" value="">  <SPAN id="loading_spinner"></SPAN> <BUTTON 
+class="lightBlue" id="shrink_submit" 
+type="submit"><SPAN></SPAN>Shrink!</BUTTON><BUTTON class="lightBlue" id="shrink_copy" 
+onclick="return false;"><SPAN></SPAN>Copy</BUTTON> <BUTTON class="lightBlue" id="shrink_another" 
+onclick="return false;"><SPAN></SPAN>Do Another!</BUTTON> 
+<DIV id="shrink_copy_wrapper">&nbsp;</DIV></FORM>
+<DIV class="gettingstarted"><HEADER>
+<H1>Get paid to share your links on the Internet!</H1></HEADER><ARTICLE class="register">
+<H3><A href="http://adf.ly/5XR" target="_blank">Register for an account and 
+start shrinking.</A></H3></ARTICLE><ARTICLE class="paid">
+<H3>Get paid for every person who visits your URLs.</H3></ARTICLE><ARTICLE 
+class="share">
+<H3>Place your links on Facebook, Twitter, and more!</H3></ARTICLE></DIV>
+<DIV class="join"><A class="button yellowButton ir" id="joinNow" href="http://adf.ly/#join"><SPAN></SPAN>Join 
+Now</A><A class="facebook_login blueButton2" onclick="FBlogin()" href="http://adf.ly/#"><SPAN></SPAN>Login 
+with <STRONG>Facebook</STRONG></A>
+<DIV id="fb-root"></DIV>
+<SCRIPT>
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId: '399141353502152',
+            cookie: true,
+            xfbml: true,
+            status: true,
+            oauth: true,
+            channelUrl : 'http://cdn.adf.ly/static/other/channel.html' // Channel File for x-domain communication
+        });
+    };
+
+    function FBlogin() {
+        FB.login(function(response) {
+            if (response.authResponse) {
+                window.location = 'https://adf.ly/index/fblogin';
+            } else {
+                window.location = 'http://adf.ly/index/logout';
+            }
+        },{scope:'email,publish_actions'});
+    }
+
+    (function() {
+        var e = document.createElement('script'); e.async = true;
+        e.src = document.location.protocol +
+                '//connect.facebook.net/en_US/all.js';
+        document.getElementById('fb-root').appendChild(e);
+    }());
+</SCRIPT>
+ 
+<P>or <A id="learnMore" href="http://adf.ly/#">learn more</A>&nbsp;about 
+AdF.ly</P></DIV>
+<DIV title="Learn More" id="learn_more"></DIV>
+<SCRIPT type="text/javascript">
+                            $(document).ready(function() {
+                                $('#learn_more').dialog({
+                                    autoOpen: false,
+                                    width: $('body').hasClass('msie7') ? 670 : 670,
+                                    minHeight: 465,
+                                    modal: true,
+                                    resizable: false,
+                                    open: function() {
+                                        jQuery('.ui-widget-overlay').bind('click', function() {
+                                            jQuery('#learn_more').dialog('close');
+                                        })
+                                    },
+                                    close: function(event, ui) {
+                                        $('#learn_more').html('');
+                                    }
+                                });
+                                $('#learnMore').click(function(e) {
+                                    $('#learn_more').html(getYouTubePlayer('http://www.youtube.com/embed/V8oT_WbI7og?autoplay=1', 640, 480 ))
+                                    $('#learn_more').dialog("open");
+                                });
+                            });
+
+                            function getYouTubePlayer(URL, width, height) {
+                                var YouTubePlayer = '<iframe title="Learn More" style="margin:0; padding:0;" width="' + width + '" ';
+                                YouTubePlayer += 'height="' + height + '" src="' + URL + '" frameborder="0" allowfullscreen></iframe>';
+                                return YouTubePlayer;
+                            }
+
+                        </SCRIPT>
+ </DIV></HEADER>
+<DIV id="main" role="main">
+<DIV class="container"><SECTION class="features"><ARTICLE class="safe">
+<H1>Safe Advertising</H1>
+<P>All advertising is strictly family-safe with no popups. Anti-virus and 
+malware servers are scanning the adverts 24/7. </P></ARTICLE><ARTICLE class="ads">
+<H1>Advertisers</H1>
+<P>Pay for real visitors on your website, our comprehensive fraud filters 
+ensures high quality traffic. Campaigns start at only $5. </P></ARTICLE><ARTICLE 
+class="lmp">
+<H1>Low Minimum Payout</H1>
+<P>You are required to earn only $5 before you will be paid. We can pay all 
+users via their PayPal or Payoneer. </P></ARTICLE><ARTICLE class="stats">
+<H1>Statistics</H1>
+<P>Detailed statistics are provided per link. Allowing you at a glance see the 
+amount you've earned, referring URLs and countries. </P></ARTICLE><ARTICLE 
+class="api">
+<H1>API</H1>
+<P>Easy-to-use API that allows your website, widget or app to create an AdF.ly 
+link instantly and securely. </P></ARTICLE><ARTICLE class="scripts">
+<H1>Website Scripts</H1>
+<P>We offer a selection of simple to install scripts, now you can easily get 
+paid for every visitor who comes to your website. 
+</P></ARTICLE></SECTION><SECTION class="sidebar">
+<DIV class="quote"><HEADER><FIGURE>
+<DIV class="imgHolder"><IMG src="test_files/daveng_small.jpg"> </DIV></FIGURE>
+<H1>Dave Ng from Hong Kong says...</H1></HEADER><ARTICLE><SPAN 
+class="arrow"></SPAN>
+<BLOCKQUOTE>Thank you AdF.ly</BLOCKQUOTE>
+<P>The link shortening is easy to use. When comparing with other similar sites, 
+the interface is much user-friendly</P></ARTICLE></DIV>
+<DIV class="clicked" id="clicked"><HEADER>
+<H1>Links clicked today:</H1></HEADER>
+<UL>
+  <LI class="digit">3</LI>
+  <LI class="divider">,</LI>
+  <LI class="digit">5</LI>
+  <LI class="digit">2</LI>
+  <LI class="digit">8</LI>
+  <LI class="divider">,</LI>
+  <LI class="digit">2</LI>
+  <LI class="digit">6</LI>
+  <LI class="digit">6</LI></UL></DIV>
+<DIV class="clicked" id="campaigns"><HEADER>
+<H1>Users registered:</H1></HEADER>
+<UL>
+  <LI class="digit">1</LI>
+  <LI class="divider">,</LI>
+  <LI class="digit">6</LI>
+  <LI class="digit">3</LI>
+  <LI class="digit">5</LI>
+  <LI class="divider">,</LI>
+  <LI class="digit">7</LI>
+  <LI class="digit">4</LI>
+  <LI class="digit">0</LI></UL></DIV></SECTION></DIV>
+<SCRIPT type="text/javascript">
+	var bmlUrl = '';</SCRIPT>
+ 
+<SCRIPT src="test_files/index.js" type="text/javascript"></SCRIPT>
+ </DIV><FOOTER id="footer">
+<DIV class="container"><NAV>
+<UL>
+  <LI class="first"><A href="http://adf.ly/advertiser/advertising" 
+  target="_top">Advertising</A></LI>
+  <LI><A href="http://adf.ly/rates" target="_top">Payout Rates</A></LI>
+  <LI><A href="http://adf.ly/abuse" target="_top">Abuse</A></LI>
+  <LI><A href="http://adf.ly/privacy" target="_top">Privacy</A></LI>
+  <LI><A href="http://adf.ly/terms" target="_top">Terms</A></LI>
+  <LI><A href="http://kb.adf.ly/" target="_top">Knowledge Base</A></LI>
+  <LI><A href="http://adf.ly/contact" target="_top">Contact</A></LI>
+  <LI class="last"><A href="http://forum.adf.ly/" 
+target="_top">Forum</A></LI></UL></NAV>
+<DIV class="payment"><A title="PayPal" class="paypal ir" href="https://www.paypal.com/" 
+target="_blank">Paypal</A><A title="Payoneer" class="payoneer ir" href="http://www.payoneer.com/" 
+target="_blank">Payoneer</A></DIV></DIV></FOOTER></DIV>
+<DIV title="Join" id="join_form" today!="" adf.ly="">
+<DIV id="alert_wrapper">
+<H4>Please fill out the form to register for your free AdF.ly 
+account.</H4></DIV>
+<FORM id="register_form" onsubmit="return submit_form();" action="https://adf.ly/index/register" 
+method="post"><INPUT name="tmp1" id="tmp1" type="hidden" value="b5429fd200db706a037268af447623ae">
+				 <INPUT name="tmp2" id="tmp2" type="hidden" value="1">				 
+<DIV class="col-1">
+<DIV class="line"><LABEL for="your_name">Your Name:</LABEL>						 <INPUT name="name" 
+id="your_name" onkeyup="check_name()" maxlength="75">					 </DIV>
+<DIV class="line"><LABEL for="username">Username:</LABEL>						 <INPUT name="username" 
+id="username" onkeyup="doUsernameKeyUp()">					 </DIV>
+<DIV class="line"><LABEL for="email">Email:</LABEL>						 <INPUT name="email" 
+id="email" onkeyup="check_email($(this))" type="email" maxlength="75">
+					 </DIV>
+<DIV class="line"><LABEL for="confirm_email">Retype Email:</LABEL>						 <INPUT 
+name="email2" id="confirm_email" onkeyup="check_email($(this))" type="email">
+					 </DIV>
+<DIV class="line"><LABEL for="account_type">Account Type:</LABEL>						 <SELECT 
+name="type" class="chzn-select" id="account_type"><OPTION value="1">Link 
+  Shrinker: Create shortened URLs and earn money</OPTION>							 <OPTION value="2">Advertiser: 
+  Pay to advertise your website on adf.ly</OPTION>						 </SELECT>
+					 </DIV></DIV>
+<DIV class="col-2">
+<DIV class="line"><LABEL for="password">Password:</LABEL>						 <INPUT name="password" 
+id="password" onkeyup="check_password(4)" type="password">					 </DIV>
+<DIV class="line"><LABEL for="confirm_password">Retype Password:</LABEL>
+						 <INPUT name="password2" id="confirm_password" onkeyup="check_password(5)" 
+type="password">					 </DIV>
+<DIV class="line"><LABEL>Human Check:</LABEL>          				 
+<SCRIPT src="test_files/challenge.js" type="text/javascript"></SCRIPT>
+	 <NOSCRIPT>  		&lt;iframe 
+src="http://www.google.com/recaptcha/api/noscript?k=6LdDnMESAAAAAGCRC2G0PA9wSE_hqPW1G2ZFZPpr" 
+height="300" width="500" frameborder="0"&gt;&lt;/iframe&gt;&lt;br/&gt;  
+		&lt;textarea name="recaptcha_challenge_field" rows="3" 
+cols="40"&gt;&lt;/textarea&gt;  		&lt;input type="hidden" 
+name="recaptcha_response_field" value="manual_challenge"/&gt;
+	 </NOSCRIPT>					</DIV></DIV>
+<DIV class="confirm">
+<DIV class="line check"><INPUT name="terms" class="terms" id="terms" onclick="check_terms(this.value)" 
+type="checkbox">						 
+<P>&nbsp;I agree to the&nbsp;<A href="http://adf.ly/terms" target="_blank">terms 
+and conditions</A>.</P></DIV>
+<DIV class="line sub"><BUTTON class="blueButton2 submit" id="submitJoin" type="submit"><SPAN></SPAN>Join</BUTTON></DIV></DIV></FORM></DIV>
+<SCRIPT type="text/javascript">
+			var cant_submit = 0;
+
+			$(document).ready(function() {
+				$('#account_type').chosen({disable_search_threshold: 2});
+				$('#account_type_chzn').css('width', '200px');
+
+				$('#join_form').dialog({
+					autoOpen: false,
+					width: $('body').hasClass('msie7') ? 800 : 750,
+					minHeight: 465,
+					modal: true,
+					resizable: false
+				});
+
+				$('#joinNow').click(function(e) {
+					$('#join_form').dialog("open");
+					//return e.preventDefault();
+				});
+		    });
+
+		    $(window).load(function() {
+		    	if ('#join_advertiser' == window.location.hash) {
+		            $('#account_type').val(2);
+		            $("#account_type").trigger("liszt:updated");
+		            open_reg();
+		        } else if ('#join' == window.location.hash) {
+		        	open_reg();
+		        }
+		    });
+
+		    function joinDialogAddAlert($el, msg) {
+		    	$el.addClass('error');
+	            AdFly.addAlert(msg, $el, $('#alert_wrapper'));
+		    }
+
+		    function joinDialogRemoveAlert($el) {
+		    	$el.removeClass('error');
+	            AdFly.removeAlert($el);
+		    }
+
+			function open_reg () {
+		    	$('#join_form').dialog("open");
+		    }
+
+			function validate_email(email) {
+		       var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+		       if(reg.test(email) == false) {
+		          return false;
+		       }
+		       return true;
+		    }
+
+		    function check_name() {
+		        if ($.trim($('#your_name').val())) {
+		            cant_submit = 0;
+		            joinDialogRemoveAlert($('#your_name'));
+		        } else {
+		            cant_submit = 1;
+		            joinDialogAddAlert($('#your_name'), "Please enter your name.");
+		        }
+		    }
+
+		    function keydelayFunc() {
+		        var timer;
+		        return function( fun, time ) {
+		            clearTimeout( timer );
+		            timer = setTimeout( fun, time );
+		        };
+		    }
+
+		    function doCheckUsername() {
+		        $.post("/index/checkusername", { username: $('#username').val() }, function(data) {
+		            if (data == 1) {
+		                username_error = 1;
+		                joinDialogAddAlert($('#username'), "Please choose another username.");
+		            } else if (data == 2) {
+		                username_error = 0;
+		                joinDialogRemoveAlert($('#username'));
+		            }
+		        });
+		    }
+
+		    function doUsernameKeyUp() {
+		        if ($('#username').val().length > 3 && $('#username').val().length < 13) {
+		            if (/[^a-zA-Z0-9_-]|anonymous|adfly|admin|support/.test($('#username').val())) {
+		                username_error = 1;
+		                joinDialogAddAlert($('#username'), "Username contains invalid characters.");
+		            } else {
+		                username_error = 0;
+		                keydelay( doCheckUsername, 500 );
+		            }
+		        } else {
+		        	joinDialogAddAlert($('#username'), "Username must be between 4 and 12 characters long.");
+		            username_error = 1;
+		        }
+		    }
+
+		    var keydelay = keydelayFunc();
+
+		    var username_error = 1;
+
+		    function check_username() {
+			    doUsernameKeyUp();
+
+		        if (username_error) {
+		            cant_submit = 1;
+		        } else {
+		            cant_submit = 0;
+		        }
+		    }
+
+		    function check_email($el) {
+		        var email = $el.val();
+
+		        at_pos = email.indexOf("@");
+		        period_pos = email.lastIndexOf(".");
+
+		        var match = $('#email').val() == $('#confirm_email').val();
+		        var confirm = $el.attr('id') == 'confirm_email';
+
+		        if (validate_email(email)) {
+		            cant_submit = 0;
+		            joinDialogRemoveAlert($('#email, #confirm_email'));
+		        } else {
+		            cant_submit = 1;
+		            joinDialogAddAlert($el, "Please enter a valid email address.");
+		        }
+
+                if(!cant_submit){
+                    if (confirm && !match) {
+                        cant_submit = 1;
+                        joinDialogAddAlert($el, "Your email addresses don't match.");
+                    } else {
+                        joinDialogRemoveAlert($el);
+                    }
+                }
+		    }
+
+		    function check_password(num) {
+		        if(num==4) var password = $('#password').val();
+		        if(num==5) var password = $('#confirm_password').val();
+
+		        if (password.length >= 6 && (num==4 || (num==5 && $('#password').val() == $('#confirm_password').val()))) {
+		            cant_submit = 0;
+		            joinDialogRemoveAlert($('#password, #confirm_password'));
+		        } else {
+		            cant_submit = 1;
+		            if ($('#password').val() != $('#confirm_password').val()) {
+		            	joinDialogAddAlert($('#password, #confirm_password'), "Your passwords don't match.");
+		            } else {
+		            	joinDialogAddAlert($('#password, #confirm_password'), "Your password must be more than 5 letters.");
+		            }
+		        }
+		    }
+
+		    function check_terms() {
+		        if ($('#terms:checked').val()) {
+		            cant_submit = 0;
+		            joinDialogRemoveAlert($('#terms'));
+		        } else {
+		            cant_submit = 1;
+		            joinDialogAddAlert($('#terms'), "You must accept our terms and conditions.");
+		        }
+		    }
+
+		    function submit_form() {
+			    cant_submit = 0;
+
+		        if(!cant_submit) check_name();
+		        if(!cant_submit) check_email($('#email'));
+		        if(!cant_submit) check_email($('#confirm_email'));
+		        if(!cant_submit) check_password(4);
+		        if(!cant_submit) check_password(5);
+		        if(!cant_submit) check_terms();
+		        if(!cant_submit) check_username();
+
+		        var tmp1 = $('#tmp1').val();
+		        $('#tmp2').val(tmp1);
+
+		        if (cant_submit == 1) {
+		            return false;
+		        }
+
+		        return check_captcha();
+		    }
+
+		    function check_captcha() {
+		        var reqData = {
+		            recaptcha_challenge_field: $('#recaptcha_challenge_field').val(),
+		            recaptcha_response_field: $('#recaptcha_response_field').val()
+		        };
+		        $('#submitJoin').css('visibility', 'hidden');
+		        $.post("/index/checkRecaptcha", reqData, function(data) {
+		            if (data == "success") {
+		                $('#register_form')[0].submit();
+		            } else {
+		            	$('#submitJoin').css('visibility', 'visible');
+		            	joinDialogAddAlert($('#recaptcha_response_field'), "The reCAPTCHA human check wasn't entered correctly.");
+		            }
+		        });
+		        return false;
+		    }
+		</SCRIPT>
+		 
+<SCRIPT type="text/javascript">
+			var uservoiceJsHost = ("https:" == document.location.protocol) ? "https://uservoice.com" : "http://cdn.uservoice.com";
+			document.write(unescape("%3Cscript src='" + uservoiceJsHost + "/javascripts/widgets/tab.js' type='text/javascript'%3E%3C/script%3E"));
+		</SCRIPT>
+				 
+<SCRIPT type="text/javascript">
+			UserVoice.Tab.show({
+				key: 'adfly',
+				host: 'adfly.uservoice.com',
+				forum: 'general',
+				alignment: 'right',
+				background_color:'#FFCC07',
+				text_color: 'black',
+				hover_color: '#06C',
+				lang: 'en'
+			});
+		</SCRIPT>
+				 
+<SCRIPT type="text/javascript">
+			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		</SCRIPT>
+				 
+<SCRIPT type="text/javascript">
+			try {
+				var pageTracker = _gat._getTracker("UA-6469700-8");
+				pageTracker._trackPageview();
+			} catch(err) {}
+		</SCRIPT>
+         
+<SCRIPT type="text/javascript">if(!NREUMQ.f){NREUMQ.f=function(){NREUMQ.push(["load",new Date().getTime()]);var e=document.createElement("script");e.type="text/javascript";e.src=(("http:"===document.location.protocol)?"http:":"https:")+"//"+"rpm-images.newrelic.com/42/eum/rum.js";document.body.appendChild(e);if(NREUMQ.a)NREUMQ.a();};NREUMQ.a=window.onload;window.onload=NREUMQ.f;};NREUMQ.push(["nrfj","beacon-3.newrelic.com","92a411bc23","2344943,2334836","YlNSbUYAV0IFBhdaWVsZc0xHFVZcSwwNV1NNdV9XQBNWXQgAERxfW1JVQQ==",0,10,new Date().getTime(),"","","","",""]);</SCRIPT>
+	 </BODY></HTML>

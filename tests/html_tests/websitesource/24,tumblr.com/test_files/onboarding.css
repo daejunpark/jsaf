@@ -1,0 +1,153 @@
+html.logged_out {
+	height: 100%; -ms-overflow-y: scroll;
+}
+.logged_out .logged_out_container {
+	transition:height 0s 1s; left: 0px; top: 0px; height: 0px; right: 0px; position: absolute; -webkit-transition: height 0s ease; -moz-transition: height 0s ease; -webkit-transition-delay: 1s; -moz-transition-delay: 1s;
+}
+.logged_out_header#header {
+	margin: 0px 0px 0px -450px; left: 50%; top: 0px; width: 900px; height: 35%; position: absolute; z-index: 2;
+}
+.logged_out .logged_out_header {
+	margin: 0px 0px 0px -450px; left: 50%; top: 0px; width: 900px; height: 35%; position: absolute; z-index: 2;
+}
+.logged_out .logged_out_header#header #logo {
+	background: 0px; margin: 14px 13px 0px 15px; transition:; left: 0px; top: 0px; width: 196px; float: left; position: absolute; -webkit-transition-property: top, left, margin-left; -webkit-transition-duration: .25s; -webkit-transition-timing-function: ease; -moz-transition-property: top, left, margin-left; -moz-transition-duration: .25s; -moz-transition-timing-function: ease; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.logged_out .outter_wrapper {
+	width: 100%;
+}
+#container {
+	margin: 0px; padding: 0px; width: auto; overflow: hidden; position: static;
+}
+#content {
+	width: 900px; margin-top: 71px; position: relative; box-sizing: border-box; opacity: 1; transition-property: left, opacity; transition-duration: 0.25s; transition-timing-function: ease; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -webkit-transition-property: left, opacity; -webkit-transition-duration: .25s; -webkit-transition-timing-function: ease; -moz-transition-property: left, opacity; -moz-transition-duration: .25s; -moz-transition-timing-function: ease;
+}
+.logged_out img.content_top {
+	margin: 0px auto; position: relative; transition-property: left, opacity; transition-duration: 0.25s; transition-timing-function: ease; -webkit-transition-property: left, opacity; -webkit-transition-duration: .25s; -webkit-transition-timing-function: ease; -moz-transition-property: left, opacity; -moz-transition-duration: .25s; -moz-transition-timing-function: ease;
+}
+.logged_out img.content_bottom {
+	margin: 0px auto; position: relative; transition-property: left, opacity; transition-duration: 0.25s; transition-timing-function: ease; -webkit-transition-property: left, opacity; -webkit-transition-duration: .25s; -webkit-transition-timing-function: ease; -moz-transition-property: left, opacity; -moz-transition-duration: .25s; -moz-transition-timing-function: ease;
+}
+.logged_out #content #search_form {
+	margin-top: 0px;
+}
+.logged_out #content #search_query {
+	margin-top: 0px;
+}
+.logged_out #auto_pagination_loader {
+	position: relative; z-index: 4;
+}
+.password_strength_meter {
+	width: 8px; display: block;
+}
+.inactive.password_strength_meter {
+	display: none;
+}
+.password_strength_meter strong {
+	background: rgba(0, 0, 0, 0.14); height: 2px; overflow: hidden; font-size: 0px; margin-bottom: 2px; display: block;
+}
+.password_strength_meter strong:last-child {
+	margin-bottom: 0px;
+}
+.level_1.password_strength_meter .l1 {
+	background: rgb(178, 90, 94);
+}
+.level_2.password_strength_meter .l2 {
+	background: rgb(224, 175, 109);
+}
+.level_3.password_strength_meter .l3 {
+	background: rgb(128, 176, 89);
+}
+.level_4.password_strength_meter .l4 {
+	background: rgb(128, 176, 89);
+}
+.level_5.password_strength_meter .l5 {
+	background: rgb(128, 176, 89); box-shadow: 0px 0px 6px 0px rgba(136,198,46,1); -webkit-box-shadow: 0 0 6px 0 rgba(136, 198, 46, 1); -moz-box-shadow: 0 0 6px 0 rgba(136, 198, 46, 1);
+}
+.signup_login .password_strength_meter {
+	display: none;
+}
+.signup_account .password_strength_meter {
+	top: 50%; right: 10px; margin-top: -8px; position: absolute;
+}
+.ie .show_form.logged_out .signup_subhead {
+	visibility: hidden;
+}
+.logged_out img.content_top {
+	left: 0px; bottom: 100%; position: absolute;
+}
+.main_themes.logged_out #content {
+	margin-top: 95px;
+}
+.main_api_docs.logged_out #content {
+	margin-top: 95px;
+}
+.main_custom_themes.logged_out #content {
+	margin-top: 95px;
+}
+.main_doc_page.logged_out #content {
+	margin-top: 95px;
+}
+.main_meetup_permalink.logged_out #content {
+	margin-top: 95px;
+}
+.help_page.main_doc_page.logged_out #content {
+	margin-top: 70px;
+}
+.main_themes.logged_out img.content_top {
+	display: none;
+}
+.dashboard_directory.logged_out img.content_top {
+	display: none;
+}
+.main_why.logged_out img.content_top {
+	display: none;
+}
+.main_why.logged_out img.content_bottom {
+	display: none;
+}
+.main_policy.logged_out img.content_top {
+	display: none;
+}
+.main_meetups.logged_out img.content_top {
+	display: none;
+}
+.logged_out .fullsize_photo_container {
+	margin: 0px 0px 0px -30px;
+}
+.main_about.logged_out .fullsize_photo_container {
+	margin: 0px;
+}
+.show_form #return_to_top {
+	display: none !important;
+}
+.show_form.logged_out.has_login_captcha .signup_view {
+	max-height: 500px !important;
+}
+.signup_birthday.signup_account.show_form.logged_out.has_login_captcha .account.signup_view {
+	max-height: 500px !important;
+}
+.signup_register.signup_birthday.show_form.logged_out.has_login_captcha .birthday.signup_view {
+	max-height: 500px !important;
+}
+.signup_register.signup_birthday.signup_account.show_form.logged_out.has_login_captcha .birthday.signup_view {
+	max-height: 500px !important;
+}
+:not(.signup_register).show_form.logged_out.has_login_captcha .captcha.signup_view {
+	max-height: 500px !important;
+}
+.signup_login.show_form.logged_out.has_login_captcha .login.signup_view {
+	max-height: 500px !important;
+}
+.show_form.logged_out.has_login_tfa .login.signup_view {
+	max-height: 500px !important;
+}
+.has_login_captcha #recaptcha_widget .image_and_buttons {
+	border-radius: 0px; box-shadow: none; -webkit-border-radius: 0; -moz-border-radius: 0; -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.has_login_captcha #recaptcha_widget .recaptcha_overlay {
+	border-radius: 0px; box-shadow: none; -webkit-border-radius: 0; -moz-border-radius: 0; -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.has_login_captcha #recaptcha_image {
+	border-radius: 0px; box-shadow: none; -webkit-border-radius: 0; -moz-border-radius: 0; -webkit-box-shadow: none; -moz-box-shadow: none;
+}

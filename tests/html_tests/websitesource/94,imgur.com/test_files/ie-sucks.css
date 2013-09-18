@@ -1,0 +1,12 @@
+#cboxLoadedContent iframe {
+	background: url("/images/loader-big-ff.gif") no-repeat 50% 20% rgb(255, 255, 255);
+}
+#footer a {
+	padding: 0px 3px;
+}
+.embed .nav-button {
+	background-image: url("http://s.imgur.com/images/transparent.gif");
+}
+.horizontal .nav-button {
+	background-image: url("http://s.imgur.com/images/transparent.gif");
+}

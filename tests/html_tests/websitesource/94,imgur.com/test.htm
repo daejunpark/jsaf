@@ -1,0 +1,939 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0017)http://imgur.com/ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><HTML 
+lang="en" xmlns="http://www.w3.org/1999/xhtml"><HEAD><META content="IE=9.0000" 
+http-equiv="X-UA-Compatible">
+     <TITLE>    imgur: the simple image sharer</TITLE>     
+<META http-equiv="content-type" content="text/html;charset=utf-8">     
+<META name="robots" content="follow,index">     
+<META name="keywords" content="images, funny pictures, image host, image upload, image sharing, image resize"> 
+    
+<META name="description" content="Imgur is used to share photos with social networks and online communities, and has the funniest pictures from all over the Internet."> 
+    
+<META http-equiv="X-UA-Compatible" content="IE=9;IE=8;">     <LINK title="Imgur Gallery" 
+href="http://feeds.feedburner.com/ImgurGallery?format=xml" rel="alternate" type="application/rss+xml"> 
+    <LINK href="test_files/global_css.css" rel="stylesheet" type="text/css">     
+    <LINK href="test_files/gallery_css.css" rel="stylesheet">     
+<STYLE>#footer, #voxel { display: none; }</STYLE>
+             <!--[if IE 9]><LINK href="test_files/ie-sucks.css" rel="stylesheet" 
+type="text/css"><![endif]-->
+<SCRIPT type="text/javascript">
+        var googletag = googletag || { };
+        googletag.cmd = googletag.cmd || [];
+        (function() {
+        var gads = document.createElement('script');
+        gads.async = true;
+        gads.type = 'text/javascript';
+        var useSSL = 'https:' == document.location.protocol;
+        gads.src = (useSSL ? 'https:' : 'http:') +
+        '//www.googletagservices.com/tag/js/gpt.js';
+        var node = document.getElementsByTagName('script')[0];
+        node.parentNode.insertBefore(gads, node);
+        })();
+    </SCRIPT>
+ 
+<META name="GENERATOR" content="MSHTML 10.00.9200.16618"></HEAD>
+<BODY>         
+<DIV id="topbar">
+<DIV class="header-center">
+<DIV id="header-logo"><A href="test_files/imgur_com.htm"></A></DIV>
+<DIV id="main-nav">
+<UL>
+  <LI title="random mode" class="random-button title-n "><SPAN class="button-outline"><A 
+  href="http://imgur.com/random"><SPAN 
+  class="random-icon"></SPAN></A></SPAN></LI>
+  <LI title="upload images" class="upload-button disabled title-n">
+  <DIV id="upload-global-top-bar-mini-progress"></DIV><SPAN class="button-outline"><A 
+  href="javascript:void(0);"><SPAN class="upload-icon"></SPAN><SPAN class="upload-queue-length">23</SPAN></A></SPAN></LI></UL></DIV>
+<DIV id="secondary-nav">
+<UL class="user-nav">
+  <LI class="signin-link"><A href="https://imgur.com/signin"><SPAN 
+  class="dot"></SPAN>sign in</A>
+  <DIV class="signin-dropdown">
+  <FORM id="dropdown-signin-form" action="https://imgur.com/signin" method="post"><SPAN 
+  class="tiptext">Use an Imgur account</SPAN>
+  <DIV><INPUT name="username" tabIndex="11" title="username or email address" 
+  class="placeholder-onkeydown required" id="dd-username" type="text" maxLength="255"> 
+                                      </DIV>
+  <DIV>
+  <DIV class="recover"><A class="forgot" href="http://imgur.com/signin/forgotpassword"> 
+                                                 forgot?                         
+                      </A>                                         </DIV>
+  <DIV class="clear"></DIV><INPUT name="password" tabIndex="12" title="password" 
+  class="placeholder required" id="dd-password" type="password" maxLength="255" 
+  placeholder="password">                                     </DIV>
+  <DIV class="remember-box"><INPUT name="remember" tabIndex="13" id="dd-remember" 
+  type="checkbox" CHECKED="checked" value="remember">                            
+               <LABEL for="dd-remember"> Stay signed in on this computer</LABEL> 
+                                      </DIV>
+  <DIV class="signin-button"><INPUT name="submit_form" tabIndex="14" class="button-medium" id="dd-submit" type="submit" value="Sign in"> 
+                                          <LABEL class="imgur signin-icon" for="dd-submit"></LABEL> 
+                                      </DIV></FORM>
+  <DIV class="other-accounts"><SPAN class="tiptext">Use another account</SPAN>
+  <UL>
+    <LI><A href="https://imgur.com/signin/google">                               
+                     Google                                                 
+    <SPAN class="signin-icon google"></SPAN>                                     
+            </A></LI>
+    <LI><A href="https://imgur.com/signin/facebook">                             
+                       Facebook                                                 
+    <SPAN class="signin-icon facebook"></SPAN>                                   
+              </A></LI>
+    <LI><A href="https://imgur.com/signin/twitter">                              
+                      Twitter                                                 
+    <SPAN class="signin-icon twitter"></SPAN>                                    
+             </A></LI>
+    <LI><A href="https://imgur.com/signin/yahoo">                                
+                    Yahoo                                                 <SPAN 
+    class="signin-icon yahoo"></SPAN>                                            
+     </A></LI></UL></DIV></DIV></LI>
+  <LI><A 
+href="https://imgur.com/register">register</A></LI></UL></DIV></DIV></DIV><A 
+title="You can't create an album with just one image" class="title-nw nodisplay" 
+id="upload-global-album-tipsy" href="javascript:;"></A> 
+<DIV class="popup" id="upload-global">
+<FORM id="upload-global-form" action="http://imgur.com/upload" encType="multipart/form-data" 
+method="post">
+<H1><SPAN id="upload-global-title">Upload images</SPAN>                     
+</H1>
+<DIV id="upload-global-buttons">
+<DIV class="textbox" id="upload-global-upload-loader">                Loading... 
+            </DIV>
+<DIV id="upload-global-file-wrapper"><SPAN class="computerIcon"></SPAN><SPAN 
+class="green">browse</SPAN> your computer                 <INPUT name="Filedata" 
+id="upload-global-file" type="file" multiple="multiple">             </DIV>
+<DIV class="left">
+<DIV id="upload-global-url"><SPAN class="webIcon"></SPAN><TEXTAREA title="enter URLs to upload from web" class="placeholder-onkeydown" id="upload-global-link-input" placeholder="enter URLs to upload from web" rows="1"></TEXTAREA> 
+                </DIV></DIV>
+<DIV class="clear"></DIV>
+<DIV id="upload-global-dragdrop"><SPAN class="dragdropIcon"></SPAN><SPAN class="green">drag 
+and drop</SPAN> here             </DIV>
+<DIV class="left">
+<DIV id="upload-global-clipboard">
+<DIV style="text-align: center;"><SPAN class="clipboardIcons">Ctrl + 
+V</SPAN></DIV><SPAN class="green">paste</SPAN> from your clipboard               
+  </DIV></DIV>
+<DIV class="clear"></DIV></DIV>
+<DIV class="textbox center" id="upload-global-instructions"></DIV><!-- gallery submit vars --> 
+        <INPUT name="current_upload" type="hidden" value="0">         <INPUT 
+name="total_uploads" type="hidden" value="0">         <INPUT name="terms" type="hidden" 
+value="0">         <INPUT name="gallery_type" type="hidden">         
+<DIV class="textbox error" id="upload-global-errors" 
+style="display: none;"></DIV>
+<DIV class="textbox nodisplay" id="upload-global-queue-description"></DIV>
+<DIV id="upload-global-start-upload">
+<DIV class="panel">
+<DIV>
+<TABLE id="upload-global-actions">
+  <TBODY>
+  <TR>
+    <TD width="50.1%">
+      <DIV id="upload-global-album-checkbox-div"><INPUT name="gallery_submit" 
+      type="hidden" value="0">                                         <BUTTON 
+      id="upload-global-gallery-checkbox" type="button"><SPAN class="gallery-icon"></SPAN>add 
+      to gallery                                         </BUTTON>               
+                                
+      <DIV id="upload-global-gallery-checkbox-overlay"></DIV><INPUT name="create_album" 
+      type="hidden" value="0">                                         <BUTTON 
+      id="upload-global-album-checkbox" type="button"><SPAN class="createAlbum-icon"></SPAN>create 
+      album                                         </BUTTON>                    
+                       </DIV></TD>
+    <TD width="49.9%"><BUTTON class="button-big green" id="upload-global-start-button" 
+      type="button"><SPAN class="start-btn-icon"></SPAN>                         
+                     Start Upload                                     </BUTTON>  
+                                     </TD></TR></TBODY></TABLE></DIV>
+<DIV id="upload-global-album-options">
+<TABLE id="upload-global-album-layout">
+  <TBODY>
+  <TR>
+    <TD id="upload-global-album-td"><INPUT name="album_title" title="Optional Album Title" 
+      class="placeholder-onkeydown" id="upload-global-album-title" type="text" 
+      maxLength="55">         </TD>
+    <TD title="<table><tr><td style='vertical-align: middle'><img src='http://s.imgur.com/images/album-layout-blog.png' style='padding-right: 2px;'/></td><td><h1>Blog Layout</h1>Shows all the images on one page in a blog post style layout. Best for albums with a small to medium amount of images.</td></tr></table>" 
+    class="center title"><INPUT name="layout" id="blog" type="radio" 
+      value="b">             <LABEL for="blog">Blog</LABEL>		 </TD>
+    <TD title="<table><tr><td style='vertical-align: middle'><img src='http://s.imgur.com/images/album-layout-vertical.png'  style='padding-right: 6px;'/></td><td><h1>Vertical Layout</h1>Shows one image at a time in a traditional style, with thumbnails to the right. Good for almost any album.</td></tr></table>" 
+    class="center title"><INPUT name="layout" id="vertical" type="radio" 
+      value="v">			 <LABEL for="vertical">Vertical</LABEL>		 </TD>
+    <TD title="<table><tr><td style='vertical-align: middle'><img src='http://s.imgur.com/images/album-layout-horizontal.png'  style='padding-right: 6px;'/></td><td><h1>Horizontal Layout</h1>Shows one image at a time in a traditional style, with thumbnails on top. Best for albums that have high resolution photos.</td></tr></table>" 
+    class="center title"><INPUT name="layout" id="horizontal" type="radio" 
+      value="h">			 <LABEL for="horizontal">Horizontal</LABEL>		 </TD>
+    <TD title="<table><tr><td style='vertical-align: middle'><img src='http://s.imgur.com/images/album-layout-grid.png'  style='padding-right: 6px;'/></td><td><h1>Grid Layout</h1>Shows all the images on one page as thumbnails that expand when clicked on. Best for albums with lots of images.</td></tr></table>" 
+    class="center title"><INPUT name="layout" id="grid" type="radio" 
+      value="g">			 <LABEL for="grid">Grid</LABEL>		 </TD>
+    <TD width="15"></TD></TR></TBODY></TABLE></DIV>
+<DIV id="upload-global-image-options">
+<TABLE id="upload-global-submission-title">
+  <TBODY>
+  <TR>
+    <TD><INPUT name="gallery_title" title="Gallery submission title (required)" 
+      class="placeholder-onkeydown" id="upload-global-gallery-submission-title" 
+      type="text" maxLength="255">                             
+</TD></TR></TBODY></TABLE></DIV>
+<DIV class="textbox list">
+<TABLE id="upload-global-file-list-header">
+  <TBODY>
+  <TR class="top-tr">
+    <TD width="40"></TD>
+    <TD>
+      <H2>Images <SPAN class="upload-queue-length">(0)</SPAN></H2></TD>
+    <TD width="45" class="edit-td">
+      <H2>Edit</H2></TD></TR></TBODY></TABLE>
+<TABLE id="upload-global-file-list"></TABLE>
+<DIV class="agreement-notice">By uploading, you agree to our <A href="http://imgur.com/tos" 
+target="_blank">terms of service</A></DIV></DIV></DIV></DIV>
+<DIV id="upload-global-progress-wrapper">
+<DIV id="upload-global-progressbar">
+<DIV class="progressBarBG">
+<DIV class="progressBar"></DIV></DIV></DIV>
+<DIV id="upload-global-upload-queue"></DIV></DIV></FORM></DIV>
+<DIV id="upload-global-FF-paste-box"></DIV>
+<DIV class="nodisplay" id="hiddenDropZone"></DIV>
+<DIV class="nodisplay">
+<DIV id="upload-global-image-formats">         That file type is not supported!  
+       
+<DIV class="textbox supported-formats">            Supported formats: JPEG, GIF, 
+PNG, APNG, TIFF, BMP, PDF, XCF         </DIV></DIV></DIV>
+<DIV title="upload images from your computer" 
+id="upload-global-flash-container">
+<DIV id="upload-global-flash-browse"></DIV></DIV>
+<DIV class="nodisplay">            Imgur is used to share photos with social 
+networks and online            communities, and has the funniest pictures from 
+all over the Internet.         </DIV>
+<DIV class="outside" id="content">
+<DIV class="panel left">
+<DIV id="imagelist">
+<DIV class="header textbox bold small-margin-bottom ">
+<DIV class="inline">The&nbsp;</DIV>     
+<DIV class="combobox inline" id="section" name="section">
+<DIV class="selection">most viral</DIV>
+<DIV class="triangle"></DIV>
+<DIV class="options">
+<DIV class="item center bold selected" value="hot">most viral</DIV>
+<DIV class="item center " value="new">user submitted</DIV>
+<DIV class="item center " value="top">highest scoring</DIV>
+<DIV class="item center" value="g/memes">memes</DIV></DIV><INPUT name="section" 
+type="hidden" value="hot">     </DIV>     
+<DIV class="inline">&nbsp;images&nbsp;of today, sorted by&nbsp;</DIV>     
+<DIV class="combobox inline green" id="sort" name="sort">
+<DIV class="selection">popularity</DIV>
+<DIV class="triangle"></DIV>
+<DIV class="options">
+<DIV class="item center bold selected" value="viral">popularity</DIV>
+<DIV class="item center " value="time">newest first</DIV></DIV><INPUT name="sort" 
+type="hidden" value="day">     </DIV>             
+<DIV class="sort-options">
+<UL>
+  <LI><A title="random mode" class="title-n" id="random-button" href="http://imgur.com/gallery/random"><SPAN></SPAN></A></LI>
+  <LI><A title="past images" class="title-n" id="past-link" href="javascript:void(0)"><SPAN></SPAN></A></LI></UL></DIV>
+<DIV class="clear"></DIV></DIV>
+<DIV class="imagelist-panels">
+<DIV class="panel" id="gallery-upload-buttons">
+<DIV>
+<DIV class="textbox small-margin-bottom">
+<H2 class="left">Upload images</H2>
+<DIV class="clear"></DIV></DIV>
+<DIV title="Browse your computer" class="title" id="file-wrapper"></DIV>
+<DIV class="right"><INPUT title="Paste URLs from the web" id="url" type="button">     
+            </DIV>
+<DIV class="clear"></DIV></DIV>
+<DIV><BUTTON class="button-big" id="make-meme-small" onclick="window.location = '/memegen'" 
+type="button">make a meme</BUTTON>             </DIV></DIV>
+<DIV class="panel">
+<DIV class="textbox small-margin-bottom">
+<H2>Today's best comments</H2></DIV>
+<DIV class="captions best-captions"><A 
+href="http://imgur.com/gallery/wep4Ei8"><IMG width="48" height="48" src="test_files/wep4Ei8b.jpg">
+			 </A>			 
+<DIV class="usertext textbox caption ">
+<DIV class="author"><A href="http://imgur.com/user/jackbos">jackbos</A> 3,226 
+points : 18 hours ago				 </DIV>				                    Asthma attacks are 
+brought on by the body reacting to extremely small things entering it.           
+     			 </DIV>
+<DIV class="clear"></DIV><A href="http://imgur.com/gallery/h2k1bO1"><IMG width="48" 
+height="48" src="test_files/h2k1bO1b.jpg">			 </A>			 
+<DIV class="usertext textbox caption ">
+<DIV class="author"><A href="http://imgur.com/user/light4ce">light4ce</A> 2,352 
+points : 23 hours ago				 </DIV>				                    loophole to the socks 
+advice...knee highs....damn!                			 </DIV>
+<DIV class="clear"></DIV><A href="http://imgur.com/gallery/OGgNDXb"><IMG width="48" 
+height="48" src="test_files/OGgNDXbb.jpg">			 </A>			 
+<DIV class="usertext textbox caption ">
+<DIV class="author"><A href="http://imgur.com/user/elscott2">elscott2</A> 2,344 
+points : 16 hours ago				 </DIV>				                    You "whited Out" 
+Indeed...                			 </DIV>
+<DIV class="clear"></DIV><A href="http://imgur.com/gallery/GkuAvpo"><IMG width="48" 
+height="48" src="test_files/GkuAvpob.jpg">			 </A>			 
+<DIV class="usertext textbox caption ">
+<DIV class="author"><A href="http://imgur.com/user/Moonkey">Moonkey</A> 2,233 
+points : 17 hours ago				 </DIV>				                    You "blacked out" 
+indeed.                			 </DIV>
+<DIV class="clear"></DIV><A href="http://imgur.com/gallery/h2k1bO1"><IMG width="48" 
+height="48" src="test_files/h2k1bO1b.jpg">			 </A>			 
+<DIV class="usertext textbox caption nobottom">
+<DIV class="author"><A 
+href="http://imgur.com/user/seemslogical">seemslogical</A> 1,749 points : 24 
+hours ago				 </DIV>				                    About the first one, the rubbing is 
+for me to get off because it feels good. Remember sex is for both people.        
+        			 </DIV>
+<DIV class="clear"></DIV></DIV></DIV>
+<DIV class="panel advertisement">
+<DIV class="imgur-ad">
+<DIV id="outside_ad_868070" style="width: 300px; height: 250px;">
+<SCRIPT type="text/javascript">
+        googletag.cmd.push(function() { googletag.pubads().display('/4761660/H_G_300x250', [300, 250], 'outside_ad_868070'); });
+  </SCRIPT>
+ </DIV></DIV>
+<DIV class="ad-text">                Advertisement: <A href="http://imgur.com/register/upgrade">pro 
+users don't see ads</A>             </DIV></DIV>
+<DIV class="panel relative">
+<FORM class="search-form" action="" method="get"><INPUT name="q" title="Search images" 
+class="search" type="text">     </FORM></DIV>
+<DIV class="panel">
+<H2 class="textbox">Stalking us is easy.<BR>Like us on Facebook.</H2>
+<DIV class="textbox" id="facebook"><IFRAME width="280" height="80" src="test_files/imgur_com.htm" 
+frameBorder="no" frameSpacing="0" scrolling="no" 
+allowTransparency="true"></IFRAME>     </DIV>
+<DIV class="textbox" id="rss">
+<TABLE>
+  <TBODY>
+  <TR>
+    <TD width="40" class="lineheight"><A href="http://feeds.feedburner.com/ImgurGallery?format=xml"><IMG 
+      src="test_files/blog_rss.png">                     </A>                 
+</TD>
+    <TD width="145"><A href="http://feeds.feedburner.com/ImgurGallery?format=xml"> 
+                             subscribe                     </A>                 
+    </TD>
+    <TD><A href="http://twitter.com/imgur">                        follow      
+                     </A>                 </TD>
+    <TD class="lineheight"><A href="http://twitter.com/imgur"><IMG src="test_files/follow_twitter.png"> 
+                          </A>                 </TD></TR></TBODY></TABLE></DIV></DIV>
+<DIV class="side-footer-links"><A title="the official imgur store" class="title green" 
+href="http://store.imgur.com/">store</A> ·     <A title="the simple imgur blog" 
+class="title" href="http://imgur.com/blog">blog</A> ·     <A title="answers to your questions" 
+class="title" href="http://imgur.com/help">help</A> ·     <A title="request an image to be deleted" 
+class="title" href="http://imgur.com/removalrequest">request deletion</A>  ·     
+<A title="terms of service" class="title" href="http://imgur.com/tos">terms</A>  
+·     
+<DIV class="combobox">
+<DIV class="selection"></DIV><SPAN class="more-arrow"></SPAN>
+<DIV class="options">
+<DIV class="selected nodisplay">more</DIV>
+<DIV class="item"><A href="http://imgur.com/register/upgrade">go pro</A></DIV>
+<DIV class="item"><A href="http://imgur.com/apps">apps</A></DIV>
+<DIV class="item"><A 
+href="http://api.imgur.com/">api</A></DIV></DIV></DIV></DIV>
+<DIV class="side-copyright">© 2012 Imgur, LLC.</DIV></DIV>
+<DIV class="posts">
+<DIV class="post" id="nDXHv"><A href="http://imgur.com/gallery/nDXHv"><IMG 
+title="Something I do at work to help pass the time<p><span class='points-nDXHv'>2,776</span>&nbsp;<span class='points-text-nDXHv'>points</span>  : 118,686 views</p>" 
+alt="" src="test_files/CeTY3ozb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="nDXHv"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="nDXHv"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="RpPOsQH"><A href="http://imgur.com/gallery/RpPOsQH"><IMG 
+title="Please let the whole world know about Nobodyn0se, this guy just saved my life.<p><span class='points-RpPOsQH'>930</span>&nbsp;<span class='points-text-RpPOsQH'>points</span>  : ø views</p>" 
+alt="" src="test_files/RpPOsQHb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="RpPOsQH"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="RpPOsQH"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="Coin57v"><A href="http://imgur.com/gallery/Coin57v"><IMG 
+title="I miss these.<p><span class='points-Coin57v'>1,924</span>&nbsp;<span class='points-text-Coin57v'>points</span>  : 16,944 views</p>" 
+alt="" src="test_files/Coin57vb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="Coin57v"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="Coin57v"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="nmXOFzy"><A href="http://imgur.com/gallery/nmXOFzy"><IMG 
+title="Fire Hair<p><span class='points-nmXOFzy'>2,462</span>&nbsp;<span class='points-text-nmXOFzy'>points</span>  : 39,812 views</p>" 
+alt="" src="test_files/nmXOFzyb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="nmXOFzy"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="nmXOFzy"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="RudPI"><A href="http://imgur.com/gallery/RudPI"><IMG 
+title="My wife and I used a groupon for a photo shoot today. I think it turned out well.<p><span class='points-RudPI'>2,192</span>&nbsp;<span class='points-text-RudPI'>points</span>  : 77,777 views</p>" 
+alt="" src="test_files/5BfyVudb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="RudPI"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="RudPI"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="OUTRHy2"><A href="http://imgur.com/gallery/OUTRHy2"><IMG 
+title="baby lamb (just look at its little knee patches, look at them!)<p><span class='points-OUTRHy2'>1,872</span>&nbsp;<span class='points-text-OUTRHy2'>points</span>  : 27,191 views</p>" 
+alt="" src="test_files/OUTRHy2b.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="OUTRHy2"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="OUTRHy2"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="OGgNDXb"><A href="http://imgur.com/gallery/OGgNDXb"><IMG 
+title="I whited out last night and have no memory of taking this photo or who these people are(I&amp;#039;m the Black guy)...<p><span class='points-OGgNDXb'>4,903</span>&nbsp;<span class='points-text-OGgNDXb'>points</span>  : 137,169 views</p>" 
+alt="" src="test_files/OGgNDXbb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="OGgNDXb"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="OGgNDXb"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="EM0KS"><A href="http://imgur.com/gallery/EM0KS"><IMG 
+title="No more stepping in puddles.<p><span class='points-EM0KS'>1,987</span>&nbsp;<span class='points-text-EM0KS'>points</span>  : 654 views</p>" 
+alt="" src="test_files/RHz1Crsb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="EM0KS"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="EM0KS"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="dX8qx"><A href="http://imgur.com/gallery/dX8qx"><IMG 
+title="Got my head shaved, and then shit got weird.<p><span class='points-dX8qx'>4,031</span>&nbsp;<span class='points-text-dX8qx'>points</span>  : 817 views</p>" 
+alt="" src="test_files/sKaWpdKb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="dX8qx"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="dX8qx"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="kasCMYd"><A href="http://imgur.com/gallery/kasCMYd"><IMG 
+title="Proof that Aladdin and Titanic are basically the same movie<p><span class='points-kasCMYd'>1,990</span>&nbsp;<span class='points-text-kasCMYd'>points</span>  : 32,902 views</p>" 
+alt="" src="test_files/kasCMYdb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="kasCMYd"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="kasCMYd"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="Cxa0f"><A href="http://imgur.com/gallery/Cxa0f"><IMG 
+title="OC - I do special effects make up for a living, here&amp;#039;s an attempted finger amputation tutorial!  Hope it&amp;#039;s not too early for LNI<p><span class='points-Cxa0f'>2,283</span>&nbsp;<span class='points-text-Cxa0f'>points</span>  : 644 views</p>" 
+alt="" src="test_files/AQI8SOUb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="Cxa0f"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="Cxa0f"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="ItpKJUy"><A href="http://imgur.com/gallery/ItpKJUy"><IMG 
+title="The worst delivery service ever.<p><span class='points-ItpKJUy'>1,027</span>&nbsp;<span class='points-text-ItpKJUy'>points</span>  : 2,776 views</p>" 
+alt="" src="test_files/ItpKJUyb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="ItpKJUy"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="ItpKJUy"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="kA5c1L4"><A href="http://imgur.com/gallery/kA5c1L4"><IMG 
+title="My girlfriend is always trying to sneak pics of me!<p><span class='points-kA5c1L4'>2,270</span>&nbsp;<span class='points-text-kA5c1L4'>points</span>  : 23,503 views</p>" 
+alt="" src="test_files/kA5c1L4b.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="kA5c1L4"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="kA5c1L4"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="V0KsYHx"><A href="http://imgur.com/gallery/V0KsYHx"><IMG 
+title="My grandfather worked on ROTJ back in the day, received this post production as a thank you<p><span class='points-V0KsYHx'>1,290</span>&nbsp;<span class='points-text-V0KsYHx'>points</span>  : 30,942 views</p>" 
+alt="" src="test_files/V0KsYHxb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="V0KsYHx"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="V0KsYHx"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="iPsM5Xe"><A href="http://imgur.com/gallery/iPsM5Xe"><IMG 
+title="Jennifer Lawrence playing with Jennifer Lawrence<p><span class='points-iPsM5Xe'>2,168</span>&nbsp;<span class='points-text-iPsM5Xe'>points</span>  : 41,177 views</p>" 
+alt="" src="test_files/iPsM5Xeb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="iPsM5Xe"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="iPsM5Xe"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="AAbclvi"><A href="http://imgur.com/gallery/AAbclvi"><IMG 
+title="I told my daughter she looked like Axl Rose. She asked &amp;quot;Who is she?&amp;quot;<p><span class='points-AAbclvi'>1,436</span>&nbsp;<span class='points-text-AAbclvi'>points</span>  : 19,998 views</p>" 
+alt="" src="test_files/AAbclvib.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="AAbclvi"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="AAbclvi"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="nIglnp1"><A href="http://imgur.com/gallery/nIglnp1"><IMG 
+title="Every time I go into the comments to add a witty remark.<p><span class='points-nIglnp1'>941</span>&nbsp;<span class='points-text-nIglnp1'>points</span>  : 5,582 views</p>" 
+alt="" src="test_files/nIglnp1b.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="nIglnp1"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="nIglnp1"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="wyCuuXk"><A href="http://imgur.com/gallery/wyCuuXk"><IMG 
+title="Thank you to the guy at the gym today for this really means a lot... He was a complete stranger<p><span class='points-wyCuuXk'>772</span>&nbsp;<span class='points-text-wyCuuXk'>points</span>  : 791 views</p>" 
+alt="" src="test_files/wyCuuXkb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="wyCuuXk"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="wyCuuXk"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="ao01J"><A href="http://imgur.com/gallery/ao01J"><IMG 
+title="Things done BIG. Another workshop class project.<p><span class='points-ao01J'>1,761</span>&nbsp;<span class='points-text-ao01J'>points</span>  : 79,828 views</p>" 
+alt="" src="test_files/a5Siayib.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="ao01J"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="ao01J"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="PKG9yp1"><A href="http://imgur.com/gallery/PKG9yp1"><IMG 
+title="Good guy coworker last night<p><span class='points-PKG9yp1'>2,050</span>&nbsp;<span class='points-text-PKG9yp1'>points</span>  : 31,875 views</p>" 
+alt="" src="test_files/PKG9yp1b.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="PKG9yp1"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="PKG9yp1"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="W3FtE4M"><A href="http://imgur.com/gallery/W3FtE4M"><IMG 
+title="When a hot girl comes on the bus, and the only free spot is next to me.<p><span class='points-W3FtE4M'>557</span>&nbsp;<span class='points-text-W3FtE4M'>points</span>  : 397 views</p>" 
+alt="" src="test_files/W3FtE4Mb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="W3FtE4M"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="W3FtE4M"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="O6FECjh"><A href="http://imgur.com/gallery/O6FECjh"><IMG 
+title="Spotted this sneaky bastard while shopping<p><span class='points-O6FECjh'>930</span>&nbsp;<span class='points-text-O6FECjh'>points</span>  : 5,846 views</p>" 
+alt="" src="test_files/O6FECjhb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="O6FECjh"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="O6FECjh"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="Yq2dl"><A href="http://imgur.com/gallery/Yq2dl"><IMG 
+title="Some of my favorite alternative artwork.<p><span class='points-Yq2dl'>1,392</span>&nbsp;<span class='points-text-Yq2dl'>points</span>  : 628 views</p>" 
+alt="" src="test_files/oZTpaxQb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="Yq2dl"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="Yq2dl"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="AGtIJHD"><A href="http://imgur.com/gallery/AGtIJHD"><IMG 
+title="My son turns five tomorrow. I&amp;#039;m a low-income single father, so I couldn&amp;#039;t buy the cake he wanted. This is the cake my nine year old daughter made for him--Captain America Cake<p><span class='points-AGtIJHD'>2,287</span>&nbsp;<span class='points-text-AGtIJHD'>points</span>  : 44,810 views</p>" 
+alt="" src="test_files/AGtIJHDb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="AGtIJHD"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="AGtIJHD"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="gW9P0Nf"><A href="http://imgur.com/gallery/gW9P0Nf"><IMG 
+title="Rapper 50Tyson(First rapper with Autism) tweets about suicide<p><span class='points-gW9P0Nf'>562</span>&nbsp;<span class='points-text-gW9P0Nf'>points</span>  : 693 views</p>" 
+alt="" src="test_files/gW9P0Nfb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="gW9P0Nf"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="gW9P0Nf"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="hf4Eq6X"><A href="http://imgur.com/gallery/hf4Eq6X"><IMG 
+title="oh my GODDD..is that cat porridge?! fuckin&amp;#039; LOOVE CAT PORRIDGE!..<p><span class='points-hf4Eq6X'>1,073</span>&nbsp;<span class='points-text-hf4Eq6X'>points</span>  : 216 views</p>" 
+alt="" src="test_files/hf4Eq6Xb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="hf4Eq6X"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="hf4Eq6X"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="lEeIXSE"><A href="http://imgur.com/gallery/lEeIXSE"><IMG 
+title="Sometimes I feel like people aren&amp;#039;t even trying.<p><span class='points-lEeIXSE'>2,818</span>&nbsp;<span class='points-text-lEeIXSE'>points</span>  : 83,143 views</p>" 
+alt="" src="test_files/lEeIXSEb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="lEeIXSE"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="lEeIXSE"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="2qML6n1"><A href="http://imgur.com/gallery/2qML6n1"><IMG 
+title="My cousin, who I haven&amp;#039;t seen or spoken to in years, just sent this to me. (He&amp;#039;s a 35 y/o man)<p><span class='points-2qML6n1'>418</span>&nbsp;<span class='points-text-2qML6n1'>points</span>  : 353 views</p>" 
+alt="" src="test_files/2qML6n1b.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="2qML6n1"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="2qML6n1"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="GkuAvpo"><A href="http://imgur.com/gallery/GkuAvpo"><IMG 
+title="I blacked out last night and have no memory of taking this photo or who these people are (I&amp;#039;m the White guy)...<p><span class='points-GkuAvpo'>4,665</span>&nbsp;<span class='points-text-GkuAvpo'>points</span>  : 170,002 views</p>" 
+alt="" src="test_files/GkuAvpob.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="GkuAvpo"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="GkuAvpo"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="zfYmpRo"><A href="http://imgur.com/gallery/zfYmpRo"><IMG 
+title="There was no rekindling the mood after this one...<p><span class='points-zfYmpRo'>772</span>&nbsp;<span class='points-text-zfYmpRo'>points</span>  : 4,492 views</p>" 
+alt="" src="test_files/zfYmpRob.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="zfYmpRo"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="zfYmpRo"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="72p4whq"><A href="http://imgur.com/gallery/72p4whq"><IMG 
+title="How France&amp;#039;s flag was created<p><span class='points-72p4whq'>2,668</span>&nbsp;<span class='points-text-72p4whq'>points</span>  : 49,671 views</p>" 
+alt="" src="test_files/72p4whqb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="72p4whq"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="72p4whq"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="uxkt2"><A href="http://imgur.com/gallery/uxkt2"><IMG 
+title="This is Me<p><span class='points-uxkt2'>1,176</span>&nbsp;<span class='points-text-uxkt2'>points</span>  : 579 views</p>" 
+alt="" src="test_files/f3j2TN1b.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="uxkt2"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="uxkt2"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="dWtv9tB"><A href="http://imgur.com/gallery/dWtv9tB"><IMG 
+title="Must be cold...<p><span class='points-dWtv9tB'>2,066</span>&nbsp;<span class='points-text-dWtv9tB'>points</span>  : 70,750 views</p>" 
+alt="" src="test_files/dWtv9tBb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="dWtv9tB"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="dWtv9tB"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="0LzSK5x"><A href="http://imgur.com/gallery/0LzSK5x"><IMG 
+title="Dogs<p><span class='points-0LzSK5x'>2,043</span>&nbsp;<span class='points-text-0LzSK5x'>points</span>  : 41,208 views</p>" 
+alt="" src="test_files/0LzSK5xb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="0LzSK5x"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="0LzSK5x"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="GHjtJoo"><A href="http://imgur.com/gallery/GHjtJoo"><IMG 
+title="Swing<p><span class='points-GHjtJoo'>857</span>&nbsp;<span class='points-text-GHjtJoo'>points</span>  : 273 views</p>" 
+alt="" src="test_files/GHjtJoob.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="GHjtJoo"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="GHjtJoo"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="T9Xz8Tm"><A href="http://imgur.com/gallery/T9Xz8Tm"><IMG 
+title="I am your king!<p><span class='points-T9Xz8Tm'>2,653</span>&nbsp;<span class='points-text-T9Xz8Tm'>points</span>  : 50,803 views</p>" 
+alt="" src="test_files/T9Xz8Tmb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="T9Xz8Tm"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="T9Xz8Tm"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="7JXwp3a"><A href="http://imgur.com/gallery/7JXwp3a"><IMG 
+title="I just can&amp;#039;t see how the cat can afford a boat in todays market.<p><span class='points-7JXwp3a'>2,078</span>&nbsp;<span class='points-text-7JXwp3a'>points</span>  : 38,187 views</p>" 
+alt="" src="test_files/7JXwp3ab.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="7JXwp3a"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="7JXwp3a"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="swyoYbO"><A href="http://imgur.com/gallery/swyoYbO"><IMG 
+title="That&amp;#039;s a cool statue of an OcelOHMYGOD!!<p><span class='points-swyoYbO'>1,829</span>&nbsp;<span class='points-text-swyoYbO'>points</span>  : 12,944 views</p>" 
+alt="" src="test_files/swyoYbOb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="swyoYbO"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="swyoYbO"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="LWn1x"><A href="http://imgur.com/gallery/LWn1x"><IMG 
+title="The original bromance<p><span class='points-LWn1x'>1,300</span>&nbsp;<span class='points-text-LWn1x'>points</span>  : 631 views</p>" 
+alt="" src="test_files/oIhtEBbb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="LWn1x"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="LWn1x"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="xDeiUFw"><A href="http://imgur.com/gallery/xDeiUFw"><IMG 
+title="This was on the back of a condom my university was giving out<p><span class='points-xDeiUFw'>1,756</span>&nbsp;<span class='points-text-xDeiUFw'>points</span>  : 55,337 views</p>" 
+alt="" src="test_files/xDeiUFwb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="xDeiUFw"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="xDeiUFw"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="I4914Je"><A href="http://imgur.com/gallery/I4914Je"><IMG 
+title="Baby seals playing on the beach<p><span class='points-I4914Je'>3,107</span>&nbsp;<span class='points-text-I4914Je'>points</span>  : 92,527 views</p>" 
+alt="" src="test_files/I4914Jeb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="I4914Je"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="I4914Je"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="jzfBnVm"><A href="http://imgur.com/gallery/jzfBnVm"><IMG 
+title="Thank you for the application but...<p><span class='points-jzfBnVm'>1,204</span>&nbsp;<span class='points-text-jzfBnVm'>points</span>  : 31,164 views</p>" 
+alt="" src="test_files/jzfBnVmb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="jzfBnVm"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="jzfBnVm"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="b7bshSh"><A href="http://imgur.com/gallery/b7bshSh"><IMG 
+title="Some biker guys came by the local nursing home<p><span class='points-b7bshSh'>1,766</span>&nbsp;<span class='points-text-b7bshSh'>points</span>  : 57,662 views</p>" 
+alt="" src="test_files/b7bshShb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="b7bshSh"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="b7bshSh"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="vt7yonD"><A href="http://imgur.com/gallery/vt7yonD"><IMG 
+title="They are slowly accepting me as their master.<p><span class='points-vt7yonD'>1,028</span>&nbsp;<span class='points-text-vt7yonD'>points</span>  : 14,133 views</p>" 
+alt="" src="test_files/vt7yonDb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="vt7yonD"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="vt7yonD"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="U0tT00w"><A href="http://imgur.com/gallery/U0tT00w"><IMG 
+title="Cute<p><span class='points-U0tT00w'>4,344</span>&nbsp;<span class='points-text-U0tT00w'>points</span>  : 13,238 views</p>" 
+alt="" src="test_files/U0tT00wb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="U0tT00w"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="U0tT00w"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="b5m7gGw"><A href="http://imgur.com/gallery/b5m7gGw"><IMG 
+title="To the mom who got mad at me for &amp;quot;saving seats&amp;quot; after my wife and kids got up to get a drink of water.<p><span class='points-b5m7gGw'>833</span>&nbsp;<span class='points-text-b5m7gGw'>points</span>  : 13,409 views</p>" 
+alt="" src="test_files/b5m7gGwb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="b5m7gGw"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="b5m7gGw"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="mh5hxax"><A href="http://imgur.com/gallery/mh5hxax"><IMG 
+title=".......<p><span class='points-mh5hxax'>926</span>&nbsp;<span class='points-text-mh5hxax'>points</span>  : 303 views</p>" 
+alt="" src="test_files/mh5hxaxb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="mh5hxax"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="mh5hxax"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="iHDcNDx"><A href="http://imgur.com/gallery/iHDcNDx"><IMG 
+title="Stealth<p><span class='points-iHDcNDx'>1,662</span>&nbsp;<span class='points-text-iHDcNDx'>points</span>  : 34,944 views</p>" 
+alt="" src="test_files/iHDcNDxb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="iHDcNDx"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="iHDcNDx"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="69PiFC6"><A href="http://imgur.com/gallery/69PiFC6"><IMG 
+title="She must have missed that day in history class<p><span class='points-69PiFC6'>359</span>&nbsp;<span class='points-text-69PiFC6'>points</span>  : 2,585 views</p>" 
+alt="" src="test_files/69PiFC6b.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="69PiFC6"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="69PiFC6"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="yb2Ei7M"><A href="http://imgur.com/gallery/yb2Ei7M"><IMG 
+title="My uncle lives in Oregon, here&amp;#039;s a picture he took of the Milky Way.<p><span class='points-yb2Ei7M'>3,172</span>&nbsp;<span class='points-text-yb2Ei7M'>points</span>  : 103,389 views</p>" 
+alt="" src="test_files/yb2Ei7Mb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="yb2Ei7M"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="yb2Ei7M"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="ip4sfRE"><A href="http://imgur.com/gallery/ip4sfRE"><IMG 
+title="My son was born premature with a 60% chance of survival... Here he is getting ready for his first birthday party.<p><span class='points-ip4sfRE'>2,265</span>&nbsp;<span class='points-text-ip4sfRE'>points</span>  : 57,610 views</p>" 
+alt="" src="test_files/ip4sfREb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="ip4sfRE"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="ip4sfRE"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="a25luIg"><A href="http://imgur.com/gallery/a25luIg"><IMG 
+title="Ha!<p><span class='points-a25luIg'>1,241</span>&nbsp;<span class='points-text-a25luIg'>points</span>  : 414 views</p>" 
+alt="" src="test_files/a25luIgb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="a25luIg"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="a25luIg"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="4fW20M6"><A href="http://imgur.com/gallery/4fW20M6"><IMG 
+title="Snape.<p><span class='points-4fW20M6'>2,842</span>&nbsp;<span class='points-text-4fW20M6'>points</span>  : 5,574 views</p>" 
+alt="" src="test_files/4fW20M6b.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="4fW20M6"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="4fW20M6"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="qvQYN"><A href="http://imgur.com/gallery/qvQYN"><IMG 
+title="PART 88 (whoops knew I was forgetting to do something)<p><span class='points-qvQYN'>3,611</span>&nbsp;<span class='points-text-qvQYN'>points</span>  : 2,896 views</p>" 
+alt="" src="test_files/dwxx9E1b.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="qvQYN"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="qvQYN"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="zCDniDS"><A href="http://imgur.com/gallery/zCDniDS"><IMG 
+title="The ultimate Irish wristwatch<p><span class='points-zCDniDS'>5</span>&nbsp;<span class='points-text-zCDniDS'>points</span>  : ø views</p>" 
+alt="" src="test_files/zCDniDSb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="zCDniDS"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="zCDniDS"></DIV></DIV></DIV></DIV>
+<DIV class="post" id="Es7VHhT"><A href="http://imgur.com/gallery/Es7VHhT"><IMG 
+title="Cave in the Thailand.<p><span class='points-Es7VHhT'>3,252</span>&nbsp;<span class='points-text-Es7VHhT'>points</span>  : 93,236 views</p>" 
+alt="" src="test_files/Es7VHhTb.jpg">                 </A>                       
+          
+<DIV class="hover">
+<DIV class="arrows">
+<DIV title="like" class="arrow up " type="image" data="Es7VHhT"></DIV>
+<DIV title="dislike" class="arrow down " type="image" 
+data="Es7VHhT"></DIV></DIV></DIV></DIV>
+<DIV class="clear"></DIV></DIV>
+<DIV class="textbox center lineheight small-margin-top" 
+id="imagelist-loader"><IMG src="test_files/album_loader.gif">     
+</DIV></DIV></DIV>
+<DIV class="clear"></DIV></DIV>
+<DIV class="nodisplay">
+<DIV class="popup" id="past-wrapper">
+<H1>Show images from the past</H1>
+<DIV>
+<DIV class="textbox left"><INPUT id="days" type="text">                          
+                  days ago                                     </DIV>
+<DIV class="textbox left" id="past-calendar-wrapper">
+<DIV id="past-calendar"></DIV></DIV>
+<DIV class="textbox left" id="slider-wrapper">
+<DIV class="ticker negative">«</DIV>
+<DIV id="slider"></DIV>
+<DIV class="ticker positive">»</DIV></DIV>
+<DIV class="textbox left" id="button-wrapper"><INPUT class="button-medium" id="past-submit" type="button" value="Go"> 
+                </DIV>
+<DIV class="clear"></DIV></DIV>
+<DIV id="past-loader"></DIV>
+<DIV id="past-preview"></DIV></DIV></DIV><INPUT id="sid" type="hidden" value="0f9058075cb5f21b7832c360262182d8"> 
+                                                    
+<SCRIPT src="test_files/global_js.js" type="text/javascript"></SCRIPT>
+         
+<SCRIPT type="text/javascript">
+            var imgur = Imgur.getInstance();
+            imgur.init({
+                
+                isDev       : 0,
+                host        : 'imgur.com',
+                cdnUrl      : 'http://i.imgur.com',
+                signed      : false
+            });
+
+            imgur.generalInit();
+        </SCRIPT>
+             
+<SCRIPT src="test_files/index_js.js" type="text/javascript"></SCRIPT>
+     
+<SCRIPT src="test_files/gallery_js.js" type="text/javascript"></SCRIPT>
+     
+<SCRIPT type="text/javascript">
+        var gallery = Imgur.Gallery.getInstance();
+        gallery.init({
+            sid               : '0f9058075cb5f21b7832c360262182d8',
+            signed            : false,
+            baseURL           : '/gallery',
+            sort              : 'viral',
+            section           : 'hot',
+            window            : 'day',  // this variable name should probably be changed since window is a reserved javascript word
+            page              : 0,
+            isPro             : false,
+            maxPage           : 918,
+            showPast          : true,
+            debugTLDR         : false,
+            searchQuery       : '',
+            showGalleryNewInfo: false,
+            gallery_type      : null,
+            subgallery_name   : null,
+            subgalleryUpload  : true //todo: move this into the config variable
+        });
+
+        gallery.initTldr();
+        gallery.outsideInit();
+
+        Imgur.Upload.Index.getInstance().generalInit();
+    </SCRIPT>
+                 
+<SCRIPT type="text/javascript">
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-6671908-2']);
+            _gaq.push(['_setDomainName', 'none']);
+            _gaq.push(['_trackPageview']);
+            _gaq.push(['_trackPageLoadTime']);
+
+            _gaq.push(['_setCustomVar', 1, 'Gallery', 'Outside', 3]);
+
+            (function() {
+              var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+              ga.src = ('https:' == document.location.protocol ? 'https://ssl' : '//www') + '.google-analytics.com/ga.js';
+              var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </SCRIPT>
+         
+<SCRIPT type="text/javascript">
+            var _qevents = _qevents || [];
+            (function() {
+            var elem = document.createElement('script');
+            elem.src = (document.location.protocol == "https:" ? "https://secure" : "//edge") + ".quantserve.com/quant.js";
+            elem.async = true;
+            elem.type = "text/javascript";
+            var scpt = document.getElementsByTagName('script')[0];
+            scpt.parentNode.insertBefore(elem, scpt);
+            })();
+
+            _qevents.push({
+                qacct:"p-f8oruOqDFlMeI"
+            });
+        </SCRIPT>
+         <NOSCRIPT>            &lt;div class="nodisplay"&gt;                
+&lt;img src="//pixel.quantserve.com/pixel/p-f8oruOqDFlMeI.gif" border="0" 
+height="1" width="1" alt="Quantcast"/&gt;            &lt;/div&gt;         
+</NOSCRIPT>                             
+<SCRIPT src="test_files/alice.js" type="text/javascript"></SCRIPT>
+             
+<SCRIPT src="test_files/imgur.js" type="text/javascript"></SCRIPT>
+                 </BODY></HTML>

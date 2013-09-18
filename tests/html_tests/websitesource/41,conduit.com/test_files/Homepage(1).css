@@ -1,0 +1,786 @@
+.leftSide .mainBodyMask {
+	padding-right: 0px; padding-left: 0px;
+}
+.DropDownMenu {
+	margin: 0px 14px 0px 15px;
+}
+.leftNav {
+	margin: 0px; padding: 0px 0px 1px; left: -100px; top: 177px; width: 38px; text-align: left; position: absolute; z-index: 201; opacity: 0;
+}
+.leftNav li {
+	padding: 0px; height: 90px; text-decoration: none; display: block; position: relative;
+}
+.leftNav li:first-child a {
+	border-radius: 0px 10px 10px 0px;
+}
+.leftNav li:first-child .imageAlt span {
+	border-radius: 0px 10px 10px 0px;
+}
+.leftNav .last a {
+	border-radius: 0px 10px 10px 0px;
+}
+.leftNav .last .imageAlt span {
+	border-radius: 0px 10px 10px 0px;
+}
+.leftNav li .imageAlt {
+	border-radius: 0px 10px 10px 0px; width: 37px; height: 90px; color: rgb(55, 55, 55); z-index: 2; cursor: pointer; background-color: rgb(55, 55, 55);
+}
+.leftNav li .imageAlt:hover {
+	border-radius: 0px 10px 10px 0px; background-color: rgb(0, 0, 0);
+}
+.leftNav li:first-child .imageAlt span {
+	border-top-color: currentColor; border-top-width: medium; border-top-style: none;
+}
+.leftNav li .imageAlt span {
+	margin: 0px !important; width: 37px !important; border-top-color: rgb(206, 206, 206); border-top-width: 1px; border-top-style: solid; background-image: url("/Images/Homepage/LeftMenuProducts.png"); background-size: 33px 346px; background-color: rgb(55, 55, 55);
+}
+.leftNav li .imageAlt:hover span {
+	background-color: rgb(34, 34, 34);
+}
+.leftNav li .imageAlt:hover span:hover {
+	background-color: rgb(34, 34, 34);
+}
+.leftNav li .toolbar span {
+	background-position: 1px 7px;
+}
+.leftNav li .mobile span {
+	background-position: 1px -83px; border-radius: 0px 10px 10px 0px;
+}
+.leftNav li .wibiya span {
+	background-position: 1px -174px;
+}
+.leftNav li .u span {
+	background-position: 1px -264px;
+}
+.leftNav li:hover .imageAlt {
+	border-radius: 0px 10px 10px 0px; background-color: rgb(0, 0, 0);
+}
+.scroller {
+	background-position: 15px -4px; margin: 0px; border-radius: 10px; border: 8px solid rgb(243, 241, 241); height: 88px; padding-top: 27px; clear: both; float: none; display: inline-block; position: relative; box-shadow: 0px 0px 7px rgba(0,0,0,0.4); background-color: rgb(255, 255, 255);
+}
+.scroller .buttons {
+	background-position: -2px -3px; margin: 11px 0px 0px; padding: 25px 0px 0px 25px; left: -30px; top: 27px; width: 25px; height: 22px; position: absolute; cursor: pointer; background-image: url("/Images/Resized/Half/Homepage/Arrows.png"); background-repeat: no-repeat; background-size: 111px 103px;
+}
+.scroller .back.buttons:hover {
+	background-position: -2px -53px;
+}
+.scroller .forward.buttons {
+	background-position: -57px -3px; left: auto; right: -30px;
+}
+.scroller .forward.buttons:hover {
+	background-position: -57px -53px;
+}
+.scroller .scrollable {
+	margin: 0px 10px; padding: 0px; width: 534px; height: 74px; overflow: hidden; position: relative; background-image: none;
+}
+.scroller .scrollable .items {
+	width: 20000em; position: absolute;
+}
+.scroller .scrollable .items li {
+	margin: 0px; padding: 0px 0px 0px 93px; width: 174px; height: 74px !important; overflow: hidden; float: left; display: inline-block; position: relative; background-image: none;
+}
+.scroller .scrollable .items li img {
+	left: 10px; top: 0px; position: absolute; max-height: 60px; max-width: 80px;
+}
+.scroller .scrollable .items li p {
+	margin: 0px; padding: 0px 10px; text-align: left;
+}
+.scroller .scrollable .items li a {
+	left: 113px; bottom: 2px; position: absolute;
+}
+.leftSide {
+	height: 500%;
+}
+.mainBodyMaskWrapper {
+	height: 100%; position: static !important; min-height: 0px;
+}
+.mainBodyMask {
+	height: 100%; position: static !important; min-height: 0px;
+}
+.page {
+	height: 20%; overflow: hidden; position: relative; background-color: rgb(255, 255, 255);
+}
+.BottomColor {
+	left: 0px; width: 100%; height: 20%; text-align: center; bottom: 0px; position: absolute; z-index: 2;
+}
+.BottomColor div {
+	left: 0px; width: 100%; text-align: center; bottom: 10px; display: none; position: absolute; z-index: 1000;
+}
+.BottomColor div a {
+	width: 24px; height: 25px; display: inline-block; background-image: url("/Images/Resized/Half/Homepage/DownDoubleArrow.png"); background-size: 100% 100%;
+}
+.corporate .BottomColor {
+	background-color: rgb(237, 120, 36);
+}
+.scrollerContainer {
+	width: 100%; text-align: center; bottom: 13%; position: absolute; z-index: 10;
+}
+.EngagingContainer {
+	top: 15%; width: 100%; text-align: center; display: block; position: absolute;
+}
+.Engaging {
+	margin: 0px; padding: 0px; width: 600px; height: 240px; color: rgb(255, 255, 255); z-index: 2; max-width: 90%;
+}
+.Engaging span {
+	background-position: top; background-image: url("/Images/Resized/Half/Homepage/Cloud.png"); background-repeat: no-repeat; background-size: 100% auto;
+}
+.Airplane {
+	animation:flyingAirplain 8s linear 1s; top: 47%; width: 49px; height: 26px; right: -50px; display: inline-block; position: absolute; z-index: 1; transform: rotate(5deg); background-image: url("/Images/Homepage/Airplane.png"); background-repeat: no-repeat; -webkit-transform: rotate(5deg); -moz-transform: rotate(5deg); -o-transform: rotate(5deg); -webkit-animation: flyingAirplain 8s 1 linear 1s; -moz-animation: flyingAirplain 8s 1 linear 1s; -o-animation: flyingAirplain 8s 1 linear 1s;
+}
+.Globe {
+	animation:spin 280s linear infinite; top: 50%; width: 728px; height: 728px; right: -30%; display: inline-block; position: absolute; z-index: 1; background-image: url("/Images/Resized/Half/Homepage/Globe.png"); background-repeat: no-repeat; background-size: 100% 100%; -webkit-animation: spin 280s infinite linear; -moz-animation: spin 280s infinite linear; -o-animation: spin 280s infinite linear;
+}
+.City {
+	background-position: right bottom; width: 407px; height: 108px; right: -2%; bottom: 51%; display: none; position: absolute; z-index: 1; max-width: 100%; background-image: url("/Images/Resized/Half/Homepage/City.png"); background-repeat: no-repeat; background-size: 100% auto;
+}
+.page h2 {
+	margin: 0px; padding: 0px;
+}
+.page h3 {
+	margin: 0px; padding: 0px;
+}
+.toolbar .BottomColor {
+	background-color: rgb(0, 107, 163);
+}
+.mobile .BottomColor {
+	background-color: rgb(167, 16, 86);
+}
+.wibiya .BottomColor {
+	background-color: rgb(98, 176, 255);
+}
+.page .LogoContainer {
+	left: 80px; top: 175px; position: absolute; z-index: 12;
+}
+.page .LogoContainer a span {
+	background-image: url("/Images/Resized/Half/Homepage/MainLogos.jpg"); background-size: 100% auto;
+}
+.toolbar.page .LogoContainer a {
+	width: 233px; height: 88px;
+}
+.mobile.page .LogoContainer a {
+	width: 224px; height: 62px;
+}
+.wibiya.page .LogoContainer a {
+	width: 220px; height: 61px;
+}
+.page .GetContainer {
+	top: 260px; right: 100px; position: absolute; z-index: 12;
+}
+.toolbar.page .GetContainer {
+	top: 275px;
+}
+.page .GetContainer a {
+	width: 240px; height: 75px; color: rgb(255, 255, 255); display: inline-block;
+}
+.page .GetContainer a span {
+	background-image: url("/Images/Homepage/MainButtons.png"); background-size: 100% auto;
+}
+.toolbar.page .GetContainer a span {
+	
+}
+.toolbar.page .GetContainer a:hover span {
+	background-position: 0px -78px;
+}
+.mobile.page .GetContainer a span {
+	background-position: 0px -156px;
+}
+.mobile.page .GetContainer a:hover span {
+	background-position: 0px -233px;
+}
+.wibiya.page .GetContainer a span {
+	background-position: 0px -312px;
+}
+.wibiya.page .GetContainer a:hover span {
+	background-position: 0px -390px;
+}
+.page .GetContainer a .bg {
+	background-color: rgb(255, 255, 255);
+}
+.page h2 {
+	left: 80px; top: 250px; width: 342px; text-align: left; color: rgb(134, 134, 134); line-height: 23px; font-family: MuseoSansRounded-300; font-size: 18px; font-weight: normal; position: absolute; z-index: 12; max-width: 80%;
+}
+.toolbar.page h2 {
+	top: 270px;
+}
+.toolbar.page .LogoContainer a span {
+	
+}
+.mobile.page .LogoContainer a span {
+	background-position: 0px -156px;
+}
+.wibiya.page .LogoContainer a span {
+	background-position: 0px -337px;
+}
+.u.page .LogoContainer {
+	left: 0px; top: 290px; width: 100%; text-align: center; position: absolute;
+}
+.u.page .LogoContainer a {
+	width: 301px; height: 413px; max-width: 80%;
+}
+.u.page .LogoContainer a span {
+	background-position: top; background-image: url("/Images/Homepage/MainLogoU.png"); background-repeat: no-repeat; background-size: 100% auto;
+}
+.page .MainImage {
+	background-position: bottom; right: 0px; display: inline-block; position: absolute; z-index: 10; max-width: 80%; background-repeat: no-repeat; background-size: 100% auto;
+}
+.toolbar.page .MainImage {
+	width: 672px; height: 388px; background-image: url("/Images/Resized/Half/Homepage/MainToolbar.png");
+}
+.mobile.page .MainImage {
+	width: 556px; height: 471px; background-image: url("/Images/Resized/Half/Homepage/MainMobile.png");
+}
+.wibiya.page .MainImage {
+	width: 685px; height: 361px; background-image: url("/Images/Resized/Half/Homepage/MainWibiya.png");
+}
+.u.page h2 {
+	left: 0px; top: 140px; width: 100%; text-align: center; color: rgb(134, 134, 134); line-height: 54px; font-family: "MuseoSansRounded-500"; font-size: 50px; position: absolute; max-width: 100%;
+}
+.u.page h3 {
+	left: 0px; top: 190px; width: 100%; text-align: center; color: rgb(134, 134, 134); line-height: 36px; font-family: "MuseoSansRounded-500"; font-size: 32px; position: absolute;
+}
+.u.page p {
+	margin: 0px; padding: 0px; left: 0px; top: 230px; width: 100%; text-align: center; color: rgb(134, 134, 134); line-height: 19px; font-family: "MuseoSansRounded-300"; font-size: 15px; position: absolute;
+}
+@media only screen and (min-width:120px)
+{
+.page {
+	height: 100%;
+}
+.page h2 {
+	left: 30px; right: auto;
+}
+.page .LogoContainer {
+	left: 30px; right: auto;
+}
+.page .GetContainer {
+	left: 30px; right: auto;
+}
+.page h2 {
+	line-height: 18px; font-size: 14px;
+}
+.Airplane {
+	display: none;
+}
+.BottomColor {
+	height: 18%;
+}
+.mainBodyMaskWrapper {
+	overflow: visible;
+}
+.mainBodyMask {
+	width: 100%; overflow: visible;
+}
+.leftNav {
+	display: none;
+}
+.leftSide {
+	height: 100%;
+}
+.corporate.page {
+	height: calc(100% - 121px);
+}
+.u.page {
+	height: calc(100% - 56px);
+}
+.scroller .scrollable {
+	width: 240px;
+}
+.scroller .scrollable .items li {
+	width: 160px;
+}
+.Globe {
+	top: 32%; width: 300px; height: 300px; right: -30%; display: inline-block;
+}
+.corporate.page .BottomColor {
+	height: 35%;
+}
+.BottomColor div a {
+	width: 12px; height: 12.5px; background-image: url("/Images/Resized/Quarter/Homepage/DownDoubleArrow.png");
+}
+.EngagingContainer {
+	top: 5%;
+}
+.footer {
+	position: static;
+}
+.BottomColor div {
+	bottom: 3px; display: block;
+}
+.page .GetContainer a {
+	width: 200px; height: 64px;
+}
+.toolbar.page .LogoContainer {
+	top: 30px;
+}
+.toolbar.page h2 {
+	top: 100px;
+}
+.toolbar.page .GetContainer {
+	top: 180px;
+}
+.toolbar.page .LogoContainer a {
+	width: 180px; height: 65px;
+}
+.toolbar.page .MainImage {
+	height: 160px; bottom: 10%;
+}
+.toolbar.page .GetContainer a span {
+	
+}
+.toolbar.page .GetContainer a:hover span {
+	background-position: 0px -65px;
+}
+.mobile.page .LogoContainer {
+	top: 30px;
+}
+.mobile.page h2 {
+	top: 90px;
+}
+.mobile.page .GetContainer {
+	top: 170px;
+}
+.mobile.page .LogoContainer a {
+	width: 180px; height: 47px;
+}
+.mobile.page .MainImage {
+	height: 260px; bottom: 3%;
+}
+.mobile.page .LogoContainer a span {
+	background-position: 0px -123px;
+}
+.mobile.page .GetContainer a span {
+	background-position: 0px -129px;
+}
+.mobile.page .GetContainer a:hover span {
+	background-position: 0px -193px;
+}
+.wibiya.page .LogoContainer {
+	top: 30px;
+}
+.wibiya.page h2 {
+	top: 90px;
+}
+.wibiya.page .GetContainer {
+	top: 170px;
+}
+.wibiya.page .LogoContainer a {
+	width: 180px; height: 45px;
+}
+.wibiya.page .MainImage {
+	height: 153px; bottom: 10%;
+}
+.wibiya.page .LogoContainer a span {
+	background-position: 0px -242px;
+}
+.wibiya.page .GetContainer a span {
+	background-position: 0px -253px;
+}
+.wibiya.page .GetContainer a:hover span {
+	background-position: 0px -318px;
+}
+.u.page h2 {
+	top: 20px; line-height: 34px; font-size: 30px;
+}
+.u.page h3 {
+	top: 55px; line-height: 28px; font-size: 24px;
+}
+.u.page p {
+	top: 90px; line-height: 24px; font-size: 20px;
+}
+.u.page .LogoContainer {
+	top: 140px;
+}
+.u.page .LogoContainer a {
+	width: 200px;
+}
+.scroller .buttons {
+	background-image: url("/Images/Resized/half/Homepage/Arrows.png");
+}
+.Engaging span {
+	background-image: url("/Images/Resized/Quarter/Homepage/Cloud.png");
+}
+.Globe {
+	background-image: url("/Images/Resized/Quarter/Homepage/Globe.png");
+}
+.City {
+	background-image: url("/Images/Resized/Quarter/Homepage/City.png");
+}
+.page .LogoContainer a span {
+	background-image: url("/Images/Resized/Half/Homepage/MainLogos.jpg");
+}
+.page .GetContainer a span {
+	background-image: url("/Images/Resized/Half/Homepage/MainButtons.png");
+}
+.toolbar.page .MainImage {
+	background-image: url("/Images/Resized/Quarter/Homepage/MainToolbar.png");
+}
+.mobile.page .MainImage {
+	background-image: url("/Images/Resized/Quarter/Homepage/MainMobile.png");
+}
+.wibiya.page .MainImage {
+	background-image: url("/Images/Resized/Quarter/Homepage/MainWibiya.png");
+}
+}
+@media not all, not all, not all, not all, only screen and (min-width:120px) and (min-resolution:192dpi), not all
+{
+.scroller .buttons {
+	background-image: url("/Images/Homepage/Arrows.png");
+}
+.BottomColor div a {
+	background-image: url("/Images/Resized/Half/Homepage/DownDoubleArrow.png");
+}
+.Engaging span {
+	background-image: url("/Images/Resized/Half/Homepage/Cloud.png");
+}
+.Globe {
+	background-image: url("/Images/Resized/Half/Homepage/Globe.png");
+}
+.City {
+	background-image: url("/Images/Resized/Half/Homepage/City.png");
+}
+.page .LogoContainer a span {
+	background-image: url("/Images/Resized/Half/Homepage/MainLogos.jpg");
+}
+.page .GetContainer a span {
+	background-image: url("/Images/Homepage/MainButtons.png");
+}
+.toolbar.page .MainImage {
+	background-image: url("/Images/Resized/Quarter/Homepage/MainToolbar.png");
+}
+.mobile.page .MainImage {
+	background-image: url("/Images/Resized/Quarter/Homepage/MainMobile.png");
+}
+.wibiya.page .MainImage {
+	background-image: url("/Images/Resized/Quarter/Homepage/MainWibiya.png");
+}
+}
+@media only screen and (min-width:480px)
+{
+.scrollerContainer {
+	display: none;
+}
+.Globe {
+	display: none;
+}
+.Engaging {
+	width: 280px; height: 120px;
+}
+.BottomColor {
+	height: 15%;
+}
+.City {
+	width: 250px; bottom: 10%; display: inline-block;
+}
+.corporate.page .BottomColor {
+	height: 14%;
+}
+.toolbar.page .MainImage {
+	width: 240px; height: 130px; bottom: 5%;
+}
+.toolbar.page .GetContainer {
+	top: 170px;
+}
+.mobile.page .MainImage {
+	width: 240px; height: 200px;
+}
+.mobile.page .GetContainer {
+	top: 160px;
+}
+.wibiya.page .MainImage {
+	width: 240px; height: 135px; bottom: 2%;
+}
+.wibiya.page .GetContainer {
+	top: 160px;
+}
+.u.page .LogoContainer a {
+	width: 90px;
+}
+.Engaging span {
+	background-image: url("/Images/Resized/Quarter/Homepage/Cloud.png");
+}
+.Globe {
+	background-image: url("/Images/Resized/Quarter/Homepage/Globe.png");
+}
+.City {
+	background-image: url("/Images/Resized/Quarter/Homepage/City.png");
+}
+.page .LogoContainer a span {
+	background-image: url("/Images/Resized/Half/Homepage/MainLogos.jpg");
+}
+.page .GetContainer a span {
+	background-image: url("/Images/Homepage/MainButtons.png");
+}
+.toolbar.page .MainImage {
+	background-image: url("/Images/Resized/Quarter/Homepage/MainToolbar.png");
+}
+.mobile.page .MainImage {
+	background-image: url("/Images/Resized/Quarter/Homepage/MainMobile.png");
+}
+.wibiya.page .MainImage {
+	background-image: url("/Images/Resized/Quarter/Homepage/MainWibiya.png");
+}
+}
+@media not all, not all, not all, not all, only screen and (min-width:480px) and (min-resolution:192dpi), not all
+{
+.Engaging span {
+	background-image: url("/Images/Resized/Half/Homepage/Cloud.png");
+}
+.Globe {
+	background-image: url("/Images/Resized/Half/Homepage/Globe.png");
+}
+.City {
+	background-image: url("/Images/Resized/Half/Homepage/City.png");
+}
+.page .LogoContainer a span {
+	background-image: url("/Images/Resized/Half/Homepage/MainLogos.jpg");
+}
+.toolbar.page .MainImage {
+	background-image: url("/Images/Resized/Quarter/Homepage/MainToolbar.png");
+}
+.mobile.page .MainImage {
+	background-image: url("/Images/Resized/Quarter/Homepage/MainMobile.png");
+}
+.wibiya.page .MainImage {
+	background-image: url("/Images/Resized/Quarter/Homepage/MainWibiya.png");
+}
+}
+@media only screen and (min-width:600px)
+{
+.scrollerContainer {
+	bottom: 8%; display: block;
+}
+.scroller .scrollable {
+	width: 267px;
+}
+.scroller .scrollable .items li {
+	width: 174px;
+}
+.page .GetContainer a {
+	width: 240px; height: 75px;
+}
+.page h2 {
+	left: 80px;
+}
+.page .LogoContainer {
+	left: 80px;
+}
+.page .GetContainer {
+	left: 80px;
+}
+.page h2 {
+	line-height: 23px; font-size: 18px;
+}
+.toolbar.page .LogoContainer a {
+	width: 233px; height: 88px;
+}
+.toolbar.page .LogoContainer {
+	top: 80px;
+}
+.toolbar.page h2 {
+	top: 200px;
+}
+.toolbar.page .GetContainer {
+	left: auto; top: 204px; right: 60px;
+}
+.toolbar.page .MainImage {
+	width: 672px; height: 388px; bottom: 7%;
+}
+.toolbar.page .GetContainer a span {
+	
+}
+.toolbar.page .GetContainer a:hover span {
+	background-position: 0px -78px;
+}
+.mobile.page .LogoContainer a {
+	width: 233px; height: 63px;
+}
+.mobile.page .LogoContainer {
+	top: 110px;
+}
+.mobile.page h2 {
+	top: 180px;
+}
+.mobile.page .GetContainer {
+	left: auto; top: 174px; right: 60px;
+}
+.mobile.page .MainImage {
+	width: 556px; height: 471px; bottom: 5%;
+}
+.mobile.page .GetContainer a span {
+	background-position: 0px -156px;
+}
+.mobile.page .GetContainer a:hover span {
+	background-position: 0px -233px;
+}
+.mobile.page .LogoContainer a span {
+	background-position: 0px -156px;
+}
+.wibiya.page .LogoContainer a {
+	width: 233px; height: 63px;
+}
+.wibiya.page .LogoContainer {
+	top: 110px;
+}
+.wibiya.page h2 {
+	top: 180px;
+}
+.wibiya.page .GetContainer {
+	left: auto; top: 174px; right: 60px;
+}
+.wibiya.page .MainImage {
+	width: 685px; height: 361px; bottom: 5%;
+}
+.wibiya.page .GetContainer a span {
+	background-position: 0px -312px;
+}
+.wibiya.page .GetContainer a:hover span {
+	background-position: 0px -390px;
+}
+.wibiya.page .LogoContainer a span {
+	background-position: 0px -312px;
+}
+.u.page h2 {
+	top: 140px; line-height: 54px; font-size: 50px;
+}
+.u.page h3 {
+	top: 190px; line-height: 36px; font-size: 32px;
+}
+.u.page p {
+	top: 230px; line-height: 19px; font-size: 15px;
+}
+.u.page .LogoContainer {
+	top: 290px;
+}
+.u.page .LogoContainer a {
+	width: 413px;
+}
+.Engaging span {
+	background-image: url("/Images/Resized/Half/Homepage/Cloud.png");
+}
+.Globe {
+	background-image: url("/Images/Resized/Half/Homepage/Globe.png");
+}
+.City {
+	background-image: url("/Images/Resized/Half/Homepage/City.png");
+}
+.toolbar.page .MainImage {
+	background-image: url("/Images/Resized/Half/Homepage/MainToolbar.png");
+}
+.mobile.page .MainImage {
+	background-image: url("/Images/Resized/Half/Homepage/MainMobile.png");
+}
+.wibiya.page .MainImage {
+	background-image: url("/Images/Resized/Half/Homepage/MainWibiya.png");
+}
+}
+@media not all, not all, not all, not all, only screen and (min-width:600px) and (min-resolution:192dpi), not all
+{
+.Engaging span {
+	background-image: url("/Images/Homepage/Cloud.png");
+}
+.Globe {
+	background-image: url("/Images/Homepage/Globe.png");
+}
+.City {
+	background-image: url("/Images/Homepage/City.png");
+}
+.page .LogoContainer a span {
+	background-image: url("/Images/Homepage/MainLogos.jpg");
+}
+.toolbar.page .MainImage {
+	background-image: url("/Images/Homepage/MainToolbar.png");
+}
+.mobile.page .MainImage {
+	background-image: url("/Images/Homepage/MainMobile.png");
+}
+.wibiya.page .MainImage {
+	background-image: url("/Images/Homepage/MainWibiya.png");
+}
+}
+@media only screen and (min-width:640px)
+{
+.scroller .scrollable {
+	width: 534px;
+}
+.City {
+	display: none;
+}
+.Globe {
+	top: 45%; width: 728px; height: 728px; display: inline-block;
+}
+.Engaging {
+	width: 600px; height: 240px;
+}
+.Airplane {
+	display: inline-block;
+}
+.BottomColor div a {
+	width: 24px; height: 25px; background-image: url("/Images/Resized/Half/Homepage/DownDoubleArrow.png");
+}
+.BottomColor div {
+	bottom: 10px;
+}
+.leftNav {
+	display: inline-block;
+}
+.corporate.page .BottomColor {
+	height: 18%;
+}
+.EngagingContainer {
+	top: 10%;
+}
+.toolbar.page .LogoContainer {
+	top: 130px;
+}
+.toolbar.page h2 {
+	top: 220px;
+}
+.toolbar.page .GetContainer {
+	top: 224px;
+}
+.wibiya.page .LogoContainer {
+	top: 140px;
+}
+.wibiya.page h2 {
+	top: 230px;
+}
+.wibiya.page .GetContainer {
+	top: 234px;
+}
+.u.page .LogoContainer a {
+	width: 320px;
+}
+.scroller .buttons {
+	background-image: url("/Images/Resized/Half/Homepage/Arrows.png");
+}
+}
+@media not all, not all, not all, not all, only screen and (min-width:640px) and (min-resolution:192dpi), not all
+{
+.scroller .buttons {
+	background-image: url("/Images/Homepage/Arrows.png");
+}
+.BottomColor div a {
+	background-image: url("/Images/Homepage/DownDoubleArrow.png");
+}
+}
+@media only screen and (min-width:810px)
+{
+.corporate.page {
+	height: calc(100% - 95px);
+}
+.EngagingContainer {
+	top: 8%;
+}
+.mobile.page .MainImage {
+	bottom: 1%;
+}
+.wibiya.page .MainImage {
+	bottom: 0%;
+}
+}
+@media only screen and (min-width:1024px)
+{
+.BottomColor div a {
+	display: none;
+}
+}

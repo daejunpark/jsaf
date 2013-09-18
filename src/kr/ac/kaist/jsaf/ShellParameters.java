@@ -20,27 +20,26 @@ public class ShellParameters
     public static final int                        CMD_USAGE = 0;
     public static final int                        CMD_PARSE = 1;
     public static final int                        CMD_UNPARSE = 2;
-    public static final int                        CMD_STRICT = 3;
-    public static final int                        CMD_CLONE_DETECTOR = 4;
-    public static final int                        CMD_COVERAGE = 5;
-    public static final int                        CMD_CONCOLIC = 6;
-    public static final int                        CMD_URL = 7;
-    public static final int                        CMD_WITH = 8;
-    public static final int                        CMD_MODULE = 9;
-    public static final int                        CMD_JUNIT = 10;
-    public static final int                        CMD_DISAMBIGUATE = 11;
-    public static final int                        CMD_COMPILE = 12;
-    public static final int                        CMD_CFG = 13;
-    public static final int                        CMD_INTERPRET = 14;
-    public static final int                        CMD_ANALYZE = 15;
-    public static final int                        CMD_PREANALYZE = 16; // This command should be inserted into CMD_ANALYZE as an option.
-    public static final int                        CMD_SPARSE = 17; // This command should be inserted into CMD_ANALYZE as an option.
-    public static final int                        CMD_HTML = 18; // This command should be inserted into CMD_ANALYZE as an option.
-    public static final int                        CMD_HTML_SPARSE= 19; // This command should be inserted into CMD_ANALYZE as an option.
-    public static final int                        CMD_NEW_SPARSE = 20; // This command should be inserted into CMD_ANALYZE as an option.
-    public static final int                        CMD_BUG_DETECTOR = 22;
-    public static final int                        CMD_WIDLPARSE = 23;
-    public static final int                        CMD_WIDLCHECK = 24;
+    public static final int                        CMD_CLONE_DETECTOR = 3;
+    public static final int                        CMD_COVERAGE = 4;
+    public static final int                        CMD_CONCOLIC = 5;
+    public static final int                        CMD_URL = 6;
+    public static final int                        CMD_WITH = 7;
+    public static final int                        CMD_MODULE = 8;
+    public static final int                        CMD_JUNIT = 9;
+    public static final int                        CMD_DISAMBIGUATE = 10;
+    public static final int                        CMD_COMPILE = 11;
+    public static final int                        CMD_CFG = 12;
+    public static final int                        CMD_INTERPRET = 13;
+    public static final int                        CMD_ANALYZE = 14;
+    public static final int                        CMD_PREANALYZE = 15; // This command should be inserted into CMD_ANALYZE as an option.
+    public static final int                        CMD_SPARSE = 16; // This command should be inserted into CMD_ANALYZE as an option.
+    public static final int                        CMD_HTML = 17; // This command should be inserted into CMD_ANALYZE as an option.
+    public static final int                        CMD_HTML_SPARSE= 18; // This command should be inserted into CMD_ANALYZE as an option.
+    public static final int                        CMD_NEW_SPARSE = 19; // This command should be inserted into CMD_ANALYZE as an option.
+    public static final int                        CMD_BUG_DETECTOR = 21;
+    public static final int                        CMD_WIDLPARSE = 22;
+    public static final int                        CMD_WIDLCHECK = 23;
     public static final int                        CMD_HELP = 99;
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -60,11 +59,13 @@ public class ShellParameters
     public boolean                                 opt_Verbose2;
     public boolean                                 opt_Verbose3;
     public boolean                                 opt_LocClone;
+    public boolean                                 opt_TryCatch;
     public boolean                                 opt_Test;
     public boolean                                 opt_DeveloperMode;
     public boolean                                 opt_ErrorOnly;
     public boolean                                 opt_Library;
     public boolean                                 opt_MemDump;
+    public boolean                                 opt_ExitDump;
     public boolean                                 opt_StatDump;
     public boolean                                 opt_Visual;
     public boolean                                 opt_CheckResult;
@@ -91,8 +92,13 @@ public class ShellParameters
     public boolean                                 opt_Dom;
     public boolean                                 opt_Tizen;
     public boolean                                 opt_jQuery;
+    public boolean                                 opt_SingleThread;
     public boolean                                 opt_MultiThread;
+    public boolean                                 opt_ReturnStateOn;
+    public boolean                                 opt_ReturnStateOff;
+    public boolean                                 opt_debugger;
     public int                                     opt_unrollingCount;
+    public int                                     opt_forinunrollingCount;
     public String                                  opt_DDGFileName;
     public String                                  opt_DDG0FileName;
     public String                                  opt_FGFileName;
@@ -125,11 +131,13 @@ public class ShellParameters
         opt_Verbose2 = false;
         opt_Verbose3 = false;
         opt_LocClone = false;
+        opt_TryCatch = false;
         opt_Test = false;
         opt_DeveloperMode = false;
         opt_ErrorOnly = false;
         opt_Library = false;
         opt_MemDump = false;
+        opt_ExitDump = false;
         opt_StatDump = false;
         opt_Visual = false;
         opt_CheckResult = false;
@@ -156,8 +164,13 @@ public class ShellParameters
         opt_Dom = false;
         opt_Tizen = false;
         opt_jQuery = false;
+        opt_SingleThread = false;
         opt_MultiThread = false;
+        opt_ReturnStateOn = false;
+        opt_ReturnStateOff = false;
+        opt_debugger = false;
         opt_unrollingCount = 0;
+        opt_forinunrollingCount = 0;
         opt_DDGFileName = null;
         opt_DDG0FileName = null;
         opt_FGFileName = null;
@@ -220,11 +233,6 @@ public class ShellParameters
             feasibleOptions.add("-dir");
             feasibleOptions.add("-db");
         }
-        else if(cmd.compareTo("strict") == 0)
-        {
-            command = CMD_STRICT;
-            feasibleOptions.add("-out");
-        }
         else if(cmd.compareTo("clone-detector") == 0)
         {
             command = CMD_CLONE_DETECTOR;
@@ -277,6 +285,7 @@ public class ShellParameters
             feasibleOptions.add("-model");
             feasibleOptions.add("-library");
             feasibleOptions.add("-unroll");
+            feasibleOptions.add("-forin-unroll");
         }
         else if(cmd.compareTo("interpret") == 0)
         {
@@ -310,9 +319,11 @@ public class ShellParameters
             feasibleOptions.add("-verbose2");
             feasibleOptions.add("-verbose3");
             feasibleOptions.add("-locclone");
+            feasibleOptions.add("-trycatch");
             feasibleOptions.add("-test");
             feasibleOptions.add("-library");
             feasibleOptions.add("-memdump");
+            feasibleOptions.add("-exitdump");
             feasibleOptions.add("-statdump");
             feasibleOptions.add("-visual");
             feasibleOptions.add("-checkResult");
@@ -335,13 +346,18 @@ public class ShellParameters
             feasibleOptions.add("-context-1-callsite-or-object");
             feasibleOptions.add("-pre-context-sensitive");
             feasibleOptions.add("-unsound");
+            feasibleOptions.add("-single-thread");
             feasibleOptions.add("-multi-thread");
+            feasibleOptions.add("-return-state");
+            feasibleOptions.add("-no-return-state");
             feasibleOptions.add("-unroll");
+            feasibleOptions.add("-forin-unroll");
             feasibleOptions.add("-ddgout");
             feasibleOptions.add("-ddg0out");
             feasibleOptions.add("-fgout");
-			feasibleOptions.add("-tizen");
+            feasibleOptions.add("-tizen");
             feasibleOptions.add("-jq");
+            feasibleOptions.add("-console");
         }
         else if(cmd.compareTo("bug-detector") == 0)
         {
@@ -349,6 +365,7 @@ public class ShellParameters
             feasibleOptions.add("-dev");
             feasibleOptions.add("-erroronly");
             feasibleOptions.add("-locclone");
+            feasibleOptions.add("-trycatch");
             feasibleOptions.add("-library");
             feasibleOptions.add("-context-trace");
             feasibleOptions.add("-context-insensitive");
@@ -366,6 +383,7 @@ public class ShellParameters
             feasibleOptions.add("-context-5-callsite-and-object");
             feasibleOptions.add("-context-1-callsite-or-object");
             feasibleOptions.add("-unroll");
+            feasibleOptions.add("-forin-unroll");
         }
         else if(cmd.compareTo("help") == 0)
         {
@@ -411,6 +429,7 @@ public class ShellParameters
         String opt = args[index];
         if(opt.compareTo("-out") == 0 ||
            opt.compareTo("-unroll") == 0 ||
+           opt.compareTo("-forin-unroll") == 0 ||
            opt.compareTo("-ddgout") == 0 ||
            opt.compareTo("-ddg0out") == 0 ||
            opt.compareTo("-fgout") == 0)
@@ -421,6 +440,7 @@ public class ShellParameters
             } else {
                 if(opt.compareTo("-out") == 0) opt_OutFileName = args[index + 1];
                 else if(opt.compareTo("-unroll") == 0) opt_unrollingCount = Integer.parseInt(args[index + 1]);
+                else if(opt.compareTo("-forin-unroll") == 0) opt_forinunrollingCount = Integer.parseInt(args[index + 1]);
                 else if(opt.compareTo("-ddgout") == 0) opt_DDGFileName = args[index + 1];
                 else if(opt.compareTo("-ddg0out") == 0) opt_DDG0FileName = args[index + 1];
                 else if(opt.compareTo("-fgout") == 0) opt_FGFileName = args[index + 1];
@@ -474,11 +494,13 @@ public class ShellParameters
         else if(opt.compareTo("-verbose2") == 0) opt_Verbose2 = true;
         else if(opt.compareTo("-verbose3") == 0) opt_Verbose3 = true;
         else if(opt.compareTo("-locclone") == 0) opt_LocClone = true;
+        else if(opt.compareTo("-trycatch") == 0) opt_TryCatch = true;
         else if(opt.compareTo("-dev") == 0) opt_DeveloperMode = true;
         else if(opt.compareTo("-erroronly") == 0) opt_ErrorOnly = true;
         else if(opt.compareTo("-test") == 0) opt_Test = true;
         else if(opt.compareTo("-library") == 0) opt_Library = true;
         else if(opt.compareTo("-memdump") == 0) opt_MemDump = true;
+        else if(opt.compareTo("-exitdump") == 0) opt_ExitDump = true;
         else if(opt.compareTo("-statdump") == 0) opt_StatDump = true;
         else if(opt.compareTo("-visual") == 0) opt_Visual = true;
         else if(opt.compareTo("-checkResult") == 0) opt_CheckResult = true;
@@ -503,9 +525,13 @@ public class ShellParameters
         else if(opt.compareTo("-pre-context-sensitive") == 0) opt_PreContextSensitive = true;
         else if(opt.compareTo("-unsound") == 0) opt_Unsound = true;
         else if(opt.compareTo("-dom") == 0) opt_Dom = true;
-		else if(opt.compareTo("-tizen") == 0) opt_Tizen = true;
+        else if(opt.compareTo("-tizen") == 0) opt_Tizen = true;
         else if(opt.compareTo("-jq") == 0) opt_jQuery = true;
+        else if(opt.compareTo("-single-thread") == 0) opt_SingleThread = true;
         else if(opt.compareTo("-multi-thread") == 0) opt_MultiThread = true;
+        else if(opt.compareTo("-return-state-on") == 0) opt_ReturnStateOn = true;
+        else if(opt.compareTo("-return-state-off") == 0) opt_ReturnStateOff = true;
+        else if(opt.compareTo("-console") == 0) opt_debugger = true;
         else
         {
             ErrorMessage = "`" + opt + "` is no match for option parameter.";

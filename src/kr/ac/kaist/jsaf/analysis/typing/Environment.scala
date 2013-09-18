@@ -27,6 +27,12 @@ abstract class Environment(cfg: CFG) {
   
   def drawDDG(cg: Map[CFGInst, Set[FunctionId]], du: DUSet): Unit = drawDDG(cg, du, false)
   def drawDDG(cg: Map[CFGInst, Set[FunctionId]], du: DUSet, quiet: Boolean): Unit
+  def getIntraDefuse(fid: FunctionId): Map[Node, (LocSet,LocSet)] = {
+    intraDefuseMap.get(fid) match {
+      case Some(m) => m
+      case None => Map()
+    }
+  }
 
   // Compute the defuse set between the functions
   def interFuncDefuse(callgraph: Map[FunctionId, Set[FunctionId]], fdu: Map[FunctionId, (LPSet, LPSet)]): Map[FunctionId, (LPSet, LPSet)] = {

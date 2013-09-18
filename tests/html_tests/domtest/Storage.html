@@ -1,0 +1,34 @@
+<!-- test for winodw.localStorage -->
+<html>
+  <body>
+    <script>
+      var storobj = window.localStorage;   // Storage object
+      var __result1 = storobj.length;
+      var __expect1 = "__UInt";
+      var __result2 = storobj.setItem("aaa", "bbb");
+      var __expect2 = undefined;
+      var __result3 = storobj.getItem("aaa");
+      var __expect3 = "bbb";
+      var __result4 = storobj.removeItem("aaa");
+      var __expect4 = undefined;
+      var __result5 = storobj.getItem("aaa");
+      var __expect5 = "__StrTop";
+
+      var sestorobj = window.sessionStorage;   // Storage object
+      var __result6 = sestorobj.length;
+      var __expect6 = "__UInt";
+      var __result7 = sestorobj.setItem("aaa", "bbb");
+      var __expect7 = undefined;
+      var __result8 = sestorobj.getItem("aaa");
+      var __expect8 = "bbb";
+      var __result9 = sestorobj.removeItem("aaa");
+      var __expect9 = undefined;
+      var __result10 = sestorobj.getItem("aaa");
+      var __expect10 = "__StrTop";
+
+    </script>
+  </body>
+</html>
+    </script>
+  </body>
+</html>

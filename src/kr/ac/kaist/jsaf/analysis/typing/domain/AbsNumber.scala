@@ -10,6 +10,7 @@
 package kr.ac.kaist.jsaf.analysis.typing.domain
 
 object AbsNumber {
+  val naturalNumbers = UInt
   // note: scala's Integer is deprecated.
   def alpha(num: java.lang.Integer): AbsNumber = {
     if (num >= 0) UIntSingle(num.toDouble)

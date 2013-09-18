@@ -9,17 +9,16 @@
 
 package kr.ac.kaist.jsaf.analysis.typing
 
-import java.io.File
-import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
+import java.util.{List => JList}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import scala.collection.immutable.HashSet
-import scala.collection.immutable.HashMap
-import kr.ac.kaist.jsaf.interpreter.InterpreterPredefine
-import kr.ac.kaist.jsaf.nodes_util.IRFactory
+import kr.ac.kaist.jsaf.nodes_util.NodeUtil
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import scala.util.parsing.json.JSONObject
 import kr.ac.kaist.jsaf.analysis.typing.{PreSemanticsExpr => SE}
+import kr.ac.kaist.jsaf.bug_detector.BugInfo
+import kr.ac.kaist.jsaf.nodes_util.Span
+import kr.ac.kaist.jsaf.scala_src.useful.Lists._
+import kr.ac.kaist.jsaf.analysis.lib.getSet
 
 class PreTyping(_cfg: CFG, quiet: Boolean, standAlone: Boolean) extends TypingInterface {
   def env = null
@@ -27,6 +26,21 @@ class PreTyping(_cfg: CFG, quiet: Boolean, standAlone: Boolean) extends TypingIn
   var programNodes = _cfg.getNodes // without built-ins
   var fset_builtin: Map[FunctionId, String] = Map()
   override def builtinFset() = fset_builtin
+
+  var errors = List[BugInfo]()
+  def getErrors: JList[BugInfo] = toJavaList(errors)
+  def signal(span: Span, bugKind: Int, msg1: String, msg2: String): Unit =
+    errors ++= List(new BugInfo(span, bugKind, msg1, msg2))
+  var _span: Span = null
+  def getSpan = _span
+  def setSpan(span: Span): Unit = {
+    _span = span
+    val num = errors.reverse.takeWhile(e => (e.span == null || NodeUtil.isDummySpan(e.span))).length
+    if (num > 0) {
+      val (front, back) = errors.splitAt(errors.length - num)
+      errors = front ++ back.map(e => new BugInfo(span, e.bugKind, e.arg1, e.arg2))
+    }
+  }
 
   var numIter = 0
   var elapsedTime = 0.0d
@@ -120,108 +134,130 @@ class PreTyping(_cfg: CFG, quiet: Boolean, standAlone: Boolean) extends TypingIn
    * @returns the map from caller to set of callees.
    */
   override def computeCallGraph(): Map[CFGInst, Set[FunctionId]] = {
-    cfg.getNodes.foldLeft[Map[CFGInst, Set[FunctionId]]](Map())(
-      (map, n) =>
-        cfg.getCmd(n) match {
-          case Entry | Exit | ExitExc => map
-          case Block(insts) =>
-            val PureLocalLoc = cfg.getMergedPureLocal(n._1)
-            if (insts.isEmpty) map
-            else {
+    getSem.ipSuccMap.foldLeft[Map[CFGInst, Set[FunctionId]]](Map())(
+      (map, n) => {
+        val cp_caller = n._1
+        n._2.foldLeft(map)((map_2, succ) => {
+          val cp_succ = succ._1
+          cfg.getCmd(cp_caller._1) match {
+            case Entry => throw new InternalError("Weird call edge: "+cp_caller+" to "+cp_succ)
+            case Exit | ExitExc => map_2
+            case Block(insts) if insts.size > 0 => {
               val i = insts.last
-              i match {
-                case CFGCall(_, _, fun, _, _, _) => {
-                  val h = state._1
-                  if (h.domIn(PureLocalLoc)) {
-                    val ctx = state._2
-                    val lset = SE.V(fun, h, ctx, PureLocalLoc)._1._2
-                    lset.foldLeft(map)((_m, l) => {
-                      if (BoolTrue <= PreHelper.IsCallable(h,l)) {
-                        _m.get(i) match {
-                          case None => _m + (i -> h(l)("@function")._1._3.toSet)
-                          case Some(set) => _m + (i -> (set ++ h(l)("@function")._1._3.toSet))
-                        }
-                      } else {
-                        _m
-                      }
-                    })
-                  } else {
-                    map
-                  }
-                }
-                case CFGConstruct(_, _, cons, _, _, _) => {
-                  val h = state._1
-                  if (h.domIn(PureLocalLoc)) {
-                    val ctx = state._2
-                    val lset = SE.V(cons, h, ctx, PureLocalLoc)._1._2
-                    lset.foldLeft(map)((_m, l) => {
-                      if (BoolTrue <= PreHelper.HasConstruct(h,l)) {
-                        _m.get(i) match {
-                          case None => _m + (i -> h(l)("@construct")._1._3.toSet)
-                          case Some(set) => _m + (i -> (set ++ h(l)("@construct")._1._3.toSet))
-                        }
-                      } else {
-                        _m
-                      }
-                    })
-                  } else {
-                    map
-                  }
-                }
-                case CFGAPICall(_, _, "Function.prototype.apply", args) => {
-                  val h = state._1
-                  val ctx = state._2
-                  if (h.domIn(PureLocalLoc)) {
-                    //val (h_1, ctx_1) = PreHelper.Oldify(h, ctx, addr1)
-                    //val (h_2, ctx_2) = PreHelper.Oldify(h_1, ctx_1, addr2)
-                    //val (h_3, ctx_3) = PreHelper.Oldify(h_2, ctx_2, addr3)
-                    val h_3 = h
-                    val lset_this = h_3(PureLocalLoc)("@this")._1._2._2
-                    lset_this.foldLeft(map)((_m, l) => {
-                      if (BoolTrue <= PreHelper.IsCallable(h_3,l)) {
-                        _m.get(i) match {
-                          case None => _m + (i -> h_3(l)("@function")._1._3.toSet)
-                          case Some(set) => _m + (i -> (set ++ h_3(l)("@function")._1._3.toSet))
-                        }
-                      } else {
-                        _m
-                      }
-                    })
-                  } else {
-                    map
-                  }
-                }
-                case CFGAPICall(_, _,"Function.prototype.call", args) => {
-                  val h = state._1
-                  val ctx = state._2
-                  if (h.domIn(PureLocalLoc)) {
-                    //val (h_1, ctx_1) = PreHelper.Oldify(h, ctx, addr1)
-                    //val (h_2, ctx_2) = PreHelper.Oldify(h_1, ctx_1, addr2)
-                    val h_2 = h
-                    val lset_this = h_2(PureLocalLoc)("@this")._1._2._2
-                    lset_this.foldLeft(map)((_m, l) => {
-                      if (BoolTrue <= PreHelper.IsCallable(h_2,l)) {
-                        _m.get(i) match {
-                          case None => _m + (i -> h_2(l)("@function")._1._3.toSet)
-                          case Some(set) => _m + (i -> (set ++ h_2(l)("@function")._1._3.toSet))
-                        }
-                      } else {
-                        _m
-                      }
-                    })
-                  } else {
-                    map
-                  }
-                }
-                // computes the call graph for event functions
-                case CFGAsyncCall(_,_, model, call_type, addr1, addr2, addr3) => {
-                  ModelManager.getModel(model).asyncCallgraph(state._1, i, map, call_type, List(addr1, addr2, addr3))
-                }
-                case _ => map
-              }
+              val succs = getSet(map_2, i)
+              map_2 + (i -> (succs + cp_succ._1._1))
             }
+            case Block(insts) => throw new InternalError("Weird call edge(caller node doesn't have instruction): "+cp_caller+" to "+cp_succ)
+
+          }
         })
+      }
+    )
   }
+
+//  override def computeCallGraph(): Map[CFGInst, Set[FunctionId]] = {
+//    cfg.getNodes.foldLeft[Map[CFGInst, Set[FunctionId]]](Map())(
+//      (map, n) =>
+//        cfg.getCmd(n) match {
+//          case Entry | Exit | ExitExc => map
+//          case Block(insts) =>
+//            val PureLocalLoc = cfg.getMergedPureLocal(n._1)
+//            if (insts.isEmpty) map
+//            else {
+//              val i = insts.last
+//              i match {
+//                case CFGCall(_, _, fun, _, _, _) => {
+//                  val h = state._1
+//                  if (h.domIn(PureLocalLoc)) {
+//                    val ctx = state._2
+//                    val lset = SE.V(fun, h, ctx, PureLocalLoc)._1._2
+//                    lset.foldLeft(map)((_m, l) => {
+//                      if (BoolTrue <= PreHelper.IsCallable(h,l)) {
+//                        _m.get(i) match {
+//                          case None => _m + (i -> h(l)("@function")._1._3.toSet)
+//                          case Some(set) => _m + (i -> (set ++ h(l)("@function")._1._3.toSet))
+//                        }
+//                      } else {
+//                        _m
+//                      }
+//                    })
+//                  } else {
+//                    map
+//                  }
+//                }
+//                case CFGConstruct(_, _, cons, _, _, _) => {
+//                  val h = state._1
+//                  if (h.domIn(PureLocalLoc)) {
+//                    val ctx = state._2
+//                    val lset = SE.V(cons, h, ctx, PureLocalLoc)._1._2
+//                    lset.foldLeft(map)((_m, l) => {
+//                      if (BoolTrue <= PreHelper.HasConstruct(h,l)) {
+//                        _m.get(i) match {
+//                          case None => _m + (i -> h(l)("@construct")._1._3.toSet)
+//                          case Some(set) => _m + (i -> (set ++ h(l)("@construct")._1._3.toSet))
+//                        }
+//                      } else {
+//                        _m
+//                      }
+//                    })
+//                  } else {
+//                    map
+//                  }
+//                }
+//                case CFGAPICall(_, _, "Function.prototype.apply", args) => {
+//                  val h = state._1
+//                  val ctx = state._2
+//                  if (h.domIn(PureLocalLoc)) {
+//                    //val (h_1, ctx_1) = PreHelper.Oldify(h, ctx, addr1)
+//                    //val (h_2, ctx_2) = PreHelper.Oldify(h_1, ctx_1, addr2)
+//                    //val (h_3, ctx_3) = PreHelper.Oldify(h_2, ctx_2, addr3)
+//                    val h_3 = h
+//                    val lset_this = h_3(PureLocalLoc)("@this")._1._2._2
+//                    lset_this.foldLeft(map)((_m, l) => {
+//                      if (BoolTrue <= PreHelper.IsCallable(h_3,l)) {
+//                        _m.get(i) match {
+//                          case None => _m + (i -> h_3(l)("@function")._1._3.toSet)
+//                          case Some(set) => _m + (i -> (set ++ h_3(l)("@function")._1._3.toSet))
+//                        }
+//                      } else {
+//                        _m
+//                      }
+//                    })
+//                  } else {
+//                    map
+//                  }
+//                }
+//                case CFGAPICall(_, _,"Function.prototype.call", args) => {
+//                  val h = state._1
+//                  val ctx = state._2
+//                  if (h.domIn(PureLocalLoc)) {
+//                    //val (h_1, ctx_1) = PreHelper.Oldify(h, ctx, addr1)
+//                    //val (h_2, ctx_2) = PreHelper.Oldify(h_1, ctx_1, addr2)
+//                    val h_2 = h
+//                    val lset_this = h_2(PureLocalLoc)("@this")._1._2._2
+//                    lset_this.foldLeft(map)((_m, l) => {
+//                      if (BoolTrue <= PreHelper.IsCallable(h_2,l)) {
+//                        _m.get(i) match {
+//                          case None => _m + (i -> h_2(l)("@function")._1._3.toSet)
+//                          case Some(set) => _m + (i -> (set ++ h_2(l)("@function")._1._3.toSet))
+//                        }
+//                      } else {
+//                        _m
+//                      }
+//                    })
+//                  } else {
+//                    map
+//                  }
+//                }
+//                // computes the call graph for event functions
+//                case CFGAsyncCall(_,_, model, call_type, addr1, addr2, addr3) => {
+//                  ModelManager.getModel(model).asyncCallgraph(state._1, i, map, call_type, List(addr1, addr2, addr3))
+//                }
+//                case _ => map
+//              }
+//            }
+//        })
+//  }
 
   override def dump() {
     System.out.println("===========================  Final State  ===============================")

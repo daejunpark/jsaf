@@ -636,11 +636,11 @@ private transient List<Member> PropAssignList =
 private transient Member PropAssign =
      get w a1:PropName w openparen w closeparen w a2:FunctionBody
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makeGetProp(span, a1, a2);
+       yyValue = NodeFactory.makeGetProp(span, a1, a2.getA(), a2.getB());
      }
    / set w a1:PropName w openparen w a2:Id w closeparen w a3:FunctionBody
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makeSetProp(span, a1, a2, a3);
+       yyValue = NodeFactory.makeSetProp(span, a1, a2, a3.getA(), a3.getB());
      }
    / a1:PropName w colon w a2:Assignment
      { Span span = createSpan(yyStart,yyCount);

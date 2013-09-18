@@ -59,9 +59,12 @@ package object bug_detector {
   /* BugIdCounter, BugKindCounter, BugType Constant, Definite Flag */
   var BugIdCounter    = -1
   var BugKindCounter  = -1
-  val TypeError       = 1
-  val ReferenceError  = 2 
-  val Warning         = 3
+  val RangeError      = 1
+  val ReferenceError  = 2
+  val SyntaxError     = 3
+  val TypeError       = 4
+  val URIError        = 5
+  val Warning         = 6
   val definite_only   = true
 
   /* Constants */
@@ -71,7 +74,6 @@ package object bug_detector {
   val property      = false
   val CALL_NORMAL   = true
   val CALL_CONST    = false
-  val MAX_BUG_COUNT = 29
 
   /* Options */
   val SOUNDNESS_LEVEL_LOW     = 0 
@@ -88,42 +90,96 @@ package object bug_detector {
 
   /* BugKind generator */
   def newBugKind(): BugKind = {
-    if (BugKindCounter >= MAX_BUG_COUNT) throw new RuntimeException("BugKindCounter is bigger then MAX_BUG_COUNT.")
+    //if (BugKindCounter >= MAX_BUG_COUNT) throw new RuntimeException("BugKindCounter is bigger then MAX_BUG_COUNT.")
     BugKindCounter += 1; BugKindCounter
   }
 
   /* BugKind : 0 ~ 9 */
+  val ArrayConstLength      :BugKind = addBugMsgFormat(newBugKind, RangeError, "Argument '%s' of 'Array.constructor' should be an unsigned integer.", 1)
   val AbsentReadProperty    :BugKind = addBugMsgFormat(newBugKind, Warning, "Reading absent property '%s' of object %s%s", 3)
   val AbsentReadVariable    :BugKind = addBugMsgFormat(newBugKind, ReferenceError, "Reading absent variable '%s'.", 1)
   val BinaryOpSecondType    :BugKind = addBugMsgFormat(newBugKind, TypeError, "Right-hand side operand '%s' of '%s' operator is %s%s", 4)
+  val BuiltinCallable       :BugKind = addBugMsgFormat(newBugKind, TypeError, "'%s' called by the builtin function '%s' is not a function.", 2)
+  val BuiltinRange          :BugKind = addBugMsgFormat(newBugKind, RangeError, "Argument '%s' of '%s' should be in [%s, %s].", 4)
+  val BuiltinRegExpConst    :BugKind = addBugMsgFormat(newBugKind, TypeError, "Argument 'Pattern' is a 'RegExp' object and argument 'flags' is not undefined.", 0)
+  val BuiltinThisType       :BugKind = addBugMsgFormat(newBugKind, TypeError, "'this' referred by the builtin function '%s' is not an object.", 1)
   val BuiltinWrongArgType   :BugKind = addBugMsgFormat(newBugKind, Warning, "%s argument of '%s' should be %s.", 3)
   val CallConstFunc         :BugKind = addBugMsgFormat(newBugKind, Warning, "Calling function '%s' both as a function and a constructor.", 1)
+  /* BugKind : 10 ~ 19 */
   val CallNonConstructor    :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling %s as a constructor.", 1)
   val CallNonFunction       :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling %s as a function.", 1)
   val CondBranch            :BugKind = addBugMsgFormat(newBugKind, Warning, "Conditional expression '%s' is always %s.", 2)
   val ConvertUndefToNum     :BugKind = addBugMsgFormat(newBugKind, Warning, "Trying to convert undefined to number.%s", 1)
   val DefaultValue          :BugKind = addBugMsgFormat(newBugKind, Warning, "Assigning a non-function value to '%s' may cause a TypeError.", 1)
-  /* BugKind : 10 ~ 19 */
   val FunctionArgSize       :BugKind = addBugMsgFormat(newBugKind, Warning, "Too %s arguments to function '%s'.", 2)
   val GlobalThis            :BugKind = addBugMsgFormat(newBugKind, Warning, "'this' refers the global object.", 0)
   val ImplicitTypeConvert   :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit type-conversion in equality comparison '%s%s %s %s%s'.", 5)
   val ObjectNullOrUndef     :BugKind = addBugMsgFormat(newBugKind, TypeError, "Property is trying to access %s, whose value is %s.", 2)
   val PrimitiveToObject     :BugKind = addBugMsgFormat(newBugKind, Warning, "Trying to convert primitive value(%s) to object.", 1)
+  /* BugKind : 20 ~ 29 */
   val ShadowedFuncByFunc    :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is shadowed by a function at '%s'.", 2)
   val ShadowedParamByFunc   :BugKind = addBugMsgFormat(newBugKind, Warning, "Parameter '%s' is shadowed by a function at '%s'.", 2)
   val ShadowedVarByFunc     :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a function at '%s'.", 2)
   val ShadowedVarByParam    :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a parameter at '%s'.", 2)
   val ShadowedVarByVar      :BugKind = addBugMsgFormat(newBugKind, Warning, "Variable '%s' is shadowed by a variable at '%s'.", 2)
-  /* BugKind : 20 ~ 28 */
   val ShadowedParamByParam  :BugKind = addBugMsgFormat(newBugKind, Warning, "Parameter '%s' is shadowed by a parameter at '%s'.", 2)
   val ShadowedFuncByVar     :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is shadowed by a variable at '%s'.", 2)
   val ShadowedParamByVar    :BugKind = addBugMsgFormat(newBugKind, Warning, "Parameter '%s' is shadowed by a variable at '%s'.", 2)
+  val StrictModeR1          :BugKind = addBugMsgFormat(newBugKind, Warning, "'%s' is classified as FutureReservedWord token within strict mode code.", 1)
+  val StrictModeR2          :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Strict mode code may not include the syntax of OctalIntegerLiteral '0%s'.", 1)
+  /* BugKind : 30 ~ 39 */
+  val StrictModeR3          :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Strict mode code may not include the syntax of OctalEscapeSequence '%s'.", 1)
+  val StrictModeR4_1        :BugKind = addBugMsgFormat(newBugKind, ReferenceError, "'%s' must not evaluate to an unresolvable reference within strict mode code.", 1)
+  val StrictModeR4_2        :BugKind = addBugMsgFormat(newBugKind, TypeError, "'%s' must not be a reference to a data property with the attribute value {[[Writable]]: false} within strict mode code.", 1)
+  val StrictModeR4_4        :BugKind = addBugMsgFormat(newBugKind, TypeError, "'%s' must not be a reference to a non-existent property of an object whose [[Extensible]] internal property has the value false within strict mode code.", 1)
+  val StrictModeR5          :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "'%s' cannot appear as an identifier of the %s within strict mode code.", 2)
+  val StrictModeR6          :BugKind = addBugMsgFormat(newBugKind, TypeError, "Arguments objects for strict mode functions define non-configurable properties named 'caller' and 'callee'.", 0)
+  val StrictModeR9          :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "ObjectLiteral in a strict mode code cannot have data properties with the same name, '%s'.", 1)
+  val StrictModeR10         :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "'%s' cannot be used as an identifier of the property %s within strict mode code.", 2)
+  val StrictModeR13         :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "The delete operator occurs within strict mode code and '%s' is a direct reference to a variable, function argument, or function name.", 1)
+  val StrictModeR14         :BugKind = addBugMsgFormat(newBugKind, TypeError, "The delete operator occurs within strict mode code and the property '%s' to be deleted has the attribute {[[Configurable]]: false}.", 1)
+  /* BugKind : 40 ~ 49 */
+  val StrictModeR15         :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "'%s' cannot be used as an identifier of the variable declaration within strict mode code.", 1)
+  val StrictModeR16         :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Strict mode code may not include a WithStatement.", 0)
+  val StrictModeR17         :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "'%s' cannot be used as an identifier of the catch statement within strict mode code.", 1)
+  val StrictModeR18         :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "'%s' cannot be used as an identifier of the formal parameter within strict mode code.", 1)
+  val StrictModeR19         :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "A function in a strict mode code cannot have formal parameters with the same name, '%s'.", 1)
+  val StrictModeR21         :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "'%s' cannot be used as an identifier of the function name within strict mode code.", 1)
+  val StrictMode11_4_1_3_a  :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "'%s' must not be a reference to a non-existent property within strict mode code.", 1)
+  val StrictMode10_2_1_2_4  :BugKind = addBugMsgFormat(newBugKind, ReferenceError, "'%s' is not initialized in strict mode.", 1)
+  val StrictModeLastDummy   :BugKind = addBugMsgFormat(newBugKind, Warning, "", 0) // to count strict mode bugs by iteration
   val UnreachableCode       :BugKind = addBugMsgFormat(newBugKind, Warning, "Unreachable code '%s' is found.", 1)
+  /* BugKind : 50 ~ 59 */
   val UnreferencedFunction  :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is neither called nor referenced.", 1)
   val UncalledFunction      :BugKind = addBugMsgFormat(newBugKind, Warning, "Function '%s' is never called.", 1)
   val UnusedVarProp         :BugKind = addBugMsgFormat(newBugKind, Warning, "Value assigned to %s is never read.", 1)
   val VaryingTypeArguments  :BugKind = addBugMsgFormat(newBugKind, Warning, "Calling a function '%s' with the %sparameter %sof varying types (%s).", 4)
   val WrongThisType         :BugKind = addBugMsgFormat(newBugKind, TypeError, "Native function '%s' is called when its 'this' value is not of the expected object type.", 1)
+  val EvalArgSyntax         :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Calling the eval function with an illegal syntax: '%s'.", 1)
+  val RegExp2_5             :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Regular expression quantifier's max %s is finite and less than min %s.", 2)
+  val RegExp2_9_1           :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Regular expression's decimal escape value is 0.", 0)
+  val RegExp2_9_2           :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Regular expression's decimal escape value %s is bigger than the total number of left capturing parentheses %s.", 2)
+  val RegExp2_15_2          :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Regular expression's character range is invalid: from %s to %s.", 2)
+  /* BugKind : 60 ~ 69 */
+  val RegExp4_1_1           :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Regular expression's pattern syntax is invalid: %s.", 1)
+  val RegExp4_1_2           :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Regular expression's flags syntax is invalid: %s.", 1)
+  val RegExp2_19            :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Regular expression's decimal escape character is invalid: %s.", 1)
+  val Range15_4_5_1         :BugKind = addBugMsgFormat(newBugKind, RangeError, "Array's new length %s is not equal to its size %s.", 2)
+  val Range15_9_5_43        :BugKind = addBugMsgFormat(newBugKind, RangeError, "Date's time value %s is not a finite number.", 1)
+  val ParseFunctionBody     :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Constructing Function with a body argument of illegal syntax: %s.", 1)
+  val ParseFunctionParams   :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "Constructing Function with a parameter argument of illegal syntax: %s.", 1)
+  val ParseJSON             :BugKind = addBugMsgFormat(newBugKind, SyntaxError, "JSON text's syntax is invalid: %s.", 1)
+  val URIErrorArg           :BugKind = addBugMsgFormat(newBugKind, URIError, "Calling the %s function with an invalid argument: %s.", 2)
+  val ToPropertyDescriptor  :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling Object.defineProperty with an invalid argument: %s.", 1)
+  /* BugKind : 70 ~ 77 */
+  val ToPropertyDescriptors :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling Object.defineProperties with an invalid argument: %s.", 1)
+  val JSONStringify         :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling JSON.stringify with a cyclic value.", 0)
+  val ArrayReduce1          :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling Array.prototype.reduce with an empty array without any initial value.", 0)
+  val ArrayReduce2          :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling Array.prototype.reduce with an empty array without any initial value.", 0)
+  val ArrayReduceRight1     :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling Array.prototype.reduceRight with an empty array without any initial value.", 0)
+  val ArrayReduceRight2     :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling Array.prototype.reduceRight with an empty array without any initial value.", 0)
+  val ToLocaleString        :BugKind = addBugMsgFormat(newBugKind, TypeError, "Calling Array.prototype.toLocaleString with an invalid element: %s", 1)
+  val RegExpDeprecated      :BugKind = addBugMsgFormat(newBugKind, Warning, "Using %s can result in problems, since browser extensions can modify them. Avoid using them.", 1)
 
   //val DefaultValueTypeError :BugKind = addBugMsgFormat(newBugKind, TypeError, "Computing default value (toString, valueOf) of %s yields TypeError.", 1)
   //val ImplicitCallToString  :BugKind = addBugMsgFormat(newBugKind, Warning, "Implicit toString type-conversion to object '%s' by non-builtin toString method.", 1)
@@ -245,6 +301,14 @@ package object bug_detector {
     "Array.prototype.reduceRight" -> (0, EJSType.OBJECT_FUNCTION)
   )
 
+  /* Map each builtin methods to its argument range */
+  val argRangeMap: Map[String, (Int, Int)] = Map(
+    "Number.prototype.toString" -> (2, 36),
+    "Number.prototype.toFixed" -> (0, 20),
+    "Number.prototype.toExponential" -> (0, 20),
+    "Number.prototype.toPrecision" -> (1, 21)
+  )
+
   /* Set of builtin methods that cannot be used as a constructor */
   /*val nonConsSet: Set[String] = Set(
     "Global.eval", "Global.parseInt", "Global.parseFloat", "Global.isNaN", "Global.isFinite",
@@ -255,7 +319,31 @@ package object bug_detector {
 
   /* Map each builtin methods with its proper type of 'this' */
   val thisTypeMap: Map[String, String] = Map(
-    "String.prototype.toString" -> "String", "String.prototype.valueOf" -> "String", 
-    "Boolean.prototype.toString" -> "Boolean", "Boolean.prototype.valueOf" -> "Boolean", 
-    "Number.prototype.toString" -> "Number", "Number.prototype.valueOf" -> "Number")
+    "String.prototype.toString" -> "String", "String.prototype.valueOf" -> "String",
+    "Boolean.prototype.toString" -> "Boolean", "Boolean.prototype.valueOf" -> "Boolean",
+    "Number.prototype.toString" -> "Number", "Number.prototype.valueOf" -> "Number",
+    "Number.prototype.toLocaleString" -> "Number", "Number.prototype.toFixed" -> "Number",
+    "Number.prototype.toExponential" -> "Number", "Number.prototype.toPrecision" -> "Number",
+    "Date.prototype.valueOf" -> "Date", "Date.prototype.getTime" -> "Date",
+    "Date.prototype.getFullYear" -> "Date", "Date.prototype.getUTCFullYear" -> "Date",
+    "Date.prototype.getMonth" -> "Date", "Date.prototype.getUTCMonth" -> "Date",
+    "Date.prototype.getDate" -> "Date", "Date.prototype.getUTCDate" -> "Date",
+    "Date.prototype.getDay" -> "Date", "Date.prototype.getUTCDay" -> "Date",
+    "Date.prototype.getHours" -> "Date", "Date.prototype.getUTCHours" -> "Date",
+    "Date.prototype.getMinutes" -> "Date", "Date.prototype.getUTCMinutes" -> "Date",
+    "Date.prototype.getSeconds" -> "Date", "Date.prototype.getUTCSeconds" -> "Date",
+    "Date.prototype.getMilliseconds" -> "Date", "Date.prototype.getUTCMilliseconds" -> "Date",
+    "Date.prototype.getTimezoneOffset" -> "Date", "Date.prototype.setMilliseconds" -> "Date",
+    "Date.prototype.setUTCMilliseconds" -> "Date", "Date.prototype.setSeconds" -> "Date",
+    "Date.prototype.setUTCSeconds" -> "Date", "Date.prototype.setMinutes" -> "Date",
+    "Date.prototype.setUTCMinutes" -> "Date", "Date.prototype.setHours" -> "Date",
+    "Date.prototype.setUTCHours" -> "Date", "Date.prototype.setDate" -> "Date",
+    "Date.prototype.setUTCDate" -> "Date", "Date.prototype.setMonth" -> "Date",
+    "Date.prototype.setUTCMonth" -> "Date", "Date.prototype.setFullYear" -> "Date",
+    "Date.prototype.setUTCFullYear" -> "Date", "Date.prototype.getYear" -> "Date",
+    "Date.prototype.setYear" -> "Date", "RegExp.prototype.exec" -> "RegExp",
+    "RegExp.prototype.test" -> "RegExp", "RegExp.prototype.toString" -> "RegExp")
+
+  /* Set of deprecated properties or RegExp */
+  val regExpDeprecated: Set[String] = Set("$1", "$2", "$3", "$4", "$5", "$6", "$7", "$8", "$9")
 }

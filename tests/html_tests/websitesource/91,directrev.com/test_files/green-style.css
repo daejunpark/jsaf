@@ -1,0 +1,1968 @@
+html {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+body {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+div {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+span {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+applet {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+object {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+iframe {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+h1 {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+h2 {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+h3 {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+h4 {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+h5 {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+h6 {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+p {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+blockquote {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+pre {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+a {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+abbr {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+acronym {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+address {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+big {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+cite {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+code {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+del {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+dfn {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+em {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+img {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+ins {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+kbd {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+q {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+s {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+samp {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+small {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+strike {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+strong {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+sub {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+sup {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+tt {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+var {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+b {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+u {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+i {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+center {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+dl {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+dt {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+dd {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+ol {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+ul {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+li {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+fieldset {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+form {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+label {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+legend {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+table {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+caption {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+tbody {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+tfoot {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+thead {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+tr {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+th {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+td {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+article {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+aside {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+canvas {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+details {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+embed {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+figure {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+figcaption {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+footer {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+header {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+hgroup {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+menu {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+nav {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+output {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+ruby {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+section {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+summary {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+time {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+mark {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+audio {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+video {
+	font: inherit; margin: 0px; padding: 0px; border: 0px currentColor; vertical-align: baseline; font-size-adjust: inherit; font-stretch: inherit;
+}
+article {
+	display: block;
+}
+aside {
+	display: block;
+}
+details {
+	display: block;
+}
+figcaption {
+	display: block;
+}
+figure {
+	display: block;
+}
+footer {
+	display: block;
+}
+header {
+	display: block;
+}
+hgroup {
+	display: block;
+}
+menu {
+	display: block;
+}
+nav {
+	display: block;
+}
+section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol {
+	list-style: none;
+}
+ul {
+	list-style: none;
+}
+blockquote {
+	quotes: none;
+}
+q {
+	quotes: none;
+}
+blockquote::before {
+	content: none;
+}
+blockquote::after {
+	content: none;
+}
+q::before {
+	content: none;
+}
+q::after {
+	content: none;
+}
+table {
+	border-collapse: collapse; border-spacing: 0;
+}
+html {
+	height: 100%; -ms-overflow-y: hidden;
+}
+body {
+	background: rgb(255, 255, 255); font: 12px/21px "Merriweather", Arial, Helvetica, sans-serif; height: 100%; color: rgb(85, 85, 85); min-width: 990px; font-size-adjust: none; font-stretch: normal;
+}
+img {
+	
+}
+a {
+	color: rgb(184, 211, 11); text-decoration: none;
+}
+a:hover {
+	color: rgb(149, 161, 5);
+}
+input {
+	font: 12px/normal "Open Sans", Arial, Helvetica, sans-serif; color: rgb(85, 85, 85); vertical-align: middle; font-size-adjust: none; font-stretch: normal;
+}
+textarea {
+	font: 12px/normal "Open Sans", Arial, Helvetica, sans-serif; color: rgb(85, 85, 85); vertical-align: middle; font-size-adjust: none; font-stretch: normal;
+}
+select {
+	font: 12px/normal "Open Sans", Arial, Helvetica, sans-serif; color: rgb(85, 85, 85); vertical-align: middle; font-size-adjust: none; font-stretch: normal;
+}
+#wrapper {
+	width: 100%; height: 100%; position: relative; -ms-overflow-x: hidden; -ms-overflow-y: auto;
+}
+.w1 {
+	background: rgb(255, 255, 255); margin: 0px auto; width: 990px; height: 100%; display: table;
+}
+.w2 {
+	width: 100%; display: table-row;
+}
+#header {
+	height: 100px; position: relative; z-index: 2;
+}
+.line {
+	background: rgb(184, 211, 11); margin: 0px -99999px; padding: 0px 9999px; height: 5px;
+}
+#header::after {
+	clear: both; display: block; content: "";
+}
+.logo {
+	background: url("http://cdn.directrev.com/s/images/logo.png") no-repeat; margin: 0px; left: 30px; top: 35px; width: 200px; height: 52px; text-indent: -9999px; overflow: hidden; position: absolute;
+}
+.logo a {
+	height: 100%; display: block;
+}
+#nav {
+	font: 14px/17px "Open Sans", Arial, Helvetica, sans-serif; top: 43px; right: 30px; position: absolute; font-size-adjust: none; font-stretch: normal;
+}
+#nav ul {
+	float: left;
+}
+#nav ul ul {
+	background: rgb(255, 255, 255); border-width: 2px 1px 1px; border-style: solid; border-color: rgb(184, 211, 11) rgb(236, 237, 243) rgb(236, 237, 243); padding: 5px 0px; left: 16px; top: 100%; width: 206px; font-size: 12px; display: none; position: absolute;
+}
+#nav ul ul ul {
+	left: 100%; top: -6px;
+}
+#nav ul li {
+	padding: 0px 0px 0px 30px; float: left; position: relative;
+}
+#nav ul ul li {
+	background: url("http://cdn.directrev.com/s/images/divider2.png") no-repeat 50% 0px; padding: 0px 15px; float: none;
+}
+#nav ul ul li:first-child {
+	
+}
+#nav ul ul a {
+	padding: 11px 0px 11px 5px; width: 171px; float: none; display: block;
+}
+#nav ul a {
+	color: rgb(85, 85, 85); padding-bottom: 12px; float: left;
+}
+#nav ul a:hover {
+	color: rgb(34, 34, 34);
+}
+#nav ul li:hover ul {
+	display: block;
+}
+#nav ul li:hover a {
+	color: rgb(34, 34, 34);
+}
+#nav ul li:hover ul a {
+	color: rgb(85, 85, 85);
+}
+#nav ul li:hover ul a:hover {
+	color: rgb(34, 34, 34);
+}
+#nav ul ul li:hover a {
+	color: rgb(85, 85, 85);
+}
+#nav ul ul ul li:hover a {
+	color: rgb(34, 34, 34);
+}
+#nav ul ul ul li:hover a:hover {
+	color: rgb(34, 34, 34);
+}
+#nav ul li:hover ul ul {
+	display: none;
+}
+#nav ul ul li:hover ul {
+	display: block;
+}
+#main {
+	padding: 0px 30px; position: relative; z-index: 1; min-height: 730px;
+}
+.intro {
+	background: rgba(0, 0, 0, 0.05); border-width: 1px 0px; border-style: solid; border-color: rgba(0, 0, 0, 0.05); margin: 0px -9999px 30px; padding: 29px 9999px 28px; width: 100%; font-size: 14px; position: relative; box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.05); -webkit-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, .05); -moz-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, .05);
+}
+.intro2 {
+	border-width: 1px 0px 0px; border-style: solid; border-color: rgba(0, 0, 0, 0.05); margin: 0px -9999px 30px; padding: 60px 9999px 30px; width: 100%; font-size: 14px; position: relative;
+}
+.intro2::after {
+	clear: both; display: block; content: "";
+}
+.intro::after {
+	clear: both; display: block; content: "";
+}
+.intro p {
+	margin: 0px;
+}
+.intro .search {
+	margin: -5px 0px; float: right;
+}
+.main-holder {
+	background: url("http://cdn.directrev.com/s/images/separator2.png") repeat-y 680px 0px; width: 100%; margin-bottom: 30px;
+}
+.main-holder::after {
+	clear: both; display: block; content: "";
+}
+.prev {
+	left: -9px; top: 274px; width: 80px; height: 52px; text-indent: -999px; overflow: hidden; position: absolute; z-index: 100;
+}
+.next {
+	left: -9px; top: 274px; width: 80px; height: 52px; text-indent: -999px; overflow: hidden; position: absolute; z-index: 100;
+}
+.prev span {
+	background: url("http://cdn.directrev.com/s/images/bg-prevnext.png") no-repeat 26px 11px; left: 0px; top: 0px; width: 100%; height: 100%; position: absolute; z-index: 2; cursor: pointer;
+}
+.next span {
+	background: url("http://cdn.directrev.com/s/images/bg-prevnext.png") no-repeat 26px 11px; left: 0px; top: 0px; width: 100%; height: 100%; position: absolute; z-index: 2; cursor: pointer;
+}
+.prev em {
+	background: rgba(34, 34, 34, 0.8); left: 0px; top: 0px; width: 70px; height: 100%; position: absolute; z-index: 1; cursor: pointer; transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-18deg, 0deg); -moz-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-18deg, 0deg); -webkit-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-18deg, 0deg); -o-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-18deg, 0deg);
+}
+.next em {
+	background: rgba(34, 34, 34, 0.8); left: 0px; top: 0px; width: 70px; height: 100%; position: absolute; z-index: 1; cursor: pointer; transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-18deg, 0deg); -moz-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-18deg, 0deg); -webkit-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-18deg, 0deg); -o-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(-18deg, 0deg);
+}
+.prev:hover em {
+	background: rgba(34, 34, 34, 0.9);
+}
+.next:hover em {
+	background: rgba(34, 34, 34, 0.9);
+}
+.next {
+	left: auto; right: -9px;
+}
+.next span {
+	background-position: 37px -58px;
+}
+.next em {
+	left: auto; right: 0px;
+}
+.gallery {
+	margin-bottom: 21px;
+}
+.gallery-holder {
+	font: 14px/18px "Open Sans", Arial, Helvetica, sans-serif; margin: -29px -30px -28px; width: 990px; overflow: hidden; float: left; position: relative; font-size-adjust: none; font-stretch: normal;
+}
+#holder-iframe {
+	margin-bottom: -31px;
+}
+.gallery-list {
+	width: 9999px; overflow: hidden; position: relative;
+}
+.gallery-list li {
+	width: 990px; float: left; position: relative;
+}
+.gallery-list img {
+	display: block;
+}
+.gallery .txt {
+	top: 60px; width: 389px; right: 31px; position: absolute;
+}
+.gallery h2 {
+	font: bold 44px/46px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px 0px 19px; color: rgb(34, 34, 34); font-size-adjust: none; font-stretch: normal;
+}
+.gallery h3 {
+	font: 300 24px/26px "Merriweather", Arial, Helvetica, sans-serif; color: rgb(149, 161, 5); margin-bottom: 17px; font-size-adjust: none; font-stretch: normal;
+}
+.gallery p {
+	color: rgb(119, 119, 119); margin-bottom: 21px;
+}
+.btn-add {
+	background: -ms-linear-gradient(rgba(195, 218, 13, 1) 0%, rgba(174, 205, 9, 1) 100%); font: bold 14px/40px "Open Sans", Arial, Helvetica, sans-serif; padding: 0px 18px; border-radius: 3px; color: rgb(255, 255, 255); text-transform: uppercase; vertical-align: top; display: inline-block; font-size-adjust: none; font-stretch: normal; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.btn-add:hover {
+	background: -ms-linear-gradient(rgba(183, 204, 11, 1) 0%, rgba(158, 186, 9, 1) 100%); color: rgb(255, 255, 255);
+}
+.switcher {
+	height: 13px; text-align: center; line-height: 13px; margin-bottom: 35px;
+}
+.switcher li {
+	padding: 0px 2px; line-height: 13px; vertical-align: top; display: inline-block;
+}
+* + html .switcher li {
+	display: inline;
+}
+.switcher a {
+	background: url("http://cdn.directrev.com/s/images/bg-switcher.png") no-repeat; width: 13px; height: 13px; text-indent: -9999px; overflow: hidden; float: left;
+}
+.switcher a:hover {
+	background-position: 0px -19px;
+}
+.switcher .active a {
+	background-position: 0px -38px;
+}
+.promo-intro {
+	padding: 0px 80px 34px; text-align: center; font-size: 14px;
+}
+.promo-intro h2 {
+	font: bold 18px/22px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); margin-bottom: 2px; font-size-adjust: none; font-stretch: normal;
+}
+.promo-intro p {
+	margin: 0px;
+}
+.error-page {
+	padding: 0px 80px 34px; text-align: center; font-size: 14px;
+}
+.error-page h1 {
+	font: bold 100px/110px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); margin-bottom: 2px; font-size-adjust: none; font-stretch: normal;
+}
+.promo {
+	margin: 0px -19px 30px; width: 966px; overflow: hidden;
+}
+.promo .col {
+	background: url("http://cdn.directrev.com/s/images/ico.png") no-repeat 50% 0px; padding: 56px 16px 0px; width: 290px; text-align: center; vertical-align: top; display: inline-block;
+}
+.promo .item2 {
+	background: url("http://cdn.directrev.com/s/images/ico2.png") no-repeat 50% 0px;
+}
+.promo .item3 {
+	background: url("http://cdn.directrev.com/s/images/ico3.png") no-repeat 50% 0px;
+}
+.promo h3 {
+	font: bold 14px/18px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); margin-bottom: 10px; font-size-adjust: none; font-stretch: normal;
+}
+.promo p {
+	margin-bottom: 8px;
+}
+.latest-work {
+	margin: 0px -3px 16px; padding: 0px 3px; width: 930px; overflow: hidden; position: relative;
+}
+.latest-work .holder {
+	margin: 0px -32px;
+}
+.latest-work .visual {
+	margin: 28px 0px 0px; width: 274px; position: relative;
+}
+.latest-work :first-child.visual {
+	margin: 0px;
+}
+.work-list {
+	padding: 3px 0px 3px 3px; width: 9999px; overflow: hidden; position: relative;
+}
+.work-list li {
+	width: 292px; margin-left: 28px; float: left;
+}
+.visual .note-holder {
+	width: 100%; position: relative;
+}
+.visual .note {
+	background: rgba(0, 0, 0, 0.3); left: 0px; top: 0px; width: 100%; height: 100%; text-align: center; display: none; position: absolute;
+}
+.latest-work .visual .note {
+	background: url("http://cdn.directrev.com/s/images/bg-photo.png") no-repeat 123px 47px rgba(255, 255, 255, 0.8); padding: 85px 5px 5px; width: 264px; height: 75px;
+}
+.latest-work .visual .video {
+	background: url("http://cdn.directrev.com/s/images/bg-video.png") no-repeat 124px 37px rgba(255, 255, 255, 0.8);
+}
+.visual .zoom {
+	background: url("http://cdn.directrev.com/s/images/bg-zoom.png") no-repeat 50% 50% rgba(0, 0, 0, 0.3); text-indent: -9999px; overflow: hidden;
+}
+.visual .zoom2 {
+	background: url("http://cdn.directrev.com/s/images/bg-zoom2.png") no-repeat 50% 50% rgba(0, 0, 0, 0.3); text-indent: -9999px; overflow: hidden;
+}
+.visual .video2 {
+	background: url("http://cdn.directrev.com/s/images/bg-video2.png") no-repeat 50% 50% rgba(0, 0, 0, 0.3); text-indent: -9999px; overflow: hidden;
+}
+.visual strong {
+	font: bold 14px/18px "Open Sans", Arial, Helvetica, sans-serif; margin-bottom: 2px; display: block; font-size-adjust: none; font-stretch: normal;
+}
+.visual a {
+	color: rgb(34, 34, 34);
+}
+.visual a:hover {
+	color: rgb(0, 0, 0);
+}
+.visual:hover .note {
+	display: block;
+}
+.promo-box {
+	padding: 16px 45px 19px 29px; border-radius: 3px; border: 1px solid rgb(236, 237, 243); overflow: hidden; margin-bottom: 37px; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.promo-box .btn-add {
+	margin-top: 3px; float: right;
+}
+.promo-box h2 {
+	font: bold 16px/20px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); margin-bottom: 2px; font-size-adjust: none; font-stretch: normal;
+}
+.promo-box p {
+	margin: 0px;
+}
+.testimonials {
+	text-align: center; margin-bottom: 31px;
+}
+.testimonials .holder {
+	background: url("http://cdn.directrev.com/s/images/bg-quote.png") no-repeat 36px 4px; padding-left: 90px;
+}
+.testimonials q {
+	background: url("http://cdn.directrev.com/s/images/bg-quote.png") no-repeat -184px 4px; padding: 0px 90px 9px 0px; display: block;
+}
+.testimonials cite {
+	background: url("http://cdn.directrev.com/s/images/divider.png") no-repeat 50% 0px; color: rgb(34, 34, 34); padding-top: 11px; font-family: "Open Sans", Arial, Helvetica, sans-serif; vertical-align: top; display: inline-block;
+}
+.latest-blog {
+	margin-bottom: 33px;
+}
+.latest-blog .post {
+	margin: 0px; padding: 2px 30px 0px 0px; width: 290px; float: left;
+}
+.post h3 {
+	font: bold 14px/18px "Open Sans", Arial, Helvetica, sans-serif; margin-bottom: 10px; font-size-adjust: none; font-stretch: normal;
+}
+.post h3 a {
+	color: rgb(34, 34, 34);
+}
+.post h3 a:hover {
+	color: rgb(0, 0, 0);
+}
+.post p {
+	margin-bottom: 7px;
+}
+.latest-blog .visual {
+	width: 274px; margin-bottom: 16px;
+}
+.latest-blog .area {
+	width: 100%;
+}
+.latest-blog .area::after {
+	clear: both; display: block; content: "";
+}
+.latest-blog .container {
+	overflow: hidden;
+}
+.latest-blog .container .post {
+	padding: 18px 0px 0px; width: auto; float: none;
+}
+.latest-blog .container :first-child.post {
+	padding: 0px;
+}
+.nav-blog {
+	font: 12px/normal "Open Sans", Arial, Helvetica, sans-serif; font-size-adjust: none; font-stretch: normal;
+}
+.nav-blog li {
+	background: url("http://cdn.directrev.com/s/images/bullet2.png") no-repeat 4px 8px; padding-left: 13px; display: inline;
+}
+.nav-blog li:first-child {
+	padding: 0px;
+}
+.social-networks3 {
+	background: url("http://cdn.directrev.com/s/images/divider.png") repeat-x 0px 48px; text-align: center; margin-bottom: 40px;
+}
+.social-networks3 h3 {
+	font: bold 14px/18px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); text-transform: uppercase; margin-bottom: 15px; font-size-adjust: none; font-stretch: normal;
+}
+.social-networks3 ul {
+	background: rgb(255, 255, 255); padding: 0px 19px; vertical-align: top; display: inline-block;
+}
+* + html .social-networks3 ul {
+	display: inline;
+}
+.social-networks3 li {
+	padding: 0px 2px 0px 1px; float: left;
+}
+.social-networks3 a {
+	background: url("http://cdn.directrev.com/s/images/ico-facebook3.png") no-repeat; width: 32px; height: 31px; text-indent: -9999px; overflow: hidden; float: left;
+}
+.social-networks3 .twitter {
+	background: url("http://cdn.directrev.com/s/images/ico-twitter3.png") no-repeat;
+}
+.social-networks3 .linkedin {
+	background: url("http://cdn.directrev.com/s/images/ico-linkedin2.png") no-repeat;
+}
+.social-networks3 .google {
+	background: url("http://cdn.directrev.com/s/images/ico-google2.png") no-repeat;
+}
+.social-networks3 .dribbble {
+	background: url("http://cdn.directrev.com/s/images/ico-dribbble2.png") no-repeat;
+}
+.social-networks3 .rss {
+	background: url("http://cdn.directrev.com/s/images/ico-rss.png") no-repeat;
+}
+.social-networks3 a:hover {
+	background-position: 0px -38px;
+}
+.social-box {
+	background: rgba(34, 34, 34, 0.02); border-width: 1px 0px; border-style: solid; border-color: rgba(0, 0, 0, 0.05); margin: 0px -9999px; padding: 27px 9999px 9px; width: 100%; overflow: hidden; position: relative; box-shadow: inset 0px 0px 3px 0px rgba(0,0,0,0.05); -webkit-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, .05); -moz-box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, .05);
+}
+.social-box .headline {
+	margin-bottom: 14px;
+}
+.social-box .headline h3 {
+	background: rgba(251, 251, 251, 1); text-transform: none; padding-left: 0px;
+}
+.latest-tweets {
+	width: 292px; margin-right: 28px; float: left;
+}
+.testimonials-item {
+	width: 290px; float: left;
+}
+.testimonials-item .img {
+	margin: 4px 17px 0px 0px; border-radius: 60px; width: 60px; float: left; -webkit-border-radius: 60px; -moz-border-radius: 60px;
+}
+.testimonials-item .item {
+	padding-bottom: 17px;
+}
+.testimonials-item blockquote {
+	overflow: hidden;
+}
+.testimonials-item q {
+	margin-bottom: 6px; display: block;
+}
+.testimonials-item cite {
+	font: 12px/16px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); display: block; font-size-adjust: none; font-stretch: normal;
+}
+.feedback {
+	width: 290px; float: right;
+}
+.feedback .text {
+	width: 100%; padding-bottom: 18px; display: block;
+}
+.feedback .text input {
+	background: rgb(255, 255, 255); margin: 0px; padding: 5px 9px 6px; border-radius: 3px; border: 1px solid rgb(236, 237, 243); width: 270px; float: left; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.feedback .text textarea {
+	background: rgb(255, 255, 255); margin: 0px; padding: 5px 9px 6px; border-radius: 3px; border: 1px solid rgb(236, 237, 243); width: 270px !important; height: 77px; overflow: auto; float: left; min-height: 77px; max-width: 270px; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.feedback .text::after {
+	clear: both; display: block; content: "";
+}
+.feedback .headline {
+	margin-bottom: 18px;
+}
+#main .feedback .submit {
+	margin: 0px;
+}
+.content-example .headline h2 {
+	line-height: 21px; padding-right: 20px; font-size: 14px;
+}
+h1 {
+	font: bold 22px/26px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); margin-bottom: 11px; font-size-adjust: none; font-stretch: normal;
+}
+h2 {
+	font: bold 20px/24px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); margin-bottom: 11px; font-size-adjust: none; font-stretch: normal;
+}
+h3 {
+	font: bold 18px/22px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); margin-bottom: 11px; font-size-adjust: none; font-stretch: normal;
+}
+h4 {
+	font: bold 16px/20px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); margin-bottom: 11px; font-size-adjust: none; font-stretch: normal;
+}
+h5 {
+	font: bold 14px/18px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); margin-bottom: 11px; font-size-adjust: none; font-stretch: normal;
+}
+h6 {
+	font: bold 12px/18px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); margin-bottom: 11px; font-size-adjust: none; font-stretch: normal;
+}
+p {
+	margin-bottom: 20px;
+}
+.list {
+	margin: 0px 0px 5px 16px;
+}
+.list li {
+	background: url("http://cdn.directrev.com/s/images/bullet3.png") no-repeat 0px 8px; padding: 0px 0px 4px 22px;
+}
+.list-sitemap {
+	margin: 0px 0px 5px 16px;
+}
+.list-sitemap li {
+	background: url("http://cdn.directrev.com/s/images/bullet3.png") no-repeat 0px 8px; padding: 0px 0px 4px 22px;
+}
+.list-sitemap li a {
+	color: rgb(85, 85, 85);
+}
+.list-sitemap li a:hover {
+	color: rgb(149, 161, 5);
+}
+.list2 {
+	margin: 0px 0px 5px 16px;
+}
+.list2 li {
+	background: url("http://cdn.directrev.com/s/images/bullet4.png") no-repeat 0px 5px; padding: 0px 0px 4px 30px;
+}
+.container {
+	height: 1%;
+}
+.container::after {
+	clear: both; display: block; content: "";
+}
+.content-vid {
+	margin-bottom: 29px;
+}
+.content-example {
+	margin-bottom: 29px;
+}
+.columns-example .headline {
+	margin-bottom: 22px;
+}
+.col-12 {
+	width: 450px; margin-left: 30px; float: left;
+}
+.col-13 {
+	width: 290px; margin-left: 30px; float: left;
+}
+.col-14 {
+	width: 210px; margin-left: 30px; float: left;
+}
+.col-23 {
+	width: 610px; margin-left: 30px; float: left;
+}
+:first-child.col-12 {
+	margin-left: 0px;
+}
+:first-child.col-13 {
+	margin-left: 0px;
+}
+:first-child.col-14 {
+	margin-left: 0px;
+}
+:first-child.col-23 {
+	margin-left: 0px;
+}
+.columns-example {
+	margin-bottom: 9px;
+}
+.tabset {
+	width: 100%; margin-bottom: 14px; border-bottom-color: rgb(236, 237, 243); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.tabset::after {
+	clear: both; display: block; content: "";
+}
+.tabset ul {
+	font: bold 14px/38px "Open Sans", Arial, Helvetica, sans-serif; margin-bottom: -1px; float: left; position: relative; font-size-adjust: none; font-stretch: normal;
+}
+.tabset li {
+	margin-left: 10px; float: left;
+}
+.tabset li:first-child {
+	margin: 0px;
+}
+.tabset a {
+	background: rgb(255, 255, 255); padding: 0px 26px; height: 38px; color: rgb(85, 85, 85); float: left;
+}
+.tabset a:hover {
+	color: rgb(34, 34, 34);
+}
+.menu .active h5 a {
+	color: rgb(34, 34, 34);
+}
+.menu a {
+	
+}
+.tabset .active {
+	border-width: 1px 1px 0px; border-style: solid; border-color: rgb(236, 237, 243); padding: 0px 25px; line-height: 36px;
+}
+.toggles-example .headline {
+	margin-bottom: 25px;
+}
+.toggles-example .container {
+	margin-bottom: 24px;
+}
+.menu li {
+	margin-bottom: 2px;
+}
+.menu h4 {
+	margin: 0px; border: 1px solid rgb(236, 237, 243);
+}
+.menu h4 a {
+	padding: 10px 19px; color: rgb(85, 85, 85); display: block;
+}
+.menu p {
+	margin: 0px;
+}
+.columns-example h4 {
+	line-height: 18px; font-size: 14px;
+}
+.list-col h4 {
+	line-height: 18px; font-size: 14px;
+}
+.menu h4 {
+	line-height: 18px; font-size: 14px;
+}
+.buttons-example h4 {
+	line-height: 18px; font-size: 14px;
+}
+.info-item h4 {
+	line-height: 18px; font-size: 14px;
+}
+.project h4 {
+	line-height: 18px; font-size: 14px;
+}
+.menu h4 a:hover {
+	color: rgb(34, 34, 34);
+}
+.menu .holder {
+	border-width: 0px 1px 1px; border-style: solid; border-color: rgb(236, 237, 243); padding: 14px 19px 13px;
+}
+.tab-content {
+	padding: 0px 25px;
+}
+.tab-content p {
+	margin: 0px;
+}
+.menu .case {
+	display: none;
+}
+.menu .active .case {
+	display: block;
+}
+.tabset2 {
+	font: 14px/18px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px 30px 0px 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+.tabset2 ul {
+	padding: 7px 10px 2px 0px; border-right-color: rgb(236, 237, 243); border-right-width: 1px; border-right-style: solid;
+}
+.tabset2 li {
+	margin-bottom: 18px;
+}
+.tabset2 a {
+	color: rgb(85, 85, 85);
+}
+.tabset2 a:hover {
+	color: rgb(34, 34, 34); font-weight: bold;
+}
+.tabset2 .active a {
+	color: rgb(34, 34, 34); font-weight: bold;
+}
+* + html .tabset2 a:hover {
+	font-weight: normal;
+}
+.tab-content2 {
+	padding-top: 6px;
+}
+.tab-content2 p {
+	margin-bottom: 14px;
+}
+.tab-content2 .list {
+	margin: 0px 0px 15px;
+}
+pre {
+	background: rgb(246, 246, 246); padding: 17px 10px 13px 24px; border: 1px solid rgb(221, 221, 221); color: rgb(0, 0, 0); margin-bottom: 25px;
+}
+code {
+	font: 13px/26px "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace; font-size-adjust: none; font-stretch: normal;
+}
+pre .row {
+	color: rgb(153, 153, 153); margin-right: 24px;
+}
+pre .name {
+	color: rgb(42, 0, 255);
+}
+.list-example .headline {
+	margin-bottom: 22px;
+}
+.list-col p {
+	margin-bottom: 9px;
+}
+.list-example {
+	margin-bottom: 20px;
+}
+.boxes-example {
+	overflow: hidden; margin-bottom: 15px;
+}
+.boxes-example .headline {
+	margin-bottom: 25px;
+}
+.message-box {
+	background: url("http://cdn.directrev.com/s/images/info-icon.png") no-repeat 19px 19px rgb(219, 236, 255); padding: 14px 10px 13px 67px; border: 1px solid rgb(159, 199, 245); color: rgb(97, 163, 239); margin-bottom: 20px;
+}
+.message-box p {
+	margin: 0px;
+}
+.green.message-box {
+	background: url("http://cdn.directrev.com/s/images/succes-icon.png") no-repeat 19px 19px rgb(212, 255, 205); border-color: rgb(154, 223, 143); color: rgb(106, 208, 90);
+}
+.yellow.message-box {
+	background: url("http://cdn.directrev.com/s/images/warning-icon.png") no-repeat 19px 19px rgb(254, 252, 203); border-color: rgb(229, 219, 85); color: rgb(213, 201, 33);
+}
+.red.message-box {
+	background: url("http://cdn.directrev.com/s/images/error-icon.png") no-repeat 19px 19px rgb(255, 210, 211); border-color: rgb(208, 90, 92); color: rgb(223, 143, 144);
+}
+.blockquote-example {
+	margin-bottom: 15px;
+}
+.blockquote-example p {
+	margin-bottom: 14px;
+}
+.blockquote {
+	font: italic 14px/21px Georgia, "Times New Roman", serif; margin: 0px 0px 16px 30px; padding: 6px 0px 3px 31px; border-left-color: rgb(236, 237, 243); border-left-width: 2px; border-left-style: solid; font-size-adjust: none; font-stretch: normal;
+}
+.col-13 .blockquote {
+	margin: 0px;
+}
+:first-child.col-13 .blockquote {
+	margin: 6px 0px 3px 31px;
+}
+.buttons-example .headline {
+	margin-bottom: 22px;
+}
+.buttons-example {
+	margin-bottom: 6px;
+}
+.buttons-example p {
+	margin-bottom: 14px;
+}
+.buttons-example .container {
+	padding-bottom: 27px;
+}
+.btn {
+	background: -ms-linear-gradient(rgba(195, 218, 13, 1) 0%, rgba(174, 205, 9, 1) 100%); font: 12px/28px "Open Sans", Arial, Helvetica, sans-serif; padding: 0px 21px; border-radius: 3px; height: 30px; color: rgb(255, 255, 255); vertical-align: top; display: inline-block; font-size-adjust: none; font-stretch: normal; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.btn:hover {
+	background: -ms-linear-gradient(rgba(183, 204, 11, 1) 0%, rgba(158, 186, 9, 1) 100%); color: rgb(255, 255, 255);
+}
+.green.btn {
+	background: -ms-linear-gradient(rgba(195, 218, 13, 1) 0%, rgba(174, 205, 9, 1) 100%); font: 12px/28px "Open Sans", Arial, Helvetica, sans-serif; padding: 0px 21px; border-radius: 3px; height: 30px; color: rgb(255, 255, 255); vertical-align: top; display: inline-block; font-size-adjust: none; font-stretch: normal; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.green.btn:hover {
+	background: -ms-linear-gradient(rgba(183, 204, 11, 1) 0%, rgba(158, 186, 9, 1) 100%); color: rgb(255, 255, 255);
+}
+.black.btn {
+	background: -ms-linear-gradient(rgba(59, 59, 59, 1) 0%, rgba(44, 44, 44, 1) 100%);
+}
+.black.btn:hover {
+	background: -ms-linear-gradient(rgba(39, 39, 39, 1) 0%, rgba(29, 29, 29, 1) 100%);
+}
+.orange.btn {
+	background: -ms-linear-gradient(rgba(255, 121, 9, 1) 0%, rgba(255, 90, 7, 1) 100%);
+}
+.orange.btn:hover {
+	background: -ms-linear-gradient(rgba(255, 106, 0, 1) 0%, rgba(255, 79, 0, 1) 100%);
+}
+.blue.btn {
+	background: -ms-linear-gradient(rgba(132, 210, 214, 1) 0%, rgba(98, 194, 200, 1) 100%);
+}
+.blue.btn:hover {
+	background: -ms-linear-gradient(rgba(52, 186, 201, 1) 0%, rgba(38, 162, 182, 1) 100%);
+}
+.red.btn {
+	background: -ms-linear-gradient(rgba(255, 63, 0, 1) 0%, rgba(255, 47, 0, 1) 100%);
+}
+.red.btn:hover {
+	background: -ms-linear-gradient(rgba(231, 56, 0, 1) 0%, rgba(223, 42, 0, 1) 100%);
+}
+.magenta.btn {
+	background: -ms-linear-gradient(rgba(209, 2, 106, 1) 0%, rgba(193, 2, 79, 1) 100%);
+}
+.magenta.btn:hover {
+	background: -ms-linear-gradient(rgba(182, 1, 86, 1) 0%, rgba(156, 1, 64, 1) 100%);
+}
+.grey.btn {
+	background: rgb(255, 255, 255); padding: 0px 20px; border: 1px solid rgb(229, 229, 229); height: 28px; color: rgb(34, 34, 34); text-shadow: none;
+}
+.grey.btn:hover {
+	background: rgb(251, 251, 251); border: 1px solid rgb(221, 221, 221); color: rgb(34, 34, 34);
+}
+.dividers-example {
+	margin-bottom: 30px;
+}
+.prtice-example {
+	margin-bottom: 36px;
+}
+.prtice-example .headline {
+	margin-bottom: 25px;
+}
+.price-box {
+	color: rgb(34, 34, 34);
+}
+.price-box .holder {
+	border-width: 0px 1px 1px; border-style: solid; border-color: rgb(236, 237, 243); padding: 25px 29px 30px;
+}
+.price-box .heading {
+	background: rgb(34, 34, 34); padding: 15px 30px 20px; color: rgb(255, 255, 255);
+}
+.price-box .heading h4 {
+	color: rgb(255, 255, 255); text-transform: uppercase; margin-bottom: 5px;
+}
+.price-box .price {
+	color: rgb(184, 211, 11); line-height: 24px; font-size: 20px;
+}
+.package-list {
+	margin-bottom: 24px;
+}
+.package-list li {
+	background: url("http://cdn.directrev.com/s/images/divider3.png") repeat-x; padding: 13px 0px 9px;
+}
+.package-list li:first-child {
+	padding-top: 0px;
+}
+.price-box .btn {
+	font-size: 14px; font-weight: bold; text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+}
+.info-columns {
+	margin-bottom: 36px;
+}
+.info-item .holder {
+	background: url("http://cdn.directrev.com/s/images/ico.png") no-repeat 0px 4px; padding-left: 52px;
+}
+.info-item h5 {
+	text-transform: uppercase; line-height: 21px; margin-bottom: 10px;
+}
+.info-item p {
+	margin-bottom: 13px;
+}
+.info-item .item2 {
+	background: url("http://cdn.directrev.com/s/images/ico2.png") no-repeat 0px 4px;
+}
+.info-item .item3 {
+	background: url("http://cdn.directrev.com/s/images/ico3.png") no-repeat 0px 4px;
+}
+.info-item .item4 {
+	background: url("http://cdn.directrev.com/s/images/ico4.png") no-repeat 0px 4px;
+}
+.info-item .item5 {
+	background: url("http://cdn.directrev.com/s/images/ico5.png") no-repeat 0px 4px;
+}
+.info-item .item6 {
+	background: url("http://cdn.directrev.com/s/images/ico6.png") no-repeat 0px 4px;
+}
+.images-example {
+	width: 100%; padding-bottom: 40px;
+}
+.images-example .headline {
+	margin-bottom: 23px;
+}
+.project {
+	margin-bottom: 28px;
+}
+.project .visual {
+	margin: 0px 29px 0px -1px; width: 594px; float: left;
+}
+.project .description {
+	overflow: hidden; padding-top: 3px;
+}
+.project h5 {
+	margin-bottom: 8px;
+}
+.project .description ul {
+	margin-bottom: 20px;
+}
+.project-type {
+	font: 14px/18px "Open Sans", Arial, Helvetica, sans-serif; overflow: hidden; font-size-adjust: none; font-stretch: normal;
+}
+.project-type strong {
+	color: rgb(34, 34, 34); font-weight: bold; margin-right: 20px; float: left;
+}
+.project-type ul {
+	float: left;
+}
+.project-type li {
+	background: url("http://cdn.directrev.com/s/images/separator4.png") no-repeat; padding: 0px 11px; float: left;
+}
+.project-type li:first-child {
+	padding-left: 0px;
+}
+.project .container {
+	margin-bottom: 29px;
+}
+.visual-list {
+	width: 100%; text-align: center; margin-bottom: 22px;
+}
+.visual-list::after {
+	clear: both; display: block; content: "";
+}
+.visual-list .col-12 .visual {
+	width: 434px;
+}
+.visual-list .col-13 .visual {
+	width: 274px;
+}
+.visual-list .col-14 .visual {
+	width: 194px;
+}
+.visual-list .visual {
+	margin-bottom: 16px; position: relative;
+}
+.visual-list h5 {
+	margin-bottom: 2px;
+}
+.actions {
+	left: 0px; top: 50%; width: 100%; text-align: center; margin-top: -20px; position: absolute;
+}
+.actions ul {
+	vertical-align: top; display: inline-block;
+}
+.actions li {
+	float: left;
+}
+.actions a {
+	background: url("http://cdn.directrev.com/s/images/bg-actions.png") no-repeat; width: 40px; height: 41px; text-indent: -9999px; overflow: hidden; float: left;
+}
+.actions .zoom-action:hover {
+	background-position: 0px -46px;
+}
+.actions .link {
+	background-position: -40px 0px;
+}
+.actions .link:hover {
+	background-position: -40px -46px;
+}
+* + html .actions ul {
+	display: inline;
+}
+.images-example .paging {
+	padding-top: 11px;
+}
+.headline {
+	background: url("http://cdn.directrev.com/s/images/divider3.png") repeat-x 0px 50%; line-height: 21px; overflow: hidden; margin-bottom: 20px;
+}
+.solid.headline {
+	background: url("http://cdn.directrev.com/s/images/divider.png") repeat-x 0px 50%;
+}
+.solid2.headline {
+	background: url("http://cdn.directrev.com/s/images/divider4.png") repeat-x 0px 50%;
+}
+.dotted3.headline {
+	background: url("http://cdn.directrev.com/s/images/divider5.png") repeat-x 0px 50%;
+}
+.center.headline {
+	text-align: center;
+}
+.center.headline h2 {
+	padding: 0px 30px;
+}
+.headline .case {
+	background: rgb(255, 255, 255); padding: 0px 30px; vertical-align: top; display: inline-block;
+}
+* + html .headline .case {
+	display: inline;
+}
+.headline h2 {
+	background: rgb(255, 255, 255); font: bold 16px/21px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px; padding: 0px 30px 0px 0px; color: rgb(34, 34, 34); text-transform: uppercase; vertical-align: top; display: inline-block; font-size-adjust: none; font-stretch: normal;
+}
+* + html .headline h2 {
+	display: inline;
+}
+.headline .case h2 {
+	margin: 0px; padding: 0px 20px 0px 0px; float: left;
+}
+.headline h3 {
+	background: rgb(255, 255, 255); font: bold 14px/21px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px; padding: 0px 20px 0px 0px; color: rgb(34, 34, 34); text-transform: uppercase; vertical-align: top; display: inline-block; font-size-adjust: none; font-stretch: normal;
+}
+.headline h4 {
+	background: rgb(255, 255, 255); font: bold 14px/21px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px; padding: 0px 20px 0px 0px; color: rgb(34, 34, 34); text-transform: uppercase; vertical-align: top; display: inline-block; font-size-adjust: none; font-stretch: normal;
+}
+.headline h5 {
+	background: rgb(255, 255, 255); font: bold 14px/21px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px; padding: 0px 20px 0px 0px; color: rgb(34, 34, 34); text-transform: uppercase; vertical-align: top; display: inline-block; font-size-adjust: none; font-stretch: normal;
+}
+.center.headline h3 {
+	padding: 0px 20px;
+}
+.center.headline h4 .center.headline h5 {
+	padding: 0px 20px;
+}
+* + html .headline h3 {
+	display: inline;
+}
+.headline img {
+	margin: 0px auto; display: block;
+}
+.skip {
+	background: rgb(255, 255, 255); font: 12px/21px "Open Sans", Arial, Helvetica, sans-serif; padding: 0px 5px; color: rgb(85, 85, 85); float: right; font-size-adjust: none; font-stretch: normal;
+}
+.skip:hover {
+	color: rgb(34, 34, 34);
+}
+.add-comments {
+	background: rgb(34, 34, 34); font: 10px/20px "Open Sans", Arial, Helvetica, sans-serif; padding: 0px 12px; border-radius: 3px; color: rgb(255, 255, 255); text-transform: uppercase; margin-top: 2px; float: left; font-size-adjust: none; font-stretch: normal; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.add-comments:hover {
+	background: rgb(184, 211, 11); color: rgb(255, 255, 255);
+}
+.comments {
+	margin-bottom: 25px;
+}
+.comments .headline {
+	padding: 0px 20px 0px 130px; margin-bottom: 32px;
+}
+.comments-list li {
+	padding: 25px 0px 24px; width: 100%; overflow: hidden; border-top-color: rgb(236, 237, 243); border-top-width: 1px; border-top-style: solid;
+}
+.comments-list p {
+	margin: 0px;
+}
+.comments-list li:first-child {
+	border: 0px currentColor; padding-top: 0px;
+}
+.comments-list .area {
+	overflow: hidden;
+}
+.comments-info {
+	font: 12px/18px "Open Sans", Arial, Helvetica, sans-serif; width: 130px; text-align: right; padding-right: 30px; float: left; font-size-adjust: none; font-stretch: normal;
+}
+.comments .txt {
+	overflow: hidden;
+}
+.comments-info .author {
+	font-weight: bold; margin-bottom: 1px; display: block;
+}
+.comments-info .author a {
+	color: rgb(34, 34, 34);
+}
+.comments-info .author a:hover {
+	color: rgb(149, 161, 5);
+}
+.comments-info .date {
+	font-style: normal; margin-bottom: 5px; display: block;
+}
+.comments-list ul {
+	padding-bottom: 5px;
+}
+.comments-list ul li {
+	background: url("http://cdn.directrev.com/s/images/separator3.png") repeat-y 160px 0px; margin: 54px 0px 0px; padding: 0px; border: 0px currentColor;
+}
+.comments-list ul li:first-child {
+	margin: 51px 0px 0px;
+}
+.comments-list ul .comments-info {
+	padding-right: 45px;
+}
+.comments-list ul .txt {
+	width: 475px; padding-top: 5px; float: right;
+}
+.comments-form {
+	font: 12px/18px "Open Sans", Arial, Helvetica, sans-serif; font-size-adjust: none; font-stretch: normal;
+}
+.comments-form .headline {
+	padding: 0px 20px 0px 130px; margin-bottom: 37px;
+}
+.comments-form .headline h2 {
+	padding: 0px 20px 0px 30px;
+}
+.comments-form label {
+	margin: 6px 30px 0px 0px; width: 130px; text-align: right; color: rgb(34, 34, 34); float: left;
+}
+.comments-form label span {
+	color: rgb(85, 85, 85); font-family: "Merriweather", Arial, Helvetica, sans-serif; margin-left: 3px;
+}
+.comments-form .row {
+	width: 100%; padding-bottom: 20px;
+}
+.comments-form .row::after {
+	clear: both; display: block; content: "";
+}
+.comments-form .text {
+	margin: 0px; padding: 6px 19px 7px; border-radius: 3px; border: 1px solid rgb(236, 237, 243); width: 450px; float: right; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.comments-form textarea {
+	margin: 0px; padding: 5px 19px; border-radius: 3px; border: 1px solid rgb(236, 237, 243); width: 450px !important; height: 148px; line-height: 18px; overflow: auto; float: right; min-height: 148px; max-width: 450px; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.comments-form .submit {
+	background: -ms-linear-gradient(rgba(195, 218, 13, 1) 0%, rgba(174, 205, 9, 1) 100%); font: 12px/30px "Open Sans", Arial, Helvetica, sans-serif; margin: 2px 0px 0px 160px; padding: 0px 24px; border-radius: 3px; color: rgb(255, 255, 255); text-transform: uppercase; vertical-align: top; display: inline-block; position: relative; cursor: pointer; font-size-adjust: none; font-stretch: normal; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.feedback .submit {
+	background: -ms-linear-gradient(rgba(195, 218, 13, 1) 0%, rgba(174, 205, 9, 1) 100%); font: 12px/30px "Open Sans", Arial, Helvetica, sans-serif; margin: 2px 0px 0px 160px; padding: 0px 24px; border-radius: 3px; color: rgb(255, 255, 255); text-transform: uppercase; vertical-align: top; display: inline-block; position: relative; cursor: pointer; font-size-adjust: none; font-stretch: normal; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.comments-form .submit:hover {
+	background: -ms-linear-gradient(rgba(183, 204, 11, 1) 0%, rgba(158, 186, 9, 1) 100%);
+}
+.feedback .submit:hover {
+	background: -ms-linear-gradient(rgba(183, 204, 11, 1) 0%, rgba(158, 186, 9, 1) 100%);
+}
+.comments-form .submit input {
+	background: url("http://cdn.directrev.com/s/images/none.gif"); padding: 0px; border: 0px currentColor; left: 0px; top: 0px; width: 100%; height: 100%; line-height: 0; text-indent: -9999px; overflow: hidden; font-size: 0px; position: absolute; cursor: pointer;
+}
+.feedback .submit input {
+	background: url("http://cdn.directrev.com/s/images/none.gif"); padding: 0px; border: 0px currentColor; left: 0px; top: 0px; width: 100%; height: 100%; line-height: 0; text-indent: -9999px; overflow: hidden; font-size: 0px; position: absolute; cursor: pointer;
+}
+#sidebar .featured h3 {
+	margin-bottom: 21px;
+}
+#content {
+	width: 650px; float: left;
+}
+.article {
+	padding: 0px 0px 19px; width: 100%; margin-bottom: 31px; border-bottom-color: rgb(236, 237, 243); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.article .area {
+	width: 100%;
+}
+.article .area::after {
+	clear: both; display: block; content: "";
+}
+.article-alt {
+	border-width: 2px;
+}
+:first-child.article {
+	padding-top: 0px;
+}
+.article::after {
+	clear: both; display: block; content: "";
+}
+.article h2 {
+	font: bold 16px/20px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px 0px 21px; color: rgb(34, 34, 34); font-size-adjust: none; font-stretch: normal;
+}
+.article h2 a {
+	color: rgb(34, 34, 34);
+}
+.article h2 a:hover {
+	color: rgb(149, 161, 5);
+}
+.article h3 {
+	font: bold 12px/16px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px; padding: 8px 0px 17px; font-size-adjust: none; font-stretch: normal;
+}
+.align-left {
+	background: rgb(255, 255, 255); margin: 4px 24px 10px -1px; padding: 8px; border: 1px solid rgb(245, 245, 245); float: left; box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.1); -webkit-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, .1); -moz-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, .1);
+}
+.align-right {
+	background: rgb(255, 255, 255); margin: 4px 24px 10px -1px; padding: 8px; border: 1px solid rgb(245, 245, 245); float: left; box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.1); -webkit-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, .1); -moz-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, .1);
+}
+.align-right {
+	margin: 4px -1px 10px 24px; float: right;
+}
+.align-left-wb {
+	margin: 4px 24px 10px -1px; padding: 8px; float: left;
+}
+.align-right-wb {
+	margin: 4px 24px 10px -1px; padding: 8px; float: left;
+}
+.align-right-wb {
+	margin: 4px -1px 10px 24px; float: right;
+}
+.article .heading {
+	padding-bottom: 10px; margin-bottom: 10px; border-bottom-color: rgb(236, 237, 243); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.article .heading h2 {
+	background: url("http://cdn.directrev.com/s/images/none.gif"); margin-bottom: 6px;
+}
+.article .heading .author {
+	font-family: "Open Sans", Arial, Helvetica, sans-serif; font-weight: normal;
+}
+.article .heading .author a {
+	color: rgb(119, 119, 119);
+}
+.article .heading .author a:hover {
+	color: rgb(149, 161, 5);
+}
+.article p {
+	margin-bottom: 12px;
+}
+.add-info {
+	font-family: "Open Sans", Arial, Helvetica, sans-serif; margin-bottom: 18px;
+}
+.add-info ul {
+	overflow: hidden;
+}
+.add-info li {
+	background: url("http://cdn.directrev.com/s/images/date.png") no-repeat 0px 3px; padding: 0px 25px 0px 26px; float: left;
+}
+.add-info li a {
+	color: rgb(119, 119, 119);
+}
+.add-info li a:hover {
+	color: rgb(149, 161, 5);
+}
+.add-info .data {
+	background: url("http://cdn.directrev.com/s/images/categories.png") no-repeat 5px 3px;
+}
+.add-info .comments {
+	background: url("http://cdn.directrev.com/s/images/comments.png") no-repeat 1px 3px; margin: 0px;
+}
+.add-info a {
+	float: left;
+}
+.info {
+	font: 12px/16px "Open Sans", Arial, Helvetica, sans-serif; width: 130px; text-align: right; padding-top: 52px; float: left; position: relative; z-index: 2; font-size-adjust: none; font-stretch: normal;
+}
+.info h2 a {
+	color: rgb(255, 255, 255); vertical-align: top; display: inline-block;
+}
+.info h2 span {
+	background: rgb(34, 34, 34); padding: 0px 10px; margin-bottom: 1px; vertical-align: top; display: inline-block; cursor: pointer;
+}
+.info a:hover span {
+	background: rgb(184, 211, 11); color: rgb(255, 255, 255);
+}
+.info-alt {
+	text-align: center; padding-top: 0px;
+}
+.info-alt2 {
+	border-width: 2px; padding-top: 0px; margin-top: -3px;
+}
+.info-alt2 .date {
+	margin-bottom: 26px;
+}
+.info-alt2 .info-list {
+	margin-bottom: 14px;
+}
+.info-alt2 .info-list li {
+	padding: 9px 0px;
+}
+.info-list {
+	margin-bottom: 16px;
+}
+.info-list li {
+	background: url("http://cdn.directrev.com/s/images/divider.png") no-repeat 100% 100%; padding: 13px 0px;
+}
+.info-list li a {
+	color: rgb(119, 119, 119);
+}
+.info-list li a:hover {
+	color: rgb(149, 161, 5);
+}
+.info-list li:first-child {
+	padding-top: 0px;
+}
+.info-alt .info-list li {
+	background: url("http://cdn.directrev.com/s/images/divider.png") no-repeat 50% 100%; text-align: center;
+}
+.info h2 {
+	font: bold 20px/36px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px -200px 19px 0px; width: 641px; text-align: left; text-transform: uppercase; font-size-adjust: none; font-stretch: normal;
+}
+.article .txt {
+	width: 490px; overflow: visible; margin-top: -5px; float: right;
+}
+.txt {
+	overflow: hidden;
+}
+.img {
+	border-radius: 80px; width: 80px; overflow: hidden; -webkit-border-radius: 80px; -moz-border-radius: 80px;
+}
+.img span {
+	vertical-align: top;
+}
+.info-alt .img {
+	margin: 0px auto 12px;
+}
+.img a {
+	display: block; cursor: pointer;
+}
+.img img {
+	display: block; cursor: pointer;
+}
+.social-networks {
+	padding-bottom: 11px;
+}
+.social-networks li {
+	padding: 0px 0px 0px 10px; vertical-align: top; display: inline-block;
+}
+* + html .social-networks li {
+	display: inline;
+}
+.social-networks li:first-child {
+	padding: 0px;
+}
+.social-networks a {
+	background: url("http://cdn.directrev.com/s/images/ico-twitter.png") no-repeat; width: 22px; height: 22px; text-align: left; text-indent: -9999px; overflow: hidden; float: left;
+}
+.social-networks .facebook {
+	background: url("http://cdn.directrev.com/s/images/ico-facebook.png") no-repeat;
+}
+.info .date {
+	font-weight: normal; display: block;
+}
+.visual {
+	margin: 0px -1px 19px; padding: 8px; border: 1px solid rgb(245, 245, 245); box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.1); -webkit-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, .1); -moz-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, .1);
+}
+.article .visual {
+	width: 634px;
+}
+.article .txt .visual {
+	width: 474px;
+}
+.visual img {
+	display: block;
+}
+.visual a {
+	display: block;
+}
+.more {
+	font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+.paging {
+	font: 14px/22px "Open Sans", Arial, Helvetica, sans-serif; overflow: hidden; font-size-adjust: none; font-stretch: normal;
+}
+.paging::after {
+	clear: both; display: block; content: "";
+}
+.paging ul {
+	margin-left: -5px; float: left;
+}
+.paging li {
+	margin-right: 4px; float: left;
+}
+.paging a {
+	padding: 0px 5px; color: rgb(85, 85, 85); float: left;
+}
+.paging ul a:hover {
+	color: rgb(34, 34, 34);
+}
+.paging ul .active {
+	background: rgb(184, 211, 11);
+}
+#content .tags {
+	padding: 17px 0px 24px; overflow: hidden; font-size: 14px;
+}
+#content .tags ul {
+	overflow: hidden;
+}
+.title {
+	font: bold 14px/22px "Open Sans", Arial, Helvetica, sans-serif; width: 130px; text-align: right; color: rgb(34, 34, 34); margin-right: 30px; float: left; font-size-adjust: none; font-stretch: normal;
+}
+.about-author .align-left {
+	margin: 4px 31px 0px 0px; padding: 0px; border: 0px currentColor; box-shadow: none; -webkit-box-shadow: 0 0 0; -moz-box-shadow: 0 0 0;
+}
+.about-author {
+	padding: 0px 0px 24px 50px; color: rgb(85, 85, 85); overflow: hidden; margin-bottom: 25px; border-bottom-color: rgb(236, 237, 243); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.about-author p {
+	margin: 0px;
+}
+.about-author strong {
+	color: rgb(34, 34, 34); font-weight: normal;
+}
+.about-author h3 {
+	font: 14px/18px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px 0px 6px; font-size-adjust: none; font-stretch: normal;
+}
+.about-author .txt {
+	overflow: hidden;
+}
+.article-list {
+	width: 100%; padding-bottom: 54px;
+}
+.article-list::after {
+	clear: both; display: block; content: "";
+}
+.article-list ul {
+	width: 490px; padding-top: 4px; float: right;
+}
+.article-list h4 {
+	font: bold 12px/18px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px; font-size-adjust: none; font-stretch: normal;
+}
+.article-list h4 a {
+	color: rgb(34, 34, 34);
+}
+.article-list h4 a:hover {
+	color: rgb(149, 161, 5);
+}
+.article-list .visual {
+	width: 134px; margin-bottom: 10px;
+}
+.article-list li {
+	width: 150px; margin-left: 20px; float: left;
+}
+.article-list li:first-child {
+	margin: 0px;
+}
+#sidebar {
+	width: 220px; float: right;
+}
+.search {
+	background: rgb(255, 255, 255); border-radius: 3px; border: 1px solid rgb(236, 237, 243); width: 220px; height: 28px; margin-bottom: 28px; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.search::after {
+	clear: both; display: block; content: "";
+}
+.search .text {
+	margin: 0px; padding: 5px 9px 6px; border: 0px currentColor; width: 165px; line-height: 17px; float: left;
+}
+.search .submit {
+	background: url("http://cdn.directrev.com/s/images/btn-go.png") no-repeat 0px 4px; padding: 0px; border: 0px currentColor; width: 36px; height: 28px; line-height: 0; text-indent: -9999px; overflow: hidden; font-size: 0px; float: right; cursor: pointer;
+}
+.search .submit:hover {
+	background-position: 0px -21px;
+}
+.items {
+	font: 12px/24px "Open Sans", Arial, Helvetica, sans-serif; padding-bottom: 18px; margin-bottom: 28px; border-bottom-color: rgb(236, 237, 243); border-bottom-width: 1px; border-bottom-style: solid; font-size-adjust: none; font-stretch: normal;
+}
+.items h3 {
+	font: bold 14px/17px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); margin-bottom: 13px; font-size-adjust: none; font-stretch: normal;
+}
+.box h3 {
+	font: bold 14px/17px "Open Sans", Arial, Helvetica, sans-serif; color: rgb(34, 34, 34); margin-bottom: 13px; font-size-adjust: none; font-stretch: normal;
+}
+.box {
+	padding-bottom: 20px; margin-bottom: 28px; border-bottom-color: rgb(236, 237, 243); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.box h3 {
+	margin-bottom: 17px;
+}
+.post {
+	padding-bottom: 17px;
+}
+.tweets .post {
+	padding: 17px 0px 0px;
+}
+.tweets :first-child.post {
+	padding: 0px;
+}
+.post .date {
+	font: 10px/normal "Open Sans", Arial, Helvetica, sans-serif; color: rgb(119, 119, 119); text-transform: uppercase; font-size-adjust: none; font-stretch: normal;
+}
+.popular-posts p {
+	margin: 0px;
+}
+.popular-posts .post {
+	padding: 17px 0px 0px; line-height: 16px; overflow: hidden;
+}
+.popular-posts :first-child.post {
+	padding: 0px;
+}
+.popular-posts .align-left {
+	margin: 0px; padding: 4px 10px 0px 0px; border: 0px currentColor; float: left; box-shadow: none; -webkit-box-shadow: 0 0 0; -moz-box-shadow: 0 0 0;
+}
+.align-left img {
+	float: left;
+}
+.align-right img {
+	float: left;
+}
+.popular-posts .txt {
+	overflow: hidden;
+}
+.box h4 {
+	font: bold 12px/16px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px 0px 6px; color: rgb(34, 34, 34); font-size-adjust: none; font-stretch: normal;
+}
+.box h4 a {
+	color: rgb(34, 34, 34);
+}
+.box h4 a:hover {
+	color: rgb(149, 161, 5);
+}
+.tags {
+	font: 12px/21px "Open Sans", Arial, Helvetica, sans-serif; font-size-adjust: none; font-stretch: normal;
+}
+.tags li {
+	margin-right: 3px; vertical-align: top; display: inline-block;
+}
+* + html .tags li {
+	display: inline;
+}
+.photo {
+	margin-bottom: 14px;
+}
+.photo img {
+	display: block;
+}
+.featured h4 {
+	text-transform: uppercase;
+}
+#footer {
+	background: rgb(34, 34, 34); width: 100%; color: rgb(153, 153, 153); line-height: 18px; display: table-row;
+}
+.footer-holder {
+	width: 100%; height: 1%; display: table-cell;
+}
+#footer .container {
+	background: rgb(34, 34, 34); margin: 0px -9999px; padding: 0px 9999px; width: 100%; height: auto; position: relative;
+}
+#footer .case {
+	padding: 28px 30px 15px; overflow: hidden;
+}
+.add {
+	background: rgb(26, 26, 26); margin: 0px -9999px; padding: 0px 9999px; width: 100%; position: relative;
+}
+#footer .add .case {
+	background: rgb(26, 26, 26);
+}
+#footer h4 {
+	font: bold 14px/16px "Open Sans", Arial, Helvetica, sans-serif; margin: 0px 0px 19px; color: rgb(255, 255, 255); font-size-adjust: none; font-stretch: normal;
+}
+.contact {
+	width: 210px; margin-right: 30px; float: left;
+}
+#footer a {
+	color: rgb(153, 153, 153);
+}
+#footer a:hover {
+	color: rgb(255, 255, 255);
+}
+.contact dl {
+	overflow: hidden; margin-bottom: 18px;
+}
+.contact dt {
+	margin-right: 3px; float: left;
+}
+.contact dd {
+	overflow: hidden;
+}
+.contact address {
+	font-style: normal;
+}
+.contact-holder {
+	margin-bottom: 23px;
+}
+#footer .newsletter h4 {
+	margin-bottom: 22px;
+}
+.newsletter form {
+	border-radius: 3px; border: 1px solid rgb(54, 54, 54); height: 28px; position: relative; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+.newsletter form::after {
+	clear: both; display: block; content: "";
+}
+.newsletter .text {
+	margin: 0px; padding: 5px 9px 6px; border: 0px currentColor; width: 151px; color: rgb(153, 153, 153); line-height: 17px; float: left;
+}
+.newsletter .submit {
+	background: url("http://cdn.directrev.com/s/images/btn-submit.png") no-repeat 0px 4px; padding: 0px; border: 0px currentColor; width: 36px; height: 28px; line-height: 0; text-indent: -9999px; overflow: hidden; font-size: 0px; float: right; cursor: pointer;
+}
+.newsletter .submit:hover {
+	background-position: 0px -21px;
+}
+#footer .social-networks2 {
+	width: 207px; margin-right: 33px; float: left;
+}
+.social-networks2 ul {
+	padding-top: 3px;
+}
+.social-networks2 li {
+	overflow: hidden; margin-bottom: 3px;
+}
+.social-networks2 a {
+	background: url("http://cdn.directrev.com/s/images/ico-facebook2.png") no-repeat 0px -70px; padding: 7px 0px 7px 46px; vertical-align: top; display: inline-block;
+}
+.social-networks2 a:hover {
+	
+}
+.social-networks2 .twitter {
+	background: url("http://cdn.directrev.com/s/images/ico-twitter2.png") no-repeat 0px -70px;
+}
+.social-networks2 .twitter:hover {
+	
+}
+.social-networks2 .dribbble {
+	background: url("http://cdn.directrev.com/s/images/ico-dribbble.png") no-repeat 0px -70px;
+}
+.social-networks2 .dribbble:hover {
+	
+}
+.social-networks2 .youtube {
+	background: url("http://cdn.directrev.com/s/images/ico-youtube.png") no-repeat 0px -70px;
+}
+.social-networks2 .youtube:hover {
+	
+}
+.social-networks2 .google {
+	background: url("http://cdn.directrev.com/s/images/ico-google.png") no-repeat 0px -70px;
+}
+.social-networks2 .google:hover {
+	
+}
+.social-networks2 .linkedin {
+	background: url("http://cdn.directrev.com/s/images/ico-linkedin.png") no-repeat 0px -70px;
+}
+.social-networks2 .linkedin:hover {
+	
+}
+.clients-info {
+	width: 207px; float: left;
+}
+.clients-info li {
+	background: url("http://cdn.directrev.com/s/images/bullet.png") no-repeat 0px 15px; padding: 9px 0px 7px 18px; border-bottom-color: rgb(69, 69, 69); border-bottom-width: 1px; border-bottom-style: dashed;
+}
+.clients-info li:first-child {
+	background-position: 0px 6px; padding-top: 0px;
+}
+.copyright {
+	color: rgb(69, 69, 69); font-weight: normal; float: left;
+}
+.add-nav {
+	float: right;
+}
+.add-nav ul {
+	float: left;
+}
+.add-nav li {
+	background: url("http://cdn.directrev.com/s/images/separator.png") no-repeat 6px 3px; padding-left: 17px; float: left;
+}
+.add-nav li:first-child {
+	
+}
+.add-nav a {
+	float: left;
+}
+#bg {
+	left: 0px; top: 0px; overflow: hidden; position: fixed; z-index: -1;
+}
+#bg img {
+	left: 0px !important; top: 0px !important; position: absolute;
+}
+.ordered-list {
+	margin: 0px 0px 5px 16px; overflow: hidden; counter-reset: item;
+}
+.ordered-list li {
+	padding-bottom: 4px; margin-right: 14px; display: block;
+}
+.ordered-list li::before {
+	padding-right: 14px; content: counters(item, ".") "."; counter-increment: item;
+}
+#banner .oneByOne_item span.slideh3 {
+	color: rgb(149, 161, 5);
+}
+#banner .oneByOne_item span.slidebutton a {
+	background: -ms-linear-gradient(rgba(195, 218, 13, 1) 0%, rgba(174, 205, 9, 1) 100%); border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+#banner .oneByOne_item span.slidebutton a:hover {
+	background: -ms-linear-gradient(rgba(183, 204, 11, 1) 0%, rgba(158, 186, 9, 1) 100%);
+}
+#banner .oneByOne_item span.slideh3_left {
+	color: rgb(149, 161, 5);
+}
+#banner .oneByOne_item span.slidebutton_left a {
+	background: -ms-linear-gradient(rgba(195, 218, 13, 1) 0%, rgba(174, 205, 9, 1) 100%); border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px;
+}
+#banner .oneByOne_item span.slidebutton_left a:hover {
+	background: -ms-linear-gradient(rgba(183, 204, 11, 1) 0%, rgba(158, 186, 9, 1) 100%);
+}
+.flickr {
+	width: 210px; float: right;
+}
+.flickr a {
+	border: 2px solid rgb(26, 26, 26); overflow: hidden; margin-right: 10px; margin-bottom: 10px; float: left;
+}
+.flickr a:hover {
+	border-color: rgb(184, 211, 11);
+}
+.flickr .flickr_badge_image {
+	margin: 22px 0px 0px;
+}
+.flickr .flickr_badge_image img {
+	border: 0px solid black !important; float: left; max-height: 56px; max-width: 56px;
+}
+.photostream {
+	width: 225px; overflow: hidden; padding-top: 4px; margin-right: -10px;
+}
+.photostream a {
+	border: 2px solid rgb(85, 85, 85); overflow: hidden; margin-right: 5px; margin-bottom: 5px; float: left;
+}
+.photostream a:hover {
+	border-color: rgb(184, 211, 11);
+}
+.photostream .flickr_badge_image {
+	margin: 0px;
+}
+.photostream .flickr_badge_image img {
+	border: 0px solid black !important; float: left; max-height: 66px; max-width: 66px;
+}

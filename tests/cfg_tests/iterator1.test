@@ -36,8 +36,8 @@ cfg_out_WCIequals=\
 (0,LBlock(0))\n\
     [0] <>Global<>ignore1 := alloc() @ #1\n\
     [1] obj := <>Global<>ignore1\n\
-    [2] <>obj<>1 := <>Global<>toObject(obj) @ #2\n\
-    [3] <>iterator<>2 := <>Global<>iteratorInit(<>obj<>1)\n\
+    [2] <>obj<>1 := obj\n\
+    [3] <>iterator<>2 := <>Global<>iteratorInit(<>obj<>1) @ #2\n\
     [4] <>cond1<>3 := <>Global<>iteratorHasNext(<>obj<>1, <>iterator<>2)\n\
 \n\
 \n\

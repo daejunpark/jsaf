@@ -35,6 +35,11 @@ object NodeUtil {
     case _ => expr
   }
 
+  def isDummySpan(span: Span) = {
+    val loc = span.getBegin
+    loc.getLine == 0 && loc.column == 0
+  }
+
   // Assumes that the filename remains the same.
   object addLinesWalker extends Walker {
     var line = 0
@@ -104,10 +109,15 @@ object NodeUtil {
                 super.walk(backCases).asInstanceOf[List[Case]])
       case SProgram(info, STopLevel(fds, vds, program)) =>
         SProgram(info, STopLevel(super.walk(fds).asInstanceOf[List[FunDecl]], vds,
-                                 simplify(program.map(walk).asInstanceOf[List[Stmt]])))
-      case SFunctional(fds, vds, body, name, params) =>
+                                 program.map(ss => ss match {
+                                   case SSourceElements(i, s, f) =>
+                                     SSourceElements(i, simplify(s.map(walk).asInstanceOf[List[Stmt]]), f)
+                                 })))
+      case SFunctional(fds, vds, SSourceElements(info, body, strict), name, params) =>
         SFunctional(super.walk(fds).asInstanceOf[List[FunDecl]], vds,
-                    simplify(body.map(walk).asInstanceOf[List[Stmt]]), name, params)
+                    SSourceElements(info,
+                                    simplify(body.map(walk).asInstanceOf[List[Stmt]]),
+                                    strict), name, params)
       case _ => super.walk(node)
     }
   }
@@ -212,15 +222,27 @@ object NodeUtil {
   val varOne = freshGlobalName("one")
   def funexprName(span: Span) = freshName("funexpr@"+span.toStringWithoutFiles)
 
-  def isFutureReserved(id: Id) = futureReserved contains id.getText
-  def isEvalOrArguments(id: Id) = (id.getText.compareTo("eval") == 0 || id.getText.compareTo("arguments") == 0)
-  def isUnderscore(id: Id) = id.getText.equals("_")
+  def isFutureReserved(id: Id): Boolean = isFutureReserved(id.getText)
+  def isFutureReserved(id: String): Boolean = futureReserved.contains(id)
+  def isEvalOrArguments(id: Id): Boolean = isEvalOrArguments(id.getText)
+  def isEvalOrArguments(id: String): Boolean = id.compareTo("eval") == 0 || id.compareTo("arguments") == 0
+  def isUnderscore(id: Id): Boolean = id.getText.equals("_")
 
   def isName(lhs: LHS) = lhs match {
     case _:VarRef => true
     case _:Dot => true
     case _ => false
   }
+
+  def isEval(n: Expr) = n match {
+    case SVarRef(info, SId(_, text, _, _)) => text.equals("eval")
+    case _ => false
+  }
+
+  // merge the statements in each SourceElements
+  // after hoisting
+  def toStmts(sources: List[SourceElements]): List[Stmt] =
+    sources.foldLeft(List[Stmt]())((l, s) => l++toList(s.getBody).asInstanceOf[List[Stmt]])
 
   def getName(lhs: LHS): String = lhs match {
     case SVarRef(_, id) => id.getText
@@ -336,7 +358,7 @@ object NodeUtil {
       val index = origin.indexOf("\\")
       val text = origin.substring(index+1)
       if (index < 0) false
-      else if (isOctalDigit(text.charAt(0)) &&
+      else if (text.length > 0 && isOctalDigit(text.charAt(0)) &&
                (text.length == 1 || (text.length >= 2 &&
                                      !isOctalDigit(text.charAt(1))))) {
         true

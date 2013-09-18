@@ -23,11 +23,14 @@ import Spacing;
  * Program ::= w SourceElements? w EndOfFile
  */
 public Program File =
-     initParser a1:TopLevelSourceElements? closeParser
+     initParser a1:UseStrictDirectives? w a2:TopLevelSourceElements? closeParser
      { Span span = createSpan(yyStart,yyCount);
-       if (a1 == null) a1 = Collections.<SourceElement>emptyList();
+       if (a2 == null) a2 = Collections.<SourceElement>emptyList();
        HashMap<String, Span> map = new HashMap<String, Span>();
-       yyValue = NodeFactory.makeProgram(span, a1);
+       if (a1 == null)
+           yyValue = NodeFactory.makeProgram(span, a2, false);
+       else
+           yyValue = NodeFactory.makeProgram(span, a2, true);
      };
 void initParser = w { initParser(); };
 void closeParser = w EndOfFile
@@ -40,6 +43,20 @@ void closeParser = w EndOfFile
            error("Closing a log file for the parser failed!");
        }
      };
+
+private String UseStrictDirectives =
+     yyValue:UseStrictDirective UseStrictDirective+
+     { Span span = createSpan(yyStart,yyCount);
+       System.out.println(span+":");
+       System.out.println("    Warning: you may not use multiple Use Strict Directives.");
+     }
+   / yyValue:UseStrictDirective
+   ;
+
+private String UseStrictDirective =
+     ["] yyValue:"use strict" ["] (w semicolon)?
+   / ['] yyValue:"use strict" ['] (w semicolon)?
+   ;
 
 /*
  * SourceElements ::= SourceElement (w SourceElement)*
@@ -78,7 +95,7 @@ private ModDecl ModuleDeclaration =
      module w a1:Id w opencurly a2:(w ModuleElements)? w closecurly
      { Span span = createSpan(yyStart,yyCount);
        if (a2 == null) a2 = Collections.<SourceElement>emptyList();
-       yyValue = NodeFactory.makeModDecl(span, a1, a2);
+       yyValue = NodeFactory.makeModDecl(span, a1, a2, false);
      };
 
 /*
@@ -116,11 +133,11 @@ private ModExport ExportDeclaration =
      }
    / export w get w a1:Id w openparen w closeparen w a2:FunctionBody
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makeModExpGetter(span, a1, a2);
+       yyValue = NodeFactory.makeModExpGetter(span, a1, a2.getA(), a2.getB());
      }
    / export w set w a1:Id w openparen w a2:Id w closeparen w a3:FunctionBody
      { Span span = createSpan(yyStart,yyCount);
-       yyValue = NodeFactory.makeModExpSetter(span, a1, a2, a3);
+       yyValue = NodeFactory.makeModExpSetter(span, a1, a2, a3.getA(), a3.getB());
      }
    / export w a1:ExportSpecifierSetList EOS
      { Span span = createSpan(yyStart,yyCount);
@@ -254,13 +271,13 @@ FunDecl FunctionDeclaration =
      function w a1:Id w openparen a2:(w Params)? w closeparen w a3:FunctionBody
      { Span span = createSpan(yyStart,yyCount);
        if (a2 == null) a2 = Collections.<Id>emptyList();
-       yyValue = NodeFactory.makeFunDecl(span, a1, a2, a3);
+       yyValue = NodeFactory.makeFunDecl(span, a1, a2, a3.getA(), a3.getB());
      };
 
 /*
  * Params ::= Id (w , w Id)*
  */
-transient List<Id> Params =
+public List<Id> Params =
      a1:Id a2s:(w void:comma w Id)+
      { yyValue = Useful.cons(a1, a2s.list()); }
    / a1:Id
@@ -269,10 +286,21 @@ transient List<Id> Params =
 /*
  * FunctionBody ::= { w SourceElement* w }
  */
-transient List<SourceElement> FunctionBody =
-     opencurly w closecurly
-     { yyValue = Useful.list(); }
-   / opencurly w yyValue:SourceElements w closecurly ;
+public kr.ac.kaist.jsaf.useful.Pair<List<SourceElement>, Boolean> FunctionBody =
+     opencurly w a1:UseStrictDirectives? w closecurly
+     { if (a1 == null)
+         yyValue = new kr.ac.kaist.jsaf.useful.Pair<List<SourceElement>, Boolean>(Collections.<SourceElement>emptyList(),
+                                                                                  Boolean.valueOf(false));
+       else
+         yyValue = new kr.ac.kaist.jsaf.useful.Pair<List<SourceElement>, Boolean>(Collections.<SourceElement>emptyList(),
+                                                                                  Boolean.valueOf(true));
+     }
+   / opencurly w a1:UseStrictDirectives? w a2:SourceElements w closecurly
+     { if (a1 == null)
+          yyValue = new kr.ac.kaist.jsaf.useful.Pair<List<SourceElement>, Boolean>(a2, Boolean.valueOf(false));
+       else
+          yyValue = new kr.ac.kaist.jsaf.useful.Pair<List<SourceElement>, Boolean>(a2, Boolean.valueOf(true));
+     };
 
 /*
  * FunctionExpr ::= function (w Id)? w ( (w Params)? w ) w FunctionBody
@@ -282,5 +310,5 @@ FunExpr FunctionExpr =
      { Span span = createSpan(yyStart,yyCount);
        Id f = (a1 == null) ? NodeFactory.makeId(span, "", "") : a1;
        if (a2 == null) a2 = Collections.<Id>emptyList();
-       yyValue = NodeFactory.makeFunExpr(span, f, a2, a3);
+       yyValue = NodeFactory.makeFunExpr(span, f, a2, a3.getA(), a3.getB());
      };

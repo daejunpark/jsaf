@@ -30,12 +30,11 @@ object Navigator extends DOM {
   val loc_ins = newPredefLoc(name + "Ins")
   val loc_proto = newPredefLoc(name + "Proto")
 
-  /* constructor */
-  private val prop_cons: List[(String, AbsProperty)] = List(
+  /* instant object */
+  private val prop_ins: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
     ("@proto", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
     ("@extensible", AbsConstValue(PropValue(BoolTrue))),
-    ("@hasinstance", AbsConstValue(PropValue(Value(NullTop)))),
     ("length", AbsConstValue(PropValue(ObjectValue(Value(AbsNumber.alpha(0)), F, F, F)))),
     ("prototype", AbsConstValue(PropValue(ObjectValue(Value(loc_proto), F, F, F)))),
     // property
@@ -53,7 +52,11 @@ object Navigator extends DOM {
     // Navigator implements NavigatorStorageUtils (Section 7.5.1.4)
     ("cookieEnabled", AbsConstValue(PropValue(ObjectValue(BoolTop, F, T, T)))),
     // Navigator implements NavigatorPlugins (Section 7.5.1.5)
-    ("javaEnabled", AbsConstValue(PropValue(ObjectValue(BoolTop, F, T, T))))
+    ("plugins", AbsConstValue(PropValue(ObjectValue(PluginArray.loc_ins, F, T, T)))),
+    ("mimeTypes", AbsConstValue(PropValue(ObjectValue(MimeTypeArray.loc_ins, F, T, T)))),
+    ("javaEnabled", AbsConstValue(PropValue(ObjectValue(BoolTop, F, T, T)))),
+    // Non-standard
+    ("vendor", AbsConstValue(PropValue(ObjectValue(StrTop, F, T, T))))
   )
 
   /* prorotype */
@@ -76,7 +79,7 @@ object Navigator extends DOM {
   /* no constructor */
   /* initial property list */
   def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
-    (loc_ins, prop_cons), (loc_proto, prop_proto)
+    (loc_ins, prop_ins), (loc_proto, prop_proto)
   )
 
   def getSemanticMap(): Map[String, SemanticFun] = {

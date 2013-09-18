@@ -1,0 +1,24 @@
+Context-sensitivity mode is "1-callsite".
+
+* Initialize *
+hRP-sites_test/69,360.cn/test_files/113.js:1:21648-21829:
+    Warning: the use of FunctionDeclaration as a Statement is not allowed in ECMAScript.
+hRP-sites_test/69,360.cn/test_files/113.js:1:48085-48304:
+    Warning: the use of FunctionDeclaration as a Statement is not allowed in ECMAScript.
+hRP-sites_test/69,360.cn/test_files/113.js:1:48305-48385:
+    Warning: the use of FunctionDeclaration as a Statement is not allowed in ECMAScript.
+hRP-sites_test/69,360.cn/test_files/switch.combo.js:1:303-423:
+    Warning: the use of FunctionDeclaration as a Statement is not allowed in ECMAScript.
+# Time for IR translation(s): 20.72
+# Time for CFG building(s): 2.25
+# Time for front end(s): 22.97
+
+* Analyze *
+# Initial peak memory(mb): 484.14
+# Basic block(#): 21951(source) + 2475(bulit-in) = 24426
+# Time for initial heap(s): 1.35
+# Time for initial heap with DOM modeling(ms): 689.614331
+The following names are defined in the initial heap of analyzer
+but not in the list of predefined names:
+    jQuery $ 
+Update predefined names at jsaf.compiler.Predefind

@@ -20,6 +20,20 @@
      var __expect3 = 4;
      var __result4 = divElem1.childNodes[1].id;    // "newdiv"
      var __expect4 = "newdiv";
+     var __result5 = newDivElem.parentNode.id;
+     var __expect5 = "div1";
+     var __result6 = newDivElem.nextSibling.id;
+     var __expect6 = "div2";
+     var __result7 = divElem2.previousSibling.id;
+     var __expect7 = "newdiv";
+
+     var newimgElem = document.createElement("img");    // HTMLImageElement
+     divElem1.insertBefore(newimgElem, null);
+
+     var __result8 = divElem1.childNodes.length;   // 
+     var __expect8 = 5;
+     var __result9 = divElem1.childNodes[4].tagName;   // 
+     var __expect9 = "IMG";
   </script>
 </body>
 

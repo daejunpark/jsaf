@@ -320,7 +320,9 @@ object JQueryEvent extends ModelData {
       val h1 = JQueryHelper.addJQueryEvent(h, Value(lset_target), AbsString.alpha(event_type), v_fun, v_dat, ValueBot)
       ((Helper.ReturnStore(h1, Value(lset_this)), ctx), (he, ctxe))
     }
-    else
-      ((HeapBot, ContextBot), (he, ctxe))
+    else {
+      val h1 = JQueryHelper.addJQueryEvent(h, Value(lset_target), AbsString.alpha(event_type), v_fun, v_dat, ValueBot)
+      ((Helper.ReturnStore(h1, Value(lset_this)), ctx), (he, ctxe))
+    }
   }
 }

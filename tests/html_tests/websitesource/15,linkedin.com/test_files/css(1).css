@@ -1,0 +1,1530 @@
+.accounticon {
+	background: url("/scds/common/u/img/sprite/sprite_global_v8.png") no-repeat; width: 15px; height: 16px; text-align: left; text-indent: -119988px; overflow: hidden; margin-left: 5px; vertical-align: top; display: inline-block;
+}
+.jobseekericon {
+	background-position: -600px 1px;
+}
+.premiumicon {
+	background-position: -500px 1px;
+}
+.openlinkicon {
+	background-position: -700px 0px;
+}
+.icon-beta {
+	color: rgb(204, 102, 0) !important; font-size: 11px; font-style: italic; font-weight: bold; vertical-align: top;
+}
+.super.icon-beta {
+	vertical-align: super;
+}
+.icon-new {
+	padding: 2px 3px; border-radius: 2px; color: rgb(255, 255, 255); text-transform: uppercase; line-height: 1; font-size: 9px; font-weight: normal; display: inline-block; background-color: rgb(204, 102, 0); -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px;
+}
+.network-degree {
+	background: rgb(255, 255, 255); padding: 0px 4px !important; border-radius: 6px; border: 1px solid rgb(51, 153, 204); text-align: center !important; color: rgb(51, 153, 204); line-height: 12px !important; font-size: 11px !important; font-style: normal !important; font-weight: bold !important; margin-top: -4px; vertical-align: middle; display: inline-block; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFC7EBF6', endColorstr='#FFFFFFFF'); min-width: 20px; -webkit-border-radius: 6px; -moz-border-radius: 6px; -ms-border-radius: 6px; -o-border-radius: 6px;
+}
+.network-degree sup {
+	font-weight: normal !important; vertical-align: bottom !important;
+}
+.v1 .network-degree sup {
+	font-size: 11px !important;
+}
+.network-degree sup {
+	vertical-align: baseline !important;
+}
+.you.network-degree {
+	letter-spacing: -0.5px !important;
+}
+.group.network-degree {
+	letter-spacing: -0.5px !important;
+}
+.degree-icon sup {
+	top: -0.1em;
+}
+.ayn-badge {
+	padding: 1px 3px; border-radius: 2px; border: 1px solid rgb(186, 221, 238); color: rgb(0, 102, 153); line-height: 1.6; font-size: 9px; font-weight: bold; text-decoration: none; white-space: nowrap; background-color: rgb(255, 255, 255); -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px;
+}
+.ayn-campaign08.ayn-badge {
+	border-color: rgb(186, 221, 238); color: rgb(0, 102, 153) !important;
+}
+.ayn-official.ayn-badge {
+	border-color: rgb(251, 223, 180); color: rgb(204, 102, 0) !important;
+}
+.ayn-featured.ayn-badge {
+	border-color: rgb(251, 223, 180); color: rgb(204, 102, 0) !important;
+}
+.typeahead-results-container {
+	width: 450px;
+}
+.typeahead-results-container .yui-ac {
+	position: relative;
+}
+.typeahead-results-container .yui-ac-input {
+	position: absolute;
+}
+.typeahead-results-container .yui-ac-container {
+	top: 1.6em; position: absolute; z-index: 1;
+}
+.typeahead-results-container .yui-ac-content {
+	background: rgb(255, 255, 255); width: 410px; overflow: hidden; position: absolute; z-index: 100;
+}
+.typeahead-results-container .yui-ac-content ul {
+	border-width: 1px 1px 0px; border-style: solid solid none; border-color: rgb(186, 221, 238) rgb(186, 221, 238) currentColor; list-style: none; margin: 0px; padding: 0px; width: auto; min-width: 310px; _width: 310px;
+}
+.typeahead-results-container .yui-ac-content li {
+	background: rgb(255, 255, 255); padding: 5px; border-bottom-color: rgb(186, 221, 238); border-bottom-width: 1px; border-bottom-style: solid; cursor: pointer;
+}
+.typeahead-results-container .yui-ac-content li h4 {
+	margin: 0px 1px 0px 0px; font-size: 12px; font-weight: normal;
+}
+.typeahead-results-container .yui-ac-content li div {
+	margin: 0px; height: 1.2em; color: rgb(102, 102, 102); overflow: hidden; font-size: 11px;
+}
+.typeahead-results-container .yui-ac-content li p {
+	margin: 0px; height: 1.2em; color: rgb(102, 102, 102); overflow: hidden; font-size: 11px;
+}
+.typeahead-results-container .yui-ac-content li .related {
+	padding-left: 10px;
+}
+.typeahead-results-container .yui-ac-content li.yui-ac-prehighlight {
+	background-color: rgb(221, 240, 248);
+}
+.typeahead-results-container .yui-ac-content li.yui-ac-highlight {
+	background-color: rgb(221, 240, 248);
+}
+.typeahead-results-container .yui-ac-content ul.hasImage li {
+	height: auto; padding-left: 40px; position: relative; min-height: 35px; _height: 35px;
+}
+.typeahead-results-container .yui-ac-content ul.hasImage li img {
+	left: 6px; top: 4px; width: 30px; height: 30px; position: absolute;
+}
+.typeahead-results-container .yui-ac-content ul.hasImage li.poll {
+	
+}
+.typeahead-noresults {
+	background: rgb(255, 255, 255); padding: 5px; border: 1px solid rgb(186, 221, 238); width: 200px; text-align: left; font-size: 120%; display: none; position: absolute;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory {
+	border: 1px solid rgb(153, 153, 153); background-color: rgb(231, 231, 231);
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li {
+	border: currentColor;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.category {
+	background: url("/scds/common/u/img/sprite/sprite_typeahead_v00.png") repeat-x 0px 0px rgb(231, 231, 231); padding: 5px 5px 0px 0px; width: 100px; height: auto; cursor: default; min-height: 25px; _height: 25px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.category h3 {
+	height: auto; text-align: right; color: rgb(144, 144, 144); font-size: 11px; font-weight: bold; min-height: 10px; _height: 10px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.top.category {
+	background-image: none;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.top.item {
+	background-image: none;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.first {
+	background: url("/scds/common/u/img/sprite/sprite_typeahead_v00.png") repeat-x 0px 0px rgb(255, 255, 255); margin-top: -30px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.text-only {
+	padding: 5px 5px 2px; width: 247px; height: 15px; min-height: 15px; _height: 15px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.item {
+	padding: 7px 5px 4px 42px; width: 225px; height: auto; margin-left: 105px; border-left-color: rgb(223, 223, 223); border-left-width: 1px; border-left-style: solid; position: relative; min-height: 25px; _height: 25px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.secondary.item {
+	background-color: rgb(244, 244, 244);
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.item div {
+	height: auto; overflow: hidden; max-height: 2.3em;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.item img {
+	left: 6px; top: 5px; width: 30px; height: 30px; position: absolute;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.sitefeature.item {
+	padding: 2px 0px 3px; width: 272px; height: auto; line-height: 25px; max-height: 25px; _height: 25px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.skill.item {
+	padding: 2px 0px 3px; width: 272px; height: auto; line-height: 25px; max-height: 25px; _height: 25px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.suggestion.item {
+	padding: 2px 0px 3px; width: 272px; height: auto; line-height: 25px; max-height: 25px; _height: 25px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.sitefeature.item h4 {
+	background: url("/scds/common/u/img/sprite/sprite_typeahead_v00.png") no-repeat 13px -85px; padding: 5px 5px 5px 40px; height: auto; line-height: 16px; max-height: 16px; _height: 16px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.skill.item h4 {
+	background: url("/scds/common/u/img/sprite/sprite_typeahead_v00.png") no-repeat 13px -85px; padding: 5px 5px 5px 40px; height: auto; line-height: 16px; max-height: 16px; _height: 16px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.suggestion.item h4 {
+	background: url("/scds/common/u/img/sprite/sprite_typeahead_v00.png") no-repeat 13px -85px; padding: 5px 5px 5px 40px; height: auto; line-height: 16px; max-height: 16px; _height: 16px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.suggestion.item h4 {
+	background-position: 13px -115px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.yui-ac-prehighlight.suggestion.item h4 {
+	background-position: 13px -145px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.yui-ac-highlight.suggestion.item h4 {
+	background-position: 13px -145px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.yui-ac-prehighlight.item {
+	background-color: rgb(221, 240, 248);
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.yui-ac-highlight.item {
+	background-color: rgb(221, 240, 248);
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.poll.item h4 {
+	background: url("/scds/common/u/img/bg/bg_search_comment.png") no-repeat left bottom; padding-bottom: 8px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.poll.item h4 strong {
+	background: url("/scds/common/u/img/bg/bg_search_comment.png") no-repeat; padding: 8px 8px 0px 19px; height: auto; font-style: italic; display: block; min-height: 20px; _height: 20px;
+}
+.typeahead-results-container .yui-ac-content ul.hasCategory li.poll.item .item-subline {
+	margin: 6px 0px 6px 25px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory {
+	width: auto; min-width: 472px; background-color: rgb(238, 238, 238); _width: 472px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.category {
+	background: rgb(231, 231, 231); padding: 5px 5px 0px 20px; width: auto; height: auto; min-height: 15px; _height: 15px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.category h3 {
+	text-align: left;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.category h3 strong {
+	font-weight: normal;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.item {
+	background-image: none; background-color: rgb(255, 255, 255);
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.first {
+	margin-top: 0px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.item {
+	padding: 0px 5px 0px 66px; width: auto; height: auto; margin-left: 0px; min-height: 40px; _height: 40px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.item h4 {
+	padding-top: 7px; font-size: 13px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.item img {
+	left: 18px; top: 0px; width: 40px; height: 40px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.sitefeature.item {
+	padding: 2px 0px 3px 20px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.skill.item {
+	padding: 2px 0px 3px 20px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.suggestion.item {
+	padding: 2px 0px 3px 20px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.sitefeature.item h4 {
+	background: url("/scds/common/u/img/sprite/sprite_typeahead_v00.png") no-repeat 13px -77px; padding: 13px 5px 5px 46px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.skill.item h4 {
+	background: url("/scds/common/u/img/sprite/sprite_typeahead_v00.png") no-repeat 13px -77px; padding: 13px 5px 5px 46px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.suggestion.item h4 {
+	background: url("/scds/common/u/img/sprite/sprite_typeahead_v00.png") no-repeat 13px -77px; padding: 13px 5px 5px 46px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.suggestion.item h4 {
+	background-position: 13px -106px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.yui-ac-prehighlight.suggestion.item h4 {
+	background-position: 13px -137px;
+}
+.typeahead-reskin .typeahead-results-container .yui-ac-content ul.hasCategory li.yui-ac-highlight.suggestion.item h4 {
+	background-position: 13px -137px;
+}
+.chrome-v4 .global-nav .v2#header-notifications {
+	background: url("/scds/common/u/img/anim/anim_loading_16x16.gif") no-repeat -12345px -12345px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .arrow {
+	overflow: visible; display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop {
+	overflow: visible; display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .gem {
+	background: rgb(218, 0, 15); filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFDA000F', endColorstr='#FF6E0002');
+}
+.chrome-v4 .global-nav .v2#header-notifications .open.activity-tab .arrow {
+	border-width: 0px 12.5px 13px; border-style: dashed dashed solid; border-color: transparent transparent rgb(68, 68, 68); left: 2px; top: 37px; width: 0px; height: 0px; display: block; position: absolute; z-index: 10032; _font-size: 0; _line-height: 0;
+}
+.chrome-v4 .global-nav .v2#header-notifications .open.activity-tab .activity-drop {
+	border-width: medium 5px 5px; border-style: none solid solid; border-color: currentColor rgb(68, 68, 68) rgb(68, 68, 68); border-radius: 0px; left: -148px; top: 50px; width: 320px; display: block; z-index: 10022; background-color: rgb(68, 68, 68); -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0;
+}
+.chrome-v4 .global-nav .v2#header-notifications .open.activity-tab .hidden.activity-drop {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .open.activity-tab .activity-drop-loading.activity-drop {
+	border-top-color: rgb(68, 68, 68); border-top-width: 5px; border-top-style: solid;
+}
+.chrome-v4 .global-nav .v2#header-notifications .open.activity-tab .activity-drop-loading.activity-drop .activity-drop-body {
+	background: url("/scds/common/u/img/anim/anim_loading_16x16.gif") no-repeat center rgb(255, 255, 255); border-radius: 3px; height: 26px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .open.activity-tab .is-backfilling.activity-drop .activity-drop-body ol li.loading {
+	background: url("/scds/common/u/img/anim/anim_loading_16x16.gif") no-repeat center rgb(255, 255, 255); height: 26px; border-top-color: rgb(210, 210, 210); border-top-width: 1px; border-top-style: solid;
+}
+.chrome-v4 .global-nav .v2#header-notifications .open.activity-tab .shim {
+	left: -148px; top: 23px; width: 330px; height: 50px; display: block; position: absolute; z-index: 10012;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-body {
+	border-radius: 3px; height: auto; overflow: hidden; position: relative; max-height: 550px; _height: 550px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .error.activity-drop-body p.error-message {
+	display: block;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-body ol {
+	width: 336px; height: auto; overflow-x: hidden; overflow-y: scroll; max-height: 550px; background-color: rgb(255, 255, 255); _height: 550px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-body ol > li {
+	margin-right: 1px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-body ol.empty li {
+	padding: 10px 0px; text-align: center; color: rgb(102, 102, 102); line-height: 17px; font-size: 13px; font-weight: normal;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-body p.error-message {
+	padding: 10px 0px; text-align: center; color: rgb(102, 102, 102); line-height: 17px; font-size: 13px; font-weight: normal;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-body p.error-message {
+	padding-right: 10px; padding-left: 10px; display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-body .li-scroll-track {
+	top: 2px; width: 13px; height: 99%; right: 0px; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); position: absolute; opacity: 0; -moz-transition: 0.5s, opacity, ease; -o-transition: 0.5s, opacity, ease; -webkit-transition: 0.5s, opacity, ease; transition: 0.5s, opacity, ease;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-body .show.li-scroll-track {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); opacity: 1;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-body .show.li-scroll-track .li-scroll-thumb {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100); opacity: 1;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-body .li-scroll-track .li-scroll-thumb {
+	width: 100%; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0); position: absolute; z-index: 20; opacity: 0;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-body .li-scroll-track .li-scroll-thumb .li-scroll-scrollbar {
+	border-radius: 4px; width: 6px; height: 100%; margin-left: 3px; background-color: rgb(102, 102, 102); -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; -o-border-radius: 4px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-header {
+	padding: 9px 10px; border-bottom-color: currentColor; border-bottom-width: 0px; border-bottom-style: none; background-color: rgb(68, 68, 68);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-header h3 {
+	color: rgb(255, 255, 255); line-height: 17px; font-size: 13px; font-weight: normal; margin-left: 10px; text-shadow: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-header h3 a {
+	color: rgb(113, 197, 239); line-height: 17px; font-size: 13px; font-weight: normal; text-decoration: none; text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.75);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-header a.see-all {
+	color: rgb(113, 197, 239); line-height: 17px; font-size: 13px; font-weight: normal; text-decoration: none; text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.75);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-header a:hover {
+	color: rgb(255, 255, 255); text-decoration: none !important;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-header a:hover .caret {
+	border-width: 4px 0px 4px 4px; border-style: dashed dashed dashed solid; border-color: transparent transparent transparent rgb(255, 255, 255); width: 0px; height: 0px; _font-size: 0; _line-height: 0;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-header .see-all {
+	float: right; text-shadow: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-header .see-all .caret {
+	border-width: 4px 0px 4px 4px; border-style: dashed dashed dashed solid; border-color: transparent transparent transparent rgb(113, 197, 239); margin: 0px 0px 0px 4px; width: 0px; height: 0px; vertical-align: middle; display: inline-block; zoom: 1; _font-size: 0; _line-height: 0;
+}
+.ie7.ie .chrome-v4 .global-nav .v2#header-notifications .activity-tab .activity-drop-header .see-all .caret {
+	margin-bottom: 5px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .shim {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update {
+	border-width: 1px 0px 0px; border-style: solid none none; border-color: rgb(210, 210, 210) currentColor currentColor; margin: 0px -1px; padding: 15px 0px; width: 320px; height: auto; position: relative; min-height: 40px; _height: 40px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update:hover {
+	background: rgb(235, 236, 237); border-top-color: rgb(255, 255, 255);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .new.update:hover {
+	background: rgb(235, 236, 237);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .can-unsubscribe.update:hover a.unsubscribe-link {
+	height: 12px; display: block; z-index: 30;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .can-unsubscribe.update:hover a.unsubscribe-link:hover {
+	background-position: 3px -1496px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.update a.notification-link {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.update a.notification-link {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .can-unsubscribe.update:hover .timestamp {
+	visibility: hidden;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.update .timestamp {
+	visibility: hidden;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.update .timestamp {
+	visibility: hidden;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .callout-container {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.update .unsubscribe-actions {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content {
+	height: 0px; z-index: 0; opacity: 0;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .confirmation {
+	height: 0px; z-index: 0; opacity: 0;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .success {
+	height: 0px; z-index: 0; opacity: 0;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.update .unsubscribe-link {
+	height: 0px; z-index: 0; opacity: 0;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.update .unsubscribe-link {
+	height: 0px; z-index: 0; opacity: 0;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.update .unsubscribe-content {
+	height: 100%; z-index: 1; opacity: 1; -moz-transition: opacity 0.5s ease; -o-transition: opacity 0.5s ease; -webkit-transition: opacity 0.5s ease; transition: opacity 0.5s ease;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.update .unsubscribe-content {
+	height: 100%; z-index: 1; opacity: 1; -moz-transition: opacity 0.5s ease; -o-transition: opacity 0.5s ease; -webkit-transition: opacity 0.5s ease; transition: opacity 0.5s ease;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.update .confirmation {
+	height: 100%; z-index: 1; opacity: 1; -moz-transition: opacity 0.5s ease; -o-transition: opacity 0.5s ease; -webkit-transition: opacity 0.5s ease; transition: opacity 0.5s ease;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.update .unsubscribe-actions {
+	height: 100%; z-index: 1; opacity: 1; -moz-transition: opacity 0.5s ease; -o-transition: opacity 0.5s ease; -webkit-transition: opacity 0.5s ease; transition: opacity 0.5s ease;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.update .success {
+	height: 100%; z-index: 1; opacity: 1; -moz-transition: opacity 0.5s ease; -o-transition: opacity 0.5s ease; -webkit-transition: opacity 0.5s ease; transition: opacity 0.5s ease;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content {
+	overflow: hidden; padding-right: 10px; padding-left: 10px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .confirmation {
+	color: rgb(51, 51, 51); line-height: 17px; font-size: 13px; font-weight: normal; text-shadow: 0 1px 0 #fff;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .success {
+	color: rgb(51, 51, 51); line-height: 17px; font-size: 13px; font-weight: normal; text-shadow: 0 1px 0 #fff;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .unsubscribe-actions {
+	margin-top: 5px; margin-bottom: 0px; position: relative; z-index: 20;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .unsubscribe-actions li {
+	float: left;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .unsubscribe-action {
+	margin: 0px 5px 0px 0px; padding: 0px 10px; border-radius: 3px; border: 1px solid rgb(27, 84, 128); width: auto; height: 26px; color: rgb(255, 255, 255); line-height: 24px; overflow: visible; font-size: 12px; font-weight: bold; text-decoration: none !important; vertical-align: middle; display: inline-block; white-space: nowrap; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF287BBC', endColorstr='#FF23639A'); cursor: pointer; zoom: 1; box-sizing: border-box; background-color: rgb(40, 123, 188); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35); -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .lu-state-hover.unsubscribe-action {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .hover.unsubscribe-action {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .unsubscribe-action:hover {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .lu-state-focus.unsubscribe-action {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .focus.unsubscribe-action {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .unsubscribe-action:focus {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .lu-state-active.unsubscribe-action {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .active.unsubscribe-action {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .unsubscribe-action:active {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .lu-state-disabled.unsubscribe-action {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .disabled.unsubscribe-action {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content [disabled].unsubscribe-action {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .unsubscribe-cancel-action {
+	margin: 0px; padding: 0px 10px; border-radius: 3px; border: 1px solid rgb(167, 167, 167); width: auto; height: 26px; color: rgb(68, 68, 68); line-height: 24px; overflow: visible; font-size: 12px; font-weight: bold; text-decoration: none !important; vertical-align: middle; display: inline-block; white-space: nowrap; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFF2F2F2', endColorstr='#FFD1D1D1'); cursor: pointer; zoom: 1; box-sizing: border-box; background-color: rgb(242, 242, 242); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75); -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .lu-state-hover.unsubscribe-cancel-action {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .hover.unsubscribe-cancel-action {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .unsubscribe-cancel-action:hover {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .lu-state-focus.unsubscribe-cancel-action {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .focus.unsubscribe-cancel-action {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .unsubscribe-cancel-action:focus {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .lu-state-active.unsubscribe-cancel-action {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .active.unsubscribe-cancel-action {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .unsubscribe-cancel-action:active {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .lu-state-disabled.unsubscribe-cancel-action {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(232, 232, 232); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content .disabled.unsubscribe-cancel-action {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(232, 232, 232); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .unsubscribe-content [disabled].unsubscribe-cancel-action {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(232, 232, 232); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .names {
+	height: auto; color: rgb(51, 51, 51); line-height: 17px; overflow: hidden; font-size: 13px; font-weight: normal; white-space: nowrap; text-overflow: ellipsis; max-height: 17px; _height: 17px; text-shadow: 0 1px 0 #fff; -o-text-overflow: ellipsis;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .name {
+	height: auto; color: rgb(51, 51, 51); line-height: 17px; overflow: hidden; font-size: 13px; font-weight: normal; white-space: nowrap; text-overflow: ellipsis; max-height: 17px; _height: 17px; text-shadow: 0 1px 0 #fff; -o-text-overflow: ellipsis;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .action {
+	color: rgb(102, 102, 102); line-height: 17px; overflow: hidden; font-size: 13px; font-weight: normal; text-overflow: ellipsis; -o-text-overflow: ellipsis;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .action strong {
+	color: rgb(51, 51, 51); line-height: 17px; padding-right: 0px; padding-left: 0px; font-size: 13px; font-weight: bold; text-shadow: 0 1px 0 #fff;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .timestamp {
+	padding: 0px 12px 0px 10px; color: rgb(153, 153, 153); line-height: 14px; font-size: 12px; float: right; display: block; text-shadow: 0 1px 0 #fff;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update .company-logo {
+	padding-top: 10px; padding-right: 12px; padding-left: 10px; clear: right; float: right;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .first.update {
+	border-top-color: rgb(255, 255, 255);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .new.update {
+	background-color: rgb(224, 237, 254);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .first.new.update {
+	border-top-color: rgb(228, 242, 253);
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update a.notification-link {
+	background: url("https://"); left: 0px; top: 0px; width: 100%; height: 100%; text-indent: -12345px; overflow: hidden; display: block; position: absolute; z-index: 20;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .update a.unsubscribe-link {
+	background: url("/scds/common/u/img/sprite/sprite_global_v8.png") no-repeat 3px -1446px; padding: 3px; top: 12px; width: 8px; text-align: left; right: 12px; text-indent: -119988px; overflow: hidden; display: none; position: absolute;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.single.update {
+	height: auto; min-height: 100%; _height: 100%;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.single.update {
+	height: auto; min-height: 100%; _height: 100%;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.single.update .action {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.single.update .name {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.single.update .photo {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.single.update .company-logo {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.single.update .timestamp {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.single.update .action {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.single.update .name {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.single.update .photo {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.single.update .company-logo {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.single.update .timestamp {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .single.update .photo {
+	left: 0px; top: 15px; margin-left: 10px; position: absolute;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .single.update .action {
+	height: auto; padding-left: 60px; max-height: 85px; _height: 85px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .single.update .action .headline {
+	height: auto; overflow: hidden; display: block; white-space: nowrap; text-overflow: ellipsis; max-height: 17px; _height: 17px; -o-text-overflow: ellipsis;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .single.update .action .wvmp-obfuscation {
+	height: auto; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-height: 34px; _height: 34px; -o-text-overflow: ellipsis;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .aggregate.update {
+	height: auto; max-height: 115px; _height: 115px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.aggregate.update .action {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.aggregate.update .names {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.aggregate.update .photos {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.aggregate.update .company-logo {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-confirm.aggregate.update .timestamp {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.aggregate.update .action {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.aggregate.update .names {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.aggregate.update .photos {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.aggregate.update .company-logo {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .unsubscribe-success.aggregate.update .timestamp {
+	display: none;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .aggregate.update .photos {
+	margin-top: 5px; margin-left: 10px;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .aggregate.update .photos .photo {
+	border: 1px solid rgb(238, 238, 238); width: 30px; height: 30px; margin-right: 1px; margin-bottom: 10px; float: left;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .aggregate.update .photos .more.photo {
+	background: rgb(230, 230, 230); width: 30px; height: 30px; text-align: center; color: rgb(51, 51, 51); line-height: 30px; padding-right: 0px; font-size: 13px; font-weight: normal; display: block; text-shadow: 0 1px 0 #fff;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .aggregate.update .action {
+	padding: 0px 0px 0px 10px; height: auto; overflow: hidden; text-overflow: ellipsis; max-height: 51px; _height: 51px; -o-text-overflow: ellipsis;
+}
+.chrome-v4 .global-nav .v2#header-notifications .activity-tab .aggregate.update .names {
+	height: auto; overflow: hidden; padding-right: 10px; padding-left: 10px; clear: left; white-space: nowrap; text-overflow: ellipsis; max-height: 17px; _height: 17px; -o-text-overflow: ellipsis;
+}
+.katy-icons.v2#header-notifications .open.activity-tab .activity-drop-loading.activity-drop {
+	height: auto; background-image: none;
+}
+.katy-icons.v2#header-notifications .open.activity-tab .activity-drop-loading.activity-drop .activity-drop-body {
+	background: url("/scds/common/u/img/anim/anim_loading_16x16.gif") no-repeat center rgb(255, 255, 255); height: 26px;
+}
+.katy-icons.v2#header-notifications .open.activity-tab .activity-drop-loading.activity-drop .error.activity-drop-body {
+	background: rgb(255, 255, 255); height: auto;
+}
+.activity-header a .caret {
+	border-width: 4px 0px 4px 4px; border-style: dashed dashed dashed solid; border-color: transparent transparent transparent rgb(255, 255, 255); margin: 0px 0px 0px 4px; width: 0px; height: 0px; vertical-align: middle; display: inline-block; zoom: 1; _font-size: 0; _line-height: 0;
+}
+.ie7.ie .activity-header a .caret {
+	margin-bottom: 5px;
+}
+.activity-drop .inbox-list .inbox-item {
+	padding: 10px; width: 300px; height: auto; border-bottom-color: rgb(221, 221, 221); border-bottom-width: 1px; border-bottom-style: solid; min-height: 68px; _height: 68px;
+}
+.activity-drop .inbox-list .inbox-item::after {
+	clear: both; display: table; content: "";
+}
+.activity-drop .inbox-list .inbox-item:hover {
+	padding-top: 9px; border-top-color: rgb(255, 255, 255); border-top-width: 1px; border-top-style: solid; background-color: rgb(235, 236, 237);
+}
+.activity-drop .inbox-list .inbox-item:hover .inbox-actions {
+	display: block !important;
+}
+.activity-drop .inbox-list .inbox-item:hover .date {
+	visibility: visible;
+}
+.activity-drop .inbox-list .inbox-item:hover .subject a {
+	color: rgb(51, 51, 51);
+}
+.activity-drop .inbox-list .inbox-item:hover .participants a {
+	color: rgb(51, 51, 51);
+}
+.activity-drop .inbox-list .inbox-item:hover .subject a:hover {
+	color: rgb(51, 51, 51);
+}
+.activity-drop .inbox-list .inbox-item:hover .participants a:hover {
+	color: rgb(51, 51, 51);
+}
+.activity-drop .inbox-list .inbox-item:hover .custom-note {
+	display: none;
+}
+.activity-drop .inbox-list .inbox-item:hover .relationship {
+	display: none;
+}
+.activity-drop .inbox-list .inbox-item:hover .preview {
+	display: none;
+}
+.activity-drop .inbox-list .inbox-item .custom-note {
+	color: rgb(102, 102, 102); line-height: 17px; font-size: 13px; font-weight: normal;
+}
+.activity-drop .inbox-list .inbox-item .relationship {
+	color: rgb(102, 102, 102); line-height: 17px; font-size: 13px; font-weight: normal;
+}
+.activity-drop .inbox-list .inbox-item .preview {
+	color: rgb(102, 102, 102); line-height: 17px; font-size: 13px; font-weight: normal;
+}
+.activity-drop .inbox-list .unread.inbox-item {
+	background-color: rgb(255, 255, 255);
+}
+.activity-drop .inbox-list .new.inbox-item {
+	background-color: rgb(224, 237, 254);
+}
+.activity-drop .inbox-list .inbox-item .response {
+	background: url("/scds/common/u/img/sprite/sprite_inbox_v3_icon.png") no-repeat; width: 20px; height: 12px; text-align: left; text-indent: -119988px; overflow: hidden; vertical-align: middle; display: inline-block; zoom: 1;
+}
+.activity-drop .inbox-list .inbox-item .forwarded.response {
+	background-position: 0px -51px;
+}
+.activity-drop .inbox-list .inbox-item .replied.response {
+	background-position: 0px -76px;
+}
+.activity-drop .inbox-list .photo {
+	padding: 2px; border: 1px solid rgb(230, 230, 230); overflow: hidden; float: left; display: block;
+}
+.activity-drop .inbox-list .connection-pic {
+	padding: 2px; border: 1px solid rgb(230, 230, 230); overflow: hidden; float: left; display: block;
+}
+.activity-drop .inbox-list .photo:hover {
+	border-color: rgb(0, 115, 178);
+}
+.activity-drop .inbox-list .connection-pic:hover {
+	border-color: rgb(0, 115, 178);
+}
+.activity-drop .inbox-list .message-item .photo:hover {
+	border-color: rgb(0, 115, 178);
+}
+.activity-drop .inbox-list .date {
+	color: rgb(102, 102, 102); line-height: 14px; font-size: 12px; font-weight: normal;
+}
+.activity-drop .inbox-list .item-content {
+	margin-left: 60px;
+}
+.activity-drop .inbox-list .item-content .participants a {
+	color: rgb(51, 51, 51); line-height: 17px; font-size: 13px; font-weight: normal;
+}
+.activity-drop .inbox-list .item-content .participants a:hover {
+	color: rgb(51, 51, 51); line-height: 17px; font-size: 13px; font-weight: normal;
+}
+.activity-drop .inbox-list .item-content .headline {
+	color: rgb(51, 51, 51); line-height: 17px; font-size: 13px; font-weight: normal;
+}
+.activity-drop .inbox-list .item-content .subject {
+	color: rgb(51, 51, 51); line-height: 17px; font-size: 13px; font-weight: normal;
+}
+.activity-drop .inbox-list .item-content .unread .participants a {
+	font-weight: bold;
+}
+.activity-drop .inbox-list .item-content .unread .headline {
+	font-weight: bold;
+}
+.activity-drop .inbox-list .item-content .unread .subject {
+	font-weight: bold;
+}
+.activity-drop .inbox-list .item-content .unread .preview {
+	font-weight: bold;
+}
+.activity-drop .inbox-list .item-content .headline {
+	overflow: hidden; display: block; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis;
+}
+.activity-drop .inbox-list .item-content .inbox-actions {
+	margin: 5px 0px 0px;
+}
+.activity-drop .inbox-list .item-content .subject {
+	width: 190px; color: rgb(51, 51, 51); overflow: hidden; display: block; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis;
+}
+.activity-drop .inbox-list .item-content .participants {
+	width: 190px; color: rgb(51, 51, 51); overflow: hidden; display: block; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis;
+}
+.activity-drop .inbox-list .item-content .subject {
+	width: 220px;
+}
+.activity-drop .inbox-list .chk {
+	display: none !important;
+}
+.activity-drop .inbox-list .flag-link {
+	display: none !important;
+}
+.activity-drop .inbox-list .unflag-link {
+	display: none !important;
+}
+.activity-drop .inbox-list .spam-icon-link {
+	display: none !important;
+}
+.activity-drop .inbox-list .archive {
+	display: none !important;
+}
+.activity-drop .inbox-list .forward {
+	display: none !important;
+}
+.activity-drop .inbox-list .report-spam {
+	display: none !important;
+}
+.activity-drop .inbox-list .inbox-actions {
+	margin: 5px 0px 0px 55px; overflow: hidden; display: none;
+}
+.lte8.ie .activity-drop .inbox-list .inbox-actions li {
+	float: left;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions {
+	margin: 0px 5px 0px 0px; float: left;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .btn-split {
+	background: rgb(35, 99, 154); filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF287BBC', endColorstr='#FF23639A');
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .accept {
+	margin: 0px; padding: 0px 10px; border-radius: 3px 0px 0px 3px; border: 1px solid rgb(27, 84, 128); width: auto; height: 26px; color: rgb(255, 255, 255); line-height: 24px; overflow: visible; font-size: 12px; font-weight: bold; text-decoration: none !important; vertical-align: middle; float: left; display: block; white-space: nowrap; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF287BBC', endColorstr='#FF23639A'); cursor: pointer; box-sizing: border-box; background-color: rgb(40, 123, 188); -webkit-border-radius: 3px 0 0 3px; -moz-border-radius: 3px 0 0 3px; -ms-border-radius: 3px 0 0 3px; -o-border-radius: 3px 0 0 3px; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35); -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .lu-state-hover.accept {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .hover.accept {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .accept:hover {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .lu-state-focus.accept {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .focus.accept {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .accept:focus {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .lu-state-active.accept {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .active.accept {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .accept:active {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .lu-state-disabled.accept {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .disabled.accept {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions [disabled].accept {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .noreply.accept {
+	margin: 0px; padding: 0px 10px; border-radius: 3px; border: 1px solid rgb(27, 84, 128); width: auto; height: 26px; color: rgb(255, 255, 255); line-height: 24px; overflow: visible; font-size: 12px; font-weight: bold; text-decoration: none !important; vertical-align: middle; display: inline-block; white-space: nowrap; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF287BBC', endColorstr='#FF23639A'); cursor: pointer; zoom: 1; box-sizing: border-box; background-color: rgb(40, 123, 188); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35); -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .lu-state-hover.noreply.accept {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .hover.noreply.accept {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .noreply.accept:hover {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .lu-state-focus.noreply.accept {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .focus.noreply.accept {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .noreply.accept:focus {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .lu-state-active.noreply.accept {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .active.noreply.accept {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .noreply.accept:active {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .lu-state-disabled.noreply.accept {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions .disabled.noreply.accept {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .inbox-actions .primary-actions [disabled].noreply.accept {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .inbox-actions .ignore {
+	margin: 0px; padding: 0px 10px; border-radius: 3px; border: 1px solid rgb(167, 167, 167); width: auto; height: 26px; color: rgb(68, 68, 68); line-height: 24px; overflow: visible; font-size: 12px; font-weight: bold; text-decoration: none !important; vertical-align: middle; float: left; display: inline-block; white-space: nowrap; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFF2F2F2', endColorstr='#FFD1D1D1'); cursor: pointer; zoom: 1; box-sizing: border-box; background-color: rgb(242, 242, 242); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75); -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.activity-drop .inbox-list .inbox-actions .delete {
+	margin: 0px; padding: 0px 10px; border-radius: 3px; border: 1px solid rgb(167, 167, 167); width: auto; height: 26px; color: rgb(68, 68, 68); line-height: 24px; overflow: visible; font-size: 12px; font-weight: bold; text-decoration: none !important; vertical-align: middle; float: left; display: inline-block; white-space: nowrap; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFF2F2F2', endColorstr='#FFD1D1D1'); cursor: pointer; zoom: 1; box-sizing: border-box; background-color: rgb(242, 242, 242); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75); -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.activity-drop .inbox-list .inbox-actions .lu-state-hover.ignore {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .hover.ignore {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .ignore:hover {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .lu-state-focus.ignore {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .focus.ignore {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .ignore:focus {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .lu-state-hover.delete {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .hover.delete {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .delete:hover {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .lu-state-focus.delete {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .focus.delete {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .delete:focus {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE8E8E8', endColorstr='#FFA9A9A9'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(232, 232, 232); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .inbox-actions .lu-state-active.ignore {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .inbox-actions .active.ignore {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .inbox-actions .ignore:active {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .inbox-actions .lu-state-active.delete {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .inbox-actions .active.delete {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .inbox-actions .delete:active {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .inbox-actions .lu-state-disabled.ignore {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(232, 232, 232); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .inbox-actions .disabled.ignore {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(232, 232, 232); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .inbox-actions [disabled].ignore {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(232, 232, 232); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .inbox-actions .lu-state-disabled.delete {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(232, 232, 232); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .inbox-actions .disabled.delete {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(232, 232, 232); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .inbox-actions [disabled].delete {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(232, 232, 232); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .message-item .reply {
+	margin: 0px 5px 0px 0px; padding: 0px 10px; border-radius: 3px; border: 1px solid rgb(27, 84, 128); width: auto; height: 26px; color: rgb(255, 255, 255); line-height: 24px; overflow: visible; font-size: 12px; font-weight: bold; text-decoration: none !important; vertical-align: middle; float: left; display: inline-block; white-space: nowrap; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF287BBC', endColorstr='#FF23639A'); cursor: pointer; zoom: 1; box-sizing: border-box; background-color: rgb(40, 123, 188); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35); -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.activity-drop .inbox-list .message-item .reply-all {
+	margin: 0px 5px 0px 0px; padding: 0px 10px; border-radius: 3px; border: 1px solid rgb(27, 84, 128); width: auto; height: 26px; color: rgb(255, 255, 255); line-height: 24px; overflow: visible; font-size: 12px; font-weight: bold; text-decoration: none !important; vertical-align: middle; float: left; display: inline-block; white-space: nowrap; filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF287BBC', endColorstr='#FF23639A'); cursor: pointer; zoom: 1; box-sizing: border-box; background-color: rgb(40, 123, 188); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35); -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.activity-drop .inbox-list .message-item .lu-state-hover.reply {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .message-item .hover.reply {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .message-item .reply:hover {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .message-item .lu-state-focus.reply {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .message-item .focus.reply {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .message-item .reply:focus {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .message-item .lu-state-hover.reply-all {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .message-item .hover.reply-all {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .message-item .reply-all:hover {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .message-item .lu-state-focus.reply-all {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .message-item .focus.reply-all {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .message-item .reply-all:focus {
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF2672AE', endColorstr='#FF1E4F7E'); box-shadow: 0px 1px 3px rgba(0,0,0,0.25); background-color: rgb(38, 114, 174); -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.activity-drop .inbox-list .message-item .lu-state-active.reply {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .message-item .active.reply {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .message-item .reply:active {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .message-item .lu-state-active.reply-all {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .message-item .active.reply-all {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .message-item .reply-all:active {
+	box-shadow: inset 0px 1px 2px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) inset;
+}
+.activity-drop .inbox-list .message-item .lu-state-disabled.reply {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .message-item .disabled.reply {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .message-item [disabled].reply {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .message-item .lu-state-disabled.reply-all {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .message-item .disabled.reply-all {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .message-item [disabled].reply-all {
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); cursor: default; opacity: 0.6; box-shadow: none; background-color: rgb(38, 114, 174); -webkit-box-shadow: none; -moz-box-shadow: none;
+}
+.activity-drop .inbox-list .item-confirmation {
+	color: rgb(51, 51, 51); line-height: 17px; font-size: 13px; font-weight: normal; position: relative; background-color: rgb(244, 244, 244);
+}
+.activity-drop .inbox-list .item-confirmation h4 {
+	color: rgb(51, 51, 51); line-height: 17px; font-size: 13px; font-weight: normal;
+}
+.activity-drop .inbox-list .item-confirmation li {
+	background: url("/scds/common/u/img/sprite/sprite_inbox_v3_icon.png") no-repeat -22px 5px; padding-left: 11px; margin-left: 6px; float: left;
+}
+.ie7.ie .activity-drop .inbox-list .item-confirmation li {
+	display: inline;
+}
+.activity-drop .inbox-list .item-confirmation li a {
+	color: rgb(102, 102, 102); line-height: 14px; font-size: 12px; font-weight: normal;
+}
+.activity-drop .inbox-list .item-confirmation li:first-child {
+	padding-left: 0px; margin-left: 0px;
+}
+.activity-drop .inbox-list .confirmation {
+	padding: 0px 20px 0px 0px; position: relative;
+}
+.activity-drop .inbox-list .ignore-confirmation {
+	padding: 0px 20px 0px 0px; position: relative;
+}
+.activity-drop .inbox-list .close-confirmation {
+	background: url("/scds/common/u/img/sprite/sprite_inbox_v3_icon.png") no-repeat 0px -202px; top: 0px; width: 8px; height: 10px; right: 0px; text-indent: -12345px; position: absolute; cursor: pointer;
+}
+.activity-drop .inbox-list .close-confirmation:hover {
+	background-position: 0px -202px;
+}
+.menu-btn {
+	z-index: 10024;
+}
+.menu-btn a:hover {
+	text-shadow: none;
+}
+.nbf-c .activity-drop .inbox-list .inbox-item .photo {
+	padding: 0px; border: currentColor;
+}
+.nbf-c .activity-drop .inbox-list .inbox-item .connection-pic {
+	padding: 0px; border: currentColor;
+}
+.nbf-d .activity-drop .inbox-list .inbox-item .photo {
+	padding: 0px; border: currentColor;
+}
+.nbf-d .activity-drop .inbox-list .inbox-item .connection-pic {
+	padding: 0px; border: currentColor;
+}
+.nbf-e .activity-drop .inbox-list .inbox-item .photo {
+	padding: 0px; border: currentColor;
+}
+.nbf-e .activity-drop .inbox-list .inbox-item .connection-pic {
+	padding: 0px; border: currentColor;
+}
+.nbf-f .activity-drop .inbox-list .inbox-item .photo {
+	padding: 0px; border: currentColor;
+}
+.nbf-f .activity-drop .inbox-list .inbox-item .connection-pic {
+	padding: 0px; border: currentColor;
+}
+.nbf-g .activity-drop .inbox-list .inbox-item .photo {
+	padding: 0px; border: currentColor;
+}
+.nbf-g .activity-drop .inbox-list .inbox-item .connection-pic {
+	padding: 0px; border: currentColor;
+}
+.nbf-h .activity-drop .inbox-list .inbox-item .photo {
+	padding: 0px; border: currentColor;
+}
+.nbf-h .activity-drop .inbox-list .inbox-item .connection-pic {
+	padding: 0px; border: currentColor;
+}
+.nbf-i .activity-drop .inbox-list .inbox-item .photo {
+	padding: 0px; border: currentColor;
+}
+.nbf-i .activity-drop .inbox-list .inbox-item .connection-pic {
+	padding: 0px; border: currentColor;
+}
+.nbf-j .activity-drop .inbox-list .inbox-item .photo {
+	padding: 0px; border: currentColor;
+}
+.nbf-j .activity-drop .inbox-list .inbox-item .connection-pic {
+	padding: 0px; border: currentColor;
+}
+.nbf-c .activity-drop-header a {
+	color: rgb(255, 255, 255) !important;
+}
+.nbf-d .activity-drop-header a {
+	color: rgb(255, 255, 255) !important;
+}
+.nbf-e .activity-drop-header a {
+	color: rgb(255, 255, 255) !important;
+}
+.nbf-f .activity-drop-header a {
+	color: rgb(255, 255, 255) !important;
+}
+.nbf-g .activity-drop-header a {
+	color: rgb(255, 255, 255) !important;
+}
+.nbf-h .activity-drop-header a {
+	color: rgb(255, 255, 255) !important;
+}
+.nbf-i .activity-drop-header a {
+	color: rgb(255, 255, 255) !important;
+}
+.nbf-j .activity-drop-header a {
+	color: rgb(255, 255, 255) !important;
+}
+.nbf-c .activity-drop-header a .caret {
+	border-left-color: rgb(255, 255, 255) !important;
+}
+.nbf-d .activity-drop-header a .caret {
+	border-left-color: rgb(255, 255, 255) !important;
+}
+.nbf-e .activity-drop-header a .caret {
+	border-left-color: rgb(255, 255, 255) !important;
+}
+.nbf-f .activity-drop-header a .caret {
+	border-left-color: rgb(255, 255, 255) !important;
+}
+.nbf-g .activity-drop-header a .caret {
+	border-left-color: rgb(255, 255, 255) !important;
+}
+.nbf-h .activity-drop-header a .caret {
+	border-left-color: rgb(255, 255, 255) !important;
+}
+.nbf-i .activity-drop-header a .caret {
+	border-left-color: rgb(255, 255, 255) !important;
+}
+.nbf-j .activity-drop-header a .caret {
+	border-left-color: rgb(255, 255, 255) !important;
+}
+.nbf-c .activity-drop-header a:hover {
+	color: rgb(113, 197, 239) !important;
+}
+.nbf-d .activity-drop-header a:hover {
+	color: rgb(113, 197, 239) !important;
+}
+.nbf-e .activity-drop-header a:hover {
+	color: rgb(113, 197, 239) !important;
+}
+.nbf-f .activity-drop-header a:hover {
+	color: rgb(113, 197, 239) !important;
+}
+.nbf-g .activity-drop-header a:hover {
+	color: rgb(113, 197, 239) !important;
+}
+.nbf-h .activity-drop-header a:hover {
+	color: rgb(113, 197, 239) !important;
+}
+.nbf-i .activity-drop-header a:hover {
+	color: rgb(113, 197, 239) !important;
+}
+.nbf-j .activity-drop-header a:hover {
+	color: rgb(113, 197, 239) !important;
+}
+.nbf-c .activity-drop-header a:hover .caret {
+	border-left-color: rgb(113, 197, 239) !important;
+}
+.nbf-d .activity-drop-header a:hover .caret {
+	border-left-color: rgb(113, 197, 239) !important;
+}
+.nbf-e .activity-drop-header a:hover .caret {
+	border-left-color: rgb(113, 197, 239) !important;
+}
+.nbf-f .activity-drop-header a:hover .caret {
+	border-left-color: rgb(113, 197, 239) !important;
+}
+.nbf-g .activity-drop-header a:hover .caret {
+	border-left-color: rgb(113, 197, 239) !important;
+}
+.nbf-h .activity-drop-header a:hover .caret {
+	border-left-color: rgb(113, 197, 239) !important;
+}
+.nbf-i .activity-drop-header a:hover .caret {
+	border-left-color: rgb(113, 197, 239) !important;
+}
+.nbf-j .activity-drop-header a:hover .caret {
+	border-left-color: rgb(113, 197, 239) !important;
+}
+.nbf-c .activity-drop-header .caret {
+	border-width: 4px 0px 4px 4px; border-style: dashed dashed dashed solid; border-color: transparent transparent transparent rgb(113, 197, 239); margin: 0px 0px 0px 4px; width: 0px; height: 0px; vertical-align: middle; display: inline-block; zoom: 1; _font-size: 0; _line-height: 0;
+}
+.nbf-d .activity-drop-header .caret {
+	border-width: 4px 0px 4px 4px; border-style: dashed dashed dashed solid; border-color: transparent transparent transparent rgb(113, 197, 239); margin: 0px 0px 0px 4px; width: 0px; height: 0px; vertical-align: middle; display: inline-block; zoom: 1; _font-size: 0; _line-height: 0;
+}
+.nbf-e .activity-drop-header .caret {
+	border-width: 4px 0px 4px 4px; border-style: dashed dashed dashed solid; border-color: transparent transparent transparent rgb(113, 197, 239); margin: 0px 0px 0px 4px; width: 0px; height: 0px; vertical-align: middle; display: inline-block; zoom: 1; _font-size: 0; _line-height: 0;
+}
+.nbf-f .activity-drop-header .caret {
+	border-width: 4px 0px 4px 4px; border-style: dashed dashed dashed solid; border-color: transparent transparent transparent rgb(113, 197, 239); margin: 0px 0px 0px 4px; width: 0px; height: 0px; vertical-align: middle; display: inline-block; zoom: 1; _font-size: 0; _line-height: 0;
+}
+.nbf-g .activity-drop-header .caret {
+	border-width: 4px 0px 4px 4px; border-style: dashed dashed dashed solid; border-color: transparent transparent transparent rgb(113, 197, 239); margin: 0px 0px 0px 4px; width: 0px; height: 0px; vertical-align: middle; display: inline-block; zoom: 1; _font-size: 0; _line-height: 0;
+}
+.nbf-h .activity-drop-header .caret {
+	border-width: 4px 0px 4px 4px; border-style: dashed dashed dashed solid; border-color: transparent transparent transparent rgb(113, 197, 239); margin: 0px 0px 0px 4px; width: 0px; height: 0px; vertical-align: middle; display: inline-block; zoom: 1; _font-size: 0; _line-height: 0;
+}
+.nbf-i .activity-drop-header .caret {
+	border-width: 4px 0px 4px 4px; border-style: dashed dashed dashed solid; border-color: transparent transparent transparent rgb(113, 197, 239); margin: 0px 0px 0px 4px; width: 0px; height: 0px; vertical-align: middle; display: inline-block; zoom: 1; _font-size: 0; _line-height: 0;
+}
+.nbf-j .activity-drop-header .caret {
+	border-width: 4px 0px 4px 4px; border-style: dashed dashed dashed solid; border-color: transparent transparent transparent rgb(113, 197, 239); margin: 0px 0px 0px 4px; width: 0px; height: 0px; vertical-align: middle; display: inline-block; zoom: 1; _font-size: 0; _line-height: 0;
+}
+.ie7.ie .nbf-c .activity-drop-header .caret {
+	margin-bottom: 5px;
+}
+.ie7.ie .nbf-d .activity-drop-header .caret {
+	margin-bottom: 5px;
+}
+.ie7.ie .nbf-e .activity-drop-header .caret {
+	margin-bottom: 5px;
+}
+.ie7.ie .nbf-f .activity-drop-header .caret {
+	margin-bottom: 5px;
+}
+.ie7.ie .nbf-g .activity-drop-header .caret {
+	margin-bottom: 5px;
+}
+.ie7.ie .nbf-h .activity-drop-header .caret {
+	margin-bottom: 5px;
+}
+.ie7.ie .nbf-i .activity-drop-header .caret {
+	margin-bottom: 5px;
+}
+.ie7.ie .nbf-j .activity-drop-header .caret {
+	margin-bottom: 5px;
+}
+.nbf-d .activity-drop .drop.menu-btn {
+	width: 230px; z-index: 10032;
+}
+.nbf-e .activity-drop .drop.menu-btn {
+	width: 230px; z-index: 10032;
+}
+.nbf-f .activity-drop .drop.menu-btn {
+	width: 230px; z-index: 10032;
+}
+.nbf-g .activity-drop .drop.menu-btn {
+	width: 230px; z-index: 10032;
+}
+.nbf-h .activity-drop .drop.menu-btn {
+	width: 230px; z-index: 10032;
+}
+.nbf-i .activity-drop .drop.menu-btn {
+	width: 230px; z-index: 10032;
+}
+.nbf-j .activity-drop .drop.menu-btn {
+	width: 230px; z-index: 10032;
+}
+.nbf-e .activity-drop .inbox-list .inbox-item:hover {
+	cursor: pointer;
+}
+.nbf-f .activity-drop .inbox-list .inbox-item:hover {
+	cursor: pointer;
+}
+.nbf-g .activity-drop .inbox-list .inbox-item:hover {
+	cursor: pointer;
+}
+.nbf-h .activity-drop .inbox-list .inbox-item:hover {
+	cursor: pointer;
+}
+.nbf-i .activity-drop .inbox-list .inbox-item:hover {
+	cursor: pointer;
+}
+.nbf-j .activity-drop .inbox-list .inbox-item:hover {
+	cursor: pointer;
+}
+.nbf-e .activity-drop .inbox-list .invitation-item.inbox-item {
+	height: auto; min-height: 51px; _height: 51px;
+}
+.nbf-f .activity-drop .inbox-list .invitation-item.inbox-item {
+	height: auto; min-height: 51px; _height: 51px;
+}
+.nbf-g .activity-drop .inbox-list .invitation-item.inbox-item {
+	height: auto; min-height: 51px; _height: 51px;
+}
+.nbf-h .activity-drop .inbox-list .invitation-item.inbox-item {
+	height: auto; min-height: 51px; _height: 51px;
+}
+.nbf-i .activity-drop .inbox-list .invitation-item.inbox-item {
+	height: auto; min-height: 51px; _height: 51px;
+}
+.nbf-j .activity-drop .inbox-list .invitation-item.inbox-item {
+	height: auto; min-height: 51px; _height: 51px;
+}
+.nbf-e .activity-drop .inbox-list .invitation-item.inbox-item:hover .headline {
+	display: none;
+}
+.nbf-f .activity-drop .inbox-list .invitation-item.inbox-item:hover .headline {
+	display: none;
+}
+.nbf-g .activity-drop .inbox-list .invitation-item.inbox-item:hover .headline {
+	display: none;
+}
+.nbf-h .activity-drop .inbox-list .invitation-item.inbox-item:hover .headline {
+	display: none;
+}
+.nbf-i .activity-drop .inbox-list .invitation-item.inbox-item:hover .headline {
+	display: none;
+}
+.nbf-j .activity-drop .inbox-list .invitation-item.inbox-item:hover .headline {
+	display: none;
+}
+.nbf-e .activity-drop .inbox-list .invitation-item.inbox-item .headline {
+	height: auto; overflow: hidden; white-space: normal; text-overflow: ellipsis; max-height: 34px; _height: 34px; -o-text-overflow: ellipsis;
+}
+.nbf-f .activity-drop .inbox-list .invitation-item.inbox-item .headline {
+	height: auto; overflow: hidden; white-space: normal; text-overflow: ellipsis; max-height: 34px; _height: 34px; -o-text-overflow: ellipsis;
+}
+.nbf-g .activity-drop .inbox-list .invitation-item.inbox-item .headline {
+	height: auto; overflow: hidden; white-space: normal; text-overflow: ellipsis; max-height: 34px; _height: 34px; -o-text-overflow: ellipsis;
+}
+.nbf-h .activity-drop .inbox-list .invitation-item.inbox-item .headline {
+	height: auto; overflow: hidden; white-space: normal; text-overflow: ellipsis; max-height: 34px; _height: 34px; -o-text-overflow: ellipsis;
+}
+.nbf-i .activity-drop .inbox-list .invitation-item.inbox-item .headline {
+	height: auto; overflow: hidden; white-space: normal; text-overflow: ellipsis; max-height: 34px; _height: 34px; -o-text-overflow: ellipsis;
+}
+.nbf-j .activity-drop .inbox-list .invitation-item.inbox-item .headline {
+	height: auto; overflow: hidden; white-space: normal; text-overflow: ellipsis; max-height: 34px; _height: 34px; -o-text-overflow: ellipsis;
+}
+.nbf-e .activity-drop .inbox-list .invitation-item.inbox-item .participants {
+	height: auto; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-height: 17px; _height: 17px; -o-text-overflow: ellipsis;
+}
+.nbf-f .activity-drop .inbox-list .invitation-item.inbox-item .participants {
+	height: auto; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-height: 17px; _height: 17px; -o-text-overflow: ellipsis;
+}
+.nbf-g .activity-drop .inbox-list .invitation-item.inbox-item .participants {
+	height: auto; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-height: 17px; _height: 17px; -o-text-overflow: ellipsis;
+}
+.nbf-h .activity-drop .inbox-list .invitation-item.inbox-item .participants {
+	height: auto; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-height: 17px; _height: 17px; -o-text-overflow: ellipsis;
+}
+.nbf-i .activity-drop .inbox-list .invitation-item.inbox-item .participants {
+	height: auto; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-height: 17px; _height: 17px; -o-text-overflow: ellipsis;
+}
+.nbf-j .activity-drop .inbox-list .invitation-item.inbox-item .participants {
+	height: auto; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-height: 17px; _height: 17px; -o-text-overflow: ellipsis;
+}
+.nbf-e .activity-drop .inbox-list .message-item.inbox-item .inbox-actions {
+	margin: 5px 0px 0px 60px;
+}
+.nbf-f .activity-drop .inbox-list .message-item.inbox-item .inbox-actions {
+	margin: 5px 0px 0px 60px;
+}
+.nbf-g .activity-drop .inbox-list .message-item.inbox-item .inbox-actions {
+	margin: 5px 0px 0px 60px;
+}
+.nbf-h .activity-drop .inbox-list .message-item.inbox-item .inbox-actions {
+	margin: 5px 0px 0px 60px;
+}
+.nbf-i .activity-drop .inbox-list .message-item.inbox-item .inbox-actions {
+	margin: 5px 0px 0px 60px;
+}
+.nbf-j .activity-drop .inbox-list .message-item.inbox-item .inbox-actions {
+	margin: 5px 0px 0px 60px;
+}
+.chrome-v4 .global-nav .nbf-g.v2#header-notifications .activity-drop .inbox-list .inbox-item:hover {
+	border-top-color: transparent;
+}
+.chrome-v4 .global-nav .nbf-h.v2#header-notifications .activity-drop .inbox-list .inbox-item:hover {
+	border-top-color: transparent;
+}
+.chrome-v4 .global-nav .nbf-i.v2#header-notifications .activity-drop .inbox-list .inbox-item:hover {
+	border-top-color: transparent;
+}
+.chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-drop .inbox-list .inbox-item:hover {
+	border-top-color: transparent;
+}
+.chrome-v4 .global-nav .nbf-g.v2#header-notifications .activity-drop .inbox-list .unread.inbox-item:hover {
+	background-color: rgb(235, 236, 237);
+}
+.chrome-v4 .global-nav .nbf-h.v2#header-notifications .activity-drop .inbox-list .unread.inbox-item:hover {
+	background-color: rgb(235, 236, 237);
+}
+.chrome-v4 .global-nav .nbf-i.v2#header-notifications .activity-drop .inbox-list .unread.inbox-item:hover {
+	background-color: rgb(235, 236, 237);
+}
+.chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-drop .inbox-list .unread.inbox-item:hover {
+	background-color: rgb(235, 236, 237);
+}
+.chrome-v4 .global-nav .nbf-g.v2#header-notifications .activity-tab .update:hover {
+	border-top-color: rgb(210, 210, 210);
+}
+.chrome-v4 .global-nav .nbf-h.v2#header-notifications .activity-tab .update:hover {
+	border-top-color: rgb(210, 210, 210);
+}
+.chrome-v4 .global-nav .nbf-i.v2#header-notifications .activity-tab .update:hover {
+	border-top-color: rgb(210, 210, 210);
+}
+.chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab .update:hover {
+	border-top-color: rgb(210, 210, 210);
+}
+.chrome-v4 .global-nav .nbf-h.v2#header-notifications .activity-tab.messages-tab .activity-drop-header {
+	padding-top: 0px; padding-bottom: 0px;
+}
+.chrome-v4 .global-nav .nbf-i.v2#header-notifications .activity-tab.messages-tab .activity-drop-header {
+	padding-top: 0px; padding-bottom: 0px;
+}
+.chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab.messages-tab .activity-drop-header {
+	padding-top: 0px; padding-bottom: 0px;
+}
+.chrome-v4 .global-nav .nbf-h.v2#header-notifications .activity-tab.messages-tab .activity-drop-header a {
+	padding-top: 10px; padding-bottom: 10px; vertical-align: middle; display: inline-block; zoom: 1;
+}
+.chrome-v4 .global-nav .nbf-i.v2#header-notifications .activity-tab.messages-tab .activity-drop-header a {
+	padding-top: 10px; padding-bottom: 10px; vertical-align: middle; display: inline-block; zoom: 1;
+}
+.chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab.messages-tab .activity-drop-header a {
+	padding-top: 10px; padding-bottom: 10px; vertical-align: middle; display: inline-block; zoom: 1;
+}
+.chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab .activity-drop-body ol {
+	
+}
+.lte8.ie .chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab .update .unsubscribe-content {
+	display: none;
+}
+.lte8.ie .chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab .update .unsubscribe-content .confirmation {
+	display: none;
+}
+.lte8.ie .chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab .update .unsubscribe-content .success {
+	display: none;
+}
+.lte8.ie .chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab .unsubscribe-confirm.update .unsubscribe-link {
+	display: none;
+}
+.lte8.ie .chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab .unsubscribe-success.update .unsubscribe-link {
+	display: none;
+}
+.lte8.ie .chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab .unsubscribe-confirm.update .unsubscribe-content {
+	display: block;
+}
+.lte8.ie .chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab .unsubscribe-success.update .unsubscribe-content {
+	display: block;
+}
+.lte8.ie .chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab .unsubscribe-confirm.update .confirmation {
+	display: block;
+}
+.lte8.ie .chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab .unsubscribe-confirm.update .unsubscribe-actions {
+	display: block;
+}
+.lte8.ie .chrome-v4 .global-nav .nbf-j.v2#header-notifications .activity-tab .unsubscribe-success.update .success {
+	display: block;
+}
+span.error {
+	color: rgb(153, 0, 0); font-weight: bold;
+}
+div.alert {
+	margin: 0px 0px 15px; padding: 6px 7px 6px 35px; color: rgb(51, 51, 51); overflow: hidden; position: relative; min-height: 28px; background-color: rgb(255, 255, 255);
+}
+div.alert img {
+	display: none;
+}
+div.alert p {
+	margin: 7px 21px 5px 7px; font-size: 13px;
+}
+div.alert h3 {
+	margin: 7px 21px 5px 7px; font-size: 13px;
+}
+div.alert ul {
+	margin: 0px 21px 5px 7px; font-size: 13px;
+}
+div.alert h3 {
+	font-weight: bold;
+}
+div.alert .dismiss {
+	background: url("/scds/common/u/img/sprite/sprite_global_v8.png") no-repeat right -1294px; padding: 7px 0px 2px; top: 3px; width: 18px; height: 12px; right: 14px; text-indent: -12345px; display: block; position: absolute; cursor: pointer;
+}
+div.alert a:visited {
+	color: rgb(0, 51, 153);
+}
+div.attention.alert {
+	background: url("/scds/common/u/img/sprite/sprite_global_v8.png") no-repeat 7px -723px rgb(255, 245, 204);
+}
+div.warning.alert {
+	background: url("/scds/common/u/img/sprite/sprite_global_v8.png") no-repeat 7px -723px rgb(255, 245, 204);
+}
+div.error.alert {
+	background: url("/scds/common/u/img/sprite/sprite_global_v8.png") no-repeat 7px -643px rgb(255, 238, 238);
+}
+div.success.alert {
+	background: url("/scds/common/u/img/sprite/sprite_global_v8.png") no-repeat 7px -883px rgb(230, 248, 221);
+}
+div.notice.alert {
+	background: url("/scds/common/u/img/sprite/sprite_global_v8.png") no-repeat 7px -803px rgb(221, 240, 248);
+}
+div.alert-details.error.alert {
+	background-position: 7px 7px; background-image: url("/scds/common/u/img/icon/icon_status_fail_26x26.gif");
+}
+div.alert-details.errorbox {
+	background-position: 7px 7px; background-image: url("/scds/common/u/img/icon/icon_status_fail_26x26.gif");
+}
+div.alert-details.success.alert {
+	background-position: 7px 7px; background-image: url("/scds/common/u/img/icon/icon_status_success_26x26.gif");
+}
+div.alert-details.warning.alert {
+	background-position: 7px 7px; background-image: url("/scds/common/u/img/icon/icon_status_info_26x26.gif");
+}
+div.alert-details.notice.alert {
+	background-position: 7px 7px; background-image: url("/scds/common/u/img/icon/icon_status_info_blue_26x26.gif");
+}
+div.alert-details.attention.alert {
+	background-position: 7px 7px; background-image: url("/scds/common/u/img/icon/icon_status_info_blue_26x26.gif");
+}

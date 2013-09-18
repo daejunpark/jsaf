@@ -1,0 +1,15 @@
+#regform .decoration.button {
+	border: 1px solid rgb(255, 255, 255); width: 100%;
+}
+#regform .decoration.button {
+	border-radius: 5px;
+}
+#regform button {
+	border-radius: 5px;
+}
+#regform button {
+	background: -ms-linear-gradient(rgb(39, 155, 250) 0%, rgb(41, 137, 216) 35%, rgb(22, 83, 141) 99%); border: currentColor; color: rgb(255, 255, 255); padding-top: 8px; padding-bottom: 8px; font-size: 20px; font-weight: 700; box-shadow: 1px 1px 1px #444;
+}
+#regform button:hover {
+	box-shadow: 0px 1px 4px #424242;
+}

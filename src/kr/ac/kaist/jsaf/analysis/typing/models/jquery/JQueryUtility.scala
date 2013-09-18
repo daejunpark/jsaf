@@ -19,7 +19,14 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.cfg._
 
 object JQueryUtility extends ModelData {
-  private val prop_const: List[(String, AbsProperty)] = List(
+  private val EventLoc = newPreDefLoc("jQuery.event", Recent)
+  private val EventSpecialLoc = newPreDefLoc("jQuery.event.special", Recent)
+  private val EventSpecialDefaultLoc = newPreDefLoc("jQuery.event.special.default", Recent)
+  private val BrowserLoc = newPreDefLoc("jQuery.browser", Recent)
+  private val ExprLoc = newPreDefLoc("jQuery.expr", Recent)
+  private val ExprDefaultLoc = newPreDefLoc("jQuery.expr.default", Recent)
+  
+private val prop_const: List[(String, AbsProperty)] = List(
     ("contains",      AbsBuiltinFunc("jQuery.contains", 2)),
     ("each",          AbsBuiltinFuncAftercall("jQuery.each", 3)),
     ("extend",        AbsBuiltinFunc("jQuery.extend", 0)),
@@ -43,15 +50,66 @@ object JQueryUtility extends ModelData {
     ("parseXML",      AbsBuiltinFunc("jQuery.parseXML", 1)),
     ("trim",          AbsBuiltinFunc("jQuery.trim", 1)),
     ("type",          AbsBuiltinFunc("jQuery.type", 1)),
-    ("unique",        AbsBuiltinFunc("jQuery.unique", 1))
+    ("unique",        AbsBuiltinFunc("jQuery.unique", 1)),
+
+    // for special EVENT 
+    ("event",         AbsConstValue(PropValue(ObjectValue(EventLoc, T, T, T)))),
+    // for browser compatibility ccheck
+    ("browser",       AbsConstValue(PropValue(ObjectValue(BrowserLoc, T, T, T)))),
+    // for browser compatibility ccheck
+    ("expr",       AbsConstValue(PropValue(ObjectValue(ExprLoc, T, T, T))))
   )
+
+////////////////////////////////////////////////////////
+// jQuery.expr
+  private val prop_expr: List[(String, AbsProperty)] = List(
+    ("@class",      AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",      AbsConstValue(PropValue(ObjectValue(ObjProtoLoc, F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
+    ("@default_other",       AbsConstValue(PropValue(ObjectValue(ExprDefaultLoc, BoolTop, BoolTop, BoolTop))))
+  )
+  private val prop_expr_default: List[(String, AbsProperty)] = List(
+    ("@class",      AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",      AbsConstValue(PropValue(ObjectValue(ObjProtoLoc, F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue)))
+  )
+///////////////////////////////////////////////////////
+// jQuery.event.special object 
+  
+  private val prop_event: List[(String, AbsProperty)] = List(
+    ("@class",      AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",      AbsConstValue(PropValue(ObjectValue(ObjProtoLoc, F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
+    ("special",      AbsConstValue(PropValue(ObjectValue(EventSpecialLoc, T, T, T))))
+  )
+  private val prop_event_special: List[(String, AbsProperty)] = List(
+    ("@class",      AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",      AbsConstValue(PropValue(ObjectValue(ObjProtoLoc, F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue))),
+    ("@default_other",       AbsConstValue(PropValue(ObjectValue(EventSpecialDefaultLoc, BoolTop, BoolTop, BoolTop))))
+  )
+  private val prop_event_special_default: List[(String, AbsProperty)] = List(
+    ("@class",      AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",      AbsConstValue(PropValue(ObjectValue(ObjProtoLoc, F, F, F)))),
+    ("@extensible", AbsConstValue(PropValue(BoolTrue)))
+  )
+/////////////////////////////////////////////////////////
+  private val prop_browser: List[(String, AbsProperty)] = List(
+    ("@class",       AbsConstValue(PropValue(AbsString.alpha("Object")))),
+    ("@proto",       AbsConstValue(PropValue(ObjectValue(ObjProtoLoc, F, F, F)))),
+    ("@extensible",  AbsConstValue(PropValue(BoolTrue))),
+    ("@default_other",       AbsConstValue(PropValue(ObjectValue(Value(BoolTop)+Value(StrTop), BoolTop, BoolTop, BoolTop))))
+  )
+////////////////////////////////////////////////////////
 
   private val prop_proto: List[(String, AbsProperty)] = List(
     ("extend",   AbsBuiltinFunc("jQuery.prototype.extend", 0))
   )
 
   def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
-    (JQuery.ConstLoc, prop_const), (JQuery.ProtoLoc, prop_proto)
+    (JQuery.ConstLoc, prop_const), (JQuery.ProtoLoc, prop_proto), (EventLoc, prop_event),
+    (EventSpecialLoc, prop_event_special), (BrowserLoc, prop_browser), (EventSpecialDefaultLoc, prop_event_special_default),
+    (ExprLoc, prop_expr), (ExprDefaultLoc, prop_expr_default)
   )
 
   def getSemanticMap(): Map[String, SemanticFun] = {
@@ -260,6 +318,22 @@ object JQueryUtility extends ModelData {
             ((Helper.ReturnStore(h, Value(s_ret)), ctx), (he, ctxe))
           else
             ((HeapBot, ContextBot), (he, ctxe))
+        })),
+      // should be refined
+      ("jQuery.isFunction" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val v_arg = getArgValue(h, ctx, args, "0")
+          val b1 = if(v_arg._1._1 </ UndefBot) F else T
+          val b2 = if(v_arg._1._2 </ NullBot) F else T
+          val b3 = if(v_arg._1._3 </ BoolBot) F else T
+          val b4 = if(v_arg._1._4 </ NumBot) F else T
+          val b5 = if(v_arg._1._5 </ StrBot) F else T
+          val b6 = v_arg._2.foldLeft(BoolBot:AbsBool)((b,l) => {
+            if(AbsString.alpha("Function") <= h(l)(AbsString.alpha("@class"))._1._2._1._5 && 
+               T <= h(l).domIn("@function") && h(l)("@function")._1._1._1._2.isEmpty) b + T
+               else b + F
+          })
+            ((Helper.ReturnStore(h, Value(b1+b2+b3+b4+b5+b6)), ctx), (he, ctxe))
         }))
     )
   }

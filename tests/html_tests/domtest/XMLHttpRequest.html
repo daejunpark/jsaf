@@ -1,0 +1,31 @@
+<!-- test for XMLHttpRequest -->
+<script>
+  var xhr = new XMLHttpRequest();   
+  var __result1 = xhr.readyState;
+  var __expect1 = 0;
+  var __result2 = xhr.responseText;
+  var __expect2 = "";
+  var __result3 = xhr.responseXML;
+  var __expect3 = null;
+  var __result4 = xhr.status;
+  var __expect4 = 0;
+  var __result5 = xhr.statusText;
+  var __expect5 = "";
+  var __result6 = xhr.timeout;
+  var __expect6 = "__UInt";
+  var __result7 = xhr.withCredentials;
+  var __expect7 = false;
+
+  var __result8 = xhr.open("GET", "myfile.txt");
+  var __expect8 = undefined;
+  var __result9 = xhr.readyState;
+  var __expect9 = 1;
+  var __result10 = xhr.status;
+  var __expect10 = "__UInt";
+  var __result11 = xhr.statusText;
+  var __expect11 = "__StrTop";
+
+  xhr.send("data");
+  var __result12 = xhr.readyState;
+  var __expect12 ="__UInt";
+</script>

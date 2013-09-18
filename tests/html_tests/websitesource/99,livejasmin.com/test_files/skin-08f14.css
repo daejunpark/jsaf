@@ -1,0 +1,2298 @@
+body {
+	background: url("/site/livejasmin/image/background/body_texture-23d0e.png") rgb(166, 0, 0); position: relative;
+}
+#container {
+	background: url("/site/livejasmin/image/background/body_bg_top-7bd67.png") fixed repeat-x 0px 0px;
+}
+a {
+	color: rgb(255, 204, 0);
+}
+#top_warnings {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") repeat-x 0px -1082px; color: rgb(255, 255, 255);
+}
+#top_warnings .content .close span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") repeat-x -596px -110px;
+}
+#header_container {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") repeat-x 0px -264px;
+}
+#header_hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") repeat-x 0px -341px;
+}
+.livejasmin_logo#logo {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -19px;
+}
+.jasmin_logo#logo {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -54px -19px;
+}
+.global_menu a {
+	color: rgb(255, 255, 255);
+}
+.global_menu a:hover {
+	color: rgb(255, 204, 204);
+}
+.left_side .header_category {
+	text-shadow: 0px 1px #840000;
+}
+#profilname {
+	background: rgb(146, 0, 0);
+}
+.login_menu li {
+	background: rgb(146, 0, 0);
+}
+#category_menu {
+	background: rgb(146, 0, 0);
+}
+#profilname:hover {
+	background: rgb(95, 0, 0);
+}
+.login_menu li:hover {
+	background: rgb(95, 0, 0);
+}
+#profilname:hover {
+	background: rgb(95, 0, 0);
+}
+.selected#profilname {
+	background: rgb(95, 0, 0);
+}
+#category_menu:hover {
+	background: rgb(95, 0, 0);
+}
+.selected#category_menu {
+	background: rgb(95, 0, 0);
+}
+#profilname .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -154px -20px;
+}
+#category_menu .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -154px -20px;
+}
+#search .input_field {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -389px rgb(222, 148, 148);
+}
+#search .hover_field {
+	background: rgb(250, 228, 228) !important;
+}
+#search .search_field {
+	color: rgb(196, 44, 44);
+}
+#search .extend_field {
+	color: rgb(196, 44, 44);
+}
+#search .search_btn {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -655px -83px;
+}
+#search .loader_gif {
+	background: url("/site/livejasmin/image/animation/loader_16x16_blur-5670a.gif") no-repeat;
+}
+.hover_field#search .loader_gif {
+	background: url("/site/livejasmin/image/animation/loader_16x16_darkred-9f282.gif") no-repeat;
+}
+#switch_tooltip {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(153, 153, 153);
+}
+#switch_tooltip .up_arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -357px -51px;
+}
+#filter_container .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -357px -51px;
+}
+#header #submenu_dropdown .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -357px -51px;
+}
+#menu_category_dropdown .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -357px -51px;
+}
+#filter_header {
+	border-bottom-color: rgb(17, 17, 17); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#filter_container #filter_header .clear_filters {
+	color: rgb(102, 102, 102);
+}
+#filter_container #filter_header .clear_filters:hover {
+	color: rgb(255, 255, 255);
+}
+#filter_container #filter_header .filter_header_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -1559px; color: rgb(170, 170, 170);
+}
+#filter_container #filter_header .filter_header_button:hover {
+	background: rgb(80, 79, 77); color: rgb(255, 255, 255);
+}
+#filter_container #filter_header .selected {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -1559px; color: rgb(255, 204, 0);
+}
+#filter_container #filter_header .selected:hover {
+	background: rgb(80, 79, 77); color: rgb(255, 204, 0);
+}
+#filter_container .filter_header_bottom {
+	background: rgb(60, 59, 57);
+}
+#filter_container #no_result_info span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -146px -51px;
+}
+#filter_btn {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -379px -51px rgb(146, 0, 0);
+}
+#filter_btn:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -412px -51px rgb(95, 0, 0);
+}
+.selected#filter_btn {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -412px -51px rgb(95, 0, 0);
+}
+#filter_container {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png");
+}
+#filter_container #close_btn span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -731px -83px;
+}
+#filter_container .column ul strong {
+	color: rgb(255, 255, 255);
+}
+#filter_container .column ul a {
+	color: rgb(204, 204, 204);
+}
+#filter_container .column ul a:hover {
+	color: rgb(255, 255, 255);
+}
+#filter_container .column ul a.selected {
+	color: rgb(255, 204, 0);
+}
+#filter_container .column ul a:active {
+	
+}
+#filter_container .clear {
+	background: rgba(0, 0, 0, 0.4);
+}
+#filter_container .btn_container {
+	border-top-color: rgba(102, 102, 102, 0.4); border-top-width: 1px; border-top-style: solid;
+}
+#filter_reset {
+	color: rgb(153, 153, 153);
+}
+#filter_reset:hover {
+	color: rgb(255, 255, 255);
+}
+#filter_container #no_result_info {
+	color: rgb(255, 255, 255);
+}
+#submenu_dropdown .inner {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png") 0px 0px;
+}
+#header .dropdown_menu li a {
+	color: rgb(204, 204, 204);
+}
+#header .dropdown_menu li a:hover {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png") 0px 0px; color: rgb(255, 255, 255);
+}
+#general_settings_menu li:hover {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png") 0px 0px; color: rgb(255, 255, 255);
+}
+#header .dropdown_menu li a.active {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png") 0px 0px; color: rgb(255, 204, 0);
+}
+#general_settings_menu li.active {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png") 0px 0px; color: rgb(255, 204, 0);
+}
+.opened#general_settings_menu li:hover {
+	
+}
+.opened#general_settings_menu li.active {
+	
+}
+#language_block .scrollbar {
+	background: rgb(102, 102, 102);
+}
+#language_list li:hover {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png") 0px 0px;
+}
+#language_list li.active {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png") 0px 0px;
+}
+#menu_favorites .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -7px -167px;
+}
+#menu_favorites:hover .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -36px -167px;
+}
+#menu_messages .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -91px -83px;
+}
+#menu_messages:hover .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -290px -83px;
+}
+#submenu_dropdown .new_messages .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -458px -83px;
+}
+#menu_credits .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -5px -83px;
+}
+#menu_credits:hover .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -204px -83px;
+}
+#menu_account .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -178px -85px;
+}
+#menu_account:hover .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -376px -85px;
+}
+#menu_general .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -120px -83px;
+}
+#menu_general:hover .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -207px -21px;
+}
+.active#menu_general .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -163px -21px;
+}
+#menu_logout .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -62px -83px;
+}
+#menu_logout:hover .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -261px -83px;
+}
+.active#menu_logout .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -404px -83px;
+}
+#menu_topmember .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -150px -83px;
+}
+#menu_topmember:hover .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -349px -83px;
+}
+#menu_onlinesupport .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -553px -20px;
+}
+#menu_onlinesupport:hover .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -582px -20px;
+}
+#submenu_dropdown ul.dropdown_select_list li {
+	color: rgb(255, 204, 0);
+}
+#submenu_dropdown ul.dropdown_select_list a {
+	color: rgb(255, 204, 0);
+}
+#submenu_dropdown ul#language_list li {
+	color: rgb(204, 204, 204);
+}
+#submenu_dropdown ul#language_list a {
+	color: rgb(204, 204, 204);
+}
+#submenu_dropdown ul#language_list li.current_language a {
+	color: rgb(255, 204, 0);
+}
+#submenu_dropdown ul#language_list li:hover {
+	color: rgb(255, 255, 255);
+}
+#submenu_dropdown ul#language_list a:hover {
+	color: rgb(255, 255, 255);
+}
+#header #general_settings_menu #language_block {
+	border-top-color: rgb(85, 85, 85); border-top-width: 1px; border-top-style: solid;
+}
+#general_settings_menu {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png") 0px 0px;
+}
+#general_settings_menu li label {
+	color: rgb(204, 204, 204);
+}
+#general_settings_menu li label:hover {
+	color: rgb(255, 255, 255);
+}
+#header #general_settings_menu li .select_left {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -162px -22px;
+}
+#header #general_settings_menu li .select_right {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -190px -22px;
+}
+#header #general_settings_menu #language_form .up.slide_arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -154px -15px;
+}
+#header #general_settings_menu #language_form .down.slide_arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -154px -20px;
+}
+#header #general_settings_menu #language_form .selected_language {
+	color: rgb(255, 204, 0);
+}
+#header #general_settings_menu #language_form label.selected {
+	color: rgb(204, 204, 204);
+}
+#header #general_settings_menu #language_form label.selected:hover {
+	color: rgb(204, 204, 204);
+}
+#submenu_dropdown #logout_confirmation .inner {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png") 0px 0px;
+}
+#submenu_dropdown #logout_confirmation span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -357px -51px;
+}
+#submenu_dropdown #logout_confirmation p {
+	color: rgb(255, 255, 255);
+}
+#confirm_block {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png") 0px 0px;
+}
+#confirm_block .arrow_top {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -357px -51px;
+}
+#confirm_block .arrow_right {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -488px -176px;
+}
+#confirm_block .arrow_bottom {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -500px -176px;
+}
+#confirm_block .arrow_left {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -475px -176px;
+}
+#menu_category_dropdown .inner {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png") 0px 0px;
+}
+#menu_category_dropdown ul li.current a {
+	color: rgb(255, 204, 0);
+}
+.first_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -588px; color: rgb(68, 31, 0) !important; text-shadow: 0px 1px #ffd964;
+}
+.first_button:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -630px !important; color: rgb(119, 53, 0) !important;
+}
+.first_button:active {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -672px !important; color: rgb(173, 107, 21) !important;
+}
+.small.first_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -714px; color: rgb(68, 31, 0) !important;
+}
+.small.first_button:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -742px !important; color: rgb(119, 53, 0) !important;
+}
+.small.first_button:active {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -770px !important; color: rgb(173, 107, 21) !important;
+}
+.second_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -1287px; color: rgb(255, 204, 51) !important;
+}
+.second_button:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -1330px !important; color: rgb(220, 152, 50) !important;
+}
+.second_button:active {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -1373px !important; color: rgb(199, 122, 31) !important;
+}
+.small.second_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -916px; color: rgb(255, 204, 0) !important;
+}
+.small.second_button:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -943px !important; color: rgb(220, 152, 50) !important;
+}
+.small.second_button:active {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -970px !important; color: rgb(199, 122, 31) !important;
+}
+.small.third_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -842px; color: rgb(255, 255, 255) !important;
+}
+.small.third_button:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -1416px !important; color: rgb(221, 221, 221) !important;
+}
+.small.third_button:active {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -1445px !important; color: rgb(221, 221, 221) !important;
+}
+.fourth_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -1584px; color: rgb(255, 255, 255) !important;
+}
+.fourth_button:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -1626px !important; color: rgb(230, 243, 205) !important;
+}
+.fourth_button:active {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -1668px !important; color: rgb(177, 217, 101) !important;
+}
+.small.fourth_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -1584px; color: rgb(255, 255, 255) !important;
+}
+.small.fourth_button:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -1584px !important; color: rgb(230, 243, 205) !important;
+}
+.small.fourth_button:active {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -1584px !important; color: rgb(221, 221, 221) !important;
+}
+.disabled.first_button {
+	opacity: 0.5;
+}
+.disabled.second_button {
+	opacity: 0.5;
+}
+#footer .footer_top {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") repeat-x 0px -226px;
+}
+#footer .footer_top ul li {
+	border-left-color: rgb(85, 0, 0); border-left-width: 1px; border-left-style: solid;
+}
+#footer .footer_top ul li a {
+	color: rgb(255, 255, 255);
+}
+#footer .footer_middle {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") repeat-x 0px -1082px; color: rgb(255, 102, 102); border-bottom-color: rgb(170, 0, 0); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#footer .footer_middle .rta {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px 0px;
+}
+#footer .footer_middle .asacp {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -38px 0px;
+}
+#footer .footer_middle .icra {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -100px 0px;
+}
+#footer .footer_middle ul li {
+	border-left-color: rgb(68, 0, 0); border-left-width: 1px; border-left-style: solid;
+}
+#footer .footer_middle ul li a {
+	color: rgb(185, 51, 50);
+}
+#footer .footer_middle p a {
+	color: rgb(255, 102, 102);
+}
+#footer .footer_middle p a:hover {
+	color: rgb(255, 255, 255);
+}
+#footer .footer_middle ul li a:hover {
+	color: rgb(255, 255, 255);
+}
+#footer .footer_bottom {
+	background: rgb(68, 0, 0); color: rgb(142, 40, 40);
+}
+#footer .footer_bottom ul li {
+	border-left-color: rgb(85, 23, 23); border-left-width: 1px; border-left-style: solid;
+}
+#footer .footer_bottom ul li a {
+	color: rgb(142, 40, 40);
+}
+#footer .footer_bottom ul li a:hover {
+	color: rgb(255, 255, 255);
+}
+#overlay {
+	background: url("/site/livejasmin/image/background/overlay_red_90-87cd5.png");
+}
+#signup_overlay {
+	background: url("/site/livejasmin/image/background/overlay_red_90-87cd5.png");
+}
+.black95#overlay {
+	background: url("/site/livejasmin/image/background/overlay_black_95-80195.png");
+}
+.noBg#overlay {
+	
+}
+.black#overlay {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png");
+}
+.content_box {
+	border: 1px solid rgb(108, 0, 0);
+}
+.standalone_box {
+	border: 1px solid rgb(108, 0, 0);
+}
+.content_box .content_box_header {
+	background: rgb(153, 0, 0); border: 1px solid rgb(224, 0, 0);
+}
+.standalone_box .standalone_box_header {
+	background: rgb(153, 0, 0); border: 1px solid rgb(224, 0, 0);
+}
+.content_box .content_box_header h2 {
+	color: rgb(255, 255, 255);
+}
+.standalone_box .standalone_box_header h2 {
+	color: rgb(255, 255, 255);
+}
+.content_box_header h2 span {
+	color: rgb(85, 0, 0);
+}
+.standalone_box .standalone_box_header h2 span {
+	color: rgb(85, 0, 0);
+}
+.content_box_header h2 a {
+	color: rgb(255, 204, 0);
+}
+.standalone_box .standalone_box_header h2 a {
+	color: rgb(255, 204, 0);
+}
+.content_box .content_box_container {
+	background: rgb(166, 0, 0); border-width: medium 1px 1px; border-style: none solid solid; border-color: currentColor rgb(224, 0, 0) rgb(224, 0, 0);
+}
+.standalone_box .standalone_box_container {
+	background: rgb(166, 0, 0); border-width: medium 1px 1px; border-style: none solid solid; border-color: currentColor rgb(224, 0, 0) rgb(224, 0, 0);
+}
+.standalone_box .standalone_box_container p {
+	color: rgb(255, 255, 255);
+}
+.standalone_box .standalone_box_footer {
+	background: rgb(177, 0, 0); border-width: 1px; border-style: solid; border-color: rgb(136, 0, 0) rgb(224, 0, 0) rgb(224, 0, 0);
+}
+.info_tag {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -1043px -126px;
+}
+.char_info {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(255, 255, 255);
+}
+.char_info_bottom {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(255, 255, 255);
+}
+.info_tag span {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(255, 255, 255);
+}
+.warning_tag {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(255, 255, 255);
+}
+.error_message {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(255, 255, 255);
+}
+.bottom_warning_tag {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(255, 255, 255);
+}
+.char_info p {
+	color: rgb(255, 255, 255) !important;
+}
+.char_info_bottom p {
+	color: rgb(255, 255, 255) !important;
+}
+.warning_tag p {
+	color: rgb(255, 255, 255) !important;
+}
+.bottom_warning_tag p {
+	color: rgb(255, 255, 255) !important;
+}
+.error_message p {
+	color: rgb(255, 0, 0) !important;
+}
+.char_info .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -1043px -136px;
+}
+.error_message .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -1043px -136px;
+}
+.warning_tag .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -1043px -136px;
+}
+.char_info_bottom .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -357px -51px;
+}
+.bottom_warning_tag .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -357px -51px;
+}
+.error_message .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -146px -51px;
+}
+.warning_tag .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -146px -51px;
+}
+.bottom_warning_tag .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -146px -51px;
+}
+.info_icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -283px -51px !important;
+}
+.info_tag span.info_text {
+	
+}
+.error_message {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(255, 0, 0);
+}
+.error_message .error_text {
+	color: rgb(255, 0, 0) !important;
+}
+.error_icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -146px -51px;
+}
+.error_message span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -146px -51px;
+}
+#no_message_container .error_text {
+	color: rgb(255, 255, 255);
+}
+.success_message {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(170, 204, 0);
+}
+.success_message span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -88px -51px;
+}
+.header_badge .badge_left {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -306px -51px; color: rgb(255, 255, 255);
+}
+.header_badge .badge_right {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -337px -51px;
+}
+form label {
+	color: rgb(255, 255, 255);
+}
+.textfield {
+	background: rgb(127, 0, 0); color: rgb(255, 153, 153); border-bottom-color: rgb(187, 0, 0) !important; border-bottom-width: 1px !important; border-bottom-style: solid !important;
+}
+select {
+	background: rgb(127, 0, 0); color: rgb(255, 153, 153); border-bottom-color: rgb(187, 0, 0) !important; border-bottom-width: 1px !important; border-bottom-style: solid !important;
+}
+@media not all
+{
+select {
+	background: rgb(127, 0, 0);
+}
+}
+.textfield:focus {
+	background: rgb(106, 0, 0); color: rgb(255, 255, 255);
+}
+select option {
+	color: rgb(255, 255, 255);
+}
+textarea {
+	background: rgb(127, 0, 0); color: rgb(255, 153, 153); border-bottom-color: rgb(187, 0, 0) !important; border-bottom-width: 1px !important; border-bottom-style: solid !important;
+}
+textarea:focus {
+	background: rgb(106, 0, 0); color: rgb(255, 255, 255);
+}
+form .submit_holder {
+	color: rgb(255, 153, 153);
+}
+div.checkbox_holder label {
+	color: rgb(255, 153, 153);
+}
+form .disabled.button:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -588px;
+}
+a.checkbox_replacement {
+	color: rgb(255, 153, 153) !important;
+}
+a.radio_replacement {
+	color: rgb(255, 153, 153) !important;
+}
+a.checkbox_replacement span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -22px -51px;
+}
+a.active.checkbox_replacement span {
+	background-position: 0px -51px !important;
+}
+a.radio_replacement span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -44px -51px;
+}
+a.active.radio_replacement span {
+	background-position: -66px -51px;
+}
+a.select_arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -501px -83px;
+}
+a.overlay.select_arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -501px -83px;
+}
+a.small.select_arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -809px -83px;
+}
+a.small.overlay.select_arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -809px -83px;
+}
+.chars {
+	color: rgb(255, 153, 153) !important;
+}
+#hover_layer {
+	background: url("/site/livejasmin/image/background/spacer-241e9.gif");
+}
+#listpage .hover_box_offline {
+	background: url("/site/livejasmin/image/background/spacer-241e9.gif");
+}
+#listpage .name .bg {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -513px;
+}
+#listpage .status .bg {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -513px;
+}
+#listpage .name {
+	color: rgb(255, 255, 255);
+}
+#listpage .status {
+	color: rgb(255, 255, 255);
+}
+#listpage .name span:first-child {
+	color: rgb(255, 255, 255);
+}
+#listpage .status span:first-child {
+	color: rgb(255, 255, 255);
+}
+#listpage .add_favorite {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -182px -51px;
+}
+#listpage .add_favorite:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -224px -51px;
+}
+#listpage .myfavorite {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -203px -51px;
+}
+.hustler#listpage .hustler_model {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -103px -119px;
+}
+#listpage .porn_star {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -1px -119px;
+}
+#listpage .sale {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -220px -119px;
+}
+#listpage .new_performer {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -169px -120px;
+}
+#flash_content_thumbs {
+	background: rgb(68, 0, 0);
+}
+#signup_form h4 {
+	text-shadow: 0px 2px 0px #860000;
+}
+#signup_form h3 {
+	text-shadow: 0px 2px 0px #860000;
+}
+#signup_form h5 {
+	text-shadow: 0px 2px 0px #860000;
+}
+#signup_form h4 {
+	color: rgb(255, 255, 255);
+}
+#signup_form h3 {
+	color: rgb(255, 204, 0) !important;
+}
+#signup_form h5 {
+	color: rgb(255, 152, 153) !important;
+}
+#signup_form p {
+	color: rgb(255, 255, 255);
+}
+#signup_form .ajax_holder {
+	color: rgb(255, 255, 255);
+}
+#signup_form .submit_holder a {
+	color: rgb(255, 204, 0);
+}
+#signup_form p a {
+	color: rgb(255, 204, 0);
+}
+#signup_form .hint {
+	color: rgb(255, 153, 153);
+}
+#signup_form .login_link {
+	color: rgb(255, 153, 153);
+}
+.popup_box_header .lock_icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -660px -51px;
+}
+.content_box_header .lock_icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -660px -51px;
+}
+#overlay_signup .popup_box_header {
+	border: currentColor;
+}
+#overlay_login .content_box_header {
+	border: currentColor;
+}
+#overlay_signup .popup_box_header .second_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -915px; color: rgb(255, 204, 51) !important;
+}
+#overlay_login .content_box_header .second_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -915px; color: rgb(255, 204, 51) !important;
+}
+#overlay_signup .popup_box_header .second_button:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -942px; color: rgb(220, 152, 50) !important;
+}
+#overlay_login .content_box_header .second_button:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -942px; color: rgb(220, 152, 50) !important;
+}
+#overlay_signup .popup_box_header .second_button:active {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -969px; color: rgb(199, 122, 31) !important;
+}
+#overlay_login .content_box_header .second_button:active {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -969px; color: rgb(199, 122, 31) !important;
+}
+.content_box .girls#signup_form {
+	background: url("/site/livejasmin/image/background/overlay_signup_girl-e0e6a.jpg") no-repeat 635px 12px;
+}
+.content_box .boys#signup_form {
+	background: url("/site/livejasmin/image/background/overlay_signup_boy-d5126.jpg") no-repeat 675px 15px;
+}
+.content_box .tranny#signup_form {
+	background: url("/site/livejasmin/image/background/overlay_signup_tranny-a432c.jpg") no-repeat 722px 15px;
+}
+#overlay_signup .girls#signup_form {
+	background: url("/site/livejasmin/image/background/overlay_signup_girl-e0e6a.jpg") no-repeat 566px 12px;
+}
+#overlay_signup .boys#signup_form {
+	background: url("/site/livejasmin/image/background/overlay_signup_boy-d5126.jpg") no-repeat 606px 15px;
+}
+#overlay_signup .tranny#signup_form {
+	background: url("/site/livejasmin/image/background/overlay_signup_tranny-a432c.jpg") no-repeat 653px 15px;
+}
+#overlay_signup #signup_form p {
+	color: rgb(255, 255, 255);
+}
+#overlay_signup #signup_form .ajax_holder {
+	color: rgb(255, 255, 255);
+}
+#overlay_signup #signup_form .hint {
+	color: rgb(255, 255, 255);
+}
+#overlay_signup #signup_form .login_link {
+	color: rgb(255, 153, 153);
+}
+#overlay_signup #signup_form .submit_holder a {
+	color: rgb(255, 204, 0);
+}
+#overlay_signup #signup_form p a {
+	color: rgb(255, 204, 0);
+}
+#signup_success .signup_content_box ul li {
+	color: rgb(255, 204, 0);
+}
+#overlay_signup .textfield {
+	color: rgb(255, 153, 153);
+}
+#overlay_signup select {
+	color: rgb(255, 153, 153);
+}
+#overlay_signup .textfield:focus {
+	color: rgb(255, 255, 255);
+}
+#overlay_signup select:focus {
+	color: rgb(255, 255, 255);
+}
+#overlay_signup .popup_box_header h2 {
+	color: rgb(255, 255, 255) !important;
+}
+#overlay_signup #signup_form .terms {
+	color: rgb(255, 255, 255) !important;
+}
+.content_box .girls#signup_success {
+	background: url("/site/livejasmin/image/background/overlay_signup_girl_success-1982c.jpg") no-repeat 679px 12px;
+}
+.content_box .boys#signup_success {
+	background: url("/site/livejasmin/image/background/overlay_signup_boy_success-cc315.jpg") no-repeat 673px 16px;
+}
+.content_box .tranny#signup_success {
+	background: url("/site/livejasmin/image/background/overlay_signup_tranny_success-0f36e.jpg") no-repeat 652px 18px;
+}
+#overlay_signup_success .girls#signup_success {
+	background: url("/site/livejasmin/image/background/overlay_signup_girl_success-1982c.jpg") no-repeat 606px 27px;
+}
+#overlay_signup_success .boys#signup_success {
+	background: url("/site/livejasmin/image/background/overlay_signup_boy_success-cc315.jpg") no-repeat 603px 16px;
+}
+#overlay_signup_success .tranny#signup_success {
+	background: url("/site/livejasmin/image/background/overlay_signup_tranny_success-0f36e.jpg") no-repeat 582px 18px;
+}
+#signup_success p {
+	color: rgb(255, 153, 153) !important;
+}
+#signup_success h5 {
+	text-shadow: 0px 2px 0px #860000;
+}
+#signup_success h6 {
+	text-shadow: 0px 2px 0px #860000;
+}
+#signup_success h5 {
+	color: rgb(255, 204, 0);
+}
+#signup_success ul li {
+	color: rgb(255, 204, 0);
+}
+#signup_success h6 {
+	color: rgb(255, 255, 255);
+}
+#signup_success ul li span {
+	color: rgb(255, 255, 255);
+}
+#signup_success span {
+	color: rgb(255, 153, 153); text-shadow: 0px 2px 0px #860000;
+}
+#login_form p {
+	color: rgb(255, 153, 153);
+}
+#login_form .submit_holder {
+	color: rgb(255, 153, 153);
+}
+.forgot_pass_box p {
+	color: rgb(255, 153, 153);
+}
+#login_form a {
+	color: rgb(255, 204, 0) !important;
+}
+.forgot_pass_box label {
+	color: rgb(255, 255, 255) !important;
+}
+#login_form label {
+	color: rgb(255, 255, 255) !important;
+}
+#login_form a.checkbox_replacement {
+	color: rgb(255, 255, 255) !important;
+}
+#overlay_login #login_form .submit_holder {
+	color: rgb(255, 255, 255) !important;
+}
+#overlay_login .forgot_pass_box p span {
+	color: rgb(255, 255, 255) !important;
+}
+#overlay_login .forgot_pass_box p.note {
+	color: rgb(255, 255, 255) !important;
+}
+#overlay_login a.checkbox_replacement {
+	color: rgb(255, 255, 255) !important;
+}
+#overlay_login #login_form p {
+	color: rgb(255, 153, 153);
+}
+#login_forgot_password #forgotPassForm p {
+	color: rgb(255, 153, 153);
+}
+#overlay_login a.checkbox_replacement span {
+	border-bottom-color: rgb(187, 0, 0); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#overlay_login form label {
+	color: rgb(255, 255, 255);
+}
+#overlay_login #login_form a {
+	color: rgb(255, 204, 0);
+}
+#overlay_login .content_box_header h2 {
+	color: rgb(255, 255, 255) !important;
+}
+#overlay_login .service_change {
+	border-top-color: rgb(136, 0, 0); border-top-width: 1px; border-top-style: solid;
+}
+#overlay_login .service_change p {
+	color: rgb(255, 153, 153) !important;
+}
+.content_box .service_change ul {
+	color: rgb(255, 153, 153) !important;
+}
+.content_box .service_change p {
+	color: rgb(255, 153, 153) !important;
+}
+.content_box .service_change a {
+	color: rgb(255, 204, 0) !important;
+}
+#overlay_login .forgot_pass_box p {
+	color: rgb(255, 255, 255);
+}
+#overlay_login .forgot_pass_box p.note2 {
+	color: rgb(255, 204, 204);
+}
+#overlay_login a.checkbox_replacement span.checked {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -708px -83px;
+}
+.left_menu li#menu_account {
+	background: url("/site/livejasmin/image/sprite/settings_sprite-bdfd0.png") no-repeat 16px 6px;
+}
+.left_menu li#menu_general {
+	background: url("/site/livejasmin/image/sprite/settings_sprite-bdfd0.png") no-repeat 16px -25px;
+}
+.left_menu li#menu_payment {
+	background: url("/site/livejasmin/image/sprite/settings_sprite-bdfd0.png") no-repeat 16px -56px;
+}
+.left_menu li#menu_topmembers {
+	background: url("/site/livejasmin/image/sprite/settings_sprite-bdfd0.png") no-repeat 16px -87px;
+}
+.topmember_image {
+	background: url("/site/livejasmin/image/background/top_member_bg-b9e72.jpg") no-repeat;
+}
+.topmember_text h2 {
+	color: rgb(255, 204, 0);
+}
+.topmember_text p {
+	color: rgb(255, 255, 255);
+}
+.topmember_text .note {
+	color: rgb(255, 153, 153) !important;
+}
+.scrollbar {
+	background: rgb(85, 51, 51);
+}
+.select_list_container .scrollbar {
+	background: rgb(173, 51, 51);
+}
+#questionnaire_btn {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png");
+}
+#support_chat_btn {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png");
+}
+#mycontent_btn {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png");
+}
+#favorite_button .fav_btn_icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -247px -51px;
+}
+#auction_button .auction_btn_icon {
+	background: url("/site/livejasmin/image/sprite/member_sprite-24e37.png") no-repeat -90px 0px;
+}
+.loading#favorite_button .fav_btn_icon {
+	background: url("/site/livejasmin/image/animation/loader_16x16_red-0b82b.gif") no-repeat;
+}
+.loading#auction_button .auction_btn_icon {
+	background: url("/site/livejasmin/image/animation/loader_16x16_red-0b82b.gif") no-repeat;
+}
+#favorite_button #fav_btn_title {
+	color: rgb(255, 255, 255);
+}
+#auction_button #auction_btn_title {
+	color: rgb(255, 255, 255);
+}
+#favorite_button {
+	background: rgb(166, 0, 0);
+}
+.slided#favorite_button {
+	background: rgb(166, 0, 0);
+}
+#auction_button {
+	background: rgb(166, 0, 0);
+}
+.slided#auction_button {
+	background: rgb(166, 0, 0);
+}
+#favorites_container .scrollbar-handle span {
+	background: rgb(119, 0, 0);
+}
+#auction_block .scrollbar-handle span {
+	background: rgb(119, 0, 0);
+}
+#slidepanel_container {
+	background: rgb(166, 0, 0);
+}
+#auction_panel_container {
+	background: rgb(166, 0, 0);
+}
+#slidepanel_container .favorites_header h2 {
+	background: rgb(136, 0, 0);
+}
+#slidepanel_container .favorites_header h2 {
+	color: rgb(255, 255, 255);
+}
+#slidepanel_container .close_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -591px -105px;
+}
+#auction_panel_container .close_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -591px -105px;
+}
+#slidepanel_container #favorites_container .add_favorite {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -182px -51px;
+}
+#slidepanel_container #favorites_container .add_favorite:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -224px -51px;
+}
+#slidepanel_container #favorites_container .myfavorite {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -203px -51px;
+}
+#slidepanel_container #favorites_container .name {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -513px; color: rgb(255, 255, 255);
+}
+#slidepanel_container #favorites_container .status {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -513px; color: rgb(255, 255, 255);
+}
+.slidepanel_mask {
+	background: url("/site/livejasmin/image/background/overlay_red_90-87cd5.png");
+}
+.no_favorites {
+	color: rgb(255, 153, 153);
+}
+.no_favorites .star {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -908px 0px;
+}
+.no_favorites strong {
+	color: rgb(136, 0, 0); text-shadow: 0px 1px #ca0000;
+}
+#questionnaire_btn .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -587px -83px;
+}
+#questionnaire_btn .title {
+	color: rgb(255, 255, 255);
+}
+#settings .settings_box {
+	background: rgb(140, 0, 0) !important;
+}
+#settings .left_menu li {
+	border-top-color: rgb(170, 0, 0); border-top-width: 1px; border-top-style: solid; background-color: rgb(156, 0, 0) !important;
+}
+#settings .left_menu li:hover {
+	background-color: rgb(153, 0, 0) !important;
+}
+#settings .left_menu li.active {
+	background-color: rgb(177, 0, 0) !important;
+}
+#settings .left_menu li a {
+	color: rgb(255, 153, 153);
+}
+#settings .left_menu li.active a {
+	color: rgb(255, 185, 51);
+}
+#settings .right_content {
+	background: rgb(177, 0, 0);
+}
+#settings .right_content .content_row {
+	border-bottom-color: rgb(149, 0, 0); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#settings .right_content :first-child.content_row {
+	border-top-color: rgb(149, 0, 0); border-top-width: 1px; border-top-style: solid;
+}
+#settings .right_content .content_row:hover {
+	background: rgb(165, 0, 0);
+}
+#settings .right_content .active_row {
+	background: rgb(165, 0, 0);
+}
+#settings .right_content .content_row .row_title {
+	color: rgb(255, 255, 255);
+}
+#settings .right_content .content_row .row_data {
+	color: rgb(255, 153, 153);
+}
+#settings .right_content .content_row .edit {
+	color: rgb(255, 187, 51);
+}
+#settings .right_content .content_row p {
+	color: rgb(255, 153, 153);
+}
+#settings .right_content .row_content p a {
+	color: rgb(255, 204, 0);
+}
+#settings .right_content .row_content p span {
+	color: rgb(255, 255, 255);
+}
+div.select_list_container {
+	background: rgb(106, 0, 0); color: rgb(255, 153, 153);
+}
+div.select ul.select_replacement li a {
+	color: rgb(255, 255, 255);
+}
+div.select .select_replacement li a {
+	color: rgb(255, 255, 255);
+}
+.error_icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -146px -51px;
+}
+.request_failure {
+	color: rgb(255, 153, 153); background-color: rgb(177, 0, 0);
+}
+.request_failure a.close_error {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -106px -51px;
+}
+.loader_gif {
+	background: url("/site/livejasmin/image/animation/loader_16x16_darkred-9f282.gif") no-repeat;
+}
+.loader_gif_blur {
+	background: url("/site/livejasmin/image/animation/loader_16x16_blur-5670a.gif") no-repeat;
+}
+.reset_search_button#loader_anim {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -621px -83px;
+}
+.loader_button:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -588px !important; color: rgb(68, 31, 0) !important;
+}
+.loader_button:active {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -588px !important; color: rgb(68, 31, 0) !important;
+}
+.loader_button .loader {
+	background: url("/site/livejasmin/image/animation/loader_22x22-f8812.gif") no-repeat;
+}
+#new_message .reset_search_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -265px -51px;
+}
+#auto_suggest {
+	background: url("/site/livejasmin/image/background/overlay_black_85-da55c.png") 0px 0px; color: rgb(255, 255, 255);
+}
+#auto_suggest li a {
+	color: rgb(153, 153, 153);
+}
+#auto_suggest li span.online.status {
+	color: rgb(163, 217, 0);
+}
+#auto_suggest li span.private.status {
+	color: rgb(163, 217, 0);
+}
+#auto_suggest li span.member_chat.status {
+	color: rgb(163, 217, 0);
+}
+#auto_suggest li span.offline.status {
+	color: rgb(119, 119, 119);
+}
+#auto_suggest li span.pic {
+	background: url("/site/livejasmin/image/background/jasmin_model/girl_new_performer_bg_35x27-d961d.jpg") no-repeat 0px 0px;
+}
+#auto_suggest li.name .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -671px -83px;
+}
+#auto_suggest li.name .name_transgendered {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -367px -83px;
+}
+#auto_suggest li.name .name_lesbian {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -467px -83px;
+}
+#auto_suggest li.name .name_girl {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -412px -83px;
+}
+#auto_suggest li.name .name_group {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -433px -83px;
+}
+#auto_suggest li.name .name_boy {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -390px -83px;
+}
+#auto_suggest li.active_suggestion {
+	background: rgb(0, 0, 0);
+}
+#auto_suggest li.active_suggestion a {
+	color: rgb(255, 255, 255);
+}
+#auto_suggest li.no_suggestion {
+	color: rgb(204, 204, 204);
+}
+#auto_suggest li.no_suggestion .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -146px -51px;
+}
+#auto_suggest .search_for {
+	color: rgb(204, 204, 204); border-bottom-color: rgb(47, 48, 46); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#auto_suggest .search_for b {
+	color: rgb(255, 255, 255);
+}
+#auto_suggest .suggestion_text b {
+	color: rgb(255, 255, 255);
+}
+#auto_suggest_msg {
+	background: rgba(68, 68, 68, 0.8);
+}
+#auto_suggest_msg li a {
+	color: rgb(255, 255, 255);
+}
+#auto_suggest_msg li.no_suggestion {
+	color: rgb(255, 255, 255);
+}
+.jump_to_clause {
+	color: rgb(255, 153, 153);
+}
+.clause {
+	color: rgb(255, 255, 255); background-color: rgb(143, 0, 0);
+}
+.policy_page h3 {
+	color: rgb(255, 255, 255);
+}
+.policy_page .agreement {
+	color: rgb(255, 204, 204);
+}
+.policy_page .definitions {
+	color: rgb(255, 204, 204);
+}
+.list_clauses li {
+	color: rgb(255, 204, 204);
+}
+.list_clauses .line_number {
+	color: rgb(255, 153, 153); background-color: rgb(143, 0, 0);
+}
+#termsandconditions h2 {
+	color: rgb(255, 255, 255);
+}
+h3 {
+	color: rgb(255, 255, 255);
+}
+#termsandconditions ul {
+	color: rgb(255, 204, 204);
+}
+#termsandconditions .terms p {
+	color: rgb(255, 204, 204);
+}
+#termsandconditions .small_text {
+	color: rgb(255, 153, 153) !important;
+}
+#termsandconditions .address div {
+	color: rgb(255, 255, 255);
+}
+#termsandconditions .address ul {
+	color: rgb(255, 255, 255);
+}
+#termsandconditions .statement p {
+	color: rgb(255, 204, 204);
+}
+#faq .questions {
+	color: rgb(255, 255, 255); background-color: rgb(143, 0, 0);
+}
+.list_question li {
+	color: rgb(255, 204, 0);
+}
+#faq .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -350px -51px;
+}
+#faq .answer {
+	color: rgb(255, 204, 204);
+}
+.answer li {
+	color: rgb(255, 204, 204);
+}
+#faq .active.question {
+	color: rgb(255, 255, 255);
+}
+#faq .sub_questions .question {
+	color: rgb(255, 204, 0);
+}
+.tooltip_favorite span {
+	background: rgb(0, 0, 0); color: rgb(255, 255, 255);
+}
+#contactus h3 {
+	color: rgb(255, 255, 255);
+}
+#contactus .content_box_container p {
+	color: rgb(255, 255, 255);
+}
+#contactus h4 {
+	color: rgb(255, 255, 255);
+}
+#contactus .content_box_container span {
+	color: rgb(255, 255, 255);
+}
+#contactus #comment_char_number {
+	color: rgb(255, 153, 153) !important;
+}
+#contactus .content_box_container h3 {
+	color: rgb(255, 153, 153);
+}
+.contact_content_container {
+	background-color: rgb(151, 0, 0);
+}
+.contact_online_support {
+	background-color: rgb(151, 0, 0);
+}
+.contact_billing_department {
+	background-color: rgb(151, 0, 0);
+}
+#online_support_link:hover {
+	background-color: rgb(138, 0, 0);
+}
+#send_message_link:hover {
+	background-color: rgb(138, 0, 0);
+}
+#online_support_link .online_support.icon {
+	background: url("/site/livejasmin/image/sprite/contactus_sprite-ac419.png") no-repeat 0px 0px;
+}
+#online_support_link:hover .online_support.icon {
+	background: url("/site/livejasmin/image/sprite/contactus_sprite-ac419.png") no-repeat 0px -146px;
+}
+#send_message_link .email.icon {
+	background: url("/site/livejasmin/image/sprite/contactus_sprite-ac419.png") no-repeat -171px 0px;
+}
+#send_message_link:hover .email.icon {
+	background: url("/site/livejasmin/image/sprite/contactus_sprite-ac419.png") no-repeat -171px -146px;
+}
+#choose_contact .contact_content_container h2 {
+	color: rgb(255, 255, 255);
+}
+#choose_contact .contact_content_container strong {
+	color: rgb(255, 255, 255);
+}
+#choose_contact .contact_content_container small {
+	color: rgb(255, 153, 153);
+}
+#contactus .contact_content_header {
+	background-color: rgb(132, 0, 0);
+}
+#contactus .contact_content_header a:hover {
+	color: rgb(255, 255, 255);
+}
+.contact_billing_department ul li a:hover {
+	color: rgb(255, 255, 255);
+}
+#contactus .contact_content_header a span {
+	color: rgb(255, 204, 0);
+}
+#contactus .contact_content_header a:hover span {
+	color: rgb(255, 255, 255);
+}
+.contact_by_email label {
+	color: rgb(255, 153, 153);
+}
+.contact_online_support p {
+	color: rgb(255, 204, 0) !important;
+}
+.contact_billing_department .phone_number {
+	color: rgb(255, 204, 0) !important;
+}
+.contact_billing_department .second_line {
+	color: rgb(255, 204, 204) !important;
+}
+div.overlay_warning_tag {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -1043px -126px;
+}
+div.overlay_info_tag {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -1043px -126px;
+}
+div.message_popup_error {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -1043px -126px;
+}
+div.general_warning_tag {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -1043px -126px;
+}
+#error_block #error_hint {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(255, 255, 255);
+}
+div.overlay_warning_tag span {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(255, 255, 255);
+}
+div.message_popup_error span {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(255, 255, 255);
+}
+div.general_warning_tag p {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(255, 255, 255);
+}
+div.overlay_warning_tag .error_icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -146px -51px;
+}
+div.message_popup_error .error_icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -146px -51px;
+}
+div.general_warning_tag .error_icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -146px -51px;
+}
+div.overlay_info_tag span {
+	background: rgb(0, 95, 157); color: rgb(255, 255, 255);
+}
+#listpage .loader {
+	background: url("/site/livejasmin/image/animation/loader_30x30_red-8210c.gif") no-repeat;
+}
+.chaos-mask-private {
+	background: rgb(193, 0, 0); opacity: 0.2;
+}
+#error_500_page .error_title {
+	color: rgb(255, 255, 255);
+}
+#error_500_page p {
+	color: rgb(255, 153, 153);
+}
+#error_500_page .content_box_container {
+	border-top-color: rgb(224, 0, 0); border-top-width: 1px; border-top-style: solid;
+}
+.topmember_text li {
+	color: rgb(255, 255, 255);
+}
+#overlay_topmember .topmember_image {
+	background: url("/site/livejasmin/image/background/top_member_bg_overlay-e62e4.jpg") no-repeat 391px 24px;
+}
+#overlay_container .popup_box {
+	background: rgb(166, 0, 0); border: currentColor;
+}
+#overlay_container .popup_box .popup_box_container {
+	background: rgb(166, 0, 0); border: currentColor;
+}
+#overlay_container .popup_box_header {
+	background: rgb(136, 0, 0); border: currentColor; color: rgb(255, 255, 255);
+}
+#overlay_container .popup_box_header h2 {
+	border: currentColor; color: rgb(255, 255, 255);
+}
+#overlay_container .popup_box_container p {
+	border: currentColor; color: rgb(255, 255, 255);
+}
+#overlay_container .popup_box_container h3 {
+	border: currentColor; color: rgb(255, 255, 255);
+}
+#overlay_container .popup_box_header .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -799px -101px;
+}
+#inner_container .standalone_box_header .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -799px -101px;
+}
+#overlay_container .popup_box_header .close_button span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -597px -110px;
+}
+#overlay_container .popup_box_footer {
+	border-top-color: rgb(136, 0, 0); border-top-width: 1px; border-top-style: solid;
+}
+#message_list ul {
+	border-bottom-color: rgb(136, 0, 0); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#message_list li {
+	border-top-color: rgb(136, 0, 0); border-top-width: 1px; border-top-style: solid;
+}
+#conversation_container li {
+	border-top-color: rgb(136, 0, 0); border-top-width: 1px; border-top-style: solid;
+}
+#message_list li:first-child {
+	border-top-color: currentColor; border-top-width: 0px; border-top-style: none;
+}
+#conversation_container li:first-child {
+	border-top-color: currentColor; border-top-width: 0px; border-top-style: none;
+}
+#standalone_message #message_list {
+	background: rgb(177, 0, 0);
+}
+#standalone_message .scrollbar {
+	background: rgb(136, 0, 0);
+}
+#overlay_message .scrollbar {
+	background: rgb(136, 0, 0);
+}
+#message_list li a.delete {
+	background: rgb(136, 0, 0);
+}
+#message_list a.delete span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -159px -176px;
+}
+#message_list a.delete:hover span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -143px -176px;
+}
+#message_list li a .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -670px -51px;
+}
+#message_list li a.unread .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -438px -94px;
+}
+#message_list li a .message {
+	color: rgb(255, 153, 153);
+}
+#message_list li a.unread .time {
+	color: rgb(255, 153, 153);
+}
+#conversation_container .message span.time {
+	color: rgb(255, 153, 153);
+}
+#message_list li a .time {
+	color: rgb(210, 62, 62);
+}
+#message_list li:hover a .name {
+	color: rgb(255, 255, 255);
+}
+#message_list li:hover a .message {
+	color: rgb(255, 255, 255);
+}
+#message_list li a.unread .message {
+	color: rgb(255, 255, 255);
+}
+#message_delete_box {
+	background: rgb(167, 0, 0);
+}
+#standalone_message #message_delete_box {
+	background: rgb(177, 0, 0);
+}
+#message_delete_box p {
+	color: rgb(255, 255, 255);
+}
+#noscript_deletethread #message_delete_box {
+	background: rgb(177, 0, 0); border-width: medium 1px 1px; border-style: none solid solid; border-color: currentColor rgb(224, 0, 0) rgb(224, 0, 0);
+}
+#standalone_message #message_recommender {
+	background: rgb(177, 0, 0); border-bottom-color: currentColor; border-bottom-width: 0px; border-bottom-style: none;
+}
+#message_recommender p {
+	color: rgb(255, 153, 153) !important;
+}
+#message_recommender .model_name {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat 0px -513px; color: rgb(255, 255, 255);
+}
+#message_to_support:hover {
+	color: rgb(255, 255, 255) !important;
+}
+#standalone_message #message_form {
+	background: rgb(177, 0, 0);
+}
+#message_form .loader_gif {
+	background: url("/site/livejasmin/image/animation/loader_20x20_darkred-9ec9d.gif") no-repeat;
+}
+#message_form .reset_search_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -111px -175px;
+}
+#message_form #auto_suggest_msg {
+	background: rgb(106, 0, 0); border: currentColor;
+}
+#message_form #subject_options {
+	background: rgb(106, 0, 0); border: currentColor;
+}
+#conversation_container {
+	background: rgb(177, 0, 0); border-bottom-color: currentColor; border-bottom-width: 0px; border-bottom-style: none;
+}
+.message_container .message span {
+	color: rgb(255, 204, 0);
+}
+#reply_message_form #credit_info {
+	color: rgb(255, 153, 153);
+}
+#overlay_logout .popup_box_container p {
+	color: rgb(255, 153, 153);
+}
+#overlay_over18 {
+	background: url("/site/livejasmin/image/background/overlay_over_eighteen-c8d3d.jpg") no-repeat;
+}
+#overlay_over18 p {
+	color: rgb(255, 191, 191);
+}
+#overlay_over18 span {
+	color: rgb(255, 191, 191);
+}
+#overlay_over18 strong {
+	color: rgb(255, 255, 255);
+}
+#overlay_question #questions_list p {
+	color: rgb(255, 255, 255);
+}
+#overlay_question #questions_list strong {
+	color: rgb(255, 204, 0);
+}
+#overlay_question #rating_list li a {
+	background: rgb(136, 0, 0); color: rgb(255, 255, 255);
+}
+#overlay_question #suggestion_container .chars {
+	color: rgb(255, 153, 153);
+}
+#overlay_question #rating_list li a.no span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -175px -176px;
+}
+#overlay_question #rating_list li a.no:hover span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -307px -176px;
+}
+#overlay_question #rating_list li a.not_sure span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -208px -176px;
+}
+#overlay_question #rating_list li a.not_sure:hover span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -348px -176px;
+}
+#overlay_question #rating_list li a.yes span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -241px -176px;
+}
+#overlay_question #rating_list li a.yes:hover span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -389px -176px;
+}
+#overlay_question #rating_list li a.yes_absolutely span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -274px -176px;
+}
+#overlay_question #rating_list li a.yes_absolutely:hover span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -430px -176px;
+}
+#overlay_account_settings {
+	color: rgb(255, 255, 255);
+}
+#overlay_account_settings .content_row {
+	border-bottom-color: rgb(136, 0, 0); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#overlay_account_settings .content_row .row_data_long {
+	color: rgb(255, 153, 153);
+}
+#overlay_account_settings .content_row .row_data span {
+	color: rgb(255, 153, 153);
+}
+#overlay_account_settings .content_row span {
+	color: rgb(255, 204, 0);
+}
+#login_forgot_password #forgotPassForm label {
+	color: rgb(255, 255, 255) !important;
+}
+#login_forgot_password .note2 {
+	color: rgb(255, 191, 191) !important;
+}
+#biopage {
+	background: rgb(153, 0, 0); outline: rgb(108, 0, 0) solid 1px; border: 1px solid rgb(224, 0, 0);
+}
+#biopage #tab_menu {
+	border-right-color: rgb(177, 0, 0); border-right-width: 1px; border-right-style: solid;
+}
+#biopage #tab_menu li {
+	background: rgb(153, 0, 0); border-left-color: rgb(177, 0, 0); border-left-width: 1px; border-left-style: solid;
+}
+#biopage #tab_menu li:first-child {
+	border-left-color: currentColor !important; border-left-width: 0px !important; border-left-style: none !important;
+}
+#biopage #tab_menu li.selected {
+	background: rgb(177, 0, 0); border-right-color: rgb(108, 0, 0); border-left-color: rgb(108, 0, 0); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid;
+}
+#biopage #tab_menu li a {
+	color: rgb(255, 153, 153);
+}
+#biopage #tab_menu li a:hover {
+	color: rgb(255, 255, 255);
+}
+#biopage #tab_menu li.selected a {
+	color: rgb(255, 255, 255);
+}
+#biopage #tab_menu li.selected a {
+	border-right-color: rgb(224, 0, 0); border-left-color: rgb(224, 0, 0); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid;
+}
+#biopage #tab_menu li:first-child.selected a {
+	border-left-color: currentColor !important; border-left-width: 0px !important; border-left-style: none !important;
+}
+.biopage_content {
+	background: rgb(177, 0, 0); color: rgb(255, 255, 255);
+}
+#biopage_details h2 {
+	color: rgb(255, 255, 255);
+}
+#biopage_details .bio_box li {
+	border-bottom-color: rgb(152, 0, 0); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#biopage_details .bio_box li strong {
+	background: rgb(177, 0, 0); color: rgb(255, 255, 255);
+}
+#biopage_details .bio_box li div b {
+	background: rgb(177, 0, 0); color: rgb(255, 153, 153);
+}
+#biopage_details .bio_box li div span {
+	background: rgb(177, 0, 0); color: rgb(255, 153, 153);
+}
+#biopage_details .bio_box li.lang div {
+	background: rgb(177, 0, 0); color: rgb(255, 153, 153);
+}
+#biopage_details .bio_box li span b {
+	background: rgb(177, 0, 0);
+}
+#biopage_details .bio_box li span font {
+	background: rgb(177, 0, 0);
+}
+#biopage_details .about_box li p {
+	color: rgb(255, 255, 255);
+}
+#biopage_wall ul {
+	border-bottom-color: rgb(136, 0, 0); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#biopage_wall ul li {
+	border-top-color: rgb(136, 0, 0); border-top-width: 1px; border-top-style: solid;
+}
+#biopage_wall ul li.birthday {
+	background: rgb(160, 0, 0);
+}
+#biopage_wall ul li.own {
+	background: rgb(160, 0, 0);
+}
+#biopage_wall ul li.write {
+	background: rgb(160, 0, 0);
+}
+.enabled#biopage_wall li.post:hover {
+	background: rgb(160, 0, 0);
+}
+#biopage_wall ul li.message span.icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") -618px -29px;
+}
+#biopage_wall ul li.video_autoteaser span.icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") -618px -29px;
+}
+#biopage_wall ul li.video_teaser span.icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") -618px -29px;
+}
+#biopage_wall ul li.image_free span.icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") -657px -29px;
+}
+#biopage_wall ul li.image_member span.icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") -657px -29px;
+}
+#biopage_wall ul li.image_pornstar span.icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") -657px -29px;
+}
+#biopage_wall ul li.image_profile span.icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") -657px -29px;
+}
+#biopage_wall ul li.birthday span.icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") -636px -28px;
+}
+#biopage_wall ul li .reply {
+	color: rgb(255, 204, 0);
+}
+#biopage_wall ul li.own strong {
+	color: rgb(255, 204, 0);
+}
+#biopage_wall ul li p {
+	color: rgb(255, 153, 153);
+}
+#biopage_wall ul li.birthday strong {
+	color: rgb(255, 255, 255);
+}
+#biopage_wall ul li.own p {
+	color: rgb(255, 255, 255);
+}
+#biopage_wall ul li span {
+	color: rgb(255, 153, 153);
+}
+#biopage_wall ul li .reply a {
+	background: rgb(136, 0, 0);
+}
+#biopage_wall ul li .reply a em {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") -724px -51px;
+}
+#biopage_wall .no_wall_posts {
+	color: rgb(255, 153, 153); border-top-color: rgb(136, 0, 0); border-top-width: 1px; border-top-style: solid;
+}
+#biopage_wall #show_more_loader {
+	background: url("/site/livejasmin/image/animation/loader_30x30_red-8210c.gif") no-repeat;
+}
+.flag_en {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -686px !important;
+}
+.flag_us {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -16px !important;
+}
+.flag_de {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -172px !important;
+}
+.flag_fr {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -134px !important;
+}
+.flag_it {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -114px !important;
+}
+.flag_es {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -76px !important;
+}
+.flag_pt {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -96px !important;
+}
+.flag_nl {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -153px !important;
+}
+.flag_sw {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -112px !important;
+}
+.flag_fi {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px 0px !important;
+}
+.flag_cs {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -381px !important;
+}
+.flag_pl {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -418px !important;
+}
+.flag_hu {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -400px !important;
+}
+.flag_ro {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -304px !important;
+}
+.flag_ur {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -208px !important;
+}
+.flag_ru {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -324px !important;
+}
+.flag_ch {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -240px !important;
+}
+.flag_tr {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -256px !important;
+}
+.flag_jp {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -272px !important;
+}
+.flag_be {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -288px !important;
+}
+.flag_bu {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -304px !important;
+}
+.flag_hr {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -320px !important;
+}
+.flag_sk {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -532px !important;
+}
+.flag_sr {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -352px !important;
+}
+.flag_sv {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -38px !important;
+}
+.flag_no {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -20px !important;
+}
+.flag_da {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -58px !important;
+}
+.flag_ja {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -361px !important;
+}
+.flag_zh {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat -28px -287px !important;
+}
+.flag_big_en {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -684px !important;
+}
+.flag_big_us {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -16px !important;
+}
+.flag_big_de {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -172px !important;
+}
+.flag_big_fr {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -134px !important;
+}
+.flag_big_it {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -114px !important;
+}
+.flag_big_es {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -76px !important;
+}
+.flag_big_pt {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -96px !important;
+}
+.flag_big_nl {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -153px !important;
+}
+.flag_big_sw {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -112px !important;
+}
+.flag_big_fi {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px 0px !important;
+}
+.flag_big_cs {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -381px !important;
+}
+.flag_big_pl {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -418px !important;
+}
+.flag_big_hu {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -400px !important;
+}
+.flag_big_ro {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -305px !important;
+}
+.flag_big_ur {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -208px !important;
+}
+.flag_big_ru {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -324px !important;
+}
+.flag_big_ch {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -240px !important;
+}
+.flag_big_tr {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -256px !important;
+}
+.flag_big_ja {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -361px !important;
+}
+.flag_big_be {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -288px !important;
+}
+.flag_big_bu {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -304px !important;
+}
+.flag_big_hr {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -320px !important;
+}
+.flag_big_sk {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -532px !important;
+}
+.flag_big_sr {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -352px !important;
+}
+.flag_big_sv {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -38px !important;
+}
+.flag_big_no {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -19px !important;
+}
+.flag_big_da {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -57px !important;
+}
+.flag_big_zh {
+	background: url("/site/livejasmin/image/sprite/flag_sprite-b8c88.png") no-repeat 0px -287px !important;
+}
+#overlay_message #auto_suggest_msg li:hover {
+	background: rgb(89, 0, 0);
+}
+#overlay_message #auto_suggest_msg li.active_suggestion {
+	background: rgb(89, 0, 0);
+}
+#overlay_message #subject_options li:hover {
+	background: rgb(89, 0, 0);
+}
+div.select .select_replacement li:hover {
+	background: rgb(89, 0, 0);
+}
+#overlay_message .message_form_container .select_replacement li:hover {
+	background: rgb(89, 0, 0);
+}
+#standalone_message #auto_suggest_msg li:hover {
+	background: rgb(89, 0, 0);
+}
+#standalone_message #auto_suggest_msg li.active_suggestion {
+	background: rgb(89, 0, 0);
+}
+#standalone_message #subject_options li:hover {
+	background: rgb(89, 0, 0);
+}
+#standalone_message .message_form_container .select_replacement li:hover {
+	background: rgb(89, 0, 0);
+}
+#inner_container #freechat {
+	background: rgb(136, 0, 0);
+}
+#captcha_block .captcha {
+	background: rgb(94, 0, 0);
+}
+#captcha_block .captcha a span {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -684px -51px;
+}
+#metro_box {
+	background: rgb(33, 33, 33); border: 3px solid rgb(85, 85, 85);
+}
+#metro_box h2 {
+	color: rgb(178, 178, 178) !important;
+}
+#metro_box p {
+	color: rgb(255, 255, 255) !important;
+}
+#metro_box .wrench_icon {
+	background: url("/site/livejasmin/image/picture/wrench_icon-61193.png") no-repeat;
+}
+#metro_arrow {
+	background: url("/site/livejasmin/image/picture/metro_arrow-162a0.png") no-repeat left bottom;
+}
+.popup_box#overlay_quickbuy .popup_box_container {
+	background: url("/site/livejasmin/image/background/overlay_quickbuy-26b7c.png") repeat-x;
+}
+#overlay_quickbuy #transaction_process {
+	background: rgb(166, 0, 0);
+}
+#overlay_quickbuy #transaction_success {
+	background: rgb(166, 0, 0);
+}
+#overlay_quickbuy #transaction_failure {
+	background: rgb(166, 0, 0);
+}
+.popup_box#overlay_quickbuy p {
+	color: rgb(255, 255, 255);
+}
+#overlay_quickbuy .popup_box_header .balance {
+	color: rgb(255, 153, 153);
+}
+#overlay_quickbuy .popup_box_header .balance span {
+	color: rgb(255, 204, 51);
+}
+#overlay_quickbuy .popup_box_container .package {
+	background: -ms-linear-gradient(rgb(146, 0, 0), rgb(110, 0, 0));
+}
+#overlay_quickbuy .popup_box_container .package:hover {
+	background: -ms-linear-gradient(rgb(96, 0, 0), rgb(68, 0, 0));
+}
+#overlay_quickbuy .popup_box_container .package:hover .bonus_credit {
+	background: rgb(60, 0, 0);
+}
+#overlay_quickbuy .popup_box_container p.rates_info {
+	color: rgb(255, 102, 102);
+}
+#overlay_quickbuy .popup_box_container p.package_type {
+	color: rgb(255, 204, 0) !important; text-shadow: 0px 2px 0px #860000;
+}
+#overlay_quickbuy .popup_box_container p.package_price {
+	color: rgb(255, 153, 153);
+}
+#overlay_quickbuy .popup_box_footer {
+	background: rgb(167, 0, 0);
+}
+#overlay_quickbuy .popup_box_footer p {
+	color: rgb(255, 255, 255);
+}
+#overlay_quickbuy .popup_box_footer a {
+	color: rgb(255, 204, 0);
+}
+#quickbuy-mask {
+	background: rgb(85, 0, 0);
+}
+#overlay_quickbuy #transaction_process {
+	color: rgb(255, 255, 255);
+}
+#overlay_quickbuy #transaction_success p span {
+	color: rgb(255, 204, 0);
+}
+#overlay_quickbuy #transaction_failure p.information {
+	color: rgb(255, 153, 153);
+}
+#overlay_quickbuy #transaction_process .loader {
+	background: url("/site/livejasmin/image/animation/loader_30x30_red-8210c.gif") no-repeat;
+}
+#minimized-quickbuy {
+	background: url("/site/livejasmin/image/background/overlay_black_80-9aea4.png"); color: rgb(255, 255, 255);
+}
+.minimized.processing#minimized-quickbuy .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -357px -51px;
+}
+.minimized.success#minimized-quickbuy .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -357px -51px;
+}
+.minimized.failure#minimized-quickbuy .arrow {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -357px -51px;
+}
+.failure#minimized-quickbuy .close_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -731px -83px;
+}
+.success#minimized-quickbuy .close_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -731px -83px;
+}
+.processing#minimized-quickbuy span.loader {
+	background: url("/site/livejasmin/image/animation/loader_20x20_white_transparent-33517.gif") no-repeat;
+}
+.success#minimized-quickbuy .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -88px -51px;
+}
+.failure#minimized-quickbuy .icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") no-repeat -146px -51px;
+}
+.failure#minimized-quickbuy p.information {
+	color: rgb(153, 153, 153);
+}
+.popup_box#overlay_quickbuy .tpp.popup_box_container {
+	background: url("/site/livejasmin/image/background/overlay_tpp_quickbuy-a2375.png") repeat-x;
+}
+#tpp_quickbuy {
+	background: url("/site/livejasmin/image/background/tpp_qb_bg-a1278.png") no-repeat bottom;
+}
+#tpp_quickbuy span.line {
+	background: rgb(190, 0, 0);
+}
+#overlay_quickbuy .popup_box_container #tpp_quickbuy span {
+	color: rgb(255, 153, 153);
+}
+#overlay_quickbuy .popup_box_container #tpp_quickbuy p {
+	color: rgb(255, 153, 153);
+}
+#packages .bonus_credit {
+	background: rgb(94, 0, 0);
+}
+#overlay_container #packages .bonus_ribbon {
+	background: url("/site/livejasmin/image/sprite/member_sprite-24e37.png") no-repeat -116px 0px;
+}
+#overlay_quickbuy .tpp.popup_box_container .bonus#packages p.credits {
+	color: rgb(255, 153, 153); text-shadow: 1px 1px #5b0000;
+}
+#memberauction_container {
+	background: rgb(166, 0, 0);
+}
+.memberauction_app_gyroscope {
+	color: rgb(255, 255, 255);
+}
+.disabled.memberauction_app_gyroscope {
+	color: rgb(149, 0, 0);
+}
+.memberauction_app_gyroscope_border {
+	background: rgb(149, 1, 1);
+}
+#memberauction_content {
+	background-color: rgb(166, 0, 0);
+}
+#memberauction_app_box {
+	background: rgb(149, 1, 1); border-top-color: rgb(184, 0, 0); border-top-width: 1px; border-top-style: solid;
+}
+#memberauction_leading_box {
+	border-top-color: rgb(184, 0, 0); border-bottom-color: rgb(184, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-bottom-style: solid;
+}
+#memberauction_info_box {
+	background: rgb(132, 0, 0);
+}
+#memberauction_winners_box {
+	border-top-color: rgb(184, 0, 0); border-top-width: 1px; border-top-style: solid;
+}
+#memberauction_info_content h1 {
+	color: rgb(255, 255, 255);
+}
+#memberauction_info_content li {
+	color: rgb(255, 77, 77);
+}
+#memberauction_info_content li span {
+	color: rgb(255, 153, 153);
+}
+#memberauction_time_remaining_text {
+	color: rgb(255, 153, 153);
+}
+#memberauction_time_start_text {
+	color: rgb(255, 153, 153);
+}
+#memberauction_time_text {
+	color: rgb(255, 97, 97); text-shadow: 1px 0px 16px #f00;
+}
+#memberauction_app_credits_text {
+	color: rgb(255, 255, 255);
+}
+#memberauction_app {
+	background-color: rgb(108, 0, 0);
+}
+#memberauction_credits_text {
+	color: rgb(255, 153, 153);
+}
+.disabled#memberauction_bid_button {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -588px; color: rgb(119, 53, 0) !important;
+}
+#memberauction_game_rules {
+	color: rgb(255, 204, 0);
+}
+#memberauction_info_button {
+	background: url("/site/livejasmin/image/sprite/member_sprite-24e37.png") -72px 0px;
+}
+#game_rules_arrow_top {
+	border-right-color: transparent; border-bottom-color: rgb(255, 204, 0); border-left-color: transparent; border-right-width: 5px; border-bottom-width: 4px; border-left-width: 5px; border-right-style: solid; border-bottom-style: solid; border-left-style: solid;
+}
+#game_rules_arrow_bottom {
+	border-top-color: rgb(255, 204, 0); border-right-color: transparent; border-left-color: transparent; border-top-width: 4px; border-right-width: 5px; border-left-width: 5px; border-top-style: solid; border-right-style: solid; border-left-style: solid;
+}
+#memberauction_winner_text {
+	color: rgb(255, 255, 255);
+}
+.memberauction_member_pic {
+	background: url("/site/livejasmin/image/sprite/member_sprite-24e37.png") 0px 0px;
+}
+#memberauction_member_winner_pic {
+	background: url("/site/livejasmin/image/sprite/member_sprite-24e37.png") -37px 0px;
+}
+#memberauction_member_id_text {
+	color: rgb(255, 204, 0);
+}
+#memberauction_member_id_winner_text {
+	color: rgb(255, 204, 0);
+}
+#memberauction_leading_credits_text {
+	color: rgb(255, 255, 255);
+}
+#memberauction_by_first_text {
+	color: rgb(255, 255, 255);
+}
+.memberauction_balance_text {
+	color: rgb(255, 153, 153);
+}
+.memberauction_credits_text {
+	color: rgb(255, 255, 255);
+}
+#memberauction_buy_credits_button:hover {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") 0px -943px; color: rgb(220, 152, 50) !important;
+}
+.memberauction_bid_button_tooltip {
+	background: rgb(0, 0, 0); color: rgb(255, 255, 255);
+}
+#memberauction_winners_title {
+	color: rgb(255, 255, 255);
+}
+.memberauction_winner_card {
+	background: rgb(149, 0, 0);
+}
+.first.memberauction_winner_text {
+	color: rgb(255, 153, 153);
+}
+.second.memberauction_winner_text {
+	color: rgb(255, 255, 255);
+}
+.memberauction_winn_for_credits {
+	color: rgb(255, 153, 153);
+}
+.memberauction_winn_credits {
+	color: rgb(255, 255, 255);
+}
+.memberauction_winner_member_id {
+	color: rgb(255, 179, 26);
+}
+.arrowright_class {
+	border-top-color: transparent; border-right-color: rgb(0, 0, 0); border-bottom-color: transparent; border-top-width: 8px; border-right-width: 8px; border-bottom-width: 8px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid;
+}
+.arrowleft_class {
+	border-top-color: transparent; border-bottom-color: transparent; border-left-color: rgb(0, 0, 0); border-top-width: 8px; border-bottom-width: 8px; border-left-width: 8px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;
+}
+.arrowtop_class {
+	border-top-color: rgb(0, 0, 0); border-right-color: transparent; border-left-color: transparent; border-top-width: 8px; border-right-width: 8px; border-left-width: 8px; border-top-style: solid; border-right-style: solid; border-left-style: solid;
+}
+.arrowbottom_class {
+	border-top-color: rgb(0, 0, 0); border-right-color: transparent; border-left-color: transparent; border-top-width: 8px; border-right-width: 8px; border-left-width: 8px; border-top-style: solid; border-right-style: solid; border-left-style: solid;
+}
+#memberauction_sold {
+	background: url("/site/livejasmin/image/picture/sold_en-5634c.png") no-repeat;
+}
+.en#memberauction_sold {
+	background: url("/site/livejasmin/image/picture/sold_en-5634c.png") no-repeat;
+}
+.hu#memberauction_sold {
+	background: url("/site/livejasmin/image/picture/sold_hu-26cd9.png") no-repeat;
+}
+#memberauction_warring_icon {
+	background: url("/site/livejasmin/image/sprite/global_sprite-815b1.png") -145px -51px;
+}
+#memberauction_buycredit_link {
+	color: rgb(255, 204, 0);
+}

@@ -66,7 +66,9 @@ object ConcolicMain {
       coverage.typing.analyze(initHeap)
       coverage.semantics = new Semantics(cfg, Worklist.computes(cfg, true), false)
       coverage.stateManager = new StateManager(cfg, coverage.typing, coverage.semantics) 
-
+      // Store function information using the result of the analysis  
+      coverage.updateFunction
+      
       val instrumentor = new Instrumentor(ir, coverage)
       ir = instrumentor.doit
       instrumentor.printIRs

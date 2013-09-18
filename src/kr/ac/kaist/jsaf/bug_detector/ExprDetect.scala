@@ -11,6 +11,7 @@ package kr.ac.kaist.jsaf.bug_detector
 
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
+import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.nodes.IROp
 import kr.ac.kaist.jsaf.nodes_util.Span
@@ -33,7 +34,7 @@ class ExprDetect(bugDetector: BugDetector) {
   // Bug Detection Main (check CFGExpr)
   ////////////////////////////////////////////////////////////////
 
-  def check(inst: CFGInst, expr: CFGExpr, cstate: CState): Unit = {
+  def check(inst: CFGInst, expr: CFGExpr, cstate: CState, typeof: Boolean): Unit = {
     val node    = cfg.findEnclosingNode(inst)
     val state   = typing.mergeState(cstate)
     val heap    = state._1
@@ -86,7 +87,7 @@ class ExprDetect(bugDetector: BugDetector) {
             case  _  => Unit
           }
         case CFGVarRef(info, id) => 
-          absentReadVariableCheck(info.getSpan, id)
+          if (!typeof) absentReadVariableCheck(info.getSpan, id)
         case _ => Unit
       }
     }
@@ -106,7 +107,7 @@ class ExprDetect(bugDetector: BugDetector) {
 
       // Get the object name and property name
       val objId: String = varManager.getUserVarAssign(obj) match {
-        case bv: BugVar0 => "'" + bv.toString + "'"
+        case bv: BugVar0 => bv.toString
         case _ => "an object"
       }
       val propId: String = varManager.getUserVarAssign(index) match {
@@ -125,6 +126,21 @@ class ExprDetect(bugDetector: BugDetector) {
         for (objLoc <- objLocSet) {
           // Check for each primitive value
           for (absValue <- propValue) {
+
+            objLocSet.foreach((loc) => {
+              for (fid <- state.heap(loc)("@construct")._1.funid) {
+                ModelManager.getFIdMap("Builtin").get(fid) match {
+                  case Some(funName) if funName == "RegExp.constructor" =>
+                    val propValue = SE.V(index, state.heap, state.context)._1.pvalue
+                    propValue.foreach((absValue) => if (regExpDeprecated contains BugHelper.getPropName(absValue.toAbsString)) {
+                      bugStorage.addMessage(span, RegExpDeprecated, inst, callContext, "'" + objId + "." + BugHelper.getPropName(absValue.toAbsString) + "'")  
+                      return
+                    })
+                  case _ => // pass
+                }
+              }
+            })
+
             if(!absValue.isBottom) {
               val isBug = if(absValue.isConcrete || bugOption.AbsentReadProperty_CheckAbstractIndexValue) {
                 val propStr = absValue.toAbsString
@@ -141,6 +157,8 @@ class ExprDetect(bugDetector: BugDetector) {
               val checkInstance = bugCheckInstance.insert(isBug, span, callContext, state)
               checkInstance.loc1 = objLoc
               checkInstance.absValue = absValue
+
+              //println(callContext + "objLoc = " + objLoc + ", " + objId + "[" + absValue + "] => isBug = " + isBug)
             }
           }
         }
@@ -148,7 +166,8 @@ class ExprDetect(bugDetector: BugDetector) {
   
       // Filter out bugs depending on options
       if (!bugOption.AbsentReadProperty_PropertyMustExistInEveryState) {
-        bugCheckInstance.filter((bug, notBug) => (bug.loc1 == notBug.loc1 && bug.absValue == notBug.absValue))
+        //bugCheckInstance.filter((bug, notBug) => (bug.loc1 == notBug.loc1 && bug.absValue == notBug.absValue))
+        bugCheckInstance.filter((bug, notBug) => true)
       }
       if (!bugOption.AbsentReadProperty_PropertyMustExistInEveryLocation) {
         bugCheckInstance.filter((bug, notBug) => (bug.callContext == notBug.callContext && bug.state == notBug.state && bug.absValue == notBug.absValue))
@@ -168,10 +187,10 @@ class ExprDetect(bugDetector: BugDetector) {
           var concreteValues: List[AbsBase] = List()
           checkInstanceList.foreach((ci) => if (!concreteValues.contains(ci.absValue)) concreteValues = concreteValues :+ ci.absValue)
           val msg = if (concreteValues.isEmpty) "." else  ", where property '" + propId + "' can be " + concreteValues.tail.foldLeft(concreteValues.head.toString)((str, s) => str + ", " + s.toString) + "."
-          bugStorage.addMessage(checkInstanceList.head.span, AbsentReadProperty, inst, checkInstanceList.head.callContext, propId, objId, msg)
+          bugStorage.addMessage(checkInstanceList.head.span, AbsentReadProperty, inst, checkInstanceList.head.callContext, propId, "'" + objId + "'", msg)
         }
       }
-      else bugCheckInstance.bugList.foreach((e) => bugStorage.addMessage(e.span, AbsentReadProperty, inst, e.callContext, BugHelper.getPropName(e.absValue.toAbsString), objId, "."))
+      else bugCheckInstance.bugList.foreach((e) => bugStorage.addMessage(e.span, AbsentReadProperty, inst, e.callContext, BugHelper.getPropName(e.absValue.toAbsString), "'" +  objId + "'", "."))
     }
 
 

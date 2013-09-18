@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Copyright (c) 2013, S-Core.
+    Copyright (c) 2013, S-Core, KAIST.
     All rights reserved.
 
     Use is subject to license terms.
@@ -16,7 +16,9 @@ import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
+import kr.ac.kaist.jsaf.bug_detector.URIErrorArg
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil
+import kr.ac.kaist.jsaf.utils.uri.URIHandling
 
 object BuiltinGlobal extends ModelData {
 
@@ -71,7 +73,7 @@ object BuiltinGlobal extends ModelData {
     Map(
       ("Global.eval" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          System.err.println("* Warning: Semantics of the API funcion 'Global.eval' are not defined")
+          System.err.println("* Warning: the 'Global.eval' call is detected during analysis, analysis results may not be sound.")
           // arguments
           val argv = getArgValue(h, ctx, args, "0")
           if(argv._1._5</StrBot){
@@ -112,44 +114,131 @@ object BuiltinGlobal extends ModelData {
           ((Helper.ReturnStore(h, rtn), ctx), (he, ctx))
         })
       ),
-      ("Global.decodeURI" -> (
+      "Global.decodeURI" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          // TODO
-          // argument
           val s = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
-          // imprecise semantics
-          if(s </ StrBot){
-            ((Helper.ReturnStore(h, Value(StrTop)), ctx), (he, ctx))
-          }
-          else
-            ((HeapBot, ContextBot), (he, ctxe))
-        })
-      ),
 
-      ("Global.decodeURIComponent" -> (
-        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          // TODO
-          // argument
-          val s = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
-          // imprecise semantics
-          if(s </ StrBot){
-            ((Helper.ReturnStore(h, Value(StrTop)), ctx), (he, ctx))
-          }
-          else
-            ((HeapBot, ContextBot), (he, ctxe))
-        })
-      ),
+          val (value, es): (Value, Set[Exception]) = s.getConcreteValue() match {
+            case Some(string) => {
+              val rtn = URIHandling.decode(string, URIHandling.decodeURIString)
+              val (v_1, es_1) =
+                if (rtn != null) {
+                  (Value(AbsString.alpha(rtn)), ExceptionBot)
+                } else {
+                  if (Config.typingInterface != null)
+                    Config.typingInterface.signal(Config.typingInterface.getSpan, URIErrorArg, "Global.decodeURI", string)
+                  (ValueBot, Set[Exception](URIError))
+                }
 
-      ("Global.encodeURIComponent" -> (
-        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          // TODO
-          val value = Value(StrTop)
-          val es = Set[Exception](URIError)
+              (v_1, es_1)
+            }
+            case None =>
+              (Value(StrTop), Set[Exception](URIError))
+          }
           val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
+          val (h_1, ctx_1) =
+            if (value </ ValueBot) {
+              (Helper.ReturnStore(h, value), ctx)
+            } else {
+              (HeapBot, ContextBot)
+            }
 
-          ((Helper.ReturnStore(h, value), ctx), (he + h_e, ctxe + ctx_e))
-        })
-      ),
+          ((h_1, ctx_1), (he + h_e, ctxe + ctx_e))
+        }),
+
+      "Global.decodeURIComponent" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val s = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+
+          val (value, es): (Value, Set[Exception]) = s.getConcreteValue() match {
+            case Some(string) => {
+              val rtn = URIHandling.decode(string, URIHandling.decodeURIComponentString)
+              val (v_1, es_1) =
+                if (rtn != null) {
+                  (Value(AbsString.alpha(rtn)), ExceptionBot)
+                } else {
+                  if (Config.typingInterface != null)
+                    Config.typingInterface.signal(Config.typingInterface.getSpan, URIErrorArg, "Global.decodeURIComponent", string)
+                  (ValueBot, Set[Exception](URIError))
+                }
+
+              (v_1, es_1)
+            }
+            case None => (Value(StrTop), Set[Exception](URIError))
+          }
+          val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
+          val (h_1, ctx_1) =
+            if (value </ ValueBot) {
+              (Helper.ReturnStore(h, value), ctx)
+            } else {
+              (HeapBot, ContextBot)
+            }
+
+          ((h_1, ctx_1), (he + h_e, ctxe + ctx_e))
+        }),
+
+      "Global.encodeURI" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val s = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+
+          val (value, es): (Value, Set[Exception]) = s.getConcreteValue() match {
+            case Some(string) => {
+              val rtn = URIHandling.encode(string, URIHandling.encodeURIString)
+              val (v_1, es_1) =
+                if (rtn != null) {
+                  (Value(AbsString.alpha(rtn)), ExceptionBot)
+                } else {
+                  if (Config.typingInterface != null)
+                    Config.typingInterface.signal(Config.typingInterface.getSpan, URIErrorArg, "Global.encodeURI", string)
+                  (ValueBot, Set[Exception](URIError))
+                }
+
+              (v_1, es_1)
+            }
+            case None => (Value(StrTop), Set[Exception](URIError))
+          }
+          val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
+          val (h_1, ctx_1) =
+            if (value </ ValueBot) {
+              (Helper.ReturnStore(h, value), ctx)
+            } else {
+              (HeapBot, ContextBot)
+            }
+
+          ((h_1, ctx_1), (he + h_e, ctxe + ctx_e))
+        }),
+
+      "Global.encodeURIComponent" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val s = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
+
+          val (value, es): (Value, Set[Exception]) = s.getConcreteValue() match {
+            case Some(string) => {
+              val rtn = URIHandling.encode(string, URIHandling.encodeURIComponentString)
+              val (v_1, es_1) =
+                if (rtn != null) {
+                  (Value(AbsString.alpha(rtn)), ExceptionBot)
+                } else {
+                  if (Config.typingInterface != null)
+                    Config.typingInterface.signal(Config.typingInterface.getSpan, URIErrorArg, "Global.encodeURIComponent", string)
+                  (ValueBot, Set[Exception](URIError))
+                }
+
+              (v_1, es_1)
+            }
+            case None => (Value(StrTop), Set[Exception](URIError))
+          }
+          val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
+          val (h_1, ctx_1) =
+            if (value </ ValueBot) {
+              (Helper.ReturnStore(h, value), ctx)
+            } else {
+              (HeapBot, ContextBot)
+            }
+
+          ((h_1, ctx_1), (he + h_e, ctxe + ctx_e))
+        }),
+
       ("Global.isNaN" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val n = Helper.toNumber(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
@@ -207,17 +296,42 @@ object BuiltinGlobal extends ModelData {
           ((PreHelper.ReturnStore(h, PureLocalLoc, rtn), ctx), (he, ctx))
         })
         ),
-      ("Global.encodeURIComponent" -> (
+      "Global.encodeURIComponent" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          // TODO
           val PureLocalLoc = cfg.getPureLocal(cp)
           val value = Value(StrTop)
           val es = Set[Exception](URIError)
           val (h_e, ctx_e) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es)
 
           ((PreHelper.ReturnStore(h, PureLocalLoc, value), ctx), (he + h_e, ctxe + ctx_e))
-        })
-        ),
+        }),
+      "Global.encodeURI" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val PureLocalLoc = cfg.getPureLocal(cp)
+          val value = Value(StrTop)
+          val es = Set[Exception](URIError)
+          val (h_e, ctx_e) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es)
+
+          ((PreHelper.ReturnStore(h, PureLocalLoc, value), ctx), (he + h_e, ctxe + ctx_e))
+        }),
+      "Global.decodeURIComponent" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val PureLocalLoc = cfg.getPureLocal(cp)
+          val value = Value(StrTop)
+          val es = Set[Exception](URIError)
+          val (h_e, ctx_e) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es)
+
+          ((PreHelper.ReturnStore(h, PureLocalLoc, value), ctx), (he + h_e, ctxe + ctx_e))
+        }),
+      "Global.decodeURI" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val PureLocalLoc = cfg.getPureLocal(cp)
+          val value = Value(StrTop)
+          val es = Set[Exception](URIError)
+          val (h_e, ctx_e) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es)
+
+          ((PreHelper.ReturnStore(h, PureLocalLoc, value), ctx), (he + h_e, ctxe + ctx_e))
+        }),
       ("Global.isNaN" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
@@ -266,14 +380,34 @@ object BuiltinGlobal extends ModelData {
           LPSet((SinglePureLocalLoc, "@return"))
         })
       ),
-      ("Global.encodeURIComponent" -> (
+      "Global.encodeURIComponent" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val es = Set[Exception](URIError)
           val LP1 = AH.RaiseException_def(es)
           val LP2 = LPSet((SinglePureLocalLoc, "@return"))
           LP1 ++ LP2
-        })
-      ),
+        }),
+      "Global.encodeURI" -> (
+        (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
+          val es = Set[Exception](URIError)
+          val LP1 = AH.RaiseException_def(es)
+          val LP2 = LPSet((SinglePureLocalLoc, "@return"))
+          LP1 ++ LP2
+        }),
+      "Global.decodeURIComponent" -> (
+        (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
+          val es = Set[Exception](URIError)
+          val LP1 = AH.RaiseException_def(es)
+          val LP2 = LPSet((SinglePureLocalLoc, "@return"))
+          LP1 ++ LP2
+        }),
+      "Global.decodeURI" -> (
+        (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
+          val es = Set[Exception](URIError)
+          val LP1 = AH.RaiseException_def(es)
+          val LP2 = LPSet((SinglePureLocalLoc, "@return"))
+          LP1 ++ LP2
+        }),
       ("Global.isNaN"-> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           LPSet((SinglePureLocalLoc, "@return"))
@@ -300,12 +434,38 @@ object BuiltinGlobal extends ModelData {
             getArgValue_use(h, ctx, args, "1") + (SinglePureLocalLoc, "@return")
         })
         ),
-      ("Global.encodeURIComponent" -> (
+      "Global.encodeURIComponent" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val es = Set[Exception](URIError)
-          AH.RaiseException_use(es) + (SinglePureLocalLoc, "@return")
-        })
-        ),
+
+          val LP_1 = getArgValue_use(h, ctx, args, "0")
+          val LP_2 = AH.RaiseException_use(es)
+          LP_1 ++ LP_2 +(SinglePureLocalLoc, "@return")
+        }),
+      "Global.encodeURI" -> (
+        (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
+          val es = Set[Exception](URIError)
+
+          val LP_1 = getArgValue_use(h, ctx, args, "0")
+          val LP_2 = AH.RaiseException_use(es)
+          LP_1 ++ LP_2 +(SinglePureLocalLoc, "@return")
+        }),
+      "Global.decodeURIComponent" -> (
+        (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
+          val es = Set[Exception](URIError)
+
+          val LP_1 = getArgValue_use(h, ctx, args, "0")
+          val LP_2 = AH.RaiseException_use(es)
+          LP_1 ++ LP_2 +(SinglePureLocalLoc, "@return")
+        }),
+      "Global.decodeURI" -> (
+        (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
+          val es = Set[Exception](URIError)
+
+          val LP_1 = getArgValue_use(h, ctx, args, "0")
+          val LP_2 = AH.RaiseException_use(es)
+          LP_1 ++ LP_2 +(SinglePureLocalLoc, "@return")
+        }),
       ("Global.isNaN"-> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           getArgValue_use(h, ctx, args, "0") + (SinglePureLocalLoc, "@return")

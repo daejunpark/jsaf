@@ -1,0 +1,216 @@
+.ghome #main {
+	margin: 0px auto; width: auto; min-width: 805px; _width: 805px;
+}
+.guest #body {
+	padding: 10px 0px;
+}
+.ghome #main #content {
+	width: 420px; float: left;
+}
+.ghome #content h1 {
+	text-align: left; color: rgb(51, 153, 204); line-height: 1.55; font-size: 180%; font-weight: bold; margin-bottom: 15px;
+}
+.ghome #content ul {
+	margin: 0px 0px 15px;
+}
+.ghome #content li {
+	background: url("/scds/common/u/img/sprite/sprite_guesthome_v2.png") no-repeat; margin: 0px 0px 6px; color: rgb(102, 102, 102); font-size: 130%;
+}
+.ghome #content #reconnect {
+	background-position: 0px 3px; padding: 8px 0px 10px 68px;
+}
+.ghome #content #answers {
+	background-position: 5px -222px; padding: 13px 0px 10px 68px;
+}
+.ghome #content #power {
+	background-position: 0px -144px; padding: 8px 0px 10px 68px;
+}
+.ghome #main .jointoday {
+	width: 320px; margin-bottom: 40px; float: right;
+}
+.ghome #main .jointoday h2 {
+	font-size: 140%; font-weight: bold;
+}
+.ghome #main .jointoday legend {
+	display: none;
+}
+.ghome #main .jointoday .content {
+	padding: 10px 10px 5px;
+}
+.ghome #main .jointoday ul {
+	overflow: hidden; clear: both;
+}
+.ghome #main .jointoday li {
+	overflow: hidden; margin-bottom: 8px;
+}
+.ghome #main .jointoday li label {
+	width: 100px; text-align: right; color: rgb(51, 51, 51); line-height: 2.3; font-size: 130%; font-weight: bold; margin-right: 10px; float: left; display: block;
+}
+.ghome #main .jointoday li .fieldgroup {
+	padding-left: 110px;
+}
+.ghome #main .jointoday li .error {
+	font-size: 120%;
+}
+.ghome #main .jointoday li input {
+	margin: 3px 7px 0px 0px; width: 175px; font-size: 130%;
+}
+.lte6.ie .ghome #main .jointoday li input {
+	width: 160px;
+}
+.ghome #main .jointoday p {
+	text-align: center; font-size: 110%;
+}
+.ghome #main .jointoday form p {
+	margin: 0px 0px 8px 110px; text-align: left; overflow: hidden;
+}
+.ghome #main .jointoday form p.action {
+	
+}
+.ghome #main .jointoday form p.action a {
+	color: rgb(102, 102, 102) !important; font-size: 18px; text-decoration: none; cursor: text;
+}
+.ghome #main .jointoday form .hint {
+	width: 180px; color: rgb(102, 102, 102); line-height: 1.5; clear: both; margin-left: 0px;
+}
+.ghome #search-browse {
+	padding: 20px 0px 0px; width: 100%; clear: both; border-top-color: rgb(204, 204, 204); border-top-width: 1px; border-top-style: solid;
+}
+.ghome #search-browse #search {
+	text-align: center; overflow: hidden; clear: both;
+}
+.ghome #search-browse #search h3 {
+	color: rgb(102, 102, 102); padding-right: 10px; font-size: 160%; font-weight: bold; display: inline;
+}
+.ghome #search-browse #search ul {
+	display: inline;
+}
+.ghome #search-browse #search p {
+	display: inline;
+}
+.ghome #search-browse #search li {
+	text-align: left; padding-right: 10px; display: inline-block;
+}
+.ghome #search-browse #search input {
+	
+}
+.ghome #search-browse #search li input {
+	width: 150px; font-size: 130%;
+}
+.ghome #search-browse #search .btn-secondary {
+	line-height: 1.3; min-width: 3em;
+}
+.lte6.ie .en #search-browse #search .btn-secondary {
+	width: 3em;
+}
+.ghome #search-browse #search label {
+	left: -12345px; position: absolute;
+}
+.ghome #search-browse #search .hint {
+	color: rgb(153, 153, 153);
+}
+.ghome #search-browse #search .error {
+	font-size: 11px;
+}
+.ghome #search-browse #directory {
+	margin: 15px 0px 20px; text-align: center; padding-bottom: 0px; font-size: 11px; border-bottom-color: currentColor; border-bottom-width: 0px; border-bottom-style: none;
+}
+#footer .wrapper .nav-footer li {
+	margin-bottom: 3px;
+}
+#directory {
+	margin: 10px 0px 20px; text-align: center; color: rgb(102, 102, 102); padding-bottom: 15px; border-bottom-color: rgb(204, 204, 204); border-bottom-width: 1px; border-bottom-style: solid; white-space: normal;
+}
+#directory h3 {
+	margin: 0px; padding: 0px 0px 0px 8px; color: rgb(102, 102, 102); font-size: 11px; font-weight: normal; display: inline;
+}
+#directory p {
+	margin: 0px; padding: 0px 4px 0px 0px; font-size: 11px; display: inline;
+}
+#directory ol {
+	margin: 0px; padding: 0px 4px 0px 0px; font-size: 11px; display: inline;
+}
+#directory ol {
+	line-height: 1.5; border-right-color: currentColor; border-right-width: 0px; border-right-style: none;
+}
+#directory ol.secondary {
+	padding-left: 8px; display: block;
+}
+#directory ol li {
+	display: inline;
+}
+#directory ol li a {
+	padding: 0px; text-decoration: none;
+}
+#directory ol li a:hover {
+	text-decoration: underline;
+}
+#directory .browse-by-country {
+	padding: 0px 0px 0px 8px;
+}
+#directory .browse-by-country h3 {
+	padding: 0px;
+}
+#directory .primary::after {
+	display: inline;
+}
+.ru#directory .secondary {
+	border-left-color: currentColor; border-left-width: 0px; border-left-style: none; display: block;
+}
+#directory .country-search {
+	display: block;
+}
+.ghome #agreement {
+	padding: 20px 0px 10px; text-align: left; color: rgb(102, 102, 102); font-size: 110%; border-top-color: rgb(204, 204, 204); border-top-width: 1px; border-top-style: solid;
+}
+.ghome #agreement strong {
+	font-size: 14px;
+}
+.whatis #main h1 {
+	margin: 0px auto 10px; text-align: center; color: rgb(0, 102, 153); font-size: 220%; font-weight: normal;
+}
+.whatis #main .triptych {
+	background: url("/scds/common/u/img/bg/bg_ghome_whatis_bot_744x600.png") no-repeat 0px 100%; margin-left: 15px;
+}
+.lte6.ie .whatis #main .triptych {
+	height: 1%;
+}
+.whatis #main .triptych ul {
+	background: url("/scds/common/u/img/bg/bg_ghome_whatis_top_744x14.png") no-repeat; overflow: hidden; _height: 1%;
+}
+.whatis #main .triptych li {
+	width: 248px; float: left;
+}
+.whatis #main .triptych li h2 {
+	background: url("/scds/common/u/img/pic/pic_ghome_reconnect_193x125.png") no-repeat 2px 25px; margin: 25px 25px 10px; height: 145px; text-align: center; color: rgb(2, 103, 154); font-size: 200%; font-weight: normal;
+}
+.whatis #main .triptych li#power h2 {
+	background: url("/scds/common/u/img/pic/pic_ghome_chart_151x80.png") no-repeat 28px 55px;
+}
+.whatis #main .triptych li#answer h2 {
+	background-image: url("/scds/common/u/img/pic/pic_ghome_answers_v2_193x125.png");
+}
+.whatis #main .triptych li p {
+	margin: 0px 25px 30px; text-align: center; color: rgb(102, 102, 102); line-height: 1.3; font-size: 130%;
+}
+.whatis #main #getstarted {
+	margin: 25px auto 10px; overflow: hidden;
+}
+.lte6.ie .whatis #main #getstarted {
+	height: 1%;
+}
+.whatis #main #getstarted strong {
+	margin: 6px 15px 0px 0px; width: 380px; text-align: right; font-size: 180%; float: left;
+}
+.whatis #main a.joinbtn {
+	background: url("/scds/common/u/img/btn/btn_ghome_right_600x33.png") no-repeat 100% 0px rgb(255, 204, 0); margin: 0px auto 10px; text-align: center; color: rgb(0, 0, 0) !important; font-size: 160%; text-decoration: none; float: left; display: block; cursor: pointer;
+}
+.lte6.ie .whatis #main a.joinbtn {
+	line-height: 18px;
+}
+.whatis #main a.joinbtn span {
+	background: url("/scds/common/u/img/btn/btn_ghome_left_8x33.png") no-repeat; padding: 8px 20px 0px; display: block; min-height: 25px;
+}
+.lte6.ie .whatis #main a.joinbtn span {
+	padding-bottom: 7px !important;
+}

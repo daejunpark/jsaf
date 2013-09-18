@@ -1,0 +1,75 @@
+  (function () 
+  {
+    var n = {
+      
+    }, t;
+    window.Msn = {
+      add : (function (t, i) 
+      {
+        return n[t] = i;
+      }),
+      f : (function (t) 
+      {
+        return n[t];
+      }),
+      extend : (function () 
+      {
+        var f = arguments, n = f[0] || {
+          
+        }, e = 1, 
+        i, 
+        r, 
+        o, 
+        u;
+        for((typeof n == "boolean" || typeof n == "number") && (o = ! ! n, n = f[1], e = 2);e < f.length;e ++)
+        {
+          r = f[e];
+          for(i in r)
+            r[i] !== t && (o && typeof r[i] == "object" ? (u = n[i], typeof u != "object" && (u = {
+              
+            }), 
+            window.Msn.extend(! 0, u, r[i]), 
+            n[i] = u) : n[i] = r[i]);
+        }
+        return n;
+      })
+    };
+  })();
+  Msn.Page = {
+    frameworkUrl : "http://col.stj.s-msn.com/br/sc/js/jquery/jquery-1.4.2.min.js",
+    dapUrl : "http://ads1.msads.net/library/dapmsn.js",
+    signedIn : "False",
+    jsUrl : "http://col.stj.s-msn.com/br/sc/js/94/ec9bba7b5c40ba6a07d7e5ba9a3fedc5.js",
+    cplus : {
+      list : ["news", "enter", "sports", "latino", "default", ],
+      current : "default"
+    },
+    cookie : document.cookie,
+    warmupUrls : ["http://col.stj.s-msn.com/primedns.gif?q=1", "http://col.stj.s-msn.com/primedns.gif?q=2", "http://rad.msn.com/msnperf/primedns.gif", "http://ads1.msads.net/library/primedns.gif", ],
+    dapUnblockOnload : true
+  };
+  window.Msn.add("afire", (function (n, t) 
+  {
+    function i(n) 
+    {
+      if(n)
+      {
+        var i = new t;
+        i.onload = i.onerror = (function () 
+        {
+          i.onload = i.onerror = null;
+        }), 
+        i.src = n.replace(/&amp;/gi, "&");
+      }
+    }
+    n.afire = i;
+  }))(window.Msn, Image), 
+  (function (n, t) 
+  {
+    var r, i, u;
+    if(! n || ! t || ! t.warmupUrls)
+      return;
+    for(r = t.warmupUrls, i = 0, u = r.length;i < u;i ++)
+      n(r[i]);
+  })(window.Msn.afire, window.Msn.Page);
+  

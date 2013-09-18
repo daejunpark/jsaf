@@ -1,0 +1,1701 @@
+body {
+	font: 12px/1.5 "Lucida Grande", tahoma, arial, "áä?"; font-size-adjust: none; font-stretch: normal;
+}
+img {
+	vertical-align: top;
+}
+.hidden {
+	display: none;
+}
+.clearfix {
+	
+}
+.clearfix::after {
+	height: 0px; clear: both; display: block;
+}
+.hideText {
+	width: 0px; height: 0px; line-height: 0; overflow: hidden; font-size: 0px;
+}
+.mallMain {
+	margin: 0px auto; width: 1190px; position: relative;
+}
+.mallLeft {
+	background: rgb(255, 255, 255); left: 0px; top: 0px; width: 240px; bottom: 0px; margin-top: -450px; position: absolute; z-index: 15; box-shadow: 4px 2px 5px rgba(0,0,0,0.2); -moz-box-shadow: 4px 2px 5px rgba(0, 0, 0, 0.2); -webkit-box-shadow: 4px 2px 5px rgba(0, 0, 0, 0.2);
+}
+.mallRight {
+	width: 950px; margin-left: 240px; border-left-color: rgb(230, 230, 230); border-left-width: 1px; border-left-style: solid;
+}
+#mallSearch button {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+#mallNav .chnHot {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+#mallNav .chnNew {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.category .categoryHd s {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.category .item .menuIcon {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.category .menu-bottom .menuIcon {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.category .item-hd s {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.category .menu-bottom .item-hd s {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.category .item-hd a {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.brandTop h3 s.arow {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.brand .brandAd span s {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.brandTop h3 s.marked {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.brand .flyBrand {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.fCs-nav li s {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.newDiscovery {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.subView0 .menuIcon {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1hBBoFeJcXXbMbfEI-194-279.png") no-repeat 0px 0px;
+}
+.ui-slide-nav-mini {
+	height: 24px; line-height: 18px;
+}
+.ui-slide-nav-mini li {
+	width: 12px; color: rgb(113, 101, 100); font-family: Tahoma,Helvetica; font-size: 28px; margin-right: 5px; float: left; cursor: pointer; _font-size: 38px;
+}
+.ui-slide-nav-mini .active {
+	color: rgb(185, 25, 25);
+}
+.ui-btn-s {
+	background: url("http://a.tbcdn.cn/apps/tmall/mui/btn/img/btn.png") repeat-x rgb(204, 204, 204); border-width: 0px 1px; border-style: none solid; border-color: rgb(204, 204, 204); padding: 0px 10px; border-radius: 2px; height: 20px; color: rgb(51, 51, 51); line-height: 20px; overflow: visible; font-size: 12px; font-weight: normal; display: inline-block; cursor: pointer; -moz-border-radius: 2px; -webkit-border-radius: 2px; -khtml-border-radius: 2px;
+}
+.ui-btn-s {
+	background-position: 0px -300px;
+}
+.ui-btn-s-hover {
+	background-position: 0px -320px;
+}
+.ui-btn-s:hover {
+	background-position: 0px -320px;
+}
+.ui-btn-s-active {
+	background-position: 0px -340px;
+}
+.ui-btn-s:active {
+	background-position: 0px -340px;
+}
+.ui-btn-s-selected {
+	background-position: 0px -360px;
+}
+.ui-btn-s:hover {
+	text-decoration: none;
+}
+.ui-btn-m:hover {
+	text-decoration: none;
+}
+.ui-btn-l:hover {
+	text-decoration: none;
+}
+.ui-btn-disable {
+	background: rgb(242, 242, 242); border: 1px solid rgb(204, 204, 204); color: rgb(197, 197, 197); cursor: default;
+}
+.ui-msg-icon {
+	background-image: url("http://a.tbcdn.cn/apps/tmall/mui/msg/img/msg.png"); background-repeat: no-repeat;
+}
+.ui-msg {
+	background: rgb(245, 245, 245); border-radius: 2px; border: 1px solid rgb(225, 225, 225); padding-left: 24px; display: inline-block; position: relative; box-shadow: 1px 1px 1px #f5f5f5;
+}
+.ui-msg-con {
+	background: rgb(251, 251, 251); border-width: 1px; border-style: solid; border-color: rgb(239, 239, 239) rgb(239, 239, 239) rgb(239, 239, 239) rgb(231, 231, 231); margin: -1px; padding: 3px 10px 3px 5px; color: rgb(102, 102, 102); line-height: 16px;
+}
+.ui-msg-icon {
+	left: 0px; top: 0px; width: 23px; height: 22px; position: absolute;
+}
+.ui-msg-clean {
+	border: currentColor; box-shadow: none;
+}
+.ui-msg-clean .ui-msg-con {
+	border: currentColor; box-shadow: none;
+}
+.ui-msg-clean .ui-msg-con {
+	border: currentColor; padding-left: 0px;
+}
+.ui-top-tip .ui-msg-con {
+	padding: 18px 28px 18px 12px; line-height: 20px; font-size: 14px; font-weight: bold;
+}
+.ui-top-tip {
+	padding-left: 58px;
+}
+.ui-top-tip .ui-msg-con {
+	padding: 18px 28px 18px 12px; line-height: 20px; font-size: 14px; font-weight: bold;
+}
+.ui-top-tip .ui-msg-icon {
+	width: 57px; height: 56px;
+}
+.ui-top-tip .ui-msg-error .ui-msg-icon {
+	background-position: 11px -20px;
+}
+.headerCon::after {
+	overflow: hidden; display: table; content: "";
+}
+.clearfix::after {
+	overflow: hidden; display: table; content: "";
+}
+.clearfix::before {
+	overflow: hidden; display: table; content: "";
+}
+.headerCon::before {
+	overflow: hidden; display: table; content: "";
+}
+.headerCon::after {
+	clear: both;
+}
+.clearfix::after {
+	clear: both;
+}
+.headerCon {
+	-ms-zoom: 1;
+}
+.clearfix {
+	-ms-zoom: 1;
+}
+#sn-bd {
+	width: 1190px;
+}
+.headerCon {
+	margin: auto; width: 1190px;
+}
+.mallNav-con {
+	margin: auto; width: 1190px;
+}
+#header {
+	background: rgb(177, 0, 0); margin-top: -30px; min-width: 990px;
+}
+#header .headerCon {
+	margin: 0px auto; height: 63px; padding-top: 30px; position: relative;
+}
+#mallLogo {
+	overflow: hidden; padding-top: 15px; float: left; z-index: 9;
+}
+#mallLogo object {
+	left: 0px; top: 0px; position: absolute;
+}
+#mallSearch {
+	width: 730px; padding-top: 12px; float: right;
+}
+#mallSearch legend {
+	display: none;
+}
+#mallSearch fieldset {
+	position: relative;
+}
+.mallSearch-input {
+	background: rgb(255, 255, 255); border-radius: 2px; height: 34px; position: relative;
+}
+#mallSearch label {
+	left: 8px; top: 0px; height: 34px; color: rgb(102, 102, 102); line-height: 34px; font-size: 12px; visibility: hidden; position: absolute; z-index: 1; _top: 2px;
+}
+#mq {
+	background: url("data:image/gif;base64,R0lGODlhAQADAJEAAObm5t3d3ff39wAAACH5BAAAAAAALAAAAAABAAMAAAICDFQAOw==") repeat-x 0px 0px; margin: 0px; padding: 7px 3px 7px 5px; border-radius: 2px 0px 0px 2px; border: 0px currentColor; left: 0px; width: 632px; height: 20px; color: rgb(0, 0, 0); line-height: 20px; font-weight: 900; position: absolute; z-index: 2;
+}
+#mallSearch button {
+	background-position: 0px -111px; border: 0px currentColor; width: 90px; height: 34px; color: rgb(255, 255, 255); line-height: 34px; text-indent: -9999px; letter-spacing: 4px; overflow: hidden; font-size: 14px; float: right; cursor: pointer; background-color: rgb(70, 40, 36);
+}
+#mallSearch button:hover {
+	background-position: -90px -111px; background-color: rgb(134, 97, 80);
+}
+.mall-suggest-container ol li {
+	list-style: none; height: 23px; color: rgb(0, 0, 0); line-height: 23px;
+}
+.mall-suggest-container ol .ks-suggest-key {
+	padding-left: 10px;
+}
+.mall-suggest-container .ks-suggest-cate {
+	color: rgb(126, 126, 126); padding-left: 10px;
+}
+.mall-suggest-container .ks-suggest-cate b {
+	font-weight: bold;
+}
+.mall-suggest-container ol .ks-selected {
+	background-color: rgb(177, 0, 0);
+}
+.mall-suggest-container ol .ks-selected em {
+	color: rgb(255, 255, 255);
+}
+.mall-suggest-container .ks-suggest-footer {
+	padding: 0px;
+}
+.mallSearch-tip p {
+	background: rgb(239, 236, 235); padding: 0px 10px; height: 30px; line-height: 30px; font-family: áä?; margin-top: 1px;
+}
+.mallSearch-tip span {
+	height: 100%; color: rgb(0, 0, 0); overflow: hidden; display: block; cursor: pointer;
+}
+.mallSearch-tip b {
+	overflow: hidden; font-family: Arial; vertical-align: middle; display: inline-block; white-space: nowrap; -ms-text-overflow: ellipsis; max-width: 300px; -o-text-overflow: ellipsis; -moz-text-overflow: ellipsis;
+}
+.mallSearch-tip em {
+	margin: 0px 5px; color: rgb(152, 1, 1); font-weight: bold;
+}
+#mallNav {
+	background: url("data:image/gif;base64,R0lGODlhAQAeAIAAAI4AAI8BACH5BAAAAAAALAAAAAABAB4AAAIHRGChy+2KCgA7") repeat-x rgb(142, 0, 0); height: 30px; font-size: 14px; min-width: 990px;
+}
+.mallNav-main {
+	width: auto; height: 30px; margin-left: 240px; float: left; display: inline;
+}
+.mallNav-others {
+	float: right;
+}
+#mallNav li {
+	background: url("data:image/gif;base64,R0lGODlhAgAOAIAAAKIAAHkAACH5BAAAAAAALAAAAAACAA4AAAIGDIynyasFADs=") no-repeat right; height: 30px; text-align: center; line-height: 30px; float: left; position: relative;
+}
+#mallNav a {
+	padding: 0px 17px 0px 15px; height: 30px; text-align: center; color: rgb(255, 255, 255); line-height: 30px; display: block; _float: left;
+}
+#mallNav span {
+	padding: 0px 17px 0px 15px; height: 30px; text-align: center; color: rgb(255, 255, 255); line-height: 30px; display: block; _float: left;
+}
+#mallNav a:hover {
+	padding-left: 17px; text-decoration: none; margin-left: -2px; position: relative; z-index: 10; background-color: rgb(122, 0, 0);
+}
+#mallNav .mallNav-con .curChn {
+	background: rgb(106, 0, 0); color: rgb(177, 0, 0); z-index: 12;
+}
+#mallNav .curChn a {
+	border-left-color: currentColor; border-left-width: medium; border-left-style: none;
+}
+#mallNav span {
+	border-left-color: currentColor; border-left-width: medium; border-left-style: none;
+}
+#mallNav .mallNav-main .mallNav-first {
+	height: 24px; line-height: 24px; margin-top: 3px;
+}
+#mallNav .mallNav-main .mallNav-first span {
+	height: 24px; line-height: 24px;
+}
+#mallNav .mallNav-last {
+	background: 0px; border-right-color: currentColor; border-right-width: 0px; border-right-style: none;
+}
+#mallNav .chnNew {
+	background-position: -146px -15px; top: -3px; width: 23px; height: 13px; right: -1px; overflow: hidden; display: block; position: absolute; z-index: 11;
+}
+#mallNav .chnHot {
+	background-position: -146px 0px; top: -3px; width: 22px; height: 12px; right: -1px; overflow: hidden; display: block; position: absolute; z-index: 11;
+}
+#mall-desc i {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1bXnSXaXkXXaB0vsu-111-109.png") no-repeat;
+}
+#mall-desc .go-home a {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1bXnSXaXkXXaB0vsu-111-109.png") no-repeat;
+}
+#mall-desc dt span {
+	width: 73px; height: 25px; overflow: hidden; display: block;
+}
+#ensure dt span {
+	
+}
+#beginner dt span {
+	background-position: 0px -20px;
+}
+#payment dt span {
+	background-position: 0px -40px;
+}
+#seller dt span {
+	background-position: 0px -60px;
+}
+#mall-desc {
+	padding: 30px 0px 20px; text-align: left; position: relative; -ms-zoom: 1;
+}
+#mall-desc::after {
+	height: 0px; clear: both; display: block; content: "";
+}
+#mall-desc dl {
+	width: 139px; height: 120px; padding-left: 50px; border-right-color: rgb(230, 230, 230); border-right-width: 1px; border-right-style: dotted; float: left;
+}
+#mall-desc dl#payment {
+	margin-left: 190px; border-left-color: rgb(230, 230, 230); border-left-width: 1px; border-left-style: dotted; _display: inline;
+}
+#mall-desc dl#seller {
+	border-right-color: currentColor; border-right-width: 0px; border-right-style: none; float: right;
+}
+#mall-desc dt {
+	padding-bottom: 4px; font-family: "Ú°?äºýÙ"; font-size: 18px; font-weight: 500; margin-bottom: 3px;
+}
+#mall-desc dl#seller dt {
+	margin-right: 0px;
+}
+#mall-desc dl a {
+	height: 22px; color: rgb(102, 102, 102); line-height: 1.8; display: block; white-space: nowrap;
+}
+#mall-desc dl dd span {
+	height: 22px; color: rgb(102, 102, 102); line-height: 1.8; display: block; white-space: nowrap;
+}
+#mall-desc dl i {
+	background-position: 2px -88px; width: 12px; height: 16px; overflow: hidden; vertical-align: text-bottom; display: inline-block;
+}
+#mall-desc .other {
+	left: 50%; top: 30px; width: 190px; height: 120px; text-align: center; overflow: hidden; margin-left: -95px; border-right-color: rgb(230, 230, 230); border-right-width: 1px; border-right-style: dotted; position: absolute;
+}
+#mall-desc .go-home {
+	left: 50%; top: 28px; width: 80px; height: 80px; line-height: 999px; overflow: hidden; margin-left: -45px; position: absolute;
+}
+#mall-desc .go-home:hover {
+	cursor: pointer;
+}
+#mall-desc .go-home a {
+	background-position: -11px -6px; display: block;
+}
+#mall-desc .go-home:hover a {
+	transition:transform 1.5s; transform: rotateY(360deg); -webkit-transform: rotateY(360deg); -webkit-transition: -webkit-transform 1.5s; -moz-transition: -moz-transform 1.5s; -moz-transform: rotateY(360deg); -webkit-transform-style: preserve-3d; -moz-transform-style: preserve-3d;
+}
+#mall-desc .other a {
+	color: rgb(102, 102, 102);
+}
+#footer {
+	margin: 10px auto; text-align: center; clear: both; position: relative; background-repeat: repeat-x; background-color: rgb(255, 255, 255);
+}
+#footer .footer-fb {
+	left: 50%; top: 128px; color: rgb(102, 102, 102); margin-left: -50px; position: absolute;
+}
+#footer p {
+	padding: 5px 0px; color: rgb(195, 195, 195);
+}
+#footer p a {
+	color: rgb(195, 195, 195); margin-right: 3px;
+}
+#footer #footer-tmallinfo {
+	color: rgb(97, 97, 97);
+}
+#footer #footer-otherlink {
+	color: rgb(97, 97, 97);
+}
+#footer #footer-tmallinfo a {
+	color: rgb(97, 97, 97);
+}
+#footer #footer-otherlink a {
+	color: rgb(97, 97, 97);
+}
+.quickSearchTip {
+	height: 30px; color: rgb(102, 102, 102); line-height: 30px;
+}
+.quickSearchTip i {
+	background: url("http://img03.taobaocdn.com/tps/i3/T1DGAyXahbXXXo2eDk-59-24.png") no-repeat white;
+}
+.quickSearchTip em {
+	background: url("http://img03.taobaocdn.com/tps/i3/T1DGAyXahbXXXo2eDk-59-24.png") no-repeat white;
+}
+.quickSearchTip i {
+	background-position: -40px 5px; width: 23px; height: 22px; margin-left: 5px; float: left; display: block;
+}
+.quickSearchTip em {
+	margin: 0px 3px; width: 35px; height: 23px; text-align: center; color: rgb(0, 0, 0); line-height: 23px; font-weight: bold; display: inline-block;
+}
+.category {
+	width: 240px; height: 100%; position: relative; z-index: 20; background-color: rgb(255, 255, 255); -webkit-backface-visibility: hidden;
+}
+.category .categoryHd {
+	width: 241px; height: 30px; line-height: 30px; position: relative; z-index: 100; background-color: rgb(162, 28, 29); _width: 240px;
+}
+.category .categoryHd a {
+	color: rgb(255, 255, 255); padding-left: 17px; font-family: "Lucida Grande","Ú°?äºýÙ"; font-size: 14px; text-decoration: none;
+}
+.category .categoryHd s {
+	border: 1px solid rgb(120, 0, 0); top: 5px; width: 21px; height: 19px; right: 5px; display: none; position: absolute; cursor: pointer; background-color: rgb(190, 0, 0);
+}
+.category .categoryHd s.expandCat {
+	background-position: -146px -54px; border-radius: 2px 0px 0px 2px; right: 27px;
+}
+.category .categoryHd s.simpleCat {
+	background-position: -168px -53px; border-radius: 0px 2px 2px 0px;
+}
+.category .categoryHd s.selectedCat {
+	cursor: default; background-color: rgb(133, 0, 0);
+}
+.category .menu {
+	width: 240px; border-bottom-color: rgb(230, 230, 230); border-bottom-width: 1px; border-bottom-style: solid; position: relative;
+}
+.category .menuMask {
+	top: 0px; width: 10px; height: 100%; right: 0px; display: block; position: absolute;
+}
+.category .item {
+	padding: 8px 0px; width: 239px; overflow: hidden; border-left-color: rgb(230, 230, 230); border-left-width: 1px; border-left-style: solid; position: relative;
+}
+.category .item1 {
+	background-color: rgb(241, 241, 241);
+}
+.category .item3 {
+	background-color: rgb(241, 241, 241);
+}
+.category .item5 {
+	background-color: rgb(241, 241, 241);
+}
+.category .item7 {
+	background-color: rgb(241, 241, 241);
+}
+.category .item9 {
+	background-color: rgb(241, 241, 241);
+}
+.category .item11 {
+	background-color: rgb(241, 241, 241);
+}
+.category .item13 {
+	background-color: rgb(241, 241, 241);
+}
+.category .item15 {
+	background-color: rgb(241, 241, 241);
+}
+.category .item-hd {
+	padding: 0px 10px 0px 37px; height: 14px; line-height: 14px; font-family: "Lucida Grande","Ú°?äºýÙ"; font-size: 12px; white-space: nowrap; position: relative; cursor: default; -ms-text-overflow: ellipsis;
+}
+.category .item-hd a {
+	background-position: -81px -34px; width: 44px; height: 16px; color: rgb(255, 255, 255); line-height: 16px; padding-left: 10px; font-size: 12px; font-weight: normal; text-decoration: none; margin-top: -3px; margin-left: 5px; vertical-align: middle; display: inline-block;
+}
+.category .item-hd s {
+	left: 15px; top: -2px; width: 16px; height: 16px; display: block; position: absolute;
+}
+.category .item0 .item-hd s {
+	background-position: 0px -85px;
+}
+.category .item1 .item-hd s {
+	
+}
+.category .item2 .item-hd s {
+	background-position: 0px -21px;
+}
+.category .item3 .item-hd s {
+	background-position: 0px -42px;
+}
+.category .item4 .item-hd s {
+	background-position: 0px -63px;
+}
+.category .item5 .item-hd s {
+	background-position: -21px 0px;
+}
+.category .item6 .item-hd s {
+	background-position: -21px -21px;
+}
+.category .item7 .item-hd s {
+	background-position: -21px -42px;
+}
+.category .item8 .item-hd s {
+	background-position: -21px -63px;
+}
+.category .item9 .item-hd s {
+	background-position: -42px 0px;
+}
+.category .item10 .item-hd s {
+	background-position: -42px -21px;
+}
+.category .item11 .item-hd s {
+	background-position: -42px -42px;
+}
+.category .item12 .item-hd s {
+	background-position: -42px -63px;
+}
+.category .item13 .item-hd s {
+	background-position: -63px 0px;
+}
+.category .item14 .item-hd s {
+	background-position: -63px -21px;
+}
+.category .item15 .item-hd s {
+	background-position: -63px -42px;
+}
+.category .item16 .item-hd s {
+	background-position: -63px -63px;
+}
+.category .item-col {
+	height: 21px; line-height: 21px; overflow: hidden;
+}
+.category .itemCol1 {
+	padding-top: 6px;
+}
+.category .item-col .item-col1 {
+	padding-left: 15px;
+}
+.category .item-col a {
+	color: rgb(132, 132, 132); margin-right: 5px;
+}
+.category .item .menuIcon {
+	background-position: -107px -20px; top: 40%; width: 7px; height: 11px; right: 10px; overflow: hidden; display: block; visibility: hidden; position: absolute; _right: 5px;
+}
+.category .selected .item-hd {
+	color: rgb(255, 255, 255);
+}
+.category .selected {
+	border-left-color: rgb(136, 118, 110); border-left-width: 1px; border-left-style: solid; background-color: rgb(136, 118, 110);
+}
+.category .selected .item-hd a {
+	background-position: -135px -34px; color: rgb(108, 81, 67);
+}
+.category .selected .item-col a {
+	color: rgb(255, 255, 255);
+}
+.category .selected .menuIcon {
+	visibility: visible;
+}
+.category .selected .item-hd0 s {
+	background-position: -171px -150px;
+}
+.category .selected .item-hd1 s {
+	background-position: 0px -150px;
+}
+.category .selected .item-hd2 s {
+	background-position: 0px -171px;
+}
+.category .selected .item-hd3 s {
+	background-position: -85px -150px;
+}
+.category .selected .item-hd4 s {
+	background-position: -85px -171px;
+}
+.category .selected .item-hd5 s {
+	background-position: -21px -150px;
+}
+.category .selected .item-hd6 s {
+	background-position: -21px -171px;
+}
+.category .selected .item-hd7 s {
+	background-position: -106px -150px;
+}
+.category .selected .item-hd8 s {
+	background-position: -106px -171px;
+}
+.category .selected .item-hd9 s {
+	background-position: -42px -150px;
+}
+.category .selected .item-hd10 s {
+	background-position: -42px -171px;
+}
+.category .selected .item-hd11 s {
+	background-position: -127px -150px;
+}
+.category .selected .item-hd12 s {
+	background-position: -127px -171px;
+}
+.category .selected .item-hd13 s {
+	background-position: -63px -150px;
+}
+.category .selected .item-hd14 s {
+	background-position: -63px -171px;
+}
+.category .selected .item-hd15 s {
+	background-position: -148px -150px;
+}
+.category .selected .item-hd16 s {
+	background-position: -148px -171px;
+}
+.subCategory {
+	left: 241px; top: 30px; width: 0px; height: 550px; overflow: hidden; position: absolute; z-index: 16;
+}
+.subView {
+	border-width: 1px 1px 1px medium; border-style: solid solid solid none; border-color: rgb(230, 230, 230) rgb(230, 230, 230) rgb(230, 230, 230) currentColor; margin: 0px 10px 10px 0px; width: 744px; height: auto; z-index: 17; max-height: 525px; box-shadow: 5px 5px 5px rgba(0,0,0,0.2), 1px -3px 5px rgba(0,0,0,0.2); background-color: rgb(255, 255, 255); -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2), 1px -3px 5px rgba(0, 0, 0, 0.2); -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2), 1px -3px 5px rgba(0, 0, 0, 0.2);
+}
+.subView ul {
+	margin: 0px 0px 15px 20px; width: 218px; height: auto; overflow: hidden; vertical-align: top; display: inline-block; position: relative; max-height: 505px;
+}
+.subView .subItem {
+	width: 218px; overflow: hidden;
+}
+.subView .subItem-hd {
+	height: 30px; line-height: 30px; font-family: "Lucida Grande","Ú°?äºýÙ"; font-size: 15px; margin-top: 10px; border-bottom-color: rgb(0, 0, 0); border-bottom-width: 2px; border-bottom-style: solid;
+}
+.subView .subItem-hd a {
+	color: rgb(0, 0, 0);
+}
+.subView .subItem-title {
+	padding: 11px 0px 4px; height: 15px; line-height: 15px; font-weight: normal;
+}
+.subView .subItem p::after {
+	height: 0px; clear: both; display: block; content: "\20";
+}
+.subView .subItem p {
+	margin-left: -11px; -ms-zoom: 1;
+}
+.subView .subItem p a {
+	height: 15px; color: rgb(100, 100, 100); line-height: 15px; margin-top: 6px; float: left; display: inline-block; white-space: nowrap;
+}
+.subView .brandTitle {
+	margin-top: 11px; margin-right: 1px; border-top-color: rgb(0, 0, 0); border-top-width: 1px; border-top-style: dotted;
+}
+.subView .subItem-cat a {
+	padding: 0px 5px 0px 10px; border-left-color: rgb(234, 234, 234); border-left-width: 1px; border-left-style: solid;
+}
+.subView .subItem-brand a {
+	padding: 0px 5px 0px 10px; border-left-color: rgb(234, 234, 234); border-left-width: 1px; border-left-style: solid;
+}
+.subView .subItemAd {
+	width: 218px; margin-top: 10px; background-color: rgb(238, 238, 238);
+}
+.subView .subItemAd a {
+	width: 218px; display: block;
+}
+.subCategory .shadow {
+	left: -10px; top: 12px; width: 10px; height: 530px; position: absolute; z-index: 18; box-shadow: 3px -5px 5px rgba(0,0,0,0.2); -moz-box-shadow: 3px -5px 5px rgba(0, 0, 0, 0.2); -webkit-box-shadow: 3px -5px 5px rgba(0, 0, 0, 0.2);
+}
+.subCategory-fold {
+	top: 30px; height: 578px;
+}
+.subCategory-fold .subView {
+	height: 558px; margin-top: 0px; max-height: 558px;
+}
+.subCategory-fold .shadow {
+	top: 0px; height: 568px;
+}
+.subView0 .subItem-hd {
+	margin: 10px 19px 0px; width: 706px;
+}
+.subView0 .subItem-list {
+	margin: 0px 19px 10px; width: 706px; overflow: hidden; position: relative;
+}
+.subView0 ul {
+	background: url("http://img03.taobaocdn.com/tps/i3/T1OylQXulaXXbsL_Yg-141-141.jpg") 0px 0px; margin: 0px; width: 717px; height: auto; overflow: hidden; max-height: 444px;
+}
+.subView0 li {
+	width: 141px; height: 141px; overflow: hidden; margin-top: -70px; float: left;
+}
+.subView0 li a {
+	margin: 21px; width: 100px; height: 100px; display: block; position: relative;
+}
+.subView0 li a:hover {
+	text-decoration: none;
+}
+.subView0 .brand-mask {
+	background: url("http://img01.taobaocdn.com/tps/i1/T1jnVQXwRXXXX7N_Yg-138-138.png") no-repeat 0px 0px; left: -141px; top: -141px; width: 141px; height: 141px; display: block; position: absolute; opacity: 0.9;
+}
+.subView0 li img {
+	left: 5px; top: 29px; position: relative; z-index: 1;
+}
+.subView0 li.secondFir {
+	margin-left: 70px;
+}
+.subView0 li.fourthFir {
+	margin-left: 70px;
+}
+.subView0 li.first {
+	margin-top: 0px;
+}
+.subView0 li span {
+	transition:0.4s ease-in-out; left: -19px; top: -19px; width: 138px; height: 138px; text-align: center; color: rgb(255, 255, 255); line-height: 138px; overflow: hidden; white-space: nowrap; position: absolute; z-index: 3; cursor: pointer; -ms-text-overflow: ellipsis; opacity: 0; -webkit-backface-visibility: hidden; -webkit-transition: all .4s ease-in-out; -moz-transition: all .4s ease-in-out; -o-transition: all .4s ease-in-out;
+}
+.subView0 li a:hover span {
+	opacity: 0.9;
+}
+.subView0 li b {
+	transform-origin: 50% 50%; transition:0.4s ease-in-out; left: 0px; top: 0px; width: 100px; height: 100px; position: absolute; z-index: 2; opacity: 0; transform: rotate(45deg); background-color: rgb(120, 101, 92); -webkit-transform: rotate(45deg); -webkit-backface-visibility: hidden; -webkit-transition: all .4s ease-in-out; -moz-transition: all .4s ease-in-out; -o-transition: all .4s ease-in-out; -moz-transform: rotate(45deg); -moz-transform-origin: 50% 50%; -webkit-transform-origin: 50% 50%; -o-transform: rotate(45deg); -o-transform-origin: 50% 50%;
+}
+.subView0 li a:hover b {
+	opacity: 0.9;
+}
+.subView0 .subItem-more {
+	margin: 5px auto; width: 217px; height: 23px; text-align: center; color: rgb(33, 33, 32); line-height: 23px; display: block; position: relative; background-color: rgb(239, 239, 239);
+}
+.subView0 .subItem-more:hover {
+	text-decoration: none;
+}
+.subView0 .menuIcon {
+	background-position: -99px -16px; border-radius: 9px; top: 2px; width: 18px; height: 18px; right: 40px; color: rgb(255, 255, 255); line-height: 17px; display: block; position: absolute; background-color: rgb(51, 51, 51); -moz-border-radius: 9px; -webkit-border-radius: 9px;
+}
+.item p {
+	transition:650ms ease-in-out; padding-right: 10px; -webkit-backface-visibility: hidden; -webkit-transition: all 700ms ease-in-out; -moz-transition: all 650ms ease-in-out; -o-transition: all 650ms ease-in-out;
+}
+.item-col {
+	transition:600ms ease-in-out; -webkit-backface-visibility: hidden; -webkit-transition: all 600ms ease-in-out; -moz-transition: all 600ms ease-in-out; -o-transition: all 600ms ease-in-out;
+}
+.overlay {
+	transition:600ms ease-in-out; -webkit-backface-visibility: hidden; -webkit-transition: all 400ms ease-in-out; -moz-transition: all 400ms ease-in-out; -o-transition: all 600ms ease-in-out;
+}
+.item {
+	position: relative;
+}
+.item-col {
+	position: relative;
+}
+.overlay {
+	left: 0px; top: 0px; width: 238px; height: 101%; display: inline-block; position: absolute; opacity: 0;
+}
+.odd {
+	background: -ms-linear-gradient(bottom, rgba(0, 0, 0, 1) 0px, rgba(0, 0, 0, 0.7) 100%);
+}
+.even {
+	background: -ms-linear-gradient(rgba(0, 0, 0, 0.8) 0px, rgba(0, 0, 0, 0.5) 100%);
+}
+.cat-tip-box {
+	top: 32px; right: -7px; display: block; position: absolute; z-index: 200;
+}
+.cat-tip-hd {
+	background: url("http://img03.taobaocdn.com/tps/i3/T1cQrVXntgXXap7Fvh-200-41.png") no-repeat -75px -9px; top: 1px; width: 9px; height: 5px; right: 20px; font-size: 0px; display: block; position: absolute; z-index: 202;
+}
+.cat-tip-bd {
+	padding: 3px 15px 2px 5px; border-radius: 2px; border: 1px solid rgb(255, 214, 153); top: 5px; width: 140px; right: 0px; color: rgb(102, 102, 102); display: block; position: absolute; z-index: 201; background-color: rgb(255, 236, 207);
+}
+.cat-tip-close {
+	top: 2px; width: 10px; height: 14px; right: 5px; line-height: 14px; font-size: 14px; font-weight: bold; display: block; position: absolute; cursor: pointer;
+}
+.category .itemSelected .item-col {
+	transform-origin: 50% 0%; height: 0px; line-height: 0; padding-top: 0px; box-shadow: 0px -2px 2px #aaa; transform: perspective(700px) translateY(0px) translateZ(-21px) rotateX(90deg); -webkit-transform: perspective(700px) translateY(0px) translateZ(-21px) rotateX(90deg); -webkit-backface-visibility: hidden; -moz-transform: perspective(700px) translateY(0px) translateZ(-21px) rotateX(90deg); -moz-transform-origin: 50% 0; -webkit-transform-origin: 50% 0; -o-transform: perspective(700px) translateY(0px) translateZ(-21px) rotateX(90deg); -o-transform-origin: 50% 0; -moz-box-shadow: 0 -2px 2px #aaa; -webkit-box-shadow: 0 -2px 2px #aaa;
+}
+.category .itemSelected .itemCol1 {
+	transform-origin: 50% 100%; box-shadow: 0px 2px 2px #aaa; transform: perspective(700px) translateY(0px) translateZ(-21px) rotateX(-90deg); -webkit-transform: perspective(700px) translateY(0px) translateZ(-21px) rotateX(-90deg); -webkit-backface-visibility: hidden; -moz-transform: perspective(700px) translateY(0px) translateZ(-21px) rotateX(-90deg); -moz-transform-origin: 50% 100%; -webkit-transform-origin: 50% 100%; -o-transform: perspective(700px) translateY(0px) translateZ(-21px) rotateX(-90deg); -o-transform-origin: 50% 100%; -moz-box-shadow: 0 2px 2px #aaa; -webkit-box-shadow: 0 2px 2px #aaa;
+}
+.category .itemSelected .item-col b {
+	visibility: visible; opacity: 0.24; box-shadow: 0px 2px 2px #aaa;
+}
+.category .item-col b {
+	visibility: hidden; opacity: 0; box-shadow: 0px -2px 2px #aaa;
+}
+.category .item-col {
+	transform-origin: 50% 100%; height: 21px; line-height: 21px; transform: perspective(700px) translateY(0px) translateZ(0px) rotateX(0deg); -webkit-transform: perspective(700px) translateY(0px) translateZ(0px) rotateX(0deg); -webkit-backface-visibility: hidden; -moz-transform: perspective(700px) translateY(0px) translateZ(0px) rotateX(0deg); -moz-transform-origin: 50% 100%; -webkit-transform-origin: 50% 100%; -o-transform: perspective(700px) translateY(0px) translateZ(0px) rotateX(0deg); -o-transform-origin: 50% 100%;
+}
+.category .itemHover .item-col {
+	transition-duration: 0s; -moz-transition-duration: 0; -webkit-transition-duration: 0; -o-transition-duration: 0;
+}
+.category .itemHover .overlay {
+	transition-duration: 0s; -moz-transition-duration: 0; -webkit-transition-duration: 0; -o-transition-duration: 0;
+}
+.cateFixed {
+	top: 0px !important; position: fixed !important;
+}
+.cateLocked .item-col {
+	display: none;
+}
+.mfpSlide {
+	height: 420px; overflow: hidden; position: relative; z-index: 0; min-width: 990px;
+}
+.mfpSlide-con li {
+	background: no-repeat 50% 0px rgb(255, 255, 255); width: 100%; height: 420px;
+}
+.mSc-main {
+	margin: 0px auto; width: 1190px; height: 420px; position: relative;
+}
+.mScm-link {
+	background: url("http://a.tbcdn.cn/kissy/1.0.0/build/imglazyload/spaceball.gif"); left: 240px; top: 0px; width: 755px; height: 420px; overflow: hidden; border-left-color: rgb(230, 230, 230); border-left-width: 1px; border-left-style: solid; display: block; position: absolute; z-index: 2; _left: 239px; _border-left: 2px solid #e6e6e6;
+}
+.mSc-main b {
+	left: 240px; top: -40px; width: 760px; height: 210px; display: block; position: absolute; z-index: 1; _display: none;
+}
+.mScm-link b img {
+	width: 100%; height: 100%;
+}
+.mSc-main .mScm-text1 {
+	top: -10px; opacity: 1;
+}
+.mScm-right {
+	border: 1px solid rgb(230, 230, 230); top: 15px; width: 190px; height: 390px; right: 3px; overflow: hidden; position: absolute; z-index: 7; box-shadow: 0px 0px 5px rgba(0,0,0,0.2); background-color: rgb(239, 235, 230); -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.mScm-right li {
+	background: rgb(239, 235, 230); height: 131px; position: relative;
+}
+.mScm-right li s {
+	margin: 0px auto; width: 170px; height: 0px; line-height: 0; overflow: hidden; border-bottom-color: rgb(217, 207, 205); border-bottom-width: 1px; border-bottom-style: solid; display: block;
+}
+.mScm-right li i {
+	background: rgb(0, 0, 0); border: currentColor; left: 0px; top: 0px; width: 190px; height: 131px; position: absolute; cursor: pointer; opacity: 0;
+}
+.mfpSlide-nav {
+	left: 50%; width: 260px; height: 25px; bottom: 0px; margin-left: -340px; display: none; position: absolute; z-index: 10;
+}
+.mfpSlide-nav li {
+	background: rgb(181, 181, 181); margin: 0px 4px; border-radius: 50%; width: 14px; height: 14px; overflow: hidden; display: inline-block; cursor: pointer; -moz-border-radius: 50%; -webkit-border-radius: 50%;
+}
+.mfpSlide-nav li.selected {
+	background-color: rgb(200, 0, 2);
+}
+.mfpSlide-nav {
+	display: block;
+}
+.mfpSlide-nav li {
+	float: left; display: block;
+}
+.timer {
+	left: 50%; width: 14px; height: 14px; bottom: 11px; margin-left: -336px; position: absolute; z-index: 20; cursor: pointer;
+}
+.gray {
+	border-radius: 0px 7px 7px 0px; top: 0px; width: 7px; height: 14px; right: 0px; display: block; position: absolute; z-index: 21; background-color: rgb(181, 181, 181);
+}
+.mask {
+	top: 0px; width: 7px; height: 14px; right: 0px; overflow: hidden; display: block; position: absolute; z-index: 22;
+}
+.rotator {
+	border-radius: 7px; top: 0px; width: 7px; height: 14px; right: 0px; border-left-color: rgb(181, 181, 181); border-left-width: 7px; border-left-style: solid; display: block; position: absolute; z-index: 23; background-color: rgb(200, 0, 2);
+}
+span.move.gray {
+	border-radius: 7px; width: 14px;
+}
+span.move.mask {
+	right: 7px;
+}
+span.move.rotator {
+	right: -7px;
+}
+.j_BrandExpand {
+	display: none;
+}
+.brand {
+	width: 950px; height: 475px; margin-bottom: 15px; position: relative; background-color: rgb(255, 255, 255);
+}
+.brand h2 {
+	height: 45px; line-height: 45px; font-family: "Lucida Grande","Ú°?äºýÙ"; font-size: 14px; font-weight: normal; margin-left: 10px;
+}
+.brandMain {
+	width: 939px; height: 432px; margin-left: 10px; border-top-color: rgb(230, 230, 230); border-left-color: rgb(230, 230, 230); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;
+}
+.brand .brandAd {
+	width: 150px; float: left;
+}
+.brand .brandAd a {
+	padding: 10px 10px 10px 9px; width: 130px; color: rgb(153, 153, 153); overflow: hidden; text-decoration: none; border-right-color: rgb(230, 230, 230); border-bottom-color: rgb(230, 230, 230); border-right-width: 1px; border-bottom-width: 1px; border-right-style: solid; border-bottom-style: solid; display: block; position: relative; z-index: 1; -webkit-backface-visibility: hidden;
+}
+.brand .brandAd a:hover {
+	color: rgb(153, 153, 153);
+}
+.brand .brandAd a.brandAd-b {
+	height: 36px; padding-top: 241px;
+}
+.brand .brandAd a.brandAd-s {
+	height: 35px; padding-top: 98px;
+}
+.brand .brandAd img {
+	left: 9px; top: 10px; position: absolute;
+}
+.brand .brandAd img.logo {
+	left: 29px; top: 38px;
+}
+.brand .brandAd p {
+	height: 18px; text-align: center; line-height: 18px; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;
+}
+.brand .brandAd span {
+	top: 6px; width: 118px; height: 20px; right: 6px; overflow: hidden; display: block; position: absolute; z-index: 1; cursor: pointer;
+}
+.brand .brandAd span.mark {
+	width: 57px; opacity: 0;
+}
+.brand .brandAd span s {
+	background-position: -124px 2px; border-radius: 10px; top: 0px; width: 20px; height: 20px; right: 0px; display: block; position: absolute; z-index: 3; opacity: 0.9; background-color: rgb(185, 0, 0);
+}
+.brand .brandAd span.mark s {
+	background-color: rgb(195, 195, 195);
+}
+.brand .brandAd span b {
+	border-radius: 10px; top: 0px; width: 10px; height: 20px; right: 0px; color: rgb(255, 255, 255); line-height: 19px; padding-left: 10px; font-weight: normal; display: block; position: absolute; z-index: 2; opacity: 0; background-color: rgb(77, 38, 38); -moz-border-radius: 10px; -webkit-border-radius: 10px;
+}
+.brand .brandAd span.mark b {
+	width: 47px; opacity: 0.6;
+}
+.brand .brandAd .label {
+	left: 9px; width: 130px; height: 19px; bottom: 51px; color: rgb(255, 255, 255); line-height: 22px; position: absolute; cursor: pointer; opacity: 0.9; _line-height: 18px; _bottom: 50px;
+}
+.brand .label1 {
+	background-color: rgb(100, 212, 181);
+}
+.brand .label2 {
+	background-color: rgb(255, 100, 100);
+}
+.brand .label3 {
+	background-color: rgb(255, 111, 91);
+}
+.brand .label4 {
+	background-color: rgb(204, 153, 218);
+}
+.brand .label5 {
+	background-color: rgb(135, 222, 108);
+}
+.brand .label6 {
+	background-color: rgb(255, 204, 107);
+}
+.brand .label7 {
+	background-color: rgb(126, 192, 233);
+}
+.brandTop {
+	border: 1px solid rgb(255, 255, 255); top: 7px; width: 135px; height: auto !important; text-align: center; right: 0px; position: absolute; z-index: 2; cursor: pointer; min-height: 30px;
+}
+.brandTop h3 {
+	height: 30px; line-height: 30px; position: relative;
+}
+.brandTop h3 a {
+	color: rgb(0, 0, 0); font-family: "Lucida Grande","Ú°?äºýÙ"; font-size: 14px; font-weight: normal; text-decoration: none; display: block;
+}
+.brandTop h3 a:hover {
+	text-decoration: none;
+}
+.brandTop h3 s.marked {
+	background-position: -124px 2px; border-radius: 10px; left: 3px; top: 5px; width: 20px; height: 20px; display: block; position: absolute; opacity: 0.8; background-color: rgb(185, 0, 0);
+}
+.brandTop h3 s.arow {
+	background-position: -128px -63px; top: 13px; width: 7px; height: 5px; right: 10px; display: block; position: absolute;
+}
+.brandTop .brand-list {
+	display: none; background-color: rgb(255, 255, 255);
+}
+.brand .brandExpand {
+	border: 1px solid rgb(230, 230, 230); box-shadow: 0px 0px 5px rgba(0,0,0,0.3); -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+.brand .brandExpand h3 {
+	border-bottom-color: rgb(230, 230, 230); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.brand .brandExpand h3 s.arow {
+	transform-origin: 50% 30%; top: 15px; transform: rotate(180deg); -webkit-transform: rotate(180deg); _top: 0; -moz-transform: rotate(180deg); -moz-transform-origin: 50% 30%; -webkit-transform-origin: 50% 30%; -o-transform: rotate(180deg); -o-transform-origin: 50% 30%;
+}
+.brand .brandExpand .brand-list {
+	display: block;
+}
+.brand .brandExpand li {
+	height: 30px; color: rgb(179, 179, 179); line-height: 30px; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; background-color: rgb(255, 255, 255);
+}
+.brand .brandExpand li.noBrand {
+	cursor: default;
+}
+.brand .brandExpand li.last {
+	margin-top: -1px; background-color: rgb(241, 241, 241);
+}
+.brand .brandExpand li a {
+	margin: 0px 20px; width: 95px; height: 29px; color: rgb(179, 179, 179); overflow: hidden; border-bottom-color: rgb(230, 230, 230); border-bottom-width: 1px; border-bottom-style: dotted; display: block; white-space: nowrap; -ms-text-overflow: ellipsis;
+}
+.brand .brandExpand li.last a {
+	color: rgb(67, 67, 67); border-bottom-color: currentColor; border-bottom-width: medium; border-bottom-style: none;
+}
+.brand .brandExpand li a:hover {
+	margin: 0px; width: 135px; color: rgb(255, 255, 255); text-decoration: none; border-bottom-color: rgb(189, 0, 0); border-bottom-width: 1px; border-bottom-style: solid; opacity: 0.8; background-color: rgb(189, 0, 0);
+}
+.brand .brandExpand li.brandLogin a {
+	text-decoration: none;
+}
+.brand .brandExpand li.brandLogin a:hover {
+	color: rgb(179, 179, 179); text-decoration: underline; border-bottom-color: rgb(255, 255, 255); border-bottom-width: 1px; border-bottom-style: solid; background-color: rgb(255, 255, 255);
+}
+.brand .brandExpand li.brandLogin a span {
+	color: rgb(185, 0, 0);
+}
+.brand .flyBrand {
+	background-position: -128px -18px; width: 13px; height: 13px; display: none; position: absolute; z-index: 900;
+}
+.brand .brandRight {
+	width: 189px; float: left; position: relative; _float: right;
+}
+.brand .brandRight div {
+	width: 189px; height: 216px; _overflow: hidden;
+}
+.brand .brandRight a {
+	width: 188px; height: 215px; text-align: center; overflow: hidden; text-decoration: none; border-right-color: rgb(230, 230, 230); border-bottom-color: rgb(230, 230, 230); border-right-width: 1px; border-bottom-width: 1px; border-right-style: solid; border-bottom-style: solid; display: block; -webkit-backface-visibility: hidden;
+}
+.brand .brandRight p {
+	width: 164px; height: 20px; text-align: center; overflow: hidden; font-family: "Lucida Grande","Ú°?äºýÙ"; position: relative;
+}
+.brand .brandRight p span {
+	left: 0px; top: 20px; width: 100%; height: 20px; line-height: 20px; display: block; position: absolute;
+}
+.brand .brandRight p.hovered span {
+	top: 0px;
+}
+.brand .brandRight a.brandTheDay {
+	background-position: 10px -194px; border-width: 2px 3px 3px 2px; border-style: solid; border-color: rgb(230, 230, 230); padding: 0px 10px; width: 164px; height: 211px; overflow: hidden;
+}
+.brand .brandTheDay img {
+	margin-top: 77px;
+}
+.brand .brandTheDay b {
+	left: 0px; top: 0px; width: 100%; height: 20px; color: rgb(81, 58, 22); line-height: 20px; font-weight: normal; position: absolute; z-index: 2;
+}
+.brand .brandTheDay p.hovered b {
+	color: rgb(255, 255, 255);
+}
+.brand .brandTheDay p {
+	margin-top: 24px; background-color: rgb(230, 227, 227);
+}
+.brand .brandTheDay p span {
+	z-index: 1; background-color: rgb(189, 0, 0);
+}
+.brand .brandRight a.temai {
+	padding: 0px 10px; width: 168px; height: 215px; overflow: hidden;
+}
+.brand .temai img {
+	margin-left: -10px;
+}
+.brand .temai p {
+	top: -73px; width: 168px; color: rgb(255, 255, 255);
+}
+.brand .temai p span {
+	opacity: 0.8; background-color: rgb(189, 0, 0);
+}
+.brand .brandRight .greatBrand {
+	background-position: 0px -194px; left: -6px; top: -34px; width: 195px; height: 250px; overflow: hidden; position: relative;
+}
+.brand .brandRight .greatBrand a {
+	margin-top: 34px; margin-left: 6px;
+}
+.brand .greatBrand img {
+	margin-top: 77px;
+}
+.brand .greatBrand b {
+	left: 0px; top: 0px; width: 100%; height: 27px; color: rgb(81, 58, 22); line-height: 27px; padding-left: 23px; font-weight: normal; position: absolute; z-index: 2;
+}
+.brand .greatBrand p {
+	left: 6px; width: 100%; height: 27px; bottom: 0px; position: absolute; z-index: 5;
+}
+.brand .greatBrand p.hovered b {
+	color: rgb(255, 255, 255);
+}
+.brand .greatBrand p {
+	margin-top: 24px; background-color: rgb(230, 227, 227);
+}
+.brand .greatBrand p span {
+	top: 27px; height: 27px; z-index: 1; background-color: rgb(189, 0, 0);
+}
+.brand .greatBrand .hongbao {
+	background-position: -156px -77px; left: 43px; width: 38px; height: 37px; bottom: 0px; position: absolute; z-index: 10;
+}
+.brand .brandRight .newDiscovery {
+	background-position: 0px -194px; left: -6px; top: -36px; width: 195px; height: 252px; overflow: hidden; position: relative;
+}
+.brand .newDiscovery a {
+	margin-top: 37px; margin-left: 6px;
+}
+.brand .newDiscovery img {
+	margin-top: 41px;
+}
+.brand .newDiscovery b {
+	left: 0px; top: 0px; width: 100%; height: 27px; color: rgb(255, 255, 255); line-height: 27px; font-weight: normal; position: absolute; z-index: 2;
+}
+.brand .newDiscovery p {
+	left: 6px; width: 100%; height: 27px; bottom: 0px; margin-top: 24px; position: absolute; z-index: 5; opacity: 0.85; background-color: rgb(26, 0, 0);
+}
+.brand .newDiscovery p span {
+	top: 27px; height: 27px; z-index: 1; background-color: rgb(189, 0, 0);
+}
+.brand .brandShadow {
+	left: -10px; top: 0px; width: 10px; height: 432px; display: block; position: absolute; z-index: 10; box-shadow: 3px 0px 5px rgba(0,0,0,0.1); -moz-box-shadow: 3px 0 5px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 3px 0 5px rgba(0, 0, 0, 0.1);
+}
+.brand .brandAd p {
+	transition:0.5s ease-in; -webkit-backface-visibility: hidden; -webkit-transition: all .5s ease-in; -moz-transition: all .5s ease-in; -o-transition: all .5s ease-in;
+}
+.brand h3 s.arow {
+	transition:0.3s ease-in; -webkit-backface-visibility: hidden; -webkit-transition: all .3s ease-in; -moz-transition: all .3s ease-in; -o-transition: all .3s ease-in;
+}
+.brand .brandRight span {
+	transition:0.5s ease-in-out 0.2s; -webkit-backface-visibility: hidden; -webkit-transition: all .5s ease-in-out .2s; -moz-transition: all .5s ease-in-out .2s; -o-transition: all .5s ease-in-out .2s;
+}
+.brand .brandTheDay b {
+	transition:0.5s ease-in-out 0.2s; -webkit-backface-visibility: hidden; -webkit-transition: all .5s ease-in-out .2s; -moz-transition: all .5s ease-in-out .2s; -o-transition: all .5s ease-in-out .2s;
+}
+.floorAd {
+	margin: 10px 0px 10px 10px; width: 940px; overflow: hidden;
+}
+.floor h2 s {
+	background: url("http://img04.taobaocdn.com/tps/i4/T1F92RXdxhXXa86zbq-145-290.png") no-repeat;
+}
+.floorTop-tab b {
+	background: url("http://img04.taobaocdn.com/tps/i4/T1F92RXdxhXXa86zbq-145-290.png") no-repeat;
+}
+.floor-loading textarea {
+	height: 360px; visibility: hidden;
+}
+.floor-loading {
+	background: url("http://img04.taobaocdn.com/tps/i4/T1YV_TXexaXXbpD82k-184-38.gif") no-repeat 50% 50%;
+}
+.floor {
+	background: rgb(255, 255, 255); width: 950px; height: 358px; overflow: hidden; clear: both; margin-bottom: 10px; border-bottom-color: rgb(229, 229, 229); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.floor h2 {
+	height: 36px; line-height: 36px; overflow: hidden; padding-left: 10px; font-size: 18px; border-bottom-color: rgb(0, 0, 0); border-bottom-width: 2px; border-bottom-style: solid; position: relative;
+}
+.floor h2 s {
+	left: 0px; top: 0px; width: 120px; height: 36px; display: block; position: absolute;
+}
+.floorTop {
+	width: 80%; height: 36px; line-height: 36px; margin-top: -38px; float: right; position: relative;
+}
+.floorCon {
+	width: 970px; height: 320px; overflow: hidden;
+}
+.floorTop-nav {
+	width: 520px; height: 34px; text-align: right; overflow: hidden; float: right;
+}
+.floorTop-nav li {
+	margin-right: -1px; display: inline-block;
+}
+.floorTop-nav a {
+	padding: 0px 10px; color: rgb(146, 146, 146); border-right-color: rgb(223, 223, 223); border-right-width: 1px; border-right-style: solid;
+}
+.floorTop-tab {
+	width: 220px; float: left; position: relative;
+}
+.floorTop-tab a {
+	width: 110px; text-align: center; color: rgb(102, 102, 102); text-decoration: none; float: left; display: block; position: relative;
+}
+.floorTop-tab b {
+	background-position: 0px -232px; left: 0px; top: 5px; width: 110px; height: 20px; display: block; position: absolute; background-color: rgb(255, 255, 255);
+}
+.floorTop-tab .selected .fTt-women {
+	background-position: 0px -214px;
+}
+.floorTop-tab .fTt-men {
+	background-position: 20px -271px;
+}
+.floorTop-tab .selected .fTt-men {
+	background-position: 20px -251px;
+}
+.floorTop-tab s {
+	background: red; left: 0px; width: 110px; height: 0px; bottom: 0px; line-height: 0; clear: both; border-bottom-color: rgb(0, 0, 0); border-bottom-width: 4px; border-bottom-style: solid; position: absolute;
+}
+.floorTop-tab i {
+	border-width: 4px; border-style: solid; border-color: rgb(255, 255, 255) rgb(255, 255, 255) rgb(0, 0, 0); left: 50px; top: -8px; width: 0px; height: 0px; line-height: 0; font-size: 0px; position: absolute;
+}
+.floorCon-logo {
+	width: 120px; height: 320px; overflow: hidden; float: left; position: relative;
+}
+.floorCon-logo a {
+	width: 120px; height: 59px; text-align: center; color: rgb(102, 102, 102); line-height: 59px; overflow: hidden; border-bottom-color: rgb(242, 242, 242); border-bottom-width: 1px; border-bottom-style: solid; display: block;
+}
+.floorCon-logo a:hover {
+	border: currentColor;
+}
+.floorCon-logo a img {
+	margin-top: 7px;
+}
+.fCl-slide {
+	height: 299px;
+}
+.floorCon-slide {
+	overflow: hidden; margin-right: 10px; float: left; display: block;
+}
+.floorCon-banner {
+	overflow: hidden; margin-right: 10px; float: left; display: block;
+}
+.floorCon-banner {
+	padding-top: 10px; position: relative;
+}
+.floorCon-banner span {
+	width: 15px; height: 83px; bottom: 22px; overflow: hidden; display: block; position: absolute;
+}
+.floorCon-banner span.left {
+	left: 0px;
+}
+.floorCon-banner span.right {
+	right: 0px;
+}
+.floorCon-banner span s {
+	width: 15px; height: 83px; display: block; opacity: 0.9; background-color: rgb(255, 255, 255);
+}
+.floorCon-banner span.left s {
+	margin-left: 15px;
+}
+.floorCon-banner span.right s {
+	margin-left: -15px;
+}
+.fCl-nav {
+	background: rgb(255, 255, 255); padding: 0px 33px; bottom: 0px; position: absolute;
+}
+.fCl-nav li {
+	color: rgb(178, 178, 178);
+}
+.fCl-nav .active {
+	color: rgb(89, 89, 89);
+}
+.floorCon-slide {
+	width: 200px; height: 320px; position: relative;
+}
+.fCs-con li {
+	width: 200px; height: 320px;
+}
+.fCs-nav {
+	left: -220px; top: 170px; width: 220px; height: 120px; position: absolute; -webkit-backface-visibility: hidden;
+}
+.fCs-nav li {
+	transition:0.3s ease-in 0.2s; left: 0px; width: 140px; height: 30px; line-height: 30px; padding-right: 20px; padding-left: 20px; font-weight: bold; white-space: nowrap; position: absolute; cursor: pointer; opacity: 0.95; -webkit-backface-visibility: hidden; -webkit-transition: all .3s ease-in .2s; -moz-transition: all .3s ease-in .2s; -o-transition: all .3s ease-in .2s; -webkit-transform-style: preserve-3d;
+}
+.fCs-nav li.active {
+	width: 160px;
+}
+.fCs-nav li:hover {
+	width: 160px;
+}
+.fCs-nav li s {
+	background-position: -107px -20px; top: 10px; width: 5px; height: 9px; right: 15px; overflow: hidden; position: absolute; opacity: 0;
+}
+.fCs-nav li.active s {
+	opacity: 1;
+}
+.fCs-nav li:hover s {
+	opacity: 1;
+}
+.fCs-nav li.fCs-nav1 {
+	background-color: rgb(130, 107, 153);
+}
+.fCs-nav li.fCs-nav2 {
+	background-color: rgb(255, 127, 159);
+}
+.fCs-nav li.fCs-nav3 {
+	background-color: rgb(179, 143, 125);
+}
+.fCs-nav li.fCs-nav4 {
+	background-color: rgb(102, 144, 204);
+}
+.fCs-nav-even li.fCs-nav1 {
+	background-color: rgb(153, 76, 115);
+}
+.fCs-nav-even li.fCs-nav2 {
+	background-color: rgb(255, 102, 102);
+}
+.fCs-nav-even li.fCs-nav3 {
+	background-color: rgb(46, 135, 153);
+}
+.fCs-nav-even li.fCs-nav4 {
+	background-color: rgb(178, 143, 107);
+}
+.fCs-nav-num1 li.fCs-nav1 {
+	top: 90px;
+}
+.fCs-nav-num2 li.fCs-nav1 {
+	top: 60px;
+}
+.fCs-nav-num2 li.fCs-nav2 {
+	top: 90px;
+}
+.fCs-nav-num3 li.fCs-nav1 {
+	top: 30px;
+}
+.fCs-nav-num3 li.fCs-nav2 {
+	top: 60px;
+}
+.fCs-nav-num3 li.fCs-nav3 {
+	top: 90px;
+}
+.fCs-nav-num4 li.fCs-nav1 {
+	top: 0px;
+}
+.fCs-nav-num4 li.fCs-nav2 {
+	top: 30px;
+}
+.fCs-nav-num4 li.fCs-nav3 {
+	top: 60px;
+}
+.fCs-nav-num4 li.fCs-nav4 {
+	top: 90px;
+}
+.fCs-nav li a {
+	width: 140px; color: rgb(255, 255, 255); overflow: hidden; text-decoration: none; display: block; white-space: nowrap; -ms-text-overflow: ellipsis;
+}
+.fCs-nav li a:hover {
+	width: 160px; text-decoration: none;
+}
+.floorCon-img {
+	margin: 10px 0px 10px -10px; width: 635px; height: 300px; overflow: hidden; float: left; position: relative; -webkit-backface-visibility: hidden;
+}
+.floorCon-img .floorPro {
+	width: 200px; height: 150px; overflow: hidden; margin-left: 10px; border-right-color: rgb(204, 204, 204); border-bottom-color: rgb(204, 204, 204); border-right-width: 1px; border-bottom-width: 1px; border-right-style: dotted; border-bottom-style: dotted; float: left; position: relative; _display: inline;
+}
+.floorCon-img .floorPro-list {
+	left: 25px; top: 13px; width: 85px; font-family: "Lucida Grande","Ú°?äºýÙ"; position: absolute;
+}
+.floorCon-img .floorPro-list a {
+	color: rgb(102, 102, 102); font-weight: normal; margin-top: 10px; display: block;
+}
+.floorCon-img em {
+	color: rgb(51, 51, 51); font-size: 14px; font-weight: bold; display: block;
+}
+.floorCon-img a.floorPro-img {
+	width: 250px; height: 150px; color: rgb(102, 102, 102); font-family: "Lucida Grande","Ú°?äºýÙ"; font-weight: normal; text-decoration: none; margin-left: 110px; display: block; cursor: pointer;
+}
+.floorCon-img a.floorPro-img:hover {
+	margin-left: 110px;
+}
+.floorCon-img a.floorPro-img {
+	transition:0.3s ease-in-out 0.2s; position: relative; z-index: 2; -webkit-transition: all .3s ease-in-out .2s; -moz-transition: all .3s ease-in-out .2s; -o-transition: all .3s ease-in-out .2s;
+}
+.floorCon-img a.floorPro-img img {
+	float: left;
+}
+.floorCon-img a.floorPro-img p {
+	width: 92px; margin-left: 8px; float: left;
+}
+.floorCon-img a.floorPro-img .imgame {
+	color: rgb(51, 51, 51); font-size: 14px; margin-top: 18px;
+}
+.floorCon-img a.floorPro-img .imgTitle {
+	color: rgb(102, 102, 102); margin-top: 8px; margin-bottom: 8px;
+}
+.floorCon-img a.floorPro-img del {
+	color: rgb(102, 102, 102); margin-top: 10px; margin-left: 8px;
+}
+.floorCon-img a.floorPro-img .imgPrice {
+	color: rgb(203, 0, 0); font-size: 14px; font-weight: bold;
+}
+.floorCon-tab {
+	width: 830px; height: 100%; overflow: hidden; float: left; position: relative;
+}
+.fCt-con {
+	width: 1700px; height: 320px; position: absolute;
+}
+#floor1 h2 s {
+	background-position: 10px -4px;
+}
+#floor2 h2 s {
+	background-position: 10px -33px;
+}
+#floor3 h2 s {
+	background-position: 10px -62px;
+}
+#floor4 h2 s {
+	background-position: 10px -92px;
+}
+#floor5 h2 s {
+	background-position: 10px -120px;
+}
+#floor6 h2 s {
+	background-position: 10px -148px;
+}
+#floor7 h2 s {
+	background-position: 10px -177px;
+}
+#floor1 .floorCon-img {
+	width: 210px;
+}
+#floor4 .floorCon-img {
+	width: 210px;
+}
+.w990 #sn-bd {
+	width: 990px;
+}
+.w990 .headerCon {
+	width: 990px;
+}
+.w990 .mallNav-con {
+	width: 990px;
+}
+.w990 .mallMain {
+	width: 990px;
+}
+.w990 #mallSearch {
+	width: 540px;
+}
+.w990 #mq {
+	width: 442px;
+}
+.w990 #mallNav {
+	font-size: 12px;
+}
+.w990 #mallNav a {
+	padding: 0px 15px;
+}
+.w990 #mallNav span {
+	padding: 0px 15px;
+}
+.w990 .floorAd {
+	width: 740px;
+}
+.w990 .floorAd img {
+	margin-left: -100px;
+}
+.w990 .mallRight {
+	width: 750px;
+}
+.w990 .slide {
+	width: 750px;
+}
+.w990 .brand {
+	width: 750px;
+}
+.w990 .floor {
+	width: 750px;
+}
+.w990 .slideBg {
+	width: 750px;
+}
+.w990 .slide-list {
+	width: 750px;
+}
+.w990 .slide-list li {
+	width: 750px;
+}
+.w990 .leftBanner {
+	width: 556px;
+}
+.w990 .adBanner img {
+	margin-left: -520px;
+}
+.w990 .birthDirectBanner {
+	margin-left: 140px;
+}
+.w990 .mSc-main {
+	width: 990px;
+}
+.w990 .mfpSlide-nav {
+	margin-left: -240px;
+}
+.w990 .mScm-link {
+	width: 555px;
+}
+.w990 .mSc-main b {
+	left: 150px;
+}
+.w990 .brandMain {
+	width: 739px;
+}
+.w990 .brand .brandRight {
+	width: 179px;
+}
+.w990 .brand .brandRight div {
+	width: 178px;
+}
+.w990 .brand .lastBrandAd {
+	display: none;
+}
+.w990 .brand .brandAd a {
+	padding-right: 5px; padding-left: 4px;
+}
+.w990 .brand .brandAd {
+	width: 140px;
+}
+.w990 .brand .brandAd img {
+	left: 4px;
+}
+.w990 .brand .brandAd img.logo {
+	left: 24px;
+}
+.w990 .brand .brandAd .label {
+	left: 4px;
+}
+.w990 .brand .brandRight .greatBrand {
+	width: 185px;
+}
+.w990 .brand .brandRight .newDiscovery {
+	width: 185px;
+}
+.w990 .brand .newDiscovery img {
+	margin-left: -5px;
+}
+.w990 .brand .brandRight a {
+	width: 178px;
+}
+.w990 .brand .brandRight a.brandTheDay {
+	padding: 0px 5px;
+}
+.w990 .brand .brandRight a.temai {
+	padding: 0px 5px; width: 168px; _width: 167px;
+}
+.w990 .floorCon-logo {
+	margin-right: 10px;
+}
+.w990 .floorTop-nav {
+	width: 380px;
+}
+.w990 #mall-desc dl {
+	width: 119px; padding-left: 30px;
+}
+.w990 #mall-desc .other {
+	width: 150px; margin-left: -75px;
+}
+.w990 #mall-desc dl#payment {
+	margin-left: 150px;
+}
+.w1190 .sn-mcate-ctn-con {
+	width: 1190px;
+}
+.w1190 #site-nav .sn-container {
+	width: 968px;
+}
+.w1190 .sn-mcate-bd .sn-mcate-ctn {
+	width: 1255px;
+}
+.w1190 .sn-mcate-bd .sn-mcate-ctn li {
+	padding-right: 58px;
+}
+@media all and (max-width:1210px)
+{
+#sn-bd {
+	width: 990px;
+}
+.headerCon {
+	width: 990px;
+}
+.mallNav-con {
+	width: 990px;
+}
+.mallMain {
+	width: 990px;
+}
+#mallSearch {
+	width: 540px;
+}
+#mq {
+	width: 442px;
+}
+#mallNav {
+	font-size: 12px;
+}
+#mallNav a {
+	padding: 0px 15px;
+}
+#mallNav span {
+	padding: 0px 15px;
+}
+.floorAd {
+	width: 740px;
+}
+.floorAd img {
+	margin-left: -100px;
+}
+.mallRight {
+	width: 750px;
+}
+.slide {
+	width: 750px;
+}
+.brand {
+	width: 750px;
+}
+.floor {
+	width: 750px;
+}
+.slideBg {
+	width: 750px;
+}
+.slide-list {
+	width: 750px;
+}
+.slide-list li {
+	width: 750px;
+}
+.leftBanner {
+	width: 556px;
+}
+.adBanner img {
+	margin-left: -520px;
+}
+.birthDirectBanner {
+	margin-left: 140px;
+}
+.mSc-main {
+	width: 990px;
+}
+.mfpSlide-nav {
+	margin-left: -240px;
+}
+.mScm-link {
+	width: 555px;
+}
+.mSc-main b {
+	left: 150px;
+}
+.brandMain {
+	width: 739px;
+}
+.brand .brandRight {
+	width: 179px;
+}
+.brand .brandRight div {
+	width: 178px;
+}
+.brand .lastBrandAd {
+	display: none;
+}
+.brand .brandAd {
+	width: 140px;
+}
+.brand .brandAd a {
+	padding-right: 5px; padding-left: 4px;
+}
+.brand .brandAd img {
+	left: 4px;
+}
+.brand .brandAd img.logo {
+	left: 24px;
+}
+.brand .brandAd .label {
+	left: 4px;
+}
+.brand .brandRight .greatBrand {
+	width: 185px;
+}
+.brand .brandRight .newDiscovery {
+	width: 185px;
+}
+.brand .newDiscovery img {
+	margin-left: -5px;
+}
+.brand .brandRight a {
+	width: 178px;
+}
+.brand .brandRight a.brandTheDay {
+	padding: 0px 5px;
+}
+.brand .brandRight a.temai {
+	padding: 0px 5px; width: 168px;
+}
+.floorCon-logo {
+	margin-right: 10px;
+}
+.floorTop-nav {
+	width: 380px;
+}
+#mall-desc dl {
+	width: 119px; padding-left: 30px;
+}
+#mall-desc .other {
+	width: 150px; margin-left: -75px;
+}
+#mall-desc dl#payment {
+	margin-left: 150px;
+}
+}
+@media all and (min-width:1210px)
+{
+.sn-mcate-bd .sn-mcate-ctn-con {
+	width: 1190px;
+}
+#site-nav .sn-container {
+	width: 968px;
+}
+.sn-mcate-bd .sn-mcate-ctn {
+	width: 1255px;
+}
+.sn-mcate-bd .sn-mcate-ctn li {
+	padding-right: 59px;
+}
+}
+.winnerTrigger {
+	background: url("http://img03.taobaocdn.com/tps/i3/T1Q4jUXiNmXXaqkKEo-62-132.png") no-repeat -16px 0px; width: 46px; height: 132px; right: 15px; bottom: 45px; overflow: hidden; display: block; position: fixed; z-index: 1000; _position: absolute;
+}
+.winnerTrigger:hover {
+	width: 62px;
+}
+.birthDirectBanner {
+	width: 760px; height: 420px; margin-left: 240px; display: block; position: relative; z-index: 10;
+}
+.slide-nickname {
+	left: 380px; top: 140px; width: 200px; height: 30px; color: rgb(194, 55, 50); line-height: 30px; overflow: hidden; font-size: 18px; font-weight: 700; display: inline-block; white-space: nowrap; position: absolute; -ms-text-overflow: ellipsis;
+}
+.mfpFlash {
+	left: 50%; top: 0px; width: 780px; height: 420px; margin-left: -355px; display: none; position: absolute; z-index: 11;
+}
+.closeFlash {
+	background: url("http://img04.taobaocdn.com/tps/i4/T1w4zoXi0oXXaCG0rh-50-50.png") no-repeat 0px 0px; top: 10px; width: 50px; height: 50px; right: 10px; position: absolute; z-index: 12; cursor: pointer; _background: url(http://img02.taobaocdn.com/tps/i2/T14wPiXnVuXXaCG0rh-50-50.png) 0 0 no-repeat transparent;
+}
+.slide-TMLShare {
+	left: 535px; top: 120px; position: absolute;
+}
+.slide-rank {
+	left: 280px; top: 140px; height: 30px; color: rgb(194, 55, 50); line-height: 30px; font-size: 18px; display: inline-block; position: absolute;
+}
+.slide-days {
+	left: 215px; top: 196px; width: 40px; height: 30px; text-align: center; color: rgb(194, 55, 50); line-height: 30px; font-size: 18px; display: inline-block; position: absolute;
+}
+.slide-replay {
+	left: 514px; top: 276px; width: 30px; height: 30px; display: inline-block; position: absolute; opacity: 0; background-color: rgb(194, 55, 50);
+}

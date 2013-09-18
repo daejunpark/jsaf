@@ -1,0 +1,306 @@
+#ritServiceHeader {
+	font-size: 82%;
+}
+:not(:target)#ritServiceHeader {
+	font-size: 80%;
+}
+#ritTopBelt {
+	background: rgb(247, 247, 247); margin: 0px 0px 10px; padding: 2px 0px; width: 100%; overflow: hidden; -ms-zoom: 1;
+}
+#ritTopBelt ul {
+	text-align: right; float: right;
+}
+#ritTopBelt li {
+	padding: 0px 6px 0px 7px; margin-right: -1px; border-right-color: rgb(0, 0, 0); border-right-width: 1px; border-right-style: solid; float: left;
+}
+#ritTopBelt a {
+	color: rgb(104, 104, 104); text-decoration: underline;
+}
+#ritTopBelt a#ritShowOldTop {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/liquid/css/icon_oldtop.gif") no-repeat 3px 1px rgb(255, 255, 255); padding: 1px 4px 1px 20px; border: 1px solid rgb(187, 187, 187); line-height: 1.1; text-decoration: none; margin-left: -7px; display: inline-block;
+}
+#ritTopHeader {
+	margin: 0px 0px 12px; width: 100%; clear: both; _margin: 0 0 8px;
+}
+#ritTopHeader {
+	clear: both; -ms-zoom: 1; min-height: 1px;
+}
+#ritTopHeader::after {
+	height: 1px; clear: both; margin-top: -1px; display: block; visibility: hidden; content: ".";
+}
+#ritTopHeader a {
+	text-decoration: underline;
+}
+#ritTopHeader h1 {
+	margin: 3px 10px 0px 4px; width: 107px; float: left; display: inline;
+}
+#ritTopHeader #logoBnr {
+	padding: 3px 13px 0px 0px; width: 70px; float: left; display: inline; _padding: 3px 10px 0 0;
+}
+#ritTopHeader #ritBasketArea {
+	width: 480px; float: right; display: inline;
+}
+#ritBasketBox {
+	margin: 0px 0px 9px; overflow: hidden; clear: both; -ms-zoom: 1; min-height: 1px;
+}
+#ritBasketBox a {
+	color: rgb(28, 83, 165);
+}
+#ritBasketBox .basket {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201010/topcart/icn_topcart_01.gif") no-repeat 3px 4px; padding: 8px 0px 7px 37px; border: 1px solid rgb(242, 150, 150); width: 173px; font-weight: bold; float: left; display: inline; position: relative; min-height: 17px;
+}
+#ritBasketBox .basket .iconCart {
+	left: 3px; top: 3px; position: absolute;
+}
+#ritBasketBox .basket .itemNumber {
+	color: rgb(191, 0, 0);
+}
+#ritBasketBox #ritBasketHelp {
+	width: 265px; overflow: hidden; float: left; -ms-zoom: 1;
+}
+#ritBasketBox #ritBasketHelp ul {
+	text-align: right; overflow: hidden; display: inline; -ms-zoom: 1;
+}
+#ritBasketBox #ritBasketHelp ul li {
+	margin: 0px -1px 0px 4px; padding: 0px 4px 0px 2px; border-right-color: rgb(0, 0, 0); border-right-width: 1px; border-right-style: solid; float: left; display: inline; white-space: nowrap;
+}
+#ritBasketBox #ritBasketHelp ul.ritGrpRelation {
+	float: right;
+}
+#ritBasketBox #ritBasketHelp ul.ritSiteUtility {
+	float: right;
+}
+#ritBasketBox #ritBasketHelp p.ritShopOpen {
+	text-align: right; margin-right: 4px;
+}
+#ritTopHeader ul.ritCmtRetMenu {
+	margin: 0px 0px 0px -4px; overflow: hidden;
+}
+#ritTopHeader ul.ritCmtRetMenu li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201105/historybg.gif") no-repeat 0px 0px; margin: 0px 0px 0px 4px; width: 95px; vertical-align: middle; float: left; display: inline;
+}
+#ritTopHeader ul.ritCmtRetMenu li.reviewbg {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201105/reviewbg.gif") no-repeat 0px 0px; width: 171px; vertical-align: middle;
+}
+#ritTopHeader ul.ritCmtRetMenu li a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/historybtm.gif") no-repeat bottom; padding: 4px 3px 2px; width: 89px; color: rgb(51, 51, 51); font-weight: bold; text-decoration: none; display: block; _padding: 5px 3px 4px;
+}
+#ritTopHeader ul.ritCmtRetMenu li.reviewbg a {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/reviewbtm.gif") no-repeat bottom; padding: 4px 3px 2px; width: 165px; font-weight: bold; vertical-align: middle; display: block; _padding: 5px 3px 4px;
+}
+#ritTopHeader ul.ritCmtRetMenu li a img.iconCircleArrow {
+	margin: 0px 3px 2px 2px; vertical-align: middle;
+}
+#ritTopHeader ul.ritCmtRetMenu li.reviewbg a img.iconCircleArrow {
+	margin: 0px 3px 2px 2px; vertical-align: middle;
+}
+#ritTopHeader ul.ritCmtRetMenu .reviewbg a {
+	color: rgb(51, 51, 51); text-decoration: none;
+}
+#ritGlobalNavi {
+	height: 27px; overflow: hidden; clear: both; -ms-zoom: 1;
+}
+#ritGlobalNavi::after {
+	height: 1px; clear: both; margin-top: -1px; display: block; visibility: hidden; content: ".";
+}
+#ritGlobalNavi ul {
+	float: left;
+}
+#ritGlobalNavi ul li {
+	margin-right: 1px; float: left;
+}
+#ritGlobalNavi ul li a {
+	overflow: hidden; display: block;
+}
+#ritGlobalNavi ul li a img {
+	display: block;
+}
+#ritGlobalNavi #ritNaviTab {
+	margin-right: 5px;
+}
+#ritGlobalNavi #ritSmNaviTab {
+	margin-top: 3px;
+}
+#ritGlobalNavi #ritNaviTab li a {
+	width: 63px; height: 27px;
+}
+#ritGlobalNavi #ritSmNaviTab li a {
+	width: 57px; height: 24px;
+}
+#ritGlobalNavi #ritNaviTab li.ritSmrNaviTab a {
+	width: 57px; height: 24px; padding-top: 3px;
+}
+#ritHdSearch {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201011/search_center_bg.gif") repeat-x left bottom rgb(191, 0, 0); padding: 11px 10px; height: 100%; border-top-color: rgb(222, 122, 122); border-top-width: 1px; border-top-style: solid;
+}
+#ritHdSearch li {
+	float: left; display: inline;
+}
+#ritHdSearch .searchInput {
+	margin: 0px 6px; width: 100%; height: 25px; font-size: 150%;
+}
+* html #ritHdSearch .searchInput {
+	width: 100%;
+}
+#ritHdSearch .ritSahSelect {
+	margin: 6px 0px 0px; left: 0px; width: 183px; position: absolute;
+}
+#ritHdSearch .ritSahInputArea {
+	left: 185px; top: 1px; right: 253px; position: absolute;
+}
+* html #ritHdSearch .ritSahInputArea {
+	left: 190px;
+}
+#ritHdSearch .ritSahInputArea {
+	right: 255px;
+}
+#ritHdSearch .searchBtn {
+	width: 115px; float: left;
+}
+#ritHdSearch .ritSahInr {
+	margin-right: 448px;
+}
+#ritHdSearch .ritSahTermInr {
+	width: 113px; padding-left: 7px; float: left;
+}
+#ritHdSearch .ritSahTermArea {
+	width: 235px; text-align: left; color: rgb(255, 255, 255); float: right;
+}
+#ritHdSearch .ritSahTermArea a {
+	color: rgb(255, 255, 255); text-decoration: underline;
+}
+#ritHdSearch .chkbox {
+	padding: 5px 0px 0px; width: 940px; text-align: center; color: rgb(255, 255, 255);
+}
+#ritHdSearch .chkbox li {
+	margin: 0px 10px 0px -5px; padding: 0px 0px 8px;
+}
+#ritHdSearch .chkbox label {
+	cursor: pointer;
+}
+#ritHdSearch .ritSahArea {
+	margin: 0px auto; width: 100%; text-align: center; color: rgb(255, 255, 255); overflow: hidden; clear: both; position: relative; -ms-zoom: 1;
+}
+.ritSanbKey {
+	background: rgb(240, 240, 240); margin: 0px 0px 7px; padding: 5px 8px; overflow: hidden; clear: both; font-size: 1.1em; _zoom: 1;
+}
+.ritSanbKey dt {
+	padding: 0px 15px 0px 0px; color: rgb(191, 0, 0); font-weight: bold; float: left;
+}
+.ritSanbKey ul {
+	font-weight: bold; float: left;
+}
+.ritSanbKey ul li {
+	padding: 0px 10px 0px 0px; float: left;
+}
+.ritSanbKey ul li a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+.ritSanbKey ul li a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}
+#ritTopHeader img.logoIchiba {
+	width: 110px; height: 60px;
+}
+#ritTopHeader img.logo {
+	background-position: 0px -60px;
+}
+#ritServiceHeader img.peace {
+	background-position: 0px -120px;
+}
+#ritServiceHeader img.iconBoxArrowB {
+	background-position: 0px -199px;
+}
+#ritServiceHeader img.iconCart {
+	background-position: -30px -440px;
+}
+#ritTopHeader img.iconCircleArrow {
+	background-position: -40px -209px;
+}
+img.tabRanking {
+	
+}
+img.tabAsuraku {
+	background-position: 0px -32px;
+}
+img.tabFree {
+	background-position: 0px -64px;
+}
+img.tabAuction {
+	background-position: 0px -96px;
+}
+img.tabGroup {
+	background-position: 0px -128px;
+}
+img.tabToolbar {
+	background-position: 0px -160px;
+}
+img.tabCard {
+	background-position: -69px 0px;
+}
+img.tabMobile {
+	background-position: -69px -32px;
+}
+img.tabPresent {
+	background-position: -69px -64px;
+}
+img.tabSpecial {
+	background-position: -69px -96px;
+}
+img.tabBooks {
+	background-position: -69px -128px;
+}
+img.tabProduct {
+	background-position: -69px -160px;
+}
+img.tabCert {
+	background-position: 0px -192px;
+}
+img.tabTravel {
+	background-position: 0px -221px;
+}
+img.tabPortal {
+	background-position: 0px -250px;
+}
+img.tabKobo {
+	background-position: -69px -192px;
+}
+body {
+	position: relative;
+}
+#flaotingHeader {
+	background: rgb(191, 0, 0); left: 0px; top: 0px; width: 100%; display: none; position: fixed; z-index: 8888; min-width: 950px;
+}
+#flaotingHeader .miniLogo {
+	margin: 6px 0px 0px 8px; width: 54px; float: left; display: inline;
+}
+#flaotingHeader .miniSerach {
+	padding: 0px 0px 0px 8px; margin-right: 0px; position: relative;
+}
+#flaotingHeader .searchInputCmn {
+	left: 10px; top: 1px; right: 390px; position: absolute;
+}
+#flaotingHeader .searchInputCont {
+	width: 100%; position: relative;
+}
+#flaotingHeader .searchInput {
+	margin: 7px 5px 5px 0px; padding: 0px; width: 100%; height: 20px; line-height: 20px; font-size: 1.1em;
+}
+#flaotingHeader .searchBtn {
+	margin: 0px 5px 0px 0px; width: 85px; height: 23px; float: left; display: inline;
+}
+#flaotingHeader .ritHidSearch {
+	padding: 8px 15px; width: 360px; text-align: right; float: right;
+}
+#flaotingHeader .ritHidSearch ul {
+	padding-top: 4px;
+}
+#flaotingHeader .ritHidSearch ul li {
+	color: rgb(255, 255, 255); display: inline;
+}
+#flaotingHeader .ritHidSearch ul li a {
+	color: rgb(255, 255, 255); text-decoration: underline; white-space: nowrap;
+}
+.ritCmtRetMenu .rv_count {
+	font-size: 90%;
+}

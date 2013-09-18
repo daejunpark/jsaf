@@ -1,0 +1,18 @@
+<!-- test for document.createDocumentFragment -->
+<html>
+  <body> my body
+   <script>
+     var df = document.createDocumentFragment();  // DocumentFragment object
+     var __result1 = df.nodeName;
+     var __expect1 = "#document-fragment"
+     var __result2 = df.nodeValue;
+     var __expect2 = null;
+     var __result3 = df.nodeType;
+     var __expect3 = 11;
+     var __result4 = df.parentNode;
+     var __expect4 = null;
+     var __result5 = df.attributes;
+     var __expect5 = null;
+   </script>
+  </body>
+</html>

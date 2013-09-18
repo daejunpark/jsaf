@@ -1,0 +1,21 @@
+.ctools-locked {
+	padding: 1em; border: 1px solid red; color: red;
+}
+.ctools-owns-lock {
+	background: 0px 0px rgb(255, 255, 221); padding: 1em; border: 1px solid rgb(240, 192, 32);
+}
+a.ctools-ajaxing {
+	background: url("/sites/all/modules/contrib/ctools/images/status-active.gif") no-repeat right; padding-right: 18px !important;
+}
+input.ctools-ajaxing {
+	background: url("/sites/all/modules/contrib/ctools/images/status-active.gif") no-repeat right; padding-right: 18px !important;
+}
+button.ctools-ajaxing {
+	background: url("/sites/all/modules/contrib/ctools/images/status-active.gif") no-repeat right; padding-right: 18px !important;
+}
+select.ctools-ajaxing {
+	background: url("/sites/all/modules/contrib/ctools/images/status-active.gif") no-repeat right; padding-right: 18px !important;
+}
+div.ctools-ajaxing {
+	background: url("/sites/all/modules/contrib/ctools/images/status-active.gif") no-repeat center; width: 18px; float: left;
+}

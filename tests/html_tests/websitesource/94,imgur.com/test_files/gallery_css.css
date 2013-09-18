@@ -1,0 +1,1599 @@
+.combobox {
+	padding: 7px; border-radius: 6px; font-family: verdana,sans-serif; font-size: 9pt; position: relative; cursor: pointer; background-color: rgb(24, 24, 24); -webkit-user-select: none; -moz-user-select: none;
+}
+.combobox:hover .triangle {
+	background-position: -69px -149px;
+}
+.opened.combobox .triangle {
+	background-position: -69px -149px;
+}
+.combobox:hover .selection {
+	background-color: rgb(18, 18, 17);
+}
+.opened.combobox {
+	background-color: rgb(18, 18, 17);
+}
+.opened.combobox {
+	border-bottom-right-radius: 0px; border-bottom-left-radius: 0px;
+}
+.combobox .selection {
+	margin: -7px; padding: 6px 7px; border-radius: 4px; line-height: 20px; overflow: hidden; max-height: 18px;
+}
+.combobox .triangle {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -69px -142px; top: 12px; width: 13px; height: 7px; right: 8px; position: absolute;
+}
+.combobox .options {
+	margin: 5px 0px 0px -7px; border-radius: 0px 0px 6px 6px; border: 3px solid rgb(18, 18, 17); color: rgb(18, 18, 17); display: none; position: absolute; overflow-x: hidden; overflow-y: auto; max-height: 350px; background-color: rgb(238, 238, 238);
+}
+.combobox .item {
+	padding: 5px; border-top-color: rgb(43, 43, 43); border-top-width: 1px; border-top-style: solid;
+}
+.combobox .item:hover {
+	background-color: rgb(204, 204, 204);
+}
+.combobox :last-child.item {
+	border-radius: 0px 0px 6px 6px;
+}
+.combobox table td {
+	vertical-align: middle;
+}
+.combobox table td.image {
+	width: 40px; line-height: 0; vertical-align: top;
+}
+.combobox .icon {
+	width: 18px; height: 18px; vertical-align: top;
+}
+.combobox .image img {
+	border: 2px solid rgb(43, 43, 43); width: 40px; height: 40px; margin-right: 7px;
+}
+#download-album-form {
+	width: 410px;
+}
+#download-album-form #email {
+	width: 400px; margin-top: 10px; margin-bottom: 10px;
+}
+.best {
+	top: 0px; right: 0px; position: relative;
+}
+#captions .caption .arrows {
+	margin: 0px 3px 0px 0px; padding: 4px 3px; border-radius: 4px; width: 22px; color: rgb(170, 170, 170); float: left; background-color: rgb(24, 24, 23); -moz-border-radius: 4px; -webkit-border-radius: 4px;
+}
+#captions .caption {
+	font-size: 14px;
+}
+#captions :last-child.caption {
+	margin: 0px;
+}
+#captions .caption .rank {
+	margin: 0px 3px 0px 0px; padding: 2px; border-radius: 4px; background-color: rgb(24, 24, 23); -moz-border-radius: 4px; -webkit-border-radius: 4px;
+}
+#captions .caption .author {
+	font: x-small/normal verdana, arial, helvetica, sans-serif; color: rgb(170, 170, 170); letter-spacing: 0px; margin-bottom: 2px; font-size-adjust: none; font-stretch: normal;
+}
+#captions .caption .author ul {
+	margin: 0px; padding: 0px;
+}
+#captions .caption .author ul li {
+	list-style: none; margin-left: 3px; display: inline;
+}
+#captions .caption .usertext {
+	line-height: 16px; overflow: auto; padding-bottom: 8px; word-wrap: break-word; min-height: 32px;
+}
+#captions .caption .contexted.usertext {
+	border: 2px solid rgb(65, 79, 102); background-color: rgb(38, 46, 59);
+}
+#captions .caption .first.usertext {
+	line-height: 24px; font-size: 24px;
+}
+#captions .caption .first.usertext .author .right {
+	color: rgb(102, 102, 102);
+}
+#captions .caption:hover .red {
+	display: inherit;
+}
+.show {
+	display: inherit;
+}
+.reply-header {
+	margin-top: 5px;
+}
+.reply-header p {
+	padding: 5px 0px 0px; margin-left: 5px;
+}
+.reply-header span {
+	margin-left: 5px;
+}
+.reply-header a {
+	margin: 0px;
+}
+.caption-deleted .usertext {
+	font-family: monospace;
+}
+.caption-toolbar {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -164px -87px; top: 3px; width: 8px; height: 0px; right: 3px; display: none; position: absolute;
+}
+.caption-toolbar .options {
+	margin: 5px 0px 0px -82px; width: 96px; z-index: 100;
+}
+.caption:hover .caption-toolbar {
+	display: block;
+}
+.caption {
+	position: relative;
+}
+.opened.caption-toolbar {
+	display: block !important;
+}
+.opened.caption-toolbar .options {
+	border: 2px solid rgb(18, 18, 17); display: block;
+}
+.bad-captions .comment {
+	display: none;
+}
+.bad-captions .comment .comment {
+	display: block;
+}
+.bad-replies {
+	margin-left: 12px;
+}
+.bad-replies .comment {
+	margin-left: -12px;
+}
+.bad-captions .textbox {
+	margin-bottom: 5px;
+}
+.expand {
+	width: 8px; color: rgb(136, 136, 136) !important; font-size: small; margin-top: 19px; margin-right: 4px;
+}
+.no-expand {
+	width: 8px; color: rgb(136, 136, 136) !important; font-size: small; margin-top: 19px; margin-right: 4px;
+}
+.expand:hover {
+	color: rgb(133, 191, 37) !important; text-decoration: none;
+}
+.no-expand {
+	cursor: default;
+}
+.load-more {
+	font-size: x-small !important; margin-left: 15px;
+}
+.best-captions .caption {
+	width: 223px; overflow: auto; float: left;
+}
+.captions .caption {
+	font-size: 14px; margin-top: 5px;
+}
+.create-caption {
+	font-size: 14px; margin-top: 5px;
+}
+.comment {
+	font-size: 14px; margin-top: 5px;
+}
+.children .load-more {
+	width: 50px; margin-top: -3px; display: block;
+}
+.children {
+	padding-left: 3px; margin-left: 28px;
+}
+.bad-captions {
+	margin-top: 5px;
+}
+.children .bad-captions {
+	font-size: 0.9em;
+}
+.caption-error {
+	margin-bottom: 5px; margin-left: 12px;
+}
+#submit-caption .caption-error {
+	margin: 5px 0px 0px;
+}
+.arrow {
+	margin: 2px auto; width: 20px; height: 20px; display: block; cursor: pointer;
+}
+.up.arrow {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -2px -60px; margin-top: 0px;
+}
+.up.arrow:hover {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -23px -60px;
+}
+.up.arrow:active {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -44px -60px;
+}
+.pushed.up.arrow {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -44px -60px;
+}
+.down.arrow {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -2px -80px; margin-bottom: 0px;
+}
+.down.arrow:hover {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -23px -80px;
+}
+.down.arrow:active {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -44px -80px;
+}
+.pushed.down.arrow {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -44px -80px;
+}
+.navigation-thumbs .header {
+	margin: -15px -15px 10px; padding: 10px 10px 7px; border-radius: 10px 10px 0px 0px; overflow: hidden; border-bottom-color: rgb(36, 36, 36); border-bottom-width: 5px; border-bottom-style: solid; background-color: rgb(66, 66, 66); -moz-border-radius: 10px 10px 0 0; -webkit-border-radius: 10px 10px 0 0;
+}
+.navigation-thumbs .next-prev {
+	margin-bottom: 10px;
+}
+.navigation-thumbs .next-prev a {
+	margin-right: 5px;
+}
+.navigation-thumbs .next-prev .browse {
+	margin: 0px;
+}
+.navigation-thumbs .thumbnails {
+	text-align: center; line-height: 0;
+}
+.navigation-thumbs .thumbnails .thumb {
+	margin: 2px; border: 3px solid rgb(68, 68, 66); width: 90px; height: 90px; float: left; background-color: rgb(24, 24, 23);
+}
+.navigation-thumbs .thumbnails .thumb:hover {
+	border: 3px solid rgb(194, 159, 55);
+}
+.navigation-thumbs .thumbnails .thumb img {
+	width: 90px; height: 90px;
+}
+.next-prev a:hover {
+	text-decoration: none !important;
+}
+.two-column#content {
+	padding: 0px; width: 1000px; margin-bottom: 0px; position: relative; background-color: transparent;
+}
+.two-column .left.panel {
+	width: 610px; margin-right: 10px;
+}
+.two-column .left .panel {
+	width: 610px; margin-right: 10px;
+}
+.two-column .right .panel {
+	padding: 15px; width: 300px; margin-bottom: 10px;
+}
+.two-column > .right {
+	width: 330px;
+}
+.two-column .right-side {
+	width: 310px; float: right;
+}
+.two-column #footer {
+	width: 655px; float: left;
+}
+.two-column#content .main-image .email-button-hide {
+	display: none;
+}
+#submit-caption {
+	margin: 5px 0px 0px; overflow: hidden; position: relative;
+}
+#submit-caption textarea {
+	height: 20px; color: rgb(136, 136, 136); padding-top: 7px; padding-bottom: 4px; float: left; resize: none;
+}
+.create-caption textarea {
+	height: 20px; color: rgb(136, 136, 136); padding-top: 7px; padding-bottom: 4px; float: left; resize: none;
+}
+.create-caption textarea {
+	margin: 0px 8px 0px 0px; width: 81%; font-size: 1.1em;
+}
+#submit-caption textarea {
+	margin: 0px; width: 514px; font-size: 1.2em;
+}
+#submit-caption .counter {
+	top: 40px; right: 40px; color: rgb(136, 136, 136); line-height: 22px; font-family: "Helvetica Neue","Helvetica","Arial",sans-serif; font-size: 22px; font-weight: bold; display: none;
+}
+.create-caption .counter {
+	top: 40px; right: 40px; color: rgb(136, 136, 136); line-height: 22px; font-family: "Helvetica Neue","Helvetica","Arial",sans-serif; font-size: 22px; font-weight: bold; display: none;
+}
+#submit-caption .counter {
+	position: absolute;
+}
+#submit-caption .warning.counter {
+	color: rgb(160, 108, 108);
+}
+.create-caption .warning.counter {
+	color: rgb(160, 108, 108);
+}
+#submit-caption .exceeded.counter {
+	color: rgb(238, 68, 68);
+}
+.create-caption .exceeded.counter {
+	color: rgb(238, 68, 68);
+}
+#caption-error {
+	margin: 5px 0px; font-size: 14px; display: none;
+}
+#save-caption-loader {
+	width: 24px; height: 24px; margin-right: 3px; margin-left: auto; display: none;
+}
+.save-caption-loader {
+	width: 24px; height: 24px; margin-right: 3px; margin-left: auto; display: none;
+}
+#save-caption-loader {
+	background: url("/images/small-loader.gif"); margin-top: 40px;
+}
+.save-caption-loader {
+	background: url("/images/caption-reply-loader.gif");
+}
+.create-caption {
+	margin-left: 12px;
+}
+.caption-error {
+	padding: 5px 7px; border-radius: 4px; color: rgb(238, 68, 68); line-height: 19px; background-color: rgb(24, 24, 23);
+}
+.main-image .left.panel {
+	width: 610px; margin-right: 10px; min-height: 645px;
+}
+.main-image .left .panel {
+	width: 610px; margin-right: 10px; min-height: 645px;
+}
+.main-image .image-arrows {
+	padding: 3px; width: 64px; height: 32px; margin-right: 3px; word-spacing: -1em; float: left;
+}
+.main-image .image-arrows .arrow {
+	margin: 1px; width: 30px; height: 30px; display: inline-block;
+}
+.main-image .image-arrows .up.arrow {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -3px -106px;
+}
+.main-image .image-arrows .up.arrow:hover {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -34px -106px;
+}
+.main-image .image-arrows .up.arrow:active {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -65px -106px;
+}
+.main-image .image-arrows .pushed.up.arrow {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -65px -106px;
+}
+.main-image .image-arrows .down.arrow {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -96px -106px;
+}
+.main-image .image-arrows .down.arrow:hover {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -127px -106px;
+}
+.main-image .image-arrows .down.arrow:active {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -158px -106px;
+}
+.main-image .image-arrows .pushed.down.arrow {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -158px -106px;
+}
+.main-image h2 {
+	margin: -10px 0px 10px; line-height: 20px; font-size: 18px; font-weight: normal; word-wrap: break-word;
+}
+.main-image h2.album-title {
+	margin: 0px 0px 1px !important; padding-top: 5px; font-size: 14px;
+}
+.main-image .image {
+	margin: 0px; padding: 0px; border-radius: 4px; text-align: center; line-height: 0; position: relative; min-height: 10px; background-color: rgb(24, 24, 23); -moz-border-radius: 4px; -webkit-border-radius: 4px;
+}
+.main-image .album-image .description {
+	margin: 5px auto 10px; overflow: auto; white-space: pre-wrap;
+}
+.main-image .album-image {
+	margin-bottom: 10px;
+}
+.main-image :last-child.album-image {
+	margin-bottom: 0px;
+}
+.main-image .image img {
+	max-width: 610px;
+}
+.main-image #under-image {
+	line-height: 10px; font-size: 0.9em; margin-top: 5px;
+}
+.main-image #under-image .info {
+	padding: 14px 10px; width: 350px; color: rgb(170, 170, 170); margin-right: 3px; float: left;
+}
+.main-image #description {
+	margin-top: 5px; white-space: pre-wrap;
+}
+.stats strong {
+	color: inherit;
+}
+.sparkbar {
+	border-radius: 2px; width: 82px; margin-left: 7px; float: right; -moz-border-radius: 2px; -webkit-border-radius: 2px;
+}
+.sparkbar div {
+	height: 10px; float: left; filter: alpha(opacity=30); opacity: 0.3; -moz-opacity: .3;
+}
+.sparkbar div:hover {
+	filter: alpha(opacity=80); opacity: 0.8; -moz-opacity: .8;
+}
+.sparkbar .positive {
+	border-radius: 2px 0px 0px 2px; background-color: rgb(133, 191, 37); -moz-border-radius: 2px 0 0 2px; -webkit-border-radius: 2px 0 0 2px;
+}
+.sparkbar .negative {
+	border-radius: 0px 2px 2px 0px; background-color: rgb(238, 68, 68); -moz-border-radius: 0 2px 2px 0; -webkit-border-radius: 0 2px 2px 0;
+}
+.sparkbar .border-right {
+	-webkit-border-bottom-right-radius: 2px; -moz-border-radius-bottomright: 2px; -webkit-border-top-right-radius: 2px; -moz-border-radius-topright: 2px;
+}
+.sparkbar .border-left {
+	-webkit-border-bottom-left-radius: 2px; -moz-border-radius-bottomleft: 2px; -moz-border-radius-topleft: 2px; -webkit-border-top-left-radius: 2px;
+}
+div.jquery-image-zoom {
+	margin: -5px; border: 5px solid rgb(255, 255, 255); line-height: 0; font-size: 0px; z-index: 10; box-shadow: 0px 0px 10px rgba(0,0,0,0.3); background-color: rgb(255, 255, 255); -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+div.jquery-image-zoom img {
+	margin: 0px; width: 100%; height: 100%;
+}
+div.jquery-image-zoom embed {
+	margin: 0px; width: 100%; height: 100%;
+}
+div.jquery-image-zoom object {
+	margin: 0px; width: 100%; height: 100%;
+}
+div.jquery-image-zoom div {
+	margin: 0px; width: 100%; height: 100%;
+}
+.links.small #original-source {
+	text-align: right; color: rgb(136, 136, 136);
+}
+.colorbox-popup {
+	width: 410px;
+}
+#embed-album-form input {
+	padding: 6px; border-radius: 4px; border: currentColor; width: 330px; color: rgb(171, 171, 161); font-size: 12px; margin-top: 5px; margin-bottom: 5px; background-color: rgb(24, 24, 23);
+}
+#embed-album-form .clipboard {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -139px -65px; width: 16px; height: 16px;
+}
+#embed-album-form .clipboard:hover {
+	background-position: -139px -81px;
+}
+#embed-album-form .hover.clipboard {
+	background-position: -139px -81px;
+}
+#embed-album-form .clipboard-container {
+	margin: 10px 3px 0px 0px; float: left; position: relative;
+}
+#AdskeeperComposite2510 .mcteaser2227 {
+	border: 0px currentColor !important;
+}
+#AdskeeperComposite2510 .mcteaser12941 {
+	border: 0px currentColor !important;
+}
+#AdskeeperComposite2510 .mcteaser2227:hover img.mcimage2227 {
+	border: 3px solid rgb(194, 159, 55) !important;
+}
+#AdskeeperComposite2510 .mcteaser12941:hover img.mcimage12941 {
+	border: 3px solid rgb(194, 159, 55) !important;
+}
+.mccc354:hover img {
+	border: 3px solid rgb(194, 159, 55) !important;
+}
+#AdskeeperComposite2510 {
+	min-height: 340px;
+}
+#AdskeeperComposite2510 .mctable2227 * {
+	padding: 0px !important; color: rgb(221, 221, 209) !important;
+}
+#AdskeeperComposite2510 .mctable12941 * {
+	padding: 0px !important; color: rgb(221, 221, 209) !important;
+}
+img.mcimage2227 {
+	border: 3px solid rgb(68, 68, 66) !important;
+}
+img.mcimage354 {
+	border: 3px solid rgb(68, 68, 66) !important;
+}
+img.mcimage7897 {
+	border: 3px solid rgb(68, 68, 66) !important;
+}
+img.mcimage12941 {
+	border: 3px solid rgb(68, 68, 66) !important;
+}
+img.mcimage2227 {
+	margin-top: 5px !important;
+}
+img.mcimage12941 {
+	margin-top: 5px !important;
+}
+div.mcdesc2227 {
+	padding-left: 5px !important;
+}
+div.mctitle2227 {
+	padding-left: 5px !important;
+}
+div.mcdesc12941 {
+	padding-left: 5px !important;
+}
+div.mctitle12941 {
+	padding-left: 5px !important;
+}
+.mcdesc2227 {
+	display: none !important;
+}
+.mcprice2227 {
+	display: none !important;
+}
+.mcprice354 {
+	display: none !important;
+}
+.mcprice12941 {
+	display: none !important;
+}
+div.mctitle2227 {
+	margin: 0px 6px 6px !important; line-height: 14px !important; font-size: 12px !important;
+}
+div.mctitle12941 {
+	margin: 0px 6px 6px !important; line-height: 14px !important; font-size: 12px !important;
+}
+.mg_addad520 {
+	margin-top: 6px; margin-left: 10px;
+}
+#MarketGidComposite520 .mcteaser354 {
+	padding: 0px !important;
+}
+.mccc354:hover img {
+	border: 3px solid rgb(194, 159, 55) !important;
+}
+.humanMsg#favoriteMsg {
+	background: 0px; top: 169px; width: 120px; height: 120px;
+}
+#favoriteMsg .favorited {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -319px -5px; width: 100px; height: 100px; margin-top: 10px; margin-left: 165px;
+}
+#favoriteMsg .unfavorited {
+	background-position: -319px -104px !important;
+}
+.horizontal#favoriteMsg {
+	left: 60.3%; top: 265px;
+}
+#favoriteMsg .bg-div {
+	border-radius: 6px; left: 153px; top: 0px; width: 100%; height: 100%; position: absolute; z-index: -1; opacity: 0.94; background-color: rgb(24, 24, 23); -moz-border-radius: 6px; -webkit-border-radius: 6px;
+}
+#favoriteMsg {
+	line-height: 0;
+}
+.addthis_button_email {
+	display: none;
+}
+.inline {
+	float: left; display: inline;
+}
+.favorite-icon {
+	padding: 4px 4px 3px 3px; border-radius: 4px; text-align: center; overflow: auto; margin-right: 3px; background-color: rgb(24, 24, 23);
+}
+#favorite-image {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -252px -183px; width: 32px; height: 31px; filter: alpha(opacity=70); cursor: pointer; opacity: 0.7;
+}
+#favorite-image {
+	background-position: -189px -106px; opacity: 1;
+}
+#favorite-image:hover {
+	background-position: -222px -106px; opacity: 1;
+}
+.favorited#favorite-image {
+	background-position: -255px -106px; opacity: 1;
+}
+.favorites .info {
+	width: 341px !important; color: rgb(170, 170, 170) !important;
+}
+.blog .favorite-icon {
+	padding: 5px; margin-top: 5px;
+}
+.rearrange .favorite-icon {
+	padding: 5px; margin-top: 5px;
+}
+.titledesc .favorite-icon {
+	padding: 5px; margin-top: 5px;
+}
+.horizontal .favorite-icon {
+	margin: 0px 3px; padding: 3px 3px 0px 2px; overflow: hidden;
+}
+div.datepicker {
+	left: 0px; top: 0px; width: 196px; height: 147px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; display: none; position: absolute; cursor: default;
+}
+.datepickerContainer {
+	background: rgb(18, 18, 18); left: 10px; top: 10px; position: absolute;
+}
+.datepickerBorderT {
+	background: url("http://s.imgur.com/images/datepicker/datepicker_t.png"); left: 10px; top: 0px; height: 10px; right: 10px; position: absolute;
+}
+.datepickerBorderB {
+	background: url("http://s.imgur.com/images/datepicker/datepicker_b.png"); left: 10px; height: 10px; right: 10px; bottom: 0px; position: absolute;
+}
+.datepickerBorderL {
+	background: url("http://s.imgur.com/images/datepicker/datepicker_l.png"); left: 0px; top: 10px; width: 10px; bottom: 10px; position: absolute;
+}
+.datepickerBorderR {
+	background: url("http://s.imgur.com/images/datepicker/datepicker_r.png"); top: 10px; width: 10px; right: 0px; bottom: 10px; position: absolute;
+}
+.datepickerBorderTL {
+	background: url("http://s.imgur.com/images/datepicker/datepicker_tl.png"); left: 0px; top: 0px; width: 10px; height: 10px; position: absolute;
+}
+.datepickerBorderTR {
+	background: url("http://s.imgur.com/images/datepicker/datepicker_tr.png"); top: 0px; width: 10px; height: 10px; right: 0px; position: absolute;
+}
+.datepickerBorderBL {
+	background: url("http://s.imgur.com/images/datepicker/datepicker_bl.png"); left: 0px; width: 10px; height: 10px; bottom: 0px; position: absolute;
+}
+.datepickerBorderBR {
+	background: url("http://s.imgur.com/images/datepicker/datepicker_br.png"); width: 10px; height: 10px; right: 0px; bottom: 0px; position: absolute;
+}
+.datepickerHidden {
+	display: none;
+}
+div.datepicker table {
+	border-collapse: collapse;
+}
+div.datepicker a {
+	outline: 0px; color: rgb(238, 238, 238); text-decoration: none; cursor: pointer;
+}
+div.datepicker table td {
+	margin: 0px; padding: 0px; text-align: right;
+}
+div.datepicker th {
+	text-align: center; color: rgb(153, 153, 153); font-weight: normal;
+}
+div.datepicker tbody th {
+	text-align: left;
+}
+div.datepicker tbody a {
+	display: block;
+}
+.datepickerDays a {
+	width: 20px; height: 16px; line-height: 16px; padding-right: 2px;
+}
+.datepickerYears a {
+	width: 44px; height: 36px; text-align: center; line-height: 36px;
+}
+.datepickerMonths a {
+	width: 44px; height: 36px; text-align: center; line-height: 36px;
+}
+td.datepickerNotInMonth a {
+	color: rgb(102, 102, 102);
+}
+tbody.datepickerDays td.datepickerSelected {
+	background: rgb(19, 106, 159);
+}
+tbody.datepickerDays td.datepickerSelected.datepickerNotInMonth {
+	background: rgb(23, 56, 77);
+}
+tbody.datepickerYears td.datepickerSelected {
+	background: rgb(23, 56, 77);
+}
+tbody.datepickerMonths td.datepickerSelected {
+	background: rgb(23, 56, 77);
+}
+div.datepicker a:hover {
+	color: rgb(136, 197, 235);
+}
+div.datepicker a:hover {
+	color: rgb(136, 197, 235);
+}
+div.datepicker td.datepickerNotInMonth a:hover {
+	color: rgb(153, 153, 153);
+}
+div.datepicker tbody th {
+	text-align: left;
+}
+.datepickerSpace div {
+	width: 20px;
+}
+.datepickerGoNext a {
+	height: 20px; text-align: center; line-height: 20px;
+}
+.datepickerGoPrev a {
+	height: 20px; text-align: center; line-height: 20px;
+}
+.datepickerMonth a {
+	height: 20px; text-align: center; line-height: 20px;
+}
+.datepickerGoNext a {
+	width: 20px; float: right;
+}
+.datepickerGoPrev a {
+	width: 20px; float: left;
+}
+table.datepickerViewDays tbody.datepickerMonths {
+	display: none;
+}
+table.datepickerViewDays tbody.datepickerYears {
+	display: none;
+}
+table.datepickerViewMonths tbody.datepickerDays {
+	display: none;
+}
+table.datepickerViewMonths tbody.datepickerYears {
+	display: none;
+}
+table.datepickerViewMonths tr.datepickerDoW {
+	display: none;
+}
+table.datepickerViewYears tbody.datepickerDays {
+	display: none;
+}
+table.datepickerViewYears tbody.datepickerMonths {
+	display: none;
+}
+table.datepickerViewYears tr.datepickerDoW {
+	display: none;
+}
+td.datepickerDisabled a {
+	color: rgb(51, 51, 51);
+}
+td.datepickerNotInMonth.datepickerDisabled a {
+	color: rgb(51, 51, 51);
+}
+td.datepickerDisabled a:hover {
+	color: rgb(51, 51, 51);
+}
+td.datepickerSpecial a {
+	background: rgb(119, 0, 0);
+}
+td.datepickerSelected.datepickerSpecial a {
+	background: rgb(170, 0, 0);
+}
+.right .panel {
+	width: 300px; margin-bottom: 10px;
+}
+.panel .textbox ul {
+	margin: 0px 0px 0px 15px;
+}
+.pages {
+	text-align: right; font-size: 1.2em; font-weight: bold; margin-top: 10px;
+}
+.pages a {
+	margin: 0px 5px;
+}
+.header {
+	height: 19px; position: relative;
+}
+.header h2 {
+	padding-top: 1px;
+}
+.header .sort-options ul {
+	margin: 0px; width: 199px;
+}
+.header .sort-options ul li {
+	list-style: none; color: rgb(136, 136, 136); border-left-color: rgb(43, 43, 43); border-left-width: 1px; border-left-style: solid; float: right;
+}
+.header .sort-options {
+	top: 0px; text-align: right; right: 0px; font-weight: normal; position: absolute; max-width: 445px;
+}
+.header .sort-options #past-link span {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -172px -34px; width: 20px; height: 20px; display: block;
+}
+.header .sort-options #random-button span {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -172px -34px; width: 20px; height: 20px; display: block;
+}
+.header .sort-options #random-button span {
+	background-position: -235px -161px;
+}
+.header .back.sort-options {
+	width: 80px; min-width: inherit; max-width: inherit;
+}
+.header .sort-options a {
+	padding: 10px 10px 4px 8px; height: 25px; text-decoration: none; border-left-color: rgb(0, 0, 0); border-left-width: 1px; border-left-style: solid; float: left;
+}
+.header .sort-options a:hover {
+	background: rgb(36, 36, 36);
+}
+.header .sort-options a#random-button:hover {
+	border-top-right-radius: 4px; border-bottom-right-radius: 4px; -webkit-border-bottom-right-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-top-right-radius: 4px; -moz-border-radius-topright: 4px;
+}
+.header .sort-options ul li.top-sort a:hover {
+	border-top-right-radius: 4px; border-bottom-right-radius: 4px; -webkit-border-bottom-right-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-top-right-radius: 4px; -moz-border-radius-topright: 4px;
+}
+.header .sort-options a#showviral {
+	color: rgb(221, 221, 209); padding-left: 20px; text-decoration: none; position: relative;
+}
+.header .sort-options a#showviral span::before {
+	background: rgb(204, 204, 204); border-radius: 60px; left: 6px; top: 50%; width: 8px; height: 8px; margin-top: -4px; display: block; position: absolute; content: ""; -moz-border-radius: 60px; -webkit-border-radius: 60px;
+}
+.header .sort-options a.showing#showviral span::before {
+	background: rgb(133, 191, 37); border-radius: 60px; left: 6px; top: 50%; width: 8px; height: 8px; margin-top: -4px; display: block; position: absolute; content: ""; -moz-border-radius: 60px; -webkit-border-radius: 60px;
+}
+.header .sort-options strong {
+	color: inherit; font-size: inherit;
+}
+.header .sort-options .green {
+	font-weight: bold;
+}
+.inline {
+	float: left; display: inline;
+}
+.album-truncated {
+	text-align: center; line-height: 10px; margin-top: 5px; margin-bottom: 5px;
+}
+.url-truncated {
+	width: 265px; overflow: hidden; display: inline-block; text-overflow: ellipsis;
+}
+#stats-submit-source {
+	white-space: nowrap;
+}
+.report-icon {
+	padding: 4px 4px 3px 3px; border-radius: 4px; text-align: center; overflow: auto; margin-right: 3px; background-color: rgb(24, 24, 23);
+}
+.meme-icon {
+	padding: 4px 4px 3px 3px; border-radius: 4px; text-align: center; overflow: auto; margin-right: 3px; background-color: rgb(24, 24, 23);
+}
+#report-image {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -252px -183px; width: 32px; height: 31px; filter: alpha(opacity=70); cursor: pointer; opacity: 0.7;
+}
+#delete-image {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -252px -183px; width: 32px; height: 31px; filter: alpha(opacity=70); cursor: pointer; opacity: 0.7;
+}
+#meme-image {
+	background: url("http://s.imgur.com/images/site-sprite.png?1372273361") no-repeat -252px -183px; width: 32px; height: 31px; filter: alpha(opacity=70); cursor: pointer; opacity: 0.7;
+}
+#meme-image {
+	background-position: -354px -211px;
+}
+#report-image {
+	background-position: -252px -213px;
+}
+#report-image:hover {
+	filter: alpha(opacity=100); opacity: 1;
+}
+#delete-image:hover {
+	filter: alpha(opacity=100); opacity: 1;
+}
+#meme-image:hover {
+	filter: alpha(opacity=100); opacity: 1;
+}
+#delete-image:hover {
+	background-position: -283px -183px;
+}
+.reported#report-image {
+	background-position: -283px -213px;
+}
+.comments-info {
+	margin-top: 5px;
+}
+#comment-sort {
+	padding: 0px; border: 0px currentColor; width: 45px; background-color: rgb(24, 24, 23);
+}
+.combobox#comment-sort .selection {
+	margin: 0px; padding: 0px; border: 0px currentColor; line-height: 10px; overflow: visible;
+}
+#comment-sort .triangle {
+	top: 2px; right: 0px;
+}
+.combobox#comment-sort:hover .selection {
+	background-color: rgb(24, 24, 23);
+}
+.combobox#comment-sort .options {
+	border-width: 0px 2px 2px !important; border-style: none solid solid !important; border-color: currentColor rgb(18, 18, 17) rgb(18, 18, 17) !important; margin: 4px 0px 0px -3px; border-radius: 0px 0px 4px 4px; width: 46px !important;
+}
+#comment-sort .selected {
+	font-weight: bold;
+}
+#comment-sort :last-child.item {
+	border-radius: 0px 0px 4px 4px;
+}
+#sort {
+	margin: 0px; padding: 0px; border: 0px currentColor; background-color: rgb(24, 24, 23);
+}
+.combobox#sort:hover .selection {
+	background-color: rgb(24, 24, 23);
+}
+.combobox#sort .selection {
+	margin: -10px 0px 0px; padding: 10px 0px; line-height: 18px; overflow: visible;
+}
+.opened#sort {
+	background-color: rgb(24, 24, 23);
+}
+#sort .triangle {
+	left: 50%; top: 18px; margin-left: -9px; position: absolute; transform: rotate(180deg); -moz-transform: rotate(180deg); -webkit-transform: rotate(180deg); -o-transform: rotate(180deg);
+}
+.opened#sort .triangle {
+	transform: rotate(0deg); -moz-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg);
+}
+.combobox#sort :first-child.item {
+	border-top-color: currentColor; border-top-width: 0px; border-top-style: none;
+}
+#sort .options {
+	margin: -2px 0px 0px -10px; border: 3px solid rgb(24, 24, 23); left: 5px; width: 110px !important; font-weight: normal;
+}
+.combobox#sort .selection {
+	font-family: arial,sans-serif; font-size: 14px;
+}
+.combobox#section .selection {
+	font-family: arial,sans-serif; font-size: 14px;
+}
+#section {
+	margin: 0px; padding: 0px; border: 0px currentColor; background-color: rgb(24, 24, 23);
+}
+.combobox#section:hover .selection {
+	background-color: rgb(24, 24, 23);
+}
+.combobox#section .selection {
+	margin: -10px 0px 0px; padding: 10px 0px; color: rgb(133, 191, 37) !important; line-height: 18px; overflow: visible;
+}
+.opened#section {
+	background-color: rgb(24, 24, 23);
+}
+#section .triangle {
+	left: 50%; top: 18px; margin-left: -9px; position: absolute; transform: rotate(180deg); -moz-transform: rotate(180deg); -webkit-transform: rotate(180deg); -o-transform: rotate(180deg);
+}
+.opened#section .triangle {
+	transform: rotate(0deg); -moz-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg);
+}
+.combobox#section :first-child.item {
+	border-top-color: currentColor; border-top-width: 0px; border-top-style: none;
+}
+#section .options {
+	margin: -2px 0px 0px -10px; border: 3px solid rgb(24, 24, 23); left: 5px; width: 120px !important; font-weight: normal;
+}
+#window {
+	border-radius: 4px; border: 2px solid rgb(40, 40, 40); width: 90px; text-align: left; margin-top: 4px; margin-right: 5px;
+}
+.combobox#window:hover {
+	border-radius: 4px; border: 2px solid rgb(40, 40, 40);
+}
+.combobox#window .selection {
+	margin: 0px; padding: 0px;
+}
+.opened#window {
+	border-radius: 4px; border: 2px solid rgb(40, 40, 40);
+}
+.combobox#window {
+	padding: 4px; background-color: rgb(18, 18, 17);
+}
+#window .triangle {
+	top: 11px; right: 4px;
+}
+.side-footer-links {
+	text-align: center; color: rgb(68, 68, 66); font-size: 12px;
+}
+.side-copyright {
+	text-align: center; color: rgb(68, 68, 66); font-size: 12px;
+}
+.side-copyright {
+	padding-right: 10px; font-size: 11px;
+}
+.side-footer-links {
+	margin-top: -5px;
+}
+.side-footer-links a {
+	position: relative;
+}
+.side-footer-links a .new {
+	left: -20px; top: 16px; width: 57px; position: absolute;
+}
+.side-footer-links .combobox {
+	padding: 0px; display: inline-block;
+}
+.side-footer-links .selection {
+	background: 0px; margin: 0px; padding: 0px 13px 0px 0px; color: rgb(78, 118, 201); overflow: visible; position: relative; z-index: 1;
+}
+.side-footer-links .selection:hover {
+	background: 0px; text-decoration: underline;
+}
+.side-footer-links .combobox .options {
+	left: -33px; top: 13px; width: 116px !important; text-align: left; display: none;
+}
+.side-footer-links .combobox .options .item {
+	padding: 0px;
+}
+.side-footer-links .combobox .options a {
+	padding: 5px; width: 100%; color: rgb(18, 18, 17); text-decoration: none; display: inline-block;
+}
+.side-footer-links .combobox .more-arrow {
+	top: 8px; width: 0px; height: 0px; right: 2px; border-top-color: rgb(78, 118, 201); border-right-color: transparent; border-left-color: transparent; border-top-width: 4px; border-right-width: 4px; border-left-width: 4px; border-top-style: solid; border-right-style: solid; border-left-style: solid; display: block; position: absolute; z-index: 0;
+}
+.side-footer-links .combobox:hover .selection {
+	background: 0px;
+}
+.caption.textbox.usertext {
+	margin-top: 0px;
+}
+#gallery-new-info {
+	width: 410px;
+}
+.subreddit .info {
+	width: 341px !important; color: rgb(170, 170, 170) !important;
+}
+.links {
+	margin-top: 5px;
+}
+.post {
+	margin: 3px; width: 141px; height: 141px; line-height: 0; float: left; position: relative; background-color: rgb(24, 24, 23);
+}
+.empty.post {
+	border: 0px currentColor; width: 141px; height: 141px;
+}
+.post .hover {
+	display: none;
+}
+.post:hover .hover {
+	display: block;
+}
+.empty.post:hover {
+	border: currentColor !important;
+}
+.post .hover .arrows {
+	padding: 3px; border-radius: 0px 0px 6px; left: 3px; top: 3px; width: 20px; line-height: 0; filter: alpha(opacity=90); position: absolute; opacity: 0.9; background-color: rgb(24, 24, 23); -moz-border-radius: 0 0 6px 0; -webkit-border-radius: 0 0 6px 0; -moz-opacity: .9; -khtml-opacity: .9;
+}
+.post .hover .arrows:hover {
+	filter: alpha(opacity=100); opacity: 1; -moz-opacity: 1; -khtml-opacity: 1;
+}
+.post:hover img {
+	border: 3px solid rgb(194, 159, 55) !important;
+}
+.best-captions img:hover {
+	border: 3px solid rgb(194, 159, 55) !important;
+}
+#past-preview img:hover {
+	border: 3px solid rgb(194, 159, 55) !important;
+}
+.post a:link img {
+	border: 3px solid rgb(68, 68, 66); width: 135px; height: 135px; float: left;
+}
+.post a:visited img {
+	border-color: rgb(24, 24, 23);
+}
+.sponsored.post a img {
+	border-color: rgb(78, 118, 201);
+}
+.green.post a img {
+	border-color: rgb(133, 191, 37);
+}
+.red.post a img {
+	border-color: rgb(196, 56, 56);
+}
+#past-wrapper {
+	width: 480px; height: 285px;
+}
+#past-wrapper input[type='text'] {
+	margin: 0px 3px 0px 0px; padding: 3px; width: 26px; height: 16px; font-size: 1em;
+}
+#past-wrapper #past-preview {
+	line-height: 0; margin-top: 15px;
+}
+#past-wrapper #past-preview h3 {
+	margin-bottom: 5px;
+}
+#past-wrapper #past-preview img {
+	margin: 3px; border: 3px solid rgb(68, 68, 66); width: 68px; height: 68px;
+}
+#past-wrapper #past-loader {
+	background: url("http://s.imgur.com/images/loader-big-2b.gif") no-repeat top; width: 48px; height: 48px; margin-top: 15px; display: none;
+}
+.textbox#button-wrapper {
+	padding: 6px 5px 5px;
+}
+#slider-wrapper {
+	margin: 0px 5px; padding: 15px 5px;
+}
+#past-calendar-wrapper {
+	margin: 0px 0px 0px 5px; padding: 10px 5px;
+}
+#past-calendar {
+	width: 24px; height: 24px; cursor: pointer; background-image: url("http://s.imgur.com/images/calendar.png"); background-repeat: no-repeat;
+}
+#make-meme-small {
+	width: 300px; height: 35px; font-size: 1em;
+}
+#slider {
+	margin: 0px; width: 170px; float: left;
+}
+#slider-wrapper .ticker {
+	margin: -3px; width: 20px; text-align: center; float: left; cursor: pointer; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; user-select: none; -o-user-select: none;
+}
+#slider-wrapper .negative.ticker {
+	margin-right: 3px;
+}
+#slider-wrapper .positive.ticker {
+	margin-left: 3px;
+}
+.textbox h2 {
+	margin: 0px; width: inherit !important;
+}
+.small-margin-bottom {
+	margin-bottom: 5px;
+}
+.small-margin-top {
+	margin-top: 5px;
+}
+.outside {
+	padding: 0px !important; width: 1000px !important; margin-bottom: 20px !important; background-color: transparent !important;
+}
+.outside .panel.left {
+	width: 590px; margin-right: 10px;
+}
+.outside .left .panel {
+	width: 590px; margin-right: 10px;
+}
+.outside #footer {
+	width: 635px !important; float: left; display: block;
+}
+.outside .rank {
+	padding: 12px 6px; border-radius: 0px 0px 0px 6px; top: 0px; right: 0px; position: absolute; background-color: rgb(24, 24, 23); -moz-border-radius: 0 0 0 6px; -webkit-border-radius: 0 0 0 6px;
+}
+.outside .album .stats {
+	font-weight: bold;
+}
+.outside .album .icons {
+	padding: 5px; margin-top: 5px;
+}
+.outside .album #social {
+	margin: 0px auto; width: 273px;
+}
+.outside .album #social ul li {
+	margin: 0px 4px;
+}
+.outside .album .description {
+	margin-bottom: 5px;
+}
+#content :last-of-type.textbox.description {
+	margin-bottom: 0px;
+}
+#rss {
+	width: 280px; font-size: 16pt; margin-top: 5px;
+}
+#rss table td {
+	vertical-align: middle;
+}
+#statsbox .textbox {
+	overflow: hidden;
+}
+.best-captions img {
+	border: 3px solid rgb(68, 68, 66); width: 48px; height: 48px; line-height: 0; margin-right: 3px; float: left; background-color: rgb(43, 43, 43);
+}
+.best-captions .caption {
+	width: 223px; overflow: auto; float: left;
+}
+.best-captions .author {
+	margin-bottom: 3px !important;
+}
+#colorbox-confirm {
+	width: 450px !important;
+}
+#text-ads {
+	margin: 10px 0px;
+}
+.imagelist-panels {
+	right: -370px; margin-top: -69px; position: absolute;
+}
+.imagelist-panels .panel {
+	width: 300px !important; margin-bottom: 10px;
+}
+.imgur-ad {
+	background: rgb(24, 24, 23); margin: -5px -5px 0px; border: 5px solid rgb(68, 68, 66); width: 300px; height: 250px;
+}
+.ad-text {
+	margin-bottom: -10px;
+}
+.lineheight {
+	line-height: 0;
+}
+.main-image #under-image .info {
+	padding: 14px 10px; width: 226px; color: inherit; margin-right: 3px; float: left;
+}
+.main-image #under-image .short.info {
+	width: 184px;
+}
+.smallText {
+	font-size: 14px; font-weight: normal;
+}
+#gallery-upload-buttons #file-wrapper {
+	background: url("http://s.imgur.com/images/button-computer.png") 0px 0px; width: 144px; height: 43px; overflow: hidden; float: left; position: relative; z-index: 2; cursor: pointer; direction: ltr;
+}
+#gallery-upload-buttons #url {
+	background: url("http://s.imgur.com/images/button-web.png") 0px 0px; margin: 0px; border-radius: 0px; border: 0px currentColor; width: 144px; height: 43px;
+}
+#gallery-upload-buttons #url:hover {
+	background-position: 0px -43px;
+}
+#gallery-upload-buttons .hover#url {
+	background-position: 0px -43px;
+}
+#gallery-upload-buttons #file-wrapper:hover {
+	background-position: 0px -43px;
+}
+#gallery-upload-buttons .hover#file-wrapper {
+	background-position: 0px -43px;
+}
+#upload-global-index-file:hover {
+	background-position: 0px -43px;
+}
+#gallery-upload-buttons #url:active {
+	background-position: 0px -86px;
+}
+#gallery-upload-buttons #file-wrapper:active {
+	background-position: 0px -86px;
+}
+#upload-global-index-file:hover {
+	background-position: 0px -86px;
+}
+.ui-slider {
+	margin: 10px auto auto; width: 568px; text-align: left; position: relative;
+}
+.ui-slider-handle {
+	width: 1.2em; height: 1.2em; position: absolute; z-index: 2; cursor: default;
+}
+.ui-slider-range {
+	border: 0px currentColor; font-size: 1%; display: block; position: absolute; z-index: 1;
+}
+.ui-slider-horizontal {
+	height: 0.8em;
+}
+.ui-slider-horizontal .ui-slider-handle {
+	top: -0.3em; margin-left: -0.6em;
+}
+.ui-slider-horizontal .ui-slider-range {
+	top: 0px; height: 100%;
+}
+.ui-slider-vertical {
+	width: 0.8em; height: 100%;
+}
+.ui-slider-vertical .ui-slider-handle {
+	left: -0.3em; margin-bottom: -0.6em; margin-left: 0px;
+}
+.ui-slider-vertical .ui-slider-range {
+	left: 0px; width: 100%; height: auto;
+}
+.ui-widget {
+	font-size: 1.1em;
+}
+.ui-widget input {
+	font-size: 1em;
+}
+.ui-widget select {
+	font-size: 1em;
+}
+.ui-widget textarea {
+	font-size: 1em;
+}
+.ui-widget button {
+	font-size: 1em;
+}
+.ui-widget-header {
+	background: repeat-x 50% 50% rgb(246, 168, 40); border: 1px solid rgb(231, 143, 8); color: rgb(255, 255, 255); font-weight: bold;
+}
+.ui-widget-content {
+	background: repeat-x 50% 0px rgb(238, 238, 238); border: 1px solid rgb(221, 221, 221); color: rgb(51, 51, 51);
+}
+.ui-state-default {
+	background: repeat-x 50% 50% rgb(246, 246, 246); outline: 0px; border: 1px solid rgb(204, 204, 204); font-weight: bold;
+}
+.ui-widget-content .ui-state-default {
+	background: repeat-x 50% 50% rgb(246, 246, 246); outline: 0px; border: 1px solid rgb(204, 204, 204); font-weight: bold;
+}
+.ui-state-hover {
+	background: repeat-x 50% 50% rgb(253, 245, 206); outline: 0px; border: 1px solid rgb(251, 203, 9); font-weight: bold;
+}
+.ui-widget-content .ui-state-hover {
+	background: repeat-x 50% 50% rgb(253, 245, 206); outline: 0px; border: 1px solid rgb(251, 203, 9); font-weight: bold;
+}
+.ui-state-focus {
+	background: repeat-x 50% 50% rgb(253, 245, 206); outline: 0px; border: 1px solid rgb(251, 203, 9); font-weight: bold;
+}
+.ui-widget-content .ui-state-focus {
+	background: repeat-x 50% 50% rgb(253, 245, 206); outline: 0px; border: 1px solid rgb(251, 203, 9); font-weight: bold;
+}
+.ui-state-active {
+	background: repeat-x 50% 50% rgb(255, 255, 255); outline: 0px; border: 1px solid rgb(251, 216, 80); font-weight: bold;
+}
+.ui-widget-content .ui-state-active {
+	background: repeat-x 50% 50% rgb(255, 255, 255); outline: 0px; border: 1px solid rgb(251, 216, 80); font-weight: bold;
+}
+.ui-state-highlight {
+	padding: 5px; border: 1px solid rgb(48, 48, 48); color: rgb(200, 203, 206); background-color: transparent;
+}
+.ui-widget-content .ui-state-highlight {
+	padding: 5px; border: 1px solid rgb(48, 48, 48); color: rgb(200, 203, 206); background-color: transparent;
+}
+.ui-state-error {
+	background: 50% 50% rgb(184, 25, 0); border: 1px solid rgb(205, 10, 10); color: rgb(255, 255, 255);
+}
+.ui-widget-content .ui-state-error {
+	background: 50% 50% rgb(184, 25, 0); border: 1px solid rgb(205, 10, 10); color: rgb(255, 255, 255);
+}
+.ui-state-error-text {
+	color: rgb(255, 255, 255);
+}
+.ui-widget-content .ui-state-error-text {
+	color: rgb(255, 255, 255);
+}
+.ui-state-disabled {
+	filter: Alpha(Opacity=35); opacity: 0.35; background-image: none;
+}
+.ui-widget-content .ui-state-disabled {
+	filter: Alpha(Opacity=35); opacity: 0.35; background-image: none;
+}
+.ui-priority-primary {
+	font-weight: bold;
+}
+.ui-widget-content .ui-priority-primary {
+	font-weight: bold;
+}
+.ui-priority-secondary {
+	font-weight: normal; filter: Alpha(Opacity=70); opacity: 0.7;
+}
+.ui-widget-content .ui-priority-secondary {
+	font-weight: normal; filter: Alpha(Opacity=70); opacity: 0.7;
+}
+.ui-corner-tl {
+	border-top-left-radius: 4px; -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px;
+}
+.ui-corner-tr {
+	border-top-right-radius: 4px; -webkit-border-top-right-radius: 4px; -moz-border-radius-topright: 4px;
+}
+.ui-corner-bl {
+	border-bottom-left-radius: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-bottomleft: 4px;
+}
+.ui-corner-br {
+	border-bottom-right-radius: 4px; -webkit-border-bottom-right-radius: 4px; -moz-border-radius-bottomright: 4px;
+}
+.ui-corner-top {
+	border-top-left-radius: 4px; border-top-right-radius: 4px; -webkit-border-top-right-radius: 4px; -moz-border-radius-topright: 4px; -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px;
+}
+.ui-corner-bottom {
+	border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; -webkit-border-bottom-right-radius: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-bottomright: 4px; -moz-border-radius-bottomleft: 4px;
+}
+.ui-corner-right {
+	border-top-right-radius: 4px; border-bottom-right-radius: 4px; -webkit-border-bottom-right-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-top-right-radius: 4px; -moz-border-radius-topright: 4px;
+}
+.ui-corner-left {
+	border-top-left-radius: 4px; border-bottom-left-radius: 4px; -webkit-border-bottom-left-radius: 4px; -moz-border-radius-bottomleft: 4px; -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px;
+}
+.ui-corner-all {
+	border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px;
+}
+.ui-widget-overlay {
+	background: 50% 50% rgb(102, 102, 102); filter: Alpha(Opacity=50); opacity: 0.5;
+}
+.ui-widget-shadow {
+	background: repeat-x 50% 50% rgb(0, 0, 0); margin: -5px 0px 0px -5px; padding: 5px; border-radius: 5px; filter: Alpha(Opacity=20); opacity: 0.2; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+}
+.search {
+	margin: 0px !important; width: 288px;
+}
+.ui-autocomplete {
+	border-width: 0px 1px 1px; border-style: none solid solid; border-color: currentColor rgb(68, 68, 66) rgb(68, 68, 66); border-radius: 0px 0px 4px 4px !important; width: 290px; overflow-x: hidden; overflow-y: auto; background-color: rgb(18, 18, 17); -moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px;
+}
+.ui-autocomplete li {
+	padding: 3px;
+}
+.ui-autocomplete li a {
+	border: currentColor !important; color: rgb(221, 221, 209); text-decoration: none; cursor: pointer;
+}
+.ui-autocomplete li a strong {
+	color: rgb(255, 255, 255); font-size: 1em;
+}
+.ui-autocomplete li a.ui-state-hover {
+	color: rgb(194, 159, 55);
+}
+.ui-autocomplete li a.ui-state-hover strong {
+	color: rgb(194, 159, 55);
+}
+.clear-search {
+	left: 25px; bottom: 6px; font-size: 0.8em; position: absolute;
+}
+.captions .caption {
+	font-size: 14px; margin-bottom: 5px;
+}
+.captions .caption .rank {
+	margin: 0px 3px 0px 0px; padding: 2px; border-radius: 4px; background-color: rgb(24, 24, 23); -moz-border-radius: 4px; -webkit-border-radius: 4px;
+}
+.captions .caption .author {
+	font: x-small/normal verdana, arial, helvetica, sans-serif; color: rgb(170, 170, 170); margin-bottom: 4px; font-size-adjust: none; font-stretch: normal;
+}
+.captions .caption .author ul {
+	margin: 0px; padding: 0px;
+}
+.captions .caption .author ul li {
+	list-style: none; margin-left: 3px; display: inline;
+}
+.captions .caption .usertext {
+	width: 575px; line-height: 15px; overflow: auto; padding-bottom: 8px; float: left;
+}
+.captions .caption .first.usertext {
+	line-height: 24px; font-size: 24px;
+}
+.captions .caption .first.usertext .author .right {
+	color: rgb(102, 102, 102);
+}
+#bottom-ad {
+	right: 3px; bottom: 25px; position: absolute;
+}
+.ad-text {
+	margin-bottom: -10px;
+}
+.tipsy {
+	font-size: 13px;
+}
+.tipsy-inner p {
+	font-size: 11px;
+}
+.small-margin-top {
+	margin-top: 5px;
+}
+#footer .right {
+	padding-right: 0px;
+}
+#facebook {
+	height: 63px; overflow: hidden; margin-top: 5px;
+}
+.sponsored-tag {
+	padding: 10px; border-radius: 4px; top: 0px; right: 0px; color: rgb(255, 255, 255); font-size: 0.8em; position: absolute; z-index: 2; background-color: rgb(78, 118, 201);
+}
+.sponsored-tag a {
+	color: rgb(255, 255, 255);
+}
+.outside .sponsored-tag {
+	padding: 7px; border-radius: 0px 0px 0px 4px; top: 0px; right: 0px; font-size: 0.7em;
+}
+.sponsored-caption {
+	margin: 5px 0px; padding: 5px; line-height: 16px;
+}
+.sponsored-caption p {
+	margin: 0px; padding: 5px;
+}
+#messagebox {
+	margin-bottom: 5px; position: relative;
+}
+#messagebox-close {
+	top: 5px; right: 10px; font-size: 16px; position: absolute;
+}
+#messagebox ~ #imagelist :first-child.imagelist-panels {
+	margin-top: -184px;
+}
+#load-more {
+	margin: -10px; padding: 20px; color: rgb(133, 191, 37); font-weight: bold; cursor: pointer;
+}
+#subreddit-wrapper {
+	color: rgb(136, 136, 136);
+}
+[data-level='0'].comment {
+	margin-left: -12px;
+}
+.jcarousel {
+	overflow: hidden; position: relative; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; user-select: none; -o-user-select: none;
+}
+.jcarousel ul {
+	list-style: none; margin: 0px !important; padding: 0px !important; width: 20000em; position: absolute;
+}
+.jcarousel li {
+	text-align: center; float: left; position: relative;
+}
+.jcarousel img.selected {
+	border-color: rgb(194, 159, 55) !important;
+}
+.jcarousel-clip {
+	overflow: hidden;
+}
+.jcarousel-direction-rtl {
+	direction: rtl;
+}
+.shrunk.thumbs-carousel {
+	height: 86px;
+}
+.shrunk.thumbs-carousel .carousel-button {
+	height: 86px;
+}
+.shrunk.thumbs-carousel .carousel-button div {
+	margin: 36px 3px;
+}
+.thumbs-carousel .bottom {
+	margin-top: 2px;
+}
+.thumbs-carousel ul li {
+	width: 86px; height: 86px; margin-right: 2px;
+}
+.thumbs-carousel ul li img {
+	border: 3px solid rgb(68, 68, 66); width: 80px; height: 80px; color: rgb(68, 68, 66); cursor: pointer;
+}
+.thumbs-carousel ul li img.sponsored {
+	border: 3px solid rgb(78, 118, 201);
+}
+.thumbs-carousel ul li a:visited img {
+	border-color: rgb(24, 24, 23);
+}
+.sponsored-tag-nav-thumb {
+	top: 3px; width: 8px; height: 8px; right: 3px; overflow: hidden; font-size: 0.8em; border-top-color: currentColor; border-right-color: currentColor; border-top-width: 0px; border-right-width: 0px; border-top-style: none; border-right-style: none; position: absolute; z-index: 2; border-bottom-left-radius: 4px; background-color: rgb(78, 118, 201);
+}
+.thumbs-carousel ul li img:hover {
+	border-color: rgb(194, 159, 55);
+}
+.thumbs-carousel ul li img:focus {
+	border-color: rgb(194, 159, 55);
+}
+.thumbs-carousel ul li img.selected {
+	border-color: rgb(194, 159, 55);
+}
+.thumbs-carousel #thumbs-top {
+	width: 262px; height: 86px; margin-bottom: 2px;
+}
+.thumbs-carousel #thumbs-bottom {
+	width: 262px; height: 86px; margin-bottom: 2px;
+}
+.carousel-button {
+	border-radius: 2px; width: 15px; height: 174px; cursor: pointer; background-repeat: no-repeat; background-color: rgb(24, 24, 23); -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; user-select: none; -moz-border-radius: 2px; -webkit-border-radius: 2px; -o-user-select: none;
+}
+.disabled.carousel-button {
+	background-position: -58px !important; cursor: default !important;
+}
+.thumbs-carousel .disabled.carousel-button:active {
+	background-position: -58px !important; cursor: default !important;
+}
+.thumbs-carousel .disabled.carousel-button:hover {
+	background-position: -58px !important; cursor: default !important;
+}
+.carousel-button:hover {
+	background-position: -18px !important;
+}
+.prev.carousel-button {
+	margin-right: 4px; float: left;
+}
+.next.carousel-button {
+	margin-left: 4px; float: right;
+}
+.carousel-button div {
+	margin: 80px 3px; width: 9px; height: 14px; background-image: url("http://s.imgur.com/images/site-sprite.png?1372273361");
+}
+.prev.carousel-button div {
+	background-position: 0px -142px;
+}
+.next.carousel-button div {
+	background-position: -28px -160px;
+}
+.prev.carousel-button:hover div {
+	background-position: -14px -142px;
+}
+.next.carousel-button:hover div {
+	background-position: -14px -160px;
+}
+.disabled.prev.carousel-button div {
+	background-position: -28px -142px;
+}
+.disabled.prev.carousel-button:hover div {
+	background-position: -28px -142px;
+}
+.disabled.next.carousel-button div {
+	background-position: 0px -160px;
+}
+.disabled.next.carousel-button:hover div {
+	background-position: 0px -160px;
+}
+.jcarousel-gallery .jcarousel-container {
+	background: rgb(212, 208, 200); border-radius: 10px; border: 1px solid rgb(128, 128, 128); -moz-border-radius: 10px; -webkit-border-radius: 10px;
+}
+.jcarousel-gallery .jcarousel-direction-rtl {
+	direction: rtl;
+}
+.jcarousel-gallery .jcarousel-container-horizontal {
+	padding: 20px 40px; width: 245px;
+}
+.jcarousel-gallery .jcarousel-container-vertical {
+	padding: 40px 20px; width: 75px; height: 245px;
+}
+.jcarousel-gallery .jcarousel-clip {
+	overflow: hidden;
+}
+.jcarousel-clip-horizontal.jcarousel-clip {
+	overflow-x: hidden;
+}
+.jcarousel-gallery .jcarousel-item {
+	width: 75px; height: 75px; text-align: center;
+}
+.jcarousel-gallery .jcarousel-item-horizontal {
+	margin-right: 7px; margin-left: 0px;
+}
+.jcarousel-gallery .jcarousel-direction-rtl .jcarousel-item-horizontal {
+	margin-right: 0px; margin-left: 7px;
+}
+.jcarousel-gallery .jcarousel-item-vertical {
+	margin-bottom: 7px;
+}
+.children .load-more {
+	width: 50px; margin-top: 2px; display: block;
+}
+#captions .caption-error {
+	margin-top: 5px;
+}
+#navFullscreen {
+	display: none;
+}
+.button-fullscreen {
+	background: url("http://s.imgur.com/images/buttons-sprite.png") no-repeat -231px -100px; width: 31px; height: 33px; color: rgb(255, 255, 255); font-family: arial,sans-serif; font-size: 14px; font-weight: bold;
+}
+#make-a-meme {
+	margin: 0px; width: 300px;
+}

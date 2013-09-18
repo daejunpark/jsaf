@@ -10,6 +10,7 @@
 package kr.ac.kaist.jsaf.analysis.typing
 
 import java.io.File
+import java.util.{List => JList}
 import scala.collection.mutable.{HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
@@ -17,6 +18,12 @@ import scala.collection.immutable.HashMap
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import scala.util.parsing.json.JSONObject
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
+import kr.ac.kaist.jsaf.bug_detector.BugInfo
+import kr.ac.kaist.jsaf.nodes_util.NodeFactory
+import kr.ac.kaist.jsaf.nodes_util.NodeRelation
+import kr.ac.kaist.jsaf.nodes_util.NodeUtil
+import kr.ac.kaist.jsaf.nodes_util.Span
+import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 
 class SparseTyping(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingInterface {
   val _env = new SparseEnv(_cfg)
@@ -28,6 +35,21 @@ class SparseTyping(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingI
   var fset_builtin: Map[FunctionId, String] = Map()
   var state = StateBot
   override def getMergedState = state
+
+  var errors = List[BugInfo]()
+  def getErrors: JList[BugInfo] = toJavaList(errors)
+  def signal(span: Span, bugKind: Int, msg1: String, msg2: String): Unit =
+    errors ++= List(new BugInfo(span, bugKind, msg1, msg2))
+  var _span: Span = null
+  def getSpan = _span
+  def setSpan(span: Span): Unit = {
+    _span = span
+    val num = errors.reverse.takeWhile(e => (e.span == null || NodeUtil.isDummySpan(e.span))).length
+    if (num > 0) {
+      val (front, back) = errors.splitAt(errors.length - num)
+      errors = front ++ back.map(e => new BugInfo(span, e.bugKind, e.arg1, e.arg2))
+    }
+  }
 
   def checkTable(dense: Table): Unit = {
     System.out.println("== Check Table ==")

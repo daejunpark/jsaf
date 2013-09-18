@@ -75,10 +75,10 @@ class Instrumentor(program: IRRoot, coverage: Coverage) extends IRWalker {
   def executeCondition(info: IRSpanInfo, e: IRExpr, env: IRId) =
     SIRInternalCall(info, dummyId,
                     IF.makeTId(info.getSpan, NU.freshConcolicName("ExecuteCondition")), e, Some(env))
-  def addFunction(info: IRSpanInfo, id: IRId) =
+  /*def addFunction(info: IRSpanInfo, id: IRId) =
     SIRInternalCall(info, dummyId, 
                     IF.makeTId(info.getSpan, NU.freshConcolicName("AddFunction")), id, None)
-
+  */
   def walkVarStmt(info: IRSpanInfo, v: IRId, env: IRId) =
     SIRInternalCall(info, dummyId,
                     IF.makeTId(info.getSpan, NU.freshConcolicName("WalkVarStmt")), v, Some(env))
@@ -88,8 +88,8 @@ class Instrumentor(program: IRRoot, coverage: Coverage) extends IRWalker {
         args.map(walk(_, name).asInstanceOf[IRStmt]),
         fds.map(walk(_, name).asInstanceOf[IRFunDecl]),
         vds,
-        List(addFunction(info, name))++vds.map(walkVarStmt(_, name))++params.map(getInput(info, _, name))++body.map(walk(_, name).asInstanceOf[IRStmt]))  
-    }
+        vds.map(walkVarStmt(_, name))++params.map(getInput(info, _, name))++body.map(walk(_, name).asInstanceOf[IRStmt]))  
+  }
   /* var x
    * ==>
    * var x;
@@ -140,7 +140,6 @@ class Instrumentor(program: IRRoot, coverage: Coverage) extends IRWalker {
      */
     case SIRCall(info, lhs, fun, thisB, args) =>       
       storeIR("SIRCall")
-      coverage.storeFuncInfo(node)
       node
 
     /* x = function f (x, x) {s*}

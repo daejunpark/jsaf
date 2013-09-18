@@ -6,5 +6,13 @@
     var line = context.lineWidth; // 1
     var __result1 = line;
     var __expect1 = 1;
+
+    var unknown = document.createElement("aaa"); // HTMLUnknownElement
+    var __result2 = unknown.nodeName;
+    var __expect2 = "AAA";
+
+    var style = unknown.style;
+    var __result3 = style.cssText;
+    var __expect3 = "__StrTop";
   </script>
 </body>

@@ -108,6 +108,7 @@ class CFG {
   // successor node
   private var succMap: Map[Node, Set[Node]] = HashMap()
   def getSucc(node: Node) = succMap(node)
+  def getSucc_Lock(node: Node) = succMap.synchronized { succMap(node) }
 
   // predecessor node
   private var predMap: Map[Node, Set[Node]] = HashMap()
@@ -116,6 +117,7 @@ class CFG {
   // exception successor node
   private var excSuccMap: Map[Node, Node] = HashMap()
   def getExcSucc = excSuccMap
+  def getExcSucc_Lock(node: Node) = excSuccMap.synchronized { excSuccMap.get(node) }
 
   // exception predecessor node
   private var excPredMap: Map[Node, Set[Node]] = HashMap()
@@ -143,7 +145,7 @@ class CFG {
 
   // Call <- Aftercatch link
   private var callFromAftercatchMap: Map[Node, Node] = HashMap()
-  def getCallFromAftercaatchMap = callFromAftercatchMap
+  def getCallFromAftercatchMap = callFromAftercatchMap
   def getCallFromAftercatch(aftercatch: Node) = {
     callFromAftercatchMap.get(aftercatch) match {
       case Some(ac) => ac
@@ -278,8 +280,9 @@ class CFG {
 
   /* new address for builtin function */
   private val addrPerCallSite =  // Function.prototype.apply uses 4 addresses
+                                 // DOMElement.setAttribute uses 5 addresses
     if (Config.tizenMode) 8
-    else 4
+    else 5
   private var apiAddrMap: Map[Address, List[Address]] = HashMap()
   def getAPIAddress(addr: Address, index: Int): Address = apiAddrMap(addr)(index)
   def getAPIAddress(addr: Address): List[Address] = apiAddrMap(addr)

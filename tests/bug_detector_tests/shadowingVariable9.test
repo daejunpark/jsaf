@@ -16,16 +16,19 @@ shadowingVariable9.js:2:3~2:4: [Warning] Variable 'i' is shadowed by a variable 
 shadowingVariable9.js:2:3~2:4: [Warning] Variable 'i' is shadowed by a variable at '7:9-8:5'. \n\
 shadowingVariable9.js:3:7~3:12: [Warning] Conditional expression '0 < i' is always true. \n\
 shadowingVariable9.js:4:9~5:5: [Warning] Variable 'i' is shadowed by a variable at '7:9-8:5'. \n\
-shadowingVariable9.js:6:10~9:4: [Warning] Unreachable code '{ i = "f"; j = i; }' is found. \n\
  \n\
 ============== Total Count ============== \n\
+|  RangeErrors       :      0 (  0.00%) | \n\
 |  ReferenceErrors   :      0 (  0.00%) | \n\
+|  SyntaxErrors      :      0 (  0.00%) | \n\
 |  TypeErrors        :      0 (  0.00%) | \n\
-|  Warnings          :      5 (100.00%) | \n\
+|  URIErrors         :      0 (  0.00%) | \n\
+|  Warnings          :      4 (100.00%) | \n\
 ========================================= \n\
 ============ Statistics ============= \n\
 |  AbsentRead              :      0 | \n\
 |  BinaryOperator          :      0 | \n\
+|  BuiltinTypeError        :      0 | \n\
 |  BuiltinWrongArgType     :      0 | \n\
 |  CallConstFunc           :      0 | \n\
 |  CallNonConstructor      :      0 | \n\
@@ -38,12 +41,16 @@ shadowingVariable9.js:6:10~9:4: [Warning] Unreachable code '{ i = "f"; j = i; }'
 |  ImplicitTypeConversion  :      0 | \n\
 |  AccessingNullOrUndef    :      0 | \n\
 |  PrimitiveToObject       :      0 | \n\
+|  RangeError              :      0 | \n\
 |  Shadowing               :      3 | \n\
-|  UncalledFuction         :      0 | \n\
-|  UnreachableCode         :      1 | \n\
+|  StrictMode              :      0 | \n\
+|  UncalledFunction        :      0 | \n\
+|  UnreachableCode         :      0 | \n\
 |  ValueNeverRead          :      0 | \n\
 |  VaryingTypeArguments    :      0 | \n\
 |  WrongThisType           :      0 | \n\
+|  RegularExpression       :      0 | \n\
+|  WrongArgument           :      0 | \n\
 ===================================== \n\
 \n
 bug-detector_err_equals=

@@ -1,0 +1,1305 @@
+body {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+div {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+dl {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+dt {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+dd {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+ul {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+ol {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+li {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+h1 {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+h2 {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+h3 {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+h4 {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+h5 {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+h6 {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+pre {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+form {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+fieldset {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+input {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+button {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+select {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+option {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+textarea {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+p {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+blockquote {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+th {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+td {
+	font: 12px/20px arial, helvetica, verdana, tahoma, sans-serif; margin: 0px; padding: 0px; font-size-adjust: none; font-stretch: normal;
+}
+ul {
+	list-style: none;
+}
+.v {
+	margin-bottom: 20px;
+}
+.p {
+	margin-bottom: 20px;
+}
+.v-mini-group {
+	margin-bottom: 20px;
+}
+.v-mini-group .v {
+	margin-bottom: 10px;
+}
+.v-small-group .v {
+	margin-bottom: 30px;
+}
+.v .vb-oneline .v-meta-title {
+	margin-top: 18px;
+}
+.yk-v-oneline .v .v-meta-title {
+	margin-top: 18px;
+}
+.v .vb-oneline .v-meta-overlay {
+	background: url("/index/img/2013/video/bg_video_mini.png") no-repeat left bottom; _background: none;
+}
+.yk-v-oneline .v .v-meta-overlay {
+	background: url("/index/img/2013/video/bg_video_mini.png") no-repeat left bottom; _background: none;
+}
+.yk-row-through {
+	margin-bottom: 40px;
+}
+.yk-AD-640x110 {
+	width: 640px; height: 110px; overflow: hidden;
+}
+.yk-AD-310x110 {
+	width: 310px; height: 110px; overflow: hidden;
+}
+.yk-AD-310x50 {
+	width: 310px; height: 50px; overflow: hidden;
+}
+.yk-AD-310x60 {
+	width: 310px; height: 50px; overflow: hidden;
+}
+.yk-AD-160x24 {
+	width: 160px; height: 24px; overflow: hidden;
+}
+.yk-AD-300x50 {
+	width: 300px; height: 50px; overflow: hidden;
+}
+.yk-AD-145x30 {
+	width: 145px; height: 30px; overflow: hidden;
+}
+.yk-AD-310x240 {
+	width: 310px; height: 240px; overflow: hidden;
+}
+.yk-AD-flash {
+	width: 310px; height: 240px; overflow: hidden;
+}
+.yk-AD-tong {
+	overflow: hidden;
+}
+.yk-AD-tong .mod {
+	padding-bottom: 40px;
+}
+.yk-AD-lb-wrap {
+	position: relative;
+}
+.yk-AD-lb {
+	background: rgb(255, 255, 255); left: 0px; bottom: 20px; padding-top: 5px; position: absolute; z-index: 10;
+}
+.yk-w970 .yk-AD-tong {
+	width: 970px;
+}
+.yk-w1190 .yk-AD-tong {
+	width: 1190px;
+}
+.yk-box .yk-head .yk-title span {
+	color: rgb(144, 144, 144);
+}
+.yk-tab li a {
+	padding: 5px 10px; line-height: 20px; font-family: "Microsoft YaHei","Ú°?äºýÙ", SimHei, helvetica, arial, verdana, tahoma, sans-serif;
+}
+.yk-tab-large li a {
+	padding: 0px 20px; line-height: 30px; font-family: "Microsoft YaHei","Ú°?äºýÙ", SimHei, helvetica, arial, verdana, tahoma, sans-serif; font-size: 20px;
+}
+.yk-slide {
+	overflow: hidden; position: relative;
+}
+.yk-slide .yk-slide-pages {
+	left: 0px; top: 0px; position: absolute;
+}
+.yk-slide .yk-slide-pager {
+	left: 0px; width: 100%; height: 10px; text-align: center; bottom: 0px; overflow: hidden; padding-top: 10px; position: absolute; z-index: 10;
+}
+.yk-slide .yk-slide-pager div {
+	background: rgb(195, 195, 195); margin: 0px 5px; border-radius: 5px; width: 10px; height: 10px; overflow: hidden; vertical-align: top; display: inline-block; cursor: pointer; -webkit-border-radius: 5px; -moz-border-radius: 5px;
+}
+.yk-slide .yk-slide-pager div:hover {
+	background: rgb(170, 170, 170);
+}
+.yk-slide .yk-slide-pager div.current {
+	background: rgb(105, 170, 236); cursor: default;
+}
+.yk-slide .yk-slide-btnprev {
+	top: 0px; width: 90px; height: 100%; display: block; visibility: hidden; position: absolute; z-index: 10; cursor: pointer;
+}
+.yk-slide .yk-slide-btnnext {
+	top: 0px; width: 90px; height: 100%; display: block; visibility: hidden; position: absolute; z-index: 10; cursor: pointer;
+}
+.yk-slide .yk-slide-btnprev i {
+	top: 50%; width: 45px; height: 45px; margin-top: -23px; position: absolute;
+}
+.yk-slide .yk-slide-btnnext i {
+	top: 50%; width: 45px; height: 45px; margin-top: -23px; position: absolute;
+}
+.yk-slide .yk-slide-btnprev i {
+	background: url("/index/img/2013/slide_prev_btn.png") no-repeat; left: 0px; _background: none;
+}
+.yk-slide .yk-slide-btnnext i {
+	background: url("/index/img/2013/slide_next_btn.png") no-repeat; right: 0px; _background: none;
+}
+.yk-slide .yk-slide-btnprev {
+	background: url("/index/img/2013/slide_prev_bg.png") no-repeat; left: 0px; _background: none;
+}
+.yk-slide .yk-slide-btnnext {
+	background: url("/index/img/2013/slide_next_bg.png") no-repeat; right: 0px; _background: none;
+}
+.yk-slide .yk-slide-btnprev:hover {
+	background: url("/index/img/2013/slide_prev_hover_bg.png") no-repeat; _background: none;
+}
+.yk-slide .yk-slide-btnnext:hover {
+	background: url("/index/img/2013/slide_next_hover_bg.png") no-repeat; _background: none;
+}
+.yk-slide-v1 {
+	height: 110px;
+}
+.yk-slide-v2 {
+	height: 160px;
+}
+.yk-slide-v3 {
+	height: 200px;
+}
+.yk-slide-p1 {
+	height: 320px;
+}
+.yk-slide-p1 .yk-slide-btnprev {
+	height: 300px;
+}
+.yk-slide-p1 .yk-slide-btnnext {
+	height: 300px;
+}
+.yk-rank {
+	margin: 0px; overflow: visible;
+}
+.yk-rank .item {
+	margin: 10px 0px 0px; width: auto; height: 20px; line-height: 20px; overflow: hidden; padding-left: 30px; font-family: "Microsoft YaHei","Ú°?äºýÙ",helvetica,arial,verdana,tahoma,sans-serif; position: relative;
+}
+.yk-rank .item::before {
+	line-height: 0; display: table; content: "";
+}
+.yk-rank .item::after {
+	line-height: 0; display: table; content: "";
+}
+.yk-rank .item::after {
+	clear: both;
+}
+.yk-rank .item label {
+	background: rgb(3, 167, 225); font: 12px/20px "Microsoft YaHei", "Ú°?äºýÙ", helvetica, arial, verdana, tahoma, sans-serif; left: 0px; top: 0px; width: 20px; height: 20px; text-align: center; color: rgb(255, 255, 255); margin-right: 10px; display: inline-block; position: absolute; font-size-adjust: none; font-stretch: normal;
+}
+.yk-rank .item label.hot {
+	background: rgb(239, 63, 34);
+}
+.yk-rank .item .name {
+	font-size: 14px; float: left; display: block;
+}
+.yk-rank .item .extend {
+	color: rgb(144, 144, 144); font-size: 14px; float: right; display: block;
+}
+.yk-rank .item a.extend:hover {
+	color: rgb(204, 51, 17);
+}
+.yk-rank .line {
+	width: 155px; overflow: hidden; margin-top: -10px; float: left;
+}
+.yk-rank .yk-rank-desc {
+	padding: 5px 0px; height: 20px; margin-top: -20px;
+}
+.yk-rank .yk-rank-desc span {
+	color: rgb(144, 144, 144);
+}
+.yk-rank .yk-rank-link {
+	line-height: 20px; padding-top: 10px; clear: both; font-size: 12px;
+}
+.yk-rank .yk-rank-link a {
+	font-family: simsun,"áä?","áä?"; margin-right: 15px;
+}
+.yk-rank .item-thumb {
+	height: 50px;
+}
+.yk-rank .item-thumb .thumb {
+	width: 90px; height: 50px; overflow: hidden; margin-right: 10px; margin-left: -30px; float: left;
+}
+.yk-rank .item-thumb .thumb img {
+	width: 100%;
+}
+.yk-rank .item-thumb .name {
+	float: none;
+}
+.yk-rank .item-thumb .extend {
+	float: none;
+}
+.yk-rank .item-thumb .rating {
+	top: 0px; right: 0px; color: rgb(187, 187, 187); font-size: 14px; position: absolute;
+}
+.yk-userCube {
+	width: 90px; height: 90px; margin-bottom: 20px; position: relative;
+}
+.yk-userCube .yk-userCube-avatar img {
+	width: 100%;
+}
+.yk-userCube .yk-userCube-name {
+	left: 0px; width: 100%; height: 18px; text-align: center; bottom: 0px; color: rgb(255, 255, 255); line-height: 18px; font-size: 12px; position: absolute; z-index: 2;
+}
+.yk-userCube .yk-userCube-name:visited {
+	color: white;
+}
+.yk-userCube .yk-userCube-name:hover {
+	text-decoration: none;
+}
+.yk-userCube .yk-userCube-overlay {
+	background: url("/index/img/2013/video/bg_video_mini.png") no-repeat left bottom; left: 0px; width: 100%; height: 45px; bottom: 0px; position: absolute; z-index: 1; _background: none;
+}
+.yk-userCube .yk-userCube-small {
+	width: 50px; height: 50px; margin-right: 5px; float: left;
+}
+.yk-userCube-small {
+	width: 50px; height: 50px; margin-right: 5px; float: left;
+}
+.yk-userCube-small img {
+	width: 100%;
+}
+.yk-ablumCube {
+	width: 200px; height: 200px; margin-bottom: 20px; position: relative;
+}
+.yk-ablumCube .yk-ablumCube-pic img {
+	width: 100%;
+}
+.yk-ablumCube .yk-ablumCube-name {
+	padding: 0px 10px; left: 0px; width: 180px; height: 34px; bottom: 0px; color: rgb(255, 255, 255); line-height: 34px; font-size: 14px; position: absolute; z-index: 2;
+}
+.yk-ablumCube .yk-ablumCube-name:hover {
+	color: rgb(204, 51, 17); text-decoration: none;
+}
+.yk-ablumCube .yk-ablumCube-overlay {
+	background: rgb(0, 0, 0); left: 0px; width: 200px; height: 34px; bottom: 0px; position: absolute; z-index: 1; opacity: 0.5;
+}
+.yk-partners {
+	overflow: hidden;
+}
+.yk-partners .yk-partners-inner {
+	margin-left: -55px;
+}
+.yk-partners .yk-partners-inner::before {
+	line-height: 0; display: table; content: "";
+}
+.yk-partners .yk-partners-inner::after {
+	line-height: 0; display: table; content: "";
+}
+.yk-partners .yk-partners-inner::after {
+	clear: both;
+}
+.yk-partners .yk-partner {
+	margin: 0px 0px 20px 55px; width: 150px; float: left;
+}
+.yk-w1190 .yk-partners .yk-partners-inner {
+	margin-left: -110px;
+}
+.yk-w1190 .yk-partners .yk-partner {
+	margin-left: 110px;
+}
+.v .v-meta-extend {
+	text-align: right; color: rgb(144, 144, 144); margin-top: -20px;
+}
+.yk-myrecord .v .v-action-del {
+	top: 0px; width: 10px; height: 10px; right: 0px; position: absolute;
+}
+.yk-myrecord .v .v-process {
+	width: 90px; height: 12px; line-height: 12px; overflow: hidden;
+}
+.yk-myrecord .v .v-process .v-time {
+	top: 0px; right: 0px; position: absolute; z-index: 1;
+}
+.yk-myrecord .v .v-process .bg {
+	background: rgb(0, 0, 0); left: 0px; top: 0px; width: 100%; height: 100%; position: absolute; z-index: -2; opacity: 0.7;
+}
+.yk-myrecord .v .v-process .bg-fill {
+	background: rgb(173, 36, 12); left: 0px; width: 20%; height: 12px; line-height: 12px; position: absolute; z-index: -1;
+}
+.yk-filter {
+	padding-bottom: 10px; border-top-color: rgb(245, 245, 245); border-bottom-color: rgb(230, 230, 230); border-top-width: 22px; border-bottom-width: 3px; border-top-style: solid; border-bottom-style: solid;
+}
+.yk-filter::before {
+	line-height: 0; display: table; content: "";
+}
+.yk-filter::after {
+	line-height: 0; display: table; content: "";
+}
+.yk-filter::after {
+	clear: both;
+}
+.yk-filter .yk-filter-item {
+	padding: 5px 0px; float: left; position: relative; -ms-zoom: 1;
+}
+.yk-filter .yk-filter-item ul {
+	overflow: hidden;
+}
+.yk-filter .yk-filter-item label {
+	font-family: arial,helvetica,verdana,tahoma,sans-serif; font-size: 12px;
+}
+.yk-filter .yk-filter-item span {
+	font-family: arial,helvetica,verdana,tahoma,sans-serif; font-size: 12px;
+}
+.yk-filter .yk-filter-item a {
+	font-family: arial,helvetica,verdana,tahoma,sans-serif; font-size: 12px;
+}
+.yk-filter .yk-filter-item a {
+	color: rgb(85, 85, 85); text-decoration: none; white-space: nowrap;
+}
+.yk-filter .yk-filter-item a:hover {
+	color: rgb(204, 51, 17);
+}
+.yk-filter .yk-filter-item label {
+	background: rgb(144, 144, 144); padding: 0px 10px; left: 0px; top: -22px; height: 22px; color: rgb(255, 255, 255); line-height: 22px; font-weight: bolder; white-space: nowrap; position: absolute;
+}
+.yk-filter .yk-filter-item li {
+	padding: 2px 0px; margin-right: 20px; float: left;
+}
+.yk-filter-tv {
+	margin-bottom: 40px;
+}
+.yk-filter-tv .yk-filter-item li {
+	margin-right: 15px;
+}
+.yk-filter-tv .item1 {
+	width: 185px; padding-right: 0px;
+}
+.yk-filter-tv .item2 {
+	width: 380px; padding-right: 10px;
+}
+.yk-filter-tv .item3 {
+	width: 130px; padding-right: 5px;
+}
+.yk-filter-tv .item4 {
+	width: 260px; padding-right: 0px;
+}
+.yk-filter-movie {
+	margin-bottom: 20px;
+}
+.yk-filter-movie .item1 {
+	width: 225px; padding-right: 0px;
+}
+.yk-filter-movie .item2 {
+	width: 240px; padding-right: 0px;
+}
+.yk-filter-movie .item3 {
+	width: 240px; padding-right: 0px;
+}
+.yk-filter-movie .item4 {
+	width: 195px; padding-right: 70px;
+}
+.yk-filter-zy {
+	margin-bottom: 40px;
+}
+.yk-filter-zy .item1 {
+	width: 180px; padding-right: 15px;
+}
+.yk-filter-zy .item2 {
+	width: 500px; padding-right: 0px;
+}
+.yk-filter-zy .item3 {
+	width: 250px; padding-right: 25px;
+}
+.yk-filter-mv {
+	padding: 0px; border: 0px currentColor; margin-bottom: -15px;
+}
+.yk-filter-mv .yk-filter-item {
+	padding: 15px 0px; width: 100%; border-top-color: rgb(245, 245, 245); border-top-width: 22px; border-top-style: solid;
+}
+.yk-filter-mv .yk-filter-item li {
+	margin-right: 30px;
+}
+.yk-filter-comic {
+	margin-bottom: 40px;
+}
+.yk-filter-comic .item1 {
+	width: 200px; padding-right: 10px;
+}
+.yk-filter-comic .item2 {
+	width: 550px; padding-right: 20px;
+}
+.yk-filter-comic .item3 {
+	width: 180px; padding-right: 10px;
+}
+.yk-tv-goldenshow {
+	background: rgb(245, 245, 245); height: 110px; margin-bottom: 20px;
+}
+.yk-tv-goldenshow .list {
+	padding: 6px 20px;
+}
+.yk-tv-goldenshow .list li {
+	font-family: "Microsoft YaHei","Ú°?äºýÙ",helvetica,arial,verdana,tahoma,sans-serif; font-size: 14px; margin-bottom: 4px;
+}
+.yk-tv-AD {
+	width: 100%; height: 30px; margin-bottom: 10px;
+}
+.yk-tv-AD .l {
+	float: left;
+}
+.yk-tv-AD .r {
+	float: right;
+}
+.yk-userCube-list .userCube {
+	padding-left: 100px; margin-bottom: 20px; position: relative; -ms-zoom: 1; min-height: 90px; _height: 90px;
+}
+.yk-userCube-list .userCube .avatar {
+	left: 0px; top: 0px; width: 90px; height: 90px; position: absolute;
+}
+.yk-userCube-list .userCube .avatar img {
+	width: 100%;
+}
+.yk-userCube-list .userCube .name {
+	font-family: "Microsoft YaHei","Ú°?äºýÙ",helvetica,arial,verdana,tahoma,sans-serif; font-size: 14px;
+}
+.yk-userCube-list .userCube .desc {
+	color: rgb(144, 144, 144);
+}
+.yk-userCube-list .userCube .videos ul {
+	padding-left: 15px;
+}
+.yk-userCube-list .userCube .videos li {
+	list-style: square;
+}
+.yk-tv-index-2 .v .va {
+	height: 75px; _height: 55px;
+}
+.yk-tv-index-5 .v .va {
+	height: 75px; _height: 55px;
+}
+.yk-tv-index-6 .v .va {
+	height: 75px; _height: 55px;
+}
+.yk-tv-index-7 .v .va {
+	height: 75px; _height: 55px;
+}
+.yk-tv-index-8 .v .va {
+	height: 75px; _height: 55px;
+}
+.yk-tv-index-13 .v .va {
+	height: 75px; _height: 55px;
+}
+.yk-tv-index-14 .v .va {
+	height: 75px; _height: 55px;
+}
+.yk-tv-index-15 .v .va {
+	height: 95px; _height: 75px;
+}
+.yk-tv-index-2 .yk-myrecord {
+	margin-bottom: 40px;
+}
+.yk-tv-index-3 .yk-rank-long {
+	margin-bottom: 20px;
+}
+.yk-tv-index-5 .yk-rank {
+	margin-bottom: 20px;
+}
+.yk-tv-index-6 .yk-rank {
+	margin-bottom: 20px;
+}
+.yk-tv-index-7 .yk-rank {
+	margin-bottom: 20px;
+}
+.yk-tv-index-2 {
+	margin-bottom: 20px;
+}
+.yk-tv-index-3 {
+	margin-bottom: 20px;
+}
+.yk-tv-index-4 {
+	margin-bottom: 20px;
+}
+.yk-tv-index-5 {
+	margin-bottom: 20px;
+}
+.yk-tv-index-6 {
+	margin-bottom: 20px;
+}
+.yk-tv-index-7 {
+	margin-bottom: 20px;
+}
+.yk-tv-index-8 {
+	margin-bottom: 20px;
+}
+.yk-tv-index-9 {
+	margin-bottom: 20px;
+}
+.yk-tv-index-10 {
+	margin-bottom: 20px;
+}
+.yk-tv-index-11 {
+	margin-bottom: 20px;
+}
+.yk-tv-index-12 {
+	margin-bottom: 20px;
+}
+.yk-tv-index-13 {
+	margin-bottom: 20px;
+}
+.yk-tv-index-14 {
+	margin-bottom: 20px;
+}
+.yk-movietrailers .yk-col4 {
+	margin-bottom: -20px;
+}
+.yk-movietrailers .v {
+	margin-bottom: 20px;
+}
+.yk-movie-online .v-small .v-thumb-online {
+	left: 0px; width: 100%; height: 45px; bottom: 0px; line-height: 32px; position: absolute; z-index: 3;
+}
+.yk-movie-online .v-small .v-thumb-online-time {
+	left: 5px; bottom: 2px; color: rgb(255, 255, 255); font-size: 14px; position: absolute;
+}
+.yk-movie-online .v-small .v-thumb-online-overlay {
+	background: url("/index/img/2013/video/bg_video_mini.png") no-repeat left bottom; left: 0px; top: 0px; width: 100%; height: 100%; position: absolute; z-index: -1; _background: none;
+}
+.yk-movie-online .v-meta .v-meta-entry {
+	height: auto;
+}
+.yk-movie-activity .v-meta .v-meta-entry {
+	height: auto;
+}
+.yk-movie-online {
+	margin-bottom: -30px;
+}
+.yk-movie-activity {
+	margin-bottom: -30px;
+}
+.yk-movie-online .v {
+	margin-bottom: 30px;
+}
+.yk-movie-activity .v {
+	margin-bottom: 30px;
+}
+.yk-movie-index-4 {
+	margin-bottom: 20px;
+}
+.yk-movie-index-7 {
+	margin-bottom: 20px;
+}
+.yk-movie-index-8 {
+	margin-bottom: 20px;
+}
+.yk-movie-index-9 {
+	margin-bottom: 20px;
+}
+.yk-movie-index-10 {
+	margin-bottom: 20px;
+}
+.yk-movie-index-11 {
+	margin-bottom: 20px;
+}
+.yk-movie-index-12 {
+	margin-bottom: 20px;
+}
+.yk-movie-index-13 {
+	margin-bottom: 20px;
+}
+.yk-movie-index-14 {
+	margin-bottom: 20px;
+}
+.yk-movie-index-8 .yk-rank {
+	height: 300px; margin-bottom: 20px;
+}
+.yk-movie-index-9 .yk-rank {
+	height: 300px; margin-bottom: 20px;
+}
+.yk-movie-index-10 .yk-rank {
+	height: 300px;
+}
+.yk-movie-index-11 .yk-rank {
+	height: 190px;
+}
+.yk-movie-index-14 .v .va {
+	height: 55px;
+}
+.yk-tab-zy {
+	background: rgb(245, 245, 245); width: 100%;
+}
+.yk-tab-zy ul {
+	background: rgb(245, 245, 245); width: 100%;
+}
+.yk-tab-zy li {
+	padding: 0px 10px; height: 34px; color: rgb(85, 85, 85); line-height: 34px; position: relative; cursor: pointer;
+}
+.yk-tab-zy .yk-tab-title {
+	font-family: "Microsoft YaHei","Ú°?äºýÙ",helvetica,arial,verdana,tahoma,sans-serif; font-size: 14px; margin-right: 10px;
+}
+.yk-tab-zy .yk-tab-desc {
+	font-size: 12px;
+}
+.yk-tab-zy li b {
+	top: 50%; width: 14px; height: 14px; right: -7px; color: rgb(6, 167, 225); line-height: 14px; overflow: hidden; font-size: 14px; margin-top: -7px; display: none; position: absolute;
+}
+.yk-tab-zy li.current {
+	background: rgb(6, 167, 225);
+}
+.yk-tab-zy li.current .yk-tab-title {
+	color: rgb(255, 255, 255);
+}
+.yk-tab-zy li.current .yk-tab-desc {
+	color: rgb(255, 255, 255);
+}
+.yk-tab-zy li.current b {
+	display: block;
+}
+.yk-zy-sync .yk-tab-zy li {
+	text-align: center;
+}
+.yk-zy-index-2 {
+	margin-bottom: 20px;
+}
+.yk-zy-index-3 {
+	margin-bottom: 20px;
+}
+.yk-zy-index-4 {
+	margin-bottom: 20px;
+}
+.yk-zy-index-5 {
+	margin-bottom: 20px;
+}
+.yk-zy-index-6 {
+	margin-bottom: 20px;
+}
+.yk-zy-index-7 {
+	margin-bottom: 20px;
+}
+.yk-zy-index-8 {
+	margin-bottom: 20px;
+}
+.yk-zy-index-9 {
+	margin-bottom: 20px;
+}
+.yk-zy-index-10 {
+	margin-bottom: 20px;
+}
+.yk-zy-index-2 .v .va {
+	height: 75px; _height: 55px;
+}
+.yk-zy-index-4 .v .va {
+	height: 75px; _height: 55px;
+}
+.yk-zy-index-7 .v .va {
+	height: 75px; _height: 55px;
+}
+.yk-zy-index-8 .v .va {
+	height: 75px; _height: 55px;
+}
+.yk-zy-index-9 .v .va {
+	height: 75px; _height: 55px;
+}
+.yk-zy-index-9 .yk-tab-zy {
+	height: 360px;
+}
+.yk-mvcompany {
+	background: rgb(245, 245, 245); height: 50px; position: relative; z-index: 5;
+}
+.yk-mvcompany .avatar {
+	background: rgb(255, 255, 255); padding: 2px; left: 3px; top: 8px; width: 50px; height: 50px; overflow: hidden; position: absolute;
+}
+.yk-mvcompany .avatar img {
+	width: 100%;
+}
+.yk-mvcompany .name {
+	padding-top: 8px; font-family: "Microsoft YaHei","Ú°?äºýÙ",helvetica,arial,verdana,tahoma,sans-serif; font-size: 14px; margin-left: 65px;
+}
+.yk-mv-index-1 {
+	margin-bottom: 40px;
+}
+.yk-mv-index-2 .yk-rank-long .item-thumb {
+	margin-bottom: 20px;
+}
+.yk-mv-index-3 .yk-rank-long .item-thumb {
+	margin-bottom: 20px;
+}
+.yk-mv-index-2 {
+	margin-bottom: 20px;
+}
+.yk-mv-index-3 {
+	margin-bottom: 20px;
+}
+.yk-mv-index-5 {
+	margin-bottom: 20px;
+}
+.yk-mv-index-6 {
+	margin-bottom: 20px;
+}
+.yk-mv-index-7 {
+	margin-bottom: 20px;
+}
+.yk-mv-index-8 {
+	margin-bottom: 20px;
+}
+.yk-mv-index-3 .v .va {
+	height: 55px;
+}
+.yk-mv-index-5 .v .va {
+	height: 105px;
+}
+.yk-mv-index-6 .v .va {
+	height: 105px;
+}
+.yk-mv-index-7 .v .va {
+	height: 55px;
+}
+.yk-mv-index-7 .v .v-meta-title {
+	height: 20px;
+}
+.yk-mv-index-8 .v .va {
+	height: 55px;
+}
+.yk-comic-update {
+	height: 290px; margin-bottom: 20px;
+}
+.yk-comic-update .yk-tab-comic {
+	background: rgb(245, 245, 245); width: 48px; height: 290px; margin-right: 10px; float: left;
+}
+.yk-comic-update .yk-tab-comic li {
+	height: 30px; text-align: center; color: rgb(85, 85, 85); line-height: 30px; font-family: "Microsoft YaHei","Ú°?äºýÙ",helvetica,arial,verdana,tahoma,sans-serif; font-size: 14px; margin-bottom: 10px; position: relative; cursor: pointer;
+}
+.yk-comic-update .yk-tab-comic li.current {
+	background: rgb(6, 167, 225); color: rgb(255, 255, 255);
+}
+.yk-comic-update .yk-tab-comic li.current a {
+	color: rgb(255, 255, 255);
+}
+.yk-comic-update .yk-tabcon-comic {
+	width: 252px; height: 290px; float: left; position: relative; -ms-overflow-y: auto; -ms-zoom: 1;
+}
+.yk-jiugongge .yk-jiugongge-con {
+	width: 310px; height: 180px; padding-top: 180px; margin-bottom: 20px; position: relative; -ms-zoom: 1;
+}
+.yk-jiugongge .yk-jiugongge-con .item {
+	margin-top: 10px; margin-right: 20px; float: left;
+}
+.yk-jiugongge .yk-jiugongge-con .item-3x {
+	margin-right: 0px;
+}
+.yk-jiugongge .yk-jiugongge-con .item img {
+	width: 100%; height: 100%;
+}
+.yk-jiugongge .yk-jiugongge-con .item .limg {
+	left: 0px; top: 0px; width: 310px; height: 170px; display: none; position: absolute;
+}
+.yk-jiugongge .yk-jiugongge-con .item .simg {
+	width: 90px; height: 50px; float: left; position: relative;
+}
+.yk-jiugongge .yk-jiugongge-con .current .limg {
+	display: block;
+}
+.yk-jiugongge .yk-jiugongge-con .current .simg img {
+	border: 3px solid rgb(6, 167, 225); left: -3px; top: -3px; position: absolute;
+}
+.yk-comic-aboutus p {
+	color: rgb(85, 85, 85); font-family: "Microsoft YaHei","Ú°?äºýÙ",helvetica,arial,verdana,tahoma,sans-serif; font-size: 14px;
+}
+.yk-comic-index-2 .v .va {
+	height: 55px; _height: 35px;
+}
+.yk-comic-index-4 .v .va {
+	height: 55px; _height: 35px;
+}
+.yk-comic-index-5 .v .va {
+	height: 95px; _height: 75px;
+}
+.yk-comic-index-6 .yk-col6 .yk-title {
+	margin-right: 10px;
+}
+.yk-comic-index-6 .yk-rank {
+	margin-bottom: 10px;
+}
+.yk-comic-index-2 {
+	margin-bottom: 20px;
+}
+.yk-comic-index-3 {
+	margin-bottom: 20px;
+}
+.yk-comic-index-4 {
+	margin-bottom: 20px;
+}
+.yk-comic-index-5 {
+	margin-bottom: 20px;
+}
+.yk-comic-index-6 {
+	margin-bottom: 20px;
+}
+.yk-comic-index-7 {
+	margin-bottom: 20px;
+}
+.yk-comic-index-8 {
+	margin-bottom: 20px;
+}
+.yk-comic-index-10 {
+	margin-bottom: 20px;
+}
+.showcase {
+	width: 970px; height: 410px; overflow: hidden; margin-bottom: 20px; position: relative; z-index: 0; -moz-user-select: none; -webkit-user-select: none;
+}
+.showcase .pages {
+	background: rgb(136, 136, 136); left: 0px; top: 0px; width: 100%; height: 100%; position: absolute;
+}
+.showcase .page {
+	background: rgb(136, 136, 136); left: 0px; top: 0px; width: 100%; height: 100%; position: absolute;
+}
+.showcase .page .item {
+	list-style: none; margin: 0px; padding: 0px; width: 100%; height: 100%; overflow: hidden; position: relative; -ms-zoom: 1;
+}
+.showcase .page .item_img {
+	background: url("http://res.mfs.ykimg.com/051000004E65BA8397927313BF036E73.gif") no-repeat center; left: 0px; top: 0px; width: 100%; height: 100%; overflow: hidden; position: absolute; z-index: 1;
+}
+.showcase .page .item_img img {
+	left: 50%; top: 0px; width: 1190px; height: 100%; margin-left: -595px; display: block; position: absolute; max-width: none;
+}
+.showcase .page .item_url {
+	left: 0px; top: 0px; width: 100%; height: 100%; position: absolute; z-index: 3;
+}
+.showcase .page .item_url a {
+	background: url("/index/img/spacer.gif"); width: 100%; height: 100%; display: block;
+}
+.showcase .pager {
+	padding: 10px 0px; left: 0px; width: 100%; height: 10px; text-align: center; bottom: 0px; overflow: hidden; position: absolute; z-index: 10;
+}
+.showcase .pager div {
+	background: rgb(255, 255, 255); margin: 0px 5px; border-radius: 10px; width: 10px; height: 10px; overflow: hidden; vertical-align: top; display: inline-block; cursor: pointer; box-shadow: 0px 0px 4px #333333; -webkit-border-radius: 10px; -moz-border-radius: 10px; -webkit-box-shadow: 0 0 4px #333333; -moz-box-shadow: 0 0 4px #333333;
+}
+.showcase .pager div:hover {
+	background: rgb(189, 189, 189);
+}
+.showcase .pager div.current {
+	background: rgb(105, 170, 236); cursor: default;
+}
+.showcase .btnprev {
+	top: 50%; width: 45px; height: 45px; margin-top: -23px; visibility: hidden; position: absolute; z-index: 10; cursor: pointer;
+}
+.showcase .btnnext {
+	top: 50%; width: 45px; height: 45px; margin-top: -23px; visibility: hidden; position: absolute; z-index: 10; cursor: pointer;
+}
+.showcase .btnprev {
+	background: url("/index/img/2013/slide_prev_btn.png") no-repeat; left: 7px; _background: none;
+}
+.showcase .btnnext {
+	background: url("/index/img/2013/slide_next_btn.png") no-repeat; right: 7px; _background: none;
+}
+.showcase .btnprev:hover {
+	background: url("/index/img/2013/slide_prev_btn_hover.png") no-repeat; left: 7px; _background: none;
+}
+.showcase .btnnext:hover {
+	background: url("/index/img/2013/slide_next_btn_hover.png") no-repeat; right: 7px; _background: none;
+}
+body.yk-w1190 .showcase {
+	width: 1190px;
+}
+.myslider {
+	height: 310px; position: relative;
+}
+.myslider img {
+	background: rgb(136, 136, 136); border: 0px currentColor; max-height: none; max-width: none;
+}
+.myslider .contentHolder {
+	overflow: hidden; position: relative;
+}
+.myslider .contentHolderUnit {
+	width: 640px; height: 270px; position: absolute; cursor: pointer;
+}
+.myslider .contentHolderUnit a.elementLink {
+	left: 0px; width: 100%; height: 100%; right: 0px; overflow: hidden; display: block; position: absolute; z-index: 3;
+}
+.myslider .contentHolderUnit img {
+	width: 100%; height: 100%;
+}
+.myslider .contentHolderUnit .elementTitle {
+	
+}
+.myslider .contentHolderUnit .elementOverlay {
+	background: rgb(0, 0, 0); left: 0px; top: 0px; width: 100%; height: 100%; position: absolute; z-index: 1; opacity: 0;
+}
+.myslider .contentHolderUnit .leftShadow {
+	background: url("/index/img/2013/leftShadow.png") no-repeat; left: -174px; top: 23px; width: 174px; height: 224px; position: absolute; _background: none;
+}
+.myslider .contentHolderUnit .rightShadow {
+	background: url("/index/img/2013/rightShadow.png") no-repeat; top: 23px; width: 174px; height: 224px; right: -174px; position: absolute; _background: none;
+}
+.myslider .bannerControls {
+	
+}
+.myslider .leftNav {
+	top: 50%; width: 45px; height: 45px; margin-top: -43px; position: absolute; z-index: 10; cursor: pointer;
+}
+.myslider .rightNav {
+	top: 50%; width: 45px; height: 45px; margin-top: -43px; position: absolute; z-index: 10; cursor: pointer;
+}
+.myslider .leftNav {
+	background: url("/index/img/2013/slide_prev_btn.png") no-repeat; left: 7px; _background: none;
+}
+.myslider .rightNav {
+	background: url("/index/img/2013/slide_next_btn.png") no-repeat; right: 7px; _background: none;
+}
+.myslider .leftNav:hover {
+	
+}
+.myslider .rightNav:hover {
+	
+}
+.myslider .bottomNav {
+	padding: 10px 0px 0px; width: 100%; height: 10px; text-align: center; margin-top: 270px; position: absolute; z-index: 140;
+}
+.myslider .bottomNavButtonOFF {
+	background: rgb(195, 195, 195); margin: 0px 5px; border-radius: 5px; width: 10px; height: 10px; overflow: hidden; vertical-align: top; display: inline-block; cursor: pointer; -webkit-border-radius: 5px; -moz-border-radius: 5px;
+}
+.myslider .bottomNavButtonOFF:hover {
+	background: rgb(170, 170, 170);
+}
+.myslider .bottomNavButtonON {
+	background: rgb(105, 170, 236);
+}
+.myslider .bottomNavButtonON:hover {
+	background: rgb(105, 170, 236);
+}
+.myslider .bottomNavLeft {
+	
+}
+.myslider .bottomNavRight {
+	
+}
+.yk-w1190 .yk-filter-tv .yk-filter-item li {
+	margin-right: 20px;
+}
+.yk-w1190 .yk-filter-tv .item1 {
+	width: 190px; padding-right: 50px;
+}
+.yk-w1190 .yk-filter-tv .item2 {
+	width: 420px; padding-right: 50px;
+}
+.yk-w1190 .yk-filter-tv .item3 {
+	padding-right: 50px;
+}
+.yk-w1190 .yk-filter-tv .item4 {
+	padding-right: 40px;
+}
+.yk-w1190 .yk-filter-movie .item1 {
+	padding-right: 60px;
+}
+.yk-w1190 .yk-filter-movie .item2 {
+	padding-right: 60px;
+}
+.yk-w1190 .yk-filter-movie .item3 {
+	padding-right: 60px;
+}
+.yk-w1190 .yk-filter-movie .item4 {
+	padding-right: 110px;
+}
+.yk-w1190 .yk-filter-zy .item1 {
+	padding-right: 80px;
+}
+.yk-w1190 .yk-filter-zy .item2 {
+	padding-right: 60px;
+}
+.yk-w1190 .yk-filter-zy .item3 {
+	padding-right: 120px;
+}
+.yk-w1190 .yk-filter-comic .item1 {
+	padding-right: 70px;
+}
+.yk-w1190 .yk-filter-comic .item2 {
+	padding-right: 90px;
+}
+.yk-w1190 .yk-filter-comic .item3 {
+	width: 260px; padding-right: 20px;
+}
+.yk-con {
+	padding: 20px 10px;
+}
+.yk-user-avatar-small {
+	width: 30px; height: 30px; margin-right: 10px; vertical-align: bottom;
+}
+.yk-recommend {
+	position: relative;
+}
+.yk-recommend .yk-recommend-more {
+	right: 0px; bottom: 0px; position: absolute; _display: inline; _margin-bottom: 53px; _zoom: 1;
+}
+.yk-v-190 .v {
+	height: 190px;
+}
+.yk-v-190 .va {
+	height: 95px;
+}
+.yk-v-170 .v {
+	height: 170px;
+}
+.yk-v-170 .va {
+	height: 75px; _height: 55px;
+}
+.yk-v-200 .v {
+	height: 200px;
+}
+.yk-v-200 .va {
+	height: 105px;
+}
+.yk-row-index {
+	margin-bottom: 30px;
+}
+.yk-row-index .yk-rank {
+	overflow: hidden;
+}
+.yk-row-index .yk-rank-link {
+	line-height: 30px;
+}
+.yk-row-index .yk-rank .line {
+	margin-top: -10px;
+}
+.yk-row-index .yk-rank-long {
+	margin-top: -10px;
+}
+.watch {
+	overflow: hidden; position: relative;
+}
+.watch .thumb {
+	top: 0px; right: 0px; position: absolute;
+}
+.watch .detail {
+	top: 0px; right: 0px; position: absolute;
+}
+.watch .close {
+	top: 0px; right: 0px; position: absolute;
+}
+.watch .thumb {
+	left: 0px; width: 90px; height: 30px;
+}
+.watch .thumb .time {
+	background: rgb(0, 0, 0); height: 11px; right: 0px; bottom: 0px; color: white; line-height: 11px; font-size: 10px; position: absolute;
+}
+.watch .detail {
+	left: 100px;
+}
+.watch .detail .title {
+	font-size: 14px; margin-bottom: 10px;
+}
+.watch .detail .info {
+	color: rgb(144, 144, 144); font-size: 12px;
+}
+.watch .detail .pull-right {
+	float: right;
+}
+.watch .close {
+	top: 5px; right: 5px;
+}
+.yk-moreGroup .v {
+	height: 190px;
+}
+.scrollBar {
+	position: relative;
+}
+.scrollBar .next {
+	background: green; top: 5px; width: 20px; right: 5px; bottom: 5px; position: absolute;
+}
+.yk-user-video .v-horiz {
+	overflow: hidden;
+}
+.yk-user-video .v-horiz .v-meta-title {
+	height: auto;
+}
+.yk-userCube {
+	width: 90px; height: 90px; margin-bottom: 20px; position: relative;
+}
+.yk-userCube img {
+	width: 90px; height: 90px;
+}
+.yk-userCube-name {
+	left: 0px; width: 100%; height: 18px; text-align: center; bottom: 0px; color: rgb(255, 255, 255); line-height: 18px; font-size: 12px; position: absolute;
+}
+.yk-userCube-name:hover {
+	color: white; text-decoration: underline;
+}
+.yk-userCube-small {
+	width: 50px; height: 50px; margin-right: 5px; float: left;
+}
+.yk-userCube-small img {
+	width: 50px; height: 50px;
+}
+.v {
+	margin-bottom: 20px;
+}
+.yk-box .yk-topic-head {
+	height: 20px; color: rgb(85, 85, 85); line-height: 20px;
+}
+.yk-box .yk-topic-head .yk-title {
+	height: 20px; color: rgb(85, 85, 85); line-height: 20px;
+}
+.yk-box .yk-topic-head .yk-title a {
+	height: 20px; color: rgb(85, 85, 85); line-height: 20px;
+}
+.yk-box .yk-topic-head .yk-title {
+	line-height: 20px; font-size: 16px;
+}
+.yk-box .yk-topic-head .yk-extend {
+	line-height: 20px; font-size: 16px;
+}
+.yk-box .yk-topic-head .yk-extend {
+	bottom: -3px; color: rgb(144, 144, 144); font-size: 12px;
+}
+.txt p {
+	margin: 2px 0px;
+}
+.yk-w970 .txt p {
+	margin: 16px 0px; _margin-top: 13px;
+}
+.txt .dot {
+	font-family: "Microsoft YaHei","Ú°?äºýÙ",helvetica,arial,verdana,tahoma,sans-serif; font-size: 14px;
+}
+.txt a {
+	font-family: "Microsoft YaHei","Ú°?äºýÙ",helvetica,arial,verdana,tahoma,sans-serif; font-size: 14px;
+}
+.txt .dot {
+	margin-right: 5px;
+}
+.focusVideo .v-meta-play {
+	background: url("/index/img/2013/logo.png") no-repeat; left: 5px; width: 65px; height: 57px; bottom: 5px; position: absolute; z-index: 10; cursor: pointer; _background: none;
+}
+.focusVideo .v-meta .v-meta-title {
+	padding-left: 70px;
+}
+.focusVideo .v-meta .v-meta-entry {
+	padding-left: 70px;
+}
+.focusVideo .v-meta-deep {
+	width: 56px; height: 20px; text-align: center; right: 0px; bottom: 0px; position: absolute; z-index: 10;
+}
+.focusVideo .v-meta-deep a:link {
+	color: white; display: block; background-color: rgb(6, 167, 225);
+}
+.focusVideo .v-meta-deep a:visited {
+	color: white; display: block; background-color: rgb(6, 167, 225);
+}
+.focusVideo .v-meta-deep a:hover {
+	background-color: rgb(204, 51, 17);
+}
+.yk-act-thumb {
+	width: 100%; height: 80px; overflow: hidden;
+}
+.yk-act-thumb img {
+	background: rgb(245, 245, 245); width: 145px; height: 80px;
+}
+.yk-act a {
+	line-height: 30px; font-family: "Microsoft YaHei","Ú°?äºýÙ",helvetica,arial,verdana,tahoma,sans-serif; font-size: 14px;
+}
+.yk-act-link {
+	background: rgb(245, 245, 245); height: 30px; text-align: center; line-height: 30px; overflow: hidden; font-family: "Microsoft YaHei","Ú°?äºýÙ",helvetica,arial,verdana,tahoma,sans-serif; font-size: 14px;
+}
+.ad-wrap {
+	margin: 0px auto; height: 100%; text-align: center; overflow: hidden; display: table;
+}
+.ad-con {
+	left: 50%; top: 50%; vertical-align: top; display: table-cell;
+}
+.ad-inner {
+	
+}
+.b5 {
+	margin-bottom: 5px;
+}
+.b10 {
+	margin-bottom: 10px;
+}
+.b20 {
+	margin-bottom: 20px;
+}
+.yk-slide-index {
+	height: 110px;
+}
+.yk-slide-index .yk-slide-pages {
+	height: 110px;
+}
+.sidebar {
+	border-radius: 5px; width: 50px; right: 20px; bottom: 60px; overflow: hidden; display: block; position: fixed; z-index: 1000; opacity: 0; -webkit-border-radius: 5px; -moz-border-radius: 5px; _position: absolute; _bottom: auto;
+}
+.sidebar a .sidebar-overlay {
+	background: rgba(0, 0, 0, 0.5); left: 0px; top: 0px; width: 50px; height: 50px; display: block; position: absolute; z-index: -1;
+}
+.sidebar a {
+	padding: 12px 0px; height: 26px; text-align: center; color: white; font-family: "Microsoft YaHei","Ú°?äºýÙ",SimHei,helvetica,arial,verdana,tahoma,sans-serif; font-size: 14px; display: block; position: relative;
+}
+.sidebar a:hover {
+	color: rgb(255, 255, 255);
+}
+.sidebar a:hover .sidebar-overlay {
+	background: rgba(0, 0, 0, 0.6); left: 0px; top: 0px; display: block; position: absolute; z-index: -1;
+}
+.sidebar i {
+	width: 24px; height: 26px; display: inline-block;
+}
+.sidebar .ico-gotop {
+	background: url("/index/img/2013/sidebar.png") no-repeat; _background: url(/index/img/2013/sidebar.8.png) no-repeat;
+}
+.sidebar .ico-feedback {
+	background: url("/index/img/2013/sidebar.png") no-repeat; _background: url(/index/img/2013/sidebar.8.png) no-repeat;
+}
+.sidebar .ico-pc {
+	background: url("/index/img/2013/sidebar.png") no-repeat; _background: url(/index/img/2013/sidebar.8.png) no-repeat;
+}
+.sidebar .ico-feedback {
+	background-position: 0px -40px; height: 22px; vertical-align: middle;
+}
+.sidebar .feedBack {
+	padding: 6px 0px; height: 38px; border-top-color: white; border-top-width: 1px; border-top-style: solid;
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<!-- Test for clientRect -->
+<body id="mybody"> ddd
+  <div id="newdiv"> newdiv </div>
+  <input type="text" value="2" class="test" />
+  <input type="text" value="3" class="test" />
+  <div id="div1" class="test">
+    <div id="div2"> ttt2 </div>
+  </div>
+  <script>
+     var divElem1 = document.getElementById("div1");     // HTMLDivElement  
+     var o1 = divElem1.getClientRects();  // ClientRectList
+     var __result1 = o1.length;    
+     var __expect1 = "__UInt";
+     var cr = o1[3];    // ClientRect
+     var __result2 = cr.bottom;
+     var __expect2 = "__NumTop";
+     var cr2 = divElem1.getBoundingClientRect();   // ClientRect    
+     var __result3 = cr2.left;
+     var __expect3 = "__NumTop";
+  </script>
+</body>
+

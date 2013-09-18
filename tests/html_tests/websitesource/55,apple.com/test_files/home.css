@@ -1,0 +1,102 @@
+.globalnav-wrapper {
+	margin: 18px 0px 0px -512px; left: 50%; top: 0px; width: 1024px; position: absolute; z-index: 9998;
+}
+#globalheader {
+	margin: 0px auto;
+}
+html {
+	background: rgb(255, 255, 255); height: 100%; min-height: 910px; min-width: 1024px;
+}
+body {
+	background: rgb(255, 255, 255); height: 100%; min-height: 910px; min-width: 1024px;
+}
+body {
+	position: relative; z-index: 1;
+}
+#billboard {
+	left: 0px; top: 0px; right: 0px; bottom: 349px; overflow: hidden; position: absolute;
+}
+#billboard .hero {
+	margin: 0px auto; width: 1024px; height: 100%;
+}
+.promos {
+	width: 100%; height: 200px; bottom: 147px; overflow: hidden; position: absolute; z-index: 1;
+}
+.promos ul {
+	margin: 0px auto; width: 100%; height: 200px; text-align: center; min-width: 1024px; max-width: 1440px;
+}
+.promos ul li {
+	margin: 0px; width: 25%; height: 200px; overflow: hidden; float: left; position: relative; z-index: 1;
+}
+.promos ul li.last-child {
+	width: 24.9%; float: right;
+}
+.promos ul li a {
+	left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; border-right-color: rgb(255, 255, 255); border-right-width: 2px; border-right-style: solid; display: block; position: absolute; z-index: 1; cursor: pointer;
+}
+.promos ul li.last-child a {
+	border-right-color: currentColor; border-right-width: medium; border-right-style: none;
+}
+.promos ul li a img {
+	left: 50%; margin-left: -179px; position: absolute; z-index: 1;
+}
+.promos ul li a img.wide {
+	display: none;
+}
+.promos ul li a.left img {
+	left: 0px;
+}
+.promos ul li a.right img {
+	left: auto; right: 0px;
+}
+.promos ul li a img.narrow {
+	display: none;
+}
+.promos ul li a img.wide {
+	display: block;
+}
+#homefooter {
+	background: rgb(255, 255, 255); margin: 0px; padding: 0px; left: 0px; width: 100%; text-align: center; right: 0px; bottom: 0px; color: rgb(110, 110, 110); line-height: 1.2; font-size: 0.83em; position: absolute; z-index: 1; zoom: 1; min-width: 980px;
+}
+#homefooter .privacy {
+	margin: 0px auto; padding: 20px; width: 980px; text-align: center; font-size: 1.4em; border-bottom-color: rgb(221, 221, 221); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#homefooter .privacy .more {
+	padding-right: 15px; background-image: url("http://images.apple.com/v/home/y/images/more.png");
+}
+#homefooter .wrapper {
+	margin: 0px auto; padding: 1em 0px 2.6em; width: 980px;
+}
+#homefooter .wrapper::after {
+	height: 0px; clear: both; display: block; visibility: hidden; content: ".";
+}
+#homefooter .left {
+	width: 49%; text-align: left; padding-top: 1.5em; clear: both; float: left;
+}
+#homefooter .right {
+	width: 51%; text-align: right; padding-top: 1.5em; float: right;
+}
+#homefooter p {
+	margin: 0px; display: inline;
+}
+#homefooter ul {
+	margin: 0px; display: inline;
+}
+#homefooter ul li {
+	margin: 0px; display: inline;
+}
+#homefooter .piped li {
+	padding-left: 0.6em; margin-left: 0.6em; border-left-color: rgb(204, 204, 204); border-left-width: 1px; border-left-style: solid; float: none; display: inline-block;
+}
+#homefooter .piped li.first {
+	padding-left: 0px; margin-left: 0px; border-left-color: currentColor; border-left-width: medium; border-left-style: none;
+}
+#homefooter .piped a {
+	margin: 0px; padding: 0px; border: currentColor; display: inline-block;
+}
+#homefooter .piped .worldwide {
+	width: 16px; height: 12px; position: relative; z-index: 1; zoom: 1;
+}
+#homefooter .piped .worldwide img {
+	left: 7px; top: -2px; position: absolute; z-index: 1;
+}

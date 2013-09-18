@@ -19,19 +19,19 @@ class ModVarWalker(env: Env, path: Path, program: Any) extends Walker {
   def doit(): List[SourceElement] = {
     var l: List[VarDecl] = Nil
     for (x <- env.namesIn(path) if x.isInstanceOf[QualIntName])
-      l ::= SVarDecl(MH.defInfo, SId(MH.defInfo, x.x, None, false), None)
+      l ::= SVarDecl(MH.defInfo, SId(MH.defInfo, x.x, None, false), None, false)
     path match {
       case Nil =>
         l ::= SVarDecl(MH.defInfo, SId(MH.defInfo, "<>Object", None, false),
-          Some(SVarRef(MH.defInfo, SId(MH.defInfo, "Object", None, false))))
+          Some(SVarRef(MH.defInfo, SId(MH.defInfo, "Object", None, false))), false)
         l ::= SVarDecl(MH.defInfo, SId(MH.defInfo, "<>intmod", None, false),
-          Some(SObjectExpr(MH.defInfo, Nil)))
+          Some(SObjectExpr(MH.defInfo, Nil)), false)
         l ::= SVarDecl(MH.defInfo, SId(MH.defInfo, "<>extmod", None, false),
-          Some(SObjectExpr(MH.defInfo, Nil)))
+          Some(SObjectExpr(MH.defInfo, Nil)), false)
         l ::= SVarDecl(MH.defInfo, SId(MH.defInfo, "<>initfun", None, false),
-          Some(SObjectExpr(MH.defInfo, Nil)))
+          Some(SObjectExpr(MH.defInfo, Nil)), false)
         l ::= SVarDecl(MH.defInfo, SId(MH.defInfo, "<>initarg", None, false),
-          Some(SObjectExpr(MH.defInfo, Nil)))
+          Some(SObjectExpr(MH.defInfo, Nil)), false)
         List(SVarStmt(MH.defInfo, l))
       case _ =>
         var m: List[Member] = Nil
@@ -41,24 +41,27 @@ class ModVarWalker(env: Env, path: Path, program: Any) extends Walker {
               m ::= SGetProp(MH.defInfo,
                 SPropId(MH.defInfo, SId(MH.defInfo, x.x, None, false)),
                 SFunctional(Nil, Nil,
+                  SSourceElements(MH.defInfo,
                   List(SReturn(MH.defInfo, Some(
-                    SVarRef(MH.defInfo, SId(MH.defInfo, x1, None, false))))),
+                    SVarRef(MH.defInfo, SId(MH.defInfo, x1, None, false))))), false),
                   SId(MH.defInfo, x.x, None, false), Nil))
             }
           } else {
             m ::= SGetProp(MH.defInfo,
               SPropId(MH.defInfo, SId(MH.defInfo, x.x, None, false)),
               SFunctional(Nil, Nil,
+                SSourceElements(MH.defInfo,
                 List(SReturn(MH.defInfo, Some(
-                  SDot(MH.defInfo, MH.intmod(p1), SId(MH.defInfo, x1, None, false))))),
+                  SDot(MH.defInfo, MH.intmod(p1), SId(MH.defInfo, x1, None, false))))), false),
                 SId(MH.defInfo, x.x, None, false), Nil))
           }
           case (t: Type, QualExtName(p1, x1)) =>
             m ::= SGetProp(MH.defInfo,
               SPropId(MH.defInfo, SId(MH.defInfo, x.x, None, false)),
               SFunctional(Nil, Nil,
+                SSourceElements(MH.defInfo,
                 List(SReturn(MH.defInfo, Some(
-                  SDot(MH.defInfo, MH.extmod(p1), SId(MH.defInfo, x1, None, false))))),
+                  SDot(MH.defInfo, MH.extmod(p1), SId(MH.defInfo, x1, None, false))))), false),
                 SId(MH.defInfo, x.x, None, false), Nil))
         }
         List(SVarStmt(MH.defInfo, l),

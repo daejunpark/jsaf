@@ -115,7 +115,7 @@ interface Node() extends HasAt;
                     /**
                      * SourceElement ::= function Id ( (Id,)* ) { SourceElement* }
                      */
-                    FunDecl(Functional ftn);
+                    FunDecl(Functional ftn, boolean strict = false);
                     /**
                      * Stmt ::= { Stmt* }
                      */
@@ -197,9 +197,13 @@ interface Node() extends HasAt;
                      */
                     Debugger(); /* ES5 */
             /**
+             * Program ::= SourceElement*
+             */
+            SourceElements(List<SourceElement> body, boolean strict);
+            /**
              * Stmt ::= Id (= Expr)?
              */
-            VarDecl(Id name, Option<Expr> expr);
+            VarDecl(Id name, Option<Expr> expr, boolean strict = false);
             /**
              * CaseClause ::= case Expr : Stmt*
              */
@@ -415,15 +419,15 @@ interface Node() extends HasAt;
     /**
      * Common body for program and functions
      */
-    abstract ScopeBody(List<FunDecl> fds, List<VarDecl> vds, List<SourceElement> stmts) extends UIDObject;
+    abstract ScopeBody(List<FunDecl> fds, List<VarDecl> vds) extends UIDObject;
         /**
          * Program top level
          */
-        TopLevel();
+        TopLevel(List<SourceElements> stmts);
         /**
          * Common shape for functions
          */
-        Functional(Id name, List<Id> params);
+        Functional(SourceElements stmts, Id name, List<Id> params);
     /**
      * Source location
      */

@@ -116,7 +116,7 @@ class ModEnvWalker(program: Program) extends Walker {
       env.put(QualIntName(path, name.getText), (Var, QualIntName(path, name.getText)))
       if (export) env.put(QualExtName(path, name.getText), (Var, QualIntName(path, name.getText)))
       node
-    case SVarDecl(_, name, _) =>
+    case SVarDecl(_, name, _, _) =>
       env.put(QualIntName(path, name.getText), (Var, QualIntName(path, name.getText)))
       if (export) env.put(QualExtName(path, name.getText), (Var, QualIntName(path, name.getText)))
       node

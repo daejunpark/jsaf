@@ -1,0 +1,1860 @@
+(Program @"/Users/changheepark/SAFE/websitesource/12,twitter.com/test_files/json2.js":1:1~12:81
+ _body=(TopLevel
+  _stmts=[
+   (VarStmt @1:1~9
+    _info=(SpanInfo)
+    _vds=[
+     (VarDecl @1:5~9
+      _info=(SpanInfo)
+      _name=(Id _info=(SpanInfo) _text="JSON"))])
+   (ExprStmt @1:10~37
+    _expr=(InfixOpApp
+     _info=(SpanInfo)
+     _left=(VarRef @1:10~14 _id=(Id _info=(SpanInfo) _text="JSON") _info=(SpanInfo))
+     _op=(Op @1:14~15
+      _info=(SpanInfo)
+      _text="||")
+     _right=(Parenthesized @1:16~37
+      _expr=(AssignOpApp @1:17~36
+       _info=(SpanInfo)
+       _lhs=(Dot @1:17~28
+        _info=(SpanInfo)
+        _member=(Id @1:24~28 _info=(SpanInfo) _text="JSON")
+        _obj=(VarRef @1:17~23 _id=(Id _info=(SpanInfo) _text="window") _info=(SpanInfo)))
+       _op=(Op @1:28~29
+        _info=(SpanInfo)
+        _text="=")
+       _right=(AssignOpApp @1:29~36
+        _info=(SpanInfo)
+        _lhs=(VarRef @1:29~33 _id=(Id _info=(SpanInfo) _text="JSON") _info=(SpanInfo))
+        _op=(Op @1:33~34
+         _info=(SpanInfo)
+         _text="=")
+        _right=(ObjectExpr @1:34~36
+         _info=(SpanInfo))))
+      _info=(SpanInfo)))
+    _info=(SpanInfo))
+   (ExprStmt @1:38~12:80
+    _expr=(FunApp
+     _fun=(Parenthesized @1:38~12:78
+      _expr=(FunExpr @1:39~12:76
+       _ftn=(Functional
+        _name=(Id _info=(SpanInfo) _text="" _uniqueName=(Some _value=""))
+        _stmts=[
+         (FunDecl @1:50~83
+          _ftn=(Functional
+           _name=(Id @1:59~60 _info=(SpanInfo) _text="f")
+           _params=[
+            (Id @1:61~62 _info=(SpanInfo) _text="a")]
+           _stmts=[
+            (Return @1:64~83
+             _expr=(Some _value=(Cond @1:71~83
+               _cond=(InfixOpApp @1:71~75
+                _info=(SpanInfo)
+                _left=(VarRef @1:71~72 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo))
+                _op=(Op @1:72~73
+                 _info=(SpanInfo)
+                 _text="<")
+                _right=(IntLiteral @1:73~75 _info=(SpanInfo) _intVal=10 _radix=10))
+               _falseBranch=(VarRef @1:82~83 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo))
+               _info=(SpanInfo)
+               _trueBranch=(InfixOpApp @1:76~81
+                _info=(SpanInfo)
+                _left=(StringLiteral @1:76~79 _escaped="0" _info=(SpanInfo) _quote="\"")
+                _op=(Op @1:79~80
+                 _info=(SpanInfo)
+                 _text="+")
+                _right=(VarRef @1:80~81 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo)))))
+             _info=(SpanInfo))])
+          _info=(SpanInfo))
+         (FunDecl @1:84~2:40
+          _ftn=(Functional
+           _name=(Id @1:93~98 _info=(SpanInfo) _text="quote")
+           _params=[
+            (Id @1:99~100 _info=(SpanInfo) _text="a")]
+           _stmts=[
+            (ExprStmt @1:102~123
+             _expr=(AssignOpApp
+              _info=(SpanInfo)
+              _lhs=(Dot @1:102~121
+               _info=(SpanInfo)
+               _member=(Id @1:112~121 _info=(SpanInfo) _text="lastIndex")
+               _obj=(VarRef @1:102~111 _id=(Id _info=(SpanInfo) _text="escapable") _info=(SpanInfo)))
+              _op=(Op @1:121~122
+               _info=(SpanInfo)
+               _text="=")
+              _right=(IntLiteral @1:122~123 _info=(SpanInfo) _intVal=0 _radix=10))
+             _info=(SpanInfo))
+            (Return @1:124~2:40
+             _expr=(Some _value=(Cond @1:131~2:40
+               _cond=(FunApp @1:131~148
+                _fun=(Dot @1:131~145
+                 _info=(SpanInfo)
+                 _member=(Id @1:141~145 _info=(SpanInfo) _text="test")
+                 _obj=(VarRef @1:131~140 _id=(Id _info=(SpanInfo) _text="escapable") _info=(SpanInfo)))
+                _info=(SpanInfo)
+                _args=[
+                 (VarRef @1:146~147 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo))])
+               _falseBranch=(InfixOpApp @2:31~40
+                _info=(SpanInfo)
+                _left=(InfixOpApp @2:31~36
+                 _info=(SpanInfo)
+                 _left=(StringLiteral @2:31~34 _escaped="\"" _info=(SpanInfo) _quote="'")
+                 _op=(Op @2:34~35
+                  _info=(SpanInfo)
+                  _text="+")
+                 _right=(VarRef @2:35~36 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo)))
+                _op=(Op @2:36~37
+                 _info=(SpanInfo)
+                 _text="+")
+                _right=(StringLiteral @2:37~40 _escaped="\"" _info=(SpanInfo) _quote="'"))
+               _info=(SpanInfo)
+               _trueBranch=(InfixOpApp @1:149~2:30
+                _info=(SpanInfo)
+                _left=(InfixOpApp @1:149~2:26
+                 _info=(SpanInfo)
+                 _left=(StringLiteral @1:149~152 _escaped="\"" _info=(SpanInfo) _quote="'")
+                 _op=(Op @1:152~153
+                  _info=(SpanInfo)
+                  _text="+")
+                 _right=(FunApp @1:153~2:26
+                  _fun=(Dot @1:153~162
+                   _info=(SpanInfo)
+                   _member=(Id @1:155~162 _info=(SpanInfo) _text="replace")
+                   _obj=(VarRef @1:153~154 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo)))
+                  _info=(SpanInfo)
+                  _args=[
+                   (VarRef @1:163~172 _id=(Id _info=(SpanInfo) _text="escapable") _info=(SpanInfo))
+                   (FunExpr @1:173~2:24
+                    _ftn=(Functional
+                     _name=(Id _info=(SpanInfo) _text="" _uniqueName=(Some _value=""))
+                     _params=[
+                      (Id @1:182~183 _info=(SpanInfo) _text="a")]
+                     _stmts=[
+                      (VarStmt @1:185~198
+                       _info=(SpanInfo)
+                       _vds=[
+                        (VarDecl @1:189~198
+                         _expr=(Some _value=(Bracket @1:195~199
+                           _index=(VarRef @1:196~197 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo))
+                           _info=(SpanInfo)
+                           _obj=(VarRef @1:191~195 _id=(Id _info=(SpanInfo) _text="meta") _info=(SpanInfo))))
+                         _info=(SpanInfo)
+                         _name=(Id @1:189~190 _info=(SpanInfo) _text="b"))])
+                      (Return @1:199~2:24
+                       _expr=(Some _value=(Cond @1:206~2:24
+                         _cond=(InfixOpApp @1:206~224
+                          _info=(SpanInfo)
+                          _left=(PrefixOpApp @1:206~214
+                           _info=(SpanInfo)
+                           _op=(Op
+                            _info=(SpanInfo)
+                            _text="typeof")
+                           _right=(VarRef @1:213~214 _id=(Id _info=(SpanInfo) _text="b") _info=(SpanInfo)))
+                          _op=(Op @1:214~216
+                           _info=(SpanInfo)
+                           _text="==")
+                          _right=(StringLiteral @1:216~224 _escaped="string" _info=(SpanInfo) _quote="\""))
+                         _falseBranch=(InfixOpApp @1:227~2:24
+                          _info=(SpanInfo)
+                          _left=(StringLiteral @1:227~232 _escaped="\\\\u" _info=(SpanInfo) _quote="\"")
+                          _op=(Op @1:232~233
+                           _info=(SpanInfo)
+                           _text="+")
+                          _right=(FunApp @1:233~2:24
+                           _fun=(Dot @1:233~2:20
+                            _info=(SpanInfo)
+                            _member=(Id @2:15~20 _info=(SpanInfo) _text="slice")
+                            _obj=(Parenthesized @1:233~2:14
+                             _expr=(InfixOpApp @1:234~2:13
+                              _info=(SpanInfo)
+                              _left=(StringLiteral @1:234~240 _escaped="0000" _info=(SpanInfo) _quote="\"")
+                              _op=(Op @1:240~241
+                               _info=(SpanInfo)
+                               _text="+")
+                              _right=(FunApp @2:9~14
+                               _fun=(Dot @1:241~2:9
+                                _info=(SpanInfo)
+                                _member=(Id @2:1~9 _info=(SpanInfo) _text="toString")
+                                _obj=(FunApp @1:241~256
+                                 _fun=(Dot @1:241~253
+                                  _info=(SpanInfo)
+                                  _member=(Id @1:243~253 _info=(SpanInfo) _text="charCodeAt")
+                                  _obj=(VarRef @1:241~242 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo)))
+                                 _info=(SpanInfo)
+                                 _args=[
+                                  (IntLiteral @1:254~255 _info=(SpanInfo) _intVal=0 _radix=10)]))
+                               _info=(SpanInfo)
+                               _args=[
+                                (IntLiteral @2:10~12 _info=(SpanInfo) _intVal=16 _radix=10)]))
+                             _info=(SpanInfo)))
+                           _info=(SpanInfo)
+                           _args=[
+                            (PrefixOpApp @2:21~23
+                             _info=(SpanInfo)
+                             _op=(Op @2:21~22
+                              _info=(SpanInfo)
+                              _text="-")
+                             _right=(IntLiteral @2:22~23 _info=(SpanInfo) _intVal=4 _radix=10))]))
+                         _info=(SpanInfo)
+                         _trueBranch=(VarRef @1:225~226 _id=(Id _info=(SpanInfo) _text="b") _info=(SpanInfo))))
+                       _info=(SpanInfo))])
+                    _info=(SpanInfo))]))
+                _op=(Op @2:26~27
+                 _info=(SpanInfo)
+                 _text="+")
+                _right=(StringLiteral @2:27~30 _escaped="\"" _info=(SpanInfo) _quote="'"))))
+             _info=(SpanInfo))])
+          _info=(SpanInfo))
+         (FunDecl @2:41~5:159
+          _ftn=(Functional
+           _name=(Id @2:50~53 _info=(SpanInfo) _text="str")
+           _params=[
+            (Id @2:54~55 _info=(SpanInfo) _text="a")
+            (Id @2:56~57 _info=(SpanInfo) _text="b")]
+           _stmts=[
+            (VarStmt @2:59~85
+             _info=(SpanInfo)
+             _vds=[
+              (VarDecl @2:63~64
+               _info=(SpanInfo)
+               _name=(Id _info=(SpanInfo) _text="c"))
+              (VarDecl @2:65~66
+               _info=(SpanInfo)
+               _name=(Id _info=(SpanInfo) _text="d"))
+              (VarDecl @2:67~68
+               _info=(SpanInfo)
+               _name=(Id _info=(SpanInfo) _text="e"))
+              (VarDecl @2:69~70
+               _info=(SpanInfo)
+               _name=(Id _info=(SpanInfo) _text="f"))
+              (VarDecl @2:71~76
+               _expr=(Some _value=(VarRef @2:73~76 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo)))
+               _info=(SpanInfo)
+               _name=(Id @2:71~72 _info=(SpanInfo) _text="g"))
+              (VarDecl @2:77~78
+               _info=(SpanInfo)
+               _name=(Id _info=(SpanInfo) _text="i"))
+              (VarDecl @2:79~85
+               _expr=(Some _value=(Bracket @2:82~86
+                 _index=(VarRef @2:83~84 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo))
+                 _info=(SpanInfo)
+                 _obj=(VarRef @2:81~82 _id=(Id _info=(SpanInfo) _text="b") _info=(SpanInfo))))
+               _info=(SpanInfo)
+               _name=(Id @2:79~80 _info=(SpanInfo) _text="j"))])
+            (ExprStmt @2:86~153
+             _expr=(InfixOpApp
+              _info=(SpanInfo)
+              _left=(InfixOpApp @2:86~136
+               _info=(SpanInfo)
+               _left=(InfixOpApp @2:86~107
+                _info=(SpanInfo)
+                _left=(VarRef @2:86~87 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))
+                _op=(Op @2:87~88
+                 _info=(SpanInfo)
+                 _text="&&")
+                _right=(InfixOpApp @2:89~107
+                 _info=(SpanInfo)
+                 _left=(PrefixOpApp @2:89~153
+                  _info=(SpanInfo)
+                  _op=(Op
+                   _info=(SpanInfo)
+                   _text="typeof")
+                  _right=(VarRef @2:96~97 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo)))
+                 _op=(Op @2:97~99
+                  _info=(SpanInfo)
+                  _text="==")
+                 _right=(StringLiteral @2:99~107 _escaped="object" _info=(SpanInfo) _quote="\"")))
+               _op=(Op @2:107~108
+                _info=(SpanInfo)
+                _text="&&")
+               _right=(InfixOpApp @2:109~136
+                _info=(SpanInfo)
+                _left=(PrefixOpApp @2:109~153
+                 _info=(SpanInfo)
+                 _op=(Op
+                  _info=(SpanInfo)
+                  _text="typeof")
+                 _right=(Dot @2:116~124
+                  _info=(SpanInfo)
+                  _member=(Id @2:118~124 _info=(SpanInfo) _text="toJSON")
+                  _obj=(VarRef @2:116~117 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))))
+                _op=(Op @2:124~126
+                 _info=(SpanInfo)
+                 _text="==")
+                _right=(StringLiteral @2:126~136 _escaped="function" _info=(SpanInfo) _quote="\"")))
+              _op=(Op @2:136~137
+               _info=(SpanInfo)
+               _text="&&")
+              _right=(Parenthesized @2:138~153
+               _expr=(AssignOpApp @2:139~152
+                _info=(SpanInfo)
+                _lhs=(VarRef @2:139~140 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))
+                _op=(Op @2:140~141
+                 _info=(SpanInfo)
+                 _text="=")
+                _right=(FunApp @2:141~152
+                 _fun=(Dot @2:141~149
+                  _info=(SpanInfo)
+                  _member=(Id @2:143~149 _info=(SpanInfo) _text="toJSON")
+                  _obj=(VarRef @2:141~142 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo)))
+                 _info=(SpanInfo)
+                 _args=[
+                  (VarRef @2:150~151 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo))]))
+               _info=(SpanInfo)))
+             _info=(SpanInfo))
+            (ExprStmt @2:154~197
+             _expr=(InfixOpApp
+              _info=(SpanInfo)
+              _left=(InfixOpApp @2:154~176
+               _info=(SpanInfo)
+               _left=(PrefixOpApp @2:154~197
+                _info=(SpanInfo)
+                _op=(Op
+                 _info=(SpanInfo)
+                 _text="typeof")
+                _right=(VarRef @2:161~164 _id=(Id _info=(SpanInfo) _text="rep") _info=(SpanInfo)))
+               _op=(Op @2:164~166
+                _info=(SpanInfo)
+                _text="==")
+               _right=(StringLiteral @2:166~176 _escaped="function" _info=(SpanInfo) _quote="\""))
+              _op=(Op @2:176~177
+               _info=(SpanInfo)
+               _text="&&")
+              _right=(Parenthesized @2:178~197
+               _expr=(AssignOpApp @2:179~196
+                _info=(SpanInfo)
+                _lhs=(VarRef @2:179~180 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))
+                _op=(Op @2:180~181
+                 _info=(SpanInfo)
+                 _text="=")
+                _right=(FunApp @2:181~196
+                 _fun=(Dot @2:181~189
+                  _info=(SpanInfo)
+                  _member=(Id @2:185~189 _info=(SpanInfo) _text="call")
+                  _obj=(VarRef @2:181~184 _id=(Id _info=(SpanInfo) _text="rep") _info=(SpanInfo)))
+                 _info=(SpanInfo)
+                 _args=[
+                  (VarRef @2:190~191 _id=(Id _info=(SpanInfo) _text="b") _info=(SpanInfo))
+                  (VarRef @2:192~193 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo))
+                  (VarRef @2:194~195 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))]))
+               _info=(SpanInfo)))
+             _info=(SpanInfo))
+            (Switch @2:198~5:159
+             _cond=(PrefixOpApp @2:205~213
+              _info=(SpanInfo)
+              _op=(Op
+               _info=(SpanInfo)
+               _text="typeof")
+              _right=(VarRef @2:212~213 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo)))
+             _info=(SpanInfo)
+             _frontCases=[
+              (Case @2:215~248
+               _cond=(StringLiteral @2:219~227 _escaped="string" _info=(SpanInfo) _quote="\"")
+               _info=(SpanInfo)
+               _body=[
+                (Return @2:228~243
+                 _expr=(Some _value=(FunApp @2:235~243
+                   _fun=(VarRef @2:235~240 _id=(Id _info=(SpanInfo) _text="quote") _info=(SpanInfo))
+                   _info=(SpanInfo)
+                   _args=[
+                    (VarRef @2:241~242 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))]))
+                 _info=(SpanInfo))])
+              (Case @2:244~3:41
+               _cond=(StringLiteral @2:248~256 _escaped="number" _info=(SpanInfo) _quote="\"")
+               _info=(SpanInfo)
+               _body=[
+                (Return @3:1~36
+                 _expr=(Some _value=(Cond @3:8~36
+                   _cond=(FunApp @3:8~19
+                    _fun=(VarRef @3:8~16 _id=(Id _info=(SpanInfo) _text="isFinite") _info=(SpanInfo))
+                    _info=(SpanInfo)
+                    _args=[
+                     (VarRef @3:17~18 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))])
+                   _falseBranch=(StringLiteral @3:30~36 _escaped="null" _info=(SpanInfo) _quote="\"")
+                   _info=(SpanInfo)
+                   _trueBranch=(FunApp @3:20~29
+                    _fun=(VarRef @3:20~26 _id=(Id _info=(SpanInfo) _text="String") _info=(SpanInfo))
+                    _info=(SpanInfo)
+                    _args=[
+                     (VarRef @3:27~28 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))])))
+                 _info=(SpanInfo))])
+              (Case @3:37~55
+               _cond=(StringLiteral @3:41~50 _escaped="boolean" _info=(SpanInfo) _quote="\"")
+               _info=(SpanInfo))
+              (Case @3:51~83
+               _cond=(StringLiteral @3:55~61 _escaped="null" _info=(SpanInfo) _quote="\"")
+               _info=(SpanInfo)
+               _body=[
+                (Return @3:62~78
+                 _expr=(Some _value=(FunApp @3:69~78
+                   _fun=(VarRef @3:69~75 _id=(Id _info=(SpanInfo) _text="String") _info=(SpanInfo))
+                   _info=(SpanInfo)
+                   _args=[
+                    (VarRef @3:76~77 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))]))
+                 _info=(SpanInfo))])
+              (Case @3:79~5:158
+               _cond=(StringLiteral @3:83~91 _escaped="object" _info=(SpanInfo) _quote="\"")
+               _info=(SpanInfo)
+               _body=[
+                (If @3:92~111
+                 _cond=(PrefixOpApp @3:95~97
+                  _info=(SpanInfo)
+                  _op=(Op
+                   _info=(SpanInfo)
+                   _text="!")
+                  _right=(VarRef @3:96~97 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo)))
+                 _info=(SpanInfo)
+                 _trueBranch=(Return @3:98~110
+                  _expr=(Some _value=(StringLiteral @3:104~110 _escaped="null" _info=(SpanInfo) _quote="\""))
+                  _info=(SpanInfo)))
+                (ExprStmt @3:111~122
+                 _expr=(AssignOpApp
+                  _info=(SpanInfo)
+                  _lhs=(VarRef @3:111~114 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo))
+                  _op=(Op @3:114~116
+                   _info=(SpanInfo)
+                   _text="+=")
+                  _right=(VarRef @3:116~122 _id=(Id _info=(SpanInfo) _text="indent") _info=(SpanInfo)))
+                 _info=(SpanInfo))
+                (ExprStmt @3:123~127
+                 _expr=(AssignOpApp
+                  _info=(SpanInfo)
+                  _lhs=(VarRef @3:123~124 _id=(Id _info=(SpanInfo) _text="i") _info=(SpanInfo))
+                  _op=(Op @3:124~125
+                   _info=(SpanInfo)
+                   _text="=")
+                  _right=(ArrayExpr @3:125~127
+                   _info=(SpanInfo)))
+                 _info=(SpanInfo))
+                (If @3:128~4:69
+                 _cond=(InfixOpApp @3:131~184
+                  _info=(SpanInfo)
+                  _left=(FunApp @3:131~165
+                   _fun=(Dot @3:131~162
+                    _info=(SpanInfo)
+                    _member=(Id @3:157~162 _info=(SpanInfo) _text="apply")
+                    _obj=(Dot @3:131~156
+                     _info=(SpanInfo)
+                     _member=(Id @3:148~156 _info=(SpanInfo) _text="toString")
+                     _obj=(Dot @3:131~147
+                      _info=(SpanInfo)
+                      _member=(Id @3:138~147 _info=(SpanInfo) _text="prototype")
+                      _obj=(VarRef @3:131~137 _id=(Id _info=(SpanInfo) _text="Object") _info=(SpanInfo)))))
+                   _info=(SpanInfo)
+                   _args=[
+                    (VarRef @3:163~164 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))])
+                  _op=(Op @3:165~167
+                   _info=(SpanInfo)
+                   _text="===")
+                  _right=(StringLiteral @3:168~184 _escaped="[object Array]" _info=(SpanInfo) _quote="\""))
+                 _info=(SpanInfo)
+                 _trueBranch=(Block @3:185~4:69
+                  _info=(SpanInfo)
+                  _stmts=[
+                   (ExprStmt @3:186~196
+                    _expr=(AssignOpApp
+                     _info=(SpanInfo)
+                     _lhs=(VarRef @3:186~187 _id=(Id _info=(SpanInfo) _text="f") _info=(SpanInfo))
+                     _op=(Op @3:187~188
+                      _info=(SpanInfo)
+                      _text="=")
+                     _right=(Dot @3:188~196
+                      _info=(SpanInfo)
+                      _member=(Id @3:190~196 _info=(SpanInfo) _text="length")
+                      _obj=(VarRef @3:188~189 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))))
+                    _info=(SpanInfo))
+                   (For @3:197~235
+                    _action=(Some _value=(AssignOpApp @3:209~213
+                      _info=(SpanInfo)
+                      _lhs=(VarRef @3:209~210 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))
+                      _op=(Op @3:210~212
+                       _info=(SpanInfo)
+                       _text="+=")
+                      _right=(IntLiteral @3:212~213 _info=(SpanInfo) _intVal=1 _radix=10)))
+                    _body=(ExprStmt @3:214~235
+                     _expr=(AssignOpApp
+                      _info=(SpanInfo)
+                      _lhs=(Bracket @3:215~219
+                       _index=(VarRef @3:216~217 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))
+                       _info=(SpanInfo)
+                       _obj=(VarRef @3:214~215 _id=(Id _info=(SpanInfo) _text="i") _info=(SpanInfo)))
+                      _op=(Op @3:218~219
+                       _info=(SpanInfo)
+                       _text="=")
+                      _right=(InfixOpApp @3:219~235
+                       _info=(SpanInfo)
+                       _left=(FunApp @3:219~227
+                        _fun=(VarRef @3:219~222 _id=(Id _info=(SpanInfo) _text="str") _info=(SpanInfo))
+                        _info=(SpanInfo)
+                        _args=[
+                         (VarRef @3:223~224 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))
+                         (VarRef @3:225~226 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))])
+                       _op=(Op @3:227~228
+                        _info=(SpanInfo)
+                        _text="||")
+                       _right=(StringLiteral @3:229~235 _escaped="null" _info=(SpanInfo) _quote="\"")))
+                     _info=(SpanInfo))
+                    _cond=(Some _value=(InfixOpApp @3:205~208
+                      _info=(SpanInfo)
+                      _left=(VarRef @3:205~206 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))
+                      _op=(Op @3:206~208
+                       _info=(SpanInfo)
+                       _text="<")
+                      _right=(VarRef @3:207~208 _id=(Id _info=(SpanInfo) _text="f") _info=(SpanInfo))))
+                    _info=(SpanInfo)
+                    _init=(Some _value=(AssignOpApp @3:201~204
+                      _info=(SpanInfo)
+                      _lhs=(VarRef @3:201~202 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))
+                      _op=(Op @3:202~203
+                       _info=(SpanInfo)
+                       _text="=")
+                      _right=(IntLiteral @3:203~204 _info=(SpanInfo) _intVal=0 _radix=10))))
+                   (ExprStmt @3:236~4:53
+                    _expr=(AssignOpApp
+                     _info=(SpanInfo)
+                     _lhs=(VarRef @3:236~237 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo))
+                     _op=(Op @3:237~238
+                      _info=(SpanInfo)
+                      _text="=")
+                     _right=(Cond @3:238~4:53
+                      _cond=(InfixOpApp @3:238~250
+                       _info=(SpanInfo)
+                       _left=(Dot @3:238~246
+                        _info=(SpanInfo)
+                        _member=(Id @3:240~246 _info=(SpanInfo) _text="length")
+                        _obj=(VarRef @3:238~239 _id=(Id _info=(SpanInfo) _text="i") _info=(SpanInfo)))
+                       _op=(Op @3:246~248
+                        _info=(SpanInfo)
+                        _text="===")
+                       _right=(IntLiteral @3:249~250 _info=(SpanInfo) _intVal=0 _radix=10))
+                      _falseBranch=(Cond @3:256~4:53
+                       _cond=(VarRef @3:256~259 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo))
+                       _falseBranch=(InfixOpApp @4:34~53
+                        _info=(SpanInfo)
+                        _left=(InfixOpApp @4:34~49
+                         _info=(SpanInfo)
+                         _left=(StringLiteral @4:34~37 _escaped="[" _info=(SpanInfo) _quote="\"")
+                         _op=(Op @4:37~38
+                          _info=(SpanInfo)
+                          _text="+")
+                         _right=(FunApp @4:38~49
+                          _fun=(Dot @4:38~44
+                           _info=(SpanInfo)
+                           _member=(Id @4:40~44 _info=(SpanInfo) _text="join")
+                           _obj=(VarRef @4:38~39 _id=(Id _info=(SpanInfo) _text="i") _info=(SpanInfo)))
+                          _info=(SpanInfo)
+                          _args=[
+                           (StringLiteral @4:45~48 _escaped="," _info=(SpanInfo) _quote="\"")]))
+                        _op=(Op @4:49~50
+                         _info=(SpanInfo)
+                         _text="+")
+                        _right=(StringLiteral @4:50~53 _escaped="]" _info=(SpanInfo) _quote="\""))
+                       _info=(SpanInfo)
+                       _trueBranch=(InfixOpApp @3:260~4:33
+                        _info=(SpanInfo)
+                        _left=(InfixOpApp @3:260~4:29
+                         _info=(SpanInfo)
+                         _left=(InfixOpApp @3:260~4:27
+                          _info=(SpanInfo)
+                          _left=(InfixOpApp @3:260~4:22
+                           _info=(SpanInfo)
+                           _left=(InfixOpApp @3:260~4:4
+                            _info=(SpanInfo)
+                            _left=(StringLiteral @3:260~265 _escaped="[\\n" _info=(SpanInfo) _quote="\"")
+                            _op=(Op @3:265~266
+                             _info=(SpanInfo)
+                             _text="+")
+                            _right=(VarRef @4:1~4 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo)))
+                           _op=(Op @4:4~5
+                            _info=(SpanInfo)
+                            _text="+")
+                           _right=(FunApp @4:5~22
+                            _fun=(Dot @4:5~11
+                             _info=(SpanInfo)
+                             _member=(Id @4:7~11 _info=(SpanInfo) _text="join")
+                             _obj=(VarRef @4:5~6 _id=(Id _info=(SpanInfo) _text="i") _info=(SpanInfo)))
+                            _info=(SpanInfo)
+                            _args=[
+                             (InfixOpApp @4:12~21
+                              _info=(SpanInfo)
+                              _left=(StringLiteral @4:12~17 _escaped=",\\n" _info=(SpanInfo) _quote="\"")
+                              _op=(Op @4:17~18
+                               _info=(SpanInfo)
+                               _text="+")
+                              _right=(VarRef @4:18~21 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo)))]))
+                          _op=(Op @4:22~23
+                           _info=(SpanInfo)
+                           _text="+")
+                          _right=(StringLiteral @4:23~27 _escaped="\\n" _info=(SpanInfo) _quote="\""))
+                         _op=(Op @4:27~28
+                          _info=(SpanInfo)
+                          _text="+")
+                         _right=(VarRef @4:28~29 _id=(Id _info=(SpanInfo) _text="g") _info=(SpanInfo)))
+                        _op=(Op @4:29~30
+                         _info=(SpanInfo)
+                         _text="+")
+                        _right=(StringLiteral @4:30~33 _escaped="]" _info=(SpanInfo) _quote="\"")))
+                      _info=(SpanInfo)
+                      _trueBranch=(StringLiteral @3:251~255 _escaped="[]" _info=(SpanInfo) _quote="\"")))
+                    _info=(SpanInfo))
+                   (ExprStmt @4:54~59
+                    _expr=(AssignOpApp
+                     _info=(SpanInfo)
+                     _lhs=(VarRef @4:54~57 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo))
+                     _op=(Op @4:57~58
+                      _info=(SpanInfo)
+                      _text="=")
+                     _right=(VarRef @4:58~59 _id=(Id _info=(SpanInfo) _text="g") _info=(SpanInfo)))
+                    _info=(SpanInfo))
+                   (Return @4:60~68
+                    _expr=(Some _value=(VarRef @4:67~68 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo)))
+                    _info=(SpanInfo))]))
+                (If @4:69~5:62
+                 _cond=(InfixOpApp @4:72~97
+                  _info=(SpanInfo)
+                  _left=(VarRef @4:72~75 _id=(Id _info=(SpanInfo) _text="rep") _info=(SpanInfo))
+                  _op=(Op @4:75~76
+                   _info=(SpanInfo)
+                   _text="&&")
+                  _right=(InfixOpApp @4:77~97
+                   _info=(SpanInfo)
+                   _left=(PrefixOpApp
+                    _info=(SpanInfo)
+                    _op=(Op
+                     _info=(SpanInfo)
+                     _text="typeof")
+                    _right=(VarRef @4:84~87 _id=(Id _info=(SpanInfo) _text="rep") _info=(SpanInfo)))
+                   _op=(Op @4:87~89
+                    _info=(SpanInfo)
+                    _text="==")
+                   _right=(StringLiteral @4:89~97 _escaped="object" _info=(SpanInfo) _quote="\"")))
+                 _falseBranch=(Some _value=(ForIn @4:220~5:62
+                   _body=(If @4:231~5:62
+                    _cond=(FunApp @4:234~5:11
+                     _fun=(Dot @4:234~5:6
+                      _info=(SpanInfo)
+                      _member=(Id @5:2~6 _info=(SpanInfo) _text="call")
+                      _obj=(Dot @4:234~265
+                       _info=(SpanInfo)
+                       _member=(Id @4:251~265 _info=(SpanInfo) _text="hasOwnProperty")
+                       _obj=(Dot @4:234~250
+                        _info=(SpanInfo)
+                        _member=(Id @4:241~250 _info=(SpanInfo) _text="prototype")
+                        _obj=(VarRef @4:234~240 _id=(Id _info=(SpanInfo) _text="Object") _info=(SpanInfo)))))
+                     _info=(SpanInfo)
+                     _args=[
+                      (VarRef @5:7~8 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))
+                      (VarRef @5:9~10 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))])
+                    _info=(SpanInfo)
+                    _trueBranch=(Block @5:12~61
+                     _info=(SpanInfo)
+                     _stmts=[
+                      (ExprStmt @5:13~23
+                       _expr=(AssignOpApp
+                        _info=(SpanInfo)
+                        _lhs=(VarRef @5:13~14 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo))
+                        _op=(Op @5:14~15
+                         _info=(SpanInfo)
+                         _text="=")
+                        _right=(FunApp @5:15~23
+                         _fun=(VarRef @5:15~18 _id=(Id _info=(SpanInfo) _text="str") _info=(SpanInfo))
+                         _info=(SpanInfo)
+                         _args=[
+                          (VarRef @5:19~20 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))
+                          (VarRef @5:21~22 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))]))
+                       _info=(SpanInfo))
+                      (ExprStmt @5:24~60
+                       _expr=(InfixOpApp
+                        _info=(SpanInfo)
+                        _left=(VarRef @5:24~25 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo))
+                        _op=(Op @5:25~26
+                         _info=(SpanInfo)
+                         _text="&&")
+                        _right=(FunApp @5:27~60
+                         _fun=(Dot @5:27~33
+                          _info=(SpanInfo)
+                          _member=(Id @5:29~33 _info=(SpanInfo) _text="push")
+                          _obj=(VarRef @5:27~28 _id=(Id _info=(SpanInfo) _text="i") _info=(SpanInfo)))
+                         _info=(SpanInfo)
+                         _args=[
+                          (InfixOpApp @5:34~59
+                           _info=(SpanInfo)
+                           _left=(InfixOpApp @5:34~57
+                            _info=(SpanInfo)
+                            _left=(FunApp @5:34~42
+                             _fun=(VarRef @5:34~39 _id=(Id _info=(SpanInfo) _text="quote") _info=(SpanInfo))
+                             _info=(SpanInfo)
+                             _args=[
+                              (VarRef @5:40~41 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))])
+                            _op=(Op @5:42~43
+                             _info=(SpanInfo)
+                             _text="+")
+                            _right=(Parenthesized @5:43~57
+                             _expr=(Cond @5:44~56
+                              _cond=(VarRef @5:44~47 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo))
+                              _falseBranch=(StringLiteral @5:53~56 _escaped=":" _info=(SpanInfo) _quote="\"")
+                              _info=(SpanInfo)
+                              _trueBranch=(StringLiteral @5:48~52 _escaped=": " _info=(SpanInfo) _quote="\""))
+                             _info=(SpanInfo)))
+                           _op=(Op @5:57~58
+                            _info=(SpanInfo)
+                            _text="+")
+                           _right=(VarRef @5:58~59 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo)))]))
+                       _info=(SpanInfo))]))
+                   _expr=(VarRef @4:229~230 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))
+                   _info=(SpanInfo)
+                   _lhs=(VarRef @4:224~225 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))))
+                 _info=(SpanInfo)
+                 _trueBranch=(Block @4:98~215
+                  _info=(SpanInfo)
+                  _stmts=[
+                   (ExprStmt @4:99~111
+                    _expr=(AssignOpApp
+                     _info=(SpanInfo)
+                     _lhs=(VarRef @4:99~100 _id=(Id _info=(SpanInfo) _text="f") _info=(SpanInfo))
+                     _op=(Op @4:100~101
+                      _info=(SpanInfo)
+                      _text="=")
+                     _right=(Dot @4:101~111
+                      _info=(SpanInfo)
+                      _member=(Id @4:105~111 _info=(SpanInfo) _text="length")
+                      _obj=(VarRef @4:101~104 _id=(Id _info=(SpanInfo) _text="rep") _info=(SpanInfo))))
+                    _info=(SpanInfo))
+                   (For @4:112~214
+                    _action=(Some _value=(AssignOpApp @4:124~128
+                      _info=(SpanInfo)
+                      _lhs=(VarRef @4:124~125 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))
+                      _op=(Op @4:125~127
+                       _info=(SpanInfo)
+                       _text="+=")
+                      _right=(IntLiteral @4:127~128 _info=(SpanInfo) _intVal=1 _radix=10)))
+                    _body=(If @4:129~214
+                     _cond=(InfixOpApp @4:132~155
+                      _info=(SpanInfo)
+                      _left=(PrefixOpApp
+                       _info=(SpanInfo)
+                       _op=(Op
+                        _info=(SpanInfo)
+                        _text="typeof")
+                       _right=(Bracket @4:142~146
+                        _index=(VarRef @4:143~144 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))
+                        _info=(SpanInfo)
+                        _obj=(VarRef @4:139~142 _id=(Id _info=(SpanInfo) _text="rep") _info=(SpanInfo))))
+                      _op=(Op @4:145~147
+                       _info=(SpanInfo)
+                       _text="==")
+                      _right=(StringLiteral @4:147~155 _escaped="string" _info=(SpanInfo) _quote="\""))
+                     _info=(SpanInfo)
+                     _trueBranch=(Block @4:156~214
+                      _info=(SpanInfo)
+                      _stmts=[
+                       (ExprStmt @4:157~165
+                        _expr=(AssignOpApp
+                         _info=(SpanInfo)
+                         _lhs=(VarRef @4:157~158 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))
+                         _op=(Op @4:158~159
+                          _info=(SpanInfo)
+                          _text="=")
+                         _right=(Bracket @4:162~166
+                          _index=(VarRef @4:163~164 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))
+                          _info=(SpanInfo)
+                          _obj=(VarRef @4:159~162 _id=(Id _info=(SpanInfo) _text="rep") _info=(SpanInfo))))
+                        _info=(SpanInfo))
+                       (ExprStmt @4:166~176
+                        _expr=(AssignOpApp
+                         _info=(SpanInfo)
+                         _lhs=(VarRef @4:166~167 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo))
+                         _op=(Op @4:167~168
+                          _info=(SpanInfo)
+                          _text="=")
+                         _right=(FunApp @4:168~176
+                          _fun=(VarRef @4:168~171 _id=(Id _info=(SpanInfo) _text="str") _info=(SpanInfo))
+                          _info=(SpanInfo)
+                          _args=[
+                           (VarRef @4:172~173 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))
+                           (VarRef @4:174~175 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))]))
+                        _info=(SpanInfo))
+                       (ExprStmt @4:177~213
+                        _expr=(InfixOpApp
+                         _info=(SpanInfo)
+                         _left=(VarRef @4:177~178 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo))
+                         _op=(Op @4:178~179
+                          _info=(SpanInfo)
+                          _text="&&")
+                         _right=(FunApp @4:180~213
+                          _fun=(Dot @4:180~186
+                           _info=(SpanInfo)
+                           _member=(Id @4:182~186 _info=(SpanInfo) _text="push")
+                           _obj=(VarRef @4:180~181 _id=(Id _info=(SpanInfo) _text="i") _info=(SpanInfo)))
+                          _info=(SpanInfo)
+                          _args=[
+                           (InfixOpApp @4:187~212
+                            _info=(SpanInfo)
+                            _left=(InfixOpApp @4:187~210
+                             _info=(SpanInfo)
+                             _left=(FunApp @4:187~195
+                              _fun=(VarRef @4:187~192 _id=(Id _info=(SpanInfo) _text="quote") _info=(SpanInfo))
+                              _info=(SpanInfo)
+                              _args=[
+                               (VarRef @4:193~194 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))])
+                             _op=(Op @4:195~196
+                              _info=(SpanInfo)
+                              _text="+")
+                             _right=(Parenthesized @4:196~210
+                              _expr=(Cond @4:197~209
+                               _cond=(VarRef @4:197~200 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo))
+                               _falseBranch=(StringLiteral @4:206~209 _escaped=":" _info=(SpanInfo) _quote="\"")
+                               _info=(SpanInfo)
+                               _trueBranch=(StringLiteral @4:201~205 _escaped=": " _info=(SpanInfo) _quote="\""))
+                              _info=(SpanInfo)))
+                            _op=(Op @4:210~211
+                             _info=(SpanInfo)
+                             _text="+")
+                            _right=(VarRef @4:211~212 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo)))]))
+                        _info=(SpanInfo))]))
+                    _cond=(Some _value=(InfixOpApp @4:120~123
+                      _info=(SpanInfo)
+                      _left=(VarRef @4:120~121 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))
+                      _op=(Op @4:121~123
+                       _info=(SpanInfo)
+                       _text="<")
+                      _right=(VarRef @4:122~123 _id=(Id _info=(SpanInfo) _text="f") _info=(SpanInfo))))
+                    _info=(SpanInfo)
+                    _init=(Some _value=(AssignOpApp @4:116~119
+                      _info=(SpanInfo)
+                      _lhs=(VarRef @4:116~117 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))
+                      _op=(Op @4:117~118
+                       _info=(SpanInfo)
+                       _text="=")
+                      _right=(IntLiteral @4:118~119 _info=(SpanInfo) _intVal=0 _radix=10))))]))
+                (ExprStmt @5:61~143
+                 _expr=(AssignOpApp
+                  _info=(SpanInfo)
+                  _lhs=(VarRef @5:61~62 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo))
+                  _op=(Op @5:62~63
+                   _info=(SpanInfo)
+                   _text="=")
+                  _right=(Cond @5:63~143
+                   _cond=(InfixOpApp @5:63~75
+                    _info=(SpanInfo)
+                    _left=(Dot @5:63~71
+                     _info=(SpanInfo)
+                     _member=(Id @5:65~71 _info=(SpanInfo) _text="length")
+                     _obj=(VarRef @5:63~64 _id=(Id _info=(SpanInfo) _text="i") _info=(SpanInfo)))
+                    _op=(Op @5:71~73
+                     _info=(SpanInfo)
+                     _text="===")
+                    _right=(IntLiteral @5:74~75 _info=(SpanInfo) _intVal=0 _radix=10))
+                   _falseBranch=(Cond @5:81~143
+                    _cond=(VarRef @5:81~84 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo))
+                    _falseBranch=(InfixOpApp @5:124~143
+                     _info=(SpanInfo)
+                     _left=(InfixOpApp @5:124~139
+                      _info=(SpanInfo)
+                      _left=(StringLiteral @5:124~127 _escaped="{" _info=(SpanInfo) _quote="\"")
+                      _op=(Op @5:127~128
+                       _info=(SpanInfo)
+                       _text="+")
+                      _right=(FunApp @5:128~139
+                       _fun=(Dot @5:128~134
+                        _info=(SpanInfo)
+                        _member=(Id @5:130~134 _info=(SpanInfo) _text="join")
+                        _obj=(VarRef @5:128~129 _id=(Id _info=(SpanInfo) _text="i") _info=(SpanInfo)))
+                       _info=(SpanInfo)
+                       _args=[
+                        (StringLiteral @5:135~138 _escaped="," _info=(SpanInfo) _quote="\"")]))
+                     _op=(Op @5:139~140
+                      _info=(SpanInfo)
+                      _text="+")
+                     _right=(StringLiteral @5:140~143 _escaped="}" _info=(SpanInfo) _quote="\""))
+                    _info=(SpanInfo)
+                    _trueBranch=(InfixOpApp @5:85~123
+                     _info=(SpanInfo)
+                     _left=(InfixOpApp @5:85~119
+                      _info=(SpanInfo)
+                      _left=(InfixOpApp @5:85~117
+                       _info=(SpanInfo)
+                       _left=(InfixOpApp @5:85~112
+                        _info=(SpanInfo)
+                        _left=(InfixOpApp @5:85~94
+                         _info=(SpanInfo)
+                         _left=(StringLiteral @5:85~90 _escaped="{\\n" _info=(SpanInfo) _quote="\"")
+                         _op=(Op @5:90~91
+                          _info=(SpanInfo)
+                          _text="+")
+                         _right=(VarRef @5:91~94 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo)))
+                        _op=(Op @5:94~95
+                         _info=(SpanInfo)
+                         _text="+")
+                        _right=(FunApp @5:95~112
+                         _fun=(Dot @5:95~101
+                          _info=(SpanInfo)
+                          _member=(Id @5:97~101 _info=(SpanInfo) _text="join")
+                          _obj=(VarRef @5:95~96 _id=(Id _info=(SpanInfo) _text="i") _info=(SpanInfo)))
+                         _info=(SpanInfo)
+                         _args=[
+                          (InfixOpApp @5:102~111
+                           _info=(SpanInfo)
+                           _left=(StringLiteral @5:102~107 _escaped=",\\n" _info=(SpanInfo) _quote="\"")
+                           _op=(Op @5:107~108
+                            _info=(SpanInfo)
+                            _text="+")
+                           _right=(VarRef @5:108~111 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo)))]))
+                       _op=(Op @5:112~113
+                        _info=(SpanInfo)
+                        _text="+")
+                       _right=(StringLiteral @5:113~117 _escaped="\\n" _info=(SpanInfo) _quote="\""))
+                      _op=(Op @5:117~118
+                       _info=(SpanInfo)
+                       _text="+")
+                      _right=(VarRef @5:118~119 _id=(Id _info=(SpanInfo) _text="g") _info=(SpanInfo)))
+                     _op=(Op @5:119~120
+                      _info=(SpanInfo)
+                      _text="+")
+                     _right=(StringLiteral @5:120~123 _escaped="}" _info=(SpanInfo) _quote="\"")))
+                   _info=(SpanInfo)
+                   _trueBranch=(StringLiteral @5:76~80 _escaped="{}" _info=(SpanInfo) _quote="\"")))
+                 _info=(SpanInfo))
+                (ExprStmt @5:144~149
+                 _expr=(AssignOpApp
+                  _info=(SpanInfo)
+                  _lhs=(VarRef @5:144~147 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo))
+                  _op=(Op @5:147~148
+                   _info=(SpanInfo)
+                   _text="=")
+                  _right=(VarRef @5:148~149 _id=(Id _info=(SpanInfo) _text="g") _info=(SpanInfo)))
+                 _info=(SpanInfo))
+                (Return @5:150~158
+                 _expr=(Some _value=(VarRef @5:157~158 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo)))
+                 _info=(SpanInfo))])])])
+          _info=(SpanInfo))
+         (ExprStmt @5:160~172
+          _expr=(StringLiteral _escaped="use strict" _info=(SpanInfo) _quote="\"")
+          _info=(SpanInfo))
+         (If @5:173~7:36
+          _cond=(InfixOpApp @5:176~216
+           _info=(SpanInfo)
+           _left=(PrefixOpApp
+            _info=(SpanInfo)
+            _op=(Op
+             _info=(SpanInfo)
+             _text="typeof")
+            _right=(Dot @5:183~204
+             _info=(SpanInfo)
+             _member=(Id @5:198~204 _info=(SpanInfo) _text="toJSON")
+             _obj=(Dot @5:183~197
+              _info=(SpanInfo)
+              _member=(Id @5:188~197 _info=(SpanInfo) _text="prototype")
+              _obj=(VarRef @5:183~187 _id=(Id _info=(SpanInfo) _text="Date") _info=(SpanInfo)))))
+           _op=(Op @5:204~206
+            _info=(SpanInfo)
+            _text="!=")
+           _right=(StringLiteral @5:206~216 _escaped="function" _info=(SpanInfo) _quote="\""))
+          _info=(SpanInfo)
+          _trueBranch=(Block @5:217~7:36
+           _info=(SpanInfo)
+           _stmts=[
+            (ExprStmt @5:218~6:184
+             _expr=(AssignOpApp
+              _info=(SpanInfo)
+              _lhs=(Dot @5:218~239
+               _info=(SpanInfo)
+               _member=(Id @5:233~239 _info=(SpanInfo) _text="toJSON")
+               _obj=(Dot @5:218~232
+                _info=(SpanInfo)
+                _member=(Id @5:223~232 _info=(SpanInfo) _text="prototype")
+                _obj=(VarRef @5:218~222 _id=(Id _info=(SpanInfo) _text="Date") _info=(SpanInfo))))
+              _op=(Op @5:239~240
+               _info=(SpanInfo)
+               _text="=")
+              _right=(FunExpr @5:240~6:183
+               _ftn=(Functional
+                _name=(Id _info=(SpanInfo) _text="" _uniqueName=(Some _value=""))
+                _params=[
+                 (Id @5:249~250 _info=(SpanInfo) _text="a")]
+                _stmts=[
+                 (Return @5:252~6:183
+                  _expr=(Some _value=(Cond @5:259~6:183
+                    _cond=(FunApp @5:259~6:17
+                     _fun=(VarRef @5:259~267 _id=(Id _info=(SpanInfo) _text="isFinite") _info=(SpanInfo))
+                     _info=(SpanInfo)
+                     _args=[
+                      (FunApp @6:2~16
+                       _fun=(Dot @6:2~14
+                        _info=(SpanInfo)
+                        _member=(Id @6:7~14 _info=(SpanInfo) _text="valueOf")
+                        _obj=(This @6:2~6 _info=(SpanInfo)))
+                       _info=(SpanInfo))])
+                    _falseBranch=(Null @6:179~183 _info=(SpanInfo))
+                    _info=(SpanInfo)
+                    _trueBranch=(InfixOpApp @6:18~178
+                     _info=(SpanInfo)
+                     _left=(InfixOpApp @6:18~174
+                      _info=(SpanInfo)
+                      _left=(InfixOpApp @6:18~150
+                       _info=(SpanInfo)
+                       _left=(InfixOpApp @6:18~146
+                        _info=(SpanInfo)
+                        _left=(InfixOpApp @6:18~122
+                         _info=(SpanInfo)
+                         _left=(InfixOpApp @6:18~118
+                          _info=(SpanInfo)
+                          _left=(InfixOpApp @6:18~96
+                           _info=(SpanInfo)
+                           _left=(InfixOpApp @6:18~92
+                            _info=(SpanInfo)
+                            _left=(InfixOpApp @6:18~71
+                             _info=(SpanInfo)
+                             _left=(InfixOpApp @6:18~67
+                              _info=(SpanInfo)
+                              _left=(InfixOpApp @6:18~43
+                               _info=(SpanInfo)
+                               _left=(FunApp @6:18~39
+                                _fun=(Dot @6:18~37
+                                 _info=(SpanInfo)
+                                 _member=(Id @6:23~37 _info=(SpanInfo) _text="getUTCFullYear")
+                                 _obj=(This @6:18~22 _info=(SpanInfo)))
+                                _info=(SpanInfo))
+                               _op=(Op @6:39~40
+                                _info=(SpanInfo)
+                                _text="+")
+                               _right=(StringLiteral @6:40~43 _escaped="-" _info=(SpanInfo) _quote="\""))
+                              _op=(Op @6:43~44
+                               _info=(SpanInfo)
+                               _text="+")
+                              _right=(FunApp @6:44~67
+                               _fun=(VarRef @6:44~45 _id=(Id _info=(SpanInfo) _text="f") _info=(SpanInfo))
+                               _info=(SpanInfo)
+                               _args=[
+                                (InfixOpApp @6:46~66
+                                 _info=(SpanInfo)
+                                 _left=(FunApp @6:46~64
+                                  _fun=(Dot @6:46~62
+                                   _info=(SpanInfo)
+                                   _member=(Id @6:51~62 _info=(SpanInfo) _text="getUTCMonth")
+                                   _obj=(This @6:46~50 _info=(SpanInfo)))
+                                  _info=(SpanInfo))
+                                 _op=(Op @6:64~65
+                                  _info=(SpanInfo)
+                                  _text="+")
+                                 _right=(IntLiteral @6:65~66 _info=(SpanInfo) _intVal=1 _radix=10))]))
+                             _op=(Op @6:67~68
+                              _info=(SpanInfo)
+                              _text="+")
+                             _right=(StringLiteral @6:68~71 _escaped="-" _info=(SpanInfo) _quote="\""))
+                            _op=(Op @6:71~72
+                             _info=(SpanInfo)
+                             _text="+")
+                            _right=(FunApp @6:72~92
+                             _fun=(VarRef @6:72~73 _id=(Id _info=(SpanInfo) _text="f") _info=(SpanInfo))
+                             _info=(SpanInfo)
+                             _args=[
+                              (FunApp @6:74~91
+                               _fun=(Dot @6:74~89
+                                _info=(SpanInfo)
+                                _member=(Id @6:79~89 _info=(SpanInfo) _text="getUTCDate")
+                                _obj=(This @6:74~78 _info=(SpanInfo)))
+                               _info=(SpanInfo))]))
+                           _op=(Op @6:92~93
+                            _info=(SpanInfo)
+                            _text="+")
+                           _right=(StringLiteral @6:93~96 _escaped="T" _info=(SpanInfo) _quote="\""))
+                          _op=(Op @6:96~97
+                           _info=(SpanInfo)
+                           _text="+")
+                          _right=(FunApp @6:97~118
+                           _fun=(VarRef @6:97~98 _id=(Id _info=(SpanInfo) _text="f") _info=(SpanInfo))
+                           _info=(SpanInfo)
+                           _args=[
+                            (FunApp @6:99~117
+                             _fun=(Dot @6:99~115
+                              _info=(SpanInfo)
+                              _member=(Id @6:104~115 _info=(SpanInfo) _text="getUTCHours")
+                              _obj=(This @6:99~103 _info=(SpanInfo)))
+                             _info=(SpanInfo))]))
+                         _op=(Op @6:118~119
+                          _info=(SpanInfo)
+                          _text="+")
+                         _right=(StringLiteral @6:119~122 _escaped=":" _info=(SpanInfo) _quote="\""))
+                        _op=(Op @6:122~123
+                         _info=(SpanInfo)
+                         _text="+")
+                        _right=(FunApp @6:123~146
+                         _fun=(VarRef @6:123~124 _id=(Id _info=(SpanInfo) _text="f") _info=(SpanInfo))
+                         _info=(SpanInfo)
+                         _args=[
+                          (FunApp @6:125~145
+                           _fun=(Dot @6:125~143
+                            _info=(SpanInfo)
+                            _member=(Id @6:130~143 _info=(SpanInfo) _text="getUTCMinutes")
+                            _obj=(This @6:125~129 _info=(SpanInfo)))
+                           _info=(SpanInfo))]))
+                       _op=(Op @6:146~147
+                        _info=(SpanInfo)
+                        _text="+")
+                       _right=(StringLiteral @6:147~150 _escaped=":" _info=(SpanInfo) _quote="\""))
+                      _op=(Op @6:150~151
+                       _info=(SpanInfo)
+                       _text="+")
+                      _right=(FunApp @6:151~174
+                       _fun=(VarRef @6:151~152 _id=(Id _info=(SpanInfo) _text="f") _info=(SpanInfo))
+                       _info=(SpanInfo)
+                       _args=[
+                        (FunApp @6:153~173
+                         _fun=(Dot @6:153~171
+                          _info=(SpanInfo)
+                          _member=(Id @6:158~171 _info=(SpanInfo) _text="getUTCSeconds")
+                          _obj=(This @6:153~157 _info=(SpanInfo)))
+                         _info=(SpanInfo))]))
+                     _op=(Op @6:174~175
+                      _info=(SpanInfo)
+                      _text="+")
+                     _right=(StringLiteral @6:175~178 _escaped="Z" _info=(SpanInfo) _quote="\""))))
+                  _info=(SpanInfo))])
+               _info=(SpanInfo)))
+             _info=(SpanInfo))
+            (ExprStmt @6:185~7:35
+             _expr=(AssignOpApp
+              _info=(SpanInfo)
+              _lhs=(Dot @6:185~208
+               _info=(SpanInfo)
+               _member=(Id @6:202~208 _info=(SpanInfo) _text="toJSON")
+               _obj=(Dot @6:185~201
+                _info=(SpanInfo)
+                _member=(Id @6:192~201 _info=(SpanInfo) _text="prototype")
+                _obj=(VarRef @6:185~191 _id=(Id _info=(SpanInfo) _text="String") _info=(SpanInfo))))
+              _op=(Op @6:208~209
+               _info=(SpanInfo)
+               _text="=")
+              _right=(AssignOpApp @6:209~7:35
+               _info=(SpanInfo)
+               _lhs=(Dot @6:209~232
+                _info=(SpanInfo)
+                _member=(Id @6:226~232 _info=(SpanInfo) _text="toJSON")
+                _obj=(Dot @6:209~225
+                 _info=(SpanInfo)
+                 _member=(Id @6:216~225 _info=(SpanInfo) _text="prototype")
+                 _obj=(VarRef @6:209~215 _id=(Id _info=(SpanInfo) _text="Number") _info=(SpanInfo))))
+               _op=(Op @6:232~233
+                _info=(SpanInfo)
+                _text="=")
+               _right=(AssignOpApp @6:233~7:35
+                _info=(SpanInfo)
+                _lhs=(Dot @6:233~257
+                 _info=(SpanInfo)
+                 _member=(Id @6:251~257 _info=(SpanInfo) _text="toJSON")
+                 _obj=(Dot @6:233~250
+                  _info=(SpanInfo)
+                  _member=(Id @6:241~250 _info=(SpanInfo) _text="prototype")
+                  _obj=(VarRef @6:233~240 _id=(Id _info=(SpanInfo) _text="Boolean") _info=(SpanInfo))))
+                _op=(Op @6:257~258
+                 _info=(SpanInfo)
+                 _text="=")
+                _right=(FunExpr @7:1~34
+                 _ftn=(Functional
+                  _name=(Id _info=(SpanInfo) _text="" _uniqueName=(Some _value=""))
+                  _params=[
+                   (Id @7:10~11 _info=(SpanInfo) _text="a")]
+                  _stmts=[
+                   (Return @7:13~34
+                    _expr=(Some _value=(FunApp @7:20~34
+                      _fun=(Dot @7:20~32
+                       _info=(SpanInfo)
+                       _member=(Id @7:25~32 _info=(SpanInfo) _text="valueOf")
+                       _obj=(This @7:20~24 _info=(SpanInfo)))
+                      _info=(SpanInfo)))
+                    _info=(SpanInfo))])
+                 _info=(SpanInfo)))))
+             _info=(SpanInfo))]))
+         (VarStmt @7:36~8:99
+          _info=(SpanInfo)
+          _vds=[
+           (VarDecl @7:40~149
+            _expr=(Some _value=(RegularExpression @7:43~149 _body="[\\u0000\\u00ad\\u0600-\\u0604\\u070f\\u17b4\\u17b5\\u200c-\\u200f\\u2028-\\u202f\\u2060-\\u206f\\ufeff\\ufff0-\\uffff]" _flag="g" _info=(SpanInfo)))
+            _info=(SpanInfo)
+            _name=(Id @7:40~42 _info=(SpanInfo) _text="cx"))
+           (VarDecl @7:150~8:1
+            _expr=(Some _value=(RegularExpression @7:160~282 _body="[\\\\\\\"\\x00-\\x1f\\x7f-\\x9f\\u00ad\\u0600-\\u0604\\u070f\\u17b4\\u17b5\\u200c-\\u200f\\u2028-\\u202f\\u2060-\\u206f\\ufeff\\ufff0-\\uffff]" _flag="g" _info=(SpanInfo)))
+            _info=(SpanInfo)
+            _name=(Id @7:150~159 _info=(SpanInfo) _text="escapable"))
+           (VarDecl @8:2~5
+            _info=(SpanInfo)
+            _name=(Id _info=(SpanInfo) _text="gap"))
+           (VarDecl @8:6~12
+            _info=(SpanInfo)
+            _name=(Id _info=(SpanInfo) _text="indent"))
+           (VarDecl @8:13~95
+            _expr=(Some _value=(ObjectExpr @8:18~95
+              _info=(SpanInfo)
+              _members=[
+               (Field @8:19~29
+                _expr=(StringLiteral @8:24~29 _escaped="\\\\b" _info=(SpanInfo) _quote="\"")
+                _info=(SpanInfo)
+                _prop=(PropStr @8:19~22
+                 _info=(SpanInfo)
+                 _str="\\b"))
+               (Field @8:30~39
+                _expr=(StringLiteral @8:34~39 _escaped="\\\\t" _info=(SpanInfo) _quote="\"")
+                _info=(SpanInfo)
+                _prop=(PropStr @8:30~32
+                 _info=(SpanInfo)
+                 _str="\t"))
+               (Field @8:40~50
+                _expr=(StringLiteral @8:45~50 _escaped="\\\\n" _info=(SpanInfo) _quote="\"")
+                _info=(SpanInfo)
+                _prop=(PropStr @8:40~43
+                 _info=(SpanInfo)
+                 _str="\\n"))
+               (Field @8:51~61
+                _expr=(StringLiteral @8:56~61 _escaped="\\\\f" _info=(SpanInfo) _quote="\"")
+                _info=(SpanInfo)
+                _prop=(PropStr @8:51~54
+                 _info=(SpanInfo)
+                 _str="\\f"))
+               (Field @8:62~72
+                _expr=(StringLiteral @8:67~72 _escaped="\\\\r" _info=(SpanInfo) _quote="\"")
+                _info=(SpanInfo)
+                _prop=(PropStr @8:62~65
+                 _info=(SpanInfo)
+                 _str="\\r"))
+               (Field @8:73~82
+                _expr=(StringLiteral @8:77~82 _escaped="\\\\\"" _info=(SpanInfo) _quote="'")
+                _info=(SpanInfo)
+                _prop=(PropStr @8:73~75
+                 _info=(SpanInfo)
+                 _str="\""))
+               (Field @8:83~94
+                _expr=(StringLiteral @8:88~94 _escaped="\\\\\\\\" _info=(SpanInfo) _quote="\"")
+                _info=(SpanInfo)
+                _prop=(PropStr @8:83~86
+                 _info=(SpanInfo)
+                 _str="\\\\"))]))
+            _info=(SpanInfo)
+            _name=(Id @8:13~17 _info=(SpanInfo) _text="meta"))
+           (VarDecl @8:96~99
+            _info=(SpanInfo)
+            _name=(Id _info=(SpanInfo) _text="rep"))])
+         (ExprStmt @8:100~9:150
+          _expr=(InfixOpApp
+           _info=(SpanInfo)
+           _left=(InfixOpApp @8:100~133
+            _info=(SpanInfo)
+            _left=(PrefixOpApp @8:100~9:150
+             _info=(SpanInfo)
+             _op=(Op
+              _info=(SpanInfo)
+              _text="typeof")
+             _right=(Dot @8:107~121
+              _info=(SpanInfo)
+              _member=(Id @8:112~121 _info=(SpanInfo) _text="stringify")
+              _obj=(VarRef @8:107~111 _id=(Id _info=(SpanInfo) _text="JSON") _info=(SpanInfo))))
+            _op=(Op @8:121~123
+             _info=(SpanInfo)
+             _text="!=")
+            _right=(StringLiteral @8:123~133 _escaped="function" _info=(SpanInfo) _quote="\""))
+           _op=(Op @8:133~134
+            _info=(SpanInfo)
+            _text="&&")
+           _right=(Parenthesized @8:135~9:150
+            _expr=(AssignOpApp @8:136~9:149
+             _info=(SpanInfo)
+             _lhs=(Dot @8:136~150
+              _info=(SpanInfo)
+              _member=(Id @8:141~150 _info=(SpanInfo) _text="stringify")
+              _obj=(VarRef @8:136~140 _id=(Id _info=(SpanInfo) _text="JSON") _info=(SpanInfo)))
+             _op=(Op @8:150~151
+              _info=(SpanInfo)
+              _text="=")
+             _right=(FunExpr @8:151~9:148
+              _ftn=(Functional
+               _name=(Id _info=(SpanInfo) _text="" _uniqueName=(Some _value=""))
+               _params=[
+                (Id @8:160~161 _info=(SpanInfo) _text="a")
+                (Id @8:162~163 _info=(SpanInfo) _text="b")
+                (Id @8:164~165 _info=(SpanInfo) _text="c")]
+               _stmts=[
+                (VarStmt @8:167~172
+                 _info=(SpanInfo)
+                 _vds=[
+                  (VarDecl @8:171~172
+                   _info=(SpanInfo)
+                   _name=(Id _info=(SpanInfo) _text="d"))])
+                (ExprStmt @8:173~179
+                 _expr=(AssignOpApp
+                  _info=(SpanInfo)
+                  _lhs=(VarRef @8:173~176 _id=(Id _info=(SpanInfo) _text="gap") _info=(SpanInfo))
+                  _op=(Op @8:176~177
+                   _info=(SpanInfo)
+                   _text="=")
+                  _right=(StringLiteral @8:177~179 _escaped="" _info=(SpanInfo) _quote="\""))
+                 _info=(SpanInfo))
+                (ExprStmt @8:180~189
+                 _expr=(AssignOpApp
+                  _info=(SpanInfo)
+                  _lhs=(VarRef @8:180~186 _id=(Id _info=(SpanInfo) _text="indent") _info=(SpanInfo))
+                  _op=(Op @8:186~187
+                   _info=(SpanInfo)
+                   _text="=")
+                  _right=(StringLiteral @8:187~189 _escaped="" _info=(SpanInfo) _quote="\""))
+                 _info=(SpanInfo))
+                (If @8:190~9:11
+                 _cond=(InfixOpApp @8:193~211
+                  _info=(SpanInfo)
+                  _left=(PrefixOpApp
+                   _info=(SpanInfo)
+                   _op=(Op
+                    _info=(SpanInfo)
+                    _text="typeof")
+                   _right=(VarRef @8:200~201 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo)))
+                  _op=(Op @8:201~203
+                   _info=(SpanInfo)
+                   _text="==")
+                  _right=(StringLiteral @8:203~211 _escaped="number" _info=(SpanInfo) _quote="\""))
+                 _falseBranch=(Some _value=(ExprStmt @8:246~9:11
+                   _expr=(InfixOpApp
+                    _info=(SpanInfo)
+                    _left=(InfixOpApp @8:246~264
+                     _info=(SpanInfo)
+                     _left=(PrefixOpApp @8:246~9:11
+                      _info=(SpanInfo)
+                      _op=(Op
+                       _info=(SpanInfo)
+                       _text="typeof")
+                      _right=(VarRef @8:253~254 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo)))
+                     _op=(Op @8:254~256
+                      _info=(SpanInfo)
+                      _text="==")
+                     _right=(StringLiteral @8:256~264 _escaped="string" _info=(SpanInfo) _quote="\""))
+                    _op=(Op @8:264~265
+                     _info=(SpanInfo)
+                     _text="&&")
+                    _right=(Parenthesized @9:1~11
+                     _expr=(AssignOpApp @9:2~10
+                      _info=(SpanInfo)
+                      _lhs=(VarRef @9:2~8 _id=(Id _info=(SpanInfo) _text="indent") _info=(SpanInfo))
+                      _op=(Op @9:8~9
+                       _info=(SpanInfo)
+                       _text="=")
+                      _right=(VarRef @9:9~10 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo)))
+                     _info=(SpanInfo)))
+                   _info=(SpanInfo)))
+                 _info=(SpanInfo)
+                 _trueBranch=(For @8:212~240
+                  _action=(Some _value=(AssignOpApp @8:224~228
+                    _info=(SpanInfo)
+                    _lhs=(VarRef @8:224~225 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))
+                    _op=(Op @8:225~227
+                     _info=(SpanInfo)
+                     _text="+=")
+                    _right=(IntLiteral @8:227~228 _info=(SpanInfo) _intVal=1 _radix=10)))
+                  _body=(ExprStmt @8:229~240
+                   _expr=(AssignOpApp
+                    _info=(SpanInfo)
+                    _lhs=(VarRef @8:229~235 _id=(Id _info=(SpanInfo) _text="indent") _info=(SpanInfo))
+                    _op=(Op @8:235~237
+                     _info=(SpanInfo)
+                     _text="+=")
+                    _right=(StringLiteral @8:237~240 _escaped=" " _info=(SpanInfo) _quote="\""))
+                   _info=(SpanInfo))
+                  _cond=(Some _value=(InfixOpApp @8:220~223
+                    _info=(SpanInfo)
+                    _left=(VarRef @8:220~221 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))
+                    _op=(Op @8:221~223
+                     _info=(SpanInfo)
+                     _text="<")
+                    _right=(VarRef @8:222~223 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))))
+                  _info=(SpanInfo)
+                  _init=(Some _value=(AssignOpApp @8:216~219
+                    _info=(SpanInfo)
+                    _lhs=(VarRef @8:216~217 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))
+                    _op=(Op @8:217~218
+                     _info=(SpanInfo)
+                     _text="=")
+                    _right=(IntLiteral @8:218~219 _info=(SpanInfo) _intVal=0 _radix=10)))))
+                (ExprStmt @9:12~17
+                 _expr=(AssignOpApp
+                  _info=(SpanInfo)
+                  _lhs=(VarRef @9:12~15 _id=(Id _info=(SpanInfo) _text="rep") _info=(SpanInfo))
+                  _op=(Op @9:15~16
+                   _info=(SpanInfo)
+                   _text="=")
+                  _right=(VarRef @9:16~17 _id=(Id _info=(SpanInfo) _text="b") _info=(SpanInfo)))
+                 _info=(SpanInfo))
+                (If @9:18~115
+                 _cond=(InfixOpApp @9:21~92
+                  _info=(SpanInfo)
+                  _left=(InfixOpApp @9:21~45
+                   _info=(SpanInfo)
+                   _left=(PrefixOpApp @9:21~92
+                    _info=(SpanInfo)
+                    _op=(Op
+                     _info=(SpanInfo)
+                     _text="!")
+                    _right=(VarRef @9:22~23 _id=(Id _info=(SpanInfo) _text="b") _info=(SpanInfo)))
+                   _op=(Op @9:23~24
+                    _info=(SpanInfo)
+                    _text="||")
+                   _right=(InfixOpApp @9:25~45
+                    _info=(SpanInfo)
+                    _left=(PrefixOpApp @9:25~92
+                     _info=(SpanInfo)
+                     _op=(Op
+                      _info=(SpanInfo)
+                      _text="typeof")
+                     _right=(VarRef @9:32~33 _id=(Id _info=(SpanInfo) _text="b") _info=(SpanInfo)))
+                    _op=(Op @9:33~35
+                     _info=(SpanInfo)
+                     _text="==")
+                    _right=(StringLiteral @9:35~45 _escaped="function" _info=(SpanInfo) _quote="\"")))
+                  _op=(Op @9:45~46
+                   _info=(SpanInfo)
+                   _text="||")
+                  _right=(InfixOpApp @9:47~92
+                   _info=(SpanInfo)
+                   _left=(InfixOpApp @9:47~65
+                    _info=(SpanInfo)
+                    _left=(PrefixOpApp @9:47~92
+                     _info=(SpanInfo)
+                     _op=(Op
+                      _info=(SpanInfo)
+                      _text="typeof")
+                     _right=(VarRef @9:54~55 _id=(Id _info=(SpanInfo) _text="b") _info=(SpanInfo)))
+                    _op=(Op @9:55~57
+                     _info=(SpanInfo)
+                     _text="==")
+                    _right=(StringLiteral @9:57~65 _escaped="object" _info=(SpanInfo) _quote="\""))
+                   _op=(Op @9:65~66
+                    _info=(SpanInfo)
+                    _text="&&")
+                   _right=(InfixOpApp @9:67~92
+                    _info=(SpanInfo)
+                    _left=(PrefixOpApp
+                     _info=(SpanInfo)
+                     _op=(Op
+                      _info=(SpanInfo)
+                      _text="typeof")
+                     _right=(Dot @9:74~82
+                      _info=(SpanInfo)
+                      _member=(Id @9:76~82 _info=(SpanInfo) _text="length")
+                      _obj=(VarRef @9:74~75 _id=(Id _info=(SpanInfo) _text="b") _info=(SpanInfo))))
+                    _op=(Op @9:82~84
+                     _info=(SpanInfo)
+                     _text="==")
+                    _right=(StringLiteral @9:84~92 _escaped="number" _info=(SpanInfo) _quote="\""))))
+                 _info=(SpanInfo)
+                 _trueBranch=(Return @9:93~114
+                  _expr=(Some _value=(FunApp @9:100~114
+                    _fun=(VarRef @9:100~103 _id=(Id _info=(SpanInfo) _text="str") _info=(SpanInfo))
+                    _info=(SpanInfo)
+                    _args=[
+                     (StringLiteral @9:104~106 _escaped="" _info=(SpanInfo) _quote="\"")
+                     (ObjectExpr @9:107~113
+                      _info=(SpanInfo)
+                      _members=[
+                       (Field @9:108~112
+                        _expr=(VarRef @9:111~112 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo))
+                        _info=(SpanInfo)
+                        _prop=(PropStr @9:108~109
+                         _info=(SpanInfo)
+                         _str=""))])]))
+                  _info=(SpanInfo)))
+                (Throw @9:115~148
+                 _expr=(New @9:121~148
+                  _info=(SpanInfo)
+                  _lhs=(FunApp
+                   _fun=(VarRef @9:125~130 _id=(Id _info=(SpanInfo) _text="Error") _info=(SpanInfo))
+                   _info=(SpanInfo)
+                   _args=[
+                    (StringLiteral @9:131~147 _escaped="JSON.stringify" _info=(SpanInfo) _quote="\"")]))
+                 _info=(SpanInfo))])
+              _info=(SpanInfo)))
+            _info=(SpanInfo)))
+          _info=(SpanInfo))
+         (ExprStmt @9:151~12:76
+          _expr=(InfixOpApp
+           _info=(SpanInfo)
+           _left=(InfixOpApp @9:151~180
+            _info=(SpanInfo)
+            _left=(PrefixOpApp @9:151~12:76
+             _info=(SpanInfo)
+             _op=(Op
+              _info=(SpanInfo)
+              _text="typeof")
+             _right=(Dot @9:158~168
+              _info=(SpanInfo)
+              _member=(Id @9:163~168 _info=(SpanInfo) _text="parse")
+              _obj=(VarRef @9:158~162 _id=(Id _info=(SpanInfo) _text="JSON") _info=(SpanInfo))))
+            _op=(Op @9:168~170
+             _info=(SpanInfo)
+             _text="!=")
+            _right=(StringLiteral @9:170~180 _escaped="function" _info=(SpanInfo) _quote="\""))
+           _op=(Op @9:180~181
+            _info=(SpanInfo)
+            _text="&&")
+           _right=(Parenthesized @9:182~12:76
+            _expr=(AssignOpApp @9:183~12:75
+             _info=(SpanInfo)
+             _lhs=(Dot @9:183~193
+              _info=(SpanInfo)
+              _member=(Id @9:188~193 _info=(SpanInfo) _text="parse")
+              _obj=(VarRef @9:183~187 _id=(Id _info=(SpanInfo) _text="JSON") _info=(SpanInfo)))
+             _op=(Op @9:193~194
+              _info=(SpanInfo)
+              _text="=")
+             _right=(FunExpr @9:194~12:74
+              _ftn=(Functional
+               _name=(Id _info=(SpanInfo) _text="" _uniqueName=(Some _value=""))
+               _params=[
+                (Id @9:203~207 _info=(SpanInfo) _text="text")
+                (Id @9:208~215 _info=(SpanInfo) _text="reviver")]
+               _stmts=[
+                (FunDecl @9:217~10:141
+                 _ftn=(Functional
+                  _name=(Id @9:226~230 _info=(SpanInfo) _text="walk")
+                  _params=[
+                   (Id @9:231~232 _info=(SpanInfo) _text="a")
+                   (Id @9:233~234 _info=(SpanInfo) _text="b")]
+                  _stmts=[
+                   (VarStmt @9:236~250
+                    _info=(SpanInfo)
+                    _vds=[
+                     (VarDecl @9:240~241
+                      _info=(SpanInfo)
+                      _name=(Id _info=(SpanInfo) _text="c"))
+                     (VarDecl @9:242~243
+                      _info=(SpanInfo)
+                      _name=(Id _info=(SpanInfo) _text="d"))
+                     (VarDecl @9:244~250
+                      _expr=(Some _value=(Bracket @9:247~251
+                        _index=(VarRef @9:248~249 _id=(Id _info=(SpanInfo) _text="b") _info=(SpanInfo))
+                        _info=(SpanInfo)
+                        _obj=(VarRef @9:246~247 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo))))
+                      _info=(SpanInfo)
+                      _name=(Id @9:244~245 _info=(SpanInfo) _text="e"))])
+                   (If @9:251~10:115
+                    _cond=(InfixOpApp @9:254~10:12
+                     _info=(SpanInfo)
+                     _left=(VarRef @9:254~255 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo))
+                     _op=(Op @9:255~256
+                      _info=(SpanInfo)
+                      _text="&&")
+                     _right=(InfixOpApp @9:257~10:12
+                      _info=(SpanInfo)
+                      _left=(PrefixOpApp
+                       _info=(SpanInfo)
+                       _op=(Op
+                        _info=(SpanInfo)
+                        _text="typeof")
+                       _right=(VarRef @10:1~2 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo)))
+                      _op=(Op @10:2~4
+                       _info=(SpanInfo)
+                       _text="==")
+                      _right=(StringLiteral @10:4~12 _escaped="object" _info=(SpanInfo) _quote="\"")))
+                    _info=(SpanInfo)
+                    _trueBranch=(ForIn @10:13~115
+                     _body=(If @10:24~115
+                      _cond=(FunApp @10:27~68
+                       _fun=(Dot @10:27~63
+                        _info=(SpanInfo)
+                        _member=(Id @10:59~63 _info=(SpanInfo) _text="call")
+                        _obj=(Dot @10:27~58
+                         _info=(SpanInfo)
+                         _member=(Id @10:44~58 _info=(SpanInfo) _text="hasOwnProperty")
+                         _obj=(Dot @10:27~43
+                          _info=(SpanInfo)
+                          _member=(Id @10:34~43 _info=(SpanInfo) _text="prototype")
+                          _obj=(VarRef @10:27~33 _id=(Id _info=(SpanInfo) _text="Object") _info=(SpanInfo)))))
+                       _info=(SpanInfo)
+                       _args=[
+                        (VarRef @10:64~65 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo))
+                        (VarRef @10:66~67 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))])
+                      _info=(SpanInfo)
+                      _trueBranch=(Block @10:69~115
+                       _info=(SpanInfo)
+                       _stmts=[
+                        (ExprStmt @10:70~81
+                         _expr=(AssignOpApp
+                          _info=(SpanInfo)
+                          _lhs=(VarRef @10:70~71 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))
+                          _op=(Op @10:71~72
+                           _info=(SpanInfo)
+                           _text="=")
+                          _right=(FunApp @10:72~81
+                           _fun=(VarRef @10:72~76 _id=(Id _info=(SpanInfo) _text="walk") _info=(SpanInfo))
+                           _info=(SpanInfo)
+                           _args=[
+                            (VarRef @10:77~78 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo))
+                            (VarRef @10:79~80 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))]))
+                         _info=(SpanInfo))
+                        (ExprStmt @10:82~114
+                         _expr=(Cond
+                          _cond=(InfixOpApp @10:82~95
+                           _info=(SpanInfo)
+                           _left=(VarRef @10:82~83 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))
+                           _op=(Op @10:83~85
+                            _info=(SpanInfo)
+                            _text="!==")
+                           _right=(VarRef @10:86~95 _id=(Id _info=(SpanInfo) _text="undefined") _info=(SpanInfo)))
+                          _falseBranch=(PrefixOpApp @10:103~114
+                           _info=(SpanInfo)
+                           _op=(Op
+                            _info=(SpanInfo)
+                            _text="delete")
+                           _right=(Bracket @10:111~115
+                            _index=(VarRef @10:112~113 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))
+                            _info=(SpanInfo)
+                            _obj=(VarRef @10:110~111 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo))))
+                          _info=(SpanInfo)
+                          _trueBranch=(AssignOpApp @10:96~102
+                           _info=(SpanInfo)
+                           _lhs=(Bracket @10:97~101
+                            _index=(VarRef @10:98~99 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))
+                            _info=(SpanInfo)
+                            _obj=(VarRef @10:96~97 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo)))
+                           _op=(Op @10:100~101
+                            _info=(SpanInfo)
+                            _text="=")
+                           _right=(VarRef @10:101~102 _id=(Id _info=(SpanInfo) _text="d") _info=(SpanInfo))))
+                         _info=(SpanInfo))]))
+                     _expr=(VarRef @10:22~23 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo))
+                     _info=(SpanInfo)
+                     _lhs=(VarRef @10:17~18 _id=(Id _info=(SpanInfo) _text="c") _info=(SpanInfo))))
+                   (Return @10:115~141
+                    _expr=(Some _value=(FunApp @10:122~141
+                      _fun=(Dot @10:122~134
+                       _info=(SpanInfo)
+                       _member=(Id @10:130~134 _info=(SpanInfo) _text="call")
+                       _obj=(VarRef @10:122~129 _id=(Id _info=(SpanInfo) _text="reviver") _info=(SpanInfo)))
+                      _info=(SpanInfo)
+                      _args=[
+                       (VarRef @10:135~136 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo))
+                       (VarRef @10:137~138 _id=(Id _info=(SpanInfo) _text="b") _info=(SpanInfo))
+                       (VarRef @10:139~140 _id=(Id _info=(SpanInfo) _text="e") _info=(SpanInfo))]))
+                    _info=(SpanInfo))])
+                 _info=(SpanInfo))
+                (VarStmt @10:142~147
+                 _info=(SpanInfo)
+                 _vds=[
+                  (VarDecl @10:146~147
+                   _info=(SpanInfo)
+                   _name=(Id _info=(SpanInfo) _text="j"))])
+                (ExprStmt @10:148~165
+                 _expr=(AssignOpApp
+                  _info=(SpanInfo)
+                  _lhs=(VarRef @10:148~152 _id=(Id _info=(SpanInfo) _text="text") _info=(SpanInfo))
+                  _op=(Op @10:152~153
+                   _info=(SpanInfo)
+                   _text="=")
+                  _right=(FunApp @10:153~165
+                   _fun=(VarRef @10:153~159 _id=(Id _info=(SpanInfo) _text="String") _info=(SpanInfo))
+                   _info=(SpanInfo)
+                   _args=[
+                    (VarRef @10:160~164 _id=(Id _info=(SpanInfo) _text="text") _info=(SpanInfo))]))
+                 _info=(SpanInfo))
+                (ExprStmt @10:166~180
+                 _expr=(AssignOpApp
+                  _info=(SpanInfo)
+                  _lhs=(Dot @10:166~178
+                   _info=(SpanInfo)
+                   _member=(Id @10:169~178 _info=(SpanInfo) _text="lastIndex")
+                   _obj=(VarRef @10:166~168 _id=(Id _info=(SpanInfo) _text="cx") _info=(SpanInfo)))
+                  _op=(Op @10:178~179
+                   _info=(SpanInfo)
+                   _text="=")
+                  _right=(IntLiteral @10:179~180 _info=(SpanInfo) _intVal=0 _radix=10))
+                 _info=(SpanInfo))
+                (ExprStmt @10:181~11:31
+                 _expr=(InfixOpApp
+                  _info=(SpanInfo)
+                  _left=(FunApp @10:181~194
+                   _fun=(Dot @10:181~188
+                    _info=(SpanInfo)
+                    _member=(Id @10:184~188 _info=(SpanInfo) _text="test")
+                    _obj=(VarRef @10:181~183 _id=(Id _info=(SpanInfo) _text="cx") _info=(SpanInfo)))
+                   _info=(SpanInfo)
+                   _args=[
+                    (VarRef @10:189~193 _id=(Id _info=(SpanInfo) _text="text") _info=(SpanInfo))])
+                  _op=(Op @10:194~195
+                   _info=(SpanInfo)
+                   _text="&&")
+                  _right=(Parenthesized @10:196~11:31
+                   _expr=(AssignOpApp @10:197~11:30
+                    _info=(SpanInfo)
+                    _lhs=(VarRef @10:197~201 _id=(Id _info=(SpanInfo) _text="text") _info=(SpanInfo))
+                    _op=(Op @10:201~202
+                     _info=(SpanInfo)
+                     _text="=")
+                    _right=(FunApp @10:202~11:30
+                     _fun=(Dot @10:202~214
+                      _info=(SpanInfo)
+                      _member=(Id @10:207~214 _info=(SpanInfo) _text="replace")
+                      _obj=(VarRef @10:202~206 _id=(Id _info=(SpanInfo) _text="text") _info=(SpanInfo)))
+                     _info=(SpanInfo)
+                     _args=[
+                      (VarRef @10:215~217 _id=(Id _info=(SpanInfo) _text="cx") _info=(SpanInfo))
+                      (FunExpr @10:218~11:28
+                       _ftn=(Functional
+                        _name=(Id _info=(SpanInfo) _text="" _uniqueName=(Some _value=""))
+                        _params=[
+                         (Id @10:227~228 _info=(SpanInfo) _text="a")]
+                        _stmts=[
+                         (Return @10:230~11:28
+                          _expr=(Some _value=(InfixOpApp @10:236~11:28
+                            _info=(SpanInfo)
+                            _left=(StringLiteral @10:236~241 _escaped="\\\\u" _info=(SpanInfo) _quote="\"")
+                            _op=(Op @10:241~242
+                             _info=(SpanInfo)
+                             _text="+")
+                            _right=(FunApp @10:242~11:28
+                             _fun=(Dot @10:242~11:24
+                              _info=(SpanInfo)
+                              _member=(Id @11:19~24 _info=(SpanInfo) _text="slice")
+                              _obj=(Parenthesized @10:242~11:18
+                               _expr=(InfixOpApp @10:243~11:17
+                                _info=(SpanInfo)
+                                _left=(StringLiteral @10:243~249 _escaped="0000" _info=(SpanInfo) _quote="\"")
+                                _op=(Op @10:249~250
+                                 _info=(SpanInfo)
+                                 _text="+")
+                                _right=(FunApp @11:13~18
+                                 _fun=(Dot @10:250~11:13
+                                  _info=(SpanInfo)
+                                  _member=(Id @11:5~13 _info=(SpanInfo) _text="toString")
+                                  _obj=(FunApp @10:250~11:4
+                                   _fun=(Dot @10:250~262
+                                    _info=(SpanInfo)
+                                    _member=(Id @10:252~262 _info=(SpanInfo) _text="charCodeAt")
+                                    _obj=(VarRef @10:250~251 _id=(Id _info=(SpanInfo) _text="a") _info=(SpanInfo)))
+                                   _info=(SpanInfo)
+                                   _args=[
+                                    (IntLiteral @11:2~3 _info=(SpanInfo) _intVal=0 _radix=10)]))
+                                 _info=(SpanInfo)
+                                 _args=[
+                                  (IntLiteral @11:14~16 _info=(SpanInfo) _intVal=16 _radix=10)]))
+                               _info=(SpanInfo)))
+                             _info=(SpanInfo)
+                             _args=[
+                              (PrefixOpApp @11:25~27
+                               _info=(SpanInfo)
+                               _op=(Op @11:25~26
+                                _info=(SpanInfo)
+                                _text="-")
+                               _right=(IntLiteral @11:26~27 _info=(SpanInfo) _intVal=4 _radix=10))])))
+                          _info=(SpanInfo))])
+                       _info=(SpanInfo))]))
+                   _info=(SpanInfo)))
+                 _info=(SpanInfo))
+                (If @11:32~12:39
+                 _cond=(FunApp @11:35~227
+                  _fun=(Dot @11:35~55
+                   _info=(SpanInfo)
+                   _member=(Id @11:51~55 _info=(SpanInfo) _text="test")
+                   _obj=(RegularExpression @11:35~50 _body="^[\\],:{}\\s]*$" _flag="" _info=(SpanInfo)))
+                  _info=(SpanInfo)
+                  _args=[
+                   (FunApp @11:199~227
+                    _fun=(Dot @11:119~199
+                     _info=(SpanInfo)
+                     _member=(Id @11:192~199 _info=(SpanInfo) _text="replace")
+                     _obj=(FunApp @11:119~227
+                      _fun=(Dot @11:56~119
+                       _info=(SpanInfo)
+                       _member=(Id @11:112~119 _info=(SpanInfo) _text="replace")
+                       _obj=(FunApp @11:56~111
+                        _fun=(Dot @11:56~68
+                         _info=(SpanInfo)
+                         _member=(Id @11:61~68 _info=(SpanInfo) _text="replace")
+                         _obj=(VarRef @11:56~60 _id=(Id _info=(SpanInfo) _text="text") _info=(SpanInfo)))
+                        _info=(SpanInfo)
+                        _args=[
+                         (RegularExpression @11:69~106 _body="\\\\(?:[\"\\\\\\/bfnrt]|u[0-9a-fA-F]{4})" _flag="g" _info=(SpanInfo))
+                         (StringLiteral @11:107~110 _escaped="@" _info=(SpanInfo) _quote="\"")]))
+                      _info=(SpanInfo)
+                      _args=[
+                       (RegularExpression @11:120~186 _body="\"[^\"\\\\\\n\\r]*\"|true|false|null|-?\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?" _flag="g" _info=(SpanInfo))
+                       (StringLiteral @11:187~190 _escaped="]" _info=(SpanInfo) _quote="\"")]))
+                    _info=(SpanInfo)
+                    _args=[
+                     (RegularExpression @11:200~222 _body="(?:^|:|,)(?:\\s*\\[)+" _flag="g" _info=(SpanInfo))
+                     (StringLiteral @11:223~225 _escaped="" _info=(SpanInfo) _quote="\"")])])
+                 _info=(SpanInfo)
+                 _trueBranch=(Block @11:228~12:39
+                  _info=(SpanInfo)
+                  _stmts=[
+                   (ExprStmt @11:229~249
+                    _expr=(AssignOpApp
+                     _info=(SpanInfo)
+                     _lhs=(VarRef @11:229~230 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))
+                     _op=(Op @11:230~231
+                      _info=(SpanInfo)
+                      _text="=")
+                     _right=(FunApp @11:231~249
+                      _fun=(VarRef @11:231~235 _id=(Id _info=(SpanInfo) _text="eval") _info=(SpanInfo))
+                      _info=(SpanInfo)
+                      _args=[
+                       (InfixOpApp @11:236~248
+                        _info=(SpanInfo)
+                        _left=(InfixOpApp @11:236~244
+                         _info=(SpanInfo)
+                         _left=(StringLiteral @11:236~239 _escaped="(" _info=(SpanInfo) _quote="\"")
+                         _op=(Op @11:239~240
+                          _info=(SpanInfo)
+                          _text="+")
+                         _right=(VarRef @11:240~244 _id=(Id _info=(SpanInfo) _text="text") _info=(SpanInfo)))
+                        _op=(Op @11:244~245
+                         _info=(SpanInfo)
+                         _text="+")
+                        _right=(StringLiteral @11:245~248 _escaped=")" _info=(SpanInfo) _quote="\""))]))
+                    _info=(SpanInfo))
+                   (Return @11:250~12:38
+                    _expr=(Some _value=(Cond @11:257~12:38
+                      _cond=(InfixOpApp @11:257~12:20
+                       _info=(SpanInfo)
+                       _left=(PrefixOpApp @11:257~12:8
+                        _info=(SpanInfo)
+                        _op=(Op
+                         _info=(SpanInfo)
+                         _text="typeof")
+                        _right=(VarRef @12:1~8 _id=(Id _info=(SpanInfo) _text="reviver") _info=(SpanInfo)))
+                       _op=(Op @12:8~10
+                        _info=(SpanInfo)
+                        _text="==")
+                       _right=(StringLiteral @12:10~20 _escaped="function" _info=(SpanInfo) _quote="\""))
+                      _falseBranch=(VarRef @12:37~38 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))
+                      _info=(SpanInfo)
+                      _trueBranch=(FunApp @12:21~36
+                       _fun=(VarRef @12:21~25 _id=(Id _info=(SpanInfo) _text="walk") _info=(SpanInfo))
+                       _info=(SpanInfo)
+                       _args=[
+                        (ObjectExpr @12:26~32
+                         _info=(SpanInfo)
+                         _members=[
+                          (Field @12:27~31
+                           _expr=(VarRef @12:30~31 _id=(Id _info=(SpanInfo) _text="j") _info=(SpanInfo))
+                           _info=(SpanInfo)
+                           _prop=(PropStr @12:27~28
+                            _info=(SpanInfo)
+                            _str=""))])
+                        (StringLiteral @12:33~35 _escaped="" _info=(SpanInfo) _quote="\"")])))
+                    _info=(SpanInfo))]))
+                (Throw @12:39~74
+                 _expr=(New @12:45~74
+                  _info=(SpanInfo)
+                  _lhs=(FunApp
+                   _fun=(VarRef @12:49~60 _id=(Id _info=(SpanInfo) _text="SyntaxError") _info=(SpanInfo))
+                   _info=(SpanInfo)
+                   _args=[
+                    (StringLiteral @12:61~73 _escaped="JSON.parse" _info=(SpanInfo) _quote="\"")]))
+                 _info=(SpanInfo))])
+              _info=(SpanInfo)))
+            _info=(SpanInfo)))
+          _info=(SpanInfo))])
+       _info=(SpanInfo))
+      _info=(SpanInfo))
+     _info=(SpanInfo))
+    _info=(SpanInfo))
+   (NoOp @1:1~12:81
+    _desc="EndOfFile"
+    _info=(SpanInfo))])
+ _info=(SpanInfo))

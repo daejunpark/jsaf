@@ -1,0 +1,600 @@
+#riTopFlash {
+	padding: 0px 0px 25px; height: 132px;
+}
+#riTopBanner {
+	padding: 0px 0px 25px; width: 100%; overflow: hidden; clear: both; _zoom: 1;
+}
+#riTopBanner ul {
+	width: 49%; text-align: center; float: left;
+}
+#riTopBanner ul li {
+	padding: 0px 0px 10px;
+}
+#riContainer .footTitle {
+	padding: 7px; border: 1px solid rgb(206, 206, 206); overflow: hidden; font-weight: bold; background-color: rgb(238, 238, 238); _zoom: 1;
+}
+#riContainer .footBox {
+	border-width: medium 1px 1px; border-style: none solid solid; border-color: currentColor rgb(206, 206, 206) rgb(206, 206, 206); padding: 13px 0px; overflow: hidden; clear: both; _zoom: 1;
+}
+#riContainer .footBoxdot {
+	font-weight: bold; border-bottom-color: rgb(206, 206, 206) !important; border-bottom-width: 1px !important; border-bottom-style: dotted !important;
+}
+#riEventColumn .titleH2 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/event_ttile_icon.gif") no-repeat 0px 2px; padding: 0px 0px 0px 25px; color: rgb(191, 0, 0); font-size: 125%; font-weight: bold; border-bottom-color: rgb(219, 219, 219); border-bottom-width: 1px; border-bottom-style: solid;
+}
+#riEventColumn .eventBox {
+	padding: 7px 0px 30px; position: relative;
+}
+#riEventColumn .eventBox a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#riEventColumn .eventBox a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}
+#riEventColumn .tri {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 0px 3px; padding: 0px 0px 0px 7px;
+}
+#riEventColumn .centerTitle {
+	overflow: hidden; clear: both; border-bottom-color: rgb(219, 219, 219); border-bottom-width: 1px; border-bottom-style: solid; _zoom: 1;
+}
+#riEventColumn .centerTitle h2 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/event_ttile_icon.gif") no-repeat 0px 2px; padding: 0px 0px 0px 25px; color: rgb(191, 0, 0); font-size: 125%; font-weight: bold; float: left; display: inline;
+}
+#riEventColumn .next {
+	padding: 5px 0px 0px 7px; float: right; display: inline;
+}
+#riEventColumn .next a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#riEventColumn .next a:hover {
+	color: rgb(29, 84, 167); text-decoration: underline;
+}
+#riEventColumn .specially a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#riEventColumn .specially a:hover {
+	color: rgb(192, 0, 0) !important; text-decoration: underline;
+}
+#riEventColumn .specially li {
+	float: left; display: inline;
+}
+#riEventColumn .specially .underdot {
+	margin: 0px 0px 7px; border-bottom-color: rgb(174, 174, 174); border-bottom-width: 1px; border-bottom-style: dotted;
+}
+#riEventColumn .specially .sp1 li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/tri_f2ab00.gif") no-repeat 0px 4px; margin: 0px 0px 0px 7px; padding: 0px 0px 0px 7px; white-space: nowrap;
+}
+#riEventColumn .specially .sp2 li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_f2ab00.gif") no-repeat 0px 6px; margin: 0px 0px 0px 5px; padding: 0px 0px 0px 7px; width: 140px;
+}
+.apiArea {
+	font-size: 120%;
+}
+#riEventColumn .favorit p {
+	text-align: right;
+}
+#riEventColumn .justWatched li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_f2ab00.gif") no-repeat 0px 6px; margin: 0px 0px 0px 10px; padding: 0px 0px 0px 7px; width: 210px; float: left; display: inline;
+}
+#riEventColumn .justWatched p {
+	text-align: right;
+}
+#riEventColumn .history p {
+	text-align: right;
+}
+#riEventColumn .asurakuLeft a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#riEventColumn .asurakuLeft a:hover {
+	color: rgb(192, 0, 0) !important; text-decoration: underline;
+}
+#riEventColumn .asurakuRight a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#riEventColumn .asurakuRight a:hover {
+	color: rgb(192, 0, 0) !important; text-decoration: underline;
+}
+#riEventColumn .asurakuLeft {
+	padding: 0px 3px 0px 2px; left: 0px; top: 0px; width: 211px; float: left; position: absolute;
+}
+#riEventColumn .asurakuLeft .red {
+	color: rgb(191, 0, 0);
+}
+#riEventColumn .asurakuLeft p {
+	line-height: 2;
+}
+#riEventColumn .asurakuRight {
+	padding: 5px 0px 0px 5px; margin-left: 220px; border-left-color: rgb(174, 174, 174); border-left-width: 1px; border-left-style: dotted;
+}
+#riEventColumn .asurakuRight .red {
+	color: rgb(191, 0, 0);
+}
+#riEventColumn .asurakuRight li {
+	float: left; display: inline; white-space: nowrap;
+}
+#riEventColumn #asurakuDynamic {
+	margin: 10px 0px 0px 40px; width: 130px; text-align: center;
+}
+#asurakuDynamicText {
+	color: rgb(191, 0, 0);
+}
+#riEventColumn .ranking a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#riEventColumn .ranking a:hover {
+	color: rgb(192, 0, 0) !important; text-decoration: underline;
+}
+#riEventColumn .rankReset {
+	margin: 0px 0px 0px 20px; color: rgb(0, 0, 0); font-size: 82%; font-weight: normal;
+}
+#riEventColumn .ranking .sp3 li {
+	float: left; display: inline;
+}
+#riEventColumn .ranking .bold {
+	padding: 5px 0px; color: rgb(191, 0, 0); font-weight: bold;
+}
+#riEventColumn .ranking .rankLeft {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/rankprize1.gif") no-repeat 32px 0px; padding: 0px 10px 0px 60px; left: 0px; top: 0px; width: 150px; position: absolute;
+}
+#riEventColumn .ranking .rankLeft li {
+	float: left; display: inline;
+}
+#riEventColumn .ranking .rankLeft .rankThumb {
+	
+}
+#riEventColumn .ranking .rankLeft .rankText {
+	margin: 0px 0px 0px 5px; top: 0px; width: 70px; right: 0px; padding-right: 5px; float: left; position: absolute;
+}
+#riEventColumn .ranking .rankRight {
+	margin-left: 225px;
+}
+#riEventColumn .ranking .rankRight ul li {
+	width: 210px; float: left;
+}
+#riEventColumn .ranking .rankPrize {
+	margin: 0px 7px 0px 0px; color: rgb(191, 0, 0); font-weight: bold;
+}
+#riEventColumn .ranking .rankBox {
+	margin: 0px 0px 7px; position: relative;
+}
+#riEventColumn .recommend a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#riEventColumn .recommend a:hover {
+	color: rgb(192, 0, 0) !important; text-decoration: underline;
+}
+#riEventColumn .recommend li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_f2ab00.gif") no-repeat 0px 6px; margin: 0px 0px 0px 5px; padding: 0px 0px 0px 7px; width: 140px; float: left; display: inline;
+}
+.trend {
+	width: 100%; display: table;
+}
+.trArea {
+	width: 51%; display: table-cell;
+}
+html > body .trArea {
+	
+}
+.trArea .thumb {
+	width: 80px;
+}
+.trArea .textarea {
+	width: 85px;
+}
+.trArea .textarea {
+	
+}
+html > body .trArea .textarea {
+	
+}
+.trend {
+	width: 100%; display: table;
+}
+.lqTrArea {
+	display: table-cell;
+}
+html > body .lqTrArea {
+	
+}
+.lqTrArea .thumb {
+	width: 80px;
+}
+.lqTrArea .textarea {
+	width: 85px; float: left;
+}
+.lqTrArea .textarea {
+	
+}
+.lqTrArea dl dt {
+	float: left; display: inline;
+}
+.lqTrArea dl dd {
+	float: left; display: inline;
+}
+.lqTrArea dl {
+	width: 186px; display: table-cell;
+}
+.lqTrArea dl dt {
+	width: 80px;
+}
+.lqTrArea dl dd {
+	padding: 0px 0px 0px 10px; width: 85px; -ms-word-wrap: break-word;
+}
+html > body .lqTrArea .textarea {
+	
+}
+#riEventColumn .pickup table {
+	margin: 0px 0px 0px 7px; width: 100%;
+}
+#riEventColumn .pickup table table {
+	margin: 0px; width: 170px;
+}
+#riEventColumn .pickup td {
+	width: 50%; text-align: left;
+}
+#riEventColumn .pickup td td {
+	width: 80px;
+}
+#riEventColumn .pickup b {
+	margin: 0px 5px 0px 10px; width: 85px; text-align: left; display: block;
+}
+#riEventColumn .lqPickup {
+	width: 100%; overflow: hidden; padding-bottom: 20px; _zoom: 1;
+}
+#riEventColumn .lqPickup table {
+	margin: 0px 0px 0px 6px; width: 180px; height: 80px; float: left;
+}
+#riEventColumn .lqPickup div {
+	display: none;
+}
+#riEventColumn .lqPickup td {
+	width: 50%; text-align: left; vertical-align: top;
+}
+#riEventColumn .auction a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#riEventColumn .auction a:hover {
+	color: rgb(192, 0, 0) !important; text-decoration: underline;
+}
+#riEventColumn .auction {
+	margin: 0px 0px 30px; padding: 7px 6px 0px;
+}
+#riEventColumn .auction li {
+	float: left; display: inline;
+}
+#riEventColumn .auction .imgarea {
+	margin: 0px;
+}
+#riEventColumn .auction .textarea {
+	margin: 0px 0px 0px 13px;
+}
+#riEventColumn .auction .sp4 {
+	padding: 7px 0px;
+}
+#riEventColumn .auction .sp4 li {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_f2ab00.gif") no-repeat 0px 6px; margin: 0px; padding: 0px 0px 0px 7px; width: 140px;
+}
+#riEventColumn .fourTimesale {
+	margin: 0px 0px 20px;
+}
+#riEventColumn .fourTimesale .timesaleBox {
+	padding: 10px 0px 0px; height: 123px; overflow: visible; clear: both; position: relative; _zoom: 1;
+}
+#riEventColumn .fourTimesale .timesaleBox td {
+	white-space: nowrap;
+}
+#riEventColumn .fourTimesale .timeSaleLeft {
+	left: 0px; top: 10px; width: 164px; position: absolute;
+}
+#riEventColumn .fourTimesale .timeSaleRight {
+	margin-left: 164px;
+}
+#riEventColumn .fourTimesale .timeSaleRight dt {
+	margin: 0px 0px 7px; min-height: 56px; _height: 56px;
+}
+#riEventColumn .fourTimesale .timeSaleRight table {
+	margin: 0px 0px 7px;
+}
+#riEventColumn .timesaleBox a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#riEventColumn .timesaleBox a:hover {
+	color: rgb(192, 0, 0) !important; text-decoration: underline;
+}
+#riEventColumn .fourTimesale {
+	padding: 7px; border: 1px solid rgb(206, 206, 206); min-width: 96%;
+}
+.LQtimesale .timesaleBox {
+	height: auto !important; margin-right: 15px; min-height: 123px;
+}
+.LQfirstSale {
+	width: 455px;
+}
+.LQlastSale .timesaleBox {
+	border-left-color: rgb(204, 204, 204); border-left-width: 1px; border-left-style: dotted;
+}
+.LQlastSale .timeSaleLeft {
+	left: 15px !important;
+}
+.LQlastSale .timeSaleRight {
+	margin-left: 184px !important;
+}
+.LQtimesale taRight {
+	margin-top: 10px;
+}
+.LQtimesale .timesaleTtl {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201011/bg_timesale.gif") repeat-x 0px -4px; border-right-color: rgb(206, 206, 206); border-left-color: rgb(206, 206, 206); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid;
+}
+.LQtimesale .timesaleTtl img {
+	margin-top: -4px; float: left;
+}
+.LQtimesale span.LQtimesaleDate {
+	width: auto; color: rgb(68, 68, 68); padding-top: 8px; padding-left: 3px; font-weight: bold; display: block;
+}
+#riEventColumn .fourPointCampaign {
+	margin: 0px 0px 20px;
+}
+#riEventColumn .fourPointCampaign .pointDetail01 {
+	padding: 5px 0px; text-align: right; font-size: 90%;
+}
+#riEventColumn .fourPointCampaign .pointDetail02 {
+	padding: 5px 0px; text-align: left; font-size: 82%;
+}
+#riEventColumn .pointCampaignBox {
+	background: rgb(249, 249, 225); padding: 9px 7px;
+}
+#riEventColumn .pointCampaignBox .pointCampaignInBox {
+	background: rgb(255, 255, 255); padding: 0px 6px; margin-top: 4px;
+}
+#riEventColumn .pointCampaignBox .pointCampaignInBox dl {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/pointcamp/dotto_01.gif") repeat-x left top; padding: 7px 0px; overflow: hidden; clear: both; _zoom: 1;
+}
+#riEventColumn .pointCampaignBox .pointCampaignInBox dl.cont1 {
+	padding: 7px 0px;
+}
+#riEventColumn .pointCampaignBox .pointCampaignInBox dl dt {
+	width: 95px; color: rgb(191, 0, 0); font-weight: bold; float: left; min-height: 17px;
+}
+#riEventColumn .pointCampaignBox .pointCampaignInBox dl dd {
+	width: 70%; float: left; min-height: 17px;
+}
+#riEventColumn .pointCampaignBox .pointCampaignInBox dl dt {
+	padding-left: 20px;
+}
+#riEventColumn .pointCampaignBox .pointCampaignInBox dl dt.no01 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/pointcamp/pointcampaign_no_01.gif") no-repeat left top;
+}
+#riEventColumn .pointCampaignBox .pointCampaignInBox dl dt.no02 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/pointcamp/pointcampaign_no_02.gif") no-repeat left top;
+}
+#riEventColumn .pointCampaignBox .pointCampaignInBox dl dt.no03 {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/pointcamp/pointcampaign_no_03.gif") no-repeat left top;
+}
+#riEventColumn .pointCampaignBox .and03 .pointIconBox {
+	width: 426px;
+}
+#riEventColumn .pointCampaignBox .and02 .pointIconBox {
+	width: 350px;
+}
+#riEventColumn .and0 {
+	margin: 0px auto 5px; text-align: center;
+}
+#riEventColumn .pointCampaignBox .or03 .pointIconBox {
+	width: 376px;
+}
+#riEventColumn .pointCampaignBox .or02 .pointIconBox {
+	width: 255px;
+}
+#riEventColumn .pointCampaignBox .or01 .pointIconBox {
+	width: 135px;
+}
+#riEventColumn .pointCampaignBox .pointIconBox {
+	margin: 5px auto 2px; overflow: hidden; clear: both; _zoom: 1;
+}
+#riEventColumn .pointCampaignBox .pointIconBox li {
+	text-align: center; padding-left: 3px; float: left;
+}
+#riEventColumn .pointCampaignBox .pointIconBox li dl {
+	padding-top: 10px;
+}
+#riEventColumn .pointCampaignBox .pointIconBox li dl dt {
+	padding-bottom: 2px;
+}
+#riEventColumn .pointCampaignBox .pointIconBox li.base {
+	padding: 25px 0px 0px 3px;
+}
+#riEventColumn .pointCampaignBox .pointIconBox li.icon {
+	padding-top: 40px;
+}
+#riEventColumn .fourPointCampaign .pointCampaign {
+	padding: 10px 0px 0px; overflow: hidden; clear: both; position: relative; _zoom: 1;
+}
+#riEventColumn .fourPointCampaign .check {
+	float: right; display: inline;
+}
+#riEventColumn .pointCampaignTtl {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/pointcamp/bg_pointcampaign.gif") repeat-x 0px -9px; border-right-color: rgb(206, 206, 206); border-left-color: rgb(206, 206, 206); border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid;
+}
+#riEventColumn .pointCampaignTtl img {
+	margin-top: -9px;
+}
+#riEventColumn .pointCampaign a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#riEventColumn .pointCampaign a:hover {
+	color: rgb(192, 0, 0) !important; text-decoration: underline;
+}
+#riEventColumn .fourPointCampaign {
+	padding: 7px; border: 1px solid rgb(206, 206, 206); min-width: 96%;
+}
+#riEventColumn .rakupon {
+	overflow: hidden; _zoom: 1;
+}
+#riEventColumn .rakupon .timesaleBox {
+	padding: 10px 0px 0px; position: relative;
+}
+#riEventColumn .rakupon .timeSaleLeft {
+	left: 0px; top: 10px; position: absolute;
+}
+#riEventColumn .rakupon .timeSaleRight {
+	margin-left: 148px;
+}
+#riEventColumn .rakupon .LQlastSale .timeSaleRight {
+	margin-left: 164px !important;
+}
+#riEventColumn .rakupon .timeSaleRight dt {
+	margin: 0px 0px 7px;
+}
+#riEventColumn .rakupon .timeSaleRight table {
+	margin: 0px 0px 7px;
+}
+#riEventColumn .rakupon li {
+	width: 455px; float: left; display: none;
+}
+#riEventColumn .rakupon .timesaleBox {
+	margin-right: 15px; min-height: 120px;
+}
+#riEventColumn .rakupon li#riRakuponListDef {
+	border-left-color: currentColor; border-left-width: medium; border-left-style: none; display: block;
+}
+#riHotitem {
+	overflow: hidden; _zoom: 1;
+}
+#riHotitem li {
+	width: 455px; float: left; display: none;
+}
+#riHotitem li#riHotListDef {
+	display: block;
+}
+#riHotitem .riHotitemBox {
+	padding: 10px 0px 0px; height: 133px; margin-right: 15px; border-left-color: rgb(204, 204, 204); border-left-width: 1px; border-left-style: dotted; position: relative; min-height: 133px;
+}
+#riHotitem li#riHotListDef .riHotitemBox {
+	border-left-color: currentColor; border-left-width: medium; border-left-style: none;
+}
+#riHotitem .riHotitemLeft {
+	left: 15px; top: 10px; position: absolute;
+}
+#riHotitem .riHotitemRight {
+	padding-bottom: 30px; margin-left: 178px;
+}
+#riHotitem .riHotitemRight dt {
+	margin: 0px 0px 7px; min-height: 32px; _height: 32px;
+}
+#riHotitem .riHotitemRight dd.taRight {
+	margin-top: 7px;
+}
+#machiraku area {
+	cursor: pointer;
+}
+.machiLink {
+	text-align: center; padding-top: 5px; padding-bottom: 5px; font-size: 90%;
+}
+.machiSttl {
+	padding-left: 5px; font-weight: bold;
+}
+#machiraku ul {
+	margin-top: -5px;
+}
+.areaHokkaido {
+	display: none;
+}
+.areaTohoku {
+	display: none;
+}
+.areaKanto {
+	display: none;
+}
+.areaKinki {
+	display: none;
+}
+.areaShikoku {
+	display: none;
+}
+.areaKyusyu {
+	display: none;
+}
+.areaChugoku {
+	display: none;
+}
+.areaChubu {
+	display: none;
+}
+.areaOkinawa {
+	display: none;
+}
+#ritopbanner {
+	margin: 0px 0px 7px;
+}
+#topInfoArea {
+	background: rgb(255, 255, 221); margin: 0px auto 10px; padding: 5px; border: 1px solid rgb(206, 206, 206); text-align: center; font-size: 82%; _zoom: 1;
+}
+#topInfoArea a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#ritFooter #topInfoArea {
+	margin: 0px auto 15px; width: 260px;
+}
+#topInfoArea a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}
+#topAnnounceArea {
+	background: rgb(255, 255, 221); margin: 0px auto 10px; padding: 5px; border: 1px solid rgb(206, 206, 206); width: 260px; text-align: center; font-size: 82%; _zoom: 1;
+}
+#topAnnounceArea a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#topAnnounceArea a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}
+#topEmergencyArea {
+	background: rgb(255, 255, 221); margin: 0px auto 10px; padding: 5px; border: 1px solid rgb(206, 206, 206); width: 260px; text-align: center; font-size: 82%; _zoom: 1;
+}
+#topEmergencyArea a {
+	color: rgb(29, 84, 167); text-decoration: none;
+}
+#topEmergencyArea a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}
+#tableHeader table[cellpadding='6'] td[width='50%'] a {
+	color: rgb(255, 255, 255);
+}
+#tableSarch td[width='30%'] img {
+	margin-top: 3px; display: block;
+}
+#tableSarch td[VALIGN='MIDDLE'] img {
+	padding: 3px; text-align: center; vertical-align: middle; display: block;
+}
+#tableSarch td[width='30%'] a {
+	color: rgb(99, 99, 99);
+}
+#tableRanking div[align='right'] td {
+	text-align: left;
+}
+.ashiatoRecoRecoItemName {
+	width: 85px !important;
+}
+.paraApi {
+	margin: 10px 0px 0px;
+}
+.guideL .subText {
+	background: url("http://a.ichiba.jp.rakuten-static.com/com/img/home/beta/201008/dot_f2ab00.gif") no-repeat 12px 6px !important; margin: 0px 0px 0px 15px !important; padding: 0px 0px 0px 19px !important;
+}
+#riEventColumn .centerTitle h2 a {
+	color: rgb(191, 0, 0); text-decoration: none;
+}
+#riEventColumn .centerTitle h2 a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}
+#riEventColumn .titleH2 a {
+	color: rgb(191, 0, 0); text-decoration: none;
+}
+#riEventColumn .titleH2 a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}
+div#riEmgArea-top08 h3 a:link {
+	color: rgb(191, 0, 0); text-decoration: none;
+}
+div#riEmgArea-top08 h3 a:hover {
+	color: rgb(192, 0, 0); text-decoration: underline;
+}

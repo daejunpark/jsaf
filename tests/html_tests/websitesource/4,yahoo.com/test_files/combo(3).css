@@ -1,0 +1,36 @@
+.type_breakingnews_default .breaking-news {
+	width: 99.9%; margin-bottom: 12px;
+}
+.dev-smartphone .type_breakingnews_default .breaking-news {
+	margin: 3px 0px;
+}
+.dev-hrtablet .type_breakingnews_default .breaking-news {
+	margin: 3px 0px;
+}
+.type_breakingnews_default {
+	color: rgb(95, 95, 95) !important;
+}
+.type_breakingnews_default a {
+	color: rgb(95, 95, 95) !important;
+}
+.type_breakingnews .breaking-header {
+	border-width: 1px 1px 1px medium; border-style: solid solid solid none; border-color: rgb(226, 226, 230) rgb(226, 226, 230) rgb(226, 226, 230) currentColor; padding: 8px 12px 9px; margin-left: 140px; background-color: rgb(255, 255, 255);
+}
+.type_breakingnews .prefix {
+	background: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAgICAgICAgICAgMDAwMDAwMDAwP/2wBDAQEBAQEBAQIBAQICAgECAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwP/wAARCAAEAAQDAREAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAABv/EABwQAAEDBQAAAAAAAAAAAAAAABIAERVBZqG18P/EABUBAQEAAAAAAAAAAAAAAAAAAAgK/8QAHhEAAQIHAQAAAAAAAAAAAAAA8ABBERIyM2VmgoP/2gAMAwEAAhEDEQA/ADdb4fGpKJ40FWyJzSRVXb60et0lX//Z") 0px 0px rgb(228, 72, 72); border: 1px solid rgb(172, 45, 30); width: 140px; text-align: center; color: rgb(255, 255, 255);
+}
+.dev-smartphone .type_breakingnews .prefix {
+	width: 65px; padding-right: 5px; padding-left: 5px;
+}
+.dev-smartphone .type_breakingnews .breaking-header {
+	padding: 0px 8px;
+}
+.dev-hrtablet .type_breakingnews .breaking-header {
+	padding: 0px 20px;
+}
+.type_breakingnews_default .bg-col-1 {
+	background: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAgICAgICAgICAgMDAwMDAwMDAwP/2wBDAQEBAQEBAQIBAQICAgECAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwP/wAARCAAEAAQDAREAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACv/EABkQAAEFAAAAAAAAAAAAAAAAAPAAETSEtf/EABUBAQEAAAAAAAAAAAAAAAAAAAcJ/8QAGxEAAgEFAAAAAAAAAAAAAAAAAPC0ETEygYL/2gAMAwEAAhEDEQA/AGqZBalDKS0d3cVZzzi1P//Z") 0px 0px rgb(250, 255, 186); border: 1px solid rgb(229, 222, 138);
+}
+.type_breakingnews_default .bg-col-1 {
+	color: rgb(63, 63, 63);
+}

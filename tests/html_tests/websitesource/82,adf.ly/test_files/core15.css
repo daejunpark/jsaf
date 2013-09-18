@@ -1,0 +1,3939 @@
+article {
+	display: block;
+}
+aside {
+	display: block;
+}
+details {
+	display: block;
+}
+figcaption {
+	display: block;
+}
+figure {
+	display: block;
+}
+footer {
+	display: block;
+}
+header {
+	display: block;
+}
+hgroup {
+	display: block;
+}
+nav {
+	display: block;
+}
+section {
+	display: block;
+}
+audio {
+	display: inline-block;
+}
+canvas {
+	display: inline-block;
+}
+video {
+	display: inline-block;
+}
+audio:not([controls]) {
+	display: none;
+}
+[hidden] {
+	display: none;
+}
+html {
+	font-size: 100%; -ms-overflow-y: scroll; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;
+}
+body {
+	margin: 0px; line-height: 1.231; font-size: 13px;
+}
+body {
+	color: rgb(34, 34, 34); font-family: sans-serif;
+}
+button {
+	color: rgb(34, 34, 34); font-family: sans-serif;
+}
+input {
+	color: rgb(34, 34, 34); font-family: sans-serif;
+}
+select {
+	color: rgb(34, 34, 34); font-family: sans-serif;
+}
+textarea {
+	color: rgb(34, 34, 34); font-family: sans-serif;
+}
+::selection {
+	background: rgb(254, 87, 161); color: rgb(255, 255, 255); text-shadow: none;
+}
+a {
+	color: rgb(0, 0, 238);
+}
+a:visited {
+	color: rgb(85, 26, 139);
+}
+a:hover {
+	color: rgb(0, 102, 238);
+}
+a:focus {
+	outline: dotted thin;
+}
+a:hover {
+	outline: 0px;
+}
+a:active {
+	outline: 0px;
+}
+abbr[title] {
+	border-bottom-color: currentColor; border-bottom-width: 1px; border-bottom-style: dotted;
+}
+b {
+	font-weight: bold;
+}
+strong {
+	font-weight: bold;
+}
+blockquote {
+	margin: 1em 40px;
+}
+dfn {
+	font-style: italic;
+}
+hr {
+	border-width: 1px 0px 0px; border-style: solid none none; border-color: rgb(204, 204, 204) currentColor currentColor; margin: 13px 0px; padding: 0px; height: 1px; display: block;
+}
+.oldie hr {
+	margin: 3px 0px;
+}
+ins {
+	background: rgb(255, 255, 153); color: rgb(0, 0, 0); text-decoration: none;
+}
+mark {
+	background: rgb(255, 255, 0); color: rgb(0, 0, 0); font-style: italic; font-weight: bold;
+}
+pre {
+	font-family: monospace,serif; font-size: 1em; _font-family: "courier new", monospace;
+}
+code {
+	font-family: monospace,serif; font-size: 1em; _font-family: "courier new", monospace;
+}
+kbd {
+	font-family: monospace,serif; font-size: 1em; _font-family: "courier new", monospace;
+}
+samp {
+	font-family: monospace,serif; font-size: 1em; _font-family: "courier new", monospace;
+}
+pre {
+	white-space: pre-wrap; -ms-word-wrap: break-word;
+}
+q {
+	quotes: none;
+}
+q::before {
+	content: none;
+}
+q::after {
+	content: none;
+}
+small {
+	font-size: 85%;
+}
+sub {
+	line-height: 0; font-size: 75%; vertical-align: baseline; position: relative;
+}
+sup {
+	line-height: 0; font-size: 75%; vertical-align: baseline; position: relative;
+}
+sup {
+	top: -0.5em;
+}
+sub {
+	bottom: -0.25em;
+}
+ul {
+	margin: 1em 0px; padding: 0px 0px 0px 40px;
+}
+ol {
+	margin: 1em 0px; padding: 0px 0px 0px 40px;
+}
+dd {
+	margin: 0px 0px 0px 40px;
+}
+nav ul {
+	list-style: none; margin: 0px; padding: 0px;
+}
+nav ol {
+	list-style: none; margin: 0px; padding: 0px;
+}
+img {
+	border: 0px currentColor; vertical-align: middle; -ms-interpolation-mode: bicubic;
+}
+svg:not(:root) {
+	overflow: hidden;
+}
+figure {
+	margin: 0px;
+}
+form {
+	margin: 0px;
+}
+fieldset {
+	margin: 0px; padding: 0px; border: 0px currentColor;
+}
+label {
+	cursor: pointer;
+}
+legend {
+	padding: 0px; border: 0px currentColor;
+}
+button {
+	margin: 0px; font-size: 100%; vertical-align: baseline;
+}
+input {
+	margin: 0px; font-size: 100%; vertical-align: baseline;
+}
+select {
+	margin: 0px; font-size: 100%; vertical-align: baseline;
+}
+textarea {
+	margin: 0px; font-size: 100%; vertical-align: baseline;
+}
+button {
+	line-height: normal;
+}
+input {
+	line-height: normal;
+}
+table button {
+	
+}
+table input {
+	
+}
+button {
+	cursor: pointer; -webkit-appearance: button;
+}
+input[type='button'] {
+	cursor: pointer; -webkit-appearance: button;
+}
+input[type='reset'] {
+	cursor: pointer; -webkit-appearance: button;
+}
+input[type='submit'] {
+	cursor: pointer; -webkit-appearance: button;
+}
+input[type='checkbox'] {
+	padding: 0px; box-sizing: border-box;
+}
+input[type='radio'] {
+	padding: 0px; box-sizing: border-box;
+}
+input[type='search'] {
+	box-sizing: content-box; -webkit-appearance: textfield; -moz-box-sizing: content-box; -webkit-box-sizing: content-box;
+}
+textarea {
+	overflow: auto; vertical-align: top; resize: vertical;
+}
+input:invalid {
+	background-color: rgb(240, 221, 221);
+}
+textarea:invalid {
+	background-color: rgb(240, 221, 221);
+}
+table {
+	border-collapse: collapse; border-spacing: 0;
+}
+td {
+	vertical-align: top;
+}
+.ui-tooltip {
+	padding: 8px; position: absolute; z-index: 9999; box-shadow: 0px 0px 5px #aaa; -o-box-shadow: 0 0 5px #aaa; -moz-box-shadow: 0 0 5px #aaa; -webkit-box-shadow: 0 0 5px #aaa;
+}
+.ui-datepicker {
+	padding: 0.2em 0.2em 0px; width: 17em; display: none;
+}
+.ui-datepicker .ui-datepicker-header {
+	padding: 0.2em 0px; position: relative;
+}
+.ui-datepicker .ui-datepicker-prev {
+	top: 2px; width: 1.8em; height: 1.8em; position: absolute;
+}
+.ui-datepicker .ui-datepicker-next {
+	top: 2px; width: 1.8em; height: 1.8em; position: absolute;
+}
+.ui-datepicker .ui-datepicker-prev-hover {
+	top: 1px;
+}
+.ui-datepicker .ui-datepicker-next-hover {
+	top: 1px;
+}
+.ui-datepicker .ui-datepicker-prev {
+	left: 2px;
+}
+.ui-datepicker .ui-datepicker-next {
+	right: 2px;
+}
+.ui-datepicker .ui-datepicker-prev-hover {
+	left: 1px;
+}
+.ui-datepicker .ui-datepicker-next-hover {
+	right: 1px;
+}
+.ui-datepicker .ui-datepicker-prev span {
+	left: 50%; top: 50%; margin-top: -8px; margin-left: -8px; display: block; position: absolute;
+}
+.ui-datepicker .ui-datepicker-next span {
+	left: 50%; top: 50%; margin-top: -8px; margin-left: -8px; display: block; position: absolute;
+}
+.ui-datepicker .ui-datepicker-title {
+	margin: 0px 2.3em; text-align: center; line-height: 1.8em;
+}
+.ui-datepicker .ui-datepicker-title select {
+	margin: 1px 0px; font-size: 1em;
+}
+.ui-datepicker select.ui-datepicker-month-year {
+	width: 100%;
+}
+.ui-datepicker select.ui-datepicker-month {
+	width: 49%;
+}
+.ui-datepicker select.ui-datepicker-year {
+	width: 49%;
+}
+.ui-datepicker table {
+	margin: 0px 0px 0.4em; width: 100%; font-size: 0.9em; border-collapse: collapse;
+}
+.ui-datepicker th {
+	padding: 0.7em 0.3em; border: 0px currentColor; text-align: center; font-weight: bold;
+}
+.ui-datepicker td {
+	padding: 1px; border: 0px currentColor;
+}
+.ui-datepicker td span {
+	padding: 0.2em; text-align: right; text-decoration: none; display: block;
+}
+.ui-datepicker td a {
+	padding: 0.2em; text-align: right; text-decoration: none; display: block;
+}
+.ui-datepicker .ui-datepicker-buttonpane {
+	margin: 0.7em 0px 0px; padding: 0px 0.2em; border-right-color: currentColor; border-bottom-color: currentColor; border-left-color: currentColor; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-right-style: none; border-bottom-style: none; border-left-style: none; background-image: none;
+}
+.ui-datepicker .ui-datepicker-buttonpane button {
+	margin: 0.5em 0.2em 0.4em; padding: 0.2em 0.6em 0.3em; width: auto; overflow: visible; float: right; cursor: pointer;
+}
+.ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
+	float: left;
+}
+.ui-datepicker-multi.ui-datepicker {
+	width: auto;
+}
+.ui-datepicker-multi .ui-datepicker-group {
+	float: left;
+}
+.ui-datepicker-multi .ui-datepicker-group table {
+	margin: 0px auto 0.4em; width: 95%;
+}
+.ui-datepicker-multi-2 .ui-datepicker-group {
+	width: 50%;
+}
+.ui-datepicker-multi-3 .ui-datepicker-group {
+	width: 33.3%;
+}
+.ui-datepicker-multi-4 .ui-datepicker-group {
+	width: 25%;
+}
+.ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header {
+	border-left-width: 0px;
+}
+.ui-datepicker-multi .ui-datepicker-group-middle .ui-datepicker-header {
+	border-left-width: 0px;
+}
+.ui-datepicker-multi .ui-datepicker-buttonpane {
+	clear: left;
+}
+.ui-datepicker-row-break {
+	width: 100%; clear: both; font-size: 0em;
+}
+.ui-datepicker-rtl {
+	direction: rtl;
+}
+.ui-datepicker-rtl .ui-datepicker-prev {
+	left: auto; right: 2px;
+}
+.ui-datepicker-rtl .ui-datepicker-next {
+	left: 2px; right: auto;
+}
+.ui-datepicker-rtl .ui-datepicker-prev:hover {
+	left: auto; right: 1px;
+}
+.ui-datepicker-rtl .ui-datepicker-next:hover {
+	left: 1px; right: auto;
+}
+.ui-datepicker-rtl .ui-datepicker-buttonpane {
+	clear: right;
+}
+.ui-datepicker-rtl .ui-datepicker-buttonpane button {
+	float: left;
+}
+.ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current {
+	float: right;
+}
+.ui-datepicker-rtl .ui-datepicker-group {
+	float: right;
+}
+.ui-datepicker-rtl .ui-datepicker-group-last .ui-datepicker-header {
+	border-right-width: 0px; border-left-width: 1px;
+}
+.ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header {
+	border-right-width: 0px; border-left-width: 1px;
+}
+.ui-datepicker-cover {
+	left: -4px; top: -4px; width: 200px; height: 200px; display: block; position: absolute; z-index: -1;
+}
+* html .ui-tooltip {
+	background-image: none;
+}
+body .ui-tooltip {
+	border-width: 2px;
+}
+#join_form {
+	display: none;
+}
+#learn_more {
+	display: none;
+}
+.displayNone {
+	display: none;
+}
+.floatNone {
+	float: none;
+}
+.floatLeft {
+	float: left;
+}
+.floatRight {
+	float: right;
+}
+.clearBoth {
+	height: 0px; line-height: 0px; clear: both;
+}
+.clearLeft {
+	clear: left;
+}
+.clearRight {
+	clear: right;
+}
+.textToLeft {
+	text-align: left !important;
+}
+.textToRight {
+	text-align: right !important;
+}
+.textToCenter {
+	text-align: center !important;
+}
+.noscriptWarning {
+	padding: 5px; text-align: center; color: rgb(255, 255, 255); margin-top: 10px; margin-bottom: 10px; background-color: red;
+}
+div.container section div.common {
+	padding: 15px 30px 30px; clear: both; position: relative;
+}
+article.info p {
+	padding-left: 20px;
+}
+html {
+	width: 100%; clear: both; float: left;
+}
+body {
+	width: 100%; clear: both; float: left;
+}
+#main {
+	width: 100%; clear: both; float: left;
+}
+#container {
+	width: 100%; clear: both; float: left;
+}
+body {
+	background: url("../image/header_gradient.jpg") no-repeat top rgb(36, 93, 146);
+}
+::selection {
+	background: rgb(60, 114, 152);
+}
+h1 {
+	margin: 0px;
+}
+h2 {
+	margin: 0px;
+}
+h3 {
+	margin: 0px;
+}
+h4 {
+	margin: 0px;
+}
+h5 {
+	margin: 0px;
+}
+h6 {
+	margin: 0px;
+}
+.page h2 {
+	color: rgb(58, 88, 114); font-family: Arial,sans-serif; font-size: 19px; font-weight: bold; text-shadow: 0px 1px 0px #fff;
+}
+.page h3 {
+	color: rgb(63, 89, 113); font-family: Arial,sans-serif; font-size: 17px; font-weight: bold;
+}
+.page h4 {
+	color: rgb(123, 146, 164); font-family: Arial,sans-serif; font-size: 16px; text-shadow: 0px 1px 0px #fff;
+}
+.page h6 {
+	line-height: 1.538; font-size: 13px;
+}
+.page p {
+	line-height: 1.538; margin-top: 0px;
+}
+a {
+	text-decoration: none;
+}
+a:link {
+	color: rgb(52, 120, 181);
+}
+a:visited {
+	color: rgb(52, 120, 181);
+}
+a:active {
+	color: rgb(52, 120, 181);
+}
+#container {
+	
+}
+.container {
+	margin: 0px auto; width: 920px;
+}
+.home .container {
+	width: 850px;
+}
+body {
+	font-family: Arial,sans-serif;
+}
+body.home {
+	background: rgb(8, 46, 73);
+}
+h1#logo {
+	background: url("../image/logo.png") no-repeat 0px 0px; width: 185px; height: 90px;
+}
+h1#logo a {
+	width: 100%; height: 100%; display: block;
+}
+input {
+	
+}
+input:focus {
+	box-shadow: 0px 0px 5px #000099; -o-box-shadow: #000099 0 0 5px; -moz-box-shadow: #000099 0 0 5px; -webkit-box-shadow: #000099 0 0 5px;
+}
+.rgba input:focus {
+	box-shadow: 0px 0px 5px rgba(0,0,255,0.5); -o-box-shadow: rgba(0, 0, 255, 0.5) 0 0 5px; -moz-box-shadow: rgba(0, 0, 255, 0.5) 0 0 5px; -webkit-box-shadow: rgba(0, 0, 255, 0.5) 0 0 5px;
+}
+input.error {
+	box-shadow: 0px 0px 5px #000099; -o-box-shadow: #000099 0 0 5px; -moz-box-shadow: #000099 0 0 5px; -webkit-box-shadow: #000099 0 0 5px;
+}
+input.error:focus {
+	box-shadow: 0px 0px 5px #990000; -o-box-shadow: #990000 0 0 5px; -moz-box-shadow: #990000 0 0 5px; -webkit-box-shadow: #990000 0 0 5px;
+}
+.rgba input.error {
+	box-shadow: 0px 0px 5px rgba(255,0,0,0.5); -o-box-shadow: rgba(255, 0, 0, 0.5) 0 0 5px; -moz-box-shadow: rgba(255, 0, 0, 0.5) 0 0 5px; -webkit-box-shadow: rgba(255, 0, 0, 0.5) 0 0 5px;
+}
+.rgba input.error:focus {
+	box-shadow: 0px 0px 5px rgba(0,0,255,0.5); -o-box-shadow: rgba(0, 0, 255, 0.5) 0 0 5px; -moz-box-shadow: rgba(0, 0, 255, 0.5) 0 0 5px; -webkit-box-shadow: rgba(0, 0, 255, 0.5) 0 0 5px;
+}
+.button {
+	background: linear-gradient(rgb(255, 255, 255), rgb(237, 237, 237)) rgb(246, 246, 246); padding: 0px 8px; border-radius: 3px; border: 1px solid rgb(192, 186, 151); width: auto; height: 23px; color: rgb(46, 46, 46); line-height: 23px; font-size: 12px; font-weight: bold; float: left; cursor: pointer; box-shadow: 0px 1px 0px white; text-shadow: 0px 1px 0px #fff; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-box-shadow: white 0 1px 0; -moz-box-shadow: white 0 1px 0; -webkit-box-shadow: white 0 1px 0; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+.current.button {
+	border-width: 1px; border-style: solid; border-color: rgb(126, 122, 98) rgb(150, 144, 115) rgb(171, 165, 129); box-shadow: 0px 1px 0px white, inset 0px 1px 2px #a7a7a7; background-image: linear-gradient(rgb(204, 204, 204), rgb(255, 255, 255)); -o-box-shadow: white 0 1px 0, inset #a7a7a7 0 1px 2px; -moz-box-shadow: white 0 1px 0, inset #a7a7a7 0 1px 2px; -webkit-box-shadow: white 0 1px 0, inset #a7a7a7 0 1px 2px;
+}
+.button:active {
+	border-width: 1px; border-style: solid; border-color: rgb(126, 122, 98) rgb(150, 144, 115) rgb(171, 165, 129); box-shadow: 0px 1px 0px white, inset 0px 1px 2px #a7a7a7; background-image: linear-gradient(rgb(204, 204, 204), rgb(255, 255, 255)); -o-box-shadow: white 0 1px 0, inset #a7a7a7 0 1px 2px; -moz-box-shadow: white 0 1px 0, inset #a7a7a7 0 1px 2px; -webkit-box-shadow: white 0 1px 0, inset #a7a7a7 0 1px 2px;
+}
+a.button:link {
+	color: rgb(46, 46, 46);
+}
+a.button:visited {
+	color: rgb(46, 46, 46);
+}
+a.ir.button {
+	padding: 0px; border: currentColor; box-shadow: none; -o-box-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none;
+}
+form#shrink {
+	border: currentColor; width: 100%; clear: both; float: left; display: block; position: relative;
+}
+form#shrink input {
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-weight: 200;
+}
+form#shrink input:focus {
+	
+}
+form#shrink span.url {
+	top: 0px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-weight: 200; position: absolute;
+}
+form#shrink button {
+	top: 0px; right: 0px; display: block; position: absolute; cursor: pointer;
+}
+.jqplot-axis {
+	padding: 10px; color: rgb(129, 129, 129); font-size: 10px; font-weight: bold;
+}
+.data {
+	width: 100%; clear: both; float: left; position: relative;
+}
+.data nav.menu {
+	background: rgb(253, 252, 238); border-width: 1px; border-style: solid; border-color: rgb(180, 186, 191) rgb(206, 205, 183) rgb(180, 186, 191) rgb(180, 186, 191); border-radius: 3px 0px 0px 3px; width: 223px; height: 367px; right: -1px; clear: left; float: left; position: relative; z-index: 3; -moz-border-radius: 3px 0 0 3px; -khtml-border-radius: 3px 0 0 3px; -webkit-border-radius: 3px 0 0 3px; -o-border-radius: 3px 0 0 3px; -ms-border-radius: 3px 0 0 3px;
+}
+.data nav.menu header {
+	background: linear-gradient(rgb(245, 245, 245), rgb(215, 215, 215)) rgb(233, 233, 233); border-radius: 3px 0px 0px; width: 100%; height: 34px; clear: left; border-top-color: rgb(255, 255, 255); border-right-color: rgb(180, 186, 191); border-bottom-color: rgb(180, 186, 191); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; float: left; -moz-border-radius: 3px 0 0 0; -khtml-border-radius: 3px 0 0 0; -webkit-border-radius: 3px 0 0 0; -o-border-radius: 3px 0 0 0; -ms-border-radius: 3px 0 0 0;
+}
+.data nav.menu ul {
+	margin: 0px; padding: 0px; width: 100%; clear: both; float: left;
+}
+.data nav.menu li {
+	width: 100%; height: 35px; color: rgb(52, 120, 181); line-height: 35px; text-indent: 46px; clear: both; font-size: 14px; font-weight: bold; float: left; cursor: pointer; text-shadow: 0px 1px 0px #fff;
+}
+.data nav.menu li.active {
+	background: url("../image/menu_current_bg.png") no-repeat 0px 0px; width: 235px; height: 36px; color: rgb(63, 89, 113); text-indent: 48px; margin-top: -1px; margin-left: -2px;
+}
+.data nav.menu li span {
+	width: 100%; clear: both; float: left;
+}
+.data .panels {
+	border-width: 1px 1px 1px 0px; border-style: solid; border-color: rgb(212, 212, 212); border-radius: 3px; width: 654px; height: 375px; float: left; position: relative; z-index: 2; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+.data .panel {
+	left: 0px; top: 0px; width: 100%; right: 0px; bottom: 0px; position: absolute; -ms-overflow-x: hidden;
+}
+.data .active.panel {
+	display: block;
+}
+.data .panel #monthly-earnings-summary {
+	color: rgb(91, 91, 90); text-transform: uppercase; font-family: Arial,sans-serif; font-size: 16px; font-weight: bold;
+}
+.data .panel #monthly-earnings-summary b {
+	color: rgb(161, 161, 161); font-size: 12px; font-weight: normal;
+}
+.data .panel #monthly-earnings-summary span {
+	margin-right: 20px;
+}
+.data .panel #monthly-earnings-summary span:last-child {
+	margin-right: 0px;
+}
+#header {
+	padding-bottom: 14px; position: relative;
+}
+#header .container {
+	padding-top: 6px; position: relative;
+}
+body.alert #header .container {
+	height: 120px; padding-top: 22px;
+}
+body.alert .loggedin #header nav {
+	top: 56px;
+}
+.loggedin #header nav {
+	top: 40px;
+}
+.loggedin #header nav.accountType {
+	padding: 0px; border: 0px currentColor; font-family: Arial,sans-serif; font-size: 12px; font-weight: normal; float: right; position: static;
+}
+.home #top_bar {
+	left: 0px; width: 100%; position: absolute;
+}
+#top_bar {
+	height: 35px; background-color: rgb(21, 55, 86);
+}
+#top_bar .container {
+	padding-top: 0px;
+}
+body.alert #header #top_bar .container {
+	padding-top: 0px;
+}
+#top_bar .accountType a {
+	padding: 0px 15px; color: rgb(106, 143, 177); line-height: 35px; float: left;
+}
+#top_bar .accountType a:hover {
+	color: rgb(164, 194, 221);
+}
+#top_bar .accountType a.selected {
+	background: url("../image/account_type_bg.png") repeat-x left top; height: 35px; color: rgb(255, 255, 255); display: block;
+}
+#top_bar .language_switcher {
+	font-family: Arial,sans-serif; font-size: 12px; float: right;
+}
+#top_bar .language_switcher h5 {
+	background: url("../image/language_flags.png") no-repeat 14px 12px; padding: 0px 15px 0px 40px; color: rgb(106, 143, 177); line-height: 35px; font-family: Arial,sans-serif; font-size: 12px; font-weight: normal; cursor: pointer;
+}
+#top_bar .hover.language_switcher h5 {
+	background-color: rgb(15, 42, 66);
+}
+#top_bar .language_switcher h5 span {
+	background: url("../image/language_arrows.png") no-repeat left top; width: 8px; height: 19px; margin-left: 8px; display: inline-block;
+}
+#top_bar .hover.language_switcher h5 span {
+	background-position: 0px -36px;
+}
+#top_bar .language_switcher ul {
+	list-style: none; margin: 0px; padding: 0px; display: none; position: relative; z-index: 999; background-color: rgb(15, 42, 66);
+}
+#top_bar .language_switcher li {
+	padding: 0px 15px; color: rgb(106, 143, 177); line-height: 33px; font-family: Arial,sans-serif; display: block; cursor: pointer;
+}
+#top_bar .language_switcher li a {
+	background: url("../image/language_flags.png") no-repeat left top; color: rgb(106, 143, 177); padding-left: 25px; display: block;
+}
+#top_bar .language_switcher li.en a {
+	background-position: 0px 12px;
+}
+#top_bar .language_switcher li.fr a {
+	background-position: 0px -21px;
+}
+#top_bar .language_switcher li.de a {
+	background-position: 0px -53px;
+}
+#top_bar .language_switcher li.it a {
+	background-position: 0px -85px;
+}
+#top_bar .language_switcher li.es a {
+	background-position: 0px -117px;
+}
+#top_bar .language_switcher li.in a {
+	background-position: 0px -149px;
+}
+#top_bar .language_switcher li.cn a {
+	background-position: 0px -181px;
+}
+#top_bar .language_switcher li.vn a {
+	background-position: 0px -213px;
+}
+#top_bar .language_switcher h5.en {
+	background-position: 15px 12px;
+}
+#top_bar .language_switcher h5.fr {
+	background-position: 15px -20px;
+}
+#top_bar .language_switcher h5.de {
+	background-position: 15px -52px;
+}
+#top_bar .language_switcher h5.it {
+	background-position: 15px -84px;
+}
+#top_bar .language_switcher h5.es {
+	background-position: 15px -116px;
+}
+#top_bar .language_switcher h5.in {
+	background-position: 15px -148px;
+}
+#top_bar .language_switcher h5.cn {
+	background-position: 15px -180px;
+}
+#top_bar .language_switcher h5.vn {
+	background-position: 15px -212px;
+}
+#top_bar .language_switcher li:hover {
+	background: url("../image/language_switcher_bg.png") repeat-x left top; color: rgb(255, 255, 255);
+}
+.loggedin #logo {
+	margin-top: 30px;
+}
+#header nav {
+	padding: 0px 1px; top: 6px; right: 10px; font-family: Arial,sans-serif; font-weight: bold; position: absolute; z-index: 2;
+}
+.multiplebgs #header nav {
+	background: url("../image/nav_div_right.png") no-repeat left bottom, url("../image/nav_div_left.png") no-repeat right bottom;
+}
+#header nav li {
+	background: url("../image/nav_div_right.png") no-repeat right bottom; padding-top: 10px; padding-bottom: 17px; float: left;
+}
+.multiplebgs #header nav li {
+	background: url("../image/nav_div_right.png") no-repeat right bottom, url("../image/nav_div_left.png") no-repeat left bottom;
+}
+#header nav li a {
+	padding: 54px 24px 0px; text-align: center; color: rgb(26, 55, 82); line-height: 1em; font-size: 15px; display: block; text-shadow: 0px 1px 0px #1b96f8;
+}
+#header nav li a.current {
+	color: rgb(255, 255, 255); text-shadow: 0px 1px 0px #0c385d;
+}
+#header nav li.home a {
+	background: url("../image/nav_icon_home.png") no-repeat top;
+}
+#header nav li.referrals a {
+	background: url("../image/nav_icon_referrals.png") no-repeat top;
+}
+#header nav li.tools a {
+	background: url("../image/nav_icon_tools.png") no-repeat top;
+}
+#header nav li.withdraw a {
+	background: url("../image/nav_icon_withdraw.png") no-repeat top;
+}
+#header nav li.forum a {
+	background: url("../image/nav_icon_forum.png") no-repeat top;
+}
+#header nav li.support a {
+	background: url("../image/nav_icon_support.png") no-repeat top;
+}
+#header nav li.wallet a {
+	background: url("../image/nav_icon_wallet.png") no-repeat top;
+}
+#header nav li a.current {
+	background-position: center -92px;
+}
+.loggedin.secondary #header {
+	
+}
+.loggedin.secondary #logo {
+	margin-top: 25px;
+}
+#footer {
+	background: url("../image/footer_large_bg.png") repeat-x 0px 0px; width: 100%; height: 152px; padding-top: 41px; clear: both; margin-top: -41px; float: left; position: relative;
+}
+#footer .background {
+	background: url("../image/footer_large.jpg") no-repeat bottom; left: 0px; width: 100%; height: 193px; bottom: 0px; clear: both; float: left; position: absolute; z-index: 0;
+}
+#footer .container {
+	width: 880px; position: relative; z-index: 1;
+}
+#footer a {
+	color: rgb(196, 227, 255);
+}
+#footer a:link {
+	color: rgb(196, 227, 255);
+}
+#footer a:hover {
+	color: rgb(196, 227, 255);
+}
+#footer a:visited {
+	color: rgb(196, 227, 255);
+}
+#footer nav {
+	font-size: 12px; font-weight: bold; text-shadow: 0px 1px 0px #22313c;
+}
+#footer nav li {
+	float: left;
+}
+#footer nav li a {
+	background: url("../image/footer_lr_bg.png") no-repeat right top; padding: 12px; display: block;
+}
+.multiplebgs #footer nav li a {
+	background: url("../image/footer_lr_bg.png") no-repeat right top, url("../image/footer_ll_bg.png") no-repeat left top;
+}
+#footer nav li.first a {
+	background: url("../image/footer_lr_bg.png") no-repeat right top; padding-left: 0px;
+}
+#footer nav li.last a {
+	background: url("../image/footer_ll_bg.png") no-repeat left top; padding-right: 0px;
+}
+#footer div.payment {
+	padding-top: 12px; float: right;
+}
+#footer div.payment a {
+	height: 27px; margin-left: 5px; float: left; display: block;
+}
+#footer a.paypal {
+	background: url("../image/ft_paypal.png") no-repeat 0px 0px; width: 81px;
+}
+#footer a.libertyreserve {
+	background: url("../image/ft_libertyreserve.png") no-repeat 0px 0px; width: 81px;
+}
+#footer a.payoneer {
+	background: url("../image/ft_payoneer.png") no-repeat 0px 0px; width: 81px;
+}
+div.highlight p {
+	padding: 10px 20px; float: left;
+}
+section.page {
+	position: relative; z-index: 1;
+}
+section.page > .container {
+	background: rgb(255, 255, 255); border-radius: 5px; border: 1px solid rgb(12, 59, 96); position: relative; z-index: 2; box-shadow: 0px 0px 5px 1px #0c3b60; -moz-border-radius: 5px; -khtml-border-radius: 5px; -webkit-border-radius: 5px; -o-box-shadow: #0c3b60 0 0 5px 1px; -moz-box-shadow: #0c3b60 0 0 5px 1px; -webkit-box-shadow: #0c3b60 0 0 5px 1px; -o-border-radius: 5px; -ms-border-radius: 5px;
+}
+section.page > .container section.bar {
+	background: linear-gradient(rgb(255, 253, 242), rgb(255, 244, 174)) rgb(255, 249, 206); border-width: medium 1px 1px; border-style: none solid solid; border-color: currentColor rgb(199, 189, 127) rgb(199, 189, 127); margin: 0px auto; top: -3px; width: 899px; height: 113px; position: relative; z-index: 5; box-shadow: 0px 8px 6px #cccccc; transition-duration: 0.8s; -o-box-shadow: #cccccc 0 8px 6px; -moz-box-shadow: #cccccc 0 8px 6px; -webkit-box-shadow: #cccccc 0 8px 6px; -moz-transition-duration: 0.8s; -webkit-transition-duration: 0.8s; -o-transition-duration: 0.8s;
+}
+section.page > .container section.bar .shadow {
+	background: url("../image/bar_bottom.png") no-repeat 0px 0px; top: 114px; width: 899px; height: 4px; display: block; position: absolute; z-index: 5; transition-duration: 0.8s; -moz-transition-duration: 0.8s; -webkit-transition-duration: 0.8s; -o-transition-duration: 0.8s;
+}
+section.page > .container section.bar section.profile {
+	width: 268px; height: 93px; padding-top: 20px; clear: left; border-right-color: rgb(228, 219, 158); border-right-width: 1px; border-right-style: solid; float: left; position: relative; transition-duration: 0.8s; background-image: linear-gradient(rgb(255, 253, 242), rgb(255, 247, 191)); -moz-transition-duration: 0.8s; -webkit-transition-duration: 0.8s; -o-transition-duration: 0.8s;
+}
+section.page > .container section.bar section.profile #editAvatarLink {
+	top: 3px; right: 5px; display: none; position: absolute;
+}
+#uploadAvatarButton {
+	left: 147px; width: 100px; position: relative;
+}
+#editAvatarResult div.half {
+	width: 48%; float: left;
+}
+#acceptDeclineAvatar a {
+	margin-right: 10px;
+}
+section.page > .container section.bar section.profile figure {
+	left: 13px; top: 20px; position: absolute;
+}
+section.page > .container section.bar section.profile figure {
+	background-position: center; border-radius: 3px; border: 1px solid rgb(150, 150, 150); width: 70px; height: 70px; text-align: center; overflow: hidden; display: block; box-shadow: 0px 1px 0px white; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-box-shadow: white 0 1px 0; -moz-box-shadow: white 0 1px 0; -webkit-box-shadow: white 0 1px 0; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+#editAvatarResult figure {
+	background-position: center; border-radius: 3px; border: 1px solid rgb(150, 150, 150); width: 70px; height: 70px; text-align: center; overflow: hidden; display: block; box-shadow: 0px 1px 0px white; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-box-shadow: white 0 1px 0; -moz-box-shadow: white 0 1px 0; -webkit-box-shadow: white 0 1px 0; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+section.page > .container section.bar section.profile figure img {
+	border-radius: 3px; display: none; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+#editAvatarResult figure img {
+	border-radius: 3px; display: none; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+section.page > .container section.bar section.profile p {
+	margin: 0px; color: rgb(108, 108, 108); font-size: 13px; font-weight: bold;
+}
+section.page > .container section.bar section.profile h3 {
+	color: rgb(26, 70, 109); padding-bottom: 9px; font-size: 18px;
+}
+section.page > .container section.bar section.profile a.account {
+	margin-right: 7px;
+}
+section.page > .container section.bar section.profile nav {
+	padding-left: 97px; clear: left; float: left;
+}
+section.page > .container section.more.bar {
+	height: 250px;
+}
+section.page > .container section.more.bar .shadow {
+	top: 251px;
+}
+section.page > .container section.more.bar .profile {
+	height: 230px;
+}
+section.page > .container section.bar section.shorten {
+	background: url("../image/shorten_bg.png") no-repeat 400px 64px; width: 630px; height: 112px; float: left; position: relative;
+}
+section.page > .container section.bar section.shorten .options {
+	left: 20px; top: 67px; position: absolute;
+}
+section.page > .container .highlight {
+	background: rgb(236, 245, 251); border-radius: 5px 5px 0px 0px; width: 100%; padding-top: 130px; clear: both; margin-top: -114px; border-bottom-color: rgb(235, 235, 235); border-bottom-width: 1px; border-bottom-style: solid; float: left; transition-duration: 0.8s; -moz-border-radius: 5px 5px 0 0; -khtml-border-radius: 5px 5px 0 0; -webkit-border-radius: 5px 5px 0 0; -o-border-radius: 5px 5px 0 0; -ms-border-radius: 5px 5px 0 0; -moz-transition-duration: 0.8s; -webkit-transition-duration: 0.8s; -o-transition-duration: 0.8s;
+}
+section.page > .container .more.highlight {
+	padding-top: 267px; margin-top: -251px;
+}
+section.page > .container .highlight h3 {
+	padding-left: 20px; clear: both;
+}
+section.page > .container .highlight ul.earnings {
+	margin: 0px; padding: 6px 0px 20px; width: 280px; text-align: center; color: rgb(140, 140, 140); float: left;
+}
+section.page > .container .highlight div.latest-news {
+	padding: 5px 10px 10px; margin-bottom: 46px;
+}
+section.page > .container .highlight div.latest-news aside {
+	left: 0px; top: 0px; width: 36px; height: 32px; text-align: center;
+}
+section.page > .container .highlight ul.totals.earnings {
+	background: url("../image/total_bg.png") repeat-y right top rgb(247, 251, 253); border-radius: 4px; border: 1px solid rgb(195, 204, 212); padding-right: 30px; padding-bottom: 13px; margin-right: 15px; float: right;
+}
+section.page > .container .highlight ul.earnings h4 {
+	color: rgb(62, 92, 119); letter-spacing: -1px; font-family: Arial,sans-serif; font-size: 25px; text-shadow: 0px 1px 0px white, 0px -1px 0px #283a4c;
+}
+section.page > .container .highlight ul.earnings h5 {
+	text-transform: uppercase; font-size: 11px;
+}
+section.page > .container .highlight ul.earnings li {
+	background: url("../image/withdraw_amnt_bg.png") no-repeat right top; padding: 5px 11px 0px; text-align: left; display: inline-block; list-style-type: none;
+}
+section.page > .container .highlight ul.totals.earnings li {
+	
+}
+section.page > .container .highlight ul.earnings li.total {
+	padding-right: 0px;
+}
+section.page > .container .highlight ul.totals.earnings li h4 {
+	color: rgb(23, 116, 194); text-shadow: 0px 1px 0px white, 0px -1px 0px #0e4573;
+}
+section.page > .container .highlight hgroup {
+	margin: 0px 20px 6px; width: 880px; line-height: 24px; clear: both; font-family: Arial,sans-serif; border-bottom-color: rgb(209, 216, 221); border-bottom-width: 1px; border-bottom-style: dotted; float: left;
+}
+.rotate {
+	transform-origin: 50% 50%; -ms-zoom: 1; transform: rotate(90deg); -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -o-transform: rotate(90deg); -webkit-transform-origin: 50% 50%; -moz-transform-origin: 50% 50%; -o-transform-origin: 50% 50%;
+}
+.rotate.totals {
+	right: -17px; color: white; text-transform: uppercase; letter-spacing: 1px; font-size: 10px; margin-top: 18px; position: absolute;
+}
+.ie8 .rotate.totals {
+	right: -14px; margin-top: 12px;
+}
+.oldie .rotate.totals {
+	margin-top: 12px;
+}
+section.page > .container .highlight hgroup h2 {
+	width: 50%; float: left;
+}
+section.page > .container .highlight hgroup h4 {
+	width: 50%; text-align: right; float: right;
+}
+hgroup h5 {
+	width: 50%; text-align: right; font-size: 14px; font-weight: normal; float: right;
+}
+hgroup h5 a {
+	color: rgb(52, 120, 181);
+}
+hgroup h5 a.selected {
+	font-weight: bold;
+}
+section.page form#shrink {
+	width: 100%; clear: both; float: left; position: relative;
+}
+section.page form#shrink #more-options {
+	left: 10px; top: 100px; display: none; position: absolute;
+}
+section.page form#shrink #more-options .line {
+	padding-bottom: 4px;
+}
+section.page form#shrink #more-options input {
+	border: 1px solid rgb(188, 188, 188);
+}
+section.page form#shrink input {
+	border: currentColor; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-weight: 200; box-shadow: none; -o-box-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none;
+}
+section.page form#shrink input:focus {
+	
+}
+section.page form#shrink label {
+	float: left;
+}
+section.page form#shrink #shrink_copy_wrapper {
+	top: 20px; width: 125px; height: 39px; right: 198px; visibility: hidden; position: absolute; z-index: 2; cursor: pointer;
+}
+section.page form#shrink #shrink_link {
+	background: url("../image/shorten_input_bg.png") no-repeat 0px 0px; padding: 0px 145px 0px 9px; border: currentColor; left: 20px; top: 20px; width: 445px; height: 39px; line-height: 39px; font-size: 19px; position: absolute;
+}
+section.page form#shrink .resized#shrink_link {
+	width: 258px;
+}
+section.page form#shrink .copy#shrink_link {
+	width: 500px; padding-left: 9px;
+}
+section.page form#shrink span.url {
+	left: 35px; top: 20px; color: rgb(110, 110, 110); line-height: 38px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 19px; font-weight: 200; position: absolute;
+}
+section.page form#shrink #loading_spinner {
+	left: 39px; top: 39px; display: none; position: absolute;
+}
+section.page form#shrink button {
+	padding: 0px 13px; border-radius: 0px 3px 3px 0px; top: 20px; height: 36px; right: 20px; line-height: 33px; letter-spacing: 1px; font-size: 17px; margin-top: 1px; border-left-color: rgb(24, 77, 126); border-left-width: 1px; border-left-style: solid;
+}
+section.page form#shrink #shrink_submit {
+	z-index: 3;
+}
+section.page form#shrink #shrink_copy {
+	right: 198px; display: none; z-index: 1;
+}
+section.page form#shrink #shrink_another {
+	border-radius: 3px; width: 171px; right: 18px; display: none; z-index: 1;
+}
+section.page form#shrink button span {
+	width: 30px; height: 34px; margin-right: 10px; float: left; display: block;
+}
+section.page form#shrink #shrink_submit span {
+	background: url("../image/shrink_button_icon2.png") no-repeat left;
+}
+section.page form#shrink #shrink_copy span {
+	background: url("../image/copy_button_icon2.png") no-repeat left;
+}
+section.page form#shrink #shrink_another span {
+	background: url("../image/another_button_icon2.png") no-repeat left;
+}
+#custom_name {
+	margin-left: 5px;
+}
+form {
+	clear: left; float: left;
+}
+form .line {
+	width: 100%; padding-right: 10px; padding-bottom: 11px; clear: both; float: left; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; -ms-box-sizing: border-box;
+}
+form span.required {
+	top: -5px; right: 2px; color: rgb(32, 112, 184); font-size: 21px; font-weight: bold; position: absolute;
+}
+form label {
+	width: 133px; text-align: right; color: rgb(46, 46, 46); line-height: 31px; padding-right: 10px; font-size: 12px; font-weight: bold; display: inline-block;
+}
+form input {
+	border-radius: 3px; border: 1px solid rgb(188, 188, 188); width: 255px; height: 31px; color: rgb(97, 97, 97); line-height: 31px; padding-left: 12px; font-size: 14px; display: inline-block; box-shadow: inset 0px 1px 3px #d2d2d2; background-image: linear-gradient(rgb(245, 245, 245), rgb(255, 255, 255)); -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-box-shadow: inset #d2d2d2 0 1px 3px; -moz-box-shadow: inset #d2d2d2 0 1px 3px; -webkit-box-shadow: inset #d2d2d2 0 1px 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+form select {
+	width: 278px; height: 31px;
+}
+.page table {
+	border-radius: 0px 3px 3px 0px; width: 100%; border-top-color: rgb(203, 203, 203); border-right-color: rgb(203, 203, 203); border-bottom-color: rgb(203, 203, 203); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-collapse: separate; -moz-border-radius: 0 3px 3px 0; -khtml-border-radius: 0 3px 3px 0; -webkit-border-radius: 0 3px 3px 0; -o-border-radius: 0 3px 3px 0; -ms-border-radius: 0 3px 3px 0;
+}
+.oldie .page table {
+	border-collapse: collapse;
+}
+.page table td {
+	height: 32px; text-align: left; line-height: 32px; padding-left: 16px; border-top-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: dotted; white-space: nowrap;
+}
+.page table th {
+	height: 32px; text-align: left; line-height: 32px; padding-left: 16px; border-top-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: dotted; white-space: nowrap;
+}
+.page table thead {
+	color: rgb(135, 135, 135); text-transform: uppercase; font-size: 12px; text-shadow: 0px 1px 0px #fff;
+}
+.page table thead th {
+	background: linear-gradient(rgb(245, 245, 245), rgb(215, 215, 215)) rgb(233, 233, 233); border-top-color: rgb(255, 255, 255); border-top-width: 1px; border-top-style: solid; cursor: pointer;
+}
+.page table thead th:first-child {
+	border-radius: 3px 0px 0px; -moz-border-radius: 3px 0 0 0; -khtml-border-radius: 3px 0 0 0; -webkit-border-radius: 3px 0 0 0; -o-border-radius: 3px 0 0 0; -ms-border-radius: 3px 0 0 0;
+}
+.page table thead th:last-child {
+	border-radius: 0px 3px 0px 0px; -moz-border-radius: 0 3px 0 0; -khtml-border-radius: 0 3px 0 0; -webkit-border-radius: 0 3px 0 0; -o-border-radius: 0 3px 0 0; -ms-border-radius: 0 3px 0 0;
+}
+.page table tfoot {
+	height: 29px; color: rgb(98, 98, 98); font-size: 11px; border-top-color: rgb(229, 229, 229); border-top-width: medium; border-top-style: none;
+}
+.page table tfoot p {
+	margin: 0px; line-height: 29px; float: left; text-shadow: 0px 1px 0px #fff;
+}
+.page table tfoot td {
+	background: linear-gradient(rgb(245, 245, 245), rgb(215, 215, 215)) rgb(233, 233, 233); height: 29px; border-top-color: rgb(203, 203, 203); border-top-width: 1px; border-top-style: solid;
+}
+.page table tfoot nav {
+	padding-top: 4px; padding-right: 3px;
+}
+.page table tfoot nav ul {
+	float: right; box-shadow: 0px 1px 0px #c8c8c8; -o-box-shadow: #c8c8c8 0 1px 0; -moz-box-shadow: #c8c8c8 0 1px 0; -webkit-box-shadow: #c8c8c8 0 1px 0;
+}
+.page table tfoot nav li {
+	clear: none; float: left;
+}
+.page table tfoot nav li a {
+	background: url("../image/table_nav_bg.png") no-repeat 0px 0px; padding: 0px 5px 0px 6px; height: 23px; color: rgb(52, 120, 181); line-height: 23px; font-size: 12px; font-weight: bold; border-right-color: rgb(188, 188, 188); border-right-width: 1px; border-right-style: solid; float: left;
+}
+.page table tfoot nav li.current a {
+	color: rgb(141, 160, 176);
+}
+.page table tfoot nav li.prev a {
+	background: url("../image/table_nav_prev.png") no-repeat 0px 0px; width: 48px; text-align: right; padding-right: 8px; padding-left: 0px;
+}
+.page table tfoot nav li.next a {
+	background: url("../image/table_nav_next.png") no-repeat 0px 0px; width: 50px; text-align: left; padding-right: 0px; padding-left: 8px; border-right-color: currentColor; border-right-width: medium; border-right-style: none;
+}
+.page table tbody {
+	color: rgb(66, 66, 66); font-size: 12px;
+}
+.page table tbody tr:nth-child(2n) {
+	background: rgb(236, 245, 251);
+}
+.page table tbody td.total {
+	background: rgb(255, 255, 255); text-align: right; color: rgb(135, 135, 135); text-transform: uppercase; padding-right: 16px; font-size: 12px; font-weight: bold; text-shadow: 0px 1px 0px #fff;
+}
+#links-tabs table tfoot th.total {
+	background: rgb(255, 255, 255); text-align: right; color: rgb(135, 135, 135); text-transform: uppercase; padding-right: 16px; font-size: 12px; font-weight: bold; text-shadow: 0px 1px 0px #fff;
+}
+.page table tbody td.sum {
+	background: rgb(244, 244, 244); color: rgb(65, 65, 65); font-size: 15px; font-weight: bold;
+}
+#links-tabs table tfoot th.sum {
+	background: rgb(244, 244, 244); color: rgb(65, 65, 65); font-size: 15px; font-weight: bold;
+}
+.page table tbody tr.totals {
+	font-weight: bold;
+}
+section.referral .lastUpdated {
+	text-align: center;
+}
+section.referral .totalReferralsCount {
+	text-align: center;
+}
+section.referral .highlight .link {
+	background: url("../image/link_bg.png") no-repeat 20px bottom; padding: 16px 0px 29px 23px; width: 272px; clear: left; float: left;
+}
+section.referral .highlight .link input {
+	padding: 7px 0px; border-radius: 3px; border: 1px solid rgb(154, 174, 189); width: 300px; text-align: center; color: rgb(52, 120, 181); line-height: 1em; font-size: 19px; box-shadow: 0px 1px 0px #d7e8f7, 0px 0px 0px 3px #c8e0f3; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-box-shadow: #d7e8f7 0 1px 0, #c8e0f3 0 0 0 3px; -moz-box-shadow: #d7e8f7 0 1px 0, #c8e0f3 0 0 0 3px; -webkit-box-shadow: #d7e8f7 0 1px 0, #c8e0f3 0 0 0 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+section.referral .highlight .description {
+	width: 550px; padding-right: 20px; float: right;
+}
+section.stats {
+	padding: 20px; width: 880px; clear: left; float: left;
+}
+section.stats table {
+	border: currentColor; width: 655px;
+}
+section.stats .data {
+	padding-top: 8px;
+}
+section.stats .data .panels {
+	height: 242px;
+}
+section.stats .data nav.menu {
+	height: 242px;
+}
+section.stats .data nav.menu li span {
+	background: url("../image/icon_stats.png") no-repeat 14px;
+}
+section.stats .data nav.menu li.active span {
+	background: url("../image/icon_stats_current.png") no-repeat 16px;
+}
+section.banners {
+	padding: 20px; width: 880px; clear: left; float: left;
+}
+section.banners .data {
+	padding-top: 8px;
+}
+section.banners .data .panel {
+	-ms-overflow-x: auto;
+}
+section.banners .data nav.menu {
+	width: 120px; height: 392px; padding-top: 8px;
+}
+section.banners .data .panels {
+	width: 756px; height: 400px;
+}
+section.banners .data nav.menu li.active {
+	background: url("../image/menu_current_bg.png") no-repeat -103px 0px;
+}
+section.banners .data nav.menu li span {
+	background: url("../image/icon_img.png") no-repeat 14px;
+}
+section.banners .data nav.menu li.active span {
+	background: url("../image/icon_img_current.png") no-repeat 16px;
+}
+section.banners .data ul.banners {
+	margin: 0px; padding: 20px 0px 20px 10px; border-radius: 3px; width: 740px; float: left; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+section.banners .data ul.banners li {
+	padding-right: 4px; padding-bottom: 15px; float: left; list-style-type: none;
+}
+section.banners .data ul.banners li figure {
+	padding: 3px; border-radius: 3px; border: 1px solid rgb(236, 236, 236); -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+section.banners .data ul.banners li .code {
+	background: url("../image/textarea_bg.png") no-repeat 0px 0px; padding: 14px 8px 8px; top: 5px; width: 350px; height: 150px; clear: left; float: left; position: relative;
+}
+section.banners .data ul.banners li .code textarea {
+	padding: 0px; border: currentColor; width: 339px; height: 135px; color: rgb(104, 104, 104); clear: left; float: left; resize: none;
+}
+#terms ol li {
+	padding-top: 10px;
+}
+#terms p.title {
+	color: orange; font-size: 16px; margin-top: 30px;
+}
+#terms p.important {
+	font-style: italic;
+}
+#terms div.box {
+	padding: 10px; border: 1px solid silver; margin-bottom: 20px; background-color: rgb(255, 238, 238);
+}
+#privacy ul li {
+	padding-top: 10px;
+}
+#rates table.rates {
+	margin: 15px auto 25px; border: 0px currentColor; width: 70%; font-family: Verdana,Geneva,Arial,Helvetica,sans-serif; font-size: 10px; border-collapse: collapse; background-color: rgb(227, 227, 227);
+}
+#rates table.rates thead {
+	text-align: center; color: rgb(51, 51, 51); background-color: rgb(240, 240, 240);
+}
+#rates table.rates tr td {
+	padding: 6px; vertical-align: middle;
+}
+table.rates tr th {
+	padding: 6px; vertical-align: middle;
+}
+#rates table.rates tr th.countryHeader {
+	width: 50%; text-align: left;
+}
+#rates table.rates tr th.intHeader {
+	width: 25%; text-align: center;
+}
+#rates table.rates tr th.bannerHeader {
+	width: 25%; text-align: center;
+}
+#rates table.rates .even {
+	background-color: rgb(255, 255, 255);
+}
+table.rates tbody {
+	background-color: rgb(255, 255, 255);
+}
+#rates table.rates .odd {
+	background-color: rgb(237, 243, 254);
+}
+#rates table.rates .error {
+	background-color: rgb(255, 54, 0);
+}
+#rates table.rates .success {
+	background-color: rgb(154, 219, 142);
+}
+#rates table.rates tr.breaker {
+	border-right-color: white; border-left-color: white; border-right-width: 1px; border-left-width: 1px; border-right-style: solid; border-left-style: solid; background-color: rgb(255, 255, 255);
+}
+#rates table.rates tr.breaker td {
+	border: 0px currentColor; text-align: center; font-weight: bold;
+}
+#rates table.rates tr.rateVals td {
+	text-align: center;
+}
+#rates table.rates tr.rateVals td.countryName {
+	text-align: left;
+}
+#rates table.rates tr.rateVals td.cpmRaw {
+	border-right-color: black; border-right-width: 1px; border-right-style: solid;
+}
+.infobar {
+	margin: 10px 25px; padding: 5px; border: 1px solid black; text-align: left; overflow: auto;
+}
+.warningbar {
+	margin: 10px 25px; padding: 5px; border: 1px solid black; text-align: left; overflow: auto;
+}
+.warningbar {
+	background-color: rgb(255, 228, 225);
+}
+.infobar {
+	background: url("../image/infobar_bg_notice.png") no-repeat 19px 16px rgb(255, 255, 255); border-width: 1px; border-style: solid; border-color: rgb(195, 216, 234) rgb(192, 214, 233) rgb(192, 214, 233); border-radius: 3px; padding-top: 15px; padding-left: 82px; min-height: 51px;
+}
+.notice.infobar {
+	background: url("../image/infobar_bg_notice.png") no-repeat 19px 16px rgb(255, 255, 255); border-width: 1px; border-style: solid; border-color: rgb(195, 216, 234) rgb(192, 214, 233) rgb(192, 214, 233); border-radius: 3px; padding-top: 15px; padding-left: 82px; min-height: 51px;
+}
+.small.infobar {
+	background-position: 9px 8px; padding-top: 21px; padding-left: 59px; min-height: 30px;
+}
+.alert.infobar {
+	background: url("../image/infobar_bg_alert.png") no-repeat 19px 16px rgb(255, 255, 255); border-width: 1px; border-style: solid; border-color: rgb(249, 175, 177) rgb(250, 170, 172) rgb(250, 170, 172);
+}
+.configure_campaign {
+	cursor: pointer;
+}
+.configure_campaign_main {
+	cursor: pointer;
+}
+.stats_campaign {
+	cursor: pointer;
+}
+.cancel_campaign {
+	cursor: pointer;
+}
+.infobar p {
+	padding: 0px; color: rgb(64, 64, 64); font-family: Arial; font-size: 13px;
+}
+.warningbar p {
+	padding: 0px; color: rgb(64, 64, 64); font-family: Arial; font-size: 13px;
+}
+section.vertiser #fullFilter {
+	padding: 15px 0px;
+}
+section.vertiser #fullFilter h4 {
+	border: 1px solid transparent; font-size: 14px; font-weight: normal; float: left;
+}
+h4.lightBlueButton {
+	border: 1px solid transparent; font-size: 14px; font-weight: normal; float: left;
+}
+.lightBlueButton {
+	border: 1px solid transparent; font-size: 14px; font-weight: normal; float: left;
+}
+section.vertiser #fullFilter h4.active {
+	border-width: 1px; border-style: solid; border-color: rgb(178, 204, 227) rgb(164, 190, 214) rgb(155, 180, 203); border-radius: 3px; padding-top: 2px; box-shadow: 0px 1px #dddddd;
+}
+h4.active.lightBlueButton {
+	border-width: 1px; border-style: solid; border-color: rgb(178, 204, 227) rgb(164, 190, 214) rgb(155, 180, 203); border-radius: 3px; padding-top: 2px; box-shadow: 0px 1px #dddddd;
+}
+.active.lightBlueButton {
+	border-width: 1px; border-style: solid; border-color: rgb(178, 204, 227) rgb(164, 190, 214) rgb(155, 180, 203); border-radius: 3px; padding-top: 2px; box-shadow: 0px 1px #dddddd;
+}
+section.vertiser #fullFilter h4 a {
+	padding: 8px 10px; color: rgb(48, 73, 97); display: block;
+}
+h4.lightBlueButton a {
+	padding: 8px 10px; color: rgb(48, 73, 97); display: block;
+}
+.lightBlueButton a {
+	padding: 8px 10px; color: rgb(48, 73, 97); display: block;
+}
+section.vertiser #fullFilter h4.active a {
+	padding-top: 6px; background-color: rgb(224, 237, 250);
+}
+h4.active.lightBlueButton a {
+	padding-top: 6px; background-color: rgb(224, 237, 250);
+}
+.active.lightBlueButton a {
+	padding-top: 6px; background-color: rgb(224, 237, 250);
+}
+.pauseResumeLink {
+	cursor: pointer;
+}
+section.vertiser .campaignRangeLabel {
+	width: 45px; color: rgb(48, 73, 97); line-height: 1.5; font-size: 14px; float: left; display: block; text-shadow: 0px 1px 0px #fff;
+}
+section.vertiser .campaignRangeInput {
+	width: 80px; height: 20px; line-height: 20px; padding-left: 7px; margin-bottom: 3px;
+}
+section.vertiser .campaignRangeGo {
+	height: 49px; line-height: 49px; margin-top: 0px; margin-left: 3px; float: left; display: block;
+}
+section.vertiser #campaignTypeFilter {
+	float: left;
+}
+section.vertiser #campaignDateFilter {
+	float: left;
+}
+section.vertiser #campaignTypeFilter {
+	margin-top: 6px; margin-left: 60px;
+}
+section.vertiser #campaignFilter {
+	margin-top: 6px; float: right;
+}
+section.vertiser section.campaigns {
+	padding: 20px; width: 880px; clear: both; float: left;
+}
+section.vertiser #campaign-tabs .jspDrag {
+	background: rgb(158, 190, 205);
+}
+section.vertiser #campaign-tabs .jspTrack {
+	background: rgb(237, 236, 223);
+}
+section.vertiser #campaign-tabs .jspVerticalBar {
+	left: 0px;
+}
+section.vertiser #campaign-tabs .menu {
+	width: 150px;
+}
+section.vertiser #campaign-tabs .menu {
+	height: 400px;
+}
+section.vertiser #campaign-tabs .panels {
+	height: 400px;
+}
+section.vertiser #campaign-tabs .panels {
+	width: 725px;
+}
+section.vertiser #campaign-tabs .panels .panel {
+	padding: 0px; overflow: auto;
+}
+section.vertiser #campaign-tabs .menu li.active {
+	background: url("../image/menu_current_bg_small.png") no-repeat 0px 0px; margin: -1px 0px 0px -2px; padding: 0px; width: 165px;
+}
+section.vertiser #campaign-tabs .menu li a {
+	text-indent: 10px;
+}
+section.vertiser #charts-tabs nav.menu {
+	width: 150px; height: 420px;
+}
+section.vertiser #charts-tabs nav.menu li.active {
+	background: url("../image/menu_current_bg_small.png") no-repeat 0px 0px;
+}
+section.vertiser #charts-tabs .panels {
+	width: 726px; height: 420px;
+}
+section.vertiser #charts-tabs .menu li {
+	text-indent: 10px;
+}
+section.vertiser table.campaign {
+	border: 1px solid silver; width: 100%; border-collapse: collapse;
+}
+section.vertiser table.campaign * {
+	line-height: normal; font-size: 12px;
+}
+section.vertiser table.campaign form {
+	clear: both; float: none;
+}
+section.vertiser table.campaign input {
+	padding: 5px; width: auto; height: auto;
+}
+section.vertiser table.campaign label {
+	padding: 5px; width: auto; height: auto;
+}
+section.vertiser table.campaign td {
+	padding: 5px; height: auto; text-align: inherit; text-transform: none; font-size: 13px; vertical-align: inherit; white-space: normal;
+}
+section.vertiser table.campaign th {
+	padding: 5px; height: auto; text-align: inherit; text-transform: none; font-size: 13px; vertical-align: inherit; white-space: normal;
+}
+section.vertiser table.campaign tr.header td {
+	font-weight: bold;
+}
+section.vertiser table.campaign tr.header td .clickable.period_switcher {
+	color: rgb(52, 120, 181); font-weight: bold; cursor: pointer;
+}
+section.vertiser table.campaign td .total {
+	display: none;
+}
+section.vertiser table.campaign td:first-child {
+	padding-left: 11px;
+}
+section.vertiser table.campaign td.campaignNameWrapperTd input {
+	margin: 0px 2px 0px 4px;
+}
+section.vertiser table.campaign td.campaignNameWrapperTd div.campaignNameWrapperDiv {
+	margin-left: 5px;
+}
+section.vertiser table.campaign thead td {
+	padding: 5px; border: 0px currentColor; font-weight: bold; white-space: normal;
+}
+section.vertiser table.campaign .remove_campaign {
+	margin-left: 5px; cursor: pointer;
+}
+section.vertiser table.campaign .actionImage {
+	width: 15px; height: 15px; cursor: pointer;
+}
+section.vertiser table.campaign .statusWrapper {
+	text-align: right;
+}
+section.vertiser table.campaign .statusWrapper * {
+	vertical-align: middle;
+}
+section.vertiser table.campaign .update_url {
+	cursor: pointer;
+}
+section.vertiser table.campaign .bannerCode {
+	width: 80%; font-family: courier;
+}
+section.vertiser table.campaign .convCode {
+	width: 99%; font-family: courier;
+}
+section.vertiser table.campaign .withRightBorder {
+	border-right-color: rgb(124, 124, 124); border-right-width: 1px; border-right-style: solid;
+}
+section.vertiser table.campaign .configure_campaign {
+	width: 16px; height: 16px; cursor: pointer;
+}
+section.vertiser table.campaign tr.pausedPart td {
+	background-color: rgb(245, 245, 245);
+}
+#configure_campaign_form {
+	display: none;
+}
+#configure_campaign_form input.text {
+	padding: 0.4em; width: 95%;
+}
+#configure_campaign_form fieldset {
+	padding: 0px; border: 0px currentColor; margin-top: 25px;
+}
+#configure_campaign_table {
+	width: 100%;
+}
+#configure_campaign_table tr td {
+	padding: 5px;
+}
+#configure_campaign_form input {
+	height: auto;
+}
+#configure_campaign_form .newCpm {
+	vertical-align: middle;
+}
+section.vertising section.rates {
+	padding: 20px; clear: both;
+}
+section.vertising section.rates .chooseType {
+	color: rgb(0, 0, 0); font-size: 14px; font-weight: normal;
+}
+section.vertising section.rates .chooseType .active {
+	color: rgb(85, 85, 85); font-weight: bold; text-decoration: underline;
+}
+section.vertising section.rates table.rates {
+	margin: 15px auto 25px; color: rgb(66, 66, 66); font-family: Arial,Helvetica,sans-serif; font-size: 12px; background-color: rgb(227, 227, 227);
+}
+section.vertising section.rates table.rates thead tr th {
+	background: linear-gradient(rgb(245, 245, 245), rgb(215, 215, 215)) rgb(233, 233, 233); padding: 0px 0px 0px 16px; height: 32px; text-align: left; color: rgb(135, 135, 135); text-transform: uppercase; line-height: 32px; font-size: 12px; border-top-color: rgb(180, 186, 191); border-left-color: rgb(180, 186, 191); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: dotted; white-space: nowrap; text-shadow: 0px 1px 0px #fff;
+}
+section.vertising section.rates table.rates thead tr th:first-child {
+	border-radius: 3px 0px 0px; -moz-border-radius: 3px 0 0 0; -khtml-border-radius: 3px 0 0 0; -webkit-border-radius: 3px 0 0 0; -o-border-radius: 3px 0 0 0; -ms-border-radius: 3px 0 0 0;
+}
+section.vertising section.rates table.rates thead tr th:last-child {
+	border-radius: 0px 3px 0px 0px; -moz-border-radius: 0 3px 0 0; -khtml-border-radius: 0 3px 0 0; -webkit-border-radius: 0 3px 0 0; -o-border-radius: 0 3px 0 0; -ms-border-radius: 0 3px 0 0;
+}
+section.vertising section.rates table.rates thead tr th:first-child {
+	border-left-color: rgb(203, 203, 203); border-left-width: 1px; border-left-style: solid;
+}
+section.vertising section.rates table.rates tr td:first-child {
+	border-left-color: rgb(203, 203, 203); border-left-width: 1px; border-left-style: solid;
+}
+section.vertising section.rates table.rates thead tr th:last-child {
+	border-right-color: rgb(203, 203, 203); border-right-width: 1px; border-right-style: solid;
+}
+section.vertising section.rates table.rates tr td:last-child {
+	border-right-color: rgb(203, 203, 203); border-right-width: 1px; border-right-style: solid;
+}
+section.vertising section.rates table.rates tr td {
+	padding: 6px 6px 6px 10px; color: rgb(66, 66, 66); line-height: 19px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; vertical-align: middle; white-space: normal;
+}
+section.vertising section.rates table.rates tr th {
+	padding: 6px 6px 6px 10px; color: rgb(66, 66, 66); line-height: 19px; font-family: Arial,Helvetica,sans-serif; font-size: 12px; vertical-align: middle; white-space: normal;
+}
+section.vertising section.rates table.rates td.blank {
+	border-top-color: currentColor; border-right-color: currentColor !important; border-bottom-color: currentColor; border-left-color: rgb(180, 186, 191); border-top-width: medium; border-right-width: medium !important; border-bottom-width: medium; border-left-width: 1px; border-top-style: none; border-right-style: none !important; border-bottom-style: none; border-left-style: solid;
+}
+section.vertising section.rates table.rates .ratesDescr {
+	text-align: left;
+}
+section.vertising section.rates table.rates .ratesPrice {
+	width: 14%; text-align: center;
+}
+section.vertising section.rates table.rates .ratesPurchase {
+	width: 18%; text-align: center;
+}
+section.vertising section.rates table.rates .highAvailability {
+	padding: 0px 4px; border-radius: 4px; color: rgb(255, 255, 255); line-height: 15px; font-size: 10px; font-weight: bold; background-color: rgb(242, 92, 96);
+}
+section.vertising section.rates table.rates .orderSummary {
+	background-color: rgb(238, 245, 251);
+}
+section.vertising section.rates table.rates .orderSummary td {
+	padding: 38px 10px 30px; border: currentColor !important; text-align: center; color: rgb(96, 127, 160); line-height: 30px; font-family: Arial,sans-serif; font-size: 27px; text-shadow: 1px 1px #fff;
+}
+.yellowButton {
+	border-width: 1px; border-style: solid; border-color: rgb(255, 255, 193) rgb(170, 146, 73) rgb(145, 123, 54) rgb(173, 150, 76); border-radius: 3px; width: auto; height: 55px; color: rgb(130, 111, 47); padding-right: 12px; padding-left: 12px; font-family: Arial,sans-serif; font-size: 21px; margin-top: 15px; box-shadow: 0px -1px #bfa65a; text-shadow: 0px 1px #ffffc1; background-image: -ms-linear-gradient(bottom, rgb(255, 202, 42) 1%, rgb(255, 226, 138) 51%); background-color: rgb(255, 220, 112) !important;
+}
+section.vertising section.rates table.rates .orderSummary input {
+	border-width: 1px; border-style: solid; border-color: rgb(255, 255, 193) rgb(170, 146, 73) rgb(145, 123, 54) rgb(173, 150, 76); border-radius: 3px; width: auto; height: 55px; color: rgb(130, 111, 47); padding-right: 12px; padding-left: 12px; font-family: Arial,sans-serif; font-size: 21px; margin-top: 15px; box-shadow: 0px -1px #bfa65a; text-shadow: 0px 1px #ffffc1; background-image: -ms-linear-gradient(bottom, rgb(255, 202, 42) 1%, rgb(255, 226, 138) 51%); background-color: rgb(255, 220, 112) !important;
+}
+table.campaign input[type='button'] {
+	border-width: 1px; border-style: solid; border-color: rgb(255, 255, 193) rgb(170, 146, 73) rgb(145, 123, 54) rgb(173, 150, 76); border-radius: 3px; width: auto; height: 55px; color: rgb(130, 111, 47); padding-right: 12px; padding-left: 12px; font-family: Arial,sans-serif; font-size: 21px; margin-top: 15px; box-shadow: 0px -1px #bfa65a; text-shadow: 0px 1px #ffffc1; background-image: -ms-linear-gradient(bottom, rgb(255, 202, 42) 1%, rgb(255, 226, 138) 51%); background-color: rgb(255, 220, 112) !important;
+}
+table.campaign input[type='submit'] {
+	border-width: 1px; border-style: solid; border-color: rgb(255, 255, 193) rgb(170, 146, 73) rgb(145, 123, 54) rgb(173, 150, 76); border-radius: 3px; width: auto; height: 55px; color: rgb(130, 111, 47); padding-right: 12px; padding-left: 12px; font-family: Arial,sans-serif; font-size: 21px; margin-top: 15px; box-shadow: 0px -1px #bfa65a; text-shadow: 0px 1px #ffffc1; background-image: -ms-linear-gradient(bottom, rgb(255, 202, 42) 1%, rgb(255, 226, 138) 51%); background-color: rgb(255, 220, 112) !important;
+}
+.medium.yellowButton {
+	height: 30px; line-height: 23px; font-size: 16px; margin-top: 0px;
+}
+.configureFolders .yellowButton {
+	padding-right: 35px; padding-left: 35px;
+}
+section.vertiser table.campaign input[type='button'] {
+	margin: 0px; height: 25px; line-height: 12px; font-family: Arial,Helvetica; font-size: 13px;
+}
+section.vertiser table.campaign input[type='submit'] {
+	margin: 0px; height: 25px; line-height: 12px; font-family: Arial,Helvetica; font-size: 13px;
+}
+section.vertising section.rates table.rates .even {
+	background-color: rgb(255, 255, 255);
+}
+table.rates tbody {
+	background-color: rgb(255, 255, 255);
+}
+section.vertising section.rates table.rates .odd {
+	background-color: rgb(238, 245, 251);
+}
+section.vertising section.rates table.rates .breaker {
+	border-right-color: currentColor !important; border-left-color: currentColor !important; border-right-width: medium !important; border-left-width: medium !important; border-right-style: none !important; border-left-style: none !important; background-color: rgb(255, 255, 255);
+}
+section.vertising section.rates table.rates .breaker td {
+	border-right-color: currentColor !important; border-left-color: currentColor !important; border-right-width: medium !important; border-left-width: medium !important; border-right-style: none !important; border-left-style: none !important; background-color: rgb(255, 255, 255);
+}
+section.vertising section.rates table.rates .coupon {
+	
+}
+section.vertising section.rates table.rates .coupon input {
+	width: 115px;
+}
+section.vertising section.rates table.rates .error {
+	background-color: rgb(252, 166, 166);
+}
+section.vertising section.rates table.rates .success {
+	background-color: rgb(228, 249, 217);
+}
+section.vertising section.rates table.rates input {
+	width: 46px; height: 26px; margin-right: 6px;
+}
+section.vertising section.rates table.rates label {
+	width: 46px; height: 26px; margin-right: 6px;
+}
+section.vertising section.rates form {
+	clear: both; float: none;
+}
+section.vertising section.rates div.error {
+	margin: auto; padding: 10px 10px 2px 85px; width: 615px; font-size: 10px; font-weight: bold; min-height: 50px; background-image: url("../image/error-bar.gif");
+}
+section.vertisingContinue div.error {
+	margin: auto; padding: 10px 10px 2px 85px; width: 615px; font-size: 10px; font-weight: bold; min-height: 50px; background-image: url("../image/error-bar.gif");
+}
+section.vertising section.rates div.error-bottom {
+	margin: auto; width: 710px; height: 14px; background-image: url("../image/error-bar-bottom.gif");
+}
+section.vertisingContinue div.error-bottom {
+	margin: auto; width: 710px; height: 14px; background-image: url("../image/error-bar-bottom.gif");
+}
+section.vertisingCategories section.categories {
+	padding: 50px 20px;
+}
+section.vertisingContinue .highlight p {
+	padding: 0px 20px;
+}
+section.vertisingContinue section.adContinue {
+	padding: 20px; clear: both;
+}
+section.vertisingContinue section.adContinue table td {
+	white-space: normal;
+}
+section.vertisingContinue section.adContinue table th {
+	white-space: normal;
+}
+section.vertisingContinue section.adContinue * {
+	line-height: normal;
+}
+section.vertisingContinue section.adContinue label {
+	width: auto; height: auto;
+}
+section.vertisingContinue section.adContinue input {
+	width: auto; height: auto;
+}
+section.vertisingContinue section.adContinue select {
+	width: auto; height: auto;
+}
+section.vertisingContinue section.adContinue table {
+	border: currentColor;
+}
+section.vertisingContinue section.adContinue table tr {
+	border: currentColor;
+}
+section.vertisingContinue section.adContinue table tr td {
+	border: currentColor;
+}
+section.vertisingContinue section.adContinue table tr th {
+	border: currentColor;
+}
+.payment #paymentButtons {
+	text-align: center;
+}
+section.vertisingContinue section.adContinue #paymentButtons input {
+	padding: 0px; border: currentColor; margin-right: 15px; float: left; box-shadow: none; -webkit-box-shadow: none;
+}
+section.vertisingContinue section.adContinue .note {
+	color: rgb(181, 181, 181); padding-left: 5px; font-family: Arial,Helvetica; font-size: 13px; font-weight: normal;
+}
+section.vertisingContinue section.adContinue .note a {
+	color: rgb(35, 93, 146);
+}
+section.vertisingContinue section.adContinue table.rates {
+	margin: 15px auto 25px; font-family: Verdana,Geneva,Arial,Helvetica,sans-serif; font-size: 10px; border-collapse: collapse; background-color: rgb(227, 227, 227);
+}
+section.vertisingContinue section.adContinue table.rates tfoot {
+	margin: 15px auto 25px; font-family: Verdana,Geneva,Arial,Helvetica,sans-serif; font-size: 10px; border-collapse: collapse; background-color: rgb(227, 227, 227);
+}
+section.vertisingContinue section.adContinue table.rates thead {
+	text-align: center; color: rgb(51, 51, 51); background-color: rgb(240, 240, 240);
+}
+section.vertisingContinue section.adContinue table.rates tr td {
+	padding: 6px; border: 1px solid rgb(187, 187, 187); height: auto; font-size: 12px; vertical-align: middle;
+}
+section.vertisingContinue section.adContinue table.rates tr th {
+	padding: 6px; border: 1px solid rgb(187, 187, 187); height: auto; font-size: 12px; vertical-align: middle;
+}
+section.vertisingContinue td.website_disclaimer input {
+	float: left;
+}
+section.vertisingContinue td.website_disclaimer label {
+	width: 375px; text-align: left; padding-right: 0px; margin-left: 4px; float: left;
+}
+.payment_switch {
+	padding-left: 43px; margin-bottom: 30px;
+}
+.payment_switch b {
+	margin-bottom: 5px;
+}
+.payment_choose {
+	overflow: hidden; clear: both; float: none;
+}
+.label_radio {
+	border: 1px solid transparent; width: 152px; height: 50px; text-indent: -99999px; overflow: hidden; float: left; display: block; cursor: pointer;
+}
+.payment_choose .paypal {
+	background: url("../image/payments_paypal.png") no-repeat left top;
+}
+.payment_choose .libertyreserve {
+	background: url("../image/payments_libertyreserve.png") no-repeat left top;
+}
+.payment_choose .wallet {
+	background: url("../image/payments_wallet.png") no-repeat left top;
+}
+.payment_choose .selected {
+	border-radius: 15px; background-color: rgb(255, 220, 112);
+}
+#confirmAdEmail {
+	padding: 20px; clear: both;
+}
+#confirmAdEmail #submit {
+	width: auto;
+}
+#confirmAdEmail .error {
+	padding: 3px; color: white; margin-top: 10px; background-color: red;
+}
+#confirmAdEmail .message {
+	padding: 3px; color: white; margin-top: 10px; background-color: green;
+}
+section.pgwallet {
+	padding: 20px; clear: both;
+}
+section.pgwallet div.line #depositType_chzn {
+	top: 0px; vertical-align: middle;
+}
+section.pgwallet .description {
+	padding: 10px 20px; float: left;
+}
+section.pgwalletsection.vertiser .highlight p {
+	padding: 10px 20px;
+}
+section.pgwallet .dataTables_wrapper {
+	padding-bottom: 32px; position: relative;
+}
+section.pgwallet table#depositsTable {
+	border-radius: 3px; border: 1px solid rgb(180, 186, 191); -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+section.pgwallet table#depositsTable tr td:first-child {
+	border-left-color: currentColor; border-left-width: medium; border-left-style: none;
+}
+section.pgwallet table#depositsTable tr th:first-child {
+	border-left-color: currentColor; border-left-width: medium; border-left-style: none;
+}
+section.pgwallet table#depositsTable th {
+	padding: 0px 8px;
+}
+section.pgwallet table#depositsTable td {
+	padding: 0px 8px;
+}
+section.vertiser #depositType {
+	width: 100px;
+}
+section.vertiser #depositAmount {
+	width: auto;
+}
+section.vertiser #makeDepositForm {
+	margin-left: 15px;
+}
+section.withdraw .description {
+	padding: 10px 20px; float: left;
+}
+section.withdraw .highlight p {
+	padding: 10px 20px;
+}
+section.withdraw section.history {
+	padding: 20px; width: 100%; clear: left; float: left; position: relative; box-sizing: border-box;
+}
+section.withdraw section.history .dataTables_wrapper {
+	padding-bottom: 32px; position: relative;
+}
+section.withdraw section.history .dataTables_paginate {
+	border-radius: 0px 0px 3px 3px; border: 1px solid rgb(180, 186, 191); width: 877px; -moz-border-radius: 0 0 3px 3px; -khtml-border-radius: 0 0 3px 3px; -webkit-border-radius: 0 0 3px 3px; -o-border-radius: 0 0 3px 3px; -ms-border-radius: 0 0 3px 3px;
+}
+section.withdraw section.history h3 {
+	padding-bottom: 8px;
+}
+section.withdraw section.history table {
+	border-radius: 3px; border: 1px solid rgb(180, 186, 191); width: 879px; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+section.withdraw section.history table tr td:first-child {
+	border-left-color: currentColor; border-left-width: medium; border-left-style: none;
+}
+section.withdraw section.history table tr th:first-child {
+	border-left-color: currentColor; border-left-width: medium; border-left-style: none;
+}
+section.withdraw section.history table td {
+	padding-right: 16px; white-space: nowrap;
+}
+section.withdraw section.payment {
+	width: 100%; padding-top: 10px; clear: both; float: left; position: relative;
+}
+section.withdraw section.payment article {
+	color: rgb(22, 58, 92); padding-right: 11px; font-size: 17px; float: left;
+}
+section.withdraw section.payment article h4 {
+	color: rgb(63, 89, 113); padding-bottom: 4px; font-family: Arial,sans-serif; font-size: 15px;
+}
+section.withdraw section.payment article section {
+	background: url("../image/withdraw_section.png") no-repeat 0px 0px; padding: 6px; width: 206px; height: 40px; text-align: center; line-height: 40px;
+}
+section.withdraw section.payment #counter {
+	background: url("../image/counter_bg.png"); margin: 0px; padding: 0px; top: 44px; width: 204px; height: 60px; right: 13px; display: block; position: absolute;
+}
+section.withdraw section.payment #counter ul {
+	margin: 0px; width: 100%; clear: both; float: left; position: relative;
+}
+section.withdraw section.payment #counter ul li {
+	top: 0px; width: 28px; text-align: center; color: rgb(255, 255, 255); line-height: 47px; font-size: 32px; font-weight: bold; list-style-type: none; position: absolute; text-shadow: 0px 1px 1px rgba(0,0,0,0.9);
+}
+section.withdraw section.payment #counter ul li.d1 {
+	left: 5px;
+}
+section.withdraw section.payment #counter ul li.d2 {
+	left: 35px;
+}
+section.withdraw section.payment #counter ul li.d3 {
+	left: 72px;
+}
+section.withdraw section.payment #counter ul li.d4 {
+	left: 103px;
+}
+section.withdraw section.payment #counter ul li.d5 {
+	left: 141px;
+}
+section.withdraw section.payment #counter ul li.d6 {
+	left: 172px;
+}
+section.withdraw section.payment .account {
+	width: 800px; padding-left: 20px; clear: left; float: left;
+}
+section.withdraw section.payment .account a.button {
+	border: 1px solid rgb(182, 182, 182); left: 3px; top: 6px; position: relative;
+}
+section.withdraw section.payment .account .types {
+	background: url("../image/payment_left.png") no-repeat 0px 0px; height: 37px; padding-left: 9px; margin-left: 9px; float: left;
+}
+section.withdraw section.payment .account .types ul {
+	background: rgb(244, 244, 244); border-width: 1px 1px 1px medium; border-style: solid solid solid none; border-color: rgb(224, 224, 224) rgb(224, 224, 224) rgb(224, 224, 224) currentColor; margin: 0px; padding: 0px; border-radius: 3px; height: 35px; float: left; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+section.withdraw section.payment .account .types li {
+	padding: 0px 7px; height: 35px; line-height: 33px; float: left; list-style-type: none;
+}
+#updateEmailForm {
+	padding: 20px;
+}
+#forumForm {
+	padding: 20px;
+}
+#accountUpdateEmail section.accountUpdateEmail {
+	padding: 30px;
+}
+#accountForum section.accountForum {
+	padding: 30px;
+}
+#accountUpdateEmail section.accountUpdateEmail span.required {
+	position: relative;
+}
+#accountForum section.accountForum span.required {
+	position: relative;
+}
+#accountDelete form#deleteAccountForm {
+	padding: 20px;
+}
+#accountDelete form#deleteAccountForm label {
+	width: auto; height: auto;
+}
+#accountDelete form#deleteAccountForm input {
+	width: auto; height: auto;
+}
+#accountDelete section.accountDelete {
+	padding: 30px;
+}
+section.accountCheck #checkAccountForm #link_answer_no {
+	width: auto; height: auto;
+}
+section.accountCheck #checkAccountForm #link_answer_yes {
+	width: auto; height: auto;
+}
+section.accountCheck #checkAccountForm label {
+	width: auto; height: auto;
+}
+section.accountCheck #checkAccountForm #Submit {
+	width: auto; height: auto;
+}
+section.accountCheck form#checkAccountForm {
+	width: 100%; text-align: center;
+}
+section.account .line .error {
+	text-align: right; padding-right: 5px; clear: right; float: right;
+}
+section.accountCheck #checkAccountForm .line .error {
+	text-align: right; padding-right: 5px; clear: right; float: right;
+}
+section.account .line .checking {
+	text-align: right; padding-right: 5px; clear: right; float: right;
+}
+section.account .line .error {
+	color: red; padding-top: 3px; padding-right: 5px;
+}
+section.accountCheck #checkAccountForm .line .error {
+	color: red; padding-top: 3px; padding-right: 5px;
+}
+section.account .highlight p {
+	padding: 10px 20px; float: left;
+}
+section.accountCheck .highlight p {
+	padding: 10px 20px; float: left;
+}
+section#accountCheck .highlight h2 {
+	width: 100%;
+}
+section.account form {
+	padding: 20px 5px; clear: left; float: left;
+}
+section.accountCheck form {
+	padding: 20px 5px; clear: left; float: left;
+}
+section.account form select {
+	width: 270px;
+}
+section.account form div.col-1 {
+	width: 440px; clear: left; float: left;
+}
+section.account form div.col-1 .divider {
+	width: 93.5%;
+}
+section.account form div.col-1 input.account {
+	border: currentColor; top: 8px; width: 20px; position: relative;
+}
+section.account form div.col-1 span.choice {
+	color: rgb(97, 97, 97); padding-right: 10px; font-size: 16px;
+}
+section.account form div.col-2 {
+	width: 450px; padding-left: 20px; float: right;
+}
+section.account form p {
+	color: rgb(108, 108, 108); line-height: 1.3em; font-size: 13px; font-weight: bold; margin-bottom: 8px;
+}
+section.accountCheck form p {
+	color: rgb(108, 108, 108); line-height: 1.3em; font-size: 13px; font-weight: bold; margin-bottom: 8px;
+}
+section.account form section.callout {
+	background: rgb(255, 253, 238); border-radius: 5px; border: 1px solid rgb(236, 229, 183); width: 410px; padding-top: 11px; padding-left: 20px; clear: both; margin-bottom: 25px; float: left; -moz-border-radius: 5px; -khtml-border-radius: 5px; -webkit-border-radius: 5px; -moz-box-sizing: box-model; -webkit-box-sizing: box-model; -o-border-radius: 5px; -ms-border-radius: 5px; -ms-box-sizing: box-model;
+}
+section.account form section.callout .line {
+	
+}
+section.account form section.callout input {
+	width: 232px;
+}
+section.account form section.callout select {
+	width: 246px;
+}
+section.account form .divider {
+	left: 15px; width: 100%; clear: both; margin-bottom: 11px; border-bottom-color: rgb(225, 225, 225); border-bottom-width: 1px; border-bottom-style: dotted; float: left; position: relative;
+}
+section.account form footer {
+	left: 20px; width: 880px; padding-top: 10px; clear: left; border-top-color: rgb(225, 225, 225); border-top-width: 1px; border-top-style: dotted; float: left; position: relative;
+}
+section.account form footer button.submit {
+	width: auto; height: 36px; line-height: 30px; padding-right: 13px; clear: left; font-size: 16px; margin-top: 10px; margin-left: 127px; float: left; display: block;
+}
+section.account form footer p {
+	text-align: right; color: rgb(64, 64, 64); line-height: 32px; font-size: 11px; font-weight: normal; float: right;
+}
+section.account form footer p span.required {
+	display: inline; position: static;
+}
+#alert {
+	background: linear-gradient(rgb(252, 252, 252), rgb(237, 237, 237)) rgb(242, 242, 242); border-width: 1px 1px medium; border-style: solid solid none; border-color: rgb(11, 58, 95) rgb(11, 58, 95) currentColor; border-radius: 0px 0px 3px 3px; left: 50%; top: 38px; width: 650px; height: 35px; color: rgb(53, 53, 53); line-height: 35px; font-size: 13px; margin-left: -325px; display: block; position: absolute; box-shadow: 0px 2px 2px rgba(0,0,0,0.3); -moz-border-radius: 0 0 3px 3px; -khtml-border-radius: 0 0 3px 3px; -webkit-border-radius: 0 0 3px 3px; -o-box-shadow: rgba(0, 0, 0, 0.3) 0 2px 2px; -moz-box-shadow: rgba(0, 0, 0, 0.3) 0 2px 2px; -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 2px 2px; -o-border-radius: 0 0 3px 3px; -ms-border-radius: 0 0 3px 3px;
+}
+.validationAlert {
+	background: linear-gradient(rgb(252, 252, 252), rgb(237, 237, 237)) rgb(242, 242, 242); border-width: 1px 1px medium; border-style: solid solid none; border-color: rgb(11, 58, 95) rgb(11, 58, 95) currentColor; border-radius: 0px 0px 3px 3px; left: 50%; top: 38px; width: 650px; height: 35px; color: rgb(53, 53, 53); line-height: 35px; font-size: 13px; margin-left: -325px; display: block; position: absolute; box-shadow: 0px 2px 2px rgba(0,0,0,0.3); -moz-border-radius: 0 0 3px 3px; -khtml-border-radius: 0 0 3px 3px; -webkit-border-radius: 0 0 3px 3px; -o-box-shadow: rgba(0, 0, 0, 0.3) 0 2px 2px; -moz-box-shadow: rgba(0, 0, 0, 0.3) 0 2px 2px; -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0 2px 2px; -o-border-radius: 0 0 3px 3px; -ms-border-radius: 0 0 3px 3px;
+}
+.login #alert {
+	top: 15px;
+}
+.login .validationAlert {
+	top: 15px;
+}
+#alert header {
+	background: linear-gradient(rgb(190, 218, 242), rgb(163, 193, 216)) rgb(174, 204, 226); border-radius: 0px 0px 0px 3px; height: 27px; padding-top: 8px; padding-right: 13px; padding-left: 13px; clear: left; float: left; -moz-border-radius: 0 0 0 3px; -khtml-border-radius: 0 0 0 3px; -webkit-border-radius: 0 0 0 3px; -o-border-radius: 0 0 0 3px; -ms-border-radius: 0 0 0 3px;
+}
+.validationAlert header {
+	background: linear-gradient(rgb(190, 218, 242), rgb(163, 193, 216)) rgb(174, 204, 226); border-radius: 0px 0px 0px 3px; height: 27px; padding-top: 8px; padding-right: 13px; padding-left: 13px; clear: left; float: left; -moz-border-radius: 0 0 0 3px; -khtml-border-radius: 0 0 0 3px; -webkit-border-radius: 0 0 0 3px; -o-border-radius: 0 0 0 3px; -ms-border-radius: 0 0 0 3px;
+}
+.secondary#container #main .container > section .validationAlert header {
+	background: linear-gradient(rgb(190, 218, 242), rgb(163, 193, 216)) rgb(174, 204, 226); border-radius: 0px 0px 0px 3px; height: 27px; padding-top: 8px; padding-right: 13px; padding-left: 13px; clear: left; float: left; -moz-border-radius: 0 0 0 3px; -khtml-border-radius: 0 0 0 3px; -webkit-border-radius: 0 0 0 3px; -o-border-radius: 0 0 0 3px; -ms-border-radius: 0 0 0 3px;
+}
+#alert header h1 {
+	background: url("../image/icon_alert.png") no-repeat 0px 2px; height: 17px; line-height: 19px; padding-left: 25px; clear: left; font-size: 13px; float: left; text-shadow: 0px 1px 0px #d9e6f1;
+}
+.validationAlert header h1 {
+	background: url("../image/icon_alert.png") no-repeat 0px 2px; height: 17px; line-height: 19px; padding-left: 25px; clear: left; font-size: 13px; float: left; text-shadow: 0px 1px 0px #d9e6f1;
+}
+#join_form .validationAlert {
+	top: 0px;
+}
+.secondary#container #main .container > section .validationAlert {
+	position: relative;
+}
+#alert .message {
+	padding-left: 8px; float: left;
+}
+.validationAlert .message {
+	padding-left: 8px; float: left;
+}
+#alert a {
+	font-weight: bold;
+}
+.validationAlert a {
+	font-weight: bold;
+}
+section.dashboard table {
+	border: currentColor;
+}
+section.dashboard .highlight nav.sort {
+	padding: 0px 0px 0px 10px; width: 270px; clear: left; float: left;
+}
+section.dashboard .highlight nav.sort ul.time {
+	color: rgb(43, 72, 98); font-family: Helvetica,Arial,sans-serif; font-size: 16px; font-weight: 500;
+}
+section.dashboard .highlight nav.sort ul.time > li {
+	width: auto; height: 40px; padding-right: 7px; float: left;
+}
+section.dashboard .highlight nav.sort ul.time > li .chzn-container {
+	left: 0px; font-size: 17px;
+}
+section.dashboard .highlight nav.sort ul.time > li.today a {
+	width: 46px;
+}
+section.dashboard .highlight nav.sort ul.time > li.yesterday a {
+	width: 76px;
+}
+section.dashboard .highlight nav.sort ul.time > li.all_time a {
+	width: 61px;
+}
+section.dashboard .highlight nav.sort ul.time > li a {
+	background: linear-gradient(rgb(198, 226, 251), rgb(137, 193, 238)) rgb(198, 226, 251); border-width: 1px; border-style: solid; border-color: rgb(126, 175, 214) rgb(113, 158, 195) rgb(102, 146, 181); padding: 0px 9px; border-radius: 3px; height: 26px; text-align: center; color: rgb(43, 72, 98); line-height: 26px; float: left; position: relative; box-shadow: inset 0px 1px 0px white, 0px 1px 0px #cdd4da; text-shadow: 0px 1px 0px #c8ffff; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-box-shadow: inset white 0 1px 0, #cdd4da 0 1px 0; -moz-box-shadow: inset white 0 1px 0, #cdd4da 0 1px 0; -webkit-box-shadow: inset white 0 1px 0, #cdd4da 0 1px 0; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+section.dashboard .highlight nav.sort ul.time > li a span.arrow {
+	display: none;
+}
+section.dashboard .highlight nav.sort ul.time > li a.current {
+	background: linear-gradient(rgb(145, 165, 184), rgb(166, 190, 212)) rgb(145, 165, 184); border-width: 1px; border-style: solid; border-color: rgb(90, 103, 114) rgb(117, 135, 150) rgb(143, 166, 184); box-shadow: inset 0px 1px 1px #798b9a, 0px 1px 0px white; -o-box-shadow: inset #798b9a 0 1px 1px, white 0 1px 0; -moz-box-shadow: inset #798b9a 0 1px 1px, white 0 1px 0; -webkit-box-shadow: inset #798b9a 0 1px 1px, white 0 1px 0;
+}
+section.dashboard .highlight nav.sort ul.time > li.current a {
+	background: linear-gradient(rgb(145, 165, 184), rgb(166, 190, 212)) rgb(145, 165, 184); border-width: 1px; border-style: solid; border-color: rgb(90, 103, 114) rgb(117, 135, 150) rgb(143, 166, 184); box-shadow: inset 0px 1px 1px #798b9a, 0px 1px 0px white; -o-box-shadow: inset #798b9a 0 1px 1px, white 0 1px 0; -moz-box-shadow: inset #798b9a 0 1px 1px, white 0 1px 0; -webkit-box-shadow: inset #798b9a 0 1px 1px, white 0 1px 0;
+}
+section.dashboard .highlight nav.sort ul.time > li a.current span.arrow {
+	background: url("../image/nav_arrow.png") no-repeat 0px 0px; left: 50%; width: 14px; height: 9px; bottom: -9px; margin-left: -7px; display: block; position: absolute; z-index: 2;
+}
+section.dashboard .highlight nav.sort ul.time > li#reportDateWrapper a {
+	width: 237px;
+}
+section.dashboard section.charts {
+	padding: 20px; width: 880px; clear: left; float: left;
+}
+section.dashboard section.latest-news {
+	padding: 20px; width: 880px; clear: left; float: left;
+}
+section.dashboard section.charts #monthly-earnings {
+	width: 640px; height: 400px;
+}
+section.dashboard section.charts h3 {
+	padding-bottom: 8px; padding-left: 3px;
+}
+section.dashboard section.charts .data .panels {
+	height: 417px;
+}
+section.dashboard section.charts nav.menu {
+	height: 409px; padding-top: 8px;
+}
+section.dashboard section.charts li.earnings span {
+	background: url("../image/icon_stats.png") no-repeat 14px;
+}
+section.dashboard section.charts li.active.earnings span {
+	background: url("../image/icon_stats_current.png") no-repeat 16px;
+}
+section.dashboard section.charts li.countries span {
+	background: url("../image/icon_countries.png") no-repeat 14px;
+}
+section.dashboard section.charts li.active.countries span {
+	background: url("../image/icon_countries_current.png") no-repeat 16px;
+}
+section.dashboard section.charts li.referrers span {
+	background: url("../image/icon_referrers.png") no-repeat 14px;
+}
+section.dashboard section.charts li.active.referrers span {
+	background: url("../image/icon_referrers_current.png") no-repeat 16px;
+}
+section.dashboard section.links {
+	padding: 20px; width: 880px; clear: left; float: left;
+}
+section.dashboard section.links #configureGroups {
+	left: 3px; bottom: 3px; display: block; position: absolute;
+}
+section.dashboard section.links #search_clear {
+	background: url("../image/menu_current_bg.png") no-repeat -3px -3px; border: 1px solid rgb(159, 159, 159); height: 31px; right: 15px; color: rgb(63, 89, 113); display: none; position: absolute;
+}
+#edit_link #edit_advert_type {
+	width: 230px;
+}
+#edit_link #edit_group {
+	width: 230px;
+}
+section.dashboard section.links h3 {
+	padding-bottom: 8px; padding-left: 3px;
+}
+section.dashboard section.links .panels {
+	height: 422px;
+}
+section.dashboard section.links nav.menu {
+	height: 385px;
+}
+section.dashboard section.links nav.menu .find {
+	background: rgb(255, 252, 221); padding: 10px 0px 0px 15px; border-radius: 3px 0px 0px; width: 208px; height: 69px; clear: left; float: left; -moz-border-radius: 3px 0 0 0; -khtml-border-radius: 3px 0 0 0; -webkit-border-radius: 3px 0 0 0; -o-border-radius: 3px 0 0 0; -ms-border-radius: 3px 0 0 0;
+}
+section.dashboard section.links nav.menu .find h5 {
+	color: rgb(73, 73, 73); line-height: 1em; padding-bottom: 8px; font-size: 14px; font-weight: bold;
+}
+section.dashboard section.links nav.menu .find input {
+	background: url("../image/find_input.png") no-repeat 0px 0px; padding: 5px 10px; border: currentColor; width: 173px; height: 22px; clear: left; float: left;
+}
+section.dashboard section.links nav.menu li span {
+	background: url("../image/icon_link.png") no-repeat 14px;
+}
+section.dashboard section.links nav.menu li .active span {
+	background: url("../image/icon_link_current.png") no-repeat 16px;
+}
+section.dashboard section.links table {
+	width: 654px;
+}
+section.dashboard section.links table a.delete {
+	color: rgb(63, 89, 113); font-size: 12px; font-weight: normal; text-decoration: underline;
+}
+#links-tabs #deleteSelected {
+	color: rgb(63, 89, 113); font-size: 12px; font-weight: normal; text-decoration: underline;
+}
+section.dashboard section.links table h4 {
+	height: 18px; line-height: 18px; font-size: 15px; font-weight: normal;
+}
+section.dashboard section.links table h4 a {
+	color: rgb(52, 120, 181); font-family: Helvetica,Arial,sans-serif; font-weight: bold;
+}
+section.dashboard section.links table h6 {
+	line-height: 14px; padding-bottom: 2px; font-size: 12px; font-weight: bold;
+}
+section.dashboard section.links table td {
+	padding-top: 4px; padding-bottom: 2px; position: relative;
+}
+section.dashboard section.links table h6 a {
+	color: rgb(63, 89, 113);
+}
+section.dashboard section.links table td div.advertype {
+	border-radius: 1px; top: 17px; right: 10px; padding-top: 1px; display: block; position: absolute;
+}
+section.dashboard section.links table td div.advertype a {
+	padding: 0px; width: 14px; text-align: center; line-height: 14px; font-family: Arial; font-size: 10px;
+}
+section.dashboard section.links table td.amount {
+	line-height: 54px;
+}
+section.dashboard section.configureFolders h4 {
+	margin-top: 26px; margin-right: 20px; float: right;
+}
+section.dashboard section.links table td.actions {
+	padding: 0px; width: 190px; background-image: linear-gradient(rgb(255, 255, 255), rgb(245, 245, 245));
+}
+section.dashboard section#groupsSection #groupsTable td.actions {
+	padding: 0px; width: 190px; background-image: linear-gradient(rgb(255, 255, 255), rgb(245, 245, 245));
+}
+section.dashboard section.links table td div {
+	position: relative;
+}
+section.dashboard section#groupsSection #groupsTable td div {
+	position: relative;
+}
+section.dashboard section.links table td.actions ul {
+	margin: 0px; padding: 14px 0px 0px 14px; height: 25px; float: left;
+}
+section.dashboard section#groupsSection #groupsTable td.actions ul {
+	margin: 0px; padding: 14px 0px 0px 14px; height: 25px; float: left;
+}
+section.dashboard section.links table td.actions ul li {
+	padding-right: 10px; float: left; list-style-type: none;
+}
+section.dashboard section#groupsSection #groupsTable td.actions ul li {
+	padding-right: 10px; float: left; list-style-type: none;
+}
+section.dashboard section.links table td.actions ul li.last {
+	padding-right: 0px;
+}
+section.dashboard section.links table td.actions ul li input {
+	top: -3px; position: relative;
+}
+section.dashboard section.links table td.actions ul li a {
+	width: 25px; height: 25px; display: block;
+}
+section.dashboard section#groupsSection #groupsTable td.actions ul li a {
+	width: 25px; height: 25px; display: block;
+}
+section.dashboard section.links table td.actions ul li a.edit {
+	background: url("../image/icon_edit.png") no-repeat center;
+}
+section.dashboard section#groupsSection #groupsTable td.actions ul li a.edit {
+	background: url("../image/icon_edit.png") no-repeat center;
+}
+section.dashboard section.links table td.actions ul li a.delete {
+	background: url("../image/icon_delete.png") no-repeat center;
+}
+section.dashboard section#groupsSection #groupsTable td.actions ul li a.delete {
+	background: url("../image/icon_delete.png") no-repeat center;
+}
+section.dashboard section.links table td.actions ul li a.stats {
+	background: url("../image/icon_stats_current.png") no-repeat center;
+}
+section.dashboard section#groupsSection #groupsTable td.actions ul li a.stats {
+	background: url("../image/icon_stats_current.png") no-repeat center;
+}
+section.dashboard section.announcements {
+	padding: 20px; width: 880px; clear: left; float: left;
+}
+section.dashboard section.top {
+	padding: 0px 0px 0px 16px; clear: both; float: none;
+}
+section.dashboard section.announcements nav {
+	width: 100%; clear: both; border-top-color: rgb(232, 232, 232); border-top-width: 1px; border-top-style: solid; float: left;
+}
+section.dashboard section.announcements nav ul {
+	padding-top: 8px;
+}
+section.dashboard section.announcements nav li {
+	padding-right: 8px; float: left;
+}
+section.dashboard section.announcements nav a.view {
+	background: url("../image/button_view.png") no-repeat 0px 0px; width: 72px; height: 25px; color: rgb(46, 46, 46); line-height: 26px; padding-left: 37px; font-size: 12px; font-weight: bold; display: block; text-shadow: 0px 1px 0px #fff;
+}
+section.dashboard section.announcements nav a.clear {
+	background: url("../image/button_clear.png") no-repeat 0px 0px; width: 90px; height: 25px;
+}
+section.dashboard section.announcements h3 {
+	padding-bottom: 4px; padding-left: 3px; margin-bottom: 8px; border-bottom-color: rgb(232, 232, 232); border-bottom-width: 1px; border-bottom-style: solid;
+}
+section.dashboard section.announcements article {
+	width: 425px; padding-right: 15px; float: left;
+}
+section.dashboard section.announcements article .wrapper {
+	padding: 5px; width: 415px; clear: left; float: left; position: relative;
+}
+section.dashboard section.top article .wrapper {
+	padding: 0px; width: 800px; position: relative;
+}
+section.dashboard section.announcements article .wrapper aside {
+	background: linear-gradient(rgb(22, 123, 204), rgb(18, 95, 158)) rgb(21, 118, 197); padding: 4px 6px; border-radius: 3px; left: 12px; top: 10px; color: rgb(255, 255, 255); text-transform: uppercase; font-size: 10px; font-weight: bold; display: block; position: absolute; text-shadow: 0px 1px 0px #104c7e; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+div.latest-news aside {
+	background: rgb(62, 92, 119); padding: 5px; border-radius: 3px; left: 12px; top: 10px; color: rgb(255, 255, 255); text-transform: uppercase; font-size: 10px; font-weight: bold; display: block; position: absolute; text-shadow: 0px 1px 0px #104c7e; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+section.dashboard section.top article .wrapper aside {
+	left: 10px; top: 15px;
+}
+section.dashboard section.announcements article .wrapper section {
+	color: rgb(87, 87, 87); line-height: 18px; padding-top: 4px; padding-left: 90px; font-size: 13px; float: left;
+}
+section.dashboard section.top article .wrapper section {
+	padding-top: 15px;
+}
+section.dashboard section.announcements article.stripe .wrapper {
+	background: rgb(242, 248, 252);
+}
+section.dashboard #addNewForm {
+	padding: 20px;
+}
+section.dashboard .configureFolders #addNewForm {
+	padding-top: 14px; padding-bottom: 7px;
+}
+section.dashboard #groupsSection {
+	padding: 0px 20px 20px; width: 880px;
+}
+section.dashboard #groupsSection #groupsTableWrapper {
+	height: 260px;
+}
+section.dashboard section#groupsSection #groupsTable td.actions ul {
+	padding: 5px 0px 0px 5px; height: auto;
+}
+.home#container {
+	background: url("../image/header_bg.png") repeat-x 0px 0px;
+}
+#join_form {
+	height: auto; padding-top: 15px;
+}
+#join_form input {
+	width: 186px;
+}
+#join_form select {
+	width: 200px;
+}
+#join_form button {
+	height: 31px; line-height: 20px; font-size: 16px; display: block;
+}
+#join_form button span {
+	background: url("../image/button_join_tick.png") no-repeat left; width: 20px; height: 21px; margin-right: 7px; float: left; display: block;
+}
+#join_form .terms {
+	width: 30px; margin-left: 20px; float: left;
+}
+#join_form .check.line {
+	padding-left: 125px;
+}
+#join_form .sub.line {
+	padding-left: 147px;
+}
+#join_form p {
+	margin: 0px; line-height: 30px; float: left;
+}
+#join_form .col-1 {
+	width: 50%; float: left;
+}
+#join_form .col-2 {
+	width: 50%; float: left;
+}
+#join_form #register_form {
+	margin-top: 5px;
+}
+#join_form #alert_wrapper {
+	height: 45px; position: relative;
+}
+iframe[src='about:blank'] {
+	display: none;
+}
+#join_form #alert_wrapper h4 {
+	color: rgb(52, 69, 83); padding-left: 35px;
+}
+#join_form #terms {
+	width: auto; height: auto; margin-top: 7px;
+}
+#edit_link {
+	height: auto; padding-top: 15px;
+}
+#edit_link input {
+	width: 220px;
+}
+#edit_link label {
+	width: 165px;
+}
+#edit_link .sub.line {
+	padding-left: 180px;
+}
+#edit_link .submit {
+	width: auto; height: 32px; line-height: 30px; padding-right: 13px; font-size: 16px; float: left; display: block;
+}
+#edit_link .submit span {
+	background: url("../image/button_join_tick.png") no-repeat left; width: 20px; height: 30px; margin-right: 7px; float: left; display: block;
+}
+section.account form footer button.submit span {
+	background: url("../image/button_join_tick.png") no-repeat left; width: 20px; height: 30px; margin-right: 7px; float: left; display: block;
+}
+.tickSpan {
+	background: url("../image/button_join_tick.png") no-repeat left; width: 20px; height: 30px; margin-right: 7px; float: left; display: block;
+}
+.home #header {
+	background: url("../image/header.png") no-repeat 50% 0px; padding: 0px; width: 100%; height: 527px; clear: both; float: left;
+}
+.home #header .gradient {
+	display: none;
+}
+.home #header .container {
+	position: relative;
+}
+.home #header .container nav {
+	height: 35px; color: rgb(255, 255, 255); line-height: 35px; font-family: Arial,sans-serif; font-size: 13px; font-weight: bold; margin-right: 15px; float: right; position: static;
+}
+.home #header .container nav p {
+	margin: 0px; float: left; text-shadow: 0px 1px 0px #104e81;
+}
+.home #header .container nav a.login {
+	padding: 0px 8px; width: auto; height: 20px; color: rgb(14, 30, 45); line-height: 20px; text-indent: 0px; margin-top: 7px; margin-left: 10px; float: left; display: block; cursor: pointer;
+}
+.oldie .home #header .container nav a.login {
+	margin-top: 6px;
+}
+.home #header .container form#shrink {
+	top: 85px;
+}
+.home #header .container form#shrink h1#logo {
+	left: -12px; top: -30px; position: absolute;
+}
+.home #header .container form#shrink input {
+	background: url("../image/shrink_bg.png") no-repeat 0px 0px; padding: 0px 158px 0px 9px; border: currentColor; width: 500px; height: 46px; line-height: 46px; font-size: 26px; float: right; box-shadow: none; -o-box-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none;
+}
+.home #header .container form#shrink input.copy {
+	width: 500px; padding-left: 9px;
+}
+.home #header .container form#shrink #shrink_copy_wrapper {
+	width: 141px; height: 45px; right: 0px; position: absolute; z-index: 2; cursor: pointer;
+}
+.home #header .container form#shrink span.url {
+	left: 198px; color: rgb(152, 152, 152); line-height: 46px; font-size: 26px; position: absolute;
+}
+.home #header .container form#shrink #loading_spinner {
+	left: 208px; top: 22px; display: none; position: absolute;
+}
+.home #header .container form#shrink button {
+	width: auto; height: 43px; line-height: 41px; padding-right: 18px; margin-top: 1px; margin-right: 1px; z-index: 999;
+}
+.home #header .container form#shrink button span {
+	width: 28px; height: 41px; margin-right: 11px; margin-left: 9px; float: left; display: block;
+}
+.home #header .container form#shrink #shrink_submit {
+	z-index: 3;
+}
+.home #header .container form#shrink #shrink_submit span {
+	background: url("../image/shrink_button_icon.png") no-repeat left;
+}
+.home #header .container form#shrink #shrink_copy {
+	display: none; z-index: 1;
+}
+.home #header .container form#shrink #shrink_copy span {
+	background: url("../image/copy_button_icon.png") no-repeat left; margin-right: 5px;
+}
+.home #header .container form#shrink #shrink_another {
+	right: 141px; display: none; z-index: 1;
+}
+.home #header .container .gettingstarted {
+	background: rgb(255, 252, 222); border-radius: 5px; left: 0px; top: 192px; width: 850px; height: 242px; display: block; position: absolute; box-shadow: 0px 0px 7px 1px #0b3355; -moz-border-radius: 5px; -khtml-border-radius: 5px; -webkit-border-radius: 5px; -o-box-shadow: 0 0 7px 1px #0b3355; -moz-box-shadow: 0 0 7px 1px #0b3355; -webkit-box-shadow: 0 0 7px 1px #0b3355; -o-border-radius: 5px; -ms-border-radius: 5px;
+}
+.home #header .container .gettingstarted header {
+	background: rgb(255, 239, 134); border-radius: 5px 5px 0px 0px; width: 100%; height: 49px; clear: both; border-bottom-color: rgb(233, 216, 117); border-bottom-width: 1px; border-bottom-style: solid; float: left; -moz-border-radius: 5px 5px 0 0; -khtml-border-radius: 5px 5px 0 0; -webkit-border-radius: 5px 5px 0 0; -o-border-radius: 5px 5px 0 0; -ms-border-radius: 5px 5px 0 0;
+}
+.home #header .container .gettingstarted header h1 {
+	color: rgb(163, 150, 76); line-height: 50px; text-indent: 20px; font-size: 23px; font-weight: bold; text-shadow: 0px 0px 1px #fff7bf;
+}
+.home #header .container .gettingstarted article {
+	width: 280px; height: 192px; float: left;
+}
+.home #header .container .gettingstarted article h3 {
+	margin: auto; width: 220px; text-align: center; color: rgb(69, 69, 69); line-height: 20px; padding-top: 125px; font-size: 15px; font-weight: bold;
+}
+.home #header .container .gettingstarted article.register h3 {
+	padding-top: 0px;
+}
+.home #header .container .gettingstarted article.register h3 a {
+	background: url("../image/register_bg.png") no-repeat top; color: rgb(69, 69, 69); padding-top: 125px; display: block;
+}
+.home #header .container .gettingstarted article.paid {
+	background: url("../image/paid_bg.png") no-repeat top; width: 278px; border-right-color: rgb(240, 227, 125); border-left-color: rgb(240, 227, 125); border-right-width: 1px; border-left-width: 1px; border-right-style: dotted; border-left-style: dotted;
+}
+.home #header .container .gettingstarted article.share {
+	background: url("../image/share_bg.png") no-repeat top; width: 290px;
+}
+.home #header .container .join {
+	left: 0px; top: 455px; width: 100%; clear: both; float: left; position: absolute;
+}
+.home #header .container .join a.button {
+	border-width: 1px; border-style: solid; border-color: rgb(255, 255, 255) rgb(53, 103, 146) rgb(28, 66, 99) rgb(31, 83, 130); padding: 0px 15px; left: -1px; height: 42px; color: rgb(93, 78, 32); line-height: 42px; text-indent: 0px; font-family: Helvetica,Arial; font-weight: normal; margin-top: 0px; float: left; filter:; position: relative; text-shadow: 1px 0px #dcc06a;
+}
+.home #header .container .join a.button span {
+	background: url("../image/button_join_now_tick.png") no-repeat left; width: 33px; height: 42px; float: left; display: block;
+}
+#login .submit span {
+	background: url("../image/button_join_now_tick.png") no-repeat left; width: 33px; height: 42px; float: left; display: block;
+}
+#login .submit span {
+	height: 36px;
+}
+.home #header .container .join p {
+	background: url("../image/arrow.png") no-repeat right; margin: 0px 10px 0px 0px; color: rgb(255, 255, 255); line-height: 45px; text-indent: 8px; padding-right: 25px; font-size: 20px; font-weight: bold; float: right; text-shadow: 0px 1px 0px #1a4263;
+}
+.home #header .container .join p a {
+	color: rgb(181, 213, 241);
+}
+.home #header .container .join p a:link {
+	color: rgb(181, 213, 241);
+}
+.home #header .container .join p a:visited {
+	color: rgb(181, 213, 241);
+}
+.home #header .container .join p a:active {
+	color: rgb(181, 213, 241);
+}
+body.login {
+	background: rgb(11, 58, 96);
+}
+body.login #header {
+	padding-bottom: 4px;
+}
+body.login #logo {
+	margin: auto;
+}
+body.login #container {
+	background: url("../image/login_bg.png") repeat-x 0px 0px; padding-top: 75px; min-height: 600px;
+}
+body.login #container .container {
+	width: 400px;
+}
+#login {
+	background: url("../image/login_form.png") no-repeat 0px 0px; padding: 7px 12px 0px; width: 376px; height: 400px; display: block;
+}
+#login header {
+	
+}
+#login h2 {
+	color: rgb(89, 86, 76); line-height: 44px; text-indent: 18px; font-size: 20px; font-weight: 500;
+}
+#login form {
+	padding: 14px 17px; width: 342px; overflow: hidden; float: none;
+}
+#login .wrap {
+	width: 100%; padding-bottom: 12px; clear: both; float: left; position: relative;
+}
+#login .wrap span {
+	left: 10px; top: 7px; width: 29px; height: 29px; display: block; position: absolute;
+}
+#login .username.wrap span {
+	background: url("../image/icon_user.png") no-repeat 0px;
+}
+#login .password.wrap span {
+	background: url("../image/icon_password.png") no-repeat 0px;
+}
+#login input {
+	width: 286px; height: 39px; line-height: 39px; padding-right: 12px; padding-left: 42px; clear: left; font-size: 18px; float: left;
+}
+#login .submit {
+	height: 38px; line-height: 33px; text-indent: 0px; overflow: hidden; clear: left; font-size: 19px; margin-top: 0px; float: left; display: block; min-width: 175px;
+}
+#login a.signup {
+	color: white; font-size: 13px; margin-top: 15px; display: block;
+}
+#login a.forgot {
+	color: rgb(172, 193, 194); font-size: 11px; text-decoration: underline;
+}
+#login #remember_me {
+	width: auto; height: auto; padding-right: 0px; padding-left: 0px; clear: none; float: none; display: inline;
+}
+#login #remember_me_label {
+	padding-right: 0px; display: inline;
+}
+#login .forgot {
+	clear: right; float: right;
+}
+#login .forgotRemember {
+	margin-bottom: 0px;
+}
+.oldie #login .forgotRemember {
+	height: 25px; clear: right; margin-bottom: 0px; float: right;
+}
+#login .forgotRemember input {
+	border: currentColor;
+}
+#login .forgotRemember label {
+	width: auto;
+}
+.home #main {
+	background: rgb(245, 245, 245); padding-top: 20px;
+}
+.home #main section.features {
+	width: 562px; padding-top: 10px; padding-bottom: 50px; clear: left; float: left;
+}
+.home #main section.features article {
+	width: 251px; padding-right: 30px; padding-bottom: 30px; float: left;
+}
+.home #main section.features article h1 {
+	color: rgb(63, 89, 113); padding-bottom: 12px; font-size: 17px; font-weight: bold; text-shadow: 0px 1px 0px #fff;
+}
+.home #main section.features article p {
+	margin: 0px; color: rgb(51, 51, 51); padding-left: 56px; font-size: 13px;
+}
+.home #main section.features article.api p {
+	background: url("../image/api.png") no-repeat 0px 0px;
+}
+.home #main section.features article.stats p {
+	background: url("../image/stats.png") no-repeat 0px 0px;
+}
+.home #main section.features article.lmp p {
+	background: url("../image/lmp.png") no-repeat 0px 0px;
+}
+.home #main section.features article.ads p {
+	background: url("../image/ads.png") no-repeat 0px 0px;
+}
+.home #main section.features article.safe p {
+	background: url("../image/safe.png") no-repeat 0px 0px;
+}
+.home #main section.features article.scripts p {
+	background: url("../image/scripts.png") no-repeat 0px 0px;
+}
+.home #main .sidebar {
+	width: 282px; float: right;
+}
+.home #main .sidebar h1 {
+	color: rgb(63, 89, 113); font-size: 15px; font-weight: 300;
+}
+.home #main .sidebar .quote {
+	width: 100%; padding-bottom: 14px; clear: both; float: left;
+}
+.home #main .sidebar .quote article {
+	background: rgb(254, 254, 254); padding: 12px 6px 12px 12px; border-radius: 5px; border: 1px solid rgb(233, 233, 233); width: 246px; clear: left; margin-top: 4px; float: left; position: relative; -moz-border-radius: 5px; -khtml-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px;
+}
+.home #main .sidebar .quote article span.arrow {
+	background: url("../image/quote_top_bg.png") no-repeat 0px 0px; left: 7px; top: -10px; width: 16px; height: 10px; display: block; position: absolute;
+}
+.home #main .sidebar .quote article blockquote {
+	background: url("../image/blockquote_bg.png") no-repeat 0px 0px; margin: 0px; padding: 0px 0px 8px 30px; height: 24px; color: rgb(93, 93, 93); font-weight: bold;
+}
+.home #main .sidebar .quote article p {
+	margin: 0px; padding: 0px;
+}
+.home #main .sidebar .quote header {
+	padding-bottom: 8px;
+}
+.home #main .sidebar .quote header figure {
+	background: url("../image/quote_photo_bg.png") no-repeat 0px 0px; padding: 3px; width: 48px; height: 49px; float: left;
+}
+.home #main .sidebar .quote header figure .imgHolder {
+	width: 42px; height: 42px; overflow: hidden;
+}
+.home #main .sidebar .quote header h1 {
+	line-height: 26px;
+}
+.home #main .sidebar ul {
+	margin: 0px; padding: 2px 0px 0px 3px; width: 278px; height: 47px; clear: left; float: left;
+}
+.home #main .sidebar li {
+	background: url("../image/num_bg.png") no-repeat 0px; width: 32px; height: 47px; text-align: center; color: rgb(255, 255, 255); line-height: 47px; font-size: 32px; font-weight: bold; float: left; list-style-type: none; text-shadow: 0px 1px 1px rgba(0,0,0,0.9);
+}
+.home #main .sidebar li.divider {
+	width: 9px; color: rgb(183, 211, 235); text-shadow: none;
+}
+.home #main .sidebar #earned {
+	width: 100%; padding-bottom: 15px; clear: both; float: left;
+}
+.home #main .sidebar #earned ul {
+	background: url("../image/earned_bg.png") no-repeat 0px 0px; width: 227px; padding-left: 35px;
+}
+.home #main .sidebar #earned h1 {
+	padding-bottom: 5px;
+}
+.home #main .sidebar .clicked {
+	width: 100%; padding-bottom: 15px; clear: both; float: left;
+}
+.home #main .sidebar .clicked ul {
+	background: url("../image/links_clicked_bg.png") no-repeat 0px 0px;
+}
+.home #main .sidebar .clicked h1 {
+	padding-bottom: 5px;
+}
+.home footer#footer {
+	background: url("../image/footer_bg.png") repeat-x 0px 0px rgb(8, 46, 73); margin: 0px; padding: 0px; width: 100%; clear: both; font-size: 11px; font-weight: bold; float: left; position: static;
+}
+.secondary footer#footer {
+	background: url("../image/footer_bg.png") repeat-x 0px 0px rgb(8, 46, 73); margin: 0px; padding: 0px; width: 100%; clear: both; font-size: 11px; font-weight: bold; float: left; position: static;
+}
+.home footer#footer .container {
+	position: relative;
+}
+.secondary footer#footer .container {
+	position: relative;
+}
+.home footer#footer a {
+	color: rgb(196, 227, 255);
+}
+.home footer#footer a:link {
+	color: rgb(196, 227, 255);
+}
+.home footer#footer a:hover {
+	color: rgb(196, 227, 255);
+}
+.home footer#footer a:visited {
+	color: rgb(196, 227, 255);
+}
+.secondary footer#footer a {
+	color: rgb(196, 227, 255);
+}
+.secondary footer#footer a:link {
+	color: rgb(196, 227, 255);
+}
+.secondary footer#footer a:hover {
+	color: rgb(196, 227, 255);
+}
+.secondary footer#footer a:visited {
+	color: rgb(196, 227, 255);
+}
+.home footer#footer nav {
+	text-shadow: 0px 1px 0px #030e15;
+}
+.secondary footer#footer nav {
+	text-shadow: 0px 1px 0px #030e15;
+}
+.home footer#footer nav li {
+	float: left;
+}
+.secondary footer#footer nav li {
+	float: left;
+}
+.home footer#footer nav li a {
+	background: url("../image/footer_home_lr_bg.png") no-repeat right top; padding: 18px 12px; display: block;
+}
+.secondary footer#footer nav li a {
+	background: url("../image/footer_home_lr_bg.png") no-repeat right top; padding: 18px 12px; display: block;
+}
+.multiplebgs .home footer#footer nav li a {
+	background: url("../image/footer_home_lr_bg.png") no-repeat right top, url("../image/footer_home_ll_bg.png") no-repeat left top;
+}
+.multiplebgs .secondary footer#footer nav li a {
+	background: url("../image/footer_home_lr_bg.png") no-repeat right top, url("../image/footer_home_ll_bg.png") no-repeat left top;
+}
+.home footer#footer nav li.first a {
+	background: url("../image/footer_home_lr_bg.png") no-repeat right top; padding-left: 0px;
+}
+.secondary footer#footer nav li.first a {
+	background: url("../image/footer_home_lr_bg.png") no-repeat right top; padding-left: 0px;
+}
+.home footer#footer nav li.last a {
+	background: url("../image/footer_home_ll_bg.png") no-repeat left top; padding-right: 0px;
+}
+.secondary footer#footer nav li.last a {
+	background: url("../image/footer_home_ll_bg.png") no-repeat left top; padding-right: 0px;
+}
+.secondary#container #header {
+	width: 100%; clear: both; float: left;
+}
+.secondary#container #header h1 {
+	margin-top: 30px; float: left;
+}
+.secondary#container #header nav {
+	float: right; position: absolute;
+}
+.secondary#container #header nav.accountType {
+	position: static;
+}
+.secondary#container #header nav span {
+	padding: 0px 6px; color: rgb(255, 255, 255); line-height: 27px; font-size: 13px; font-weight: bold; float: left; text-shadow: 0px 1px 0px #0e548a;
+}
+.secondary#container #header a.login {
+	height: 24px; line-height: 24px; text-indent: 0px; float: left;
+}
+.secondary#container #header a.signup {
+	height: 24px; line-height: 24px; text-indent: 0px; float: left;
+}
+.secondary#container .wrapper {
+	background: url("../image/secondary_container_bg.jpg") no-repeat bottom; width: 100%; padding-bottom: 108px; clear: both; float: left;
+}
+.secondary#container .container {
+	width: 920px;
+}
+.secondary#container #main {
+	background: url("../image/secondary_bottom_bg.png") repeat-x left bottom;
+}
+.secondary#container #main .container > section {
+	background: rgb(255, 255, 255); border-radius: 5px; width: 100%; clear: both; float: left; box-shadow: 0px 0px 7px 1px #0b3355; -moz-border-radius: 5px; -khtml-border-radius: 5px; -webkit-border-radius: 5px; -o-box-shadow: #0b3355 0 0 7px 1px; -moz-box-shadow: #0b3355 0 0 7px 1px; -webkit-box-shadow: #0b3355 0 0 7px 1px; -o-border-radius: 5px; -ms-border-radius: 5px;
+}
+.secondary#container #main .container > section header {
+	background: rgb(242, 227, 127); border-radius: 5px 5px 0px 0px; width: 100%; height: 49px; clear: both; border-bottom-color: rgb(233, 216, 117); border-bottom-width: 1px; border-bottom-style: solid; float: left; -moz-border-radius: 5px 5px 0 0; -khtml-border-radius: 5px 5px 0 0; -webkit-border-radius: 5px 5px 0 0; -o-border-radius: 5px 5px 0 0; -ms-border-radius: 5px 5px 0 0;
+}
+.secondary#container #main .container > section header h2 {
+	color: rgb(163, 150, 76); line-height: 50px; text-indent: 20px; font-size: 23px; font-weight: bold; text-shadow: 0px 0px 1px #fff7bf;
+}
+.secondary#container form {
+	font-size: 14px;
+}
+.secondary#container form .line {
+	width: 100%; padding-bottom: 10px; clear: both; float: left;
+}
+.secondary#container form .line label {
+	width: 120px; text-align: right; color: rgb(56, 56, 56); padding-right: 10px; clear: left; font-weight: bold; float: left;
+}
+.secondary#container form .line input {
+	border-width: 1px; border-style: solid; border-color: rgb(152, 152, 152) rgb(147, 147, 147) rgb(191, 191, 191); padding: 3px 6px; border-radius: 3px; width: 380px; box-shadow: inset 0px 1px 1px #d0d0d0; background-image: linear-gradient(rgb(237, 237, 237), rgb(255, 255, 255)); -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-box-shadow: inset #d0d0d0 0 1px 1px; -moz-box-shadow: inset #d0d0d0 0 1px 1px; -webkit-box-shadow: inset #d0d0d0 0 1px 1px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+.secondary#container form .line textarea {
+	border-width: 1px; border-style: solid; border-color: rgb(152, 152, 152) rgb(147, 147, 147) rgb(191, 191, 191); padding: 3px 6px; border-radius: 3px; width: 380px; box-shadow: inset 0px 1px 1px #d0d0d0; background-image: linear-gradient(rgb(237, 237, 237), rgb(255, 255, 255)); -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-box-shadow: inset #d0d0d0 0 1px 1px; -moz-box-shadow: inset #d0d0d0 0 1px 1px; -webkit-box-shadow: inset #d0d0d0 0 1px 1px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+.secondary#container form .line .chzn-container {
+	left: 0px;
+}
+#container .wrapper .container section#confirm form {
+	float: none;
+}
+#container .wrapper .container section#lostpass form {
+	float: none;
+}
+#container .wrapper .container section#confirm form input {
+	width: auto;
+}
+#container .wrapper .container section#lostpass form input {
+	width: auto;
+}
+#container .wrapper .container section.reset#lostpass form {
+	float: left;
+}
+#container .wrapper .container section#abuse .required {
+	top: 0px; right: 16px; cursor: pointer;
+}
+#container .wrapper .container section#abuse .error {
+	color: red; padding-right: 36px; clear: right; float: right;
+}
+.secondary#container section.contact {
+	padding-bottom: 20px;
+}
+.secondary#container section#abuse {
+	padding-bottom: 20px;
+}
+.secondary#container section.contact form {
+	padding: 20px 0px; width: 560px; clear: both; float: left;
+}
+.secondary#container section#abuse form {
+	padding: 20px 0px; width: 560px; clear: both; float: left;
+}
+.secondary#container section.contact form button {
+	left: 130px; position: relative;
+}
+.secondary#container section#abuse form button {
+	left: 130px; position: relative;
+}
+.secondary#container section.contact form input.email {
+	height: 27px;
+}
+.secondary#container section#abuse form input.email {
+	height: 27px;
+}
+.secondary#container section.contact form input.check {
+	width: 165px; height: 21px;
+}
+.secondary#container section#abuse form input.check {
+	width: 165px; height: 21px;
+}
+.secondary#container section.contact form textarea {
+	height: 160px; line-height: 1.4em;
+}
+.secondary#container section#abuse form textarea {
+	height: 160px; line-height: 1.4em;
+}
+.secondary#container section.contact form label {
+	line-height: 32px;
+}
+.secondary#container section#abuse form label {
+	line-height: 32px;
+}
+.secondary#container section.contact form select {
+	width: 394px; float: left;
+}
+.secondary#container section#abuse form select {
+	width: 394px; float: left;
+}
+.secondary#container section.contact form button {
+	height: 36px; line-height: 30px; font-size: 16px; float: left; display: block;
+}
+.secondary#container section#abuse form button {
+	height: 36px; line-height: 30px; font-size: 16px; float: left; display: block;
+}
+.secondary#container section.contact form .human {
+	background: rgb(251, 251, 251); padding: 4px 6px; border-radius: 3px; border: 1px solid rgb(225, 225, 225); width: 380px; float: left; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+.secondary#container section#abuse form .human {
+	background: rgb(251, 251, 251); padding: 4px 6px; border-radius: 3px; border: 1px solid rgb(225, 225, 225); width: 380px; float: left; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+.secondary#container section.contact form .human span {
+	color: rgb(101, 101, 101); line-height: 30px; padding-right: 6px; font-size: 13px; float: left;
+}
+.secondary#container section#abuse form .human span {
+	color: rgb(101, 101, 101); line-height: 30px; padding-right: 6px; font-size: 13px; float: left;
+}
+.secondary#container section.contact .description {
+	padding: 17px 0px; width: 260px; line-height: 18px; float: left;
+}
+.secondary#container section#abuse .description {
+	padding: 17px 0px; width: 260px; line-height: 18px; float: left;
+}
+.secondary#container section.contact .description h6 {
+	font-size: 13px; display: inline;
+}
+.secondary#container section#abuse .description h6 {
+	font-size: 13px; display: inline;
+}
+.secondary#container section.contact .description p {
+	display: inline;
+}
+.secondary#container section#abuse .description p {
+	display: inline;
+}
+section.tools .data .panels {
+	background: white; border-width: medium medium medium 1px; border-style: none none none solid; border-color: currentColor currentColor currentColor rgb(180, 186, 191); height: auto; min-height: 294px;
+}
+section.tools .data .menu {
+	border: currentColor; height: auto; right: 0px;
+}
+#tools-tabs {
+	background: rgb(253, 252, 238); border: 1px solid rgb(180, 186, 191);
+}
+section.tools {
+	padding: 20px; width: 880px; clear: left; margin-bottom: 10px; float: left;
+}
+section.tools nav.menu {
+	border-color: rgb(212, 212, 212); padding-top: 8px;
+}
+section.tools nav.menu li.mass span {
+	background: url("../image/icon_shrink.png") no-repeat 14px;
+}
+section.tools nav.menu li.active.mass span {
+	background: url("../image/icon_shrink_current.png") no-repeat 16px;
+}
+section.tools nav.menu li.easy span {
+	background: url("../image/icon_link.png") no-repeat 14px;
+}
+section.tools nav.menu li.active.easy span {
+	background: url("../image/icon_link_current.png") no-repeat 16px;
+}
+section.tools nav.menu li.bookmarklet span {
+	background: url("../image/icon_bookmark.png") no-repeat 14px;
+}
+section.tools nav.menu li.active.bookmarklet span {
+	background: url("../image/icon_bookmark_current.png") no-repeat 16px;
+}
+section.tools nav.menu li.api span {
+	background: url("../image/icon_api.png") no-repeat 14px;
+}
+section.tools nav.menu li.active.api span {
+	background: url("../image/icon_api_current.png") no-repeat 16px;
+}
+section.tools nav.menu li.google span {
+	background: url("../image/icon_stats.png") no-repeat 14px;
+}
+section.tools nav.menu li.active.google span {
+	background: url("../image/icon_stats_current.png") no-repeat 16px;
+}
+section.tools nav.menu li.full span {
+	background: url("../image/icon_script.png") no-repeat 14px;
+}
+section.tools nav.menu li.active.full span {
+	background: url("../image/icon_script_current.png") no-repeat 16px;
+}
+section.tools nav.menu li.website span {
+	background: url("../image/icon_site.png") no-repeat 14px;
+}
+section.tools nav.menu li.active.website span {
+	background: url("../image/icon_site_current.png") no-repeat 16px;
+}
+section.tools nav.menu li.export span {
+	background: url("../image/icon_export.png") no-repeat 14px;
+}
+section.tools nav.menu li.active.export span {
+	background: url("../image/icon_export_current.png") no-repeat 16px;
+}
+#tools-tabs .panel {
+	padding: 20px; width: 614px; border-left-color: currentColor; border-left-width: medium; border-left-style: none; float: left; position: relative;
+}
+#tools-tabs .panel h2 {
+	color: rgb(26, 70, 109); line-height: 20px; font-size: 15px; font-weight: normal;
+}
+#tools-tabs .panel h3 {
+	color: rgb(64, 64, 64); line-height: 20px; font-size: 12px; font-weight: normal;
+}
+#tools-tabs .panel h3 span {
+	font-weight: bold;
+}
+#tools-tabs .panel form {
+	width: 100%;
+}
+#tools-tabs .panel .wrap {
+	background: rgb(236, 245, 251); width: 100%; padding-top: 10px; clear: both; font-size: 12px; margin-top: 10px; float: left;
+}
+#tools-tabs .panel .wrap .half {
+	width: 48%; padding-left: 2%; float: left;
+}
+#tools-tabs .panel .wrap label {
+	width: auto; color: rgb(26, 70, 109); padding-right: 5px;
+}
+#tools-tabs .panel .wrap select {
+	width: 180px;
+}
+#tools-tabs .panel .wrap textarea {
+	margin: 10px 0px 4px 4px; border-radius: 3px; border: 1px solid rgb(202, 202, 202); width: 600px; height: 130px; clear: left; font-size: 14px; float: left; -moz-border-radius: 3px; -khtml-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px;
+}
+#tools-tabs .panel button.submit {
+	width: auto; height: 36px; line-height: 30px; font-size: 16px; margin-top: 8px; float: right; cursor: pointer;
+}
+#tools-tabs .panel button.submit span {
+	background: url("../image/button_go.png") no-repeat left; width: 16px; height: 31px; margin-left: 8px; float: right; display: block;
+}
+.secondary#container section.contact form button span {
+	background: url("../image/button_go.png") no-repeat left; width: 16px; height: 31px; margin-left: 8px; float: right; display: block;
+}
+.secondary#container section#abuse form button span {
+	background: url("../image/button_go.png") no-repeat left; width: 16px; height: 31px; margin-left: 8px; float: right; display: block;
+}
+#tools-tabs .panel #massResults #shrinkMore {
+	background: url("../image/button_shrink_more.png") no-repeat 0px 0px; width: 164px; height: 36px; text-indent: -9999px; overflow: hidden; margin-top: 8px; float: right; cursor: pointer;
+}
+#tools-tabs .panel .code {
+	padding: 10px; border: 1px solid black; overflow: auto;
+}
+#tools-tabs .panel .code {
+	background-color: rgb(255, 250, 240);
+}
+#tools-tabs .panel .codeLinks {
+	padding: 20px 20px 0px; background-color: rgb(236, 245, 251);
+}
+#tools-tabs .panel .infobar {
+	margin: 10px 0px; background-color: rgb(255, 228, 225);
+}
+#tools-tabs .panel .small.infobar {
+	background-position: 6px 5px; padding-top: 18px; padding-left: 54px;
+}
+.tools #gaForm #submit {
+	width: auto;
+}
+.tools #exportForm label {
+	width: 200px;
+}
+.tools #exportForm #submit {
+	width: auto;
+}
+.tools #massForm .groupWrapper {
+	width: 250px; margin-top: 10px; margin-left: 20px;
+}
+.tools #tools_sub_menu #tools-domains-menu li {
+	padding-left: 10px; display: inline;
+}
+.tools #tools_sub_menu #tools-domains-menu {
+	padding: 10px; border: 1px solid rgb(180, 186, 191); background-color: rgb(253, 252, 238);
+}
+.tools #tools_sub_menu #tools-domains-menu li a:hover {
+	text-decoration: underline;
+}
+.tools #tools_sub_menu #tools-domains-menu li.active {
+	background-color: white;
+}
+.dataTables_filter {
+	display: none;
+}
+.dataTables_paginate {
+	left: 0px; width: 100%; height: 27px; bottom: 0px; color: rgb(98, 98, 98); padding-top: 4px; font-size: 11px; border-top-color: rgb(180, 186, 191); border-top-width: 1px; border-top-style: solid; display: block; position: absolute; background-image: linear-gradient(rgb(245, 245, 245), rgb(215, 215, 215));
+}
+.dataTables_paginate span {
+	background: url("../image/table_nav_bg.png") no-repeat 0px 0px; height: 23px; color: rgb(52, 120, 181); line-height: 23px; font-size: 12px; font-weight: bold; border-right-color: currentColor; border-right-width: medium; border-right-style: none; float: left; cursor: pointer;
+}
+.dataTables_paginate span.first {
+	border-right-color: rgb(188, 188, 188); border-right-width: 1px; border-right-style: solid; display: none; box-shadow: 0px 1px 0px #c8c8c8; -o-box-shadow: #c8c8c8 0 1px 0; -moz-box-shadow: #c8c8c8 0 1px 0; -webkit-box-shadow: #c8c8c8 0 1px 0;
+}
+.dataTables_paginate span.last {
+	border-right-color: rgb(188, 188, 188); border-right-width: 1px; border-right-style: solid; display: none; box-shadow: 0px 1px 0px #c8c8c8; -o-box-shadow: #c8c8c8 0 1px 0; -moz-box-shadow: #c8c8c8 0 1px 0; -webkit-box-shadow: #c8c8c8 0 1px 0;
+}
+.dataTables_paginate span.next {
+	border-radius: 0px 3px 3px 0px; -moz-border-radius: 0 3px 3px 0; -khtml-border-radius: 0 3px 3px 0; -webkit-border-radius: 0 3px 3px 0; -o-border-radius: 0 3px 3px 0; -ms-border-radius: 0 3px 3px 0;
+}
+.dataTables_paginate span.previous {
+	border-radius: 3px 0px 0px 3px; margin-left: 6px; border-left-color: rgb(188, 188, 188); border-left-width: 1px; border-left-style: solid; -moz-border-radius: 3px 0 0 3px; -khtml-border-radius: 3px 0 0 3px; -webkit-border-radius: 3px 0 0 3px; -o-border-radius: 3px 0 0 3px; -ms-border-radius: 3px 0 0 3px;
+}
+.dataTables_paginate span.paginate_active {
+	padding: 0px 5px 0px 6px; color: rgb(141, 160, 176); border-right-color: rgb(188, 188, 188); border-right-width: 1px; border-right-style: solid; box-shadow: 0px 1px 0px #c8c8c8; -o-box-shadow: #c8c8c8 0 1px 0; -moz-box-shadow: #c8c8c8 0 1px 0; -webkit-box-shadow: #c8c8c8 0 1px 0;
+}
+.dataTables_paginate span.paginate_button {
+	padding: 0px 5px 0px 6px; border-right-color: rgb(188, 188, 188); border-right-width: 1px; border-right-style: solid; box-shadow: 0px 1px 0px #c8c8c8; -o-box-shadow: #c8c8c8 0 1px 0; -moz-box-shadow: #c8c8c8 0 1px 0; -webkit-box-shadow: #c8c8c8 0 1px 0;
+}
+.dataTables_paginate span.paginate_button_disabled {
+	color: rgb(141, 160, 176); cursor: default;
+}
+.paging_full_numbers.dataTables_paginate .floatRight {
+	padding: 4px;
+}
+.chzn-container {
+	left: 0px; top: 0px; font-size: 13px; display: inline-block; position: relative; -ms-zoom: 1;
+}
+.chzn-container .chzn-drop {
+	background: rgb(255, 255, 255); border-width: 0px 1px 1px; border-style: none solid solid; border-color: currentColor rgb(170, 170, 170) rgb(170, 170, 170); left: 0px; top: 29px; position: absolute; z-index: 999; box-shadow: 0px 4px 5px rgba(0,0,0,0.15); -o-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); -moz-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
+}
+.chzn-container-single .chzn-single {
+	padding: 0px 0px 0px 8px; border-radius: 4px; border: 1px solid rgb(170, 170, 170); height: 26px; color: rgb(68, 68, 68); line-height: 26px; overflow: hidden; text-decoration: none; display: block; white-space: nowrap; position: relative; background-image: -ms-linear-gradient(rgb(238, 238, 238) 0%, white 50%); background-clip: padding-box; background-color: rgb(255, 255, 255); -moz-border-radius: 4px; -webkit-border-radius: 4px; -moz-background-clip: padding; -webkit-background-clip: padding-box;
+}
+.chzn-container-single .chzn-single span {
+	overflow: hidden; margin-right: 26px; display: block; white-space: nowrap; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis;
+}
+.chzn-container-single .chzn-single abbr {
+	background: url("../image/chosen-sprite.png") no-repeat right top; top: 8px; width: 12px; height: 13px; right: 26px; font-size: 1px; display: block; position: absolute;
+}
+.chzn-container-single .chzn-single abbr:hover {
+	background-position: right -11px;
+}
+.chzn-container-single .chzn-single div {
+	background: linear-gradient(rgb(198, 226, 251), rgb(137, 193, 238)) rgb(204, 204, 204); border-radius: 0px 4px 4px 0px; top: 0px; width: 18px; height: 100%; right: 0px; border-left-color: rgb(113, 158, 195); border-left-width: 1px; border-left-style: solid; display: block; position: absolute; box-shadow: inset 0px 1px 0px white; -moz-border-radius: 0 4px 4px 0; -webkit-border-radius: 0 4px 4px 0; -o-box-shadow: inset white 0 1px 0; -moz-box-shadow: inset white 0 1px 0; -webkit-box-shadow: inset white 0 1px 0; -moz-background-clip: padding; -webkit-background-clip: padding-box;
+}
+.chzn-container-single .chzn-single div b {
+	background: url("../image/chosen-sprite.png") no-repeat 0px 1px; width: 100%; height: 100%; display: block;
+}
+.chzn-container-single .chzn-search {
+	margin: 0px; padding: 3px 4px; white-space: nowrap; position: relative; z-index: 1010;
+}
+.chzn-container-single .chzn-search input {
+	background: url("../image/chosen-sprite.png") no-repeat 100% -22px, -ms-linear-gradient(white 85%, rgb(238, 238, 238) 99%); margin: 1px 0px; padding: 4px 20px 4px 5px; outline: 0px; border: 1px solid rgb(170, 170, 170); height: auto; font-family: sans-serif; font-size: 1em;
+}
+.chzn-container-single .chzn-drop {
+	border-radius: 0px 0px 4px 4px; background-clip: padding-box; -moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; -moz-background-clip: padding; -webkit-background-clip: padding-box;
+}
+.chzn-container-single-nosearch .chzn-search input {
+	left: -9000px; position: absolute;
+}
+.chzn-container-multi .chzn-choices {
+	margin: 0px; padding: 0px; border: 1px solid rgb(170, 170, 170); height: auto !important; overflow: hidden; position: relative; cursor: text; background-image: -ms-linear-gradient(white 85%, rgb(238, 238, 238) 99%); background-color: rgb(255, 255, 255);
+}
+.chzn-container-multi .chzn-choices li {
+	list-style: none; float: left;
+}
+.chzn-container-multi .chzn-choices .search-field {
+	margin: 0px; padding: 0px; white-space: nowrap;
+}
+.chzn-container-multi .chzn-choices .search-field input {
+	margin: 1px 0px; padding: 5px; outline: 0px; border: 0px currentColor !important; color: rgb(102, 102, 102); box-shadow: none; -o-box-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none;
+}
+.chzn-container-multi .chzn-choices .search-field .default {
+	color: rgb(153, 153, 153);
+}
+.chzn-container-multi .chzn-choices .search-choice {
+	margin: 3px 0px 3px 5px; padding: 3px 19px 3px 6px; border-radius: 3px; border: 1px solid rgb(180, 180, 180); color: rgb(51, 51, 51); line-height: 13px; position: relative; background-image: -ms-linear-gradient(rgb(228, 228, 228) 0%, rgb(238, 238, 238) 70%); background-clip: padding-box; background-color: rgb(228, 228, 228); -moz-border-radius: 3px; -webkit-border-radius: 3px; -moz-background-clip: padding; -webkit-background-clip: padding-box;
+}
+.chzn-container-multi .chzn-choices .search-choice span {
+	cursor: default;
+}
+.chzn-container-multi .chzn-choices .search-choice-focus {
+	background: rgb(212, 212, 212);
+}
+.chzn-container-multi .chzn-choices .search-choice .search-choice-close {
+	background: url("../image/chosen-sprite.png") no-repeat right top; top: 4px; width: 12px; height: 13px; right: 3px; font-size: 1px; display: block; position: absolute;
+}
+.chzn-container-multi .chzn-choices .search-choice .search-choice-close:hover {
+	background-position: right -11px;
+}
+.chzn-container-multi .chzn-choices .search-choice-focus .search-choice-close {
+	background-position: right -11px;
+}
+.chzn-container .chzn-results {
+	margin: 0px 4px 4px 0px; padding: 0px 0px 0px 4px; position: relative; -ms-overflow-x: hidden; -ms-overflow-y: auto; max-height: 190px;
+}
+.chzn-container-multi .chzn-results {
+	margin: -1px 0px 0px; padding: 0px;
+}
+.chzn-container .chzn-results li {
+	list-style: none; margin: 0px; padding: 7px 7px 8px; line-height: 14px; display: none;
+}
+.chzn-container .chzn-results .active-result {
+	display: list-item; cursor: pointer;
+}
+.chzn-container .chzn-results .highlighted {
+	background: rgb(56, 117, 215); color: rgb(255, 255, 255);
+}
+.chzn-container .chzn-results li em {
+	background: rgb(254, 255, 222); font-style: normal;
+}
+.chzn-container .chzn-results .highlighted em {
+	
+}
+.chzn-container .chzn-results .no-results {
+	background: rgb(244, 244, 244); display: list-item;
+}
+.chzn-container .chzn-results .group-result {
+	color: rgb(153, 153, 153); font-weight: bold; cursor: default;
+}
+.chzn-container .chzn-results .group-option {
+	padding-left: 20px;
+}
+.chzn-container-multi .chzn-drop .result-selected {
+	display: none;
+}
+.chzn-container-active .chzn-single {
+	border: 1px solid rgb(88, 151, 251); box-shadow: 0px 0px 5px rgba(0,0,0,0.3); -o-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+.chzn-container-active .chzn-single-with-drop {
+	border: 1px solid rgb(170, 170, 170); border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; box-shadow: inset 0px 1px 0px #fff; background-image: -ms-linear-gradient(white 0%, rgb(238, 238, 238) 50%); background-color: rgb(238, 238, 238); -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; -o-box-shadow: 0 1px 0 #fff inset; -moz-box-shadow: 0 1px 0 #fff inset; -webkit-box-shadow: 0 1px 0 #fff inset;
+}
+#reportDateWrapper .chzn-single {
+	
+}
+.chzn-container-active .chzn-single-with-drop div {
+	border-left-color: currentColor; border-left-width: medium; border-left-style: none; box-shadow: none;
+}
+.chzn-container-active .chzn-single-with-drop div b {
+	background-position: -18px 1px;
+}
+.chzn-container-active .chzn-choices {
+	border: 1px solid rgb(88, 151, 251); box-shadow: 0px 0px 5px rgba(0,0,0,0.3); -o-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+.chzn-container-active .chzn-choices .search-field input {
+	color: rgb(17, 17, 17) !important;
+}
+.chzn-disabled {
+	cursor: default; opacity: 0.5 !important;
+}
+.chzn-disabled .chzn-single {
+	cursor: default;
+}
+.chzn-disabled .chzn-choices .search-choice .search-choice-close {
+	cursor: default;
+}
+.chzn-rtl {
+	text-align: right; direction: rtl;
+}
+.chzn-rtl .chzn-single {
+	padding-right: 8px; padding-left: 0px;
+}
+.chzn-rtl .chzn-single span {
+	margin-right: 0px; margin-left: 26px;
+}
+.chzn-rtl .chzn-single div {
+	border-radius: 4px 0px 0px 4px; left: 0px; right: auto; border-right-color: rgb(170, 170, 170); border-left-color: currentColor; border-right-width: 1px; border-left-width: medium; border-right-style: solid; border-left-style: none; -moz-border-radius: 4px 0 0 4px; -webkit-border-radius: 4px 0 0 4px;
+}
+.chzn-rtl .chzn-choices li {
+	float: right;
+}
+.chzn-rtl .chzn-choices .search-choice {
+	margin: 3px 5px 3px 0px; padding: 3px 6px 3px 19px;
+}
+.chzn-rtl .chzn-choices .search-choice .search-choice-close {
+	background-position: right top; left: 5px; right: auto;
+}
+.chzn-container-single.chzn-rtl .chzn-results {
+	padding-right: 4px; padding-left: 0px; margin-right: 0px; margin-left: 4px;
+}
+.chzn-rtl .chzn-results .group-option {
+	padding-right: 20px; padding-left: 0px;
+}
+.chzn-container-active.chzn-rtl .chzn-single-with-drop div {
+	border-right-color: currentColor; border-right-width: medium; border-right-style: none;
+}
+.chzn-rtl .chzn-search input {
+	background: url("../image/chosen-sprite.png") no-repeat -38px -22px, -ms-linear-gradient(white 85%, rgb(238, 238, 238) 99%); padding: 4px 5px 4px 20px;
+}
+.ir {
+	border: 0px currentColor; text-align: left; text-indent: -999em; overflow: hidden; display: block; direction: ltr; background-repeat: no-repeat; background-color: transparent;
+}
+.ir br {
+	display: none;
+}
+.hidden {
+	display: none !important; visibility: hidden;
+}
+.visuallyhidden {
+	margin: -1px; padding: 0px; border: 0px currentColor; width: 1px; height: 1px; overflow: hidden; position: absolute; clip: rect(0px, 0px, 0px, 0px);
+}
+.focusable.visuallyhidden:active {
+	margin: 0px; width: auto; height: auto; overflow: visible; position: static; clip: auto;
+}
+.focusable.visuallyhidden:focus {
+	margin: 0px; width: auto; height: auto; overflow: visible; position: static; clip: auto;
+}
+.invisible {
+	visibility: hidden;
+}
+.clearfix::before {
+	display: table; content: "";
+}
+.clearfix::after {
+	display: table; content: "";
+}
+.clearfix::after {
+	clear: both;
+}
+.clearfix {
+	
+}
+@media print
+{
+* {
+	color: black !important; filter: !important; text-shadow: none !important;
+}
+a {
+	text-decoration: underline;
+}
+a:visited {
+	text-decoration: underline;
+}
+a[href]::after {
+	content: " (" attr(href) ")";
+}
+abbr[title]::after {
+	content: " (" attr(title) ")";
+}
+.ir a::after {
+	content: "";
+}
+a[href^='javascript:']::after {
+	content: "";
+}
+a[href^='#']::after {
+	content: "";
+}
+pre {
+	border: 1px solid rgb(153, 153, 153); page-break-inside: avoid;
+}
+blockquote {
+	border: 1px solid rgb(153, 153, 153); page-break-inside: avoid;
+}
+thead {
+	display: table-header-group;
+}
+tr {
+	page-break-inside: avoid;
+}
+img {
+	page-break-inside: avoid;
+}
+img {
+	max-width: 100% !important;
+}
+p {
+	orphans: 3; widows: 3;
+}
+h2 {
+	orphans: 3; widows: 3;
+}
+h3 {
+	orphans: 3; widows: 3;
+}
+h2 {
+	page-break-after: avoid;
+}
+h3 {
+	page-break-after: avoid;
+}
+}
+body.mozilla .chzn-container {
+	top: 3px;
+}
+.bar .chzn-container {
+	left: 5px;
+}
+body.mozilla #reportDateWrapper .chzn-container {
+	top: 0px;
+}
+body.mozilla #groupsTableWrapper {
+	height: 275px !important;
+}
+body.mozilla #editLinkForm .chzn-container {
+	top: 7px;
+}
+body.mozilla #massForm .chzn-container {
+	top: 7px;
+}
+body.mozilla .account .details form .chzn-container {
+	top: 7px;
+}
+body.mozilla #register_form .chzn-container {
+	top: 7px;
+}
+body.mozilla #avatarFile {
+	height: auto;
+}
+body.msie8 form#shrink #shrink_link {
+	line-height: 46px;
+}
+body.msie7 form#shrink #shrink_link {
+	line-height: 46px;
+}
+body.msie8 form input {
+	line-height: 31px;
+}
+body.msie7 form input {
+	line-height: 31px;
+}
+body.msie8 #abuse .description {
+	background-color: white;
+}
+body.msie8 #register_form .chzn-container {
+	top: 7px;
+}
+body.msie9 #register_form .chzn-container {
+	top: 7px;
+}
+body.opera #register_form .chzn-container {
+	top: 7px;
+}
+body.msie8 #editLinkForm .chzn-container {
+	top: 7px;
+}
+body.msie9 #editLinkForm .chzn-container {
+	top: 7px;
+}
+body.opera #editLinkForm .chzn-container {
+	top: 7px;
+}
+body.msie8 #massForm .chzn-container {
+	top: 7px;
+}
+body.msie9 #massForm .chzn-container {
+	top: 7px;
+}
+body.opera #massForm .chzn-container {
+	top: 7px;
+}
+body.msie8 .account .details .chzn-container {
+	top: 7px;
+}
+body.msie9 .account .details .chzn-container {
+	top: 7px;
+}
+body.opera .account .details .chzn-container {
+	top: 7px;
+}
+body.msie8 #groupsTableWrapper table td {
+	border-right-color: rgb(180, 186, 223); border-right-width: 1px; border-right-style: dotted;
+}
+body.msie9 #groupsTableWrapper table td {
+	border-right-color: rgb(180, 186, 223); border-right-width: 1px; border-right-style: dotted;
+}
+body.msie7 #groupsTableWrapper table td {
+	border-right-color: rgb(180, 186, 223); border-right-width: 1px; border-right-style: dotted;
+}
+body.opera #groupsTableWrapper table td {
+	border-right-color: rgb(180, 186, 223); border-right-width: 1px; border-right-style: dotted;
+}
+body.msie8 #tools-tabs .panel {
+	overflow: auto;
+}
+body.msie7 #tools-tabs .panel {
+	overflow: auto;
+}
+body.msie8 .account .details #acct1 {
+	height: auto;
+}
+body.msie8 .account .details #acct2 {
+	height: auto;
+}
+body.msie9 .account .details #acct1 {
+	height: auto;
+}
+body.msie9 .account .details #acct2 {
+	height: auto;
+}
+body.opera .account .details #acct1 {
+	height: auto;
+}
+body.opera .account .details #acct2 {
+	height: auto;
+}
+body.msie8 .account .details #acct1 {
+	vertical-align: top;
+}
+body.msie8 .account .details #acct2 {
+	vertical-align: top;
+}
+body.msie9 .account .details #acct1 {
+	vertical-align: top;
+}
+body.msie9 .account .details #acct2 {
+	vertical-align: top;
+}
+body.opera .account .details #acct1 {
+	vertical-align: top;
+}
+body.opera .account .details #acct2 {
+	vertical-align: top;
+}
+body.msie7 select {
+	margin-top: 7px;
+}
+body.msie7 #container .wrapper .container section#abuse .error {
+	text-align: right; color: red; clear: right;
+}
+body.msie7 #remember_me_label {
+	width: auto;
+}
+body.msie7 #login .forgot {
+	text-align: right; line-height: 1 !important;
+}
+body.msie7 #more-options select {
+	margin-left: 5px;
+}
+body.msie7 #more-options select {
+	margin-top: 0px;
+}
+body.msie7 #more-options input {
+	margin-top: 0px;
+}
+body.msie7 #report_date {
+	margin-top: 0px;
+}
+body.msie7 div.loggedin header#header div.container nav.accountTopMenu {
+	top: 36px !important; position: absolute !important;
+}
+body.msie7 #groupsTableWrapper {
+	height: 245px !important;
+}
+body.msie7 .account .details #acct1 {
+	vertical-align: baseline;
+}
+body.msie7 .account .details #acct2 {
+	vertical-align: baseline;
+}
+#recaptcha_area {
+	float: right;
+}
+a.facebook_login {
+	padding: 0px 15px; height: 42px; line-height: 42px; font-size: 19px; margin-right: 20px; margin-left: 20px; display: block;
+}
+a.facebook_login span {
+	background: url("../image/fb_f.png") no-repeat left; width: 20px; height: 40px; padding-right: 12px; margin-right: 13px; border-right-color: rgb(43, 90, 134); border-right-width: 1px; border-right-style: solid; float: left; display: block;
+}
+#header a.facebook_login {
+	margin-left: 10px; float: left; display: block;
+}
+#login a.facebook_login {
+	text-align: center; margin-top: 18px; display: block;
+}
+#login div.separator {
+	width: 315px; margin-left: 29px;
+}
+.postal_address {
+	clear: both; float: none;
+}
+.postal_address hr {
+	margin: 30px;
+}
+.postal_address h3 {
+	padding-left: 37px;
+}
+.postal_address p {
+	padding-left: 37px;
+}
+h3.yourCampaigns {
+	padding-top: 26px; padding-bottom: 10px; clear: both; float: none;
+}
+#campaignsAjax {
+	overflow: hidden; clear: both; float: none;
+}
+.advertType {
+	overflow: hidden; clear: both;
+}
+section.rates {
+	color: rgb(56, 56, 56); font-family: Arial,Helvetica; font-size: 13px;
+}
+section.rates p.bold {
+	margin: 23px 0px; font-weight: bold;
+}
+section.rates ul {
+	margin: 20px 0px; padding: 0px; overflow: hidden; clear: both;
+}
+section.rates ul li {
+	background: url("../image/list_bullet.png") no-repeat 2px 8px; list-style: none; width: 400px; line-height: 24px; padding-left: 17px; float: left;
+}
+section.adContinue table.create_website #website_id_chzn {
+	line-height: 26px; font-weight: normal;
+}
+section.adContinue table.create_website #website_id_chzn * {
+	line-height: 26px; font-weight: normal;
+}
+section.adContinue table.create_website #flash_enabled_chzn {
+	line-height: 26px; font-weight: normal;
+}
+section.adContinue table.create_website #flash_enabled_chzn * {
+	line-height: 26px; font-weight: normal;
+}
+section.adContinue table.create_website tr td {
+	height: 34px; color: rgb(46, 46, 46); line-height: 34px; padding-bottom: 11px; font-family: Arial,Helvetica; font-size: 12px; font-weight: bold;
+}
+section.adContinue table.create_website tr td:first-child {
+	text-align: right;
+}
+section.adContinue table.create_website input {
+	width: 277px; height: 31px;
+}
+section.adContinue table.create_website input.small {
+	width: 113px;
+}
+section.adContinue table tr td.small {
+	line-height: 26px;
+}
+section.adContinue table tr td.tc.small {
+	line-height: 16px;
+}
+section.adContinue table tr td.data {
+	height: auto; color: rgb(97, 97, 97); line-height: 26px; font-size: 15px; font-weight: normal;
+}
+section.adContinue table tr td.data label {
+	color: rgb(46, 46, 46); line-height: 18px; font-size: 13px; font-weight: normal; margin-left: 7px;
+}
+section.adContinue table tr td.data input {
+	width: auto; height: auto;
+}
+section.vertisingContinue section.vertising section.rates table.rates {
+	width: 90%;
+}
+section.vertisingContinue section.vertising section.rates table.rates tr td {
+	padding: 2px 12px; color: rgb(66, 66, 66); font-size: 14px;
+}
+section.vertisingContinue section.vertising section.rates table.rates tfoot td {
+	padding: 2px 12px; height: 32px; color: rgb(162, 162, 162); line-height: 19px; font-size: 12px; border-top-color: rgb(203, 203, 203); border-left-color: rgb(203, 203, 203); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: dotted; background-color: rgb(255, 255, 255);
+}
+section.vertisingContinue section.vertising section.rates table.rates tfoot tr:last-child td {
+	border-bottom-color: rgb(203, 203, 203); border-bottom-width: 1px; border-bottom-style: solid;
+}
+section.vertisingContinue section.vertising section.rates table.rates tfoot td b {
+	color: rgb(65, 65, 65); font-weight: bold;
+}
+section.vertisingContinue section.vertising section.rates table.rates tfoot td b.total {
+	font-size: 16px;
+}
+section.vertising section.payment {
+	padding: 15px 60px 30px; background-color: rgb(238, 245, 251);
+}
+section.vertising section.payment b {
+	margin-bottom: 15px; display: block;
+}
+#v1_dialog {
+	display: none;
+}
+#v1_dialog p {
+	font-size: 12px;
+}
+#v1_dialog textarea {
+	width: 366px; height: 177px;
+}
+#v1_dialog .yellowButton {
+	padding: 2px 6px 3px; width: 100%; font-family: Arial, sans-serif; font-size: 28px; margin-top: 20px;
+}
+#header nav#v1Adfly {
+	height: 35px; color: rgb(255, 255, 255); line-height: 35px; font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; margin-right: 15px; float: left !important; position: static !important;
+}
+#v1Link {
+	color: rgb(192, 192, 192);
+}
+a.help {
+	background: url("../image/famfamfam/help.png") no-repeat left top; width: 16px; height: 16px; text-indent: -99999px; overflow: hidden; display: inline-block;
+}
+a.info {
+	background: url("../image/famfamfam/information.png") no-repeat left top; width: 16px; height: 16px; text-indent: -99999px; overflow: hidden; display: inline-block;
+}
+#vertiserCampaignsRevise {
+	margin: 0px; padding: 0px; border-radius: 5px; border: 1px solid lightgrey; border-collapse: separate; table-layout: fixed;
+}
+#vertiserCampaignsRevise table {
+	margin: 0px; padding: 0px; border-radius: 5px; border: 1px solid lightgrey; border-collapse: separate; table-layout: fixed;
+}
+#vertiserCampaignsRevise tr {
+	background: rgb(236, 245, 251); margin: 0px; padding: 0px;
+}
+#vertiserCampaignsRevise tr.campaignRow {
+	background: rgb(255, 255, 255);
+}
+#vertiserCampaignsRevise tr.eCampaignTable {
+	background: rgb(255, 255, 255);
+}
+#vertiserCampaignsRevise tr.eCampaignTable tr {
+	background: rgb(255, 255, 255);
+}
+#vertiserCampaignsRevise td {
+	margin: 0px; padding: 5px; height: 26px; line-height: normal; vertical-align: middle; white-space: normal; -ms-word-wrap: break-word;
+}
+#vertiserCampaignsRevise th {
+	margin: 0px; padding: 5px; height: 26px; line-height: normal; vertical-align: middle; white-space: normal; -ms-word-wrap: break-word;
+}
+#vertiserCampaignsRevise th.tools {
+	width: 44px;
+}
+#vertiserCampaignsRevise td.reference {
+	width: 100px;
+}
+#vertiserCampaignsRevise td.statusWrapper {
+	padding-right: 10px;
+}
+.vertiser-revise .date-range-selected > .ui-state-active {
+	background: lightsteelblue;
+}
+.vertiser-revise .date-range-selected > .ui-state-default {
+	background: lightsteelblue;
+}
+.vertiser-revise .ui-datepicker {
+	position: absolute;
+}
+.vertiser-revise .ui-datepicker th {
+	padding: 0px; border: 0px currentColor; height: auto; line-height: normal; white-space: normal; cursor: auto;
+}
+.vertiser-revise .ui-datepicker td {
+	padding: 0px; border: 0px currentColor; height: auto; line-height: normal; white-space: normal; cursor: auto;
+}
+.vertiser-revise #jrange {
+	position: absolute;
+}
+.vertiser-revise #jrange input {
+	border: currentColor; box-shadow: none;
+}
+.vertiser-revise .ui-datepicker {
+	top: 15px;
+}
+#vertiserCampaignsRevise .warningbar {
+	margin: 5px 0px; border: 1px solid rgb(197, 197, 197); background-color: rgb(235, 235, 235);
+}
+.vertiser-revise #widgetField {
+	background: url("../image/calendar_field.png"); width: 205px; height: 36px; overflow: hidden; position: relative;
+}
+.vertiser-revise #widgetField a {
+	top: 0px; width: 36px; height: 36px; right: 0px; text-indent: -3000px; text-decoration: none; display: block; position: absolute;
+}
+.vertiser-revise #widgetField span {
+	top: 0px; width: 164px; height: 36px; text-align: center; color: rgb(0, 0, 0); line-height: 36px; font-size: 12px; font-weight: normal; position: absolute;
+}
+#vertiserCampaignsRevise th.campaign-name {
+	width: 160px;
+}
+#vertiserCampaignsRevise .campaignPartsReferenceHeader {
+	width: 50px;
+}
+#vertiserCampaignsRevise .active.campaignNameTd {
+	background: url("../image/menu_current_bg_small.png") no-repeat left rgb(255, 251, 226);
+}
+#vertiserCampaignsRevise .campaignNameTd {
+	padding: 0px; width: 225px; overflow: hidden; font-size: 14px; font-weight: bold; vertical-align: middle; border-left-color: currentColor; border-left-width: 0px; border-left-style: none; white-space: nowrap; min-width: 225px; background-color: rgb(255, 251, 226);
+}
+#vertiserCampaignsRevise .campaignNameTd a.expandCampaign {
+	line-height: 34px; margin-left: 5px; display: block;
+}
+#vertiserCampaignsRevise .campaignNameTd a.expandCampaign img {
+	margin-left: 6px;
+}
+#vertiserCampaignsRevise th:first-child {
+	border-left-color: currentColor; border-left-width: 0px; border-left-style: none;
+}
+#vertiserCampaignsRevise td:first-child {
+	border-left-color: currentColor; border-left-width: 0px; border-left-style: none;
+}
+#vertiserCampaignsRevise tr.campaignPartsHeaderRow {
+	background-color: rgb(255, 246, 176);
+}
+.expandCampaign span {
+	background: url("/static/image/vertiser_expand.png"); width: 14px; height: 14px; margin-right: 6px; vertical-align: middle; display: inline-block;
+}
+.expanded.expandCampaign span {
+	background: url("/static/image/vertiser_collapse.png");
+}
+#fullFilter .ui-widget-header {
+	border: currentColor; background-color: white;
+}
+#fullFilter .ui-widget-header .ui-state-hover {
+	border: 0px currentColor;
+}
+#fullFilter .ui-state-hover #fullFilter .ui-widget-header .ui-state-focus {
+	border: 0px currentColor;
+}
+#fullFilter .ui-widget-header .ui-datepicker-next {
+	border: 0px currentColor;
+}
+#fullFilter .ui-widget-header .ui-datepicker-prev {
+	border: 0px currentColor;
+}
+#fullFilter .ui-widget-content {
+	background-color: white;
+}
+#fullFilter .ui-datepicker-calendar {
+	background-color: white;
+}
+#fullFilter table tbody tr:nth-child(2n) {
+	
+}
+.tabletitle.pgwallet h3 {
+	margin-bottom: 5px; float: left;
+}
+#depositsTable {
+	clear: both; float: none;
+}
+#depositsTable tr.even {
+	
+}
+#depositsTable tr.pending {
+	background-color: rgb(255, 247, 174);
+}
+#depositsTable tr.refund_pending {
+	background-color: rgb(255, 247, 174);
+}
+.legend ul li.pending span {
+	background-color: rgb(255, 247, 174);
+}
+#depositsTable tr.pending_account_verification {
+	background-color: rgb(255, 187, 128);
+}
+.legend ul li.pending_account_verification span {
+	background-color: rgb(255, 187, 128);
+}
+#depositsTable tr.old {
+	background-color: rgb(235, 235, 235);
+}
+.legend ul li.old span {
+	background-color: rgb(235, 235, 235);
+}
+#depositsTable tr.failed {
+	background-color: rgb(255, 178, 176);
+}
+#depositsTable tr.reversed {
+	background-color: rgb(255, 178, 176);
+}
+.legend ul li.failed span {
+	background-color: rgb(255, 178, 176);
+}
+.legend {
+	float: right;
+}
+.legend ul {
+	list-style: none; margin: 8px 0px 0px; padding: 0px; overflow: hidden;
+}
+.legend ul li {
+	color: rgb(123, 146, 164); font-size: 11px; margin-left: 10px; float: left;
+}
+.legend ul li span {
+	border: 1px solid transparent; width: 8px; height: 8px; margin-right: 5px; display: inline-block;
+}
+.legend ul li.pending span {
+	border-color: rgb(255, 235, 0);
+}
+.legend ul li.failed span {
+	border-color: rgb(243, 125, 125);
+}
+.legend ul li.pending_account_verification span {
+	border-color: rgb(255, 143, 0);
+}
+.legend ul li.old span {
+	border-color: rgb(190, 189, 189);
+}
+#depositsTable a.info {
+	line-height: 16px;
+}
+#depositsTable .yellowButton {
+	color: rgb(130, 111, 47) !important; font-size: 12px; margin-left: 5px;
+}
+#depositsTable td:last-child {
+	text-align: center;
+}
+#info_dialog h4 {
+	margin-top: 10px;
+}
+#info_dialog img {
+	margin: 10px auto 0px; display: block;
+}
+#info_dialog table {
+	margin: 15px 0px; width: 100%; background-color: rgb(255, 255, 255);
+}
+#info_dialog table th {
+	background-color: rgb(255, 255, 255);
+}
+#info_dialog table td {
+	padding: 6px; border: 1px solid rgb(232, 198, 142);
+}
+#info_dialog table th {
+	padding: 6px; border: 1px solid rgb(232, 198, 142);
+}
+.blueButton {
+	background: -ms-linear-gradient(bottom, rgb(54, 121, 182) 1%, rgb(76, 161, 239) 51%) rgb(62, 136, 202); border-width: 1px; border-style: solid; border-color: rgb(101, 213, 255) rgb(29, 78, 123) rgb(23, 61, 94) rgb(31, 84, 130); border-radius: 3px; width: auto; height: 55px; color: rgb(14, 30, 45) !important; padding-right: 12px; padding-left: 12px; font-family: Arial, sans-serif; font-size: 13px; box-shadow: 0px -1px #1e4f7d; text-shadow: 0px 1px #4aa4f5;
+}
+.blueButton2 {
+	background: -ms-linear-gradient(bottom, rgb(40, 92, 140) 20%, rgb(61, 140, 212) 81%) rgb(61, 140, 212); border-width: 1px; border-style: solid; border-color: rgb(74, 169, 255) rgb(29, 78, 123) rgb(23, 61, 94) rgb(31, 84, 130); border-radius: 3px; width: auto; height: 55px; color: rgb(255, 255, 255) !important; padding-right: 8px; padding-left: 8px; font-family: Arial, sans-serif !important; font-size: 13px; box-shadow: 0px -1px #1e4f7d; text-shadow: 1px 1px #1e4f7d;
+}
+section.vertiser #campaignDateFilter .ui-datepicker-calendar thead tr th {
+	height: 25px; text-align: center;
+}
+section.vertiser #campaignDateFilter .ui-datepicker-calendar .ui-state-default {
+	border: 0px currentColor; width: 30px; height: 28px; text-align: center; color: rgb(48, 73, 97); line-height: 28px; padding-right: 2px; font-family: Arial,Helvetica,sans-serif; font-size: 14px; font-weight: normal;
+}
+section.vertiser #campaignDateFilter .ui-datepicker-calendar .date-range-selected .ui-state-default {
+	background: rgb(19, 106, 159); color: rgb(224, 237, 250);
+}
+.lightBlue {
+	background: -ms-linear-gradient(bottom, rgb(174, 217, 255) 3%, rgb(254, 255, 255) 90%) rgb(254, 255, 255); border-width: medium medium medium 1px; border-style: none none none solid; border-color: currentColor currentColor currentColor rgb(167, 167, 167); border-radius: 0px 3px 3px 0px; width: auto; height: 55px; color: rgb(48, 128, 202) !important; letter-spacing: 1px; padding-right: 8px; padding-left: 8px; font-family: Arial, sans-serif !important; font-size: 20px; box-shadow: -1px 0px #c1c4c9;
+}
+.validationAlertMultiple {
+	clear: both;
+}
+.secondary#container #main .container > section .validationAlertMultiple header {
+	
+}
+.secondary#container #main .container > section .validationAlert header {
+	
+}
+h3.configlinks {
+	padding-left: 20px; clear: both; margin-top: 20px;
+}
+section.linkPrefs {
+	margin: 0px 20px; overflow: hidden; padding-bottom: 25px; border-bottom-color: rgb(225, 225, 225); border-bottom-width: 1px; border-bottom-style: dotted;
+}
+section.linkPrefs #adblock_block {
+	width: 14px; height: 14px;
+}
+section.linkPrefs button.blueButton2 {
+	width: auto; height: 36px; line-height: 30px; padding-right: 13px; font-size: 16px; float: right; display: block;
+}
+section.linkPrefs form {
+	width: 100%; padding-top: 13px;
+}
+section.linkPrefs div.line {
+	width: auto;
+}
+section.linkPrefs div.line label {
+	width: auto; text-align: left;
+}
+section.linkPrefs p.notice {
+	width: 550px; color: rgb(102, 102, 102); padding-left: 20px; float: left;
+}

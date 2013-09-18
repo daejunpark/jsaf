@@ -1,0 +1,19 @@
+<head> </head>
+<body id="mybody">
+   <div id="mydiv"> mydiv </div>
+   <script>
+      var all = document.all;   // HTMLAllCollection
+      var __result1 = all.length;
+      var __expect1 = 5;
+      var __result2 = all[0].nodeName;
+      var __expect2 = "HTML";
+      var __result3 = all[1].tagName;
+      var __expect3 = "HEAD";
+      var __result4 = all[2].id;
+      var __expect4 = "mybody";
+      var __result5 = all[3].id;
+      var __expect5 = "mydiv";
+      var __result6 = all[4].tagName;
+      var __expect6 = "SCRIPT";
+   </script>
+</body>

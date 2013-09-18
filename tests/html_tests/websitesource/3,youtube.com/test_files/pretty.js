@@ -1,0 +1,2352 @@
+  var aa = window, aaa = Object, aba = clearTimeout, aca = setTimeout, 
+  ada = Function, 
+  ab = document, 
+  aea = isNaN, 
+  ac = Math, 
+  afa = Array, 
+  aga = navigator, 
+  ad = Error, 
+  ae = parseInt, 
+  aha = parseFloat, 
+  aia = String;
+  function aja(a, b) 
+  {
+    return a.onload = b;
+  }
+  function aka(a, b) 
+  {
+    return a.width = b;
+  }
+  function ala(a, b) 
+  {
+    return a.data = b;
+  }
+  function ama(a, b) 
+  {
+    return a.enable = b;
+  }
+  function ana(a, b) 
+  {
+    return a.send = b;
+  }
+  function aoa(a, b) 
+  {
+    return a.remove = b;
+  }
+  function apa(a, b) 
+  {
+    return a.clear = b;
+  }
+  function aqa(a, b) 
+  {
+    return a.toString = b;
+  }
+  function ara(a, b) 
+  {
+    return a.message = b;
+  }
+  function asa(a, b) 
+  {
+    return a.init = b;
+  }
+  function ata(a, b) 
+  {
+    return a.href = b;
+  }
+  function aua(a, b) 
+  {
+    return a.contains = b;
+  }
+  function ava(a, b) 
+  {
+    return a.display = b;
+  }
+  function awa(a, b) 
+  {
+    return a.height = b;
+  }
+  function axa(a, b) 
+  {
+    return a.onreadystatechange = b;
+  }
+  function aya(a, b) 
+  {
+    return a.load = b;
+  }
+  function af(a, b) 
+  {
+    return a.innerHTML = b;
+  }
+  function aza(a, b) 
+  {
+    return a.dispose = b;
+  }
+  function aAa(a, b) 
+  {
+    return a.onerror = b;
+  }
+  function aBa(a, b) 
+  {
+    return a.value = b;
+  }
+  function aCa(a, b) 
+  {
+    return a.disable = b;
+  }
+  function aDa(a, b) 
+  {
+    return a.cssText = b;
+  }
+  function aEa(a, b) 
+  {
+    return a.name = b;
+  }
+  function aFa(a, b) 
+  {
+    return a.parse = b;
+  }
+  function aGa(a, b) 
+  {
+    return a.length = b;
+  }
+  function aHa(a, b) 
+  {
+    return a.title = b;
+  }
+  function aIa(a, b) 
+  {
+    return a.className = b;
+  }
+  function aJa(a, b) 
+  {
+    return a.loaded = b;
+  }
+  var ag = "appendChild", aKa = "filter", aLa = "shift", aMa = "exec", 
+  aNa = "clearTimeout", 
+  aOa = "classList", 
+  ah = "replace", 
+  aPa = "reverse", 
+  aQa = "data", 
+  aRa = "responseText", 
+  aSa = "dataset", 
+  aTa = "charAt", 
+  aUa = "createTextNode", 
+  aVa = "preventDefault", 
+  aWa = "insertBefore", 
+  aXa = "match", 
+  aYa = "status", 
+  aZa = "enable", 
+  a_a = "send", 
+  a0a = "remove", 
+  ai = "createElement", 
+  a1a = "firstChild", 
+  a2a = "forEach", 
+  a3a = "setAttribute", 
+  a4a = "clear", 
+  a5a = "bind", 
+  a6a = "nextSibling", 
+  a7a = "contentWindow", 
+  a8a = "getElementsByTagName", 
+  a9a = "toString", 
+  a$a = "altKey", 
+  aab = "propertyIsEnumerable", 
+  abb = "setTimeout", 
+  acb = "removeEventListener", 
+  aj = "split", 
+  adb = "userAgent", 
+  ak = "location", 
+  al = "style", 
+  aeb = "state", 
+  afb = "scripts", 
+  agb = "random", 
+  am = "info", 
+  ahb = "protocol", 
+  aib = "init", 
+  ajb = "enabled", 
+  akb = "styles", 
+  an = "href", 
+  alb = "removeNode", 
+  amb = "contains", 
+  anb = "apply", 
+  aob = "tagName", 
+  apb = "onError", 
+  aqb = "execute", 
+  arb = "execScript", 
+  asb = "error", 
+  ao = "push", 
+  atb = "page", 
+  aub = "open", 
+  avb = "text", 
+  awb = "round", 
+  axb = "cancel", 
+  ayb = "slice", 
+  azb = "nodeType", 
+  aAb = "load", 
+  aBb = "getElementById", 
+  ap = "dispose", 
+  aCb = "button", 
+  aq = "indexOf", 
+  aDb = "metaKey", 
+  aEb = "disable", 
+  aFb = "setRequestHeader", 
+  aGb = "readyState", 
+  aHb = "opera", 
+  aIb = "addEventListener", 
+  aJb = "headers", 
+  aKb = "name", 
+  aLb = "keys", 
+  aMb = "parse", 
+  ar = "length", 
+  aNb = "title", 
+  aOb = "config", 
+  as = "prototype", 
+  aPb = "className", 
+  aQb = "timing", 
+  aRb = "abort", 
+  aSb = "document", 
+  aTb = "ctrlKey", 
+  at = "body", 
+  aUb = "history", 
+  aVb = "removeChild", 
+  au = "target", 
+  av = "call", 
+  aWb = "lastIndexOf", 
+  aw = "getAttribute", 
+  aXb = "querySelectorAll", 
+  aYb = "clientHeight", 
+  aZb = "charCodeAt", 
+  a_b = "substring", 
+  a0b = "shiftKey", 
+  a1b = "parentNode", 
+  a2b = "splice", 
+  ax = "join", 
+  a3b = "unshift", 
+  a4b = "toLowerCase", 
+  ay, 
+  a5b = [];
+  function a6b(a) 
+  {
+    return (function () 
+    {
+      return a5b[a][anb](this, arguments);
+    });
+  }
+  var a7b = a7b || {
+    
+  }, a8b = this;
+  function az(a, b) 
+  {
+    for(var c = a[aj]("."), d = b || a8b, e;e = c[aLa]();)
+      if(null != d[e])
+        d = d[e];
+      else
+        return null;
+    return d;
+  }
+  function a9b(a) 
+  {
+    var b = typeof a;
+    if("object" == b)
+      if(a)
+      {
+        if(a instanceof afa)
+          return "array";
+        if(a instanceof aaa)
+          return b;
+        var c = aaa[as][a9a][av](a);
+        if("[object Window]" == c)
+          return "object";
+        if("[object Array]" == c || "number" == typeof a[ar] && "undefined" != typeof a[a2b] && "undefined" != typeof a[aab] && ! a[aab]("splice"))
+          return "array";
+        if("[object Function]" == c || "undefined" != typeof a[av] && "undefined" != typeof a[aab] && ! a[aab]("call"))
+          return "function";
+      }
+      else
+        return "null";
+    else
+      if("function" == b && "undefined" == typeof a[av])
+        return "object";
+    return b;
+  }
+  function a$b(a) 
+  {
+    return "array" == a9b(a);
+  }
+  function aac(a) 
+  {
+    return "string" == typeof a;
+  }
+  function abc(a) 
+  {
+    return "function" == a9b(a);
+  }
+  var acc = "closure_uid_" + (1000000000 * ac[agb]() >>> 0);
+  function adc(a, b, c) 
+  {
+    return a[av][anb](a[a5a], arguments);
+  }
+  function aec(a, b, c) 
+  {
+    if(! a)
+      throw ad();
+    if(2 < arguments[ar])
+    {
+      var d = afa[as][ayb][av](arguments, 2);
+      return (function () 
+      {
+        var c = afa[as][ayb][av](arguments);
+        afa[as][a3b][anb](c, d);
+        return a[anb](b, c);
+      });
+    }
+    return (function () 
+    {
+      return a[anb](b, arguments);
+    });
+  }
+  function aA(a, b, c) 
+  {
+    aA = ada[as][a5a] && - 1 != ada[as][a5a][a9a]()[aq]("native code") ? adc : aec;
+    return aA[anb](null, arguments);
+  }
+  function afc(a, b) 
+  {
+    for(var c in b)
+      a[c] = b[c];
+  }
+  var agc = Date.now || (function () 
+  {
+    return + new Date;
+  });
+  function aB(a, b) 
+  {
+    var c = a[aj]("."), d = a8b;
+    c[0] in d || ! d[arb] || d[arb]("var " + c[0]);
+    for(var e;c[ar] && (e = c[aLa]());)
+      c[ar] || void 0 === b ? d = d[e] ? d[e] : d[e] = {
+        
+      } : d[e] = b;
+  }
+  function aC(a, b) 
+  {
+    function c() 
+    {
+      
+    }
+    c.prototype = b[as];
+    a.G = b[as];
+    a.prototype = new c;
+  }
+  ada[as].bind = ada[as][a5a] || (function (a, b) 
+  {
+    if(1 < arguments[ar])
+    {
+      var c = afa[as][ayb][av](arguments, 1);
+      c[a3b](this, a);
+      return aA[anb](null, c);
+    }
+    return aA(this, a);
+  });
+  var aD = {
+    hq : ! 1,
+    aj : {
+      "url-identifier" : "?spf=__type__",
+      "link-class" : "spf-link",
+      "nolink-class" : null,
+      "request-timeout" : 0,
+      "cache-lifetime" : 600000,
+      "navigate-requested-callback" : null,
+      "navigate-received-callback" : null,
+      "navigate-processed-callback" : null,
+      "navigate-error-callback" : null,
+      "transition-class" : "spf-transition",
+      "transition-duration" : 425,
+      "transition-forward-parent-class" : "spf-transition-forward",
+      "transition-reverse-parent-class" : "spf-transition-reverse",
+      "transition-current-child-class" : "spf-current",
+      "transition-forward-child-class" : "spf-forward",
+      "transition-reverse-child-class" : "spf-reverse"
+    },
+    config : {
+      
+    },
+    execute : (function (a, b) 
+    {
+      if(a)
+      {
+        var c = afa[as][ayb][av](arguments, 1);
+        try
+{          return a[anb](null, c);}
+        catch(d)
+{          return d;}
+
+      }
+    }),
+    now : (function () 
+    {
+      return + new Date;
+    }),
+    key : (function (a) 
+    {
+      return a["spf-key"] || (a["spf-key"] = aD.now() + "-" + ++ aD.xc);
+    }),
+    xc : 0
+  };
+  aD.history = {
+    
+  };
+  asa(aD[aUb], (function (a) 
+  {
+    ! aD[aUb].Tb && aa[aIb] && (aD[aUb].Tb = ! 0, aD[aUb].ab = a, aD[aUb].bb = aa[ak][an], 
+    aD[aUb][ah](aD[aUb].bb), 
+    aa[aIb]("popstate", aD[aUb].yj, ! 1));
+  }));
+  aza(aD[aUb], (function () 
+  {
+    aa[acb] && aa[acb]("popstate", aD[aUb].yj, ! 1);
+    aD[aUb].Tb = ! 1;
+  }));
+  aD[aUb].add = (function (a, b, c) 
+  {
+    aD[aUb].yk(! 1, a, b, c);
+  });
+  aD[aUb].replace = (function (a, b, c) 
+  {
+    aD[aUb].yk(! 0, a, b, c);
+  });
+  aD[aUb].yk = (function (a, b, c, d) 
+  {
+    if(b || c)
+      b = b || aa[ak][an], c = c || {
+        
+      }, aD[aUb].pe = aD.now(), 
+      c["spf-timestamp"] = aD[aUb].pe, 
+      a ? aa[aUb].replaceState(c, "", b) : aa[aUb].pushState(c, "", b), 
+      aD[aUb].bb = b, 
+      d && aD[aUb].ab(b, c);
+  });
+  aD[aUb].yj = (function (a) 
+  {
+    var b = aa[ak][an];
+    if(a[aeb])
+      if(a = a[aeb], b == aD[aUb].bb)
+        aD[aUb].pe = a["spf-timestamp"], aa[aUb].replaceState(a, "", b);
+      else
+      {
+        var c = a["spf-timestamp"];
+        a["spf-back"] = ! ! (c < aD[aUb].pe);
+        aD[aUb].pe = c;
+        aD[aUb].bb = b;
+        aD[aUb].ab(b, a);
+      }
+  });
+  aD[aUb].Tb = ! 1;
+  aD[aUb].pe = 0;
+  aD[aUb].bb = aa[ak][an];
+  aD.pa = {
+    
+  };
+  aD.pa.get = (function (a) 
+  {
+    if(aD.pa.ma && a in aD.pa.ma)
+    {
+      var b = aD.pa.ma[a];
+      if(b && b[aQa])
+      {
+        var c = aD.now() - b.g;
+        if(aea(b.b) || c < b.b)
+          return b[aQa];
+      }
+      aD.pa[a0a](a);
+    }
+  });
+  aD.pa.set = (function (a, b, c) 
+  {
+    aD.pa.ma || (aD.pa.ma = {
+      
+    });
+    c = ae(c, 10);
+    0 >= c || (aD.pa.ma[a] = new ahc(b, c), aca(aD.pa.Pd, 1000));
+  });
+  aoa(aD.pa, (function (a) 
+  {
+    aD.pa.ma && a in aD.pa.ma && delete aD.pa.ma[a];
+  }));
+  apa(aD.pa, (function () 
+  {
+    delete aD.pa.ma;
+  }));
+  aD.pa.Pd = (function () 
+  {
+    if(aD.pa.ma)
+      for(var a in aD.pa.ma)
+      {
+        var b = aD.pa.ma[a];
+        if(b && b[aQa])
+        {
+          var c = aD.now() - b.g;
+          ! aea(b.b) && c >= b.b && delete aD.pa.ma[a];
+        }
+        else
+          delete aD.pa.ma[a];
+      }
+  });
+  function ahc(a, b) 
+  {
+    ala(this, a);
+    this.b = b;
+    this.g = aD.now();
+  }
+  ;
+  aD.W = {
+    
+  };
+  aD.W.Pa = {
+    
+  };
+  aD.W.Pa.get = (function (a) 
+  {
+    return a[aPb] && a[aPb][aXa](/\S+/g) || [];
+  });
+  aD.W.Pa.has = afa[as][aq] ? (function (a, b) 
+  {
+    var c = aD.W.Pa.get(a);
+    return - 1 != afa[as][aq][av](c, b);
+  }) : (function (a, b) 
+  {
+    for(var c = aD.W.Pa.get(a), d = 0, e = c[ar];d < e;d ++)
+      if(c[d] == b)
+        return ! 0;
+    return ! 1;
+  });
+  aD.W.Pa.add = (function (a, b) 
+  {
+    aD.W.Pa.has(a, b) || aIa(a, a[aPb] + (" " + b));
+  });
+  aoa(aD.W.Pa, afa[as][aKa] ? (function (a, b) 
+  {
+    var c = aD.W.Pa.get(a), c = afa[as][aKa][av](c, (function (a) 
+    {
+      return a != b;
+    }));
+    aIa(a, c[ax](" "));
+  }) : (function (a, b) 
+  {
+    for(var c = aD.W.Pa.get(a), d = [], e = 0, f = c[ar];e < f;e ++)
+      c[e] != b && d[ao](c[e]);
+    aIa(a, d[ax](" "));
+  }));
+  aD.W.query = (function (a) 
+  {
+    if(ab[aXb])
+      return ab[aXb](a);
+    if(aD.W.jj)
+    {
+      var b = ab[ai]("style"), c = ab[a8a]("head")[0];
+      c[ag](b);
+      aa.__qsa = [];
+      aDa(b.styleSheet, a + "{x:expression(__qsa.push(this))}");
+      aDa(ab[at][al], ab[at][al].cssText + "");
+      ab[at][al].zoom = 1;
+      c[aVb](b);
+      return aa.__qsa[ayb](0);
+    }
+    return [];
+  });
+  aD.W.Wi = (function (a, b) 
+  {
+    b[a1b][aWa](a, b);
+  });
+  aD.W.Vi = (function (a, b) 
+  {
+    b[a1b][aWa](a, b[a6a]);
+  });
+  aD.W.Ui = (function (a) 
+  {
+    var b, c = a[a1b];
+    if(c && 11 != c[azb])
+    {
+      if(a[alb])
+        return a[alb](! 1);
+      for(;b = a[a1a];)
+        c[aWa](b, a);
+      return c[aVb](a);
+    }
+  });
+  aD.W.Lo = (function (a, b) 
+  {
+    if(b)
+    {
+      for(var c;c = a[a1a];)
+        b[ag](c);
+      a[ag](b);
+    }
+  });
+  aD.W.qf = (function (a, b, c) 
+  {
+    for(;a;)
+    {
+      if(b(a))
+        return a;
+      if(c && a == c)
+        break;
+      a = a[a1b];
+    }
+    return null;
+  });
+  aD.W.Oo = (function (a, b) 
+  {
+    for(var c in b)
+    {
+      var d = b[c];
+      "class" == c ? aIa(a, d) : "style" == c ? aDa(a[al], d) : a[a3a](c, d);
+    }
+  });
+  aD.W.Zo = (function (a) 
+  {
+    a = a || "";
+    var b = ab, c = b[ai]("iframe");
+    c.id = a;
+    c.src = 'javascript:""';
+    ava(c[al], "none");
+    b[at][ag](c);
+    return c;
+  });
+  aD.W.jj = "Microsoft Internet Explorer" == aga.appName;
+  aD.W.url = {
+    
+  };
+  aD.W.url.absolute = (function (a) 
+  {
+    var b = ab[ai]("a");
+    ata(b, a);
+    return b[an];
+  });
+  aD.W.dataset = {
+    
+  };
+  aD.W[aSa].get = (function (a, b) 
+  {
+    return a[aSa] ? a[aSa][b] : a[aw]("data-" + aD.Oa.Mj(b));
+  });
+  aD.W[aSa].set = (function (a, b, c) 
+  {
+    a[aSa] ? a[aSa][b] = c : a[a3a]("data-" + aD.Oa.Mj(b), c);
+  });
+  aD.ua = {
+    
+  };
+  aD.ua.D = (function (a, b, c) 
+  {
+    a in aD.ua.da || (aD.ua.da[a] = []);
+    aD.ua.da[a][ao]([b, c, ]);
+  });
+  aD.ua.yb = (function (a, b, c) 
+  {
+    if(a in aD.ua.da)
+    {
+      a = aD.ua.da[a];
+      for(var d = 0, e = a[ar];d < e;d ++)
+        if(a[d] && a[d][0] == b && a[d][1] == c)
+        {
+          a[d] = null;
+          break;
+        }
+    }
+  });
+  aD.ua.A = (function (a, b) 
+  {
+    if(a in aD.ua.da)
+      for(var c = aD.ua.da[a], d = afa[as][ayb][av](arguments, 1), 
+      e = 0, 
+      f = c[ar];e < f;e ++)
+        c[e] && c[e][0][anb](c[e][1], d);
+  });
+  apa(aD.ua, (function (a) 
+  {
+    a ? a in aD.ua.da && delete aD.ua.da[a] : aD.ua.da = {
+      
+    };
+  }));
+  aD.ua.da = {
+    
+  };
+  aD.Oa = {
+    
+  };
+  aua(aD.Oa, (function (a, b) 
+  {
+    return - 1 != a[aq](b);
+  }));
+  aD.Oa.Po = (function (a) 
+  {
+    return 0 == a[aWb]("?", 0);
+  });
+  aD.Oa.Uo = (function (a) 
+  {
+    var b = a[ar] - 9;
+    return 0 <= b && a[aq]("-callback", b) == b;
+  });
+  aD.Oa.zg = (function (a) 
+  {
+    for(var b = 0, c = 0, d = a[ar];c < d;++ c)
+      b = 31 * b + a[aZb](c), b %= 4294967296;
+    return b;
+  });
+  aD.Oa.Mj = (function (a) 
+  {
+    return aia(a)[ah](/([A-Z])/g, "-$1")[a4b]();
+  });
+  aD.K = {
+    
+  };
+  aD.K.Ia = {
+    
+  };
+  aya(aD.K.Ia, (function (a, b, c, d) 
+  {
+    if("js" != a && "css" != a)
+      return null;
+    var e = a + "-" + aD.Oa.zg(b);
+    d = d || "";
+    var f = ab[aBb](e), g = f && aD.W[aSa].get(f, "loaded"), 
+    h = f && ! g;
+    if(g)
+      return c && c(), f;
+    c && aD.ua.D(e, c);
+    if(h)
+      return f;
+    var k = d ? aD.W.query(("css" == a ? "link" : "script") + "." + d) : [];
+    return f = aD.K.Ia.Zc(a, b, e, d, (function () 
+    {
+      aD.W[aSa].get(f, "loaded") || (aD.W[aSa].set(f, "loaded", "true"), aD.K.Ia.Wd(k), aD.ua.A(e), 
+      aD.ua[a4a](e));
+    }));
+  }));
+  aD.K.Ia.Zc = (function (a, b, c, d, e, f) 
+  {
+    if("js" != a && "css" != a)
+      return null;
+    var g = ab[ai]("css" == a ? "link" : "script");
+    g.id = c;
+    aIa(g, d);
+    "css" == a && (g.rel = "stylesheet");
+    aja(g, (function () 
+    {
+      e && aca(e, 0);
+    }));
+    axa(g, (function () 
+    {
+      switch(g[aGb]){
+        case "loaded":
+          
+
+        case "complete":
+          g.onload();
+
+        
+      }
+    }));
+    "css" == a ? ata(g, b) : g.src = b;
+    b = f || ab;
+    b = b[a8a]("head")[0] || b[at];
+    "js" == a ? b[aWa](g, b[a1a]) : b[ag](g);
+    return g;
+  });
+  aD.K.Ia.xd = (function (a, b) 
+  {
+    if("js" == a || "css" == a)
+    {
+      var c = ab[aBb](a + "-" + aD.Oa.zg(b));
+      c && aD.K.Ia.Wd([c, ]);
+    }
+  });
+  aD.K.Ia.Wd = (function (a) 
+  {
+    for(var b = 0, c = a[ar];b < c;b ++)
+      aD.ua[a4a](a[b].id), a[b][a1b][aVb](a[b]);
+  });
+  aD.K.Ia.tb = (function (a, b) 
+  {
+    if("js" == a || "css" == a)
+    {
+      var c = a + "-" + aD.Oa.zg(b), d = ab[aBb](c);
+      if(! d)
+      {
+        var d = a + "-prefetch", e = ab[aBb](d);
+        if(e)
+        {
+          if(d = e[a7a][aSb][aBb](c))
+            return;
+        }
+        else
+          e = aD.W.Zo(d);
+        aca((function () 
+        {
+          var d = e[a7a][aSb];
+          if("css" == a)
+            aD.K.Ia.Zc(a, b, c, "", null, d);
+          else
+          {
+            var g = d[ai]("object");
+            g.id = c;
+            aD.W.jj ? d[ai]("script").src = b : ala(g, b);
+            d[at][ag](g);
+          }
+        }), 
+        0);
+      }
+    }
+  });
+  aD.K.scripts = {
+    
+  };
+  aD.K[afb].eval = (function (a, b) 
+  {
+    if(aa[arb])
+      aa[arb](a, "JavaScript");
+    else
+    {
+      var c = ab[ai]("script");
+      c[ag](ab[aUa](a));
+      var d = ab[a8a]("head")[0] || ab[at];
+      d[aWa](c, d[a1a]);
+    }
+    b && b();
+  });
+  aya(aD.K[afb], (function (a, b, c) 
+  {
+    return aD.K.Ia[aAb]("js", a, b, c);
+  }));
+  aD.K[afb].xd = (function (a) 
+  {
+    aD.K.Ia.xd("js", a);
+  });
+  aD.K[afb].tb = (function (a) 
+  {
+    aD.K.Ia.tb("js", a);
+  });
+  aD.K[afb].execute = (function (a, b) 
+  {
+    if(0 >= a[afb][ar])
+      b && b();
+    else
+    {
+      var c = - 1, d = (function () 
+      {
+        c ++;
+        if(c < a[afb][ar])
+        {
+          var e = a[afb][c];
+          e.url ? aD.K[afb][aAb](e.url, d, e[aKb]) : e[avb] ? aD.K[afb].eval(e[avb], d) : d();
+        }
+        else
+          b && b();
+      });
+      d();
+    }
+  });
+  aD.K[afb].pj = (function (a) 
+  {
+    if(! (0 >= a[afb][ar]))
+      for(var b = 0;b < a[afb][ar];b ++)
+      {
+        var c = a[afb][b];
+        c.url && aD.K[afb].tb(c.url);
+      }
+  });
+  aFa(aD.K[afb], (function (a) 
+  {
+    var b = new aic;
+    if(! a)
+      return b;
+    a = a[ah](aD.K[afb].vp, (function (a, d, e) 
+    {
+      a = (a = d[aXa](aD.K[afb].wp)) ? a[1] : "";
+      d = (d = d[aXa](aD.K[afb].Fg)) ? d[1] : "";
+      b[afb][ao]({
+        url : a,
+        text : e,
+        name : d
+      });
+      return "";
+    }));
+    b.he = a;
+    return b;
+  }));
+  function aic() 
+  {
+    this.he = "";
+    this.scripts = [];
+  }
+  aD.K[afb].vp = /\x3cscript([\s\S]*?)\x3e([\s\S]*?)\x3c\/script\x3e/ig;
+  aD.K[afb].wp = /src="([\S]+)"/;
+  aD.K[afb].Fg = /class="([\S]+)"/;
+  aD.K.styles = {
+    
+  };
+  aD.K[akb].eval = (function (a) 
+  {
+    var b = ab[ai]("style");
+    (ab[a8a]("head")[0] || ab[at])[ag](b);
+    "styleSheet" in b ? aDa(b.styleSheet, a) : b[ag](ab[aUa](a));
+  });
+  aya(aD.K[akb], (function (a, b, c) 
+  {
+    return aD.K.Ia[aAb]("css", a, b, c);
+  }));
+  aD.K[akb].xd = (function (a) 
+  {
+    aD.K.Ia.xd("css", a);
+  });
+  aD.K[akb].tb = (function (a) 
+  {
+    aD.K.Ia.tb("css", a);
+  });
+  aD.K[akb].Mo = (function (a) 
+  {
+    if(! (0 >= a[akb][ar]))
+      for(var b = 0;b < a[akb][ar];b ++)
+      {
+        var c = a[akb][b];
+        c.url ? aD.K[akb][aAb](c.url, null, c[aKb]) : c[avb] && aD.K[akb].eval(c[avb]);
+      }
+  });
+  aD.K[akb].xp = (function (a) 
+  {
+    if(! (0 >= a[akb][ar]))
+      for(var b = 0;b < a[akb][ar];b ++)
+      {
+        var c = a[akb][b];
+        c.url && aD.K[akb].tb(c.url);
+      }
+  });
+  aFa(aD.K[akb], (function (a) 
+  {
+    var b = new ajc;
+    if(! a)
+      return b;
+    a = a[ah](aD.K[akb].kp, (function (a, d) 
+    {
+      if(aD.Oa[amb](d, 'rel="stylesheet"'))
+      {
+        var e = d[aXa](aD.K[akb].jp), e = e ? e[1] : "", f = d[aXa](aD.K[akb].Fg), 
+        f = f ? f[1] : "";
+        b[akb][ao]({
+          url : e,
+          text : "",
+          name : f
+        });
+        return "";
+      }
+      return a;
+    }));
+    a = a[ah](aD.K[akb].lp, (function (a, d, e) 
+    {
+      b[akb][ao]({
+        url : "",
+        text : e,
+        name : ""
+      });
+      return "";
+    }));
+    b.he = a;
+    return b;
+  }));
+  function ajc() 
+  {
+    this.he = "";
+    this.styles = [];
+  }
+  aD.K[akb].kp = /\x3clink([\s\S]*?)\x3e/ig;
+  aD.K[akb].lp = /\x3cstyle([\s\S]*?)\x3e([\s\S]*?)\x3c\/style/ig;
+  aD.K[akb].jp = /href="([\S]+)"/;
+  aD.K[akb].Fg = /class="([\S]+)"/;
+  aD.K.lc = {
+    
+  };
+  aD.K.lc.get = (function (a, b) 
+  {
+    return aD.K.lc[a_a]("GET", a, null, b);
+  });
+  aD.K.lc.nt = (function (a, b, c) 
+  {
+    return aD.K.lc[a_a]("POST", a, b, c);
+  });
+  ana(aD.K.lc, (function (a, b, c, d) 
+  {
+    c = d || {
+      
+    };
+    var e = c.J || (function () 
+    {
+      
+    }), f = c[apb] || (function () 
+    {
+      
+    }), 
+    g = c.ce || (function () 
+    {
+      
+    }), 
+    h, 
+    k = aD.K.lc.create();
+    k[aub](a, b, ! 0);
+    k.timing = {
+      
+    };
+    var l = k[aRb];
+    k.abort = (function () 
+    {
+      aba(h);
+      axa(k, null);
+      l[av](k);
+    });
+    axa(k, (function () 
+    {
+      var a = k[aQb];
+      if(2 == k[aGb])
+        a.responseStart = a.responseStart || aD.now();
+      else
+        if(4 == k[aGb])
+          switch(a.responseEnd = a.responseEnd || aD.now(), aba(h), k[aYa]){
+            case 200:
+              
+
+            case 201:
+              
+
+            case 202:
+              
+
+            case 204:
+              
+
+            case 206:
+              
+
+            case 304:
+              e(k);
+              break;
+
+            default:
+              f(k);
+            
+          }
+    }));
+    if(c[aJb])
+      for(var m in c[aJb])
+        k[aFb](m, c[aJb][m]);
+    0 < c.Zi && (h = aca((function () 
+    {
+      k[aRb]();
+      g(k);
+    }), 
+    c.Zi));
+    k[aQb].fetchStart = aD.now();
+    k[a_a](null);
+    return k;
+  }));
+  var akc;
+  akc = "XMLHttpRequest" in aa ? (function () 
+  {
+    return new XMLHttpRequest;
+  }) : "ActiveXObject" in aa ? (function () 
+  {
+    return new ActiveXObject("Microsoft.XMLHTTP");
+  }) : void 0;
+  aD.K.lc.create = akc;
+  aD.O = {
+    
+  };
+  asa(aD.O, (function () 
+  {
+    ! aD.O.Tb && ab[aIb] && (ab[aIb]("click", aD.O.sj, ! 1), aD.O.Tb = ! 0);
+  }));
+  aza(aD.O, (function () 
+  {
+    aD.O[axb]();
+    aD.O.Tb && (ab[acb] && ab[acb]("click", aD.O.sj, ! 1), aD.O.Tb = ! 1);
+  }));
+  aD.O.sj = (function (a) 
+  {
+    if(! (a[aDb] || (a[a$a] || a[aTb] || a[a0b]) || 0 < a[aCb]))
+    {
+      var b = aD.W.qf(a[au], (function (a) 
+      {
+        return aD.W.Pa.has(a, aD[aOb]["link-class"]);
+      }));
+      ! b || aD[aOb]["nolink-class"] && aD.W.qf(a[au], (function (a) 
+      {
+        return aD.W.Pa.has(a, aD[aOb]["nolink-class"]);
+      })) || ! (b = aD.W.qf(a[au], (function (a) 
+      {
+        return a[an] && "img" != a[aob][a4b]();
+      }), 
+      b)) || (b = b[an]) && b != aa[ak][an] && aD.O.Eg(b), a[aVa]();
+    }
+  });
+  aD.O.Vo = (function (a, b) 
+  {
+    aD.O.Eg(a, b && b["spf-referer"], ! 0, ! (! b || ! b["spf-back"]));
+  });
+  aD.O.navigate = (function (a) 
+  {
+    a && a != aa[ak][an] && aD.O.Eg(a);
+  });
+  aD.O.Eg = (function (a, b, c, d) 
+  {
+    var e = aD[aqb](aD[aOb]["navigate-requested-callback"], a);
+    if(! 1 !== e)
+      if(e instanceof ad)
+        aD.O[asb](a, e);
+      else
+        if(aD.O.Tb)
+        {
+          aD.O[axb]();
+          var f = b || aa[ak][an];
+          b = aD.O.request(a, (function (a, b) 
+          {
+            aD.O.za = null;
+            b.redirect ? aD[aUb][ah](b.redirect, {
+              "spf-referer" : f
+            }, 
+            ! 0) : aD.O.le(b, d, ! 0);
+          }), 
+          (function (a, b) 
+          {
+            aD.O.za = null;
+            b instanceof ad && aD.O[asb](a, b);
+          }), 
+          "navigate", 
+          f);
+          aD.O.za = b;
+          if(! c)
+            try
+{              aD[aUb].add(a, {
+                "spf-referer" : f
+              });}
+            catch(g)
+{              aD.O[axb](), aD.O[asb](a, g);}
+
+        }
+        else
+          aD.O[asb](a, ad("Navigation not initialized"));
+  });
+  aD.O.cancel = (function () 
+  {
+    aD.O.za && (aD.O.za[aRb](), aD.O.za = null);
+  });
+  aD.O.error = (function (a, b) 
+  {
+    ! 1 !== aD[aqb](aD[aOb]["navigate-error-callback"], a, b) && ata(aa[ak], a);
+  });
+  aya(aD.O, (function (a, b, c) 
+  {
+    return aD.O.request(a, (function (a, e) 
+    {
+      if(e.redirect)
+        aD.O[aAb](e.redirect, b, c);
+      else
+        aD.O.le(e), b && b(a, e);
+    }), 
+    (function (a, b) 
+    {
+      c && c(a, b);
+    }), 
+    "load");
+  }));
+  aD.O.request = (function (a, b, c, d, e) 
+  {
+    function f(b) 
+    {
+      n.navigationStart = m;
+      if(b[aQb])
+        for(var d in b[aQb])
+          n[d] = b[aQb][d];
+      var e;
+      try
+{        e = "JSON" in aa ? JSON[aMb](b[aRa]) : eval("(" + b[aRa] + ")");}
+      catch(f)
+{        c && c(a, f);
+        return;}
+
+      aD.pa.set(h, e, aD[aOb]["cache-lifetime"]);
+      e.timing = n;
+      g(e);
+    }
+    function g(e) 
+    {
+      if("navigate" == d)
+      {
+        var f = aD[aqb](aD[aOb]["navigate-received-callback"], a, e);
+        if(! 1 === f || f instanceof ad)
+        {
+          c && c(a, f);
+          return;
+        }
+      }
+      b && b(a, e);
+    }
+    var h = aD.W.url.absolute(a), k = h, l = aD[aOb]["url-identifier"] || "";
+    l && (l = l[ah]("__type__", d || "request"), k = aD.Oa.Po(l) && aD.Oa[amb](k, "?") ? k + l[ah]("?", "&") : k + l);
+    var m = aD.now(), n = {
+      
+    };
+    n.fetchStart = aD.now();
+    var p = aD.pa.get(h);
+    if(p)
+      aca((function () 
+      {
+        n.responseStart = n.responseEnd = aD.now();
+        n.navigationStart = m;
+        p.timing = n;
+        g(p);
+      }), 
+      0);
+    else
+    {
+      var n = {
+        
+      }, q;
+      e && (q = {
+        "X-SPF-Referer" : e
+      });
+      return aD.K.lc.get(k, {
+        headers : q,
+        Zi : aD[aOb]["request-timeout"],
+        J : f,
+        onError : f,
+        ce : f
+      });
+    }
+  });
+  aD.O.le = (function (a, b, c) 
+  {
+    function d() 
+    {
+      if(0 == h)
+      {
+        var b = aD.K[afb][aMb](a.js);
+        aD.K[afb][aqb](b, (function () 
+        {
+          c && aD[aqb](aD[aOb]["navigate-processed-callback"], a);
+        }));
+        h --;
+      }
+    }
+    var e = aD.K[akb][aMb](a.css);
+    aD.K[akb].Mo(e);
+    a[aNb] && aHa(ab, a[aNb]);
+    var f = a.attr || {
+      
+    }, g;
+    for(g in f)
+      (e = ab[aBb](g)) && aD.W.Oo(e, f[g]);
+    var h = 0, f = a.html || {
+      
+    };
+    if(aaa[aLb])
+      h = aaa[aLb](f)[ar];
+    else
+      for(g in f)
+        h ++;
+    for(g in f)
+      if(e = ab[aBb](g))
+      {
+        var k = f[g], l = aD.key(e);
+        if(aD.O.lf && aD.W.Pa.has(e, aD[aOb]["transition-class"]))
+        {
+          aD.O.kf(l, ! 0);
+          var m = [], e = {
+            reverse : ! ! b,
+            Xi : aD.K[afb][aMb](k),
+            vd : null,
+            wd : null,
+            mf : e,
+            Ko : aD[aOb]["transition-current-child-class"],
+            No : b ? aD[aOb]["transition-reverse-child-class"] : aD[aOb]["transition-forward-child-class"],
+            Yi : b ? aD[aOb]["transition-reverse-parent-class"] : aD[aOb]["transition-forward-parent-class"]
+          };
+          m[ao]([(function (a, b) 
+          {
+            a.vd = ab[ai]("div");
+            aIa(a.vd, a.Ko);
+            aD.W.Lo(a.mf, a.vd);
+            a.wd = ab[ai]("div");
+            aIa(a.wd, a.No);
+            af(a.wd, a.Xi.he);
+            a[aPa] ? aD.W.Wi(a.wd, a.vd) : aD.W.Vi(a.wd, a.vd);
+            b();
+          }), 0, ]);
+          m[ao]([(function (a, b) 
+          {
+            aD.W.Pa.add(a.mf, a.Yi);
+            b();
+          }), 0, ]);
+          m[ao]([(function (a, b) 
+          {
+            a.mf[aVb](a.vd);
+            aD.W.Pa[a0a](a.mf, a.Yi);
+            aD.W.Ui(a.wd);
+            b();
+          }), aD[aOb]["transition-duration"], ]);
+          m[ao]([(function (a, b) 
+          {
+            aD.K[afb][aqb](a.Xi, (function () 
+            {
+              h --;
+              d();
+              b();
+            }));
+          }), 0, ]);
+          aD.O.Lb[l] = {
+            Ti : 0,
+            Si : m,
+            data : e
+          };
+          aD.O.kf(l);
+        }
+        else
+          l = aD.K[afb][aMb](k), af(e, l.he), aD.K[afb][aqb](l, (function () 
+          {
+            h --;
+            d();
+          }));
+      }
+      else
+        h --;
+    d();
+  });
+  aD.O.kf = (function (a, b) 
+  {
+    var c = aD.O.Lb;
+    if(a in c)
+      if(0 < c[a].Si[ar])
+      {
+        var d = c[a].Si[aLa]();
+        if(b)
+          d[0](c[a][aQa], (function () 
+          {
+            aD.O.kf(a, b);
+          }));
+        else
+          c[a].Ti = aca((function () 
+          {
+            d[0](c[a][aQa], (function () 
+            {
+              aD.O.kf(a, b);
+            }));
+          }), 
+          d[1]);
+      }
+      else
+        aba(c[a].Ti), delete c[a];
+  });
+  aD.O.tb = (function (a, b, c) 
+  {
+    return aD.O.request(a, (function (a, e) 
+    {
+      e.redirect ? aD.O.tb(e.redirect, b, c) : (aD.O.sf(e), b && b(a, e));
+    }), 
+    (function (a, b) 
+    {
+      c && c(a, b);
+    }), 
+    "prefetch");
+  });
+  aD.O.sf = (function (a) 
+  {
+    var b = aD.K[akb][aMb](a.css);
+    aD.K[akb].xp(b);
+    var b = a.html || {
+      
+    }, c, d;
+    for(d in b)
+      c = aD.K[afb][aMb](b[d]), aD.K[afb].pj(c);
+    c = aD.K[afb][aMb](a.js);
+    aD.K[afb].pj(c);
+  });
+  aD.O.Tb = ! 1;
+  aD.O.Lb = {
+    
+  };
+  var alc = aD.O, amc;
+  t : {
+    for(var anc = ab[ai]("div"), aoc = ["Webkit", "Moz", "Ms", "O", "Khtml", ], 
+    apc = 0, 
+    aqc = aoc[ar];apc < aqc;apc ++)
+      if(aoc[apc] + "Transition" in anc[al])
+      {
+        amc = ! 0;
+        break t;
+      }
+    amc = ! 1;
+  }
+  alc.lf = amc;
+  aD.Ff = {
+    
+  };
+  asa(aD.Ff, (function (a) 
+  {
+    var b = ! ! aa[aUb].pushState;
+    a = a || {
+      
+    };
+    for(var c in aD.aj)
+    {
+      var d = c in a ? a[c] : aD.aj[c];
+      aD[aOb][c] = d;
+      b && (d && aD.Oa.Uo(c)) && aD.ua.D(c, d);
+    }
+    b && (aD[aUb][aib](aD.O.Vo), aD.O[aib]());
+    return b;
+  }));
+  aza(aD.Ff, (function () 
+  {
+    aa[aUb].pushState && (aD.O[ap](), aD[aUb][ap]());
+    aD.ua[a4a]();
+    aD.pa[a4a]();
+    aD.config = {
+      
+    };
+  }));
+  asa(aD, aD.Ff[aib]);
+  aza(aD, aD.Ff[ap]);
+  aD.navigate = aD.O.navigate;
+  aya(aD, aD.O[aAb]);
+  aD.le = aD.O.le;
+  aD.tb = aD.O.tb;
+  aD.sf = aD.O.sf;
+  aa.spf = aD.hq ? aD : {
+    init : aD[aib],
+    dispose : aD[ap],
+    navigate : aD.navigate,
+    load : aD[aAb],
+    process : aD.le,
+    prefetch : aD.tb,
+    preprocess : aD.sf
+  };
+  var arc = afa[as], asc = arc[aq] ? (function (a, b, c) 
+  {
+    return arc[aq][av](a, b, c);
+  }) : (function (a, b, c) 
+  {
+    c = null == c ? 0 : 0 > c ? ac.max(0, a[ar] + c) : c;
+    if(aac(a))
+      return aac(b) && 1 == b[ar] ? a[aq](b, c) : - 1;
+    for(;c < a[ar];c ++)
+      if(c in a && a[c] === b)
+        return c;
+    return - 1;
+  }), 
+  aE = arc[a2a] ? (function (a, b, c) 
+  {
+    arc[a2a][av](a, b, c);
+  }) : (function (a, b, c) 
+  {
+    for(var d = a[ar], e = aac(a) ? a[aj]("") : a, f = 0;f < d;f ++)
+      f in e && b[av](c, e[f], f, a);
+  }), 
+  atc = arc[aKa] ? (function (a, b, c) 
+  {
+    return arc[aKa][av](a, b, c);
+  }) : (function (a, b, c) 
+  {
+    for(var d = a[ar], e = [], f = 0, g = aac(a) ? a[aj]("") : a, 
+    h = 0;h < d;h ++)
+      if(h in g)
+      {
+        var k = g[h];
+        b[av](c, k, h, a) && (e[f ++] = k);
+      }
+    return e;
+  }), 
+  auc = arc.map ? (function (a, b, c) 
+  {
+    return arc.map[av](a, b, c);
+  }) : (function (a, b, c) 
+  {
+    for(var d = a[ar], e = afa(d), f = aac(a) ? a[aj]("") : a, g = 0;g < d;g ++)
+      g in f && (e[g] = b[av](c, f[g], g, a));
+    return e;
+  }), 
+  avc = arc.some ? (function (a, b, c) 
+  {
+    return arc.some[av](a, b, c);
+  }) : (function (a, b, c) 
+  {
+    for(var d = a[ar], e = aac(a) ? a[aj]("") : a, f = 0;f < d;f ++)
+      if(f in e && b[av](c, e[f], f, a))
+        return ! 0;
+    return ! 1;
+  }), 
+  awc = arc.every ? (function (a, b, c) 
+  {
+    return arc.every[av](a, b, c);
+  }) : (function (a, b, c) 
+  {
+    for(var d = a[ar], e = aac(a) ? a[aj]("") : a, f = 0;f < d;f ++)
+      if(f in e && ! b[av](c, e[f], f, a))
+        return ! 1;
+    return ! 0;
+  });
+  function axc(a, b, c) 
+  {
+    b = ayc(a, b, c);
+    return 0 > b ? null : aac(a) ? a[aTa](b) : a[b];
+  }
+  function ayc(a, b, c) 
+  {
+    for(var d = a[ar], e = aac(a) ? a[aj]("") : a, f = 0;f < d;f ++)
+      if(f in e && b[av](c, e[f], f, a))
+        return f;
+    return - 1;
+  }
+  function azc(a, b) 
+  {
+    return 0 <= asc(a, b);
+  }
+  function aAc(a, b) 
+  {
+    var c = asc(a, b), d;
+    (d = 0 <= c) && aBc(a, c);
+    return d;
+  }
+  function aBc(a, b) 
+  {
+    return 1 == arc[a2b][av](a, b, 1)[ar];
+  }
+  function aCc(a, b, c) 
+  {
+    return 2 >= arguments[ar] ? arc[ayb][av](a, b) : arc[ayb][av](a, b, c);
+  }
+  ;
+  function aDc() 
+  {
+    
+  }
+  aDc[as].Ca = ! 1;
+  aDc[as].Fa = a6b(9);
+  aza(aDc[as], (function () 
+  {
+    this.Ca || (this.Ca = ! 0, this.M());
+  }));
+  aDc[as].M = (function () 
+  {
+    if(this.ja)
+      for(;this.ja[ar];)
+        this.ja[aLa]()();
+  });
+  function aEc() 
+  {
+    this.da = [];
+    this.Wa = {
+      
+    };
+  }
+  aC(aEc, aDc);
+  ay = aEc[as];
+  ay.wj = 1;
+  ay.Ye = 0;
+  ay.D = (function (a, b, c) 
+  {
+    var d = this.Wa[a];
+    d || (d = this.Wa[a] = []);
+    var e = this.wj;
+    this.da[e] = a;
+    this.da[e + 1] = b;
+    this.da[e + 2] = c;
+    this.wj = e + 3;
+    d[ao](e);
+    return e;
+  });
+  ay.yb = (function (a, b, c) 
+  {
+    if(a = this.Wa[a])
+    {
+      var d = this.da;
+      if(a = axc(a, (function (a) 
+      {
+        return d[a + 1] == b && d[a + 2] == c;
+      })))
+        return this.Z(a);
+    }
+    return ! 1;
+  });
+  ay.Z = (function (a) 
+  {
+    if(0 != this.Ye)
+      return this.b || (this.b = []), this.b[ao](a), ! 1;
+    var b = this.da[a];
+    if(b)
+    {
+      var c = this.Wa[b];
+      c && aAc(c, a);
+      delete this.da[a];
+      delete this.da[a + 1];
+      delete this.da[a + 2];
+    }
+    return ! ! b;
+  });
+  ay.A = (function (a, b) 
+  {
+    var c = this.Wa[a];
+    if(c)
+    {
+      this.Ye ++;
+      for(var d = aCc(arguments, 1), e = 0, f = c[ar];e < f;e ++)
+      {
+        var g = c[e];
+        this.da[g + 1][anb](this.da[g + 2], d);
+      }
+      this.Ye --;
+      if(this.b && 0 == this.Ye)
+        for(;c = this.b.pop();)
+          this.Z(c);
+      return 0 != e;
+    }
+    return ! 1;
+  });
+  apa(ay, (function (a) 
+  {
+    if(a)
+    {
+      var b = this.Wa[a];
+      b && (aE(b, this.Z, this), delete this.Wa[a]);
+    }
+    else
+      aGa(this.da, 0), this.Wa = {
+        
+      };
+  }));
+  ay.fb = a6b(11);
+  ay.M = (function () 
+  {
+    aEc.G.M[av](this);
+    delete this.da;
+    delete this.Wa;
+    delete this.b;
+  });
+  var aFc = aa.yt && aa.yt.config_ || {
+    
+  };
+  aB("yt.config_", aFc);
+  var aGc = aa.yt && aa.yt.tokens_ || {
+    
+  };
+  aB("yt.tokens_", aGc);
+  var aHc = aa.yt && aa.yt.globals_ || {
+    
+  };
+  aB("yt.globals_", aHc);
+  var aIc = aa.yt && aa.yt.msgs_ || {
+    
+  };
+  aB("yt.msgs_", aIc);
+  var aJc = aa.yt && aa.yt.timeouts_ || [];
+  aB("yt.timeouts_", aJc);
+  var aKc = aa.yt && aa.yt.intervals_ || [];
+  aB("yt.intervals_", aKc);
+  function aLc(a) 
+  {
+    aMc(aFc, arguments);
+  }
+  function aF(a, b) 
+  {
+    return a in aFc ? aFc[a] : b;
+  }
+  function aNc(a) 
+  {
+    aMc(aGc, arguments);
+  }
+  function aG(a, b) 
+  {
+    abc(a) && (a = aOc(a));
+    var c = aa[abb](a, b);
+    aJc[ao](c);
+    return c;
+  }
+  function aPc(a) 
+  {
+    aa[aNa](a);
+  }
+  function aOc(a) 
+  {
+    return a && aa.yterr ? (function () 
+    {
+      try
+{        return a[anb](this, arguments);}
+      catch(b)
+{        throw aQc(b), b;}
+
+    }) : a;
+  }
+  function aQc(a) 
+  {
+    if(aa.yterr)
+    {
+      var b = az("yt.www.errors.log");
+      b ? b(a) : (b = aF("ERRORS") || [], b[ao](a), aLc("ERRORS", b));
+    }
+  }
+  function aRc(a) 
+  {
+    aMc(aIc, arguments);
+  }
+  function aSc(a) 
+  {
+    return a in aIc;
+  }
+  function aMc(a, b) 
+  {
+    if(1 < b[ar])
+    {
+      var c = b[0];
+      a[c] = b[1];
+    }
+    else
+    {
+      var d = b[0];
+      for(c in d)
+        a[c] = d[c];
+    }
+  }
+  var aTc = "Microsoft Internet Explorer" == aga.appName;
+  var aH = {
+    
+  };
+  aH.Ef = az("yt.pubsub.instance_") || new aEc;
+  aEc[as].subscribe = aEc[as].D;
+  aEc[as].unsubscribeByKey = aEc[as].Z;
+  aEc[as].publish = aEc[as].A;
+  apa(aEc[as], aEc[as][a4a]);
+  aB("yt.pubsub.instance_", aH.Ef);
+  aH.D = (function (a, b, c) 
+  {
+    var d = az("yt.pubsub.instance_");
+    return d ? d.subscribe(a, (function () 
+    {
+      var a = arguments;
+      aG((function () 
+      {
+        b[anb](c || a8b, a);
+      }), 
+      0);
+    }), 
+    c) : 0;
+  });
+  aH.Z = (function (a) 
+  {
+    var b = az("yt.pubsub.instance_");
+    b && ("number" == typeof a ? a = [a, ] : "string" == typeof a && (a = [ae(a, 10), ]), 
+    aE(a, (function (a) 
+    {
+      b.unsubscribeByKey(a);
+    })));
+  });
+  aH.A = (function (a, b) 
+  {
+    var c = az("yt.pubsub.instance_");
+    return c ? c.publish[anb](c, arguments) : ! 1;
+  });
+  apa(aH, (function (a) 
+  {
+    var b = az("yt.pubsub.instance_");
+    if(b)
+      b[a4a](a);
+  }));
+  function aUc(a, b, c, d, e) 
+  {
+    aEa(this, a);
+    this.deps = b || [];
+    this.page = c || "";
+    this.i = aOc(d || null);
+    this.g = aOc(e || null);
+    this.da = [];
+  }
+  ay = aUc[as];
+  ama(ay, (function () 
+  {
+    aE("string" == typeof this[atb] ? [this[atb], ] : this[atb], 
+    (function (a) 
+    {
+      a && (this.D("init-" + a, this[aib], this), this.D("dispose-" + a, this[ap], this), 
+      aF("PAGE_NAME") == a && this[aib]());
+    }), 
+    this);
+  }));
+  asa(ay, (function () 
+  {
+    this.i && this.i();
+  }));
+  aza(ay, (function () 
+  {
+    this.g && this.g();
+  }));
+  aCa(ay, (function () 
+  {
+    this[ap]();
+    this[a4a]();
+  }));
+  ay.D = (function (a, b, c) 
+  {
+    a = aH.D(a, b, c);
+    this.da[ao](a);
+    return a;
+  });
+  apa(ay, (function () 
+  {
+    aH.Z(this.da);
+    aGa(this.da, 0);
+  }));
+  function aVc(a) 
+  {
+    a[aKb] in aWc && aXc(a[aKb]);
+    aWc[a[aKb]] = {
+      reqs : [],
+      disable : aA(a[aEb], a)
+    };
+    aE(a.deps, (function (b) 
+    {
+      if(! (b in aWc))
+        throw ad("Module " + b + " required by " + a[aKb]);
+      aWc[b].reqs[ao](a[aKb]);
+    }));
+    a[aZa]();
+  }
+  function aXc(a) 
+  {
+    if(a in aWc)
+    {
+      var b = aWc[a];
+      aE(b.reqs, (function (a) 
+      {
+        aXc(a);
+      }));
+      try
+{        b[aEb]();}
+      catch(c)
+{        }
+
+      delete aWc[a];
+    }
+  }
+  var aWc = az("yt.modules.registry_") || {
+    
+  };
+  aB("yt.modules.registry_", aWc);
+  function aYc(a, b) 
+  {
+    for(var c in a)
+      b[av](void 0, a[c], c, a);
+  }
+  ;
+  function aZc(a, b) 
+  {
+    var c = a[aXa](a_c);
+    return aD.K[afb][aAb](a, b, c ? c[1] : "");
+  }
+  function a0c(a) 
+  {
+    a && (aac(a) ? aZc(a) : a$b(a) ? aE(a, (function (a) 
+    {
+      a0c(a);
+    })) : aYc(a, (function (a, c) 
+    {
+      aZc(c, (function () 
+      {
+        a0c(a);
+      }));
+    })));
+  }
+  var a_c = /jsbin\/(?:debug-)?([a-zA-Z0-9_-]+?)(?:-vfl|.js)/;
+  function a1c() 
+  {
+    this.b = agc();
+  }
+  var a2c = new a1c;
+  a1c[as].set = (function (a) 
+  {
+    this.b = a;
+  });
+  a1c[as].get = (function () 
+  {
+    return this.b;
+  });
+  var a3c = "StopIteration" in a8b ? a8b.StopIteration : ad("StopIteration");
+  var a4c, a5c, a6c, a7c, a8c, a9c, a$c;
+  function aad() 
+  {
+    return a8b.navigator ? a8b.navigator[adb] : null;
+  }
+  function abd() 
+  {
+    return a8b.navigator;
+  }
+  a7c = a6c = a5c = a4c = ! 1;
+  var acd;
+  if(acd = aad())
+  {
+    var add = abd();
+    a4c = 0 == acd[aq]("Opera");
+    a5c = ! a4c && - 1 != acd[aq]("MSIE");
+    a6c = ! a4c && - 1 != acd[aq]("WebKit");
+    a7c = ! a4c && ! a6c && "Gecko" == add.product;
+  }
+  var aed = a4c, aI = a5c, afd = a7c, agd = a6c, ahd = abd(), 
+  aid = ahd && ahd.platform || "";
+  a8c = - 1 != aid[aq]("Mac");
+  a9c = - 1 != aid[aq]("Win");
+  a$c = - 1 != aid[aq]("Linux");
+  var ajd = ! ! abd() && - 1 != (abd().appVersion || "")[aq]("X11");
+  function akd() 
+  {
+    var a = a8b[aSb];
+    return a ? a.documentMode : void 0;
+  }
+  var ald;
+  t : {
+    var amd = "", and;
+    if(aed && a8b[aHb])
+      var aod = a8b[aHb].version, amd = "function" == typeof aod ? aod() : aod;
+    else
+      if(afd ? and = /rv\:([^\);]+)(\)|;)/ : aI ? and = /MSIE\s+([^\);]+)(\)|;)/ : agd && (and = /WebKit\/(\S+)/), 
+      and)
+        var apd = and[aMa](aad()), amd = apd ? apd[1] : "";
+    if(aI)
+    {
+      var aqd = akd();
+      if(aqd > aha(amd))
+      {
+        ald = aia(aqd);
+        break t;
+      }
+    }
+    ald = amd;
+  }
+  var ard = ald, asd = a8b[aSb], atd = asd && aI ? akd() || ("CSS1Compat" == asd.compatMode ? ae(ard, 10) : 5) : void 0;
+  function aud(a, b) 
+  {
+    aEa(this, a);
+    aBa(this, b);
+  }
+  aqa(aud[as], (function () 
+  {
+    return this[aKb];
+  }));
+  var avd = new aud("SHOUT", 1200), awd = new aud("SEVERE", 1000), 
+  axd = new aud("WARNING", 900), 
+  ayd = new aud("INFO", 800);
+  var azd = aa.console;
+  var aAd = {
+    
+  }, aBd = 0;
+  function aCd(a, b) 
+  {
+    if(a)
+    {
+      var c = new Image, d = "" + aBd ++;
+      aAd[d] = c;
+      aja(c, aAa(c, (function () 
+      {
+        b && aAd[d] && b();
+        delete aAd[d];
+      })));
+      c.src = a;
+      c = eval("null");
+    }
+  }
+  ;
+  function aDd(a, b) 
+  {
+    aEd().tick[a] = b || agc();
+  }
+  function aFd(a) 
+  {
+    return a.responseStart - a.navigationStart;
+  }
+  function aGd() 
+  {
+    var a = aEd().tick, b = aEd().span, c = aEd()[am], d = az("yt.timing.reportbuilder_");
+    if(d)
+    {
+      if(d = d[anb](null, [a, b, c, void 0, ]))
+        aHd(d), aId();
+    }
+    else
+    {
+      var d = {
+        v : 2,
+        s : "youtube",
+        action : aF("TIMING_ACTION")
+      }, 
+      e = aF("TIMING_INFO") || {
+        
+      }, 
+      f;
+      for(f in e)
+        c[f] = e[f];
+      f = c.srt;
+      delete c.srt;
+      if(! f && 0 !== f)
+        try
+{          f = aFd((aa.performance || aa.mozPerformance || aa.msPerformance || aa.webkitPerformance)[aQb]);}
+        catch(g)
+{          c.pt && (f = c.pt);}
+
+      if(f || 0 === f)
+        c.srt = f;
+      a.aft || (a.aft = a.vr && a.cl && a.cl > a.vr ? a.cl : a.vr ? a.vr : a.ol);
+      a.aft && a.plev && (a.aft = ac.min(a.aft, a.plev));
+      a.vr && a.gv && (b.vl = ac[awb](a.vr - a.gv));
+      for(var h in c)
+        "_" != h[aTa](0) && (d[h] = c[h]);
+      c = {
+        
+      };
+      h = [];
+      f = a._start;
+      for(var k in a)
+        "_" != k[aTa](0) && (e = ac.max(ac[awb](a[k] - f), 0), c[k] = e, h[ao](k + "." + e));
+      d.rt = h[ax](",");
+      a = {
+        
+      };
+      k = [];
+      for(var l in b)
+        "_" != l[aTa](0) && (a[l] = b[l], k[ao](l + "." + b[l]));
+      d.it = k[ax](",");
+      aHd(d);
+      (b = az("ytdebug.logTiming")) && b(d, c, a);
+      aId();
+    }
+  }
+  function aJd() 
+  {
+    var a = aF("TIMING_ACTION"), b = ! ! aF("TIMING_WFF"), c = aEd().tick;
+    a && c._start && (b && c.vr ? aGd() : b || ! c.ol && ! c.aft || aGd());
+  }
+  function aHd(a) 
+  {
+    var b = "https:" == aa[ak][ahb] ? "https://gg.google.com/csi" : "http://csi.gstatic.com/csi", 
+    c = "", 
+    d;
+    for(d in a)
+      c += "&" + d + "=" + a[d];
+    aCd(b + "?" + c[a_b](1));
+  }
+  function aEd() 
+  {
+    return az("ytcsi.data_") || aId();
+  }
+  function aId() 
+  {
+    var a = {
+      tick : {
+        
+      },
+      span : {
+        
+      },
+      info : {
+        
+      }
+    };
+    aB("ytcsi.data_", a);
+    return a;
+  }
+  ;
+  var aKd = ! ! a8b.DOMTokenList, aLd = aKd ? (function (a) 
+  {
+    return a[aOa];
+  }) : (function (a) 
+  {
+    a = a[aPb];
+    return aac(a) && a[aXa](/\S+/g) || [];
+  }), 
+  aMd = aKd ? (function (a, b) 
+  {
+    return a[aOa][amb](b);
+  }) : (function (a, b) 
+  {
+    return azc(aLd(a), b);
+  }), 
+  aNd = aKd ? (function (a, b) 
+  {
+    a[aOa].add(b);
+  }) : (function (a, b) 
+  {
+    aMd(a, b) || aIa(a, a[aPb] + (0 < a[aPb][ar] ? " " + b : b));
+  }), 
+  aOd = aKd ? (function (a, b) 
+  {
+    aE(b, (function (b) 
+    {
+      aNd(a, b);
+    }));
+  }) : (function (a, b) 
+  {
+    var c = {
+      
+    };
+    aE(aLd(a), (function (a) 
+    {
+      c[a] = ! 0;
+    }));
+    aE(b, (function (a) 
+    {
+      c[a] = ! 0;
+    }));
+    aIa(a, "");
+    for(var d in c)
+      aIa(a, a[aPb] + (0 < a[aPb][ar] ? " " + d : d));
+  }), 
+  aPd = aKd ? (function (a, b) 
+  {
+    a[aOa][a0a](b);
+  }) : (function (a, b) 
+  {
+    aMd(a, b) && aIa(a, atc(aLd(a), (function (a) 
+    {
+      return a != b;
+    }))[ax](" "));
+  }), 
+  aQd = aKd ? (function (a, b) 
+  {
+    aE(b, (function (b) 
+    {
+      aPd(a, b);
+    }));
+  }) : (function (a, b) 
+  {
+    aIa(a, atc(aLd(a), (function (a) 
+    {
+      return ! azc(b, a);
+    }))[ax](" "));
+  });
+  function aRd() 
+  {
+    aDd("ol");
+    aH.A("init");
+    var a = aF("PAGE_NAME");
+    a && aH.A("init-" + a);
+    aJd();
+    aNd(ab[at], "page-loaded");
+  }
+  function aSd(a) 
+  {
+    (a = a || aF("PAGE_NAME")) && aH.A("dispose-" + a);
+    aH.A("dispose");
+  }
+  function aTd() 
+  {
+    aRd();
+  }
+  function aUd() 
+  {
+    aSd();
+  }
+  function aVd(a, b, c) 
+  {
+    for(var d = ab[a8a]("script"), e = ! 1, f = 0, g = d[ar];f < g;f ++)
+      if(0 < d[f].src[aq]("/debug-"))
+      {
+        e = ! 0;
+        break;
+      }
+    e && (d = ad(), ara(d, a), d.fileName = b, d.lineNumber = c, 
+    aQc(d));
+  }
+  ;
+  function aWd() 
+  {
+    aId();
+    aIa(ab[aBb]("content"), ab[aBb]("content")[aPb] + " loading ");
+    var a = ab[aBb]("progress");
+    a || (a = ab[ai]("div"), a.id = "progress", af(a, "<dt><dd>"), 
+    ab[at][ag](a));
+    aXd(60, 900);
+    aH.A("navigate");
+  }
+  function aYd(a, b) 
+  {
+    aDd("_start");
+    var c = aFd(b[aQb]);
+    aEd()[am].srt = c;
+    aXd(90, 500);
+    aa.scroll(0, 0);
+    c = ab[aBb]("content");
+    awa(c[al], c[aYb] + "px");
+    aZd();
+    var c = aF("PAGE_NAME"), d;
+    for(d in aFc)
+      delete aFc[d];
+    aB("ytplayer.config", null);
+    (d = az("yt.www.watch.player.dispose")) && d();
+    d = b.swfcfg || null;
+    var e = az("yt.player.embed");
+    d && e && (e("player-api", d), d = a_d(d), aJa(d, ! 0));
+    aB("ytplayer.config", d);
+    aSd(c);
+  }
+  function a0d() 
+  {
+    aXd(101, 25);
+    awa(ab[aBb]("content")[al], "");
+    aRd();
+  }
+  function a1d(a, b) 
+  {
+    aQc(b);
+  }
+  function a2d() 
+  {
+    aZd(! 0);
+    a3d();
+  }
+  function a4d() 
+  {
+    
+  }
+  function a3d() 
+  {
+    if(ab[aBb]("progress"))
+    {
+      var a = (function () 
+      {
+        var a = ab[aBb]("progress");
+        a && a[a1b][aVb](a);
+      });
+      aG((function () 
+      {
+        var b = ab[aBb]("progress");
+        b && (aIa(b, "done"), b = b[al], b.transitionDuration = b.MozTransitionDuration = b.b = b.g = b.webkitTransitionDuration = "", 
+        aG(a, 450));
+      }), 
+      500);
+    }
+  }
+  function aXd(a, b) 
+  {
+    var c = b || 500, d = ab[aBb]("progress");
+    if(d)
+    {
+      aIa(d, "");
+      var e = d[al];
+      e.transitionDuration = e.MozTransitionDuration = e.b = e.g = e.webkitTransitionDuration = c + "ms";
+      aG((function () 
+      {
+        aka(e, a + "%");
+        aG((function () 
+        {
+          aIa(d, "waiting");
+        }), 
+        c);
+      }), 
+      0);
+    }
+  }
+  function aZd(a) 
+  {
+    function b() 
+    {
+      aIa(c, c[aPb][ah](" loading ", ""));
+    }
+    var c = ab[aBb]("content");
+    a ? b() : aG(b, 50);
+  }
+  ;
+  aa.yt = aa.yt || {
+    
+  };
+  aB("yt.setConfig", aLc);
+  aB("yt.getConfig", aF);
+  aB("yt.hasMsg", aSc);
+  aB("yt.setMsg", aRc);
+  aB("yt.setGoogMsg", (function (a) 
+  {
+    aMc(aIc, arguments);
+  }));
+  aB("yt.setAjaxToken", aNc);
+  aB("reportTimingMaps", (function (a, b) 
+  {
+    for(var c in a)
+      aDd(c, a[c]);
+    for(var d in b)
+    {
+      c = d;
+      var e = b[d];
+      aEd()[am][c] = e;
+    }
+    aJd();
+  }));
+  function a5d() 
+  {
+    aUc[av](this, "www/base");
+    this.b = 0;
+  }
+  aC(a5d, aUc);
+  ama(a5d[as], (function () 
+  {
+    aja(aa, aTd);
+    aa.onunload = aUd;
+    aAa(aa, aVd);
+    var a = aa.ytspf || {
+      
+    };
+    if(a[ajb])
+      a.config = a[aOb] || {
+        
+      }, afc(a[aOb], {
+        "nolink-class" : "spf-nolink",
+        "navigate-requested-callback" : aWd,
+        "navigate-received-callback" : aYd,
+        "navigate-processed-callback" : a0d,
+        "navigate-error-callback" : a1d
+      }), 
+      aD[aib](a[aOb]), 
+      this.D("init", a2d), 
+      this.D("dispose", a4d);
+    else
+      aD[ap]();
+    this.D("init", this[aib], this);
+    this.D("dispose", this[ap], this);
+  }));
+  asa(a5d[as], (function () 
+  {
+    (aa.ytspf || {
+      
+    })[ajb] || aD[ap]();
+    var a, b;
+    ! aa.ytMastheadLoaded && aF("MASTHEAD_JS") && (a = aF("MASTHEAD_JS"), b = (function () 
+    {
+      az("ytbin.www.masthead.setup")();
+      aa.ytMastheadLoaded = ! 0;
+    }));
+    var c = {
+      
+    };
+    c[aF("JS_COMMON_MODULE")] = aF("JS_PAGE_MODULES");
+    var d = aF("JS_DELAY_LOAD");
+    0 < d ? (aPc(this.b), this.b = aG((function () 
+    {
+      a && aZc(a, b);
+      a0c(c);
+    }), 
+    d)) : (a && aZc(a, b), a0c(c));
+  }));
+  aza(a5d[as], (function () 
+  {
+    aPc(this.b);
+  }));
+  aCa(a5d[as], (function () 
+  {
+    a5d.G[aEb][av](this);
+    aD[ap]();
+    aja(aa, null);
+    aa.onunload = null;
+    aAa(aa, null);
+  }));
+  aVc(new a5d);
+  

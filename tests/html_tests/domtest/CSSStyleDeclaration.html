@@ -1,0 +1,22 @@
+<!-- test for CSSStyleDeclaration object -->
+<html>
+  <body>
+    <div id="div1"> my div </div>
+    <script>
+      var divelem = document.getElementById("div1");
+      var divstyle = divelem.style;
+      var __result1 = divstyle.cssText;
+      var __expect1 = "__StrTop";
+
+      var __result2 = divstyle.getPropertyValue("aaa");
+      var __expect2 = "__StrTop";
+
+      var divstyle2 = window.getComputedStyle(divelem, null);
+
+      var __result3 = divstyle2.length;
+      var __expect3 = "__UInt";
+
+      var __result4 = divstyle2.setProperty("aaa", "bbb", "ccc");
+      var __expect4 = undefined;
+    </script>
+</html>

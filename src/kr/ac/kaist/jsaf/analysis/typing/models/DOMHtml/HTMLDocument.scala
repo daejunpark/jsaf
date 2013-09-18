@@ -153,22 +153,23 @@ object HTMLDocument extends DOM {
       val referrer = d.getReferrer
       val domain = d.getDomain
       val URL = d.getURL
-      val cookie = d.getCookie
       // This instance object has all properties of the Document object
       DOMDocument.getInsList(node) ++ List(
       ("@class",    PropValue(AbsString.alpha("Object"))),
       ("@proto",    PropValue(ObjectValue(loc_proto, F, F, F))),
       ("@extensible", PropValue(BoolTrue)),
       // DOM Level 1
-  //    ("title",   PropValue(ObjectValue(AbsString.alpha(d.getTitle), T, T, T))),
+      ("title",   PropValue(ObjectValue(StrTop, T, T, T))),
       ("referrer",   PropValue(ObjectValue(AbsString.alpha(if(referrer!=null) referrer else ""), F, T, T))),
       ("domain",   PropValue(ObjectValue(AbsString.alpha(if(domain!=null) domain else ""), F, T, T))),
       ("URL",   PropValue(ObjectValue(AbsString.alpha(if(URL!=null) URL else ""), F, T, T))),
-      ("cookie",   PropValue(ObjectValue(AbsString.alpha(if(cookie!=null) cookie else ""), T, T, T))),
+      ("cookie",   PropValue(ObjectValue(StrTop, T, T, T))),
       ("body",   PropValue(ObjectValue(HTMLBodyElement.getInstance.get, T, T, T))),
       // 'compatMode' in WHATWG DOM Living Standard 
-      ("compatMode",   PropValue(ObjectValue(OtherStr, T, T, T))))
-      // TODO: 'images', 'applets', 'links', 'forms', 'anchors' in DOM Level 1
+      ("compatMode",   PropValue(ObjectValue(OtherStr, T, T, T)))
+      // 'all', 'forms' , 'images'  property is updated in DOMBuilder 
+     )
+      // TODO: 'applets', 'links', 'anchors' in DOM Level 1
     case _ => {
       System.err.println("* Warning: " + node.getNodeName + " cannot be an instance of HTMLDocument.")
       List()

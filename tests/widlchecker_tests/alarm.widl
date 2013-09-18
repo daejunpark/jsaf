@@ -1,153 +1,78 @@
-module Application {
+module Alarm {
 
-  typedef DOMString ApplicationId;
+    typedef DOMString AlarmId;
 
-  typedef DOMString ApplicationContextId;
 
-  [NoInterfaceObject] interface ApplicationManagerObject {
-    readonly attribute ApplicationManager application;
-  };
-  WebAPIs implements ApplicationManagerObject;
 
-  [NoInterfaceObject] interface ApplicationManager {
+    [NoInterfaceObject] interface AlarmManagerObject {
+        readonly attribute AlarmManager alarm;
+    };
+    WebAPIs implements AlarmManagerObject;
 
-    Application getCurrentApplication() raises(WebAPIException);
 
-    void launch(ApplicationId id,
-                optional SuccessCallback? successCallback,
-                optional ErrorCallback? errorCallback) raises(WebAPIException);
+    [NoInterfaceObject] interface AlarmManager {
 
-    void launchAppControl(ApplicationControl appControl,
-                          ApplicationId? id,
-                          optional SuccessCallback? successCallback,
-                          optional ErrorCallback? errorCallback,
-                          optional ApplicationControlDataArrayReplyCallback? replyCallback) raises(WebAPIException);
+        const unsigned long long PERIOD_MINUTE = 60;
+        
 
-    void findAppControl(ApplicationControl appControl,
-                        FindAppControlSuccessCallback successCallback,
-                        optional ErrorCallback? errorCallback) raises(WebAPIException);
+        const unsigned long long PERIOD_HOUR = 3600;
+         
 
-    void getAppsContext(ApplicationContextArraySuccessCallback successCallback,
-                        optional ErrorCallback? errorCallback) raises(WebAPIException);
+        const unsigned long long PERIOD_DAY = 86400;
+        
 
-    ApplicationContext getAppContext(optional ApplicationContextId? contextId) raises(WebAPIException);
+        const unsigned long long PERIOD_WEEK = 604800;
 
-    void getAppsInfo(ApplicationInformationArraySuccessCallback successCallback,
-                     optional ErrorCallback? errorCallback) raises(WebAPIException);
 
-    ApplicationInformation getAppInfo(optional ApplicationId? id) raises(WebAPIException);
+        void add(Alarm alarm, ApplicationId applicationId, optional ApplicationControl? appControl) raises(WebAPIException);
 
-    long addAppInfoEventListener(ApplicationInformationEventCallback eventCallback) raises(WebAPIException);
 
-    void removeAppInfoEventListener(long watchId) raises(WebAPIException);
+        void remove(AlarmId id) raises(WebAPIException);
 
-  };
 
-  [NoInterfaceObject] interface Application {
+        void removeAll() raises(WebAPIException);
 
-    readonly attribute ApplicationInformation appInfo;
 
-    readonly attribute ApplicationContextId contextId;
+        Alarm get(AlarmId id) raises(WebAPIException);
 
-    void exit() raises(WebAPIException);
 
-    void hide() raises(WebAPIException);
+        Alarm[] getAll() raises(WebAPIException);
+    };
 
-    RequestedApplicationControl getRequestedAppControl() raises(WebAPIException);
 
-  };
+    [NoInterfaceObject] interface Alarm {
 
+        readonly attribute AlarmId? id;
+    };
 
-  [NoInterfaceObject] interface ApplicationInformation {
+    [Constructor(unsigned long long delay, optional unsigned long long? period)]
 
-    readonly attribute ApplicationId id;
+    interface AlarmRelative : Alarm {
 
-    readonly attribute DOMString name;
+        readonly attribute unsigned long long delay;
+        
 
-    readonly attribute DOMString iconPath;
+        readonly attribute unsigned long long? period;
 
-    readonly attribute DOMString version;
 
-    readonly attribute boolean show;
+        unsigned long long? getRemainingSeconds() raises(WebAPIException);
+    };
 
-    readonly attribute DOMString[] categories;
+    [Constructor(Date date),
+     Constructor(Date date, ByDayValue[] daysOfTheWeek),
+     Constructor(Date date, unsigned long long period)]
 
-    readonly attribute Date installDate;
+    interface AlarmAbsolute : Alarm {
 
-    readonly attribute long size;
+        readonly attribute Date date;
 
-  };
 
-  [NoInterfaceObject] interface ApplicationContext {
+        readonly attribute unsigned long long? period;
 
-    readonly attribute ApplicationContextId id;
 
-    readonly attribute ApplicationId appId;
+        readonly attribute ByDayValue[] daysOfTheWeek;
 
-  };
 
-  [Constructor(DOMString key, DOMString[] value)]
-  interface ApplicationControlData {
-
-    attribute DOMString key;
-
-    attribute DOMString[] value;
-
-  };
-
-  [Constructor(DOMString operation, optional DOMString? uri,
-               optional DOMString? mime, optional DOMString? category,
-               optional ApplicationControlData[]? data)]
-  interface ApplicationControl {
-
-    attribute DOMString operation;
-
-    attribute DOMString? uri;
-
-    attribute DOMString? mime;
-
-    attribute DOMString? category;
-
-    attribute ApplicationControlData[] data;
-
-  };
-
-  [NoInterfaceObject] interface RequestedApplicationControl {
-
-    readonly attribute ApplicationControl appControl;
-
-    void replyResult(optional ApplicationControlData[]? data);
-
-    void replyFailure();
-
-  };
-
-
-
-  [Callback=FunctionOnly, NoInterfaceObject] interface ApplicationInformationArraySuccessCallback {
-    void onsuccess(ApplicationInformation[] informationArray);
-  };
-
-  [Callback=FunctionOnly, NoInterfaceObject] interface FindAppControlSuccessCallback {
-    void onsuccess(ApplicationInformation[] informationArray, ApplicationControl appControl);
-  };
-
-  [Callback=FunctionOnly, NoInterfaceObject] interface ApplicationContextArraySuccessCallback {
-    void onsuccess(ApplicationContext[] contexts);
-  };
-
-  [Callback, NoInterfaceObject] interface ApplicationControlDataArrayReplyCallback {
-    void onsuccess(optional ApplicationControlData[]? data);
-
-    void onfailure();
-  };
-
-  [Callback, NoInterfaceObject] interface ApplicationInformationEventCallback {
-    void oninstalled(ApplicationInformation info);
-
-    void onupdated(ApplicationInformation info);
-
-    void onuninstalled(ApplicationId id);
-  };
-
+        Date? getNextScheduledDate() raises(WebAPIException);
+    };
 };

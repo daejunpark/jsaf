@@ -48,7 +48,7 @@ object BuiltinBoolean extends ModelData {
 
   def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
-      ("Boolean" -> (
+      "Boolean" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           // 15.6.1.1 Boolean(value)
           val v_1 = getArgValue(h, ctx, args, "0")
@@ -59,8 +59,8 @@ object BuiltinBoolean extends ModelData {
             if (!(arg_length <= NumBot)) Value(Helper.toBoolean(v_1))
             else ValueBot
           ((Helper.ReturnStore(h, value), ctx), (he, ctxe))
-        })),
-      ("Boolean.constructor" -> (
+        }),
+      "Boolean.constructor" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           // 15.6.2.1 new Boolean(value)
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
@@ -79,25 +79,16 @@ object BuiltinBoolean extends ModelData {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
-      ("Boolean.prototype.toString" -> (
+        }),
+      "Boolean.prototype.toString" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != OtherStrSingle("Boolean")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
-          val lset_bool = lset_this.filter((l) => h(l)("@class")._1._2._1._5 == OtherStrSingle("Boolean"))
-          val b = lset_bool.foldLeft[AbsBool](BoolBot)((_b, l) => _b + h(l)("@primitive")._1._2._1._3)
-          val s = b match {
-            case BoolTrue => OtherStrSingle("true")
-            case BoolFalse => OtherStrSingle("false")
-            case BoolTop => OtherStr
-            case BoolBot => StrBot
-          }
+          val es = notGenericMethod(h, lset_this, "Boolean")
+
+          val lset_bool = lset_this.filter((l) => AbsString.alpha("Boolean") <= h(l)("@class")._1._2._1._5)
+          val s = Helper.defaultToString(h, lset_bool)
           val (h_1, c_1) =
-            if (s == StrBot){
+            if (s == StrBot) {
               (HeapBot, ContextBot)
             }
             else {
@@ -105,16 +96,13 @@ object BuiltinBoolean extends ModelData {
             }
           val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
           ((h_1, c_1), (h_e, ctx_e))
-        })),
-      ("Boolean.prototype.valueOf" -> (
+        }),
+      "Boolean.prototype.valueOf" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != OtherStrSingle("Boolean")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
-          val lset_bool = lset_this.filter((l) => h(l)("@class")._1._2._1._5 == OtherStrSingle("Boolean"))
+          val es = notGenericMethod(h, lset_this, "Boolean")
+
+          val lset_bool = lset_this.filter((l) => AbsString.alpha("Boolean") <= h(l)("@class")._1._2._1._5)
           val b = lset_bool.foldLeft[AbsBool](BoolBot)((_b, l) => _b + h(l)("@primitive")._1._2._1._3)
           val (h_1, c_1) =
             if (b == BoolBot) {
@@ -125,13 +113,13 @@ object BuiltinBoolean extends ModelData {
             }
           val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
           ((h_1, c_1), (h_e, ctx_e))
-        }))
+        })
     )
   }
 
   def getPreSemanticMap(): Map[String, SemanticFun] = {
     Map(
-      ("Boolean" -> (
+      "Boolean" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           // 15.6.1.1 Boolean(value)
           val PureLocalLoc = cfg.getPureLocal(cp)
@@ -143,8 +131,8 @@ object BuiltinBoolean extends ModelData {
             if (!(arg_length <= NumBot)) Value(PreHelper.toBoolean(v_1))
             else ValueBot
           ((PreHelper.ReturnStore(h, PureLocalLoc, value), ctx), (he, ctxe))
-        })),
-      ("Boolean.constructor" -> (
+        }),
+      "Boolean.constructor" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
           val lset_this = h(PureLocalLoc)("@this")._1._2._2
@@ -164,28 +152,17 @@ object BuiltinBoolean extends ModelData {
           }
           else
             ((h_1, ctx), (he, ctxe))
-        })),
-      ("Boolean.prototype.toString" -> (
+        }),
+      "Boolean.prototype.toString" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
           val lset_this = h(PureLocalLoc)("@this")._1._2._2
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != OtherStrSingle("Boolean")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
-          // @class may be OtherStr by Boolean.constructor
-          //        val lset_bool = lset_this.filter((l) => h(l)("@class")._1._2._1._5 == OtherStrSingle("Boolean"))
-          val lset_bool = lset_this.filter((l) => OtherStrSingle("Boolean") <= h(l)("@class")._1._2._1._5)
-          val b = lset_bool.foldLeft[AbsBool](BoolBot)((_b, l) => _b + h(l)("@primitive")._1._2._1._3)
-          val s = b match {
-            case BoolTrue => OtherStrSingle("true")
-            case BoolFalse => OtherStrSingle("false")
-            case BoolTop => OtherStr
-            case BoolBot => StrBot
-          }
+          val es = notGenericMethod(h, lset_this, "Boolean")
+
+          val lset_bool = lset_this.filter((l) => AbsString.alpha("Boolean") <= h(l)("@class")._1._2._1._5)
+          val s = Helper.defaultToString(h, lset_bool)
           val (h_1, c_1) =
-            if (s == StrBot){
+            if (s == StrBot) {
               (h, ctx)
             }
             else {
@@ -193,19 +170,14 @@ object BuiltinBoolean extends ModelData {
             }
           val (h_e, ctx_e) = PreHelper.RaiseException(h, ctx, PureLocalLoc, es)
           ((h_1, c_1), (h_e, ctx_e))
-        })),
-      ("Boolean.prototype.valueOf" -> (
+        }),
+      "Boolean.prototype.valueOf" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val PureLocalLoc = cfg.getPureLocal(cp)
           val lset_this = h(PureLocalLoc)("@this")._1._2._2
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != OtherStrSingle("Boolean")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
-          // @class may be OtherStr by Boolean.constructor
-          //        val lset_bool = lset_this.filter((l) => h(l)("@class")._1._2._1._5 == OtherStrSingle("Boolean"))
-          val lset_bool = lset_this.filter((l) => OtherStrSingle("Boolean") <= h(l)("@class")._1._2._1._5)
+          val es = notGenericMethod(h, lset_this, "Boolean")
+
+          val lset_bool = lset_this.filter((l) => AbsString.alpha("Boolean") <= h(l)("@class")._1._2._1._5)
           val b = lset_bool.foldLeft[AbsBool](BoolBot)((_b, l) => _b + h(l)("@primitive")._1._2._1._3)
           val (h_1, c_1) =
             if (b == BoolBot) {
@@ -216,90 +188,74 @@ object BuiltinBoolean extends ModelData {
             }
           val (h_e, ctx_e) = PreHelper.RaiseException(h_1, c_1, PureLocalLoc, es)
           ((h_e, ctx_e), (h_e, ctx_e))
-        }))
+        })
     )
   }
 
   def getDefMap(): Map[String, AccessFun] = {
     Map(
-      ("Boolean" -> (
+      "Boolean" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           LPSet((SinglePureLocalLoc, "@return"))
-        })),
-      ("Boolean.constructor" -> (
+        }),
+      "Boolean.constructor" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           val LP1 = lset_this.foldLeft(LPBot)((lpset, l) =>
-            AH.NewBoolean_def.foldLeft(lpset)((_lpset, prop) => _lpset + (l, prop)))
-          LP1 + (SinglePureLocalLoc, "@return")
-        })),
-      ("Boolean.prototype.toString" -> (
+            AH.NewBoolean_def.foldLeft(lpset)((_lpset, prop) => _lpset +(l, prop)))
+          LP1 +(SinglePureLocalLoc, "@return")
+        }),
+      "Boolean.prototype.toString" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != OtherStrSingle("Boolean")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
-          AH.RaiseException_def(es) + (SinglePureLocalLoc, "@return")
-        })),
-      ("Boolean.prototype.valueOf" -> (
+          val es = notGenericMethod(h, lset_this, "Boolean")
+          AH.RaiseException_def(es) +(SinglePureLocalLoc, "@return")
+        }),
+      "Boolean.prototype.valueOf" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != OtherStrSingle("Boolean")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
-          AH.RaiseException_def(es) + (SinglePureLocalLoc, "@return")
-        }))
+          val es = notGenericMethod(h, lset_this, "Boolean")
+          AH.RaiseException_def(es) +(SinglePureLocalLoc, "@return")
+        })
     )
   }
 
   def getUseMap(): Map[String, AccessFun] = {
     Map(
-      ("Boolean" -> (
+      "Boolean" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           getArgValue_use(h, ctx, args, "0") ++
-            getArgValue_use(h, ctx, args, "length") + (SinglePureLocalLoc, "@return")
-        })),
-      ("Boolean.constructor" -> (
+            getArgValue_use(h, ctx, args, "length") +(SinglePureLocalLoc, "@return")
+        }),
+      "Boolean.constructor" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           /* may def */
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           val LP1 = lset_this.foldLeft(LPBot)((lpset, l) =>
-            AH.NewBoolean_def.foldLeft(lpset)((_lpset, prop) => _lpset + (l, prop)))
+            AH.NewBoolean_def.foldLeft(lpset)((_lpset, prop) => _lpset +(l, prop)))
           LP1 ++ getArgValue_use(h, ctx, args, "0") ++
-            getArgValue_use(h, ctx, args, "length") + (SinglePureLocalLoc, "@return") + ((SinglePureLocalLoc, "@this"))
-        })),
-      ("Boolean.prototype.toString" -> (
+            getArgValue_use(h, ctx, args, "length") +(SinglePureLocalLoc, "@return") + ((SinglePureLocalLoc, "@this"))
+        }),
+      "Boolean.prototype.toString" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val LP1 = lset_this.foldLeft(LPBot)((lpset, l) => lpset + (l, "@class"))
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != OtherStrSingle("Boolean")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
+          val LP1 = lset_this.foldLeft(LPBot)((lpset, l) => lpset +(l, "@class"))
+          val es = notGenericMethod(h, lset_this, "Boolean")
           val LP2 = AH.RaiseException_use(es)
-          val lset_bool = lset_this.filter((l) => h(l)("@class")._1._2._1._5 == OtherStrSingle("Boolean"))
-          val LP3 = lset_bool.foldLeft(LPBot)((lpset, l) => lpset + (l, "@primitive"))
-          LP1 ++ LP2 ++ LP3 + (SinglePureLocalLoc, "@return") + (SinglePureLocalLoc, "@this")
-        })),
-      ("Boolean.prototype.valueOf" -> (
+          val lset_bool = lset_this.filter((l) => AbsString.alpha("Boolean") <= h(l)("@class")._1._2._1._5)
+          val LP3 = lset_bool.foldLeft(LPBot)((lpset, l) => lpset +(l, "@primitive"))
+          LP1 ++ LP2 ++ LP3 +(SinglePureLocalLoc, "@return") +(SinglePureLocalLoc, "@this")
+        }),
+      "Boolean.prototype.valueOf" -> (
         (h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
-          val LP1 = lset_this.foldLeft(LPBot)((lpset, l) => lpset + (l, "@class"))
-          val es =
-            if (lset_this.exists((l) => h(l)("@class")._1._2._1._5 != OtherStrSingle("Boolean")))
-              Set[Exception](TypeError)
-            else
-              ExceptionBot
+          val LP1 = lset_this.foldLeft(LPBot)((lpset, l) => lpset +(l, "@class"))
+          val es = notGenericMethod(h, lset_this, "Boolean")
           val LP2 = AH.RaiseException_use(es)
-          val lset_bool = lset_this.filter((l) => h(l)("@class")._1._2._1._5 == OtherStrSingle("Boolean"))
-          val LP3 = lset_bool.foldLeft(LPBot)((lpset, l) => lpset + (l, "@primitive"))
-          LP1 ++ LP2 ++ LP3 + (SinglePureLocalLoc, "@return") + (SinglePureLocalLoc, "@this")
-        }))
+          val lset_bool = lset_this.filter((l) => AbsString.alpha("Boolean") <= h(l)("@class")._1._2._1._5)
+          val LP3 = lset_bool.foldLeft(LPBot)((lpset, l) => lpset +(l, "@primitive"))
+          LP1 ++ LP2 ++ LP3 +(SinglePureLocalLoc, "@return") +(SinglePureLocalLoc, "@this")
+        })
     )
   }
 }

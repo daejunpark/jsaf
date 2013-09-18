@@ -1,0 +1,738 @@
+.signup_login.show_form.logged_out .signup_buttons .login {
+	display: none;
+}
+.signup_account.show_form.logged_out .signup_buttons .signup {
+	display: none;
+}
+.signup_birthday.show_form.logged_out .signup_buttons .signup {
+	display: none;
+}
+.signup_register.show_form.logged_out .signup_buttons .signup {
+	display: none;
+}
+.show_form.already_logged_in .signup_buttons .signup {
+	display: none;
+}
+.logged_out .signup_buttons .cancel {
+	display: none;
+}
+.show_form.logged_out {
+	height: 100%;
+}
+.show_form.logged_out .logged_out_container {
+	height: 100%; transition-delay: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.show_form.logged_out .signup_buttons .cancel {
+	display: inline-block;
+}
+.show_form.logged_out .outter_wrapper {
+	position: fixed;
+}
+.show_form.logged_out .outter_wrapper {
+	position: fixed;
+}
+.show_form.logged_out #container {
+	height: 100%;
+}
+.show_form.logged_out img.content_top {
+	left: 100%; opacity: 0;
+}
+.show_form.logged_out img.content_bottom {
+	left: 100%; opacity: 0;
+}
+.show_form.logged_out #content {
+	left: 100%; opacity: 0;
+}
+.show_form.logged_out #footer {
+	display: none;
+}
+.show_form.logged_out #pagination {
+	display: none;
+}
+.show_form.logged_out #auto_pagination_loader {
+	display: none;
+}
+.show_form.logged_out .signup_subhead {
+	opacity: 0;
+}
+.show_form.logged_out .logged_out_header#header {
+	height: 100%;
+}
+.show_form.logged_out .logged_out_header#header #logo {
+	left: 50%; top: 25%; margin-left: -98px; cursor: default; transition-delay: 0.25s; -webkit-transition-delay: .25s; -moz-transition-delay: .25s;
+}
+.show_form.logged_out .signup_forms {
+	left: 50%; opacity: 1;
+}
+.signup_account.show_form.logged_out .signup_forms_panel {
+	left: 0px;
+}
+.signup_login.show_form.logged_out .signup_forms_panel {
+	left: 0px;
+}
+.signup_birthday.show_form.logged_out .signup_forms_panel {
+	left: -490px;
+}
+.signup_register.show_form.logged_out .signup_forms_panel {
+	left: -980px;
+}
+.signup_account.show_form.logged_out .account {
+	max-height: 200px;
+}
+.signup_birthday.show_form.logged_out .birthday {
+	max-height: 200px;
+}
+.signup_register.show_form.logged_out .captcha {
+	max-height: 200px;
+}
+.signup_login.show_form.logged_out .login {
+	max-height: 200px;
+}
+.show_form.logged_out .signup_view {
+	max-height: 80px;
+}
+.signup_birthday.signup_account.show_form.logged_out .account.signup_view {
+	max-height: 80px;
+}
+.signup_register.signup_birthday.show_form.logged_out .birthday.signup_view {
+	max-height: 80px;
+}
+.signup_register.signup_birthday.signup_account.show_form.logged_out .birthday.signup_view {
+	max-height: 80px;
+}
+:not(.signup_register).show_form.logged_out .captcha.signup_view {
+	max-height: 80px;
+}
+.ie .signup_login.show_form.logged_out .signup_forms .signup_forms_container {
+	height: 72px;
+}
+.show_form.logged_out form .submit_row {
+	display: none;
+}
+.signup_account.show_form.logged_out .account .submit_row {
+	display: block;
+}
+.signup_birthday.show_form.logged_out .birthday .submit_row {
+	display: block;
+}
+.signup_register.show_form.logged_out .captcha .submit_row {
+	display: block;
+}
+.signup_login.show_form.logged_out .login .submit_row {
+	display: block;
+}
+.signup_account.logged_out .signup_forms_submit .account_btn {
+	display: block;
+}
+.signup_birthday.logged_out .signup_forms_submit .birthday_btn {
+	display: block;
+}
+.signup_birthday.signup_account.logged_out .signup_forms_submit .birthday_btn {
+	display: block;
+}
+.signup_register.logged_out .signup_forms_submit .captcha_btn {
+	display: block;
+}
+.signup_register.signup_birthday.signup_account.logged_out .signup_forms_submit .captcha_btn {
+	display: block;
+}
+.signup_register.signup_account.logged_out .signup_forms_submit .captcha_btn {
+	display: block;
+}
+.signup_login.logged_out .signup_forms_submit .login_btn {
+	display: block;
+}
+.signup_login.show_form.logged_out .forgot_password_link {
+	margin: 20px 0px 0px; max-height: none; opacity: 1;
+}
+.signup_account.logged_out .account_btn {
+	display: none;
+}
+.signup_birthday.signup_account.logged_out .account_btn {
+	display: none;
+}
+.signup_register.signup_account.logged_out .account_btn {
+	display: none;
+}
+.signup_register.signup_birthday.signup_account.logged_out .birthday_btn {
+	display: none;
+}
+.account_btn {
+	overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;
+}
+.signup_login.show_form.logged_out .account.signup_view .username.form_row {
+	max-height: 0px; opacity: 0;
+}
+.signup_waiting.show_form.logged_out {
+	overflow: hidden;
+}
+.signup_waiting.show_form.logged_out .logged_out_container {
+	overflow: hidden;
+}
+.signup_waiting.show_form.logged_out .signup_forms {
+	left: -100%; opacity: 0;
+}
+.signup_waiting.show_form.logged_out .logged_out_header #logo {
+	left: -100%; opacity: 0;
+}
+.signup_waiting.show_form.logged_out .signup_waiting {
+	left: 50%; opacity: 1;
+}
+.signup_waiting.show_form.logged_out .signup_buttons {
+	display: none;
+}
+.signup_waiting.show_form.logged_out #footer {
+	display: none;
+}
+.signup_waiting.show_form.logged_out .content_bottom {
+	display: none;
+}
+.logged_out .slow_motion .logged_out_header #logo {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.logged_out .slow_motion #content {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.logged_out .slow_motion .signup_forms {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.logged_out .slow_motion .signup_forms .account.signup_view .username.form_row {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.logged_out .slow_motion .signup_forms_submit.chrome b {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.logged_out .slow_motion #recaptcha_widget .recaptcha_overlay {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.logged_out .slow_motion #recaptcha_widget .recaptcha_overlay .recaptcha_overlay_inner {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.slow_motion.show_form.logged_out .logged_out_header #logo {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.slow_motion.show_form.logged_out #content {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.slow_motion.show_form.logged_out .signup_forms {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.slow_motion.show_form.logged_out .signup_forms .account.signup_view .username.form_row {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.slow_motion.show_form.logged_out .signup_forms_submit.chrome b {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.slow_motion.show_form.logged_out #recaptcha_widget .recaptcha_overlay {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.slow_motion.show_form.logged_out #recaptcha_widget .recaptcha_overlay .recaptcha_overlay_inner {
+	transition-duration: 2.5s; -webkit-transition-duration: 2.5s; -moz-transition-duration: 2.5s;
+}
+.logged_out .slow_motion .signup_subhead {
+	transition-duration: 5s; -webkit-transition-duration: 5s; -moz-transition-duration: 5s;
+}
+.logged_out .slow_motion .signup_forms_panel {
+	transition-duration: 5s; -webkit-transition-duration: 5s; -moz-transition-duration: 5s;
+}
+.logged_out .slow_motion .signup_forms form {
+	transition-duration: 5s; -webkit-transition-duration: 5s; -moz-transition-duration: 5s;
+}
+.slow_motion.show_form.logged_out .signup_subhead {
+	transition-duration: 5s; -webkit-transition-duration: 5s; -moz-transition-duration: 5s;
+}
+.slow_motion.show_form.logged_out .signup_forms_panel {
+	transition-duration: 5s; -webkit-transition-duration: 5s; -moz-transition-duration: 5s;
+}
+.slow_motion.show_form.logged_out .signup_forms form {
+	transition-duration: 5s; -webkit-transition-duration: 5s; -moz-transition-duration: 5s;
+}
+.is_tablet.logged_out .logged_out_header #logo {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.is_tablet.logged_out #content {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.is_tablet.logged_out .signup_subhead {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.is_tablet.logged_out .signup_forms {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.is_mobile_handset.logged_out .logged_out_header #logo {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.is_mobile_handset.logged_out #content {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.is_mobile_handset.logged_out .signup_subhead {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.is_mobile_handset.logged_out .signup_forms {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.now.show_form.logged_out .logged_out_header #logo {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.now.show_form.logged_out #content {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.now.show_form.logged_out .signup_subhead {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.now.show_form.logged_out .signup_forms form {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.now.show_form.logged_out .account.signup_view .username.form_row {
+	transition-duration: 0s !important; transition-delay: 0s !important; -webkit-transition-duration: 0s; -moz-transition-duration: 0s; -webkit-transition-delay: 0s; -moz-transition-delay: 0s;
+}
+.logged_out .signup_subhead {
+	margin: 14px 0px 0px 224px; color: rgb(255, 255, 255); line-height: 44px; overflow: hidden; font-weight: bold; float: left; position: relative; max-width: 395px; opacity: 1; text-shadow: 1px 1px 4px rgba(0,0,0,0.25); transition-property: opacity; transition-duration: 0.5s; transition-timing-function: ease-out; -webkit-font-smoothing: antialiased; -webkit-transition-property: opacity; -webkit-transition-duration: .5s; -webkit-transition-timing-function: ease-out; -moz-transition-property: opacity; -moz-transition-duration: .5s; -moz-transition-timing-function: ease-out;
+}
+.signup_subhead span {
+	white-space: nowrap;
+}
+.medium.signup_subhead {
+	line-height: 50px; font-size: 15px;
+}
+.small.signup_subhead {
+	line-height: 53px; font-size: 13px;
+}
+.infinitesimal.signup_subhead {
+	line-height: 55px; font-size: 11px;
+}
+.signup_buttons {
+	margin: 0px 20px 0px 0px; clear: right; float: right; position: relative;
+}
+.signup_buttons .chrome {
+	margin: 18px 0px 18px 10px; padding: 0px; border-radius: 6px; height: 37px; text-align: center; line-height: 34px; font-size: 14px; font-weight: bold; float: none; display: inline-block; -webkit-border-radius: 6px; -moz-border-radius: 6px;
+}
+.signup_forms .chrome {
+	margin: 18px 0px 18px 10px; padding: 0px; border-radius: 6px; height: 37px; text-align: center; line-height: 34px; font-size: 14px; font-weight: bold; float: none; display: inline-block; -webkit-border-radius: 6px; -moz-border-radius: 6px;
+}
+.signup_buttons > .chrome {
+	overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; min-width: 101px; max-width: 180px;
+}
+.ie9 .signup_buttons {
+	position: static;
+}
+.ie9 .signup_buttons .chrome {
+	float: left;
+}
+.ie9 .signup_buttons .signup.other_blue.chrome {
+	top: 2px; position: relative;
+}
+.signup_forms .chrome {
+	font-size: 16px;
+}
+.signup_forms [disabled].chrome {
+	background: rgb(186, 189, 192); border-color: rgb(0, 0, 0); cursor: default; opacity: 1; box-shadow: 0px 1px 0px rgba(255,255,255,0.2), inset 0px 1px 2px rgba(255,255,255,0.7); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(255, 255, 255, 0.7) inset; -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(255, 255, 255, 0.7) inset;
+}
+.signup_forms [disabled].chrome:active {
+	color: rgb(255, 255, 255);
+}
+:not(.shallow).signup.chrome {
+	margin: 16px 0px 21px 12px; border: 0px currentColor; position: relative;
+}
+:not(.shallow).signup.chrome:active {
+	margin: 16px 0px 20px 10px; border: 1px solid rgba(0, 0, 0, 0.5); left: 1px;
+}
+.signup_forms {
+	margin: 71px 0px 0px -122px; padding: 0px 0px 60px; left: -100%; top: 25%; width: 245px; display: block; position: fixed; z-index: 3; box-sizing: border-box; opacity: 0; transition-property: left, opacity; transition-duration: 0.25s; transition-timing-function: ease; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -webkit-transition-property: left, opacity; -webkit-transition-duration: .25s; -webkit-transition-timing-function: ease; -moz-transition-property: left, opacity; -moz-transition-duration: .25s; -moz-transition-timing-function: ease;
+}
+.signup_forms .signup_forms_container {
+	background: -ms-linear-gradient(rgba(221, 229, 237, 1) 0px, rgba(242, 243, 244, 1) 100%); margin: 0px; padding: 0px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.8); overflow: hidden; position: relative; box-shadow: inset 0px 1px 3px rgba(0,0,0,0.36), 0px 1px 0px rgba(255,255,255,0.15); -webkit-border-radius: 8px; -moz-border-radius: 8px; -webkit-background-clip: padding-box; -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.36), 0 1px 0 rgba(255, 255, 255, 0.15); -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.36), 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+.signup_forms .signup_forms_panel {
+	left: 0px; width: 1525px; position: relative; box-sizing: border-box; transition-property: left; transition-duration: 0.5s; transition-timing-function: ease; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -webkit-transition-property: left; -webkit-transition-duration: .5s; -webkit-transition-timing-function: ease; -moz-transition-property: left; -moz-transition-duration: .5s; -moz-transition-timing-function: ease;
+}
+.signup_forms .signup_forms_errors {
+	background: rgba(255, 255, 255, 0.046867); margin: -2px 0px 0px; padding: 0px; border-radius: 6px; border: 1px solid rgba(0, 0, 0, 0.18); transition:; overflow: hidden; clear: both; list-style-type: none; max-height: 0px; opacity: 0; -webkit-border-radius: 6px; -moz-border-radius: 6px; -webkit-font-smoothing: antialiased; -webkit-transition-property: max-height, opacity, margin; -webkit-transition-duration: .5s; -webkit-transition-timing-function: ease; -moz-transition-property: max-height, opacity, margin; -moz-transition-duration: .5s; -moz-transition-timing-function: ease; -webkit-transition-delay: .5s; -moz-transition-delay: .5s;
+}
+.has_errors.signup_forms .signup_forms_errors {
+	margin: 15px 0px 0px; max-height: 300px; opacity: 1;
+}
+.signup_forms .signup_forms_errors .error {
+	padding: 8px 15px; text-align: center; color: rgba(255, 255, 255, 0.8); line-height: 16px; font-family: Helvetica,sans-serif; font-size: 12px; font-weight: bold;
+}
+.signup_forms .signup_forms_errors .error a {
+	color: rgba(255, 255, 255, 0.8); text-decoration: underline;
+}
+.signup_forms .signup_forms_errors .error .signup_username_taken_link {
+	text-decoration: none;
+}
+.signup_forms .signup_forms_errors .error a:hover {
+	color: rgb(255, 255, 255);
+}
+.signup_forms .signup_forms_errors .error .signup_username_taken_link:hover {
+	color: rgb(255, 255, 255);
+}
+.signup_forms .signup_view {
+	width: 245px; overflow: hidden; padding-right: 245px; float: left; position: relative; max-height: 200px; transition-property: max-height, opacity; transition-duration: 0.5s; transition-timing-function: ease; -webkit-transition-property: max-height, opacity; -webkit-transition-duration: .5s; -webkit-transition-timing-function: ease; -moz-transition-property: max-height, opacity; -moz-transition-duration: .5s; -moz-transition-timing-function: ease;
+}
+.signup_forms label {
+	display: none;
+}
+.signup_forms input {
+	background: 0px; font: bold 14px/1.4 "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; margin: 0px; padding: 11px 10px 9px; border: 0px currentColor; width: 100%; display: block; box-sizing: border-box; font-size-adjust: none; font-stretch: normal; -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.signup_forms select {
+	background: 0px; font: bold 14px/1.4 "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; margin: 0px; padding: 11px 10px 9px; border: 0px currentColor; width: 100%; display: block; box-sizing: border-box; font-size-adjust: none; font-stretch: normal; -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.signup_forms input#signup_password {
+	padding-right: 24px;
+}
+.ie9 .signup_forms input {
+	padding: 12px 10px;
+}
+.ie9 .signup_forms select {
+	padding: 12px 10px;
+}
+.signup_forms select {
+	-moz-appearance: window; -webkit-appearance: none;
+}
+.signup_forms select.changed {
+	color: rgb(68, 68, 68);
+}
+.signup_forms .signup_forms_submit_helper {
+	margin: 0px; padding: 0px; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1; opacity: 0;
+}
+.signup_forms .form_row {
+	border-top-color: rgba(0, 0, 0, 0.12); border-top-width: 1px; border-top-style: solid; position: relative;
+}
+.signup_forms :first-child.form_row {
+	border-top-color: currentColor; border-top-width: 0px; border-top-style: none;
+}
+.signup_forms .form_row_hidden {
+	display: none;
+}
+.signup_forms .account.signup_view .username.form_row {
+	overflow: hidden; max-height: 50px; opacity: 1; transition-property: max-height, opacity; transition-duration: 0.25s; transition-timing-function: ease; -webkit-transition-property: max-height, opacity; -webkit-transition-duration: .25s; -webkit-transition-timing-function: ease; -moz-transition-property: max-height, opacity; -moz-transition-duration: .25s; -moz-transition-timing-function: ease;
+}
+.signup_forms form .submit_row {
+	width: 0px; height: 0px; visibility: hidden;
+}
+.signup_forms form .submit_row .chrome {
+	margin: 0px; width: 100%;
+}
+.signup_forms .signup_view .form_row .form_field .form_error {
+	display: none;
+}
+.signup_forms .signup_view .form_row .has_error.form_field .form_error {
+	display: block;
+}
+.signup_forms .birthday.signup_view .age.form_field {
+	position: relative;
+}
+.signup_forms .birthday.signup_view .age.form_field input.is_empty {
+	opacity: 0.6;
+}
+.signup_forms .birthday.signup_view .age.form_field input {
+	opacity: 1;
+}
+.signup_forms .birthday.signup_view input[type='checkbox'] {
+	margin: 14px 0px 0px 10px; width: auto; float: left;
+}
+.signup_forms .birthday.signup_view label {
+	margin: 10px; color: rgb(134, 156, 178); line-height: 20px; font-weight: bold; display: inline-block;
+}
+.signup_forms .birthday.signup_view .signup_age_label {
+	left: 2px; top: 0px; right: 0px; color: rgb(68, 68, 68); visibility: visible; position: absolute;
+}
+.signup_forms .birthday.signup_view .is_empty.signup_age_label {
+	visibility: hidden;
+}
+.signup_forms .birthday.signup_view .signup_age_label span {
+	display: none;
+}
+.signup_forms .birthday.signup_view .years_old.signup_age_label .years_old {
+	display: inline-block;
+}
+.signup_forms .birthday.signup_view .years_young.signup_age_label .years_young {
+	display: inline-block;
+}
+.signup_forms .birthday.signup_view .age.form_field input {
+	position: relative; z-index: 2;
+}
+.signup_forms .birthday.signup_view .signup_age_label .years_old {
+	pointer-events: none; -ms-user-select: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; -khtml-user-select: none; -webkit-touch-callout: none;
+}
+.signup_forms .birthday.signup_view .signup_age_label .years_young {
+	pointer-events: none; -ms-user-select: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; -khtml-user-select: none; -webkit-touch-callout: none;
+}
+.signup_forms .birthday.signup_view .signup_age_label .placeholder {
+	pointer-events: none; -ms-user-select: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; -khtml-user-select: none; -webkit-touch-callout: none;
+}
+.signup_forms .birthday.signup_view .signup_age_label b {
+	pointer-events: none; -ms-user-select: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; -khtml-user-select: none; -webkit-touch-callout: none;
+}
+.signup_forms .birthday.signup_view .is_empty.signup_age_label .placeholder {
+	display: inline-block !important; visibility: visible !important;
+}
+.signup_forms .birthday.signup_view .signup_age_label .placeholder {
+	color: rgb(153, 153, 153); display: none !important; visibility: hidden !important; cursor: text;
+}
+.signup_forms .birthday.signup_view .signup_age_label b {
+	visibility: hidden;
+}
+.signup_forms .birthday.signup_view .tos input {
+	margin: 0px; padding: 0px; left: 10px; top: 15px; position: absolute;
+}
+.signup_forms .birthday.signup_view .tos label {
+	margin-left: 30px;
+}
+.signup_forms .birthday.signup_view label a {
+	color: rgb(134, 156, 178); text-decoration: none;
+}
+.signup_forms .birthday.signup_view label a:hover {
+	color: rgb(68, 68, 68);
+}
+.signup_forms .birthday.signup_view label a.signup_terms_link {
+	text-decoration: underline;
+}
+div.signup_waiting {
+	margin: 0px; transition:opacity 1s; left: -50%; top: 50%; width: 100px; height: 100px; position: fixed; opacity: 0; -webkit-transition: opacity 1s ease; -moz-transition: opacity 1s ease;
+}
+.failed_redirect_link {
+	margin: 80px 0px 0px -100px; left: 50%; top: 50%; width: 200px; height: 30px; text-align: center; color: rgba(255, 255, 255, 0.8); font-family: "Helvetica Neue","HelveticaNeue",Helvetica,Arial,sans-serif; font-size: 12px; font-weight: bold; text-decoration: none; position: fixed; z-index: 999; opacity: 0; text-shadow: 0px -1px 1px rgba(0,0,0,0.3); -webkit-font-smoothing: antialiased;
+}
+.show.failed_redirect_link {
+	transition:opacity 1s 3s; opacity: 1; -webkit-transition: opacity 1s ease; -moz-transition: opacity 1s ease; -webkit-transition-delay: 3s; -moz-transition-delay: 3s;
+}
+.signup_forms_submit.chrome {
+	margin: 15px 0px 0px; width: 100%;
+}
+.signup_forms_submit.chrome span {
+	display: none;
+}
+.signup_forms_submit.chrome span span {
+	overflow: hidden; display: block;
+}
+.signup_forms_submit.chrome b {
+	transition:max-width 0.2s 1.5s; overflow: hidden; display: inline-block; max-width: 100px; -webkit-transition: max-width .2s ease; -moz-transition: max-width .2s ease; -webkit-transition-delay: 1.5s; -moz-transition-delay: 1.5s;
+}
+.changed.signup_forms_submit.chrome b:first-child {
+	max-width: 0px;
+}
+.forgot_password_link {
+	margin: 0px; transition:; width: 100%; text-align: center; color: rgba(255, 255, 255, 0.6); overflow: hidden; clear: both; font-family: "Helvetica Neue","HelveticaNeue",Helvetica,Arial,sans-serif; font-size: 12px; font-weight: bold; text-decoration: none; float: left; max-height: 0px; opacity: 0; text-shadow: 0px -1px 1px rgba(0,0,0,0.3); -webkit-font-smoothing: antialiased; -webkit-transition-property: opacity, margin; -webkit-transition-duration: .1s; -webkit-transition-timing-function: ease; -moz-transition-property: opacity, margin; -moz-transition-duration: .1s; -moz-transition-timing-function: ease; -webkit-transition-delay: .25s; -moz-transition-delay: .25s;
+}
+.forgot_password_link:hover {
+	color: rgb(255, 255, 255);
+}
+.show_form.logged_out > iframe {
+	position: absolute;
+}
+#recaptcha_widget {
+	margin: 0px; width: 243px; overflow: hidden; position: relative;
+}
+#recaptcha_widget .image_and_buttons {
+	border-radius: 6px 6px 0px 0px; overflow: hidden; -webkit-border-radius: 6px 6px 0 0; -moz-border-radius: 6px 6px 0 0; -webkit-background-clip: padding-box;
+}
+#recaptcha_widget .recaptcha_overlay {
+	background: url("/images/full_page_vignette.png?054777e4a7e9edb122045fbb02358afd") 0% 0% / 100% 100% rgba(0, 0, 0, 0.8); border-radius: 6px 6px 0px 0px; transition:max-height 0.12s; left: 0px; top: 0px; height: 100%; right: 0px; overflow: hidden; position: absolute; z-index: 99; max-height: 0px; -webkit-border-radius: 6px 6px 0 0; -moz-border-radius: 6px 6px 0 0; -webkit-background-clip: padding-box; -webkit-transition: max-height .125s ease; -moz-transition: max-height .125s ease;
+}
+#recaptcha_widget:hover .recaptcha_overlay {
+	max-height: 100%;
+}
+.recaptcha_is_showing_audio#recaptcha_widget:hover .recaptcha_overlay {
+	max-height: 0px;
+}
+#recaptcha_widget .recaptcha_overlay .recaptcha_overlay_inner {
+	transition:top 0.12s; left: 0px; top: -100px; height: 100px; right: 0px; position: absolute; -webkit-transition: top .125s ease; -moz-transition: top .125s ease;
+}
+#recaptcha_widget:hover .recaptcha_overlay .recaptcha_overlay_inner {
+	top: 0px;
+}
+#recaptcha_widget .recaptcha_overlay .captcha_overlay_btn {
+	margin: 10px 0px; width: 50%; height: 100%; text-align: center; color: rgb(255, 255, 255); line-height: 50px; float: left; box-sizing: border-box; text-shadow: 1px 1px 0px rgba(0,0,0,0.5); -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+#recaptcha_widget .recaptcha_overlay .captcha_overlay_btn a {
+	color: rgb(255, 255, 255); text-decoration: none;
+}
+#recaptcha_widget .recaptcha_overlay .captcha_overlay_btn a:hover {
+	text-decoration: underline;
+}
+#recaptcha_image {
+	background: rgb(255, 255, 255); padding: 15px 0px; border-radius: 8px 8px 0px 0px; transition:height 0.15s; width: 100% !important; height: auto !important; text-align: center; overflow: hidden; position: relative; min-height: 76px; box-sizing: border-box; box-shadow: inset 0px 2px 3px rgba(0,0,0,0.36), 0px 1px 0px rgba(255,255,255,0.15); -webkit-border-radius: 8px 8px 0 0; -moz-border-radius: 8px 8px 0 0; -webkit-background-clip: padding-box; -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.36), 0 1px 0 rgba(255, 255, 255, 0.15); -moz-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.36), 0 1px 0 rgba(255, 255, 255, 0.15); -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -webkit-transition: height .15s ease; -moz-transition: height .15s ease;
+}
+#recaptcha_image img {
+	margin: 0px auto; width: 100% !important; height: auto !important; display: block; min-height: 43px;
+}
+#recaptcha_image embed {
+	left: 0px; top: 0px; position: absolute;
+}
+#recaptcha_image br {
+	display: none;
+}
+#recaptcha_image span {
+	margin: 0px; width: 100%; float: left;
+}
+.recaptcha_hide {
+	display: none !important;
+}
+.signup_forms input#recaptcha_response_field {
+	padding-right: 70px;
+}
+#recaptcha_widget .captcha_controls {
+	top: 0px; right: 0px; bottom: 0px; border-left-color: rgba(0, 0, 0, 0.12); border-left-width: 1px; border-left-style: solid; position: absolute;
+}
+#tfa_widget .tfa_controls {
+	top: 0px; right: 0px; bottom: 0px; border-left-color: rgba(0, 0, 0, 0.12); border-left-width: 1px; border-left-style: solid; position: absolute;
+}
+#recaptcha_widget .captcha_control {
+	background: url("/images/captcha_sprite.png?b981366f4d52ce64ebb78e8550ad2e2b") no-repeat 0px 0px; width: 35px; height: 100%; text-indent: -999em; overflow: hidden; float: left;
+}
+#tfa_widget .tfa_control {
+	background: url("/images/captcha_sprite.png?b981366f4d52ce64ebb78e8550ad2e2b") no-repeat 0px 0px; width: 35px; height: 100%; text-indent: -999em; overflow: hidden; float: left;
+}
+#tfa_widget .tfa_control {
+	width: 39px !important;
+}
+#recaptcha_widget .refresh.captcha_control {
+	
+}
+#tfa_widget .resend.tfa_control {
+	
+}
+#recaptcha_widget .audio.captcha_control {
+	background-position: -44px 0px;
+}
+#recaptcha_widget .visual.captcha_control {
+	background-position: -84px 0px;
+}
+#recaptcha_widget .captcha_control:active {
+	opacity: 0.6;
+}
+#recaptcha_widget .captcha_input {
+	position: relative;
+}
+#recaptcha_widget .visual.captcha_control {
+	display: none;
+}
+.recaptcha_is_showing_audio#recaptcha_widget .audio.captcha_control {
+	display: none;
+}
+.recaptcha_is_showing_audio#recaptcha_widget .visual.captcha_control {
+	display: block;
+}
+#recaptcha_widget .recaptcha_audio_cant_hear_link {
+	text-decoration: none; display: block;
+}
+#recaptcha_widget #recaptcha_audio_play_again {
+	top: 50%; width: 100%; text-align: center; color: rgb(153, 153, 153); line-height: 60px; text-indent: -40px; padding-left: 40px; font-weight: bold; margin-top: -30px; position: absolute; box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box;
+}
+#recaptcha_widget #recaptcha_audio_play_again::after {
+	background: url("/images/captcha_sprite.png?b981366f4d52ce64ebb78e8550ad2e2b") no-repeat -120px 10px; left: 0px; top: 0px; width: 40px; right: auto; bottom: 0px; overflow: hidden; display: block; position: absolute; content: "";
+}
+#recaptcha_widget #recaptcha_audio_download {
+	display: none;
+}
+.signup_forms {
+	left: 50%; transition-duration: 0s; -webkit-transition-duration: 0; -moz-transition-duration: 0;
+}
+.signup_login.show_form.logged_out .signup_view {
+	max-height: 80px; transition-duration: 0s; -webkit-transition-duration: 0; -moz-transition-duration: 0;
+}
+.is_tablet {
+	min-height: 420px;
+}
+.is_mobile_handset {
+	min-height: 420px;
+}
+.is_bookmarklet.account_login_and_register #header {
+	margin: 0px; left: 0px; width: 100% !important; right: 0px; position: absolute;
+}
+.is_tablet.account_login_and_register #header {
+	margin: 0px; left: 0px; width: 100% !important; right: 0px; position: absolute;
+}
+.is_mobile_handset.account_login_and_register #header {
+	margin: 0px; left: 0px; width: 100% !important; right: 0px; position: absolute;
+}
+.is_bookmarklet .signup_subhead {
+	display: none;
+}
+.is_mobile .signup_subhead {
+	display: none;
+}
+.is_bookmarklet.account_login_and_register #logo {
+	top: 45px !important;
+}
+.is_mobile_handset.account_login_and_register #logo {
+	top: 45px !important;
+}
+.is_bookmarklet .signup_forms {
+	top: 45px; position: absolute;
+}
+.is_mobile_handset .signup_forms {
+	top: 45px; position: absolute;
+}
+.show_form.is_mobile_handset * {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.is_bookmarklet .signup_buttons {
+	display: none;
+}
+.is_mobile_handset .signup_buttons {
+	margin: 0px 0px 0px -122px; left: 50%; top: auto; width: 245px; text-align: center; right: auto; bottom: 0px; position: absolute;
+}
+.is_mobile_handset .login_signup_button {
+	padding: 10px 5px; color: rgba(255, 255, 255, 0.6); font-size: 12px; font-weight: bold; text-decoration: none; float: left; text-shadow: 0px -1px 1px rgba(0,0,0,0.3);
+}
+.is_mobile_handset .privacy.login_signup_button {
+	float: right;
+}
+.signup_account.is_mobile_handset .mobile_signup_buttons .signup {
+	display: none;
+}
+.signup_login.is_mobile_handset .mobile_signup_buttons .login {
+	display: none;
+}
+.is_mobile_handset .form_row_password {
+	position: relative;
+}
+:not(.signup_login).show_form.is_mobile_handset .forgot_password_link {
+	display: none;
+}
+.signup_login.show_form.is_mobile_handset .forgot_password_link {
+	background: rgb(170, 170, 170); margin: -9px 0px 0px; border-radius: 50%; top: 50%; width: 18px; height: 18px; right: 10px; text-indent: -999em; overflow: hidden; position: absolute;
+}
+.is_mobile_handset .forgot_password_link .question_mark {
+	left: 0px; top: 0px; text-align: center; right: 0px; bottom: 0px; color: rgb(231, 239, 247); line-height: 18px; text-indent: 0px; font-size: 11px; font-weight: bold; position: absolute; text-shadow: none;
+}
+.is_mobile_handset #recaptcha_widget .audio.captcha_control {
+	display: none;
+}
+.is_tablet #recaptcha_widget .audio.captcha_control {
+	display: none;
+}
+.is_mobile_handset #recaptcha_widget .refresh.captcha_control {
+	width: 40px;
+}
+.is_tablet #recaptcha_widget .refresh.captcha_control {
+	width: 40px;
+}
+.is_tablet.account_login_and_register #logo {
+	top: 150px !important; position: absolute;
+}
+.is_tablet.account_login_and_register .signup_forms {
+	top: 150px !important; position: absolute;
+}
+#suggested_usernames_container {
+	border-radius: 7px; border: 0px currentColor; left: 100%; top: 55px; width: 240px; overflow: visible; margin-left: 4px; position: absolute;
+}
+#suggested_usernames {
+	list-style: none; margin: 0px; padding: 0px;
+}
+@media screen and (max-width:500px)
+{
+.signup_buttons {
+	display: none;
+}
+}
+@media not all, not all, not all, not all, only screen and (min-resolution:192dpi), not all
+{
+#recaptcha_widget .captcha_control {
+	background-image: url("/images/captcha_sprite_2x.png?d5d86f04941a4ae1826cf04622617e14"); background-size: 160px 80px;
+}
+}

@@ -12,13 +12,10 @@ import kr.ac.kaist.jsaf.exceptions.JSAFError
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
-import scala.collection.mutable.ListBuffer
 import java.io.BufferedInputStream
 import kr.ac.kaist.jsaf.analysis.typing.OrderMap
+import kr.ac.kaist.jsaf.analysis.typing.Fixpoint
 import kr.ac.kaist.jsaf.analysis.typing.Worklist
-import kr.ac.kaist.jsaf.analysis.lib.graph.{DataDependencyGraph => DDGraph}
-import kr.ac.kaist.jsaf.ShellParameters
-import kr.ac.kaist.jsaf.analysis.typing.DSparseEnv
 import kr.ac.kaist.jsaf.analysis.typing.Environment
 import kr.ac.kaist.jsaf.analysis.typing.SparseEnv
 
@@ -234,7 +231,7 @@ object DotWriter {
   def ddgwrite(g: CFG, env: Environment, dotFile: String, outputFile: String, dotExe: String, ddg0: Boolean, global: Boolean) = {
     val wo = Worklist.computes(g)
     val o = wo.getOrder()
-    if(!global) spawnDot(dotExe, "local"+outputFile, ddgwriteDotFile(env.asInstanceOf[SparseEnv].getDDGStr(ddg0), o, "local"+dotFile))
+    spawnDot(dotExe, "local"+outputFile, ddgwriteDotFile(env.asInstanceOf[SparseEnv].getDDGStr(ddg0), o, "local"+dotFile))
   }
 
   def ddgwriteDotFile(str: String, o: OrderMap, dotfile: String) = {

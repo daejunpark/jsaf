@@ -30,10 +30,12 @@ object ModHelper {
   val paramRef = SVarRef(defInfo, paramId)
   val bypass = SObjectExpr(defInfo, List(
     SGetProp(defInfo, SPropId(defInfo, argumentsId), SFunctional(Nil, Nil,
-      List(SReturn(defInfo, Some(argumentsRef))),
+      SSourceElements(defInfo, 
+                      List(SReturn(defInfo, Some(argumentsRef))), false),
       argumentsId, List(paramId))),
     SSetProp(defInfo, SPropId(defInfo, argumentsId), SFunctional(Nil, Nil,
-      List(SExprStmt(defInfo, SAssignOpApp(defInfo, argumentsRef, SOp(defInfo, "="), paramRef), false)),
+      SSourceElements(defInfo, 
+      List(SExprStmt(defInfo, SAssignOpApp(defInfo, argumentsRef, SOp(defInfo, "="), paramRef), false)), false),
       argumentsId, List(paramId)))))
 
   val seal = SDot(defInfo, SVarRef(defInfo,

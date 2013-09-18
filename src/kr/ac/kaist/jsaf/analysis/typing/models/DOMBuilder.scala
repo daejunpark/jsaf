@@ -25,6 +25,7 @@ import org.w3c.dom.Node
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5._
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject._
 
 class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
   val F = BoolFalse
@@ -305,6 +306,8 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
       case Some(l) =>
         // HTMLFormElement object
         val form_obj = heap(l)
+        val new_form_obj = form_obj.update(AbsString.alpha(name), PropValue(ObjectValue(targetloc, T, T, T)))
+
         // we know only a single location can be mapped to 'elements' in the initial heap
         val elements_loc = form_obj("elements")._1._1._1._2.head
         val elements_obj = heap(elements_loc)
@@ -319,7 +322,7 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
                               else new_elements2
           // update the 'form' property 
           val new_obj = heap(targetloc).update(AbsString.alpha("form"), PropValue(ObjectValue(l, F, T, T)))
-          heap + (elements_loc -> new_elements3) + (targetloc -> new_obj)
+          heap + (elements_loc -> new_elements3) + (targetloc -> new_obj) + (l -> new_form_obj)
        case None => heap
     }
   }
@@ -365,20 +368,38 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
         // 'forms' property
         val loc_forms = HTMLCollection.getInstance(cfg).get
         val newheap2 = addInstance(newheap, loc_forms, HTMLCollection.getInsList(0))
+        
+        // 'images' property
+        val loc_images = HTMLCollection.getInstance(cfg).get
+        val newheap3 = addInstance(newheap2, loc_images, HTMLCollection.getInsList(0))
+        
+        // 'scripts' property
+        val loc_scripts = HTMLCollection.getInstance(cfg).get
+        val newheap4 = addInstance(newheap3, loc_scripts, HTMLCollection.getInsList(0))
+        
+        // 'all' property
+        val loc_all = HTMLAllCollection.getInstance(cfg).get
+        val newheap5 = addInstance(newheap4, loc_all, HTMLAllCollection.getInsList(0))
 
         // the root element does not have any siblings and parent
-        val newElementObj=newheap2(loc).
+        val newElementObj=newheap4(loc).
                         update(OtherStrSingle("previousSibling"),
                                 PropValue(ObjectValue(PValue(NullTop), F, T, T))).
                         update(OtherStrSingle("nextSibling"),
                                 PropValue(ObjectValue(PValue(NullTop), F, T, T))).
                         update(OtherStrSingle("parentNode"),
                                 PropValue(ObjectValue(PValue(NullTop), F, T, T))).
+                        update(OtherStrSingle("offsetParent"),
+                                PropValue(ObjectValue(PValue(NullTop), F, T, T))).
                         update(OtherStrSingle("forms"),
-                                PropValue(ObjectValue(Value(loc_forms), F, T, T)))
-          // 'document' property
-          val global_object = map(GlobalLoc).update(AbsString.alpha("document"), PropValue(ObjectValue(loc, T, F, T)))
-          (newheap2 + (loc -> newElementObj) + (GlobalLoc -> global_object), loc)
+                                PropValue(ObjectValue(Value(loc_forms), F, T, T))).
+                        update(OtherStrSingle("images"),
+                                PropValue(ObjectValue(Value(loc_images), F, T, T))).
+                        update(OtherStrSingle("scripts"),
+                                PropValue(ObjectValue(Value(loc_scripts), F, T, T))).
+                        update(OtherStrSingle("all"),
+                                PropValue(ObjectValue(Value(loc_all), F, T, T)))
+          (newheap5 + (loc -> newElementObj), loc)
       // Element
       case e: Element => 
         val (_newheap, _insloc) = nodeName match {
@@ -393,7 +414,11 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
           case "HEAD" =>
             val loc= HTMLHeadElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLHeadElement.getInsList(node))
-            (newheap, loc)
+            /* 'document.head' update */
+            // 'document' object
+            val docobj = newheap(HTMLDocument.GlobalDocumentLoc)
+            val newdocobj = docobj.update(AbsString.alpha("head"), PropValue(ObjectValue(Value(loc), F, T, T))) 
+            (newheap + (HTMLDocument.GlobalDocumentLoc -> newdocobj), loc)
           case "LINK" =>
             val loc= HTMLLinkElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLLinkElement.getInsList(node))
@@ -560,7 +585,22 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
           case "IMG" =>
             val loc= HTMLImageElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLImageElement.getInsList(node))
-            (newheap, loc)
+            /* 'document.images' update */
+            // 'document' object
+            val docobj = newheap(HTMLDocument.GlobalDocumentLoc)
+            // we know only a single location can be mapped for 'forms' in the initial heap
+            val images_loc = docobj("images")._1._1._1._2.head
+            val images_obj = newheap(images_loc)
+            // we know a concrete value for the property value is always present in the initial heap
+            val collection_length: Int = AbsNumber.concretize(images_obj("length")._1._1._1._1._4).get.toInt
+            val new_images1 = images_obj.update(
+                   AbsString.alpha(collection_length.toString), PropValue(ObjectValue(loc, T, T, T))).update(
+                   AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(collection_length+1), T, T, T)))
+            val name = e.getAttribute("name")
+            val new_images2 = if(name!="") new_images1.update(AbsString.alpha(name), PropValue(ObjectValue(loc, T, T, T)))
+                             else new_images1
+
+            (newheap + (images_loc -> new_images2), loc)
           case "OBJECT" =>
             val loc= HTMLObjectElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLObjectElement.getInsList(node))
@@ -585,7 +625,22 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
           case "SCRIPT" =>
             val loc= HTMLScriptElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLScriptElement.getInsList(node))
-            (newheap, loc)
+            /* 'document.scripts' update */
+            // 'document' object
+            val docobj = newheap(HTMLDocument.GlobalDocumentLoc)
+            // we know only a single location can be mapped for 'forms' in the initial heap
+            val scripts_loc = docobj("scripts")._1._1._1._2.head
+            val scripts_obj = newheap(scripts_loc)
+            // we know a concrete value for the property value is always present in the initial heap
+            val collection_length: Int = AbsNumber.concretize(scripts_obj("length")._1._1._1._1._4).get.toInt
+            val new_scripts1 = scripts_obj.update(
+                   AbsString.alpha(collection_length.toString), PropValue(ObjectValue(loc, T, T, T))).update(
+                   AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(collection_length+1), T, T, T)))
+            val name = e.getAttribute("name")
+            val new_scripts2 = if(name!="") new_scripts1.update(AbsString.alpha(name), PropValue(ObjectValue(loc, T, T, T)))
+                             else new_scripts1
+
+            (newheap + (scripts_loc -> new_scripts2), loc)
           case "TABLE" =>
             val loc= HTMLTableElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLTableElement.getInsList(node))
@@ -666,11 +721,25 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
               ("@proto",   PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
               ("@extensible",   PropValue(BoolTrue)))
             val newheap = addInstance(map, loc, prop_list)
-            (newheap, loc)  
+            (newheap, loc)
+          /* HTML 5 */
           case "CANVAS"  =>
             val loc = HTMLCanvasElement.getInstance(cfg).get
             val newheap=addInstance(map, loc, HTMLCanvasElement.getInsList(node))
             (newheap, loc)
+          case "DATALIST"  =>
+            val loc = HTMLDataListElement.getInstance(cfg).get
+            val newheap=addInstance(map, loc, HTMLDataListElement.getInsList(node))
+            (newheap, loc)
+          case "HEADER" | "FOOTER" | "ARTICLE" | "SECTION" | "NAV" =>
+            val loc = HTMLElement.getInstance(cfg).get
+            val prop_list = HTMLElement.getInsList(node)++List(
+              ("@class",   PropValue(AbsString.alpha("Object"))),
+              ("@proto",   PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
+              ("@extensible",   PropValue(BoolTrue)))
+            val newheap = addInstance(map, loc, prop_list)
+            (newheap, loc)    
+
           case _ =>
             System.err.println("* Warning: " + node.getNodeName + " - not modeled yet.")
             val loc = HTMLElement.getInstance(cfg).get
@@ -681,8 +750,28 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
             val newheap = addInstance(map, loc, prop_list)
             (newheap, loc)
         }
+        // update the "style" and "innerText" property
+        val styleloc = CSSStyleDeclaration.getInstance(cfg).get
+        val _newheap2 = addInstance(_newheap, styleloc, CSSStyleDeclaration.getInsList)
+        val newelem = _newheap2(_insloc).update("style", PropValue(ObjectValue(Value(styleloc), T, T, T))).
+                                         update("innerText", _newheap2(_insloc)("textContent")._1)
+        /* 'document.all' update */
+        // 'document' object
+        val docobj = _newheap2(HTMLDocument.GlobalDocumentLoc)
+        // we know only a single location can be mapped for 'forms' in the initial heap
+        val all_loc = docobj("all")._1._1._1._2.head
+        val all_obj = _newheap2(all_loc)
+        // we know a concrete value for the property value is always present in the initial heap
+        val collection_length: Int = AbsNumber.concretize(all_obj("length")._1._1._1._1._4).get.toInt
+        val new_all1 = all_obj.update(
+                 AbsString.alpha(collection_length.toString), PropValue(ObjectValue(_insloc, T, T, T))).update(
+                 AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(collection_length+1), T, T, T)))
+        val id = e.getAttribute("id")
+        val new_all2 = if(id!="") new_all1.update(AbsString.alpha(id), PropValue(ObjectValue(_insloc, T, T, T)))
+                       else new_all1
+
         HTMLTopElement.setInsLoc(_insloc)
-        (_newheap, _insloc)
+        (_newheap2 + (_insloc -> newelem) + (all_loc -> new_all2), _insloc)
       case _ =>
         // the node, not modeled yet, gets a dummy location for the 'Element' node 
         val loc =  HTMLElement.getInstance(cfg).get
@@ -707,7 +796,7 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
           newmap1=newheap
           attributes_objlist = attributes_objlist ++ List(
             (i.toString, PropValue(ObjectValue(attr_loc, T, T, T))),
-            (attr.getNodeName, PropValue(ObjectValue(attr_loc, T, T, T)))
+            (attr.getNodeName.toLowerCase, PropValue(ObjectValue(attr_loc, T, T, T)))
           )
         }
         newmap1 = addInstance(newmap1, attributes_loc, attributes_objlist)
@@ -764,9 +853,11 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
           // object update for the 'childNodes' field
           children_obj = children_obj.
                         update(NumStrSingle(i.toString),   PropValue(ObjectValue(absloc_list(i), T, T, T)))
-          // set the 'parentNode' fields of all children nodes
+          // set the 'parentNode' and 'offsetParent' fields of all children nodes
+          // 'offsetParent' could be more precise with null
           val newObj1 = newmap3(x).
-                update(OtherStrSingle("parentNode"), PropValue(ObjectValue(absloc1, F, T, T)))
+                update(OtherStrSingle("parentNode"), PropValue(ObjectValue(absloc1, F, T, T))).
+                update(OtherStrSingle("offsetParent"), PropValue(ObjectValue(Value(absloc1) + Value(NullTop), F, T, T)))
           // set the sibling information
           val newObj2 = if(i==0) newObj1.update(OtherStrSingle("previousSibling"), 
                                                   PropValue(ObjectValue(PValue(NullTop), F, T, T)))
@@ -817,7 +908,7 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
   
   // Set the initial state for the DOM HTML objects depending on the HTML source
   def initHtml(map: HeapMap): HeapMap = {
-    // printDom(document, "")
+    //printDom(document, "")
     val map_1 = initEventTables(map)
     val (newmap, absloc) = modelSource(map_1, document, None)
     // printDom(document, "")
