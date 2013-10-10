@@ -24,7 +24,7 @@ import net.liftweb.json._
 import scala.collection.JavaConversions._
 import scala.collection.mutable.ListBuffer
 
-class SVisualization(typing:SparseTyping, fileMap: JHashMap[String, String], in:String, out:Option[String]) {
+class SVisualization(typing:SparseTyping, in:String, out:Option[String]) {
   var outpath:String = "";
   var filename = ""
   var resultpath = ""
@@ -66,9 +66,9 @@ class SVisualization(typing:SparseTyping, fileMap: JHashMap[String, String], in:
   def dumpSourceInfo() {
     try {
       var contents = new StringBuilder
-      Source.fromFile(fileMap.get(in).split("::")(0)).getLines.foreach((line) => {
-        contents.append("\"").append(line.replaceAll("\"", "\\\\\"").replaceAll("\t", "        ")).append("\\n\" +\n")
-      })
+      //Source.fromFile(fileMap.get(in).split("::")(0)).getLines.foreach((line) => {
+      //  contents.append("\"").append(line.replaceAll("\"", "\\\\\"").replaceAll("\t", "        ")).append("\\n\" +\n")
+      //})
       contents.append("\"").append("\";")
       
       val sb = new StringBuilder

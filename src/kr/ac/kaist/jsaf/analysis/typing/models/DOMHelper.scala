@@ -15,6 +15,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse=>F, BoolTrue=>T}
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5._
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject._
 import kr.ac.kaist.jsaf.analysis.typing.{InternalError, Operator, Helper}
 import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
@@ -23,20 +24,13 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.OtherStrSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.NumStrSingle
-import scala.Some
-import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
-import kr.ac.kaist.jsaf.analysis.typing.domain.OtherStrSingle
-import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.typing.domain.NumStrSingle
-import scala.Some
-import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
-import kr.ac.kaist.jsaf.analysis.typing.domain.OtherStrSingle
-import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.typing.domain.NumStrSingle
+import kr.ac.kaist.jsaf.analysis.cfg.CFG
+import org.cyberneko.html.parsers._
+import org.apache.html.dom.HTMLDocumentImpl
+import org.xml.sax.InputSource
+import org.w3c.dom.{DOMException=>DE, Element, Node, Document, DocumentFragment}
+import org.w3c.dom.{Attr, DocumentType, Text, Comment, NodeList}
+import java.io._
 
 object DOMHelper {
   private val validHtmlTags: Set[String] = Set(
@@ -391,12 +385,14 @@ object DOMHelper {
   }
 
   def findByAttr(h: Heap, l_root: Loc, attr_name: String, s: AbsString, contain: Boolean): LocSet = {
+    val ab_attr_name = AbsString.alpha(attr_name)
+    val ab_childNodes = AbsString.alpha("childNodes")
     def search(lset_visited: LocSet, l_this: Loc): LocSet = {
       if (!lset_visited.contains(l_this)) {
         // get attribute value
-        val v_attr = DOMHelper.getAttribute(h, LocSet(l_this),  AbsString.alpha(attr_name))
+        val v_attr = DOMHelper.getAttribute(h, LocSet(l_this), ab_attr_name)
         // next elements
-        val lset_children = Helper.Proto(h, l_this, AbsString.alpha("childNodes"))._2.foldLeft(LocSetBot)((lset, l_n) =>
+        val lset_children = Helper.Proto(h, l_this, ab_childNodes)._2.foldLeft(LocSetBot)((lset, l_n) =>
           lset ++ Helper.Proto(h, l_n, NumStr)._2)
         if ((!contain && v_attr._1._5 </ StrBot && v_attr._1._5 <= s) || (contain && BoolTrue <= v_attr._1._5.contains(s)))
           lset_children.foldLeft(LocSet(l_this))((lset, l_child) => lset ++ search(lset_visited + l_this, l_child))
@@ -410,14 +406,18 @@ object DOMHelper {
   }
 
   def findByProp(h: Heap, l_root: Loc, prop_name: String, s: AbsString, tag: Boolean): LocSet = {
+    val ab_prop_name = AbsString.alpha(prop_name)
+    val ab_childNodes = AbsString.alpha("childNodes")
+    val ab_asterisk = AbsString.alpha("*")
+    val ab_empty = AbsString.alpha("")
     def search(lset_visited: LocSet, l_this: Loc): LocSet = {
       if (!lset_visited.contains(l_this)) {
         // get property value
-        val v_prop = Helper.Proto(h, l_this, AbsString.alpha(prop_name))
+        val v_prop = Helper.Proto(h, l_this, ab_prop_name)
         // next elements
-        val lset_children = Helper.Proto(h, l_this, AbsString.alpha("childNodes"))._2.foldLeft(LocSetBot)((lset, l_n) =>
+        val lset_children = Helper.Proto(h, l_this, ab_childNodes)._2.foldLeft(LocSetBot)((lset, l_n) =>
           lset ++ Helper.Proto(h, l_n, NumStr)._2)
-        if (BoolTrue <= (v_prop._1._5 === s) || (tag && AbsString.alpha("*") <= s))
+        if ((v_prop._1._5 </ ab_empty && BoolTrue <= (v_prop._1._5 === s)) || (tag && ab_asterisk <= s))
           lset_children.foldLeft(LocSet(l_this))((lset, l_child) => lset ++ search(lset_visited + l_this, l_child))
         else
           lset_children.foldLeft(LocSetBot)((lset, l_child) => lset ++ search(lset_visited + l_this, l_child))
@@ -473,13 +473,16 @@ object DOMHelper {
 
   // to nextSibling
   def findByPropWidth(h: Heap, l_root: Loc, prop_name: String, s: AbsString, tag: Boolean): LocSet = {
+    val ab_prop_name = AbsString.alpha(prop_name)
+    val ab_nextSibling = AbsString.alpha("nextSibling")
+    val ab_asterisk = AbsString.alpha("*")
     def search(lset_visited: LocSet, l_this: Loc): LocSet = {
       if (!lset_visited.contains(l_this)) {
         // get property value
-        val v_attr = Helper.Proto(h, l_this, AbsString.alpha(prop_name))
+        val v_attr = Helper.Proto(h, l_this, ab_prop_name)
         // next elements
-        val lset_children = Helper.Proto(h, l_this, AbsString.alpha("nextSibling"))._2
-        if (BoolTrue <= (v_attr._1._5 === s) || (tag && AbsString.alpha("*") <= s))
+        val lset_children = Helper.Proto(h, l_this, ab_nextSibling)._2
+        if (BoolTrue <= (v_attr._1._5 === s) || (tag && ab_asterisk <= s))
           lset_children.foldLeft(LocSet(l_this))((lset, l_child) => lset ++ search(lset_visited + l_this, l_child))
         else
           lset_children.foldLeft(LocSetBot)((lset, l_child) => lset ++ search(lset_visited + l_this, l_child))
@@ -496,10 +499,11 @@ object DOMHelper {
 
   // get all parents
   def getParents(h: Heap, l_root: Loc): LocSet = {
+    val ab_parentNode = AbsString.alpha("parentNode")
     def search(lset_visited: LocSet, l_this: Loc): LocSet = {
       if (!lset_visited.contains(l_this)) {
         // next elements
-        val lset_parent = Helper.Proto(h, l_this, AbsString.alpha("parentNode"))._2
+        val lset_parent = Helper.Proto(h, l_this, ab_parentNode)._2
         lset_parent.foldLeft(LocSet(l_this))((lset, l_parent) => lset ++ search(lset_visited + l_this, l_parent))
       }
       else
@@ -730,7 +734,7 @@ object DOMHelper {
         querySelectorAll(h, l_root, s)
       case None =>
         if (s_selector </ StrBot)
-          HTMLTopElement.getInsLoc
+          HTMLTopElement.getInsLoc(h)
         else
           LocSetBot
 
@@ -908,38 +912,50 @@ object DOMHelper {
       /* location for clone node */
       val h_1 = lset_parent.foldLeft(h)((h1, l_node) => {
         val lset_ns = Helper.Proto(h, l_node, AbsString.alpha("childNodes"))._2
-        lset_ns.foldLeft(h1)((h2, l_ns) => {
+        val (h1_2, firstChild_lset, lastChild_lset) = lset_ns.foldLeft((h1, LocSetBot, LocSetBot))((hl, l_ns) => {
           val n_len = Operator.ToUInt32(Helper.Proto(h, l_ns, AbsString.alpha("length")))
-          n_len match {
+          val (h_2, lchild_lset) = n_len match {
             case UIntSingle(n) =>
               val n_index = (0 until n.toInt).indexWhere((i) => {
-                BoolTrue <= Operator.bopSEq(Helper.Proto(h2, l_ns, AbsString.alpha(i.toString)), Value(lset_child))._1._3
+                BoolTrue <= Operator.bopSEq(Helper.Proto(hl._1, l_ns, AbsString.alpha(i.toString)), Value(lset_child))._1._3
               })
               if (n_index < 0)
-                h2
+                (hl._1, LocSetBot)
               else {
-                val hhh_1 = Helper.Delete(h2, l_ns, AbsString.alpha(n_index.toString))._1
+                val hhh_1 = Helper.Delete(hl._1, l_ns, AbsString.alpha(n_index.toString))._1
                 val hhh_2 = (n_index+1 until n.toInt).foldLeft(hhh_1)((_h, i) => {
                   val v_next = Helper.Proto(_h, l_ns,  AbsString.alpha(i.toString))
                   val _h1 = Helper.Delete(_h, l_ns, AbsString.alpha(i.toString))._1
                   Helper.PropStore(_h1, l_ns, AbsString.alpha((i-1).toString), v_next)
                 })
                 // decrease the length of childNodes by 1
-                Helper.PropStore(hhh_2, l_ns, AbsString.alpha("length"), Value(AbsNumber.alpha(n - 1)))
+                val hhh_3 = Helper.PropStore(hhh_2, l_ns, AbsString.alpha("length"), Value(AbsNumber.alpha(n - 1)))
+                val lastC_lset = if(n-1==0) Helper.Proto(hhh_3, l_ns, AbsString.alpha("0"))._2
+                                 else Helper.Proto(hhh_3, l_ns, AbsString.alpha((n-2).toString))._2
+                (hhh_3, lastC_lset)
               }
 
             case NumTop | UInt =>
-              val b_eq = Operator.bopSEq(Helper.Proto(h2, l_ns, NumStr), Value(lset_child))._1._3
+              val b_eq = Operator.bopSEq(Helper.Proto(hl._1, l_ns, NumStr), Value(lset_child))._1._3
               val h2_1 =
-                if (BoolTrue <= b_eq) Helper.Delete(h2, l_ns, NumStr)._1
+                if (BoolTrue <= b_eq) Helper.Delete(hl._1, l_ns, NumStr)._1
                 else HeapBot
               val h2_2 =
-                if (BoolFalse <= b_eq) h2
+                if (BoolFalse <= b_eq) hl._1
                 else HeapBot
-              h2_1 + h2_2
-            case _ => h2 /* exception ?? */
+              val h2_3 = h2_1 + h2_2
+              (h2_3, Helper.Proto(h2_3, l_ns, NumStr)._2)
+            case _ => (hl._1, LocSetBot) /* exception ?? */
           }
+          val fchild_lset = Helper.Proto(h_2, l_ns,  AbsString.alpha("0"))._2
+          (h_2, hl._2 ++ fchild_lset, hl._3 ++ lchild_lset)
+
         })
+        /* 'firstChild' and 'lastChild' update of the parentNode */
+        val firstChildVal = if(firstChild_lset.isEmpty) Value(NullTop) else Value(firstChild_lset)
+        val lastChildVal = if(lastChild_lset.isEmpty) Value(NullTop) else Value(lastChild_lset)
+        val h1_3 = Helper.PropStore(h1_2, l_node, AbsString.alpha("firstChild"), firstChildVal)
+        Helper.PropStore(h1_3, l_node, AbsString.alpha("lastChild"), lastChildVal)
       })
       /* 'parentNode', 'previousSibling', 'nextSibling' update of the removed child */
       val (h_2, preSib, nextSib) = lset_child.foldLeft((h_1, ValueBot, ValueBot))((d, l) => {
@@ -1218,4 +1234,1032 @@ object DOMHelper {
 
      new_heap
   }
+  
+  /* Parse the HTML source string, s, and return a corresponding document fragment */
+  def stringToDocumentFragment(s: String): DocumentFragment = {
+    val parser = new DOMFragmentParser()
+    val document = new HTMLDocumentImpl()
+    val fragment = document.createDocumentFragment()
+    parser.parse(new InputSource(new StringReader(s)), fragment)
+    fragment
+  }
+
+  // Print a concrete DOM tree
+  def printDom(node: Node, indent: String): Unit = {
+    System.out.println(indent + node.getNodeName + node.getNodeType + node.getClass().getName())
+    var child : Node = node.getFirstChild
+    while (child != null) {
+      printDom(child, indent+" ")
+      child = child.getNextSibling()
+    }
+  }
+
+  def clearAllChildNodes(h: Heap, l_root: Loc): Heap = {
+    val h_1 = if(BoolTrue <= Helper.HasOwnProperty(h, l_root, AbsString.alpha("firstChild"))) 
+                 Helper.PropStore(h, l_root, AbsString.alpha("firstChild"), Value(NullTop))
+              else h
+    val h_2 = if(BoolTrue <= Helper.HasOwnProperty(h_1, l_root, AbsString.alpha("lastChild"))) 
+                 Helper.PropStore(h_1, l_root, AbsString.alpha("lastChild"), Value(NullTop))
+              else h_1
+    val nodelist_proplist = DOMNodeList.getInsList(0)
+    val h_3 = if(BoolTrue <= Helper.HasOwnProperty(h_2, l_root, AbsString.alpha("childNodes"))){ 
+                val childNodes_lset = Helper.Proto(h_2, l_root, AbsString.alpha("childNodes"))._2
+                childNodes_lset.foldLeft(h_2)((_h, l) => {
+                  addInstance(_h, l, nodelist_proplist)
+                })
+              }
+              else h_2
+    h_3
+  }
+
+  def updateDOMTree(h: Heap, ctx: Context, l_root: Loc, source: Value, cfg: CFG, addresskey: Int): (Heap, Context) = {
+    val s_str = Helper.toString(Helper.toPrimitive(source))
+    if(s_str </ StrBot) {
+      AbsString.concretize(s_str) match {
+        case None =>  // StrTop | NumStr | OtherStr
+          val (h_1, ctx_1, l_topnode) = cfgAddrToLoc(h, ctx, cfg.getStoreAddress(addresskey))
+          val (h_2, ctx_2, l_childNodes) = cfgAddrToLoc(h_1, ctx_1, cfg.getStoreAddress(addresskey))
+          val h2 = HTMLTopElement.setInsLoc(h_2, l_topnode)
+          // property list for HTMLTopElement
+          val topelement_proplist = HTMLTopElement.getInsList(l_topnode, l_childNodes)
+          val h_3 = addInstance(h2, l_topnode, topelement_proplist)
+          // property list for 'childNodes'
+          val childNodes_proplist = DOMNodeList.getInsListTop(l_topnode)
+          val h_4 = addInstance(h_3, l_childNodes, childNodes_proplist)
+          // clear all child nodes of the updated root node
+          val h_5 = clearAllChildNodes(h_4, l_root)
+          /* weak update of 'firstChild', 'lastChild', and 'childNodes' of the updated root node */
+          val h_6 = Helper.PropStoreWeak(h_5, l_root, AbsString.alpha("firstChild"), Value(l_topnode))
+          val h_7 = Helper.PropStoreWeak(h_6, l_root, AbsString.alpha("lastChild"), Value(l_topnode))
+          val childNodes_lset = Helper.Proto(h_7, l_root, AbsString.alpha("childNodes"))._2
+          val h_8 = childNodes_lset.foldLeft(h_7)((_h, l) => {
+            Helper.PropStoreWeak(_h, l, AbsString.alpha("length"), Value(UInt))
+            Helper.PropStoreWeak(_h, l, AbsString.alpha("@default_number"), Value(l_topnode))
+          })
+          /* weak update of 'parentNode' of the new HTMLTopElement */
+          val h_9 = Helper.PropStoreWeak(h_8, l_topnode, AbsString.alpha("parentNode"), Value(l_root))
+          System.err.println("* Warning: The value to be assigned to 'innerHTML' is not concrete; analysis results may be unsound.") 
+          (h_9, ctx_2)
+        case Some(t) => 
+          val _h = clearAllChildNodes(h, l_root)
+          // parse HTML fragment and produces a concrete DOM tree
+          val fragment = stringToDocumentFragment(t)
+          val ((h_1, ctx_1), l_newroot) = buildDOMTree(_h, ctx, fragment, cfg, None, addresskey, false)
+          // location set of 'firstChild' of the new DOM tree root
+          var firstChild_lset = Helper.Proto(h_1, l_newroot, AbsString.alpha("firstChild"))._2
+          var h_3 = h_1
+          while(!firstChild_lset.isEmpty) {
+            val h_2 = removeChild(h_3, LocSet(l_newroot), firstChild_lset)
+            h_3 = appendChild(h_2, LocSet(l_root), firstChild_lset)
+            firstChild_lset = Helper.Proto(h_3, l_newroot, AbsString.alpha("firstChild"))._2
+          }
+          (h_3, ctx_1)
+      }
+    }
+    else (h, ctx)
+  }
+
+
+  // Handle side effects caused by DOM property update
+  // Property update is performed in Helper.PropStore, not in this function
+  def updateDOMProp(h: Heap, ctx: Context, l: Loc, s: AbsString, v: Value, cfg: CFG, addresskey: Int): (Heap, Context) = {
+    AbsString.concretize(s) match {
+      case Some(str) => str match {
+        /* innerHTML : update the DOM tree */
+        case "innerHTML" => 
+          System.err.println("* Warning: Assigning a value to 'innerHTML'.") 
+          cfg.initStoreAddressIndex(addresskey)
+          updateDOMTree(h, ctx, l, v, cfg, addresskey)
+        // case "id" =>
+        // case "onclick" =>
+        case _ => (h, ctx)
+      }
+      case None if OtherStr <= s => 
+        System.err.println("* Warning: 'innerHTML' of an HTML element might be updated but the DOM tree is not updated.") 
+        (h, ctx)
+      case _ => (h, ctx)
+    }
+  }
+
+  // Add the instance object in the heap 
+  private def addInstance(h: Heap, loc_ins: Loc, list_ins: List[(String, PropValue)]): Heap = {
+    // create the instance object and update properties
+    val obj_ins = list_ins.foldLeft(ObjEmpty) ((obj, v) => obj.update(AbsString.alpha(v._1), v._2))
+    h.update(loc_ins, obj_ins)
+  }
+
+
+
+  // Initialize named properties in Document
+  // WHATWG HTML Living Standard - Section 3.1.4 DOM tree accessors
+  private def updateDocumentNamedProps(h: Heap, ctx: Context, node: Node, cfg: CFG, ins_loc: Loc, addresskey: Int, init: Boolean) : (Heap, Context) = {
+    val nodeName = node.getNodeName
+    node match {
+      // Element node
+      case e: Element => 
+        // document object
+        val docobj = h(HTMLDocument.GlobalDocumentLoc)
+        val id = e.getAttribute("id")
+        val name = e.getAttribute("name")
+        nodeName match {
+          // TODO: HTMLEmbedElement(not modeled yet), name propertis for HTMLIFrameElement
+          case "APPLET" | "OBJECT" | "IMG" if id != "" && (nodeName!="IMG" || name!="") => 
+            val propval = docobj(id)
+            // in case that the 'id' property does not exist
+            if(propval._2 </ AbsentBot) {
+               val new_docobj = docobj.update(AbsString.alpha(id), PropValue(ObjectValue(ins_loc, T, T, T)))
+               (h.update(HTMLDocument.GlobalDocumentLoc, new_docobj), ctx)
+            }
+            // in case that the 'id' property already exists
+            else {
+               val loc_existing = propval._1._1._1._2
+               val (h1, ctx1, val_locset) = loc_existing.foldLeft((h, ctx, LocSetBot))((hcl, ll) => {
+                 val obj_existing = hcl._1(ll)
+                 val tagName = obj_existing("tagName")
+                 val len = obj_existing("length")
+                 // in case that the 'tagName' property exists: DOM element
+                 if(tagName._2 <= AbsentBot) {
+                   // HTMLCollection
+                   val (h_1, ctx_1, loc_collection) = if(init) (hcl._1, hcl._2, HTMLCollection.getInstance(cfg).get)
+                                            else cfgAddrToLoc(hcl._1, hcl._2, cfg.getStoreAddress(addresskey))
+                   val collection_proplist = HTMLCollection.getInsList(2) ::: 
+                     List(("0", PropValue(ObjectValue(ll, T, T, T))), ("1", PropValue(ObjectValue(ins_loc, T, T, T))))
+                   (addInstance(h_1, loc_collection, collection_proplist), ctx_1, hcl._3 + loc_collection)
+                 }
+                 // in case that the 'tagName' property does not exist and 'length' exists: HTMLCollection
+                 else if(len._2 <= AbsentBot) {
+                   val n_len = Operator.ToUInt32(len._1._1._1)
+                   n_len match {
+                   case UIntSingle(n) =>
+                     val new_collection = obj_existing.update(
+                       AbsString.alpha(n.toInt.toString), PropValue(ObjectValue(ins_loc, T, T, T))).update(
+                       AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(n+1), T, T, T)))
+                     (hcl._1.update(ll, new_collection), hcl._2, hcl._3 + ll)
+                   case NumTop | UInt =>
+                     val new_collection = obj_existing.update(NumStr, PropValue(ObjectValue(ins_loc, T, T, T)))
+                     (hcl._1.update(ll, new_collection), hcl._2, hcl._3 + ll)
+      
+                   case _ => (hcl._1, hcl._2, hcl._3)
+                   }
+                 }
+                 else (hcl._1, hcl._2, hcl._3)
+               })
+               val new_docobj = docobj.update(AbsString.alpha(id), PropValue(ObjectValue(Value(val_locset), T, T, T)))
+               (h1.update(HTMLDocument.GlobalDocumentLoc, new_docobj), ctx1)
+            }
+          case "APPLET" | "FORM" | "IFRAME" | "IMG" | "OBJECT" if name != "" =>
+            val propval = docobj(name)
+            // in case that the 'name' property does not exist
+            if(propval._2 </ AbsentBot) {
+               val new_docobj = docobj.update(AbsString.alpha(name), PropValue(ObjectValue(ins_loc, T, T, T)))
+               (h.update(HTMLDocument.GlobalDocumentLoc, new_docobj), ctx)
+            }
+            // in case that the 'name' property already exists
+            else {
+               val loc_existing = propval._1._1._1._2
+               val (h1, ctx1, val_locset) = loc_existing.foldLeft((h, ctx, LocSetBot))((hcl, ll) => {
+                 val obj_existing = hcl._1(ll)
+                 val tagName = obj_existing("tagName")
+                 val len = obj_existing("length")
+                 // in case that the 'tagName' property exists: DOM element
+                 if(tagName._2 <= AbsentBot) {
+                   // HTMLCollection
+                   val (h_1, ctx_1, loc_collection) = if(init) (hcl._1, hcl._2, HTMLCollection.getInstance(cfg).get)
+                                            else cfgAddrToLoc(hcl._1, hcl._2, cfg.getStoreAddress(addresskey))
+                   val collection_proplist = HTMLCollection.getInsList(2) ::: 
+                     List(("0", PropValue(ObjectValue(ll, T, T, T))), ("1", PropValue(ObjectValue(ins_loc, T, T, T))))
+                   (addInstance(h_1, loc_collection, collection_proplist), ctx_1, hcl._3 + loc_collection)
+                 }
+                 // in case that the 'tagName' property does not exist and 'length' exists: HTMLCollection
+                 else if(len._2 <= AbsentBot) {
+                   val n_len = Operator.ToUInt32(len._1._1._1)
+                   n_len match {
+                   case UIntSingle(n) =>
+                     val new_collection = obj_existing.update(
+                       AbsString.alpha(n.toInt.toString), PropValue(ObjectValue(ins_loc, T, T, T))).update(
+                       AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(n+1), T, T, T)))
+                     (hcl._1.update(ll, new_collection), hcl._2, hcl._3 + ll)
+                   case NumTop | UInt =>
+                     val new_collection = obj_existing.update(NumStr, PropValue(ObjectValue(ins_loc, T, T, T)))
+                     (hcl._1.update(ll, new_collection), hcl._2, hcl._3 + ll)
+      
+                   case _ => (hcl._1, hcl._2, hcl._3)
+                   }
+                 }
+                 else (hcl._1, hcl._2, hcl._3)
+               })
+               val new_docobj = docobj.update(AbsString.alpha(name), PropValue(ObjectValue(Value(val_locset), T, T, T)))
+               (h1.update(HTMLDocument.GlobalDocumentLoc, new_docobj), ctx1)
+               
+            }
+          case _ => (h, ctx)
+      }
+      // Non-element node
+      case _ => (h, ctx)
+    }
+  }
+
+
+  // Update the id lookup table, name lookup table, tag lookup table, and class lookup table 
+  // for getElementById, getElementsByName, getElementsByTagName,
+  // also initialize the event target table
+  private def updateLookupTables(h: Heap, ctx: Context, node: Node, cfg: CFG, ins_loc: Loc, addresskey: Int, init: Boolean) : (Heap, Context) = node match {
+    // Element node
+    case e: Element => 
+      /* id look-up table update */
+      val id_table = h(IdTableLoc)
+      val id = e.getAttribute("id")
+      val h_1 = 
+      // if the element has an id,
+        if(id!="") {
+          val mapped_node = id_table(id)
+          // DOM Level 3 Core : If more than one element has an ID attribute with that value, 
+          //   what is returned is undefined
+          val new_value =  
+            // in case that the mapping does not exist
+            if(mapped_node._2 </ AbsentBot) Value(ins_loc)
+            // in case that the mapping already exists
+            else {
+              System.err.println("* Warning: More than one element has the ID, " + id + ".")  
+              Value(UndefTop)
+            }
+          val new_id_table = id_table.update(AbsString.alpha(id), PropValue(ObjectValue(new_value, T, T, T)))
+         h.update(IdTableLoc, new_id_table)
+        }
+        else h
+
+       /* name look-up table update */
+       val name_table = h_1(NameTableLoc)
+       val name = e.getAttribute("name")
+       val (h_2, ctx_2) =
+       // if the element has a name,
+         if(name!=""){
+           val mapped_node = name_table(name)
+            // in case that the mapping does not exist
+           if(mapped_node._2 </ AbsentBot) {
+             val (h_1_1, ctx_2_1, loc_nodelist) = if(init) (h_1, ctx, DOMNodeList.getInstance(cfg).get)
+                                            else cfgAddrToLoc(h_1, ctx, cfg.getStoreAddress(addresskey))
+             val nodelist_proplist = DOMNodeList.getInsList(1) :+
+               ("0", PropValue(ObjectValue(ins_loc, T, T, T)))
+             val new_name_table = name_table.update(AbsString.alpha(name), PropValue(ObjectValue(loc_nodelist, T, T, T)))
+             (addInstance(h_1_1, loc_nodelist, nodelist_proplist).update(NameTableLoc, new_name_table), ctx_2_1)
+           }
+           // in case that the mapping already exists
+           else {
+             val nodelist_locset = mapped_node._1._1._1._2
+             val newheap2 = nodelist_locset.foldLeft(h_1)((h, l) => {
+               val nodelist_obj = h(l)
+               val n_len = Operator.ToUInt32(Helper.Proto(h, l, AbsString.alpha("length")))
+               n_len match {
+                 case UIntSingle(n) =>
+                   val new_nodelist1 = nodelist_obj.update(
+                     AbsString.alpha(n.toInt.toString), PropValue(ObjectValue(ins_loc, T, T, T))).update(
+                     AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(n+1), T, T, T)))
+                   h.update(l, new_nodelist1)
+                 case NumTop | UInt =>
+                   val new_nodelist1 = nodelist_obj.update(NumStr, PropValue(ObjectValue(ins_loc, T, T, T)))
+                   h.update(l, new_nodelist1)
+      
+                case _ => h
+
+              }
+             })
+             (newheap2, ctx)
+           }
+         }
+         else (h_1, ctx) 
+       
+       /* tag look-up table update */
+       val tag_table = h_2(TagTableLoc)
+       val tag = e.getTagName
+       val (h_3, ctx_3) =
+       // if the element has a tag name,
+         if(tag!=null){
+           val mapped_node = tag_table(tag)
+           // in case that the mapping does not exist
+           if(mapped_node._2 </ AbsentBot) {
+             val (h_2_1, ctx_3_1, loc_nodelist) = if(init) (h_2, ctx_2, DOMNodeList.getInstance(cfg).get)
+                                            else cfgAddrToLoc(h_2, ctx_2, cfg.getStoreAddress(addresskey))
+             val nodelist_proplist = DOMNodeList.getInsList(1) :+
+               ("0", PropValue(ObjectValue(ins_loc, T, T, T)))
+             val new_tag_table = tag_table.update(AbsString.alpha(tag), PropValue(ObjectValue(loc_nodelist, T, T, T)))
+             (addInstance(h_2_1, loc_nodelist, nodelist_proplist).update(TagTableLoc, new_tag_table), ctx_3_1)
+           }
+           // in case that the mapping already exists
+           else {
+             val nodelist_locset = mapped_node._1._1._1._2
+             val newheap2 = nodelist_locset.foldLeft(h_2)((h, l) => {
+               val nodelist_obj = h(l)
+               val n_len = Operator.ToUInt32(Helper.Proto(h, l, AbsString.alpha("length")))
+               n_len match {
+                 case UIntSingle(n) =>
+                   val new_nodelist1 = nodelist_obj.update(
+                     AbsString.alpha(n.toInt.toString), PropValue(ObjectValue(ins_loc, T, T, T))).update(
+                     AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(n+1), T, T, T)))
+                   h.update(l, new_nodelist1)
+                 case NumTop | UInt =>
+                   val new_nodelist1 = nodelist_obj.update(NumStr, PropValue(ObjectValue(ins_loc, T, T, T)))
+                   h.update(l, new_nodelist1)
+      
+                case _ => h
+
+              }
+             })
+             (newheap2, ctx_2)
+           }
+         }
+         else (h_2, ctx_2)
+
+       /* class look-up table update */
+       val class_table = h_3(ClassTableLoc)
+       val classname = e.getAttribute("class")
+       val (h_4, ctx_4) =
+       // if the element has a class name,
+         if(classname!=""){
+           val mapped_node = class_table(classname)
+           // in case that the mapping does not exist
+           if(mapped_node._2 </ AbsentBot) {
+             val (h_3_1, ctx_4_1, loc_nodelist) = if(init) (h_3, ctx_3, DOMNodeList.getInstance(cfg).get)
+                                            else cfgAddrToLoc(h_3, ctx_3, cfg.getStoreAddress(addresskey))
+             val nodelist_proplist = DOMNodeList.getInsList(1) :+
+               ("0", PropValue(ObjectValue(ins_loc, T, T, T)))
+             val new_class_table = class_table.update(AbsString.alpha(classname), PropValue(ObjectValue(loc_nodelist, T, T, T)))
+             (addInstance(h_3_1, loc_nodelist, nodelist_proplist).update(ClassTableLoc, new_class_table), ctx_4_1)
+           }
+           // in case that the mapping already exists
+           else {
+             val nodelist_locset = mapped_node._1._1._1._2
+             val newheap2 = nodelist_locset.foldLeft(h_3)((h, l) => {
+               val nodelist_obj = h(l)
+               val n_len = Operator.ToUInt32(Helper.Proto(h, l, AbsString.alpha("length")))
+               n_len match {
+                 case UIntSingle(n) =>
+                   val new_nodelist1 = nodelist_obj.update(
+                     AbsString.alpha(n.toInt.toString), PropValue(ObjectValue(ins_loc, T, T, T))).update(
+                     AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(n+1), T, T, T)))
+                   h.update(l, new_nodelist1)
+                 case NumTop | UInt =>
+                   val new_nodelist1 = nodelist_obj.update(NumStr, PropValue(ObjectValue(ins_loc, T, T, T)))
+                   h.update(l, new_nodelist1)
+      
+                case _ => h
+
+              }
+             })
+             (newheap2, ctx_3)
+           }
+         }
+         else (h_3, ctx_3)
+
+       /* event target table update */
+       val event_target_table = h_4(EventTargetTableLoc)
+       val load_targets: LocSet = event_target_table("#LOAD")._1._2._2
+       val unload_targets: LocSet = event_target_table("#UNLOAD")._1._2._2
+       val keyboard_targets: LocSet = event_target_table("#KEYBOARD")._1._2._2
+       val mouse_targets: LocSet = event_target_table("#MOUSE")._1._2._2
+       val other_targets: LocSet = event_target_table("#OTHER")._1._2._2
+
+       val hasLoadEvent: Boolean = e.getAttribute("load")!="" || e.getAttribute("onload")!=""
+       val hasUnloadEvent: Boolean = e.getAttribute("unload")!="" || e.getAttribute("onunload")!=""
+       val hasKeyboardEvent: Boolean = e.getAttribute("onkeypress")!="" || e.getAttribute("onkeydown")!="" || e.getAttribute("onkeyup")!=""
+       val hasMouseEvent: Boolean = e.getAttribute("onclick")!="" || e.getAttribute("ondbclick")!="" || e.getAttribute("onmousedown")!="" || 
+                                    e.getAttribute("onmouseup")!="" || e.getAttribute("onmouseover")!="" || e.getAttribute("onmousemove")!="" ||
+                                    e.getAttribute("onmouseout")!=""
+       val hasOtherEvent: Boolean = e.getAttribute("onfocus")!="" || e.getAttribute("onblur")!="" || e.getAttribute("onsubmit")!="" ||
+                                    e.getAttribute("onreset")!="" || e.getAttribute("onselect")!="" || e.getAttribute("onchange")!="" ||
+                                    e.getAttribute("onresize")!="" || e.getAttribute("onselectstart")!=""
+       val event_target_table_1 = 
+         if(hasLoadEvent) event_target_table.update(AbsString.alpha("#LOAD"), PropValue(Value(load_targets + ins_loc)))
+         else event_target_table
+       val event_target_table_2 = 
+         if(hasUnloadEvent) event_target_table_1.update(AbsString.alpha("#UNLOAD"), PropValue(Value(unload_targets + ins_loc)))
+         else event_target_table_1
+       val event_target_table_3 = 
+         if(hasKeyboardEvent) event_target_table_2.update(AbsString.alpha("#KEYBOARD"), PropValue(Value(keyboard_targets + ins_loc)))
+         else event_target_table_2
+       val event_target_table_4 = 
+         if(hasMouseEvent) event_target_table_3.update(AbsString.alpha("#MOUSE"), PropValue(Value(mouse_targets + ins_loc)))
+         else event_target_table_3
+       val event_target_table_5 = 
+         if(hasOtherEvent) event_target_table_4.update(AbsString.alpha("#OTHER"), PropValue(Value(other_targets + ins_loc)))
+         else event_target_table_4
+      
+       (h_4.update(EventTargetTableLoc, event_target_table_5), ctx_4)
+
+  // non-Element node
+    case _ => (h, ctx)
+  }
+
+
+
+  // update the 'form' property of target object and 'elements' property in HTMLFormElement
+  private def updateFormProps(h: Heap, name: String, id: String, formloc : Option[Loc], targetloc : Loc): Heap = {
+    formloc match {
+      // update the 'elements' property in HTMLFormElement
+      case Some(l) =>
+        // HTMLFormElement object
+        val form_obj = h(l)
+        val new_form_obj = form_obj.update(AbsString.alpha(name), PropValue(ObjectValue(targetloc, T, T, T)))
+        val elements_locset = form_obj("elements")._1._1._1._2
+        val newheap2 = elements_locset.foldLeft(h)((h, ll) => {
+          val elements_obj = h(ll)
+          val n_len = Operator.ToUInt32(Helper.Proto(h, ll, AbsString.alpha("length")))
+          n_len match {
+            case UIntSingle(n) =>
+              val new_elements1 = elements_obj.update(
+                 AbsString.alpha(n.toInt.toString), PropValue(ObjectValue(targetloc, T, T, T))).update(
+                 AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(n+1), T, T, T)))
+              val new_elements2 = if(name!="") new_elements1.update(AbsString.alpha(name), PropValue(ObjectValue(targetloc, T, T, T)))
+                               else new_elements1
+              val new_elements3 = if(id!="") new_elements2.update(AbsString.alpha(id), PropValue(ObjectValue(targetloc, T, T, T)))
+                               else new_elements2
+              h.update(ll, new_elements3)
+            case NumTop | UInt =>
+              val new_elements1 = elements_obj.update(NumStr, PropValue(ObjectValue(targetloc, T, T, T)))
+                 
+              val new_elements2 = if(name!="") new_elements1.update(AbsString.alpha(name), PropValue(ObjectValue(targetloc, T, T, T)))
+                               else new_elements1
+              val new_elements3 = if(id!="") new_elements2.update(AbsString.alpha(id), PropValue(ObjectValue(targetloc, T, T, T)))
+                               else new_elements2
+              h.update(ll, new_elements3)
+              
+            case _ => h
+          }
+
+        })
+       val new_obj = newheap2(targetloc).update(AbsString.alpha("form"), PropValue(ObjectValue(l, F, T, T)))
+       newheap2.update(targetloc, new_obj).update(l, new_form_obj)
+     case None => h
+    }
+  }
+    
+  // Model a node in a dom tree
+  def modelNode(h: Heap, ctx: Context, node : Node, cfg: CFG, form : Option[Loc], addresskey: Int, init: Boolean) : ((Heap, Context), Loc) = {
+    val nodeName = node.getNodeName
+    val (_h, _ctx, loc) = if(init) (h, ctx, DOMNode.getInstance(cfg).get)
+                          else cfgAddrToLoc(h, ctx, cfg.getStoreAddress(addresskey))
+    val (h_1, ctx_1, ins_loc) = node match {
+      // Attr
+      case a: Attr =>
+        val newheap=addInstance(_h, loc, DOMAttr.getInsList(node))
+        // the Attr object does not have any siblings and parent
+        val newAttrObj=newheap(loc).
+                        update(OtherStrSingle("previousSibling"),
+                                PropValue(ObjectValue(PValue(NullTop), F, T, T))).
+                        update(OtherStrSingle("nextSibling"),
+                                PropValue(ObjectValue(PValue(NullTop), F, T, T))).
+                        update(OtherStrSingle("parentNode"),
+                                PropValue(ObjectValue(PValue(NullTop), F, T, T)))
+          (newheap.update(loc, newAttrObj), _ctx, loc)
+
+      // DocumentType
+      case d: DocumentType => 
+        val newheap=addInstance(_h, loc, DOMDocumentType.getInsList(node))
+        (newheap, _ctx, loc)
+      // Text node
+      case t: Text =>
+        val newheap=addInstance(_h, loc, DOMText.getInsList(node))
+        (newheap, _ctx, loc)
+      // Comment node
+      case c: Comment =>
+        val newheap=addInstance(_h, loc, DOMComment.getInsList(node))
+        (newheap, _ctx, loc)
+      // DocumentFragment node
+      case d: DocumentFragment =>
+        val newheap=addInstance(_h, loc, DOMDocumentFragment.getInsList(node))
+        // the DocumentFragment object does not have any siblings and parent
+        val newObj=newheap(loc).
+                        update(OtherStrSingle("previousSibling"),
+                                PropValue(ObjectValue(PValue(NullTop), F, T, T))).
+                        update(OtherStrSingle("nextSibling"),
+                                PropValue(ObjectValue(PValue(NullTop), F, T, T))).
+                        update(OtherStrSingle("parentNode"),
+                                PropValue(ObjectValue(PValue(NullTop), F, T, T)))
+        (newheap.update(loc, newObj), _ctx, loc)
+
+      // Document
+      case d: Document =>
+        val loc = HTMLDocument.getInstance(cfg).get
+        val newheap=addInstance(_h, loc, HTMLDocument.getInsList(node))
+
+        // 'forms' property
+        val (newheap_1, ctx_1, loc_forms) = if(init) (newheap, _ctx, HTMLCollection.getInstance(cfg).get)
+                                            else cfgAddrToLoc(newheap, _ctx, cfg.getStoreAddress(addresskey))
+        val newheap2 = addInstance(newheap_1, loc_forms, HTMLCollection.getInsList(0))
+        
+        // 'images' property
+        val (newheap2_1, ctx_2, loc_images) = if(init) (newheap2, ctx_1, HTMLCollection.getInstance(cfg).get)
+                                            else cfgAddrToLoc(newheap2, ctx_1, cfg.getStoreAddress(addresskey))
+        val newheap3 = addInstance(newheap2_1, loc_images, HTMLCollection.getInsList(0))
+        
+        // 'scripts' property
+        val (newheap3_1, ctx_3, loc_scripts) = if(init) (newheap3, ctx_2, HTMLCollection.getInstance(cfg).get)
+                                            else cfgAddrToLoc(newheap3, ctx_2, cfg.getStoreAddress(addresskey))
+        val newheap4 = addInstance(newheap3_1, loc_scripts, HTMLCollection.getInsList(0))
+        
+        // 'all' property
+        val (newheap4_1, ctx_4, loc_all) =  if(init) (newheap4, ctx_3, HTMLCollection.getInstance(cfg).get)
+                                            else cfgAddrToLoc(newheap4, ctx_3, cfg.getStoreAddress(addresskey))
+        val newheap5 = addInstance(newheap4_1, loc_all, HTMLAllCollection.getInsList(0))
+
+        // the root element does not have any siblings and parent
+        val newElementObj=newheap4(loc).
+                        update(OtherStrSingle("previousSibling"),
+                                PropValue(ObjectValue(PValue(NullTop), F, T, T))).
+                        update(OtherStrSingle("nextSibling"),
+                                PropValue(ObjectValue(PValue(NullTop), F, T, T))).
+                        update(OtherStrSingle("parentNode"),
+                                PropValue(ObjectValue(PValue(NullTop), F, T, T))).
+                        update(OtherStrSingle("offsetParent"),
+                                PropValue(ObjectValue(PValue(NullTop), F, T, T))).
+                        update(OtherStrSingle("forms"),
+                                PropValue(ObjectValue(Value(loc_forms), F, T, T))).
+                        update(OtherStrSingle("images"),
+                                PropValue(ObjectValue(Value(loc_images), F, T, T))).
+                        update(OtherStrSingle("scripts"),
+                                PropValue(ObjectValue(Value(loc_scripts), F, T, T))).
+                        update(OtherStrSingle("all"),
+                                PropValue(ObjectValue(Value(loc_all), F, T, T)))
+          (newheap5.update(loc, newElementObj), ctx_4, loc)
+      // Element
+      case e: Element => 
+        val (_newheap, ctx1_1, _insloc) = nodeName match {
+          case "HTML" =>
+            val newheap=addInstance(_h, loc, HTMLHtmlElement.getInsList(node))
+              // update 'documentElement' of HTMLDocument
+            val doc_loc = HTMLDocument.getInstance().get
+            val new_doc = newheap(doc_loc).
+            update(OtherStrSingle("documentElement"), PropValue(ObjectValue(loc, F, T, T)))
+            (newheap.update(doc_loc, new_doc), _ctx, loc)
+          case "HEAD" =>
+            val newheap=addInstance(_h, loc, HTMLHeadElement.getInsList(node))
+            /* 'document.head' update */
+            // 'document' object
+            val docobj = newheap(HTMLDocument.GlobalDocumentLoc)
+            val newdocobj = docobj.update(AbsString.alpha("head"), PropValue(ObjectValue(Value(loc), F, T, T))) 
+            (newheap.update(HTMLDocument.GlobalDocumentLoc, newdocobj), _ctx, loc)
+          case "LINK" =>
+            val newheap=addInstance(_h, loc, HTMLLinkElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "TITLE" =>
+            val newheap=addInstance(_h, loc, HTMLTitleElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "META" =>
+            val newheap=addInstance(_h, loc, HTMLMetaElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "BASE" =>
+            val newheap=addInstance(_h, loc, HTMLBaseElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "ISINDEX" =>
+            val newheap=addInstance(_h, loc, HTMLIsIndexElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "STYLE" =>
+            val newheap=addInstance(_h, loc, HTMLIsIndexElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "BODY" =>
+            val loc = HTMLBodyElement.getInstance(cfg).get
+            val newheap=addInstance(_h, loc, HTMLBodyElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "FORM" =>
+            val newheap=addInstance(_h, loc, HTMLFormElement.getInsList(node))
+            /* 'document.forms' update */
+            // 'document' object
+            val docobj = newheap(HTMLDocument.GlobalDocumentLoc)
+
+            val forms_locset = docobj("forms")._1._1._1._2
+            val newheap2 = forms_locset.foldLeft(newheap)((h, l) => {
+              val forms_obj = h(l)
+              val n_len = Operator.ToUInt32(Helper.Proto(h, l, AbsString.alpha("length")))
+              n_len match {
+                case UIntSingle(n) =>
+                  val new_forms1 = forms_obj.update(
+                     AbsString.alpha(n.toInt.toString), PropValue(ObjectValue(loc, T, T, T))).update(
+                     AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(n+1), T, T, T)))
+                  val name = e.getAttribute("name")
+                  val new_forms2 = if(name!="") new_forms1.update(AbsString.alpha(name), PropValue(ObjectValue(loc, T, T, T)))
+                                   else new_forms1
+                  h.update(l, new_forms2)
+                case NumTop | UInt =>
+                  val new_forms1 = forms_obj.update(NumStr, PropValue(ObjectValue(loc, T, T, T)))
+                  val name = e.getAttribute("name")
+                  val new_forms2 = if(name!="") new_forms1.update(AbsString.alpha(name), PropValue(ObjectValue(loc, T, T, T)))
+                                   else new_forms1
+                  h.update(l, new_forms2)
+      
+                case _ => h
+
+              }
+            })
+            // 'elements' property
+            val (newheap2_1, ctx_1, loc_elements) = if(init) (newheap2, _ctx, HTMLCollection.getInstance(cfg).get)
+                               else cfgAddrToLoc(newheap2, _ctx, cfg.getStoreAddress(addresskey))
+
+            val newheap3 = addInstance(newheap2_1, loc_elements, HTMLCollection.getInsList(0))
+
+            val new_formobj = newheap3(loc).
+                        update(OtherStrSingle("elements"),
+                                PropValue(ObjectValue(Value(loc_elements), F, T, T)))
+
+            (newheap3.update(loc, new_formobj), ctx_1, loc)
+          case "SELECT" =>
+            val newheap=addInstance(_h, loc, HTMLSelectElement.getInsList(node))
+            (updateFormProps(newheap, e.getAttribute("name"), e.getAttribute("id"), form, loc), _ctx, loc)
+          case "OPTGROUP" =>
+            val newheap=addInstance(_h, loc, HTMLOptGroupElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "OPTION" =>
+            val newheap=addInstance(_h, loc, HTMLOptionElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "INPUT" =>
+            val newheap=addInstance(_h, loc, HTMLInputElement.getInsList(node))
+            (updateFormProps(newheap, e.getAttribute("name"), e.getAttribute("id"), form, loc), _ctx, loc)
+          case "TEXTAREA" =>
+            val newheap=addInstance(_h, loc, HTMLTextAreaElement.getInsList(node))
+            (updateFormProps(newheap, e.getAttribute("name"), e.getAttribute("id"), form, loc), _ctx, loc)
+          case "BUTTON" =>
+            val newheap=addInstance(_h, loc, HTMLButtonElement.getInsList(node))
+            (updateFormProps(newheap, e.getAttribute("name"), e.getAttribute("id"), form, loc), _ctx, loc)
+          case "LABEL" =>
+            val newheap=addInstance(_h, loc, HTMLLabelElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "FIELDSET" =>
+            val newheap=addInstance(_h, loc, HTMLFieldSetElement.getInsList(node))
+            (updateFormProps(newheap, e.getAttribute("name"), e.getAttribute("id"), form, loc), _ctx, loc)
+          case "LEGEND" =>
+            val newheap=addInstance(_h, loc, HTMLLegendElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "UL" =>
+            val newheap=addInstance(_h, loc, HTMLUListElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "OL" =>
+            val newheap=addInstance(_h, loc, HTMLOListElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "DL" =>
+            val newheap=addInstance(_h, loc, HTMLDListElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "DIR" =>
+            val newheap=addInstance(_h, loc, HTMLDirectoryElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "MENU" =>
+            val newheap=addInstance(_h, loc, HTMLMenuElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "LI" =>
+            val newheap=addInstance(_h, loc, HTMLLIElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "DIV" =>
+            val newheap=addInstance(_h, loc, HTMLDivElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "P" =>
+            val newheap=addInstance(_h, loc, HTMLParagraphElement.getInsList(node))
+            (newheap, _ctx, loc)
+          // Heading element
+          case "H1" | "H2" | "H3" | "H4" | "H5" | "H6"  =>
+            val newheap=addInstance(_h, loc, HTMLHeadingElement.getInsList(node))
+            (newheap, _ctx, loc)
+          // Quote element
+          case "BLACKQUOTE" | "Q" =>
+            val newheap=addInstance(h, loc, HTMLQuoteElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "PRE" =>
+            val newheap=addInstance(_h, loc, HTMLPreElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "BR" =>
+            val newheap=addInstance(_h, loc, HTMLBRElement.getInsList(node))
+            (newheap, _ctx, loc)
+          // BASEFONT Element : deprecated
+          case "BASEFONT" =>
+            val newheap=addInstance(_h, loc, HTMLBaseFontElement.getInsList(node))
+            (newheap, _ctx, loc)
+          // FONT Element : deprecated
+          case "FONT" =>
+            val newheap=addInstance(_h, loc, HTMLFontElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "HR" =>
+            val newheap=addInstance(_h, loc, HTMLHRElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "INS" | "DEL" =>
+            val newheap=addInstance(_h, loc, HTMLModElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "A" =>
+            val newheap=addInstance(_h, loc, HTMLAnchorElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "IMG" =>
+            val newheap=addInstance(_h, loc, HTMLImageElement.getInsList(node))
+            /* 'document.images' update */
+            // 'document' object
+            val docobj = newheap(HTMLDocument.GlobalDocumentLoc)
+            val images_locset = docobj("images")._1._1._1._2
+            val newheap2 = images_locset.foldLeft(newheap)((h, l) => {
+              val images_obj = h(l)
+              val n_len = Operator.ToUInt32(Helper.Proto(h, l, AbsString.alpha("length")))
+              n_len match {
+                case UIntSingle(n) =>
+                  val new_images1 = images_obj.update(
+                     AbsString.alpha(n.toInt.toString), PropValue(ObjectValue(loc, T, T, T))).update(
+                     AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(n+1), T, T, T)))
+                  val name = e.getAttribute("name")
+                  val new_images2 = if(name!="") new_images1.update(AbsString.alpha(name), PropValue(ObjectValue(loc, T, T, T)))
+                                   else new_images1
+                  h.update(l, new_images2)
+                case NumTop | UInt =>
+                  val new_images1 = images_obj.update(NumStr, PropValue(ObjectValue(loc, T, T, T)))
+                  val name = e.getAttribute("name")
+                  val new_images2 = if(name!="") new_images1.update(AbsString.alpha(name), PropValue(ObjectValue(loc, T, T, T)))
+                                   else new_images1
+                  h.update(l, new_images2)
+      
+                case _ => h
+
+              }
+            })
+            (newheap2, _ctx, loc)
+          case "OBJECT" =>
+            val newheap=addInstance(_h, loc, HTMLObjectElement.getInsList(node))
+            (updateFormProps(newheap, e.getAttribute("name"), e.getAttribute("id"), form, loc), _ctx, loc)
+          case "PARAM" =>
+            val newheap=addInstance(_h, loc, HTMLParamElement.getInsList(node))
+            (newheap, _ctx, loc)
+          // APPLET element : deprecated
+          case "APPLET" =>
+            val newheap=addInstance(_h, loc, HTMLAppletElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "MAP" =>
+            val newheap=addInstance(_h, loc, HTMLMapElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "AREA" =>
+            val newheap=addInstance(_h, loc, HTMLAreaElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "SCRIPT" =>
+            val newheap=addInstance(_h, loc, HTMLScriptElement.getInsList(node))
+            /* 'document.scripts' update */
+            // 'document' object
+            val docobj = newheap(HTMLDocument.GlobalDocumentLoc)
+
+            val scripts_locset = docobj("scripts")._1._1._1._2
+            val newheap2 = scripts_locset.foldLeft(newheap)((h, l) => {
+              val scripts_obj = h(l)
+              val n_len = Operator.ToUInt32(Helper.Proto(h, l, AbsString.alpha("length")))
+              n_len match {
+                case UIntSingle(n) =>
+                  val new_scripts1 = scripts_obj.update(
+                     AbsString.alpha(n.toInt.toString), PropValue(ObjectValue(loc, T, T, T))).update(
+                     AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(n+1), T, T, T)))
+                  val name = e.getAttribute("name")
+                  val new_scripts2 = if(name!="") new_scripts1.update(AbsString.alpha(name), PropValue(ObjectValue(loc, T, T, T)))
+                                   else new_scripts1
+                  h.update(l, new_scripts2)
+                case NumTop | UInt =>
+                  val new_scripts1 = scripts_obj.update(NumStr, PropValue(ObjectValue(loc, T, T, T)))
+                  val name = e.getAttribute("name")
+                  val new_scripts2 = if(name!="") new_scripts1.update(AbsString.alpha(name), PropValue(ObjectValue(loc, T, T, T)))
+                                   else new_scripts1
+                  h.update(l, new_scripts2)
+                case _ => h
+
+              }
+            })
+            (newheap2, _ctx, loc)
+          case "TABLE" =>
+            val newheap=addInstance(_h, loc, HTMLTableElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "CAPTION" =>
+            val newheap=addInstance(_h, loc, HTMLTableCaptionElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "COL" =>
+            val newheap=addInstance(_h, loc, HTMLTableColElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "THEAD" | "TFOOT" | "TBODY" =>
+            val newheap=addInstance(_h, loc, HTMLTableSectionElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "TR"  =>
+            val newheap=addInstance(_h, loc, HTMLTableRowElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "TH" | "TD"  =>
+            val newheap=addInstance(_h, loc, HTMLTableCellElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "FRAMESET"  =>
+            val newheap=addInstance(_h, loc, HTMLFrameSetElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "FRAME"  =>
+            val newheap=addInstance(_h, loc, HTMLFrameElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "IFRAME"  =>
+            val newheap=addInstance(_h, loc, HTMLIFrameElement.getInsList(node))
+            (newheap, _ctx, loc)
+          // Special tags
+          case "SUB" | "SUP" | "SPAN" | "BDO" | "BDI" =>
+            val prop_list = HTMLElement.getInsList(node)++List(
+              ("@class",   PropValue(AbsString.alpha("Object"))),
+              ("@proto",   PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
+              ("@extensible",   PropValue(BoolTrue)))
+            val newheap = addInstance(_h, loc, prop_list)
+            (newheap, _ctx, loc)    
+          // Font tags
+          case "TT" | "I" | "B" | "U" | "S" | "STRIKE" | "BIG" | "SMALL" =>
+            val prop_list = HTMLElement.getInsList(node)++List(
+              ("@class",   PropValue(AbsString.alpha("Object"))),
+              ("@proto",   PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
+              ("@extensible",   PropValue(BoolTrue)))
+            val newheap = addInstance(_h, loc, prop_list)
+            (newheap, _ctx, loc)    
+          // Phrase tags
+          case "EM" | "STRONG" | "DFN" | "CODE" | "SAMP" | "KBD" | "VAR" | "CITE" | "ACRONYM" | "ABBR" =>
+            val prop_list = HTMLElement.getInsList(node)++List(
+              ("@class",   PropValue(AbsString.alpha("Object"))),
+              ("@proto",   PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
+              ("@extensible",   PropValue(BoolTrue)))
+            val newheap = addInstance(_h, loc, prop_list)
+            (newheap, _ctx, loc)    
+          // List tags
+          case "DD" | "DT" =>
+            val prop_list = HTMLElement.getInsList(node)++List(
+              ("@class",   PropValue(AbsString.alpha("Object"))),
+              ("@proto",   PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
+              ("@extensible",   PropValue(BoolTrue)))
+            val newheap = addInstance(_h, loc, prop_list)
+            (newheap, _ctx, loc)    
+          // etc
+          case "NOFRAMES" | "NOSCRIPT" | "ADDRESS" | "CENTER"  =>
+            val prop_list = HTMLElement.getInsList(node)++List(
+              ("@class",   PropValue(AbsString.alpha("Object"))),
+              ("@proto",   PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
+              ("@extensible",   PropValue(BoolTrue)))
+            val newheap = addInstance(_h, loc, prop_list)
+            (newheap, _ctx, loc)
+          /* HTML 5 */
+          case "CANVAS"  =>
+            val newheap=addInstance(_h, loc, HTMLCanvasElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "DATALIST"  =>
+            val newheap=addInstance(_h, loc, HTMLDataListElement.getInsList(node))
+            (newheap, _ctx, loc)
+          case "HEADER" | "FOOTER" | "ARTICLE" | "SECTION" | "NAV" =>
+            val prop_list = HTMLElement.getInsList(node)++List(
+              ("@class",   PropValue(AbsString.alpha("Object"))),
+              ("@proto",   PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
+              ("@extensible",   PropValue(BoolTrue)))
+            val newheap = addInstance(_h, loc, prop_list)
+            (newheap, _ctx, loc)    
+
+          case _ =>
+            System.err.println("* Warning: " + node.getNodeName + " - not modeled yet.")
+            val prop_list = HTMLElement.getInsList(node)++List(
+              ("@class",   PropValue(AbsString.alpha("Object"))),
+              ("@proto",   PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
+              ("@extensible",   PropValue(BoolTrue)))
+            val newheap = addInstance(h, loc, prop_list)
+            (newheap, _ctx, loc)
+        }
+        // update the "style" and "innerText" property
+        val (_newheap1, ctx1_2, styleloc) = if(init) (_newheap, ctx1_1, CSSStyleDeclaration.getInstance(cfg).get)
+                                else cfgAddrToLoc(_newheap, ctx1_1, cfg.getStoreAddress(addresskey))
+
+        val _newheap2 = addInstance(_newheap1, styleloc, CSSStyleDeclaration.getInsList)
+        val newelem = _newheap2(_insloc).update("style", PropValue(ObjectValue(Value(styleloc), T, T, T))).
+                                         update("innerText", _newheap2(_insloc)("textContent")._1)
+        /* 'document.all' update */
+        // 'document' object
+        val docobj = _newheap2(HTMLDocument.GlobalDocumentLoc)
+        
+        val all_locset = docobj("all")._1._1._1._2
+        val _newheap3 = all_locset.foldLeft(_newheap2)((h, l) => {
+          val all_obj = h(l)
+          val n_len = Operator.ToUInt32(Helper.Proto(h, l, AbsString.alpha("length")))
+          n_len match {
+            case UIntSingle(n) =>
+              val new_all1 = all_obj.update(
+                 AbsString.alpha(n.toInt.toString), PropValue(ObjectValue(_insloc, T, T, T))).update(
+                 AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(n+1), T, T, T)))
+              val id = e.getAttribute("id")
+              val new_all2 = if(id!="") new_all1.update(AbsString.alpha(id), PropValue(ObjectValue(_insloc, T, T, T)))
+                               else new_all1
+              h.update(l, new_all2)
+            case NumTop | UInt =>
+              val new_all1 = all_obj.update(NumStr, PropValue(ObjectValue(_insloc, T, T, T)))
+              val id = e.getAttribute("id")
+              val new_all2 = if(id!="") new_all1.update(AbsString.alpha(id), PropValue(ObjectValue(loc, T, T, T)))
+                               else new_all1
+              h.update(l, new_all2)
+            case _ => h
+
+          }
+        })
+        val _newheap4 = HTMLTopElement.setInsLoc(_newheap3, _insloc)
+        (_newheap4.update(_insloc, newelem), ctx1_2, _insloc)
+      case _ =>
+        // the node, not modeled yet, gets a dummy location for the 'Element' node 
+        val newheap=addInstance(_h, loc, List())
+        System.err.println("* Warning: " + node.getNodeName + " - not modeled yet.")
+        (newheap, _ctx, loc)
+
+    }
+
+    // 'attributes' property update
+    val attributes = node.getAttributes
+    val (h_2, ctx_2, attributes_val) = if(attributes==null) (h_1, ctx_1, PropValue(ObjectValue(NullTop, F, T, T)))
+      else {
+        val length = attributes.getLength
+        val (h_1_1, ctx_2_1, attributes_loc) = if(init) (h_1, ctx_1, DOMNamedNodeMap.getInstance(cfg).get)
+                                      else cfgAddrToLoc(h_1, ctx_1, cfg.getStoreAddress(addresskey))
+        val (h_2_1, ctx_2_2, attributes_objlist) = (0 until length).foldLeft[(Heap, Context, List[(String, PropValue)])]((h_1_1, ctx_2_1, DOMNamedNodeMap.getInsList(length)))((hcl, i) => {
+           val attr = attributes.item(i)
+           val ((newheap, new_ctx), attr_loc) = buildDOMTree(hcl._1, hcl._2, attr, cfg, None, addresskey, init)
+           val newlist: List[(String, PropValue)] = hcl._3 ++ List(
+            (i.toString, PropValue(ObjectValue(attr_loc, T, T, T))),
+            (attr.getNodeName.toLowerCase, PropValue(ObjectValue(attr_loc, T, T, T)))
+           )
+           (newheap, new_ctx, newlist) 
+        })
+        (addInstance(h_2_1, attributes_loc, attributes_objlist), ctx_2_2, PropValue(ObjectValue(attributes_loc, F, T, T)))           
+      }
+    
+    val ins_obj_new = h_2(ins_loc).update(AbsString.alpha("attributes"), attributes_val)
+    
+    // initialize id, name, tag, and event look-up tables
+    val (h_3, ctx_3) = updateLookupTables(h_2.update(ins_loc, ins_obj_new), ctx_2, node, cfg, ins_loc, addresskey, init)
+    // initialize named properties in Document
+    val (h_4, ctx_4) = updateDocumentNamedProps(h_3, ctx_3, node, cfg, ins_loc, addresskey, init)
+    ((h_4, ctx_4), ins_loc)
+  }
+  
+  
+  private def cfgAddrToLoc(h: Heap, ctx: Context, addr: Address): (Heap, Context, Loc) = {
+    val l = addrToLoc(addr, Recent)
+    val (h1, ctx1) = Helper.Oldify(h, ctx, addr)
+    (h1, ctx1, l)
+  }
+
+
+  // Construct a DOM tree for the html source
+  // 'form' : keeps a location of HTMLFormElement if any.
+  // 'init' : indicates whether this function is called before analysis or not
+  def buildDOMTree(h: Heap, ctx: Context, node : Node, cfg: CFG, form : Option[Loc], addresskey: Int, init: Boolean) : ((Heap, Context), Loc) = {
+    val children : NodeList = node.getChildNodes
+    val num_children = children.getLength
+        
+    val ((h_1, _ctx), absloc1) = modelNode(h, ctx, node, cfg, form, addresskey, init)     
+
+    if(num_children == 0) {
+      val (h_1_1, ctx_1, absloc2) = if(init) (h_1, _ctx, DOMNodeList.getInstance(cfg).get) 
+                                    else cfgAddrToLoc(h_1, _ctx, cfg.getStoreAddress(addresskey))
+      val h_2 = addInstance(h_1_1, absloc2, DOMNodeList.getInsList(0))
+      val newElementObj = h_2(absloc1).
+        update(OtherStrSingle("childNodes"),    PropValue(ObjectValue(absloc2, F, T, T))).
+        update(OtherStrSingle("firstChild"),    PropValue(ObjectValue(PValue(NullTop), F, T, T))).
+        update(OtherStrSingle("lastChild"),     PropValue(ObjectValue(PValue(NullTop), F, T, T)))
+      ((h_2.update(absloc1, newElementObj), ctx_1), absloc1)
+    }
+
+    else {
+      val formelement = if(node.getNodeName == "FORM") Some(absloc1) else form
+      val (h_2, ctx_1, absloc_list) = (0 until num_children).foldLeft[(Heap, Context, List[Loc])]((h_1, _ctx, List()))((hcl, i) => {
+        val ((_h, _ctx1), absloc2) = buildDOMTree(hcl._1, hcl._2, children.item(i), cfg, formelement, addresskey, init)
+        (_h, _ctx1, hcl._3 :+ absloc2)
+      })
+
+      val (h_2_1, ctx_2, absloc3) = if(init) (h_2, ctx_1, DOMNodeList.getInstance(cfg).get)
+                                    else cfgAddrToLoc(h_2, ctx_1, cfg.getStoreAddress(addresskey))
+      val h_3 = addInstance(h_2_1, absloc3, DOMNodeList.getInsList(num_children))
+      
+      var children_obj = h_3(absloc3)
+      
+      val absobj_list : List[Obj] = absloc_list.zipWithIndex.map(
+         ele => {
+          val x=ele._1
+          val i=ele._2
+          // object update for the 'childNodes' field
+          children_obj = children_obj.
+                        update(NumStrSingle(i.toString),   PropValue(ObjectValue(absloc_list(i), T, T, T)))
+          // set the 'parentNode' and 'offsetParent' fields of all children nodes
+          // 'offsetParent' could be more precise with null
+          val newObj1 = h_3(x).
+                update(OtherStrSingle("parentNode"), PropValue(ObjectValue(absloc1, F, T, T))).
+                update(OtherStrSingle("offsetParent"), PropValue(ObjectValue(Value(absloc1) + Value(NullTop), F, T, T)))
+          // set the sibling information
+          val newObj2 = if(i==0) newObj1.update(OtherStrSingle("previousSibling"), 
+                                                  PropValue(ObjectValue(PValue(NullTop), F, T, T)))
+                        else newObj1.update(OtherStrSingle("previousSibling"),   
+                                                  PropValue(ObjectValue(absloc_list(i-1), F, T, T)))
+          if (i==num_children-1)
+            newObj2.update(OtherStrSingle("nextSibling"),   
+                                                  PropValue(ObjectValue(PValue(NullTop), F, T, T)))
+          else
+            newObj2.update(OtherStrSingle("nextSibling"),   
+                                                  PropValue(ObjectValue(absloc_list(i+1), F, T, T)))
+        })
+
+      // set the children information in the parent node
+      val newElementObj=h_3(absloc1).
+                         update(OtherStrSingle("childNodes"),   PropValue(ObjectValue(absloc3, F, T, T))).
+                         update(OtherStrSingle("firstChild"),   PropValue(ObjectValue(absloc_list(0), F, T, T))).
+                         update(OtherStrSingle("lastChild"),   PropValue(ObjectValue(absloc_list(num_children-1), F, T, T)))
+
+      val h_4: Heap = ((absloc_list zip absobj_list).foldLeft(h_3)((_h, y) => _h.update(y._1, y._2)))
+
+      ((h_4.update(absloc3, children_obj).update(absloc1, newElementObj), ctx_2), absloc1)
+    }
+
+  }
+
+
 }

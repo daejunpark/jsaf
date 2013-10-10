@@ -78,8 +78,8 @@ object AnalyzeMain {
     }
     if (Shell.params.command == ShellParameters.CMD_HTML ||
         Shell.params.command == ShellParameters.CMD_BUG_DETECTOR) {
-      Shell.params.opt_MultiThread = true
-      Shell.params.opt_ReturnStateOn = true
+      //Shell.params.opt_MultiThread = true
+      //Shell.params.opt_ReturnStateOn = true
     }
 
     // Context-sensitivity mode
@@ -136,6 +136,7 @@ object AnalyzeMain {
       // DOM mode
       Config.setDomMode
       if(Shell.params.opt_jQuery) Config.setJQueryMode
+      if(Shell.params.opt_Domprop) Config.setDOMPropMode
     }
 
     // for Tizen
@@ -156,7 +157,7 @@ object AnalyzeMain {
 
     // Read a JavaScript file and translate to IR
     var start = System.nanoTime
-    var pair: Pair[Program, HashMap[String, String]] = null
+    var program: Program = null
 
     // for HTML
     var jshtml: JSFromHTML = null
@@ -164,13 +165,11 @@ object AnalyzeMain {
         Shell.params.command == ShellParameters.CMD_HTML_SPARSE) {
       jshtml = new JSFromHTML(fileName)
       // Parse JavaScript code in the target html file
-      pair = jshtml.parseScripts
+      program = jshtml.parseScripts
     }
-    else pair = Parser.fileToAST(fileNames)
+    else program = Parser.fileToAST(fileNames)
 
-    val program: Program = pair.first
-    val fileMap: HashMap[String, String] = pair.second
-    val irErrors = Shell.ASTtoIR(fileName, program, JOption.none[String], JOption.none[Coverage])
+    val irErrors = Shell.ASTtoIR(fileName, program, JOption.none[String], JOption.none[kr.ac.kaist.jsaf.nodes_util.Coverage])
     val irOpt: JOption[IRRoot] = irErrors.first
     val program2: Program = irErrors.third // Disambiguated and hoisted and with written
 
@@ -313,8 +312,8 @@ object AnalyzeMain {
     }
     if (Shell.params.opt_Visual && typingInterface.isInstanceOf[Typing]) {
       System.out.println("\n* Visualization *")
-      val vs: Visualization = new Visualization(typingInterface.asInstanceOf[Typing], fileMap, NodeUtil.getFileName(ir), Shell.toOption(Shell.params.opt_OutFileName))
-      vs.run
+      val vs: Visualization = new Visualization(typingInterface.asInstanceOf[Typing], fileName, Shell.toOption(Shell.params.opt_OutFileName))
+      vs.run(true)
     }
 
     if (!quiet) {
@@ -327,14 +326,28 @@ object AnalyzeMain {
       System.out.println("Test pass")
     }
 
-    // Node relation set
-    NodeRelation.set(program2, ir, cfg, quiet)
+    // Print Coverages
+    if(Shell.params.opt_FunctionCoverage) {
+      val coverage = new kr.ac.kaist.jsaf.analysis.typing.Coverage
+      coverage.set(typingInterface)
+      println("\n* Function Coverage *\n")
+      println(coverage.coveredFIDSetToString)
+      println(coverage.notCoveredFIDSetToString)
+    }
 
-    // Execute Bug Detector
-    System.out.println("\n* Bug Detector *")
-    val detector = new BugDetector(program2, cfg, typingInterface, fileMap, quiet, irErrors.second)
-    StrictModeChecker.checkAdvanced(program2, cfg, detector.varManager, detector.stateManager)
-    detector.detectBug
+    // Bug Detector
+    /*if(Shell.params.command == ShellParameters.CMD_HTML ||
+      Shell.params.command == ShellParameters.CMD_HTML_SPARSE ||
+      Shell.params.command == ShellParameters.CMD_BUG_DETECTOR) {*/
+      // Node relation set
+      NodeRelation.set(program2, ir, cfg, quiet)
+
+      // Execute Bug Detector
+      System.out.println("\n* Bug Detector *")
+      val detector = new BugDetector(program2, cfg, typingInterface, quiet, irErrors.second)
+      StrictModeChecker.checkAdvanced(program2, cfg, detector.varManager, detector.stateManager)
+      detector.detectBug
+    //}
 
     if (!quiet) printf("\nAnalysis took %.2fs\n", (System.nanoTime - analyzeStartTime) / 1000000000.0)
 

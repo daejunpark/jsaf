@@ -26,13 +26,13 @@ import scala.collection.mutable.ListBuffer
 
 
 
-class Visualization(typing:Typing, fileMap: JHashMap[String, String], in:String, out:Option[String]) {
+class Visualization(typing:Typing, in:String, out:Option[String], inCFG:CFG = null) {
   var outpath:String = "";
   var filename = ""
   var resultpath = ""
-  val cfg = typing.cfg
+  val cfg = if (inCFG != null) inCFG else typing.cfg
 
-  def run() {
+  def run(fromCFG: Boolean) {
     filename = (new File(in)).getName.split(".js")(0)
     out.isSome match {
       case true =>
@@ -53,24 +53,30 @@ class Visualization(typing:Typing, fileMap: JHashMap[String, String], in:String,
         s + f.getName() + ","
       })
 	}
-    drawGraph(resultpath)
-    dumpSourceInfo
-    dumpFuncInfo
-    runScript
+    drawGraph(resultpath, !fromCFG)
+    if (fromCFG) {
+      dumpSourceInfo
+      dumpFuncInfo
+      runScript
+    }
   }
   
-  def drawGraph(path:String) {
-    FunCFGWriter.write(cfg, getFuncsId, typing.programNodes, path, "dot")
-    CGWriter.write(cfg, getCallgraph, path+"/callgraph.dot", path+"/callgraph.svg", "dot")
+  def drawGraph(path:String, onlyGraph:Boolean) {
+    if (onlyGraph) {
+      FunCFGWriter.write(cfg, cfg.getFunctionIds.toList, cfg.getNodes, path, "dot")
+    } else {
+      FunCFGWriter.write(cfg, getFuncsId, typing.programNodes, path, "dot")
+      CGWriter.write(cfg, getCallgraph, path+"/callgraph.dot", path+"/callgraph.svg", "dot")
+    }
   }
   
   
   def dumpSourceInfo() {
     try {
       var contents = new StringBuilder
-      Source.fromFile(fileMap.get(in).split("::")(0)).getLines.foreach((line) => {
-        contents.append("\"").append(line.replaceAll("\"", "\\\\\"").replaceAll("\t", "        ")).append("\\n\" +\n")
-      })
+      //Source.fromFile(fileMap.get(in).split("::")(0)).getLines.foreach((line) => {
+      //  contents.append("\"").append(line.replaceAll("\"", "\\\\\"").replaceAll("\t", "        ")).append("\\n\" +\n")
+      //})
       contents.append("\"").append("\";")
       
       val sb = new StringBuilder

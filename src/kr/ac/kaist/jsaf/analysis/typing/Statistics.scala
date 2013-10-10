@@ -151,6 +151,9 @@ class Statistics(cfg: CFG, builtins:Map[FunctionId, String], inTable: Table, loc
               case Some(e) => V(e, stateMap, nodeStat)
             }
           }
+          case CFGAssert(_, _, expr, flag) => {
+            if(flag) V(expr, stateMap, nodeStat)
+          }
           case CFGThrow(_, _, expr) => {
             V(expr, stateMap, nodeStat)
           }

@@ -30,7 +30,7 @@ object CoverageMain {
 
     var return_code = 0
     val coverage = new Coverage
-    val irOpt: JOption[IRRoot] = Shell.fileToIR(fileNames, JOption.none[String], JOption.some[Coverage](coverage)).first
+    val irOpt: JOption[IRRoot] = Shell.fileToIR(fileNames, JOption.none[String], JOption.some[Coverage](coverage))
     if (irOpt.isSome) {
       val ir: IRRoot = irOpt.unwrap
       new Interpreter().doit(ir, JOption.some[Coverage](coverage), true)

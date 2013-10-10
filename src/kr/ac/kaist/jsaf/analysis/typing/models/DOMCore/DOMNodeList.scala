@@ -154,4 +154,18 @@ object DOMNodeList extends DOM {
     // DOM Level 1
     ("length",   PropValue(ObjectValue(AbsNumber.alpha(length), F, T, T)))
   )
+  def getInsList(length: PropValue): List[(String, PropValue)] = List(
+    ("@class",  PropValue(AbsString.alpha("Object"))),
+    ("@proto",  PropValue(ObjectValue(loc_proto, F, F, F))),
+    ("@extensible", PropValue(BoolTrue)),
+    // DOM Level 1
+    ("length",   length)
+  )
+
+  def getInsListTop(top_loc: Loc): List[(String, PropValue)] = 
+    getInsList(PropValue(ObjectValue(UInt, F, T, T))) ++ List(
+    ("@default_number", PropValue(ObjectValue(Value(top_loc), T, T, T)))
+  )
+
+
 }

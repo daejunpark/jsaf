@@ -13,6 +13,7 @@ import scala.collection.immutable.HashMap
 import scala.collection.immutable.HashSet
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
+import kr.ac.kaist.jsaf.Shell
 
 class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Table, quiet: Boolean, locclone: Boolean) {
   private val sem = new Semantics(cfg, worklist, locclone)
@@ -20,13 +21,19 @@ class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Tabl
   var count = 0
   var duset: DUSet = Map()
   var time = 0.0
+  var isTimeout = false
+  var startTime: Long = 0
 
   def compute(du: DUSet): Unit = {
+    // Analysis start time
+    startTime = System.nanoTime()
+
     duset = du
     worklist.add(((cfg.getGlobalFId, LEntry), CallContext.globalCallContext), None, false)
     System.out.println()
     loop()
     System.out.println()
+    if(isTimeout) System.out.println("*** Analysis time out! (" + Shell.params.opt_Timeout + " sec)")
     if (!quiet)
       System.out.println("# edge recovering time: "+time)
   }
@@ -53,6 +60,12 @@ class SparseFixpoint(cfg: CFG, env: SparseEnv, worklist: Worklist, inTable: Tabl
 
       val (cp, callerCPSetOpt) = worklist.getHead()
       val (fg, ddg) = env.getFlowGraph(cp._1._1, cp._2)
+
+      // Analysis timeout check
+      if(Shell.params.opt_Timeout > 0) {
+        if(isTimeout) return
+        if((System.nanoTime() - startTime) / 1000000000 > Shell.params.opt_Timeout) {isTimeout = true; return}
+      }
 
       val inS = readTable(cp)
 

@@ -22,9 +22,14 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
   var count = 0
   var duset: DUSet = Map()
   var time = 0.0
+  var isTimeout = false
+  var startTime: Long = 0
 
   def compute(du: DUSet): Unit = {
     Config.setDebugger(Shell.params.opt_debugger)
+
+    // Analysis start time
+    startTime = System.nanoTime()
 
     duset = du
     worklist.add(((cfg.getGlobalFId, LEntry), CallContext.globalCallContext), None, false)
@@ -34,7 +39,9 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
 
     if(!quiet) System.out.println()
     loop()
-    if(!quiet) System.out.println("\n# edge recovering time: "+time)
+    if(!quiet) System.out.println()
+    if(isTimeout) System.out.println("*** Analysis time out! (" + Shell.params.opt_Timeout + " sec)")
+    if(!quiet) System.out.println("# edge recovering time: "+time)
 
     if (Config.debugger)
       DebugConsoleDSparse.runFinished()
@@ -68,6 +75,12 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
 
       val (cp, callerCPSetOpt) = worklist.getHead()
       val (fg, ddg) = env.getFlowGraph(cp._1._1, cp._2)
+
+      // Analysis timeout check
+      if(Shell.params.opt_Timeout > 0) {
+        if(isTimeout) return
+        if((System.nanoTime() - startTime) / 1000000000 > Shell.params.opt_Timeout) {isTimeout = true; return}
+      }
 
       val inS = readTable(cp)
 

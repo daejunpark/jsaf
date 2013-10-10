@@ -388,17 +388,11 @@ rewritten as a non-local jump to the label \newvar{return}.
 & & \phantom{\mbox{LET\ }} (\irstmt_2^*, \irexpr_2) = \atoiEfd{e_2}({\inblue\newvb})\\
 & & \mbox{IN}\hspace*{1.2em}
 \open\irstmt_1^*\verb+;+\
-%\irstmt_2^*\verb+;+
-\mbox{IF $\irstmt_2^*$ is not empty THEN\ }
-{\inred\newvar{new_1}}\ \verb+=+\ \irexpr_1\verb+;+
 \\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}
 {\inblue \newvar{label}} \; \verb+:+ \; \verb+{+\\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}\quad
-{\sf if\ (}
-%{\irexpr_1}
-\mbox{IF $\irstmt_2^*$ is empty THEN $\irexpr_1$ ELSE ${\inred\newvar{new_1}}$}
-{\sf )}
+{\sf if\ (}{\irexpr_1}{\sf )}
 \\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}\quad
 {\sf then}\ \langle \irstmt_2^*\verb+;+\
@@ -428,20 +422,13 @@ rewritten as a non-local jump to the label \newvar{return}.
 & & \phantom{\mbox{LET\ }} (\irstmt_2^*, \irexpr_2) = \atoiEfd{e_2}({\inblue\newvb})\\
 & & \mbox{IN}\hspace*{1.2em}
 \open\irstmt_1^*\verb+;+\
-%\irstmt_2^*\verb+;+
-\mbox{IF $\irstmt_2^*$ is not empty THEN\ }
-{\inred\newvar{new_1}}\ \verb+=+\ \irexpr_1\verb+;+
 \\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}
 {\inblue \newvar{label_2}} \; \verb+:+ \; \verb+{+\\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}\quad
 {\inblue \newvar{label_1}} \; \verb+:+ \; \verb+{+\\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}\quad\quad
-{\sf if\ (}
-%{\irexpr_1}
-\mbox{IF $\irstmt_2^*$ is empty THEN $\irexpr_1$ ELSE ${\inred\newvar{new_1}}$}
-{\sf )}
-\\
+{\sf if\ (}{\irexpr_1}{\sf )}\\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}\quad\quad
 {\sf then\ break}\ {\inred\newvar{label_1}}\verb+;+\ \irstmt_2^*\verb+;+\\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}\quad\quad
@@ -1155,15 +1142,11 @@ Where $c$ is either $(\expr, \ir{l})$ or $((), \ir{l})$.
 & & \mbox{IN}\hspace*{1.2em}
 (\irstmt_a^*\verb+;+\
 % \irstmt_b^*\verb+;+
-\mbox{IF $\irstmt_b^*$ is not empty THEN\ }
-{\inred\newvar{new_a}}\ \verb+=+\ \irexpr_a\verb+;+
 \\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}
 {\inblue \newvar{label}} \; \verb+:+ \; \verb+{+\\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}\quad
-{\sf if\ (}
-\mbox{IF $\irstmt_b^*$ is empty THEN $\irexpr_a$ ELSE ${\inred\newvar{new_a}}$}
-{\sf )}\\
+{\sf if\ (}\irexpr_a{\sf )}\\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}\quad
 {\sf then}\
 \langle\irstmt_b^*\verb+;+\
@@ -1193,18 +1176,13 @@ Where $c$ is either $(\expr, \ir{l})$ or $((), \ir{l})$.
 & & \phantom{\mbox{LET\ }} (\irstmt_3^*, \irexpr_3) = \atoiEfd{e_3}(\ir{x})\\
 & & \mbox{IN}\hspace*{1.2em}
 (\irstmt_a^*\verb+;+\
-% \irstmt_b^*\verb+;+
-\mbox{IF $\irstmt_b^*$ is not empty THEN\ }
-{\inred\newvar{new_a}}\ \verb+=+\ \irexpr_a\verb+;+
 \\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}
 {\inblue \newvar{label_2}} \; \verb+:+ \; \verb+{+\\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}\quad
 {\inblue \newvar{label_1}} \; \verb+:+ \; \verb+{+\\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}\quad\quad
-{\sf if\ (}
-\mbox{IF $\irstmt_b^*$ is empty THEN $\irexpr_a$ ELSE ${\inred\newvar{new_a}}$}
-{\sf )}
+{\sf if\ (}\irexpr_a{\sf )}
 \\
 & & \phantom{\mbox{IN}\hspace*{1.2em}\open}\quad\quad
 {\sf then\ break}\ {\inred\newvar{label_1}}\verb+;+ \irstmt_b^*\verb+;+\\
@@ -1407,6 +1385,18 @@ Where $c$ is either $(\expr, \ir{l})$ or $((), \ir{l})$.
 
 % ast2ir_e[e1&&e2])(sigma)(x) = <ast2ir_e[e1](sigma)(y); y1=\ensuremath{\diamond}toBoolean(y); if y1 then x=y else ast2ir_e[e2](sigma)(x)>
 % ast2ir_e[e1||e2])(sigma)(x) = <ast2ir_e[e1](sigma)(y); y1=\ensuremath{\diamond}toBoolean(y); if y1 then ast2ir_e[e2](sigma)(x) else x=y >
+
+
+\lefteqn{\note{
+In order to preserve the semantics when the evaluation of $\irexpr_1$ throws an exception,
+we force to evaluate $\irexpr_1$ before evaluating}}\\
+\lefteqn{\note{
+$\irstmt_2^*$ by introducing an assignment ``{\inred$\newvar{new_1}$}\ {\tt =} $\irexpr_1$''
+to avoid any side effects by $\irstmt_2^*$.
+Note that we add the assignment only when}}\\
+\lefteqn{\note{
+$\irstmt_2^*$ is not empty for a simple optimization.
+}}\\
 
 % binary operation
 \emph{\inblue Candidate for optimization}

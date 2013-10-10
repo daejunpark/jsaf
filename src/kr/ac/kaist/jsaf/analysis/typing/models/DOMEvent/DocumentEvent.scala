@@ -21,7 +21,9 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 
 
 object DocumentEvent extends DOM {
+  
   /* predefined locatoins */
+  val loc_proto = ObjProtoLoc
   // no locations
 
   /* prorotype */

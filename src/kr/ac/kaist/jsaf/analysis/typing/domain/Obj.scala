@@ -285,20 +285,20 @@ case class Obj(map: ObjMap) {
         case OtherStrSingle(x) => // weak update
           update(x, propv)
         case NumStr =>
-          // ignore internal properties
-          val pset = map.keySet.filter(x => !x.take(1).equals("@") && AbsString.alpha(x) <= NumStr)
+          // ignore internal or non-writable properties
+          val pset = map.keySet.filter(x => !x.take(1).equals("@") && AbsString.alpha(x) <= NumStr && BoolTrue <= map(x)._1._1._2)
           // weak update
           val map1 = pset.foldLeft(map)((m, x) => m + (x -> (propv + m(x)._1, m(x)._2)))
           Obj(map1 + ("@default_number" -> ((propv + map1("@default_number")._1), AbsentTop)))
         case OtherStr =>
-          // ignore internal properties
-          val pset = map.keySet.filter(x => !x.take(1).equals("@") && AbsString.alpha(x) <= OtherStr)
+          // ignore internal or non-writable properties
+          val pset = map.keySet.filter(x => !x.take(1).equals("@") && AbsString.alpha(x) <= OtherStr && BoolTrue <= map(x)._1._1._2)
           // weak update
           val map1 = pset.foldLeft(map)((m, x) => m + (x -> (propv + m(x)._1, m(x)._2)))
           Obj(map1 + ("@default_other" -> ((propv + map1("@default_other")._1), AbsentTop)))
         case StrTop =>
-          // ignore internal properties
-          val pset = map.keySet.filter(x => !x.take(1).equals("@"))
+          // ignore internal or non-writable properties
+          val pset = map.keySet.filter(x => !x.take(1).equals("@") && BoolTrue <= map(x)._1._1._2)
           // weak update
           val map1 = pset.foldLeft(map)((m, x) => m + (x -> (propv + m(x)._1, m(x)._2)))
           Obj(map1 + ("@default_number" -> ((propv + map1("@default_number")._1), AbsentTop),
@@ -312,20 +312,20 @@ case class Obj(map: ObjMap) {
         case OtherStrSingle(x) => // strong update
           Obj(map + (x -> (propv, AbsentBot)))
         case NumStr =>
-          // ignore internal properties
-          val pset = map.keySet.filter(x => !x.take(1).equals("@") && AbsString.alpha(x) <= NumStr)
+          // ignore internal or non-writable properties
+          val pset = map.keySet.filter(x => !x.take(1).equals("@") && AbsString.alpha(x) <= NumStr && BoolTrue <= map(x)._1._1._2)
           // weak update
           val map1 = pset.foldLeft(map)((m, x) => m + (x -> (propv + m(x)._1, m(x)._2)))
           Obj(map1 + ("@default_number" -> ((propv + map1("@default_number")._1), AbsentTop)))
         case OtherStr =>
-          // ignore internal properties
-          val pset = map.keySet.filter(x => !x.take(1).equals("@") && AbsString.alpha(x) <= OtherStr)
+          // ignore internal or non-writable properties
+          val pset = map.keySet.filter(x => !x.take(1).equals("@") && AbsString.alpha(x) <= OtherStr && BoolTrue <= map(x)._1._1._2)
           // weak update
           val map1 = pset.foldLeft(map)((m, x) => m + (x -> (propv + m(x)._1, m(x)._2)))
           Obj(map1 + ("@default_other" -> ((propv + map1("@default_other")._1), AbsentTop)))
         case StrTop =>
-          // ignore internal properties
-          val pset = map.keySet.filter(x => !x.take(1).equals("@"))
+          // ignore internal or non-writable properties
+          val pset = map.keySet.filter(x => !x.take(1).equals("@") && BoolTrue <= map(x)._1._1._2)
           // weak update
           val map1 = pset.foldLeft(map)((m, x) => m + (x -> (propv + m(x)._1, m(x)._2)))
           Obj(map1 + ("@default_number" -> ((propv + map1("@default_number")._1), AbsentTop),

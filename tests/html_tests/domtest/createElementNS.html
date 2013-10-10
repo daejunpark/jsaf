@@ -1,0 +1,24 @@
+<!-- test for 'createElementNS' -->
+<body>
+  <script>
+    var elem1 = document.createElementNS("", "svg");  // HTMLElement
+    var __result1 = elem1.tagName;
+    var __expect1 = "svg";
+    var __result2 = elem1.namespaceURI;
+    var __expect2 = null;
+    var __result3 = elem1.prefix;
+    var __expect3 = null;
+    var __result4 = elem1.localName;
+    var __expect4 = "svg";
+    
+    var elem2 = document.createElementNS("dd", "aaa:bbb");  // HTMLElement
+    var __result5 = elem2.tagName;
+    var __expect5 = "aaa:bbb";
+    var __result6 = elem2.namespaceURI;
+    var __expect6 = "dd";
+    var __result7 = elem2.prefix;
+    var __expect7 = "aaa";
+    var __result8 = elem2.localName;
+    var __expect8 = "bbb";
+  </script>
+</body>

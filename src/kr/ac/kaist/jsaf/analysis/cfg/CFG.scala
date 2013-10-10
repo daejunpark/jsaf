@@ -271,6 +271,8 @@ class CFG {
   private var userFuncCount = 0
   private var blockCount = 0
   private var instCount = 0
+   
+  def getInstCount = instCount
 
   /* address counter for user loation */
   private var programAddrCount = 1
@@ -283,6 +285,7 @@ class CFG {
                                  // DOMElement.setAttribute uses 5 addresses
     if (Config.tizenMode) 8
     else 5
+
   private var apiAddrMap: Map[Address, List[Address]] = HashMap()
   def getAPIAddress(addr: Address, index: Int): Address = apiAddrMap(addr)(index)
   def getAPIAddress(addr: Address): List[Address] = apiAddrMap(addr)
@@ -307,10 +310,76 @@ class CFG {
   def getFuncCount = funcCount
   def getAddrCount = programAddrCount
 
-  def setHtmlStartAddr= htmlStartAddr = programAddrCount
+  def setHtmlStartAddr: Unit = {
+    htmlStartAddr = programAddrCount
+    setStoreStartAddr
+  }
   def setHtmlEndAddr = htmlEndAddr = programAddrCount
 
   def isHtmlAddr(addr: Address) = (htmlStartAddr <=  addr) && (addr < htmlEndAddr)
+ 
+  /* new address for Store instruction */
+  private val totalStoreAddr: Int = 10000
+  private val addrPerStore: Int = 100
+  private var storeStartAddr: Address = -1
+  private var storeAddrOffset: Int = 0 
+  private val maxStore: Int = totalStoreAddr / addrPerStore
+
+  private var storeAddrMap: Map[Int, (Int, List[Address])] = HashMap()
+
+  def setStoreStartAddr: Unit = {
+    storeStartAddr = programAddrCount
+    programAddrCount += totalStoreAddr
+  }
+
+  def addStoreAddress(key: Int): Unit = {
+    // if all addresses have been already assigned
+    if(storeAddrOffset >= maxStore){
+      throw new InternalError("Not enough addresses assigned for CFGStore")
+    }
+    else {
+      val new_list = (0 until addrPerStore).foldLeft[List[Address]](List())((list, i) => {
+        list :+ (storeStartAddr + (addrPerStore * storeAddrOffset) + i) 
+      })
+      storeAddrMap += (key -> (0, new_list))
+      storeAddrOffset += 1
+    }
+  }
+
+  // initialize the index of the mapped address
+  def initStoreAddressIndex(key: Int): Unit = {
+    storeAddrMap.get(key) match {
+      case Some(e) => 
+        storeAddrMap += (key -> (0, e._2))
+      case None =>
+        addStoreAddress(key)
+    }
+  }
+
+  def getStoreAddress(key: Int, index: Int): Address = {
+    storeAddrMap.get(key) match {
+      case Some(e) => 
+        if(index >= addrPerStore)
+          throw new InternalError(index + ": Out of range of the number of addresses per CFGStore")
+        else {
+          e._2(index)
+        }
+      case None => 
+        addStoreAddress(key)
+        getStoreAddress(key, index)
+    }
+  }
+
+  def getStoreAddress(key: Int): Address = storeAddrMap.get(key) match {
+    case Some(e) => 
+      val addr = getStoreAddress(key, e._1)
+      storeAddrMap += (key -> (e._1+1, e._2))
+      addr
+    case None => 
+      addStoreAddress(key)
+      getStoreAddress(key)
+  }
+
 
   def setUserFuncCount(): Unit = userFuncCount = funcCount
   def getUserFuncCount = userFuncCount

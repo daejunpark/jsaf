@@ -912,6 +912,27 @@ object DOMElement extends DOM {
       List()
     }
   }
+  def getInsList(tagName: PropValue, scrollTop: PropValue, scrollLeft: PropValue, scrollWidth: PropValue, scrollHeight: PropValue,
+                 offsetParent: PropValue, offsetTop: PropValue, offsetLeft: PropValue, offsetWidth: PropValue, offsetHeight: PropValue,
+                 clientTop: PropValue, clientLeft: PropValue, clientWidth: PropValue, clientHeight: PropValue, onclick: PropValue,
+                 onload: PropValue): List[(String, PropValue)] = List(
+    ("tagName", tagName),
+    ("scrollTop", scrollTop),
+    ("scrollLeft", scrollLeft),
+    ("scrollWidth", scrollWidth),
+    ("scrollHeight", scrollHeight),
+    ("offsetParent", offsetParent),
+    ("offsetTop", offsetTop),
+    ("offsetLeft", offsetLeft),
+    ("offsetWidth", offsetWidth),
+    ("offsetHeight", offsetHeight),
+    ("clientTop", clientTop),
+    ("clientLeft", clientLeft),
+    ("clientWidth", clientWidth),
+    ("clientHeight", clientHeight),
+    ("onclick", onclick),
+    ("onload", onload)
+  )
 
   def getInsList(tagName: PropValue): List[(String, PropValue)] = {
     val nodeName = tagName

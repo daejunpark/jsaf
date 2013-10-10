@@ -18,6 +18,7 @@ import kr.ac.kaist.jsaf.nodes_util.IRFactory
 trait DOM extends ModelData {
   /* legacy code */
   //def getCons(): Option[(String,Loc)] = None
+  val loc_proto: Loc 
   def getProto(): Option[Loc] = None
   // Returns a new location for the instance object of a DOM object 
   def getInstance(cfg: CFG): Option[Loc] = None

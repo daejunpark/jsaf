@@ -241,10 +241,28 @@ Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String ind
 
 * Sites using 'eval' or 'Function' : Total 11 sites
 9, qq.com 
+test_files/crystal-min.js
+  Dense Iteration: 975(8)   next: (1054,LBlock(13697))
+"({'extension_js_src':'http://adsrich.qq.com/web/crystal/v1.9Beta08Build081/crystal_ext-min.js','lview_time_out':10,'mo_page_ratio':0.02,'mo_ping_ratio':0.01,'mo_ping_script':'http://adsrich.qq.com/sc/mo_ping-min.js'})"
+
 10, taobao.com
+tests/html_tests/websitesource/10,taobao.com/test_files/a_tbcdn_cn.js:115:11130-11285:
+next: (592,LBlock(7941))   * Warning: the 'Global.eval' call is detected during analysis, analysis results may not be sound.
+* Warning: the argument of 'Global.eval' is a non-string
+  Dense Iteration: 9975(236)   next: (590,LExitExc)   * Warning: the argument of 'Global.eval' is in the below ...
+"StrTop"
+* The argument is undefined, #272, ##272
+* The argument is undefined, #28, #272
+
 13, blogspot.com
+test.htm
+
 17, sina.com.cn
+tests/html_tests/websitesource/17,sina.com.cn/test_files/sync.js:eval(function(p,a,c,k,e,r){e=function(c){return c.toString(a)};if(!''.replace(/^/,String)){while(c--)r[e(c)]=k[c]||e(c);k=[function(e){return r[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('8 9(a){2 b=3.4.e(";",a);5(b==-1){b=3.4.6}7 g(3.4.f(a,b))}8 h(a){2 b=a+"=";2 c=b.6;2 d=3.4.6;2 i=0;k(i<d){2 j=i+c;5(3.4.f(i,j)==b){7 9(j)}i=3.4.e(" ",i)+1;5(i==0)l}7\'\'}',22,22,'||var|document|cookie|if|length|return|function|libweb_getCookieVal|||||indexOf|substring|unescape|libweb_getCookie|||while|break'.split('|'),0,{}));
+
 49, sohu.com
+tests/html_tests/websitesource/49,sohu.com/test_files/sohuad2012v15.js
+
 61, avg.com
 66, jd.com
 70, neobux.com 
@@ -254,14 +272,14 @@ Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String ind
 
 * Sites using 'innerHTML' : Total 3 sites
 30, wordpress.com
-44, babylon.com
+44, babylon.com (-jq)
 69, 360.cn
 
 
 * Sites with abnormal analysis state : exit Heap Bottom - Total 3 sites 
 20, ask.com(-jq) : JSAF is undefined (need the jQuery.map modeling)
 21, 163.com : regular expression error
-63, ifeng.com :  no modeling of Date.getYear, jQuery.hasChildNodes/removeChild/appendChild
+63, ifeng.com(-jq) :  no modeling of Date.getYear, jQuery.hasChildNodes/removeChild/appendChild
 
 * Etc : Total 1 site
 72, youku.com : Cannot find js
@@ -271,7 +289,7 @@ Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String ind
 29, weibo.com (simple JavaScript code)
 40, odnokiassniki.ru
 53, soso.com
-91, directrev.com
+91, directrev.com (-jq)
 96, thepiratebay.xs (simple JavaScript code)
 100, ku6.com (simple JavaScript code)
 

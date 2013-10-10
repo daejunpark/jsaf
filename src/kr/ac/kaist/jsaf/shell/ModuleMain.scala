@@ -37,8 +37,7 @@ object ModuleMain {
 
     Shell.params.opt_Module = true
     Shell.params.opt_IgnoreErrorOnAST = true
-    val pair: Pair[Program, HashMap[String, String]] = Parser.fileToAST(fileNames)
-    val program: Program = new ModuleRewriter(pair.first).doit
+    val program: Program = new ModuleRewriter(Parser.fileToAST(fileNames)).doit
     val rewritten: String = JSAstToConcrete.doit(program)
     if (Shell.params.opt_OutFileName != null) {
       try {

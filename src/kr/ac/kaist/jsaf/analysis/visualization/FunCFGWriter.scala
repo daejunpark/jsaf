@@ -144,7 +144,7 @@ object FunCFGWriter {
     sb.append("\n}\n").toString()
   }
   
-  def spawnDot(dotExe: String, outputFile: String, dotFile: File) = {
+  def spawnDot(dotExe: String, outputFile: String, dotFile: File): Unit = {
     val cmdarray = Array(dotExe, "-Tsvg", "-o", outputFile, "-v", dotFile.getAbsolutePath)
     System.out.println("Spawning process" + cmdarray.foldLeft("")((r,s) => r + " " + s))
     try {
@@ -152,9 +152,11 @@ object FunCFGWriter {
       val output = new BufferedInputStream(p.getInputStream)
       val error = new BufferedInputStream(p.getErrorStream)
       var repeat = true
+      var repeatCount = 0
       while (repeat) {
         try {
           Thread.sleep(500)
+          repeatCount = repeatCount + 1
         } catch {
           case e1:InterruptedException =>
           e1.printStackTrace
@@ -171,6 +173,11 @@ object FunCFGWriter {
           //System.err.println("read " + nRead + " bytes from error stream")
         }
         try {
+          if (repeatCount > 120) {
+            p.destroy
+            System.out.println("Drawing %s takes more than one minute. Aborted.".format(outputFile))
+            return
+          }
           p.exitValue
           // if we get here, the process has terminated
           repeat = false
@@ -212,13 +219,11 @@ object FunCFGWriter {
 
   def write(cfg:CFG, callgraph:List[FunctionId], nodes:List[Node], outputPath: String, dotExe: String) = {
     val o = Worklist.computes(cfg).getOrder()
-    for (node <- nodes) {
-      node._2 match {
-        case LEntry  if callgraph.contains(node._1) =>
-          val funcId:FunctionId = node._1
-          spawnDot(dotExe, outputPath+"/f"+funcId+".svg", writeDotFile(cfg, getIdNodes(nodes, funcId), o, outputPath, funcId))
-        case _ =>
-      }
-    }
+    nodes.par.map(node => node._2 match {
+      case LEntry  if callgraph.contains(node._1) =>
+        val funcId:FunctionId = node._1
+        spawnDot(dotExe, outputPath+"/f"+funcId+".svg", writeDotFile(cfg, getIdNodes(nodes, funcId), o, outputPath, funcId))
+      case _ =>
+    })
   }
 }

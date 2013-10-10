@@ -10,13 +10,16 @@
 package kr.ac.kaist.jsaf.shell
 
 import java.io.{BufferedWriter, FileWriter}
+import java.util.HashMap
 import scala.collection.JavaConversions
 import kr.ac.kaist.jsaf.analysis.cfg.{DotWriter, CFG, CFGBuilder}
 import kr.ac.kaist.jsaf.analysis.typing.{InitHeap, Config}
+import kr.ac.kaist.jsaf.analysis.visualization.Visualization
+import kr.ac.kaist.jsaf.compiler.Parser
 import kr.ac.kaist.jsaf.exceptions.UserError
-import kr.ac.kaist.jsaf.nodes_util.NodeUtil
 import kr.ac.kaist.jsaf.nodes.IRRoot
-import kr.ac.kaist.jsaf.Shell
+import kr.ac.kaist.jsaf.nodes_util.{NodeUtil, JSFromHTML}
+import kr.ac.kaist.jsaf.{Shell, ShellParameters}
 import kr.ac.kaist.jsaf.useful.Pair
 import edu.rice.cs.plt.tuple.{Option => JOption}
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMBuilder
@@ -32,6 +35,7 @@ object CFGMain {
   def cfgBuilder: Int = {
     if (Shell.params.FileNames.length == 0) throw new UserError("Need a file to build a control flow graph.")
     val fileNames = JavaConversions.seqAsJavaList(Shell.params.FileNames)
+    val fileName: String = Shell.params.FileNames(0)
 
     if (Shell.params.opt_Test) {
       Config.setTestMode(Shell.params.opt_Test)
@@ -44,6 +48,10 @@ object CFGMain {
     if (Shell.params.opt_Tizen) {
       Config.setTizenMode
       System.out.println("Tizen mode enabled.")
+    }
+    if (Shell.params.opt_jQuery) {
+      Config.setJQueryMode
+      System.out.println("jQuery mode enabled.")
     }
     if (Shell.params.opt_Library) {
       Config.setLibMode(Shell.params.opt_Library)
@@ -68,7 +76,12 @@ object CFGMain {
         val init: InitHeap = new InitHeap(cfg)
         init.initialize
       }
-      if (Shell.params.opt_OutFileName != null) {
+      if (Shell.params.opt_Visual) {
+        System.out.println("\nSeparating graphs...")
+        val vs: Visualization = new Visualization(null, fileName, Shell.toOption(Shell.params.opt_OutFileName), cfg)
+        vs.run(false)
+      }
+      else if (Shell.params.opt_OutFileName != null) {
         val outfile: String = Shell.params.opt_OutFileName
         DotWriter.write(cfg, outfile + ".dot", outfile + ".svg", "dot")
       }

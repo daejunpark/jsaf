@@ -21,9 +21,14 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, loc
   def getSemantics = sem
   var count = 0
   val countRef = new AnyRef
+  var isTimeout = false
+  var startTime: Long = 0
 
   def compute(): Unit = {
     Config.setDebugger(Shell.params.opt_debugger)
+
+    // Analysis start time
+    startTime = System.nanoTime()
 
     // Single-thread option has a priority
     if(Shell.params.opt_SingleThread || !Shell.params.opt_MultiThread) {
@@ -75,6 +80,8 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, loc
       Shell.workManager.deinitialize()
     }
 
+    if(isTimeout) System.out.println("*** Analysis time out! (" + Shell.params.opt_Timeout + " sec)")
+
     if (Shell.params.opt_ExitDump) {
       System.out.println("** Dump Exit Heap **\n=========================================================================")
       System.out.println(DomainPrinter.printHeap(4, readTable(((cfg.getGlobalFId,LExit),CallContext.globalCallContext))._1, cfg))
@@ -108,6 +115,12 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, loc
         cp = _cp; callerCPSetOpt = _callerCPSetOpt
       }
 
+      // Analysis timeout check
+      if(Shell.params.opt_Timeout > 0) {
+        if(isTimeout) return
+        if((System.nanoTime() - startTime) / 1000000000 > Shell.params.opt_Timeout) {isTimeout = true; return}
+      }
+
       // Read a state
       val inS = readTable(cp)
       val (outS, outES) = sem.C(cp, cfg.getCmd(cp._1), inS, callerCPSetOpt) // TODO: Multi-thread safety check
@@ -117,10 +130,10 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, loc
       succs.foreach(node => { // TODO: Multi-thread safety check
         val cp_succ = (node, cp._2)
         val oldS = readTable(cp_succ)
-        val newS = oldS + outS
-        if (!(newS <= oldS)) {
-          worklist.add(cp_succ, callerCPSetOpt, false)
+        if(!(outS <= oldS)) {
+          val newS = if(cfg.getAllPred(cp_succ._1).size <= 1) outS else oldS + outS
           updateTable(cp_succ, newS)
+          worklist.add(cp_succ, callerCPSetOpt, false)
         }
       })
 
@@ -133,11 +146,11 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, loc
       esucc match { // TODO: Multi-thread safety check
         case Some(node) =>
           val cp_succ = (node, cp._2)
-          val oldS = readTable(cp_succ)
-          val newS = oldS + outES
-          if (!(newS <= oldS)) {
+          val oldES = readTable(cp_succ)
+          if(!(outES <= oldES)) {
+            val newES = oldES + outES
+            updateTable(cp_succ, newES)
             worklist.add(cp_succ, callerCPSetOpt, false)
-            updateTable(cp_succ, newS)
           }
         case None => ()
       }
@@ -165,15 +178,16 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, loc
                 }
               */
               val oldS = readTable(cp_succ)
-              val newS = oldS + sem.E(cp, cp_succ, kv._2._1, kv._2._2, outS) // TODO: Multi-thread safety check
-              if (!(newS <= oldS)) {
+              val outS2 = sem.E(cp, cp_succ, kv._2._1, kv._2._2, outS) // TODO: Multi-thread safety check
+              if(!(outS2 <= oldS)) {
+                val newS = oldS + outS2
                 // no-return-state option has a priority
                 if(Shell.params.opt_ReturnStateOff || !Shell.params.opt_ReturnStateOn) {
-                  worklist.add(cp_succ, None, false)
                   updateTable(cp_succ, newS)
+                  worklist.add(cp_succ, None, false)
                 }
                 else {
-                  if(worklist.add(cp, cp_succ, cfg, callerCPSetOpt, false)) updateTable(cp_succ, newS)
+                  worklist.add(cp, cp_succ, cfg, callerCPSetOpt, false, Unit => updateTable(cp_succ, newS))
                 }
               }
             })

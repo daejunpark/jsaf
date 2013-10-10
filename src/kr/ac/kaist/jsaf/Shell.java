@@ -336,36 +336,27 @@ public final class Shell {
     }
 
     public static Option<IRRoot> scriptToIR(List<Triple<String, Integer, String>> scripts, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {
-        Program program = Parser.scriptToAST(scripts).first();
+        Program program = Parser.scriptToAST(scripts);
         return ASTtoIR(scripts.get(0).first(), program, out, coverage).first();
     }
 
     public static Option<IRRoot> fileToIR(List<String> files, Option<String> out) throws UserError, IOException {
-        return fileToIR(files, out, Option.<Coverage>none()).first();
+        return fileToIR(files, out, Option.<Coverage>none());
     }
 
-    public static Pair<Option<IRRoot>, HashMap<String, String>> fileToIR(List<String> files, Option<String> out, boolean getFileMap) throws UserError, IOException {
-        if (getFileMap) return fileToIR(files, out, Option.<Coverage>none());
-        else return new Pair<Option<IRRoot>, HashMap<String, String>>(fileToIR(files, out, Option.<Coverage>none()).first(), new HashMap<String, String>());
-    }
-
-    public static Pair<Option<IRRoot>, HashMap<String, String>> fileToIR(List<String> files, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {
-        Pair<Program, HashMap<String, String>> pair;
+    public static Option<IRRoot> fileToIR(List<String> files, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {
+        Program program;
         // html file support 
         if(files.size() == 1 && (files.get(0).toLowerCase().endsWith(".html") || files.get(0).toLowerCase().endsWith(".xhtml") || files.get(0).toLowerCase().endsWith(".htm"))) { 
             // DOM mode
             Config.setDomMode();
             JSFromHTML jshtml = new JSFromHTML(files.get(0));
             // Parse JavaScript code in the target html file
-            pair = jshtml.parseScripts();
-        }
-        else
-            pair = Parser.fileToAST(files);
+            program = jshtml.parseScripts();
+        } else program = Parser.fileToAST(files);
 
-        // Pair<Program, HashMap<String,String>> pair = Parser.fileToAST(files);
-        Program program = pair.first();
-        HashMap<String,String> fileMap = pair.second();
-        return new Pair<Option<IRRoot>, HashMap<String, String>>(ASTtoIR(files.get(0), program, out, coverage).first(), fileMap);
+        // Program program = Parser.fileToAST(files);
+        return ASTtoIR(files.get(0), program, out, coverage).first();
     }
 
     public static Triple<Option<IRRoot>, List<BugInfo>, Program> ASTtoIR(String file, Program pgm, Option<String> out, Option<Coverage> coverage) throws UserError, IOException {

@@ -1,0 +1,22 @@
+<body id='aaa'> aaa
+<div id='div1'></div>
+<script>
+  var divelem1 = document.getElementById("div1");
+  var __result1 = divelem1.childNodes.length;
+  var __expect1 = 0;
+  divelem1.innerHTML = "<div id = 'div2'> bbb </div> ccc";
+  var __result2 = divelem1.childNodes.length;
+  var __expect2 = 2;
+  var __result3 = divelem1.firstChild.nodeName;
+  var __expect3 = "DIV";
+  var __result4 = divelem1.firstChild.childNodes[0].nodeName;
+  var __expect4 = "#text";
+  var __result5 = divelem1.lastChild.nodeName;
+  var __expect5 = "#text";
+  var divelem2 = document.getElementById("div2");
+  var __result6 = divelem2.tagName;
+  var __expect6 = "DIV";
+  var __result7 = divelem2.parentNode.id;
+  var __expect7 = "div1";
+</script>
+</body>

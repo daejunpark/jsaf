@@ -26,7 +26,7 @@ import kr.ac.kaist.jsaf.nodes.{Block => ABlock, Node => ANode}
 import kr.ac.kaist.jsaf.nodes_util.{NodeHashMap, NodeRelation, Span}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 
-class BugStorage(bugDetector: BugDetector, fileMap: JMap[String, String]) {
+class BugStorage(bugDetector: BugDetector) {
   val cfg          = bugDetector.cfg
   val semantics    = bugDetector.semantics
   val stateManager = bugDetector.stateManager

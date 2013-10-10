@@ -502,22 +502,22 @@ object NodeRelation {
     println
 
     // AST -> IR
-    /*println("*** AST -> IR ***")
+    println("*** AST -> IR ***")
     for(keyValue <- ast2irMap) {
       val (ast, irList) = keyValue
       println("AST" + ast.getClass().getSimpleName() + '[' + getUID(ast) + "] : " + astToString(ast))
       for(ir <- irList) println("    " + ir.getClass().getSimpleName() + '[' + getUID(ir) + "] : " + irToString(ir))
     }
-    println*/
+    println
 
     // IR -> AST
-    /*println("*** IR -> AST ***")
+    println("*** IR -> AST ***")
     for(keyValue <- ir2astMap) {
       val (ir, ast) = keyValue
       println(ir.getClass().getSimpleName() + '[' + getUID(ir) + "] : " + irToString(ir))
       println("    AST" + ast.getClass().getSimpleName() + '[' + getUID(ast) + "] : " + astToString(ast))
     }
-    println*/
+    println
 
     // AST -> CFG
     /*println("*** AST -> CFG ***")

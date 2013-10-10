@@ -52,6 +52,8 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
     HTMLTableCaptionElement, HTMLTableCellElement, HTMLTableColElement, HTMLTableElement, HTMLTableRowElement,
     HTMLTableSectionElement, HTMLTextAreaElement, HTMLTitleElement, HTMLUListElement,
     DOMWindow,
+    // HTML Top Element
+    HTMLTopElement,
     // DOM Style,
     CSSStyleDeclaration, CSSStyleSheet, StyleSheetList, StyleSheet,
     // HTML 5
@@ -244,32 +246,33 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
     val o_event = name match {
       case "#ALL" =>
         // Event object
-        val proplist = MouseEvent.getInstList(lset_target) ++ KeyboardEvent.getInstList(lset_target)
-        proplist.foldLeft(Helper.NewObject(LocSet(MouseEvent.loc_proto) + KeyboardEvent.loc_proto))((o, pv) =>
+        val proplist = MouseEvent.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3)) ++ KeyboardEvent.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3)) ++ 
+                       MessageEvent.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3))
+        proplist.foldLeft(Helper.NewObject(LocSet(MouseEvent.loc_proto) + KeyboardEvent.loc_proto + MessageEvent.loc_proto))((o, pv) =>
           o.update(pv._1, pv._2)
         )
       case "#MOUSE" =>
         // MouseEvent object
-        val proplist = MouseEvent.getInstList(lset_target)
+        val proplist = MouseEvent.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3))
         proplist.foldLeft(Helper.NewObject(MouseEvent.loc_proto))((o, pv) =>
           o.update(pv._1, pv._2)
         )
       case "#KEYBOARD" =>
         // KeyboardEvent object
-        val proplist = KeyboardEvent.getInstList(lset_target)
+        val proplist = KeyboardEvent.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3))
         proplist.foldLeft(Helper.NewObject(KeyboardEvent.loc_proto))((o, pv) =>
           o.update(pv._1, pv._2)
         )
       case "#MESSAGE" =>
         // MessageEvent object
-        val proplist = MessageEvent.getInstList(lset_target)
+        val proplist = MessageEvent.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3))
         proplist.foldLeft(Helper.NewObject(MessageEvent.loc_proto))((o, pv) =>
           o.update(pv._1, pv._2)
         )
 
       case _ =>
         // Event object
-        Event.getInstList(lset_target).foldLeft(Helper.NewObject(Event.loc_proto))((o, pv) =>
+        Event.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3)).foldLeft(Helper.NewObject(Event.loc_proto))((o, pv) =>
           o.update(pv._1, pv._2)
         )
     }
@@ -375,25 +378,26 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
     val o_event = name match {
       case "#ALL" =>
         // Event object
-        val proplist = MouseEvent.getInstList(lset_target) ++ KeyboardEvent.getInstList(lset_target)
+        val proplist = MouseEvent.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3)) ++ KeyboardEvent.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3)) ++ 
+                       MessageEvent.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3))
         proplist.foldLeft(PreHelper.NewObject(ObjProtoLoc))((o, pv) =>
           o.update(pv._1, pv._2)
         )
       case "#MOUSE" =>
         // MouseEvent object
-        val proplist = MouseEvent.getInstList(lset_target)
+        val proplist = MouseEvent.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3))
         proplist.foldLeft(PreHelper.NewObject(ObjProtoLoc))((o, pv) =>
           o.update(pv._1, pv._2)
         )
       case "#KEYBOARD" =>
         // KeyboardEvent object
-        val proplist = KeyboardEvent.getInstList(lset_target)
+        val proplist = KeyboardEvent.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3))
         proplist.foldLeft(PreHelper.NewObject(ObjProtoLoc))((o, pv) =>
           o.update(pv._1, pv._2)
         )
       case _ =>
         // Event object
-        Event.getInstList(lset_target).foldLeft(PreHelper.NewObject(ObjProtoLoc))((o, pv) =>
+        Event.getInstList(lset_target, HTMLTopElement.getInsLoc(h_3)).foldLeft(PreHelper.NewObject(ObjProtoLoc))((o, pv) =>
           o.update(pv._1, pv._2)
         )
     }

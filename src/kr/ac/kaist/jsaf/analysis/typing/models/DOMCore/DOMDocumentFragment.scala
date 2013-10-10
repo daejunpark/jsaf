@@ -14,14 +14,16 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLDocument
+import org.w3c.dom.{DocumentFragment, Node}
 
 
 object DOMDocumentFragment extends DOM {
   private val name = "DocumentFragment"
 
-  /* predefined locatoins */
+  /* predefined locations */
   val loc_cons = newPredefLoc(name + "Cons")
   val loc_proto = newPredefLoc(name + "Proto")
 
@@ -72,7 +74,25 @@ object DOMDocumentFragment extends DOM {
 
   /* instance */
 
-  def getInsList(): List[(String, PropValue)] = {
+  /* instance */
+  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr(), Recent))
+  /* list of properties in the instance object */
+  override def getInsList(node: Node): List[(String, PropValue)] = node match {
+    case d: DocumentFragment =>
+      // This instance object has all properties of the Node object
+      DOMNode.getInsList(node) ++ List(
+      ("@class",  PropValue(AbsString.alpha("Object"))),
+      ("@proto",  PropValue(ObjectValue(loc_proto, F, F, F))),
+      ("@extensible", PropValue(BoolTrue))
+      )
+    case _ => {
+      System.err.println("* Warning: " + node.getNodeName + " cannot be an instance of DocumentFragment.")
+      List()
+    }
+  }
+
+
+  override def default_getInsList(): List[(String, PropValue)] = {
     val nodeName = PropValue(ObjectValue(AbsString.alpha("#document-fragment"), F, T, T))
     val nodeValue = PropValue(ObjectValue(NullTop, F, T, T))
     val nodeType = PropValue(ObjectValue(AbsNumber.alpha(DOMNode.DOCUMENT_FRAGMENT_NODE), F, T, T))

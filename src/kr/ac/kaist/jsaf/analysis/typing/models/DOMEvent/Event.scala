@@ -100,18 +100,18 @@ object Event extends DOM {
   }
 
   /* instance */
-  def getInstList(lset_target: LocSet): List[(String, PropValue)] = {
+  def getInstList(lset_currenttarget: LocSet, lset_target: LocSet): List[(String, PropValue)] = {
     List(
       ("type", PropValue(ObjectValue(Value(OtherStr), F,T,F))),
-      ("target", PropValue(ObjectValue(Value(HTMLTopElement.getInsLoc), F,T,F))),
-      ("currentTarget", PropValue(ObjectValue(Value(lset_target), F,T,F))),
+      ("target", PropValue(ObjectValue(Value(lset_target), F,T,F))),
+      ("currentTarget", PropValue(ObjectValue(Value(lset_currenttarget), F,T,F))),
       ("eventPhase", PropValue(ObjectValue(Value(UInt), F,T,F))),
       ("bubbles", PropValue(ObjectValue(Value(BoolFalse), F,T,F))),
       ("cancelable", PropValue(ObjectValue(Value(BoolFalse), F,T,F))),
       ("defaultPrevented", PropValue(ObjectValue(Value(BoolFalse), F,T,F))),
       ("timeStamp", PropValue(ObjectValue(Value(DOMEventTimeLoc), F,T,F))),
       // Non-standard : used by IE
-      ("srcElement", PropValue(ObjectValue(Value(HTMLTopElement.getInsLoc), F,T,F))),
+      ("srcElement", PropValue(ObjectValue(Value(lset_target), F,T,F))),
       ("returnValue", PropValue(ObjectValue(Value(BoolTrue), F,T,F)))
     )
   }

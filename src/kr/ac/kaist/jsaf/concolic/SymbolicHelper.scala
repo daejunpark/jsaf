@@ -9,11 +9,12 @@
 
 package kr.ac.kaist.jsaf.concolic
 
+import _root_.java.math.BigInteger
 import _root_.java.util.{List => JList}
 import kr.ac.kaist.jsaf.interpreter.Interpreter
 import kr.ac.kaist.jsaf.nodes._
-import kr.ac.kaist.jsaf.nodes_util.{EJSOp, Coverage}
-import kr.ac.kaist.jsaf.nodes_util.{IRFactory => IF, NodeUtil => NU}
+import kr.ac.kaist.jsaf.nodes_util.{Coverage, EJSOp, NodeRelation}
+import kr.ac.kaist.jsaf.nodes_util.{IRFactory => IF, NodeUtil => NU, NodeFactory => NF}
 import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.scala_src.useful.Options._
@@ -41,7 +42,7 @@ import scala.util.Random
  * op   ::= + | - | * | / | % | < | <= | > | >= | == | !=
  */
 class SymbolicHelper(I: Interpreter) {
-  val symbolic_memory = new HashMap[String, String]
+  val symbolic_memory = HashMap[String, String]()
   val symbol = "s"
   val input_symbol = "i"
   var index, input_index = 0
@@ -56,9 +57,12 @@ class SymbolicHelper(I: Interpreter) {
 
   // Mapping symbolic helper function to environment in which the function is defined
   var environments = new HashMap[String, IRId]
+
   var coverage: Coverage = null
+
+  def storeEnvironment(v: IRId, env: IRId) = environments(v.getUniqueName) = env
+  def getEnvironment(v: IRId) = environments(v.getUniqueName)
   def initialize(I: List[Int], cov: Coverage) = {
-    System.out.println("Initialize()")
     input = I
     index = 0
     input_index = 0
@@ -68,101 +72,91 @@ class SymbolicHelper(I: Interpreter) {
     coverage = cov
     System.out.println("Current target function: "+ coverage.target)
   }
- 
-  def storeEnvironment(v: IRId, env: IRId) =
-    environments(v.getUniqueName) = env
-  
-  def getEnvironment(v: IRId) = environments(v.getUniqueName)
-
+    
   /* If its environment, that is the function in which the 'executeAssignment' statement is instrumented is targeted, 
    * the symbolic execution proceeds and its change is reported to build symbolic execution tree. 
    * Otherwise, just report symbolic variables which don't represent local variables. 
    * When local variables are in that expressions, just use concrete value instead of symbolic varialbes of local variables. 
    */
   def executeAssignment(loc: String, id: IRId, expr: IRExpr, c1: Option[String], c2: Option[String], env: IRId) = { 
-    if (checkFocus(env)) {
+    if (checkFocus(env) || !loc.equals("LocalVariable")) { 
       expr match {
         /* variable op varialbe */
         //TODO: extend the range to cover all expressions, first and second
-        case SIRBin(_, first, op, second) => first match {
-          case v1:IRId => second match {
-            case v2:IRId => op.getKind match {
-              //TODO: find simple way to distinguish operation type 
-              // op is supported by the constraint solver
-              case EJSOp.BIN_COMP_REL_INSTANCEOF => symbolic_memory -= id.getUniqueName
-              case EJSOp.BIN_COMP_REL_IN => symbolic_memory -= id.getUniqueName
-              case EJSOp.BIN_BIT_SHIFT_LEFT => symbolic_memory -= id.getUniqueName
-              case EJSOp.BIN_BIT_SHIFT_SRIGHT => symbolic_memory -= id.getUniqueName
-              case EJSOp.BIN_BIT_SHIFT_USRIGHT => symbolic_memory -= id.getUniqueName
-              case EJSOp.BIN_COMP_EQ_SEQUAL => symbolic_memory -= id.getUniqueName
-              case EJSOp.BIN_COMP_EQ_SNEQUAL => symbolic_memory -= id.getUniqueName
-              case EJSOp.BIN_BIT_BIT_AND => symbolic_memory -= id.getUniqueName
-              case EJSOp.BIN_BIT_BIT_XOR => symbolic_memory -= id.getUniqueName
-              case EJSOp.BIN_BIT_BIT_OR => symbolic_memory -= id.getUniqueName
-              case _ => 
-                // BIN_ARITH_MUL_MULTIPLICATION
-                // BIN_ARITH_MUL_DIVISION
-                // BIN_ARITH_MUL_REMINDER
-                // ETC_PLUS
-                // ETC_MINUS
+        case SIRBin(_, first, op, second) => op.getKind match {
+          //TODO: find simple way to distinguish operation type 
+          // op is supported by the constraint solver
+          case EJSOp.BIN_COMP_REL_INSTANCEOF => symbolic_memory -= id.getUniqueName
+          case EJSOp.BIN_COMP_REL_IN => symbolic_memory -= id.getUniqueName
+          case EJSOp.BIN_BIT_SHIFT_LEFT => symbolic_memory -= id.getUniqueName
+          case EJSOp.BIN_BIT_SHIFT_SRIGHT => symbolic_memory -= id.getUniqueName
+          case EJSOp.BIN_BIT_SHIFT_USRIGHT => symbolic_memory -= id.getUniqueName
+          case EJSOp.BIN_COMP_EQ_SEQUAL => symbolic_memory -= id.getUniqueName
+          case EJSOp.BIN_COMP_EQ_SNEQUAL => symbolic_memory -= id.getUniqueName
+          case EJSOp.BIN_BIT_BIT_AND => symbolic_memory -= id.getUniqueName
+          case EJSOp.BIN_BIT_BIT_XOR => symbolic_memory -= id.getUniqueName
+          case EJSOp.BIN_BIT_BIT_OR => symbolic_memory -= id.getUniqueName
+          case _ => 
+            // BIN_ARITH_MUL_MULTIPLICATION
+            // BIN_ARITH_MUL_DIVISION
+            // BIN_ARITH_MUL_REMINDER
+            // ETC_PLUS
+            // ETC_MINUS
 
-                // BIN_COMP_REL_LESS
-                // BIN_COMP_REL_GREATER
-                // BIN_COMP_REL_LESSEQUAL
-                // BIN_COMP_REL_GREATEREQUAL
-                // BIN_COMP_EQ_EQUAL
-                // BIN_COMP_EQ_NEQUAL
-                
-                System.out.println("EXECUTE_ASSIGNMENT()")
-                if (symbolic_memory.contains(v1.getUniqueName) || symbolic_memory.contains(v2.getUniqueName)) {
-                  //TODO: When c2 or c1 are None, we have to error reporting. 
-                  var res1 = c1 match {
-                    case Some(c) => c
-                    case None => ""
-                  }
-                  var res2 = c2 match {
-                    case Some(c) => c
-                    case None => ""
-                  }
-                  var context = ""
+            // BIN_COMP_REL_LESS
+            // BIN_COMP_REL_GREATER
+            // BIN_COMP_REL_LESSEQUAL
+            // BIN_COMP_REL_GREATEREQUAL
+            // BIN_COMP_EQ_EQUAL
+            // BIN_COMP_EQ_NEQUAL
+            //TODO: When c2 or c1 are None, we have to error reporting. 
+            var res1 = c1 match { case Some(c) => c; case None => "" }
+            var res2 = c2 match { case Some(c) => c; case None => "" }
+            var context = ""
+            first match {
+              case v1: IRId => second match {
+                case v2: IRId =>
                   if (symbolic_memory.contains(v1.getUniqueName) && symbolic_memory.contains(v2.getUniqueName)) {
                     // only if linear constraints supported
                     if (op.getKind == EJSOp.BIN_ARITH_MUL_MULTIPLICATION ||
                         op.getKind == EJSOp.BIN_ARITH_MUL_DIVISION ||
-                        op.getKind == EJSOp.BIN_ARITH_MUL_REMINDER) {
+                        op.getKind == EJSOp.BIN_ARITH_MUL_REMINDER) 
                       context = symbolic_memory(v1.getUniqueName) + op.getText + res2 
-                    } 
                     else 
                       context = symbolic_memory(v1.getUniqueName) + op.getText + symbolic_memory(v2.getUniqueName)
                   }
-                  else if (symbolic_memory.contains(v1.getUniqueName)) {
-                    context = symbolic_memory(v1.getUniqueName) + op.getText + res2 
-                  }
-                  else if (symbolic_memory.contains(v2.getUniqueName)) {
+                  else if (symbolic_memory.contains(v1.getUniqueName)) 
+                      context = symbolic_memory(v1.getUniqueName) + op.getText + res2 
+                  else if (symbolic_memory.contains(v2.getUniqueName)) 
                     context = symbolic_memory(v2.getUniqueName) + op.getText + res1 
-                  }
-                  val sid = symbol + index
-                  symbolic_memory(id.getUniqueName) = sid
-                  index += 1
-                  val info = new Info(false, sid, Some(op.getText), context, None)
-                  report = report:+info
-                }
-                else 
-                  symbolic_memory -= id.getUniqueName
+                  else 
+                    symbolic_memory -= id.getUniqueName
+                case _ => 
+                  if (symbolic_memory.contains(v1.getUniqueName))
+                    context = symbolic_memory(v1.getUniqueName) + op.getText + res2
+              }
+              case _ => second match {
+                case v2: IRId =>
+                  if (symbolic_memory.contains(v2.getUniqueName))
+                    context = symbolic_memory(v2.getUniqueName) + op.getText + res1
+              }
             }
-          //TODO: Error reporting. 
-          }
+            if (!context.isEmpty) {
+              val sid = symbol + index
+              symbolic_memory(id.getUniqueName) = sid
+              index += 1
+              val info = new Info(false, sid, Some(op.getText), context, None)
+              report = report:+info
+            }
         }
         case SIRUn(_, op, expr) =>
         case SIRLoad(_, obj, index) =>
-
+        
         /* variable */
         case v:IRId =>
-          System.out.println("EXECUTE_ASSIGNMENT()")
-          if (symbolic_memory.contains(v.getUniqueName)) {
+          if (symbolic_memory.contains(v.getUniqueName)) 
             symbolic_memory(id.getUniqueName) = symbolic_memory(v.getUniqueName)
             // Do not need to report because symbolic memory is replaced
-          }
           else
             symbolic_memory -= id.getUniqueName
 
@@ -170,7 +164,6 @@ class SymbolicHelper(I: Interpreter) {
 
         /* constant value */
         case n:IRNumber =>
-          System.out.println("EXECUTE_ASSIGNMENT()")
           symbolic_memory -= id.getUniqueName
 
         case s:IRString =>
@@ -179,86 +172,13 @@ class SymbolicHelper(I: Interpreter) {
         case _:IRNull =>
       }
     }
-    else {
-      //TODO: What about wrong variable?
-      if (!loc.equals("LocalVariable")) {
-        expr match {
-          case SIRBin(_, first, op, second) => first match {
-            case v1:IRId => second match {
-              case v2:IRId => op.getKind match {
-                case EJSOp.BIN_COMP_REL_INSTANCEOF => 
-                case EJSOp.BIN_COMP_REL_IN =>    
-                case EJSOp.BIN_BIT_SHIFT_LEFT =>                
-                case EJSOp.BIN_BIT_SHIFT_SRIGHT =>                 
-                case EJSOp.BIN_BIT_SHIFT_USRIGHT =>                
-                case EJSOp.BIN_COMP_EQ_SEQUAL =>                 
-                case EJSOp.BIN_COMP_EQ_SNEQUAL =>                 
-                case EJSOp.BIN_BIT_BIT_AND =>                 
-                case EJSOp.BIN_BIT_BIT_XOR =>                   
-                case EJSOp.BIN_BIT_BIT_OR =>
-                case _ => 
-                  System.out.println("EXECUTE_ASSIGNMENT()")
-                  if (symbolic_memory.contains(v1.getUniqueName) || symbolic_memory.contains(v2.getUniqueName)) {
-                    var res1 = c1 match {
-                      case Some(c) => c
-                      case None => ""
-                    }
-                    var res2 = c2 match {
-                      case Some(c) => c
-                      case None => ""
-                    }
-                    var context = ""
-                    if (symbolic_memory.contains(v1.getUniqueName) && symbolic_memory.contains(v2.getUniqueName)) {
-                      if (op.getKind == EJSOp.BIN_ARITH_MUL_MULTIPLICATION ||
-                          op.getKind == EJSOp.BIN_ARITH_MUL_DIVISION ||
-                          op.getKind == EJSOp.BIN_ARITH_MUL_REMINDER) {
-                        context = symbolic_memory(v1.getUniqueName) + op.getText + res2 
-                      } 
-                      else
-                        context = symbolic_memory(v1.getUniqueName) + op.getText + symbolic_memory(v2.getUniqueName)
-                    }
-                    else if (symbolic_memory.contains(v1.getUniqueName)) {
-                      context = symbolic_memory(v1.getUniqueName) + op.getText + res2 
-                    }
-                    else if (symbolic_memory.contains(v2.getUniqueName)) {
-                      context = symbolic_memory(v2.getUniqueName) + op.getText + res1 
-                    }
-                    val sid = symbol + index
-                    symbolic_memory(id.getUniqueName) = sid
-                    index += 1
-                    val info = new Info(false, sid, Some(op.getText), context, None)
-                    report = report:+info
-                  }
-                  // TODO: Decide between two methods: recording the changes of symbolic variables in untargeted functions as concrete values, or just ignoring.
-              }
-            }
-          }
-          case SIRUn(_, op, expr) =>
-          case SIRLoad(_, obj, index) =>
-          case v:IRId =>
-            System.out.println("EXECUTE_ASSIGNMENT()")
-            if (symbolic_memory.contains(v.getUniqueName)) {
-              symbolic_memory(id.getUniqueName) = symbolic_memory(v.getUniqueName)
-            }
-          case _:IRThis =>
-          case n:IRNumber =>
-            System.out.println("EXECUTE_ASSIGNMENT()")
-            symbolic_memory -= id.getUniqueName
-          case s:IRString =>
-          case b:IRBool =>
-          case _:IRUndef =>
-          case _:IRNull =>
-        }
-      }
-    }
   }
   
   // when the function is targeted to test
-  def getInput(id: IRId, env: IRId):Option[Int] = {
-    System.out.println("GET_INPUT()")
-    if (checkFocus(env)) {
+  def getInput(v: IRId, env: IRId):Option[Int] = {
+    if (checkFocus(env) & !coverage.checkProcessing(env.getUniqueName)) {
       //TODO: find other ways to generate symbolic/input identifier
-      symbolic_memory(id.getUniqueName) = symbol + index
+      symbolic_memory.put(v.getUniqueName, symbol+index)
       val info = new Info(false, symbol + index, None, input_symbol + input_index, None)
       report = report:+info
 
@@ -272,67 +192,71 @@ class SymbolicHelper(I: Interpreter) {
 
       index += 1
       input_index += 1
+      coverage.setProcessing(env.getUniqueName)
       return Some(res)
     }
     return None
   }
 
-  def walkVarStmt(id: IRId, env: IRId) = {
-    System.out.println("WALK_VAR_STMT()")
+  /*def walkVarStmt(id: IRId, env: IRId) = {
     if (checkFocus(env)) {
       symbolic_memory(id.getUniqueName) = symbol + index
       index += 1
     }
-  }
+  }*/
 
   def executeCondition(expr: IRExpr, branchTaken: Option[Boolean], c1: Option[String], c2: Option[String], env: IRId) = {
   //TODO: Don't need to be option type
   //TODO: need rewriter to modify the expressions syntatically accepted to the expressions supported by symbolic helper
-    System.out.println("EXECUTE_CONDITION()")
+    println("executeCondition: start")
     if (checkFocus(env)) {
+      println("executeCondition: focus pass")
       expr match {
-        case SIRBin(_, first, op, second) => first match {
-          case v1:IRId => second match {
-            case v2:IRId => op.getKind match {
-              //TODO: find simple way to distinguish operation type 
-              case EJSOp.BIN_COMP_REL_INSTANCEOF => 
-              case EJSOp.BIN_COMP_REL_IN =>
-              case EJSOp.BIN_ARITH_MUL_MULTIPLICATION => 
-              case EJSOp.BIN_ARITH_MUL_DIVISION => 
-              case EJSOp.BIN_ARITH_MUL_REMINDER => 
-              case EJSOp.ETC_PLUS => 
-              case EJSOp.ETC_MINUS => 
-              case EJSOp.BIN_BIT_SHIFT_LEFT => 
-              case EJSOp.BIN_BIT_SHIFT_SRIGHT => 
-              case EJSOp.BIN_BIT_SHIFT_USRIGHT => 
-              case EJSOp.BIN_BIT_BIT_AND => 
-              case EJSOp.BIN_BIT_BIT_XOR => 
-              case EJSOp.BIN_BIT_BIT_OR => 
-              //TODO: construct branch bitvector
-              case _ =>
-                if (symbolic_memory.contains(v1.getUniqueName) || symbolic_memory.contains(v2.getUniqueName)) {
-                  //TODO: how to handle the case, concrete value is error
-                  val res1 = c1 match {
-                    case Some(c) => c
-                    case None => ""
+        case SIRBin(_, first, op, second) => op.getKind match {
+          //TODO: find simple way to distinguish operation type 
+          case EJSOp.BIN_COMP_REL_INSTANCEOF => 
+          case EJSOp.BIN_COMP_REL_IN =>
+          case EJSOp.BIN_ARITH_MUL_MULTIPLICATION => 
+          case EJSOp.BIN_ARITH_MUL_DIVISION => 
+          case EJSOp.BIN_ARITH_MUL_REMINDER => 
+          case EJSOp.ETC_PLUS => 
+          case EJSOp.ETC_MINUS => 
+          case EJSOp.BIN_BIT_SHIFT_LEFT => 
+          case EJSOp.BIN_BIT_SHIFT_SRIGHT => 
+          case EJSOp.BIN_BIT_SHIFT_USRIGHT => 
+          case EJSOp.BIN_BIT_BIT_AND => 
+          case EJSOp.BIN_BIT_BIT_XOR => 
+          case EJSOp.BIN_BIT_BIT_OR => 
+          //TODO: construct branch bitvector
+          case _ => 
+            //TODO: construct branch bitvector
+            val res1 = c1 match {case Some(c) => c; case None => ""}
+            val res2 = c2 match {case Some(c) => c; case None => ""}
+            var context = ""
+            first match {
+              case id1: IRId => second match {
+                case id2: IRId => 
+                  if (symbolic_memory.contains(id1.getUniqueName) || symbolic_memory.contains(id2.getUniqueName)) {
+                    //TODO: how to handle the case, concrete value is error
+                    if (symbolic_memory.contains(id1.getUniqueName) && symbolic_memory.contains(id2.getUniqueName)) 
+                      context = symbolic_memory(id1.getUniqueName) + op.getText + symbolic_memory(id2.getUniqueName)
+                    else if (symbolic_memory.contains(id1.getUniqueName)) 
+                      context = symbolic_memory(id1.getUniqueName) + op.getText + res2
+                    else if (symbolic_memory.contains(id2.getUniqueName)) 
+                      context = symbolic_memory(id2.getUniqueName) + op.getText + res1
                   }
-                  val res2 = c2 match {
-                    case Some(c) => c
-                    case None => ""
-                  }
-                  var context = ""
-                  if (symbolic_memory.contains(v1.getUniqueName) && symbolic_memory.contains(v2.getUniqueName)) 
-                    context = symbolic_memory(v1.getUniqueName) + op.getText + symbolic_memory(v2.getUniqueName)
-                  
-                  else if (symbolic_memory.contains(v1.getUniqueName)) 
-                    context = symbolic_memory(v1.getUniqueName) + op.getText + res2
-                  else if (symbolic_memory.contains(v2.getUniqueName)) 
-                    context = symbolic_memory(v2.getUniqueName) + op.getText + res1 
-                  val info = new Info(true, "", Some(op.getText), context, branchTaken)
-                  report = report:+info
-                }
+                case _ =>
+                  if (symbolic_memory.contains(id1.getUniqueName))
+                    context = symbolic_memory(id1.getUniqueName) + op.getText + res2
+              }
+              case _ => second match {
+                case id2: IRId =>
+                  if (symbolic_memory.contains(id2.getUniqueName)) 
+                    context = symbolic_memory(id2.getUniqueName) + op.getText + res1
+              }
             }
-          }
+            val info = new Info(true, "", Some(op.getText), context, branchTaken)
+            report = report:+info
         }
         case v:IRId =>
           if (symbolic_memory.contains(v.getUniqueName)) {
@@ -343,13 +267,39 @@ class SymbolicHelper(I: Interpreter) {
     }
   }
 
-  def checkFocus(f: IRId):Boolean = {
-    System.out.println("CHECK_FOCUS()")
-    return coverage.target == f.getUniqueName
+  // TODO: target environment setting
+  // TODO: function call setting
+  def setupCall():Option[IRStmt] = {
+    if (coverage.target == null) return None
+    for (k <- NodeRelation.ast2irMap.keySet) {
+      k match {
+        case SFunDecl(info, f@SFunctional(fds, vds, body, name, params), strict) =>
+          if (name.getText == coverage.target) {
+            val dummySpan = IF.dummySpan("forConcolic")
+            val dummyInfo = NF.makeSpanInfoComment(dummySpan)
+            val fun = new FunExpr(dummyInfo, f)
+            var args = List[Expr]()
+            var env = List[(String, IRId)]()
+            for (i <- 0 until params.length)
+              if (i < input.length)
+                args = args:+NF.makeIntLiteral(dummySpan, new BigInteger(input(i).toString)) 
+              else
+                args = args:+NF.makeIntLiteral(dummySpan, new BigInteger(random.nextInt(10).toString)) 
+            val funapp = new FunApp(dummyInfo, fun, args)
+            val res = IF.makeTId(funapp, dummySpan, NU.ignoreName)
+            
+            return Some(IRGenerator.funAppToIR(funapp, env, res))
+          }
+        case _ =>
+      }
+    }
+    return None
   }
+  def ignoreCall(f: IRId) = environments.get(f.getUniqueName) match { case Some(e) => !coverage.checkTarget(e.getUniqueName); case None => false }
+
+  def checkFocus(f: IRId) = coverage.checkTarget(f.getUniqueName)
 
   def checkLoop():Boolean = {
-    System.out.println("CHECK_LOOP()")
     if (depth < max_depth) {
       depth = depth + 1
       return true

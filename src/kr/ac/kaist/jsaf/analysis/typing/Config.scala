@@ -161,6 +161,12 @@ object Config {
   def setJQueryMode = jqMode = true
 
   /**
+   * temporary DOM property update mode flag
+   */
+  var domPropMode = false
+  def setDOMPropMode = domPropMode = true
+
+  /**
    * WIDL mode flag
    */
   var widlMode = false

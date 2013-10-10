@@ -378,7 +378,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val (ss1, r1) = walkExpr(left, env, new1)
       val (ss2, r2) = walkExpr(right, env, freshId(right, getSpan(right), "new2"))
       val lab = freshId(s, span, "label")
-      val ifStmt = IF.makeIf(true, s, span, if(ss2.isEmpty) r1 else new1,
+      val ifStmt = IF.makeIf(true, s, span, r1,
                              IF.makeSeq(left, leftspan,
                                         ss2:+IF.makeIf(true, right, getSpan(right), r2,
                                                        IF.makeSeq(trueB, getSpan(trueB), walkStmt(trueB, env),
@@ -388,8 +388,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
                    case None => ifStmt
                    case Some(stmt) => IF.makeSeq(s, span, List(ifStmt, walkStmt(stmt, env)))
                  }
-      makeStmtUnit(s, span, IF.makeSeq(s, span, ss1++(if(!ss2.isEmpty) List(mkExprS(left, leftspan, new1, r1)) else Nil):+
-                                       IF.makeLabelStmt(false, s, span, lab, body)))
+      makeStmtUnit(s, span, IF.makeSeq(s, span, ss1:+IF.makeLabelStmt(false, s, span, lab, body)))
 
     case SIf(info, SInfixOpApp(_, left, op, right), trueB, falseB) if op.getText.equals("||") =>
       val span = getSpan(info)
@@ -399,7 +398,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val (ss2, r2) = walkExpr(right, env, freshId(right, getSpan(right), "new2"))
       val lab1 = freshId(s, span, "label1")
       val lab2 = freshId(s, span, "label2")
-      val ifStmts = ((IF.makeIf(true, s, span, if(ss2.isEmpty) r1 else new1,
+      val ifStmts = ((IF.makeIf(true, s, span, r1,
                                 IF.makeBreak(false, s, span, lab1), None))::ss2):+
                     IF.makeIf(true, s, span, r2, IF.makeBreak(false, s, span, lab1), None)
       val body1 = falseB match {
@@ -409,8 +408,7 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
                                                      IF.makeBreak(false, s, span, lab2)))
                   }
       val body2 = IF.makeSeq(s, span, IF.makeLabelStmt(false, s, span, lab1, body1), walkStmt(trueB, env))
-      makeStmtUnit(s, span, IF.makeSeq(s, span, ss1++(if(!ss2.isEmpty) List(mkExprS(left, leftspan, new1, r1)) else Nil):+
-                                       IF.makeLabelStmt(false, s, span, lab2, body2)))
+      makeStmtUnit(s, span, IF.makeSeq(s, span, ss1:+IF.makeLabelStmt(false, s, span, lab2, body2)))
 
     case SIf(info, SParenthesized(_, expr), trueBranch, falseBranch) =>
       walkStmt(setUID(SIf(info, expr, trueBranch, falseBranch), s.getUID), env)
@@ -645,15 +643,14 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val (ss2, r2) = walkExpr(trueB, env, res)
       val (ss3, r3) = walkExpr(falseB, env, res)
       val lab = freshId(e, span, "label")
-      val ifStmt = IF.makeIf(true, e, span, if(ssb.isEmpty) ra else newa,
+      val ifStmt = IF.makeIf(true, e, span, ra,
                              IF.makeSeq(e, span, ssb:+
                                               IF.makeIf(true, e, span, rb,
                                                         IF.makeSeq(e, span, makeList(trueB, ss2, r2, res):+
                                                                    IF.makeBreak(false, e, span, lab)), None)),
                              None)
       val body = IF.makeSeq(e, span, List(ifStmt)++makeList(falseB, ss3, r3, res))
-      (ssa++(if(!ssb.isEmpty) List(mkExprS(e, span, newa, ra)) else Nil):+
-       IF.makeLabelStmt(false, e, span, lab, body), res)
+      (ssa:+IF.makeLabelStmt(false, e, span, lab, body), res)
 
     case SCond(info, SInfixOpApp(_, left, op, right), trueB, falseB) if op.getText.equals("||") =>
       val span = getSpan(info)
@@ -664,13 +661,12 @@ class Translator(program: Program, coverage: JOption[Coverage]) extends Walker {
       val (ss3, r3) = walkExpr(falseB, env, res)
       val lab1 = freshId(e, span, "label1")
       val lab2 = freshId(e, span, "label2")
-      val ifStmts = ((IF.makeIf(true, e, span, if(ssb.isEmpty) ra else newa,
+      val ifStmts = ((IF.makeIf(true, e, span, ra,
                                 IF.makeBreak(false, e, span, lab1), None))::ssb):+
                     IF.makeIf(true, e, span, rb, IF.makeBreak(false, e, span, lab1), None)
       val body1 = IF.makeSeq(e, span, ifStmts++makeList(falseB, ss3, r3, res):+IF.makeBreak(false, e, span, lab2))
       val body2 = IF.makeSeq(e, span, IF.makeLabelStmt(false, e, span, lab1, body1), makeSeq(trueB, trueB.getInfo, ss2, r2, res))
-      (ssa++(if(!ssb.isEmpty) List(mkExprS(e, span, newa, ra)) else Nil):+
-       IF.makeLabelStmt(false, e, span, lab2, body2), res)
+      (ssa:+IF.makeLabelStmt(false, e, span, lab2, body2), res)
 
     case SCond(info, SParenthesized(_, expr), trueBranch, falseBranch) =>
       walkExpr(setUID(SCond(info, expr, trueBranch, falseBranch), e.getUID), env, res)

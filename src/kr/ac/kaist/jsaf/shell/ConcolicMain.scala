@@ -14,7 +14,10 @@ import java.util.HashMap
 import scala.collection.JavaConversions
 import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.analysis.cfg.CFGBuilder
-import kr.ac.kaist.jsaf.analysis.typing._
+import kr.ac.kaist.jsaf.analysis.typing.InitHeap
+import kr.ac.kaist.jsaf.analysis.typing.Semantics
+import kr.ac.kaist.jsaf.analysis.typing.Typing
+import kr.ac.kaist.jsaf.analysis.typing.Worklist
 import kr.ac.kaist.jsaf.bug_detector.StateManager
 import kr.ac.kaist.jsaf.compiler.Parser
 import kr.ac.kaist.jsaf.concolic.{Z3, Instrumentor}
@@ -41,9 +44,7 @@ object ConcolicMain {
     var return_code = 0
     val coverage = new Coverage
     
-    val pair: Pair[Program, HashMap[String, String]] = Parser.fileToAST(fileNames)
-    val program: Program = pair.first
-    val fileMap: HashMap[String, String] = pair.second
+    val program: Program = Parser.fileToAST(fileNames)
     val irErrors = Shell.ASTtoIR(fileName, program, JOption.none[String], JOption.some[Coverage](coverage))
     val irOpt: JOption[IRRoot] = irErrors.first
     val program2: Program = irErrors.third
@@ -71,7 +72,6 @@ object ConcolicMain {
       
       val instrumentor = new Instrumentor(ir, coverage)
       ir = instrumentor.doit
-      instrumentor.printIRs
       val z3 = new Z3
       val interpreter = new Interpreter
       do {

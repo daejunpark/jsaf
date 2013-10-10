@@ -40,7 +40,7 @@ class SemanticsDOMTest(dir: String, tc: String, typing_mode: String) extends Sem
     // html preprocess, parse
     //val jshtml = new JSFromHTML(file.getPath)
     val jshtml = new JSFromHTML(file.getCanonicalPath)
-    var program: Program = jshtml.parseScripts().first
+    var program: Program = jshtml.parseScripts()
 
     // hoist
     val hoister = new Hoister(program)

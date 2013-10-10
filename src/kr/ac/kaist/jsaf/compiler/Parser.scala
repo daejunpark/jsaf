@@ -51,7 +51,6 @@ object Parser {
 
   val mergedSourceLoc = new SourceLocRats(NU.freshFile("merged"), 0, 0, 0)
   val mergedSourceInfo = new ASTSpanInfo(new Span(mergedSourceLoc, mergedSourceLoc))
-  var fileMap = new HashMap[String, String]()
   var fileindex = 1
 
   def getInfoStmts(program: Program): (ASTSpanInfo, SourceElements) = {
@@ -70,12 +69,9 @@ object Parser {
                     isCloneDetector: Boolean): (ASTSpanInfo, SourceElements) = {
     val f = script.first
     val file = new File(f)
-    fileMap.put(file.getCanonicalPath, "%s::%d".format(f, fileindex))
     fileindex += 1
     getInfoStmts(parseScriptConvertExn(f, script.second, script.third, isCloneDetector))
   }
-
-  def clearFileMap() = fileMap.clear
 
   def fileToStmts(f: String): (ASTSpanInfo, SourceElements) = {
     val file = new File(f)
@@ -84,7 +80,6 @@ object Parser {
       // convert path string to linux style for windows
       path = path.charAt(0).toLower + path.replace('\\', '/').substring(1)
     }
-    fileMap.put(path, "%s::%d".format(f, fileindex))
     fileindex += 1
     getInfoStmts(parseFileConvertExn(file))
   }
@@ -98,30 +93,26 @@ object Parser {
     NF.makeProgram(info, NF.makeTopLevel(info, List(stmts)))
   }
 
-  def scriptToAST(ss: JList[Triple[String, JInteger, String]]) = toList(ss) match {
+  def scriptToAST(ss: JList[Triple[String, JInteger, String]]): Program = toList(ss) match {
     case List(script) =>
       val (info, stmts) = scriptToStmts(script)
-      new Pair[Program, HashMap[String,String]](NF.makeProgram(info, NF.makeTopLevel(info, List(stmts))), fileMap)
+      NF.makeProgram(info, NF.makeTopLevel(info, List(stmts)))
     case scripts =>
-      val stmts =
-          scripts.foldLeft(List[SourceElements]())((l, s) => {
-                          val (_, ss) = scriptToStmts(s)
-                          l++List(ss)})
-      new Pair[Program, HashMap[String,String]](NF.makeProgram(mergedSourceInfo,
-                                                               NF.makeTopLevel(mergedSourceInfo, stmts)), fileMap)
+      val stmts = scripts.foldLeft(List[SourceElements]())((l, s) => {
+        val (_, ss) = scriptToStmts(s)
+        l++List(ss)})
+      NF.makeProgram(mergedSourceInfo, NF.makeTopLevel(mergedSourceInfo, stmts))
   }
 
-  def fileToAST(fs: JList[String]) = toList(fs) match {
+  def fileToAST(fs: JList[String]): Program = toList(fs) match {
     case List(file) =>
       val (info, stmts) = fileToStmts(file)
-      new Pair[Program, HashMap[String,String]](NF.makeProgram(info, NF.makeTopLevel(info, List(stmts))), fileMap)
+      NF.makeProgram(info, NF.makeTopLevel(info, List(stmts)))
     case files =>
-      val stmts =
-          files.foldLeft(List[SourceElements]())((l, f) => {
-                        val (_, ss) = fileToStmts(f)
-                        l++List(ss)})
-      new Pair[Program, HashMap[String,String]](NF.makeProgram(mergedSourceInfo,
-                                                               NF.makeTopLevel(mergedSourceInfo, stmts)), fileMap)
+      val stmts = files.foldLeft(List[SourceElements]())((l, f) => {
+        val (_, ss) = fileToStmts(f)
+        l++List(ss)})
+      NF.makeProgram(mergedSourceInfo, NF.makeTopLevel(mergedSourceInfo, stmts))
   }
 
   def parseScriptConvertExn(filename: String, start: JInteger, script: String): Program =

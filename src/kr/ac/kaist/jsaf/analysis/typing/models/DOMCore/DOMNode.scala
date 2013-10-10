@@ -1314,6 +1314,7 @@ object DOMNode extends DOM {
 
   /* instance */
   override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  
   /* list of properties in the instance object */
   override def getInsList(node: Node): List[(String, PropValue)] = {
     val nodeName = node.getNodeName

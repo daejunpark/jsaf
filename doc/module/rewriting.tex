@@ -236,7 +236,7 @@ Rewriting of a program is to collect module declarations, import declarations, a
 \subsubsection{Function Declaration}
 \FunDecl\ is a helper function that collects the function declarations declared in a module.
 \begin{equation*}
-\FunDecl \llbracket s_1 \cdots s_n \rrbracket (\Sigma, \phi) = \bigcup_{1 \le i \le n} \FunDecl \llbracket s_1 \rrbracket (\Sigma, \phi)
+\FunDecl \llbracket s_1 \cdots s_n \rrbracket (\Sigma, \phi) = \bigcup_{1 \le i \le n} \FunDecl \llbracket s_i \rrbracket (\Sigma, \phi)
 \end{equation*}
 \begin{equation*}
 \begin{split}

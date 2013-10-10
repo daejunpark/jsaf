@@ -43,7 +43,7 @@ class Coverage() {
   var semantics: Semantics = null
   var stateManager: StateManager = null
   var functions: HashMap[String, FunctionInfo] = HashMap[String,FunctionInfo]()
-  //functions.put("<>Concolic<>Main", new FunctionInfo)
+  functions.put("<>Concolic<>Main", new FunctionInfo)
 
   def toInt(n: JInteger):Int = n.intValue()
   def setInput(result: JList[JInteger]) = { 
@@ -51,24 +51,31 @@ class Coverage() {
     input = toList(tmp)
   }
   def getConstraints:JList[ConstraintForm] = toJavaList(constraints)
+
   def continue = constraints.nonEmpty
   def existCandidate = functions.filter(x => x._2.isCandidate).nonEmpty
-  def removeTarget() = {
+  def removeTarget = {
     functions.get(target) match {
       case Some(info) => info.done
       case None => println("Target should be function type")
     }
     if (functions.nonEmpty) {
       var filters = functions.filter(x => x._2.isCandidate)
-      if (filters.nonEmpty)
+      if (filters.nonEmpty) {
+        filters.head._2.targeting
         target = filters.head._1
+      }
       else
         target = null
     }
   }
+  def setProcessing(fun: String) = functions.get(fun) match { case Some(f) => f.processing; case None => }
+  def setUnprocessing(fun: String) = functions.get(fun) match { case Some(f) => f.unprocessing; case None => }
+  def checkTarget(fun: String) = functions.get(fun) match { case Some(f) => f.isTarget; case None => false }
+  def checkProcessing(fun: String) = functions.get(fun) match { case Some(f) => f.isProcess; case None => false }
 
   // using static analysis, store function information
-  def updateFunction() = {
+  def updateFunction = {
     for (k <- NodeRelation.cfg2irMap.keySet) {
       k match {
         case inst@CFGCall(iid, info, fun, thisArg, arguments, addr) =>
@@ -104,6 +111,9 @@ class Coverage() {
         case _ =>
       }
     }
-    println("updateFunction: "+functions)
   }
+
+  /*def storeIR(id: IRId) = functions.get(id.getUniqueName) match { case Some(f) => f.storeIR(id); case None => } 
+
+  def getIR(fun: String): IRId = functions.get(fun) match { case Some(f) => f.irId; case None => }*/
 }

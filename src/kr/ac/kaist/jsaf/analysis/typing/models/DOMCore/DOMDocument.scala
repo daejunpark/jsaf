@@ -18,28 +18,14 @@ import org.w3c.dom.Document
 import org.w3c.dom.Node
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5.DOMLocation
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLTopElement
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.{HTMLTopElement, HTMLElement}
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject.{CSSStyleDeclaration, StyleSheetList}
 import scala.Some
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.domain.OtherStrSingle
-import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.typing.domain.NumStrSingle
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.domain.OtherStrSingle
-import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.typing.domain.NumStrSingle
 
 object DOMDocument extends DOM {
   private val name = "Document"
 
-  /* predefined locatoins */
+  /* predefined locations */
   val loc_cons = newPredefLoc(name + "Cons")
   val loc_proto = newPredefLoc(name + "Proto")
 
@@ -106,7 +92,8 @@ object DOMDocument extends DOM {
           val l_nodes = addrToLoc(addr2, Recent)
           val l_attributes = addrToLoc(addr3, Recent)
           val l_style = addrToLoc(addr4, Recent)
-          val (h_1, ctx_1)  = Helper.Oldify(h, ctx, addr1)
+          val h1 = HTMLTopElement.setInsLoc(h, l_r)
+          val (h_1, ctx_1)  = Helper.Oldify(h1, ctx, addr1)
           val (h_2, ctx_2)  = Helper.Oldify(h_1, ctx_1, addr2)
           val (h_3, ctx_3)  = Helper.Oldify(h_2, ctx_2, addr3)
           val (h_4, ctx_4)  = Helper.Oldify(h_3, ctx_3, addr4)
@@ -128,6 +115,7 @@ object DOMDocument extends DOM {
           // object for 'style' property
           val style_list = CSSStyleDeclaration.getInsList()
           val style = style_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+
           
           /* imprecise semantics */
           s_tag match {
@@ -163,6 +151,104 @@ object DOMDocument extends DOM {
               ((HeapBot, ContextBot), (he, ctxe))
           }
         })),
+      // Based on WHATWG DOM Living Standard Section 6.5 Interface Document
+      // Unsound: no excepting handling
+      ("DOMDocument.createElementNS" -> (
+        (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr_env = set_addr.head
+          val addr1 = cfg.getAPIAddress(addr_env, 0)
+          val addr2 = cfg.getAPIAddress(addr_env, 1)
+          val addr3 = cfg.getAPIAddress(addr_env, 2)
+          val addr4 = cfg.getAPIAddress(addr_env, 3)
+          val l_r = addrToLoc(addr1, Recent)
+          val l_nodes = addrToLoc(addr2, Recent)
+          val l_attributes = addrToLoc(addr3, Recent)
+          val l_style = addrToLoc(addr4, Recent)
+          val h1 = HTMLTopElement.setInsLoc(h, l_r)
+          val (h_1, ctx_1)  = Helper.Oldify(h1, ctx, addr1)
+          val (h_2, ctx_2)  = Helper.Oldify(h_1, ctx_1, addr2)
+          val (h_3, ctx_3)  = Helper.Oldify(h_2, ctx_2, addr3)
+          val (h_4, ctx_4)  = Helper.Oldify(h_3, ctx_3, addr4)
+
+          val s_namespace = Helper.toString(Helper.toPrimitive(getArgValue(h_4, ctx_4, args, "0")))
+          // 1. If namespace is the empty string, set it to null
+          val v_namespace = s_namespace match {
+            case StrTop | OtherStr => Value(s_namespace) + Value(NullTop)
+            case StrBot => ValueBot
+            case OtherStrSingle(s) if s=="" => Value(NullTop)
+            case OtherStrSingle(s) => Value(s_namespace)
+            case NumStrSingle(s) => Value(s_namespace)
+            case NumStr => Value(s_namespace)
+          }
+          val s_name = Helper.toString(Helper.toPrimitive(getArgValue(h_4, ctx_4, args, "1")))
+          //4 if qualifiedName contains a ":" (U+003E), 
+          //  then split the string on it and let prefix be the part before and localName the part after. 
+          //  Otherwise, let prefix be null and localName be qualifiedName.
+          val (prefix, localName) = s_name match {
+            case StrTop | OtherStr => (Value(s_name) + Value(NullTop), Value(s_name))
+            case NumStr => (Value(NullTop), Value(s_name))
+            case NumStrSingle(s) => (Value(NullTop), Value(s_name))
+            case OtherStrSingle(s) =>
+              val ss = s.span(c => c!=':')
+              if(ss._2 == "")
+                (Value(NullTop), Value(s_name))
+              else
+                (Value(OtherStrSingle(ss._1)), Value(OtherStrSingle(ss._2.tail)))
+            case StrBot => (ValueBot, ValueBot)
+          }
+          if(v_namespace </ ValueBot && prefix </ ValueBot && localName </ ValueBot) {
+            // 5. If prefix is not null and namespace is null, throw a "NamespaceError" exception.
+            val es = Set(DOMException.NAMESPACE_ERR)
+            val (he_1, ctxe_1) = DOMHelper.RaiseDOMException(h_4, ctx_4, es)
+            if(prefix._1._2 <= NullBot && v_namespace <= Value(NullTop)){
+              System.err.println("* Warning: the NamespaceError exception has occurred in the 'document.createElementNS' call.")
+              ((HeapBot, ContextBot), (he + he_1, ctxe + ctxe_1))
+            }
+            else {
+              val (he_2, ctxe_2) = if(v_namespace._1._2 </ NullBot && prefix._1._2 <= NullBot) {
+                System.err.println("* Warning: the NamespaceError exception may occurr in the 'document.createElementNS' call.")
+                DOMHelper.RaiseDOMException(h_4, ctx_4, es)
+              }
+              else (HeapBot, ContextBot)
+              // 10. Return a new element that implements interface, with no attributes, namespace set to namespace, 
+              //     namespace prefix set to prefix, local name set to localName, and node document set to the context object.
+              // object for 'childNodes' property
+              val childNodes_list = DOMNodeList.getInsList(0)
+              val childNodes = childNodes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+          
+              // object for 'attributes' property
+              val attributes_list = DOMNamedNodeMap.getInsList(0)
+              val attributes = attributes_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+
+              // object for 'style' property
+              val style_list = CSSStyleDeclaration.getInsList()
+              val style = style_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+              
+              val element_obj_proplist = DOMElement.getInsList(PropValue(ObjectValue(s_name, F, T, T))) ++ HTMLElement.default_getInsList ++ List(
+                                         ("@class", PropValue(AbsString.alpha("Object"))),
+                                         ("@proto", PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
+                                         ("@extensible", PropValue(BoolTrue)))
+              val element_obj = element_obj_proplist.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+              // 'childNodes', 'attributes', 'style' update
+              val element_obj_up = element_obj.update("childNodes", PropValue(ObjectValue(l_nodes, F, T, T))).update(
+                                                       "attributes", PropValue(ObjectValue(l_attributes, F, T, T))).update(
+                                                       "style", PropValue(ObjectValue(l_style, T, T, T)))
+              // 'namespaceURI', 'prefix', 'localName' update  
+              val element_obj_up1 = element_obj_up.update("namespaceURI", PropValue(ObjectValue(v_namespace, F, T, T))).update(
+                                                          "prefix", PropValue(ObjectValue(prefix, T, T, T))).update(
+                                                          "localName", PropValue(ObjectValue(localName, F, T, T)))
+              val h_5= h_4.update(l_nodes, childNodes).update(l_attributes, attributes).update(l_style, style).update(l_r, element_obj_up1)
+              ((Helper.ReturnStore(h_5, Value(l_r)), ctx_4), (he + he_2, ctxe + ctxe_2))
+            
+            }
+                                    
+          }
+          else
+            ((HeapBot, ContextBot), (he, ctxe))
+        })),
       ("DOMDocument.createDocumentFragment" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
@@ -176,7 +262,7 @@ object DOMDocument extends DOM {
           val (h_1, ctx_1)  = Helper.Oldify(h, ctx, addr1)
           val (h_2, ctx_2)  = Helper.Oldify(h_1, ctx_1, addr2)
 
-          val obj_proplist = DOMDocumentFragment.getInsList
+          val obj_proplist = DOMDocumentFragment.default_getInsList
           val obj = obj_proplist.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
           // 'childNodes' update
           val childNodes_list = DOMNodeList.getInsList(0)
@@ -320,7 +406,9 @@ object DOMDocument extends DOM {
           val s_id = Helper.toString(Helper.toPrimitive(getArgValue(h, ctx, args, "0")))
           if (s_id </ StrBot) {
             val lset_find = DOMHelper.findById(h, s_id)
-            val v_null = if (lset_find.isEmpty || !s_id.isConcrete) Value(NullTop) else ValueBot
+            val v_null = if(!s_id.isConcrete || !lset_find.exists(l => {h(l)(OtherStrSingle("id"))._1.objval.value.pvalue.strval.isConcrete})) 
+                            Value(NullTop) 
+                         else ValueBot
             /* imprecise semantic */
             ((Helper.ReturnStore(h, Value(lset_find) + v_null), ctx), (he, ctxe))
           }

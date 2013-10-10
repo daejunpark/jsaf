@@ -68,11 +68,14 @@ class Interpreter extends IRWalker {
       val coverage = IS.coverage.get
       coverage.inum = 0
       SH.initialize(coverage.input, coverage)
-      walkIRs(vds ++ fds ++ irs.filterNot(_.isInstanceOf[IRNoOp]))
+      val inputIR = SH.setupCall match { case Some(ir) => List(ir); case None => List() }
+      walkIRs(vds ++ fds ++ inputIR ++ irs.filterNot(_.isInstanceOf[IRNoOp]))
+
       SH.print
       CE.extract(SH.report)
       coverage.constraints = CE.constraint
       CE.print()
+      coverage.setUnprocessing(coverage.target)
     }
     else 
       walkIRs(vds ++ fds ++ irs.filterNot(_.isInstanceOf[IRNoOp]))
@@ -862,20 +865,21 @@ class Interpreter extends IRWalker {
               case _ =>
             }
             arg1 match {
-              case SIRBin(_, first, op, second) => first match {
-                case v1:IRId => second match {
-                  case v2:IRId =>
-                    val c1 = IH.getBindingValue(IH.lookup(v1), v1.getOriginalName) match {
-                      case v:Val => Some(IH.toString(v))
-                      case _:JSError => None
-                    }
-                    val c2 = IH.getBindingValue(IH.lookup(v2), v2.getOriginalName) match {
-                      case v:Val => Some(IH.toString(v))
-                      case _:JSError => None
-                    }
-                    SH.executeAssignment(loc, arg2.get, arg1, c1, c2, env)
+              case SIRBin(_, first, op, second) =>
+                var c1, c2: Option[String] = None
+                first match {
+                  case id: IRId =>
+                    c1 = IH.getBindingValue(IH.lookup(id), id.getOriginalName) match { case v: Val => Some(IH.toString(v)); case _: JSError => None }
+                  case v: IRPVal => 
+                    c1 = Some(IH.toString(PVal(v)))
                 }
-              }
+                second match {
+                  case id: IRId => 
+                    c2 = IH.getBindingValue(IH.lookup(id), id.getOriginalName) match { case v: Val => Some(IH.toString(v)); case _: JSError => None }
+                  case v: IRPVal => 
+                    c2 = Some(IH.toString(PVal(v)))
+                }
+                SH.executeAssignment(loc, arg2.get, arg1, c1, c2, env)
               case _ => SH.executeAssignment(loc, arg2.get, arg1, None, None, env)
             }
           case "<>Concolic<>GetInput" =>
@@ -890,42 +894,28 @@ class Interpreter extends IRWalker {
             val branchTaken = walkExpr(arg1) match
                              { case v: Val => Some(IH.toBoolean(v))
                                case _: JSError => None }
-            System.out.println(arg1)
             arg1 match {
-              case SIRBin(_, first, op, second) => /*first match {
-                case v1: IRId => second match {
-                  case v2: IRId =>
-                    val c1 = IH.getBindingValue(IH.lookup(v1), v1.getOriginalName) match
-                            { case v: Val => Some(IH.toString(v))
-                              case _: JSError => None }
-                    val c2 = IH.getBindingValue(IH.lookup(v2), v2.getOriginalName) match
-                            { case v: Val => Some(IH.toString(v))
-                              case _: JSError => None}
-
-                    SH.executeCondition(arg1, branchTaken, c1, c2, arg2.get)
-                }*/
+              case SIRBin(_, first, op, second) => 
                 var c1, c2: Option[String] = None 
-                System.out.println(first, op, second)
                 first match {
-                  case SIRLoad(_, obj, index) => System.out.println("SIRLoadddddddddd", obj, walkExpr(index)) 
-                  case id: IRId => c1 = IH.getBindingValue(IH.lookup(id), id.getOriginalName) match {
-                    case v: Val => Some(IH.toString(v))
-                    case _: JSError => None}
-                  case v: IRPVal => c1 = Some(IH.toString(PVal(v)))
+                  case id: IRId => 
+                    c1 = IH.getBindingValue(IH.lookup(id), id.getOriginalName) match { case v: Val => Some(IH.toString(v)); case _: JSError => None }
+                  case v: IRPVal => 
+                    c1 = Some(IH.toString(PVal(v)))
                 }
                 second match {
-                  case id: IRId => c2 = IH.getBindingValue(IH.lookup(id), id.getOriginalName) match {
-                    case v: Val => Some(IH.toString(v))
-                    case _: JSError => None}
-                  case v: IRPVal => c2 = Some(IH.toString(PVal(v)))
+                  case id: IRId => 
+                    c2 = IH.getBindingValue(IH.lookup(id), id.getOriginalName) match { case v: Val => Some(IH.toString(v)); case _: JSError => None }
+                  case v: IRPVal => 
+                    c2 = Some(IH.toString(PVal(v)))
                 }
                 SH.executeCondition(arg1, branchTaken, c1, c2, arg2.get)
               case v: IRId => SH.executeCondition(arg1, branchTaken, None, None, arg2.get)
               case _ => SH.executeCondition(arg1, None, None, None, arg2.get)
             }
           }
-          case "<>Concolic<>WalkVarStmt" =>
-            SH.walkVarStmt(arg1.asInstanceOf[IRId], arg2.get)
+          /*case "<>Concolic<>WalkVarStmt" =>
+            SH.walkVarStmt(arg1.asInstanceOf[IRId], arg2.get)*/
 
           case "<>Global<>toObject" => walkExpr(arg1) match {
             case v: Val => IH.toObject(v) match {
@@ -1011,6 +1001,7 @@ class Interpreter extends IRWalker {
       }
 
       case SIRCall(info, lhs: IRId, fun: IRId, thisB, args) =>
+        //if (IS.coverage.isDefined && SH.ignoreCall(lhs)) { println("Interpreter: "+fun.getUniqueName); return }
         IS.span = info.getSpan
         val oldEnv = IS.env
         val oldTb = IS.tb

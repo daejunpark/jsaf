@@ -84,9 +84,7 @@ class CmdPrint extends Command {
         }
         case "worklist" => {
           System.out.println("* Worklist set")
-          c.getWorklist.getWorkList.foreach(w => {
-            System.out.println("["+w._1+"] "+w._2)
-          })
+          System.out.print(c.getWorklist.toString)
         }
         case "cmd" | "command" => {
           val cp = c.current

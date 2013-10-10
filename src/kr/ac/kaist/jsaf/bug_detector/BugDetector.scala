@@ -17,7 +17,7 @@ import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
 import kr.ac.kaist.jsaf.nodes.Program
 
-class BugDetector(_ast: Program, _cfg: CFG, _typing: TypingInterface, fileMap: JHashMap[String, String], quiet: Boolean, _fromHoister: JList[BugInfo]) {
+class BugDetector(_ast: Program, _cfg: CFG, _typing: TypingInterface, quiet: Boolean, _fromHoister: JList[BugInfo]) {
   val params        = Shell.params
   val ast           = _ast
   val cfg           = _cfg
@@ -37,7 +37,7 @@ class BugDetector(_ast: Program, _cfg: CFG, _typing: TypingInterface, fileMap: J
   val semantics     = new Semantics(cfg, Worklist.computes(cfg, quiet), locclone)
   val varManager    = new VarManager(this)
   val stateManager  = new StateManager(cfg, typing, semantics, varManager)
-  val bugStorage    = new BugStorage(this, fileMap)
+  val bugStorage    = new BugStorage(this)
   val bugOption     = new BugOption(!devMode)
   val ASTDetect     = new ASTDetect(this)
   val CommonDetect  = new CommonDetect(this)

@@ -160,6 +160,10 @@ object NodeUtil {
         // Remove an empty internal IRStmt list
         case SIRSeq(_, Nil) => repeat = true; simpl(rest)
 
+        // Remove a self assignment IRStmt
+        case SIRExprStmt(_, lhs, rhs:IRId, ref) if lhs.getUniqueName.equals(rhs.getUniqueName) =>
+          repeat = true; simpl(rest)
+
         // Simplify the following case:
         //     <>ignore<>1 = expr
         //     <>temp = <>ignore<>1
@@ -302,6 +306,14 @@ object NodeUtil {
             case 'r' => buf.append('\r')
             case 't' => buf.append('\t')
             case 'v' => buf.append('\u000b')
+            case 'x' =>
+              i += 2
+              if (i >= length) {
+                throw new IllegalArgumentException("incomplete universal character"+
+                                                   " name " + s.substring(i-1))
+              }
+              val n = Integer.parseInt(s.substring(i-1, i+1), 16)
+              buf.append(n.asInstanceOf[Char])
             case 'u' =>
               i += 4
               if (i >= length) {

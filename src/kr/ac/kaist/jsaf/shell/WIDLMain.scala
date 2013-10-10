@@ -14,7 +14,11 @@ import java.nio.charset.Charset
 import java.util.{ArrayList, HashMap}
 import java.util.{List => JList}
 import kr.ac.kaist.jsaf.analysis.cfg.CFGBuilder
-import kr.ac.kaist.jsaf.analysis.typing._
+import kr.ac.kaist.jsaf.analysis.typing.Config
+import kr.ac.kaist.jsaf.analysis.typing.InitHeap
+import kr.ac.kaist.jsaf.analysis.typing.Semantics
+import kr.ac.kaist.jsaf.analysis.typing.Typing
+import kr.ac.kaist.jsaf.analysis.typing.Worklist
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMBuilder
 import kr.ac.kaist.jsaf.bug_detector.{StateManager, BugDetector}
 import kr.ac.kaist.jsaf.compiler.Parser
@@ -123,9 +127,8 @@ object WIDLMain {
     val DBFileNames = toList(Shell.params.opt_DB)
 
     // AST
-    val pair: Pair[Program, HashMap[String, String]] = Parser.fileToAST(JSFileNameList)
-    val ast_0: Program = rewriteWebapisConstructors(pair.first) // add bindings for webapis Interface constructor calls
-    val fileMap: HashMap[String, String] = pair.second
+    val program: Program = Parser.fileToAST(JSFileNameList)
+    val ast_0: Program = rewriteWebapisConstructors(program) // add bindings for webapis Interface constructor calls
     // IR
     val irErrors = Shell.ASTtoIR(JSFileName, ast_0, JOption.none[String], JOption.none[Coverage])
     val irOpt: JOption[IRRoot] = irErrors.first
@@ -151,6 +154,7 @@ object WIDLMain {
     initHeap.initialize
     // Set the initial state with DOM objects
     val domParser = new DOMParser
+    domParser.setFeature("http://xml.org/sax/features/namespaces", false)
     domParser.parse(new org.xml.sax.InputSource(new java.io.StringReader("<HTML></HTML>")))
     new DOMBuilder(cfg, initHeap, domParser.getDocument).initialize(true)
     // Analyze
@@ -165,7 +169,7 @@ object WIDLMain {
     WIDLChecker.typing.dump*/
     // BugDetector Test
     /*System.out.println("\n* Bug Detector *")
-    val detector = new BugDetector(cfg, WIDLChecker.typing, fileMap, false, irErrors.second)
+    val detector = new BugDetector(cfg, WIDLChecker.typing, false, irErrors.second)
     detector.detectBug*/
     // Run Web IDL checker
     WIDLChecker.doit(ast_n)

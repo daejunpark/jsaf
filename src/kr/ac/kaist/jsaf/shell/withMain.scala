@@ -34,8 +34,7 @@ object WithMain {
     if (Shell.params.FileNames.length == 0) throw new UserError("The with command needs a file to rewrite.")
     val fileNames = JavaConversions.seqAsJavaList(Shell.params.FileNames)
 
-    val pair: Pair[Program, HashMap[String, String]] = Parser.fileToAST(fileNames)
-    var program: Program = pair.first
+    var program: Program = Parser.fileToAST(fileNames)
     program = new Hoister(program).doit.asInstanceOf[Program]
     program = new Disambiguator(program, Shell.opt_DisambiguateOnly).doit.asInstanceOf[Program]
     program = new WithRewriter(program, false).doit.asInstanceOf[Program]

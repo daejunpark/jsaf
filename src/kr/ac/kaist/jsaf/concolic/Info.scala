@@ -24,7 +24,8 @@ class Info(stype: Boolean, id: String, operator: Option[String], context: String
   /* v = left op right */
   val op = operator
   val expr = (id, context)
-  val branchTaken = branch match { case Some(b) => b
-                                   case None => true }
+  val branchTaken = branch match { case Some(b) => b; case None => true }
+
+  override def toString = context 
 }
 

@@ -21,6 +21,7 @@ import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLDocument
 // Section 6.2 The Window object 
 object DOMWindow extends DOM {
 
+  val loc_proto = ObjProtoLoc
   val WindowLoc = GlobalLoc
 
   private val prop_window: List[(String, AbsProperty)] = List(

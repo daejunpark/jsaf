@@ -75,9 +75,9 @@ object MessageEvent extends DOM {
   }
 
   /* instance */
-  def getInstList(lset_target: LocSet): List[(String, PropValue)] = {
+  def getInstList(lset_currenttarget: LocSet, lset_target: LocSet): List[(String, PropValue)] = {
     // this object has all properties of the Event object
-    Event.getInstList(lset_target) ++ 
+    Event.getInstList(lset_currenttarget, lset_target) ++ 
     List(
       ("data", PropValue(ObjectValue(JSONValueTop, F,T,T))),
       ("origin", PropValue(ObjectValue(StrTop, F,T,T))),

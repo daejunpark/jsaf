@@ -40,6 +40,7 @@ class JSFromHTML(filename: String) extends Walker {
 
   // use of Neko HTML parser for the DOM tree
   val document = { val parser : DOMParser = new DOMParser
+                   parser.setFeature("http://xml.org/sax/features/namespaces", false)
                    parser.parse(filename)
                    parser.getDocument }
   def getDocument(): Document = document
@@ -47,7 +48,7 @@ class JSFromHTML(filename: String) extends Walker {
   /*
    * Parse all code in the <script> tags, and return an AST
    */
-  def parseScripts(): Pair[Program, HashMap[String, String]] = {
+  def parseScripts(): Program = {
     //System.out.println(source);
     // filter out script elements that have non-JavaScript code
     val filtered_scriptelements = toList(scriptelements).filter(x =>
@@ -87,7 +88,7 @@ class JSFromHTML(filename: String) extends Walker {
         // code from external source
         else {
           // extract a JavaScript file name from a string such as "main.js?135895164373817"
-          if (!srcname.endsWith(".js"))
+          if (!srcname.endsWith(".js") && srcname.containsSlice(".js"))
             srcname = srcname.take(srcname.replaceAll(".js", "<>").indexOf('<')).concat(".js")
           val srcsource = new File(srcname)
           val path = if(srcsource.isAbsolute()) srcname 
@@ -157,7 +158,6 @@ class JSFromHTML(filename: String) extends Walker {
               messageevent_count += 1
               e_list.add(new Triple(filename, new JInteger(attr.getRowColumnVector().getRow()), eventsource))
             }
-
             // other event attribute
             else if(DOMHelper.isOtherEventAttribute(name) && value!=null){
               val eventsource = "function __OTHEREvent__" + otherevent_count + "(event) { " + value + "}\n"
@@ -179,7 +179,7 @@ class JSFromHTML(filename: String) extends Walker {
   /* enable model */
   def enableModel(srcname: String): Unit = {
     if (regex_jquery.findFirstIn(srcname).nonEmpty && regex_mobile.findFirstIn(srcname).isEmpty)
-    {}  // Config.setJQueryMode
+      {}  // Config.setJQueryMode
   }
 
   private def list_regex_lib = List(

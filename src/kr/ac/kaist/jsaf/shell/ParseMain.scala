@@ -34,8 +34,7 @@ object ParseMain {
     val return_code = 0
     try {
       NodeFactory.initIr2ast
-      val pair: Pair[Program, HashMap[String, String]] = Parser.fileToAST(fileNames)
-      val pgm: Program = pair.first
+      val pgm: Program = Parser.fileToAST(fileNames)
       System.out.println("Ok")
       if (Shell.params.opt_OutFileName != null) {
         try {

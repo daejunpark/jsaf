@@ -266,7 +266,7 @@ object JQueryHelper {
         val o_jq = NewJQueryObject(UInt)
           .update("selector", PropValue(ObjectValue(v_selector, T, T, T)))
           .update("prevObject", PropValue(ObjectValue(Value(JQuery.RootJQLoc) + Value(l_jq), T, T, T)))
-          .update(NumStr, PropValue(ObjectValue(Value(l_tag) + Value(HTMLTopElement.getInsLoc), T, T, T)))
+          .update(NumStr, PropValue(ObjectValue(Value(l_tag) + Value(HTMLTopElement.getInsLoc(_h1)), T, T, T)))
         (_h1.update(l_jq, o_jq), Value(l_jq))
       case NumStrSingle(_) | NumStr =>
         // jQuery object

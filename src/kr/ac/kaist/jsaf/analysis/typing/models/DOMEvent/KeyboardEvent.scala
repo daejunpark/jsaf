@@ -93,9 +93,9 @@ object KeyboardEvent extends DOM {
   }
 
   /* instance */
-  def getInstList(lset_target: LocSet): List[(String, PropValue)] = {
+  def getInstList(lset_currenttarget: LocSet, lset_target: LocSet): List[(String, PropValue)] = {
     // this object has all properties of the UIEvent object
-    UIEvent.getInstList(lset_target) ++ 
+    UIEvent.getInstList(lset_currenttarget, lset_target) ++ 
     List(
       ("keyIdentifier", PropValue(ObjectValue(Value(StrTop), F,T,F))),
       ("keyLocation", PropValue(ObjectValue(Value(UInt), F,T,F))),

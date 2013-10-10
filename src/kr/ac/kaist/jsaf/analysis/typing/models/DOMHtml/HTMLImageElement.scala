@@ -81,7 +81,8 @@ object HTMLImageElement extends DOM {
           val l_childNodes = addrToLoc(addr1, Recent)
           val l_attributes = addrToLoc(addr2, Recent)
           val l_style = addrToLoc(addr3, Recent)
-          val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+          val h1 = HTMLTopElement.setInsLoc(h, lset_this)
+          val (h_1, ctx_1) = Helper.Oldify(h1, ctx, addr1)
           val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
           val (h_3, ctx_3) = Helper.Oldify(h_2, ctx_2, addr3)
           
@@ -103,6 +104,7 @@ object HTMLImageElement extends DOM {
             case NumBot => (NumBot, NumBot)
             case _ => (NumTop, NumTop)
           }
+
           // create a new HTMLImageElement
           if(width </ NumBot && height </ NumBot) {
             val h_4 = lset_this.foldLeft(h_3)((_h, l) => {

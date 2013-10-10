@@ -25,6 +25,7 @@ object EventTarget extends DOM {
   private val name = "EventTarget"
 
   /* predefined locatoins */
+  val loc_proto = ObjProtoLoc
   // no locations
 
   /* initial property list */

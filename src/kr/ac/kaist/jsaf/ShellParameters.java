@@ -11,6 +11,7 @@ package kr.ac.kaist.jsaf;
 
 import java.util.ArrayList;
 import java.util.List;
+import kr.ac.kaist.jsaf.analysis.typing.Worklist;
 
 public class ShellParameters
 {
@@ -90,15 +91,19 @@ public class ShellParameters
     public boolean                                 opt_PreContextSensitive;
     public boolean                                 opt_Unsound;
     public boolean                                 opt_Dom;
+    public boolean                                 opt_Domprop;
     public boolean                                 opt_Tizen;
     public boolean                                 opt_jQuery;
     public boolean                                 opt_SingleThread;
     public boolean                                 opt_MultiThread;
     public boolean                                 opt_ReturnStateOn;
     public boolean                                 opt_ReturnStateOff;
+    public int                                     opt_Timeout;
+    public boolean                                 opt_FunctionCoverage;
     public boolean                                 opt_debugger;
     public int                                     opt_unrollingCount;
     public int                                     opt_forinunrollingCount;
+    public int                                     opt_WorklistOrder;
     public String                                  opt_DDGFileName;
     public String                                  opt_DDG0FileName;
     public String                                  opt_FGFileName;
@@ -162,15 +167,19 @@ public class ShellParameters
         opt_PreContextSensitive = false;
         opt_Unsound = false;
         opt_Dom = false;
+        opt_Domprop = false;
         opt_Tizen = false;
         opt_jQuery = false;
         opt_SingleThread = false;
         opt_MultiThread = false;
         opt_ReturnStateOn = false;
         opt_ReturnStateOff = false;
+        opt_Timeout = 0;
+        opt_FunctionCoverage = false;
         opt_debugger = false;
         opt_unrollingCount = 0;
         opt_forinunrollingCount = 0;
+        opt_WorklistOrder = Worklist.WORKLIST_ORDER_DEFAULT();
         opt_DDGFileName = null;
         opt_DDG0FileName = null;
         opt_FGFileName = null;
@@ -283,8 +292,10 @@ public class ShellParameters
             feasibleOptions.add("-tizen");
             feasibleOptions.add("-test");
             feasibleOptions.add("-model");
+            feasibleOptions.add("-jq");
             feasibleOptions.add("-library");
             feasibleOptions.add("-unroll");
+            feasibleOptions.add("-visual");
             feasibleOptions.add("-forin-unroll");
         }
         else if(cmd.compareTo("interpret") == 0)
@@ -348,8 +359,14 @@ public class ShellParameters
             feasibleOptions.add("-unsound");
             feasibleOptions.add("-single-thread");
             feasibleOptions.add("-multi-thread");
-            feasibleOptions.add("-return-state");
-            feasibleOptions.add("-no-return-state");
+            feasibleOptions.add("-return-state-on");
+            feasibleOptions.add("-return-state-off");
+            feasibleOptions.add("-timeout");
+            feasibleOptions.add("-fcov");
+            feasibleOptions.add("-worklist-order-default");
+            feasibleOptions.add("-worklist-order-fifo");
+            feasibleOptions.add("-worklist-order-lifo");
+            feasibleOptions.add("-worklist-order-count");
             feasibleOptions.add("-unroll");
             feasibleOptions.add("-forin-unroll");
             feasibleOptions.add("-ddgout");
@@ -358,6 +375,7 @@ public class ShellParameters
             feasibleOptions.add("-tizen");
             feasibleOptions.add("-jq");
             feasibleOptions.add("-console");
+            feasibleOptions.add("-domprop");
         }
         else if(cmd.compareTo("bug-detector") == 0)
         {
@@ -428,6 +446,7 @@ public class ShellParameters
 
         String opt = args[index];
         if(opt.compareTo("-out") == 0 ||
+           opt.compareTo("-timeout") == 0 ||
            opt.compareTo("-unroll") == 0 ||
            opt.compareTo("-forin-unroll") == 0 ||
            opt.compareTo("-ddgout") == 0 ||
@@ -439,6 +458,7 @@ public class ShellParameters
                 ErrorMessage = "`" + opt + "` parameter needs an output filename. See help.";
             } else {
                 if(opt.compareTo("-out") == 0) opt_OutFileName = args[index + 1];
+                else if(opt.compareTo("-timeout") == 0) opt_Timeout = Integer.parseInt(args[index + 1]);
                 else if(opt.compareTo("-unroll") == 0) opt_unrollingCount = Integer.parseInt(args[index + 1]);
                 else if(opt.compareTo("-forin-unroll") == 0) opt_forinunrollingCount = Integer.parseInt(args[index + 1]);
                 else if(opt.compareTo("-ddgout") == 0) opt_DDGFileName = args[index + 1];
@@ -525,12 +545,18 @@ public class ShellParameters
         else if(opt.compareTo("-pre-context-sensitive") == 0) opt_PreContextSensitive = true;
         else if(opt.compareTo("-unsound") == 0) opt_Unsound = true;
         else if(opt.compareTo("-dom") == 0) opt_Dom = true;
+        else if(opt.compareTo("-domprop") == 0) opt_Domprop = true;
         else if(opt.compareTo("-tizen") == 0) opt_Tizen = true;
         else if(opt.compareTo("-jq") == 0) opt_jQuery = true;
         else if(opt.compareTo("-single-thread") == 0) opt_SingleThread = true;
         else if(opt.compareTo("-multi-thread") == 0) opt_MultiThread = true;
         else if(opt.compareTo("-return-state-on") == 0) opt_ReturnStateOn = true;
         else if(opt.compareTo("-return-state-off") == 0) opt_ReturnStateOff = true;
+        else if(opt.compareTo("-fcov") == 0) opt_FunctionCoverage = true;
+        else if(opt.compareTo("-worklist-order-default") == 0) opt_WorklistOrder = Worklist.WORKLIST_ORDER_DEFAULT();
+        else if(opt.compareTo("-worklist-order-fifo") == 0) opt_WorklistOrder = Worklist.WORKLIST_ORDER_FIFO();
+        else if(opt.compareTo("-worklist-order-lifo") == 0) opt_WorklistOrder = Worklist.WORKLIST_ORDER_LIFO();
+        else if(opt.compareTo("-worklist-order-count") == 0) opt_WorklistOrder = Worklist.WORKLIST_ORDER_COUNT();
         else if(opt.compareTo("-console") == 0) opt_debugger = true;
         else
         {

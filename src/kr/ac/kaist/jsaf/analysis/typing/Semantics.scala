@@ -28,7 +28,8 @@ import kr.ac.kaist.jsaf.nodes.IROp
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.analysis.typing.{PreSemanticsExpr => PSE}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolTrue => BTrue, BoolFalse => BFalse}
-import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
+import kr.ac.kaist.jsaf.analysis.typing.models.{DOMHelper, ModelManager}
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLTopElement
 
 class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
   // Inter-procedural edge set.
@@ -428,7 +429,13 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
           val (h_e, ctx_e) = Helper.RaiseException(h, ctx, es)
           ((h_2, ctx_2), (he + h_e, ctxe + ctx_e))
         }
-        case CFGStore(_, info, obj, index, rhs) => {
+        case CFGStore(id, info, obj, index, rhs) => {
+          // unique key
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if(set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val key = if(set_addr.size == 0) cfg.getInstCount - id // global environment
+                    else set_addr.head + id
           // TODO: toStringSet should be used in more optimized way
           val (h_1, ctx_1, es_1) = {
             val (v_index, es_index) = SE.V(index, h, ctx)
@@ -441,7 +448,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                 val lset = SE.V(obj, h, ctx)._1._2
                 // iterate over set of strings for index
                 val sset = Helper.toStringSet(Helper.toPrimitive(v_index))
-                val (h_2, es_2) = sset.foldLeft((HeapBot, es_index ++ es_rhs))((res, s) => {
+                val (h_2, ctx_2, es_2) = sset.foldLeft((HeapBot, ctx, es_index ++ es_rhs))((res, s) => {
                   // non-array objects
                   val lset_narr = lset.filter(l => (BFalse <= Helper.IsArray(h, l)) && BTrue <= Helper.CanPut(h, l, s))
                   // array objects
@@ -452,13 +459,28 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                     else HeapBot
                   // store for non-array object
                   //val h_narr = lset_narr.foldLeft(HeapBot)((_h, l) => _h + Helper.PropStore(h, l, s, v_rhs))
+                  
+                  val (h_dom, ctx1) = if(Config.domPropMode) {
+                    /* DOM property update: some side effects such as DOM tree update might happen */
+                    val lset_dom = lset_narr.filter(l => HTMLTopElement.getInsLoc(h).contains(l))
+                    val (_h, _ctx1) = if(lset_dom.size==0) (h, ContextBot)
+                      else if(lset_dom.size==1) DOMHelper.updateDOMProp(h, ctx, lset_dom.head, s, v_rhs, cfg, key)
+                      else { 
+                        lset_dom.foldLeft((h, ctx))((hc, l) => {
+                              val (_h1, _ctx2) = DOMHelper.updateDOMProp(h, ctx, l, s, v_rhs, cfg, key)
+                              (hc._1 + _h1, hc._2 + _ctx2)
+                              })
+                    }
+                    (_h, _ctx1)
+                  }  else (h, ContextBot)
+
                   val h_narr =
                     if (lset_narr.size == 0)
                       HeapBot
                     else if (lset_narr.size == 1)
-                      Helper.PropStore(h, lset_narr.head, s, v_rhs)
+                      Helper.PropStore(h_dom, lset_narr.head, s, v_rhs)
                     else {
-                      lset_narr.foldLeft(h)((hh, l) => Helper.PropStoreWeak(hh, l, s, v_rhs))
+                      lset_narr.foldLeft(h_dom)((hh, l) => Helper.PropStoreWeak(hh, l, s, v_rhs))
                     }
                   // 15.4.5.1 [[DefineOwnProperty]] of Array
                   val (h_arr, ex) = lset_arr.foldLeft((HeapBot, ExceptionBot))((_hex, l) => {
@@ -547,9 +569,9 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
                       else HeapBot
                     (_hex._1 + h_length + h_index + h_normal, _hex._2 ++ ex_len)
                   })
-                  (res._1 + h_cantput + h_narr + h_arr, res._2 ++ ex)
+                  (res._1 + h_cantput + h_narr + h_arr, res._2 + ctx1, res._3 ++ ex)
                 })
-                (h_2, ctx, es_2)
+                (h_2, ctx_2, es_2)
               }
             }
           }
