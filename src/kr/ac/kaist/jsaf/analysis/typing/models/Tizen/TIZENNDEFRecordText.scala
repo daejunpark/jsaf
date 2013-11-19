@@ -9,17 +9,15 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import java.lang.InternalError
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsInternalFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
+
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsInternalFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
@@ -28,8 +26,8 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 object TIZENNDEFRecordText extends Tizen {
   private val name = "NDEFRecordText"
   /* predefined locations */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   val loc_parent = TIZENNDEFRecord.loc_proto
   /* constructor or object*/
   private val prop_cons: List[(String, AbsProperty)] = List(

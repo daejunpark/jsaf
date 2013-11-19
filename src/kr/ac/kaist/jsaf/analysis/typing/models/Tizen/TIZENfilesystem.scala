@@ -9,28 +9,14 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import java.lang.InternalError
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
@@ -42,13 +28,13 @@ object TIZENfilesystem extends Tizen {
   private val name = "filesystem"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_filesystem
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_file: Loc = newPreDefLoc("File", Old)
-  val loc_filearr: Loc = newPreDefLoc("FileArr", Old)
-  val loc_filesysstorage: Loc = newPreDefLoc("FileSystemStorage", Old)
-  val loc_filesysstoragearr: Loc = newPreDefLoc("FileSystemStorageArr", Old)
-  val loc_filestream: Loc = newPreDefLoc("FileStream", Old)
+  val loc_file: Loc = newSystemLoc("File", Old)
+  val loc_filearr: Loc = newSystemLoc("FileArr", Old)
+  val loc_filesysstorage: Loc = newSystemLoc("FileSystemStorage", Old)
+  val loc_filesysstoragearr: Loc = newSystemLoc("FileSystemStorageArr", Old)
+  val loc_filestream: Loc = newSystemLoc("FileStream", Old)
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_file, prop_file_ins), (loc_filesysstorage, prop_filesysstorage_ins),

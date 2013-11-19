@@ -20,6 +20,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.domain.State
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 class Access(cfg: CFG, cg: Map[CFGInst, Set[FunctionId]], state_org: State) {
   val dusetLock: AnyRef = new AnyRef()

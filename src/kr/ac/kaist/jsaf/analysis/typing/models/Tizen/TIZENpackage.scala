@@ -9,25 +9,15 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import java.lang.InternalError
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -38,11 +28,11 @@ object TIZENpackage extends Tizen {
   private val name = "package"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_package
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_pkginfo: Loc = newPreDefLoc("PackageInformation", Old)
-  val loc_pkginfoarr: Loc = newPreDefLoc("PackageInformationArr", Old)
-  val loc_appidarr: Loc = newPreDefLoc("ApplicationIdArr", Old)
+  val loc_pkginfo: Loc = newSystemLoc("PackageInformation", Old)
+  val loc_pkginfoarr: Loc = newSystemLoc("PackageInformationArr", Old)
+  val loc_appidarr: Loc = newSystemLoc("ApplicationIdArr", Old)
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_pkginfo, prop_pkginfo_ins), (loc_pkginfoarr, prop_pkginfoarr_ins),
@@ -363,7 +353,7 @@ object TIZENpackage extends Tizen {
 object TIZENPackageInformation extends Tizen {
   private val name = "PackageInformation"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)

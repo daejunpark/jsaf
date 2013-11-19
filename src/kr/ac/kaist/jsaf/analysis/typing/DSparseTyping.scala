@@ -29,6 +29,7 @@ import kr.ac.kaist.jsaf.analysis.cfg.ExitExc
 import kr.ac.kaist.jsaf.analysis.cfg.LEntry
 import kr.ac.kaist.jsaf.analysis.cfg.LExit
 import kr.ac.kaist.jsaf.analysis.cfg.LExitExc
+import kr.ac.kaist.jsaf.analysis.cfg.InternalError
 import kr.ac.kaist.jsaf.analysis.typing.domain.ContextBot
 import kr.ac.kaist.jsaf.analysis.typing.domain.ContextEmpty
 import kr.ac.kaist.jsaf.analysis.typing.domain.GlobalLoc
@@ -40,24 +41,19 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Recent
 import kr.ac.kaist.jsaf.analysis.typing.domain.SinglePureLocalLoc
 import kr.ac.kaist.jsaf.analysis.typing.domain.StateBot
 import kr.ac.kaist.jsaf.analysis.typing.domain.ValueBot
-import kr.ac.kaist.jsaf.analysis.typing.domain.addrToLoc
-import kr.ac.kaist.jsaf.analysis.typing.domain.isOldLoc
-import kr.ac.kaist.jsaf.analysis.typing.domain.locToAddr
 import kr.ac.kaist.jsaf.analysis.typing.domain.AbsString
 import kr.ac.kaist.jsaf.analysis.typing.domain.Absent
 import kr.ac.kaist.jsaf.analysis.typing.domain.BoolTrue
 import kr.ac.kaist.jsaf.analysis.typing.domain.DomainPrinter
 import kr.ac.kaist.jsaf.analysis.typing.domain.State
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Value
-import kr.ac.kaist.jsaf.analysis.typing.models.{ModelManager, BuiltinModel}
+import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.bug_detector.BugInfo
 import kr.ac.kaist.jsaf.nodes_util.Span
-import kr.ac.kaist.jsaf.nodes_util.NodeFactory
-import kr.ac.kaist.jsaf.nodes_util.NodeRelation
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 class DSparseTyping(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingInterface {
   val _env = new DSparseEnv(_cfg)

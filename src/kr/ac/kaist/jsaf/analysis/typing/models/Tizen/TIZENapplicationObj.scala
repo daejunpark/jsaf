@@ -9,32 +9,12 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -45,20 +25,20 @@ object TIZENapplicationObj extends Tizen {
   val name = "application"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_application
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_app: Loc = newPreDefLoc("Application", Old)
-  val loc_appinfo: Loc = newPreDefLoc("ApplicationInformation", Old)
-  val loc_appinfoarr: Loc = newPreDefLoc("ApplicationInformationArr", Old)
-  val loc_appctrl: Loc = newPreDefLoc("ApplicationControl", Old)
-  val loc_appctrldata: Loc = newPreDefLoc("ApplicationControlData", Old)
-  val loc_appctrldataarr: Loc = newPreDefLoc("ApplicationControlDataArr", Old)
-  val loc_appctxt: Loc = newPreDefLoc("ApplicationContext", Old)
-  val loc_appctxtarr: Loc = newPreDefLoc("ApplicationContextArr", Old)
-  val loc_strarr: Loc = newPreDefLoc("appStrArr", Old)
-  val loc_appcert: Loc = newPreDefLoc("ApplicationCertificate", Old)
-  val loc_appcertarr: Loc = newPreDefLoc("ApplicationCertificateArr", Old)
-  val loc_reqappctrl: Loc = newPreDefLoc("RequestedApplicationControl", Old)
+  val loc_app: Loc = newSystemLoc("Application", Old)
+  val loc_appinfo: Loc = newSystemLoc("ApplicationInformation", Old)
+  val loc_appinfoarr: Loc = newSystemLoc("ApplicationInformationArr", Old)
+  val loc_appctrl: Loc = newSystemLoc("ApplicationControl", Old)
+  val loc_appctrldata: Loc = newSystemLoc("ApplicationControlData", Old)
+  val loc_appctrldataarr: Loc = newSystemLoc("ApplicationControlDataArr", Old)
+  val loc_appctxt: Loc = newSystemLoc("ApplicationContext", Old)
+  val loc_appctxtarr: Loc = newSystemLoc("ApplicationContextArr", Old)
+  val loc_strarr: Loc = newSystemLoc("appStrArr", Old)
+  val loc_appcert: Loc = newSystemLoc("ApplicationCertificate", Old)
+  val loc_appcertarr: Loc = newSystemLoc("ApplicationCertificateArr", Old)
+  val loc_reqappctrl: Loc = newSystemLoc("RequestedApplicationControl", Old)
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_app, prop_app_ins), (loc_appinfo, prop_appinfo_ins),

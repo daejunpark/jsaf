@@ -12,6 +12,7 @@ package kr.ac.kaist.jsaf.analysis.typing
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import scala.collection.immutable.HashSet
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 /* Interface */
 object CallContext {

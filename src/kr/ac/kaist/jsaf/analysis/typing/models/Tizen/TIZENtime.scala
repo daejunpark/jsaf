@@ -9,26 +9,28 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import java.lang.InternalError
+
 
 object TIZENtime extends Tizen {
   private val name = "time"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_time
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_tzdate: Loc        = newPreDefLoc("TZDate", Old)
-  val loc_timeduration: Loc = newPreDefLoc("TimeDuration", Old)
+  val loc_tzdate: Loc        = newSystemLoc("TZDate", Old)
+  val loc_timeduration: Loc = newSystemLoc("TimeDuration", Old)
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_tzdate, prop_tzdate_ins), (loc_timeduration, prop_timeduration_ins)

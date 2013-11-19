@@ -10,6 +10,7 @@
 package kr.ac.kaist.jsaf.analysis.typing.domain
 
 import kr.ac.kaist.jsaf.analysis.typing.Config
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 case class Heap(map: HeapMap) {
   /* partial order */

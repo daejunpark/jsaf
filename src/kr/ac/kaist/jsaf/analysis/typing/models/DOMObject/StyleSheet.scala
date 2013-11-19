@@ -20,6 +20,7 @@ import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMElement
 import kr.ac.kaist.jsaf.analysis.cfg.CFG
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 // Modeled based on W3C DOM Style Sheets
 // Section 1.2 Style Sheet Interfaces
@@ -27,8 +28,8 @@ object StyleSheet extends DOM {
   private val name = "StyleSheet"
 
   /* predefined locations */
-  val loc_ins = newPredefLoc(name + "Ins")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_ins = newSystemRecentLoc(name + "Ins")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   
   /* prorotype */
   private val prop_proto: List[(String, AbsProperty)] = List(

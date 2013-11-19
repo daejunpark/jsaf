@@ -8,6 +8,9 @@
   ******************************************************************************/
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
@@ -20,7 +23,7 @@ import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 object TIZENApplication extends Tizen {
   val name = "Application"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor */
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
@@ -78,7 +81,7 @@ object TIZENApplication extends Tizen {
 object TIZENApplicationInformation extends Tizen {
   val name = "ApplicationInformation"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor */
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
@@ -109,7 +112,7 @@ object TIZENApplicationInformation extends Tizen {
 object TIZENRequestedApplicationControl extends Tizen {
   val name = "RequestedApplicationControl"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
@@ -160,7 +163,7 @@ object TIZENRequestedApplicationControl extends Tizen {
 object TIZENApplicationContext extends Tizen {
   val name = "ApplicationContext"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor */
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
@@ -191,7 +194,7 @@ object TIZENApplicationContext extends Tizen {
 object TIZENApplicationCertificate extends Tizen {
   val name = "ApplicationCertificate"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor */
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(

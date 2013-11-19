@@ -16,7 +16,7 @@ cfg_out_WCIequals=\
 (0,LBlock(14))\n\
     [EDGE] after-call(<>temp<>13)\n\
     [28] <>temp<>13 := <>temp<>13\n\
-    [29] <>Global<>ignore4 := allocArray(3) @ #19\n\
+    [29] <>Global<>ignore4 := allocArray(3) @ #9\n\
     [30] <>Global<>ignore4["0"] := <>temp<>8\n\
     [31] <>Global<>ignore4["1"] := <>temp<>9\n\
     [32] <>Global<>ignore4["2"] := <>temp<>13\n\

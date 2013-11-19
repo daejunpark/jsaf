@@ -10,7 +10,7 @@
 package kr.ac.kaist.jsaf.analysis.typing
 
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import scala.runtime.{RichInt, RichDouble}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object Operator {
   /* unary operator */

@@ -9,6 +9,8 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.jquery
 
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
@@ -16,7 +18,7 @@ import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper => AH, _}
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG, InternalError}
 
 object JQueryCSS extends ModelData {
   private val prop_const: List[(String, AbsProperty)] = List(
@@ -87,13 +89,15 @@ object JQueryCSS extends ModelData {
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           ((Helper.ReturnStore(h, Value(NumTop)), ctx), (he, ctxe))
         })),
-      ("jQuery.prototype.offset" -> (
+      "jQuery.prototype.offset" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           /* jQuery object */
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           /* new addr */
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
 
           /* 1st argument */
           var v_arg1 = getArgValue(h, ctx, args, "0")
@@ -125,7 +129,7 @@ object JQueryCSS extends ModelData {
             ((Helper.ReturnStore(h_ret, v_ret), ctx_ret), (he, ctxe))
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
+        }),
       ("jQuery.prototype.outerHeight" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           ((Helper.ReturnStore(h, Value(NumTop)), ctx), (he, ctxe))
@@ -134,11 +138,13 @@ object JQueryCSS extends ModelData {
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           ((Helper.ReturnStore(h, Value(NumTop)), ctx), (he, ctxe))
         })),
-      ("jQuery.prototype.position" -> (
+      "jQuery.prototype.position" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           /* new addr */
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
           /* new loc */
           val l_ret = addrToLoc(addr1, Recent)
           val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
@@ -146,7 +152,7 @@ object JQueryCSS extends ModelData {
             .update("top", PropValue(ObjectValue(Value(NumTop), T, T, T)))
           val h_2 = h_1.update(l_ret, o_new)
           ((Helper.ReturnStore(h_2, Value(l_ret)), ctx_1), (he, ctxe))
-        })),
+        }),
       ("jQuery.prototype.scrollLeft" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           /* jQuery object */

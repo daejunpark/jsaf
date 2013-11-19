@@ -1,0 +1,25 @@
+<!-- test for named properties of the Window object -->
+<html>
+  <body id = "myelem"> body
+    <img name = "myelem" id="myimg"> </img>
+    <div id = "myelem">
+      <div id = "myelem" name = "div2"> </div>
+    </div>
+    <script>
+      var __result1 = myelem.length;
+      var __expect1 = 4;
+      var __result2 = myelem[0].tagName;
+      var __expect2 = "BODY";
+      var __result3 = myelem[1].tagName;
+      var __expect3 = "IMG";
+      var __result4 = myelem[2].tagName;
+      var __expect4 = "DIV";
+      var __result5 = myelem[3].getAttribute("name");
+      var __expect5 = "div2";
+      
+      var __result6 = myimg.tagName;
+      var __expect6 = "IMG";
+
+    </script>
+  </body>
+</html>

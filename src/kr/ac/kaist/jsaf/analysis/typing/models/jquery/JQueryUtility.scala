@@ -9,22 +9,26 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.jquery
 
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper => AH, _}
+import kr.ac.kaist.jsaf.analysis.cfg._
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFuncAftercall
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.cfg._
 
 object JQueryUtility extends ModelData {
-  private val EventLoc = newPreDefLoc("jQuery.event", Recent)
-  private val EventSpecialLoc = newPreDefLoc("jQuery.event.special", Recent)
-  private val EventSpecialDefaultLoc = newPreDefLoc("jQuery.event.special.default", Recent)
-  private val BrowserLoc = newPreDefLoc("jQuery.browser", Recent)
-  private val ExprLoc = newPreDefLoc("jQuery.expr", Recent)
-  private val ExprDefaultLoc = newPreDefLoc("jQuery.expr.default", Recent)
+  private val EventLoc = newSystemLoc("jQuery.event", Recent)
+  private val EventSpecialLoc = newSystemLoc("jQuery.event.special", Recent)
+  private val EventSpecialDefaultLoc = newSystemLoc("jQuery.event.special.default", Recent)
+  private val BrowserLoc = newSystemLoc("jQuery.browser", Recent)
+  private val ExprLoc = newSystemLoc("jQuery.expr", Recent)
+  private val ExprDefaultLoc = newSystemLoc("jQuery.expr.default", Recent)
   
 private val prop_const: List[(String, AbsProperty)] = List(
     ("contains",      AbsBuiltinFunc("jQuery.contains", 2)),
@@ -115,13 +119,15 @@ private val prop_const: List[(String, AbsProperty)] = List(
   def getSemanticMap(): Map[String, SemanticFun] = {
 
     Map(
-      ("jQuery.each" -> (
+      "jQuery.each" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           /* new addr */
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
-          val addr2 = list_addr(1)
-          val addr3 = list_addr(2)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
+          val addr2 = cfg.getAPIAddress(set_addr.head, 1)
+          val addr3 = cfg.getAPIAddress(set_addr.head, 2)
           /* new loc */
           val l_arg = addrToLoc(addr1, Recent)
           val l_cc = addrToLoc(addr2, Recent)
@@ -132,7 +138,7 @@ private val prop_const: List[(String, AbsProperty)] = List(
           /* target */
           val lset_target = getArgValue(h_3, ctx_3, args, "0")._2
           /* fun */
-          val lset_fun = getArgValue(h_3, ctx_3, args, "1")._2.filter((l) => BoolTrue <= Helper.IsCallable(h,l))
+          val lset_fun = getArgValue(h_3, ctx_3, args, "1")._2.filter((l) => BoolTrue <= Helper.IsCallable(h, l))
 
           val b_isarr = lset_target.foldLeft[AbsBool](BoolBot)((b, l) => b + JQueryHelper.isArraylike(h_3, l))
           // arg1
@@ -174,8 +180,8 @@ private val prop_const: List[(String, AbsProperty)] = List(
                   update(cfg.getArgumentsName(fid),
                   PropValue(ObjectValue(v_arg, BoolTrue, BoolFalse, BoolFalse))).
                   update("@scope", o_f("@scope")._1)
-                sem.addCallEdge(cp, ((fid,LEntry), cc_new), ContextEmpty, o_new2)
-                sem.addReturnEdge(((fid,LExit), cc_new), cp_aftercall, ctx_5, o_old)
+                sem.addCallEdge(cp, ((fid, LEntry), cc_new), ContextEmpty, o_new2)
+                sem.addReturnEdge(((fid, LExit), cc_new), cp_aftercall, ctx_5, o_old)
                 sem.addReturnEdge(((fid, LExitExc), cc_new), cp_aftercatch, ctx_5, o_old)
               })
             })
@@ -186,7 +192,7 @@ private val prop_const: List[(String, AbsProperty)] = List(
           })
 
           ((h_6, ctx_5), (he, ctxe))
-        })),
+        }),
       ("jQuery.isArray" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val v = getArgValue(h, ctx, args, "0")

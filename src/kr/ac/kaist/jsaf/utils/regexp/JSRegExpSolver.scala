@@ -9,15 +9,15 @@
 
 package kr.ac.kaist.jsaf.utils.regexp
 
+import scala.collection.mutable.{HashMap => MHashMap, HashSet => MHashSet}
 import kr.ac.kaist.jsaf.analysis.typing.Config
 import kr.ac.kaist.jsaf.bug_detector._
+import kr.ac.kaist.jsaf.analysis.cfg.InternalError
 import kr.ac.kaist.jsaf.nodes.{RegExpAbstractNode, RegExpNode, RegExpDecimalEscape, RegExpCharacterEscape, RegExpCharacterClassEscape}
-import scala.collection.mutable.{HashMap => MHashMap, HashSet => MHashSet}
 import kr.ac.kaist.jsaf.exceptions.ParserError
 import kr.ac.kaist.jsaf.scala_src.nodes._
 import kr.ac.kaist.jsaf.interpreter._
 import kr.ac.kaist.jsaf.compiler.RegExpParser
-import scala.Some
 
 object JSRegExpSolver {
   val in = (a: CharSet, ch: Char) => a.contains(ch)
@@ -211,7 +211,7 @@ object JSRegExpSolver {
             val e = x.endIndex
             if (e == env.input.length) true
             else if (!env.multiline) false
-            else if (lineTerminator.contains(env.input(e-1))) true
+            else if (lineTerminator.contains(env.input(e))) true
             else false
           }
         case SRegExpAssertionLowerCaseB(_) =>
@@ -230,7 +230,7 @@ object JSRegExpSolver {
             val b = isWordChar(e, env)
             if (a && !b) false
             else if (!a && b) false
-            else false
+            else true
           }
         case SRegExpAssertionEqual(_, d) =>
           val m: Matcher = walk(d, env, parenIndex)

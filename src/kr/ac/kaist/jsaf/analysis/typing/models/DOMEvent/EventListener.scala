@@ -12,19 +12,16 @@ package kr.ac.kaist.jsaf.analysis.typing.models.DOMEvent
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.ControlPoint
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 
 object EventListener extends DOM {
   private val name = "EventListener"
 
   /* predefined locatoins */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* prorotype */
   private val prop_proto: List[(String, AbsProperty)] = List(

@@ -9,17 +9,12 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMObject
 
-import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import org.w3c.dom.Node
-import org.w3c.dom.Element
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMNode
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMElement
-import kr.ac.kaist.jsaf.analysis.cfg.CFG
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 // Modeled based on W3C CSSOM View Module
 // Section 10.2 The ClientRect Interface
@@ -27,8 +22,8 @@ object ClientRect extends DOM {
   private val name = "ClientRect"
 
   /* predefined locations */
-  val loc_ins = newPredefLoc(name + "Ins")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_ins = newSystemRecentLoc(name + "Ins")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   
   /* prorotype */
   private val prop_proto: List[(String, AbsProperty)] = List(

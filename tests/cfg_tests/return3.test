@@ -34,14 +34,14 @@ cfg_out_WCIequals=\
 \n\
 (2,LBlock(5))\n\
     [EDGE] after-call(<>Global<>ignore4)\n\
-    [12] <>Global<>ignore5 := function (3) @ #14, #15\n\
+    [12] <>Global<>ignore5 := function (3) @ #4, #5\n\
     [13] <>w<>6 := <>Global<>ignore5\n\
-    [14] <>obj<>15 := <>Global<>toObject(<>w<>6) @ #16\n\
+    [14] <>obj<>15 := <>Global<>toObject(<>w<>6) @ #6\n\
     [15] <>temp<>16 := 3\n\
-    [16] <>arguments<>17 := allocArg(1) @ #17\n\
+    [16] <>arguments<>17 := allocArg(1) @ #7\n\
     [17] <>arguments<>17["0"] := <>temp<>16\n\
     [18] <>fun<>18 := <>Global<>getBase(<>w<>6)\n\
-    [19] call(<>obj<>15, <>fun<>18, <>arguments<>17) @ #18\n\
+    [19] call(<>obj<>15, <>fun<>18, <>arguments<>17) @ #8\n\
 \n\
 \n\
 (2,LBlock(4))\n\
@@ -65,16 +65,16 @@ cfg_out_WCIequals=\
 \n\
 \n\
 (1,LBlock(1))\n\
-    [20] <>Global<>ignore1 := function (2) @ #29, #30\n\
+    [20] <>Global<>ignore1 := function (2) @ #9, #10\n\
     [21] <>y<>1 := <>Global<>ignore1\n\
 \n\
 \n\
 (0,LBlock(0))\n\
-    [22] f := function (1) @ #31, #32\n\
-    [23] <>obj<>20 := <>Global<>toObject(f) @ #33\n\
-    [24] <>arguments<>21 := allocArg(0) @ #34\n\
+    [22] f := function (1) @ #11, #12\n\
+    [23] <>obj<>20 := <>Global<>toObject(f) @ #13\n\
+    [24] <>arguments<>21 := allocArg(0) @ #14\n\
     [25] <>fun<>22 := <>Global<>getBase(f)\n\
-    [26] call(<>obj<>20, <>fun<>22, <>arguments<>21) @ #35\n\
+    [26] call(<>obj<>20, <>fun<>22, <>arguments<>21) @ #15\n\
 \n\
 \n\
 \n

@@ -9,22 +9,14 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import java.lang.InternalError
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
@@ -36,12 +28,12 @@ object TIZENseService extends Tizen {
   private val name = "seService"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_seService
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_reader: Loc = newPreDefLoc("Reader", Old)
-  val loc_readerarr: Loc = newPreDefLoc("ReaderArr", Old)
-  val loc_session: Loc = newPreDefLoc("Session", Old)
-  val loc_channel: Loc = newPreDefLoc("Channel", Old)
+  val loc_reader: Loc = newSystemLoc("Reader", Old)
+  val loc_readerarr: Loc = newSystemLoc("ReaderArr", Old)
+  val loc_session: Loc = newSystemLoc("Session", Old)
+  val loc_channel: Loc = newSystemLoc("Channel", Old)
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_reader, prop_reader_ins), (loc_readerarr, prop_readerarr_ins),
@@ -209,7 +201,7 @@ object TIZENseService extends Tizen {
 object TIZENReader extends Tizen {
   private val name = "Reader"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
@@ -297,7 +289,7 @@ object TIZENReader extends Tizen {
 object TIZENSession extends Tizen {
   private val name = "Session"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
@@ -507,7 +499,7 @@ object TIZENSession extends Tizen {
 object TIZENChannel extends Tizen {
   private val name = "Channel"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)

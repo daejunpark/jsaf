@@ -117,15 +117,16 @@ object ASSERTHelper {
   }
 
   def str2Num(s: AbsString): AbsNumber = {
-    s match {
-      case StrTop => NumTop
-      case StrBot => NumBot
-      case NumStr => NumTop
-      case OtherStr => NumTop
-      case NumStrSingle(s) => AbsNumber.alpha(s.toDouble)
-      case OtherStrSingle(s) => try {AbsNumber.alpha(s.toDouble)}
-                                catch {case ne: NumberFormatException => if(s.trim().equals("")) AbsNumber.alpha(0) else NumBot}
-    }
+    Helper.toNumber(PValue(s))
+//    s match {
+//      case StrTop => NumTop
+//      case StrBot => NumBot
+//      case NumStr => NumTop
+//      case OtherStr => NumTop
+//      case NumStrSingle(s) => AbsNumber.alpha(s.toDouble)
+//      case OtherStrSingle(s) => try {AbsNumber.alpha(s.toDouble)}
+//                                catch {case ne: NumberFormatException => if(s.trim().equals("")) AbsNumber.alpha(0) else NumBot}
+//    }
   }
 
   def PruneInstanceof(l_obj: Loc, l_fun: Loc, b: AbsBool, h: Heap): Heap = {

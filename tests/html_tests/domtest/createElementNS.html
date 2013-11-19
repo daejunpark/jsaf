@@ -20,5 +20,22 @@
     var __expect7 = "aaa";
     var __result8 = elem2.localName;
     var __expect8 = "bbb";
+    
+    var elem3 = document.createElementNS("http://www.w3.org/2000/svg", "svg");  // SVGSVGElement
+    var __result9 = elem3.tagName;
+    var __expect9 = "svg";
+    var __result10 = elem3.useCurrentView;
+    var __expect10 = false;
+    var __result11 = elem3.prefix;
+    var __expect11 = null;
+    
+    var elem4 = document.createElementNS("http://www.w3.org/2000/svg", "SVG");  // SVGElement
+    var __result12 = elem4.nodeName;
+    var __expect12 = "SVG";
+    var __result13 = elem4.useCurrentView;
+    var __expect13 = undefined;
+    var __result14 = elem4.id;
+    var __expect14 = "";
+
   </script>
 </body>

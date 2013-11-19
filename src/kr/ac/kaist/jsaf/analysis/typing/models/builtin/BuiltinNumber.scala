@@ -15,11 +15,12 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object BuiltinNumber extends ModelData {
 
-  val ConstLoc = newPreDefLoc("NumberConst", Recent)
-  val ProtoLoc = newPreDefLoc("NumberProto", Recent)
+  val ConstLoc = newSystemLoc("NumberConst", Recent)
+  val ProtoLoc = newSystemLoc("NumberProto", Recent)
 
   private val prop_const: List[(String, AbsProperty)] = List(
     ("@class",            AbsConstValue(PropValue(AbsString.alpha("Function")))),

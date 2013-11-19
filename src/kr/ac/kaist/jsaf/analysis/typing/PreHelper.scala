@@ -8,7 +8,8 @@
  ***************************************************************************** */
 
 package kr.ac.kaist.jsaf.analysis.typing
-import kr.ac.kaist.jsaf.analysis.cfg.{CFGId, GlobalVar, PureLocalVar, CapturedVar, CapturedCatchVar}
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFGId, GlobalVar, PureLocalVar, CapturedVar, CapturedCatchVar, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.Config.DEBUG
 import kr.ac.kaist.jsaf.analysis.cfg.FunctionId
@@ -17,14 +18,13 @@ import com.sun.org.apache.xpath.internal.operations.Equals
 import scala.collection.immutable.HashSet
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin._
 import kr.ac.kaist.jsaf.analysis.typing.domain.NUIntSingle
-import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.domain.OtherStrSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.NumStrSingle
-
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object PreHelper {
   def VarStore(h: Heap, PureLocalLoc: Loc, id: CFGId, v: Value): Heap = {

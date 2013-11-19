@@ -9,24 +9,22 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml
 
-import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import org.w3c.dom.Node
 import org.w3c.dom.Element
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMNode
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMElement
 import kr.ac.kaist.jsaf.analysis.cfg.CFG
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object HTMLElement extends DOM {
   private val name = "HTMLElement"
 
   /* predefined locatoins */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor */
   private val prop_cons: List[(String, AbsProperty)] = List(
@@ -76,7 +74,7 @@ object HTMLElement extends DOM {
   // no function
 
   /* instance */
-  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  override def getInstance(cfg: CFG): Option[Loc] = Some(newRecentLoc())
   /* list of properties in the instance object */
   override def getInsList(node: Node): List[(String, PropValue)] = node match {
     case e: Element => 

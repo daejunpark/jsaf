@@ -9,23 +9,20 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml
 
-import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.Helper
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import org.w3c.dom.Node
-import org.w3c.dom.Element
-import kr.ac.kaist.jsaf.analysis.cfg.CFG
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5._
-import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.{DOMElement, DOMNode, DOMNodeList}
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.{DOMElement, DOMNode}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object HTMLTopElement extends DOM {
   private val name = "HTMLTopElement"
   
   /* predefined locations */
   val loc_proto = ObjProtoLoc  // dummy
-  val TopElementLoc = newPredefLoc(name + "Ins")
+  val TopElementLoc = newSystemRecentLoc(name + "Ins")
   // val loc_child = newPredefLoc("childNodesTop")
   
   private val elementList = List(

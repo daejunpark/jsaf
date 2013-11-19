@@ -20,6 +20,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 // Modeled based on WHATWG HTML Living Standard 
 // Section 6.5.3 The Location Interface
@@ -27,8 +28,8 @@ object DOMLocation extends DOM {
   private val name = "Location"
 
   /* predefined locatoins */
-  val loc_ins = newPredefLoc(name + "Ins")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_ins = newSystemRecentLoc(name + "Ins")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* instance */
   private val prop_ins: List[(String, AbsProperty)] = List(

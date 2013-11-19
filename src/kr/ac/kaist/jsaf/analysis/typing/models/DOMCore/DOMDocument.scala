@@ -13,21 +13,21 @@ import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import org.w3c.dom.Document
 import org.w3c.dom.Node
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5.DOMLocation
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.{HTMLTopElement, HTMLElement}
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject.{CSSStyleDeclaration, StyleSheetList}
-import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object DOMDocument extends DOM {
   private val name = "Document"
 
   /* predefined locations */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor or object*/
   private val prop_cons: List[(String, AbsProperty)] = List(
@@ -175,13 +175,34 @@ object DOMDocument extends DOM {
 
           val s_namespace = Helper.toString(Helper.toPrimitive(getArgValue(h_4, ctx_4, args, "0")))
           // 1. If namespace is the empty string, set it to null
-          val v_namespace = s_namespace match {
-            case StrTop | OtherStr => Value(s_namespace) + Value(NullTop)
-            case StrBot => ValueBot
-            case OtherStrSingle(s) if s=="" => Value(NullTop)
-            case OtherStrSingle(s) => Value(s_namespace)
-            case NumStrSingle(s) => Value(s_namespace)
-            case NumStr => Value(s_namespace)
+          // WHATWG HTML Living Standard Section 2.8 Namespaces
+          // The HTML namespace is: http://www.w3.org/1999/xhtml
+          // The MathML namespace is: http://www.w3.org/1998/Math/MathML
+          // The SVG namespace is: http://www.w3.org/2000/svg
+          // The XLink namespace is: http://www.w3.org/1999/xlink
+          // The XML namespace is: http://www.w3.org/XML/1998/namespace
+          // The XMLNS namespace is: http://www.w3.org/2000/xmlns/
+          
+          val (v_namespace, namespace) = s_namespace match {
+            case StrTop | OtherStr => (Value(s_namespace) + Value(NullTop), "all")
+            case StrBot => (ValueBot, "")
+            case OtherStrSingle(s) if s=="" => (Value(NullTop), "HTML")
+            case OtherStrSingle(s) => 
+              val n = if(s=="http://www.w3.org/1998/Math/MathML") 
+                        "MathML"
+                      else if(s=="http://www.w3.org/2000/svg")
+                        "SVG"
+                      else if(s=="http://www.w3.org/1999/xlink")
+                        "XLink"
+                      else if(s=="http://www.w3.org/XML/1998/namespace")
+                        "XML"
+                      else if(s=="http://www.w3.org/XML/2000/xmlns")
+                        "XMLNS"
+                      else 
+                        "HTML"
+              (Value(s_namespace), n)
+            case NumStrSingle(s) => (Value(s_namespace), "HTML")
+            case NumStr => (Value(s_namespace), "HTML")
           }
           val s_name = Helper.toString(Helper.toPrimitive(getArgValue(h_4, ctx_4, args, "1")))
           //4 if qualifiedName contains a ":" (U+003E), 
@@ -227,11 +248,24 @@ object DOMDocument extends DOM {
               val style_list = CSSStyleDeclaration.getInsList()
               val style = style_list.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
               
-              val element_obj_proplist = DOMElement.getInsList(PropValue(ObjectValue(s_name, F, T, T))) ++ HTMLElement.default_getInsList ++ List(
-                                         ("@class", PropValue(AbsString.alpha("Object"))),
-                                         ("@proto", PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
-                                         ("@extensible", PropValue(BoolTrue)))
-              val element_obj = element_obj_proplist.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
+              val element_obj_proplist = if(namespace == "HTML") {
+                                           HTMLElement.default_getInsList ++ List(
+                                            ("@class", PropValue(AbsString.alpha("Object"))),
+                                            ("@proto", PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
+                                            ("@extensible", PropValue(BoolTrue)))
+                                         }
+                                         else if(namespace == "SVG") {
+                                           DOMHelper.default_getInsListSVG(Helper.toString(Helper.toPrimitive(localName)))
+                                         }
+                                         else {
+                                           System.err.println("* Warning: Namespaces other than 'HTML' and 'SVG' are not modeled in the semantics of 'document.createElementNS'.")
+                                           HTMLElement.default_getInsList ++ List(
+                                            ("@class", PropValue(AbsString.alpha("Object"))),
+                                            ("@proto", PropValue(ObjectValue(HTMLElement.getProto.get, F, F, F))),
+                                            ("@extensible", PropValue(BoolTrue)))
+                                         }
+              val element_obj_proplist2 = DOMElement.getInsList(PropValue(ObjectValue(s_name, F, T, T))) ++ element_obj_proplist              
+              val element_obj = element_obj_proplist2.foldLeft(ObjEmpty)((x, y) => x.update(y._1, y._2))
               // 'childNodes', 'attributes', 'style' update
               val element_obj_up = element_obj.update("childNodes", PropValue(ObjectValue(l_nodes, F, T, T))).update(
                                                        "attributes", PropValue(ObjectValue(l_attributes, F, T, T))).update(
@@ -445,10 +479,12 @@ object DOMDocument extends DOM {
       //case "DOMDocument.adoptNode" => ((h, ctx), (he, ctxe))
       //case "DOMDocument.normalizeDocument" => ((h, ctx), (he, ctxe))
       //case "DOMDocument.renameNode" => ((h, ctx), (he, ctxe))
-      ("DOMDocument.querySelector" -> (
+      "DOMDocument.querySelector" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
 
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           /* arguments */
@@ -459,12 +495,12 @@ object DOMDocument extends DOM {
             val l_result = addrToLoc(addr1, Recent)
             val lset_find = lset_this.foldLeft(LocSetBot)((ls, l) => ls ++ DOMHelper.querySelectorAll(h_1, l, s_selector))
             val (h_ret, v_ret) =
-              if(lset_find.isEmpty)
+              if (lset_find.isEmpty)
                 (h_1, Value(NullTop))
               else {
                 val o_result = Helper.NewObject(ObjProtoLoc)
-                  .update("0", PropValue(ObjectValue(Value(lset_find), T,T,T)))
-                  .update("length", PropValue(ObjectValue(AbsNumber.alpha(0), T,T,T)))
+                  .update("0", PropValue(ObjectValue(Value(lset_find), T, T, T)))
+                  .update("length", PropValue(ObjectValue(AbsNumber.alpha(0), T, T, T)))
                 val h_2 = h_1.update(l_result, o_result)
                 val v_null = if (!s_selector.isConcrete) Value(NullTop) else ValueBot
                 (h_2, Value(lset_find) + v_null)
@@ -473,11 +509,13 @@ object DOMDocument extends DOM {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
-      ("DOMDocument.querySelectorAll" -> (
+        }),
+      "DOMDocument.querySelectorAll" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
 
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           /* arguments */
@@ -488,12 +526,12 @@ object DOMDocument extends DOM {
             val l_result = addrToLoc(addr1, Recent)
             val lset_find = lset_this.foldLeft(LocSetBot)((ls, l) => ls ++ DOMHelper.querySelectorAll(h_1, l, s_selector))
             val (h_ret, v_ret) =
-              if(lset_find.isEmpty)
+              if (lset_find.isEmpty)
                 (h_1, Value(NullTop))
               else {
                 val o_result = Helper.NewObject(ObjProtoLoc)
-                  .update(NumStr, PropValue(ObjectValue(Value(lset_find), T,T,T)))
-                  .update("length", PropValue(ObjectValue(Value(UInt), T,T,T)))
+                  .update(NumStr, PropValue(ObjectValue(Value(lset_find), T, T, T)))
+                  .update("length", PropValue(ObjectValue(Value(UInt), T, T, T)))
                 val h_2 = h_1.update(l_result, o_result)
                 val v_null = if (!s_selector.isConcrete) Value(NullTop) else ValueBot
                 (h_2, Value(lset_find) + v_null)
@@ -502,7 +540,7 @@ object DOMDocument extends DOM {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        }))
+        })
     )
   }
 

@@ -19,9 +19,10 @@ import org.w3c.dom.Node
 import org.w3c.dom.Element
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.{DOMDocument, DOMNodeList}
 import org.w3c.dom.html.{HTMLDocument => HTMLDoc}
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -30,9 +31,9 @@ object HTMLDocument extends DOM {
   private val name = "HTMLDocument"
 
   /* predefined locations */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
-  val GlobalDocumentLoc = newPredefLoc(name + "Global")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
+  val GlobalDocumentLoc = newSystemRecentLoc(name + "Global")
 
   /* constructor */
   private val prop_cons: List[(String, AbsProperty)] = List(

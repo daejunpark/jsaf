@@ -42,7 +42,7 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
     if(!quiet) System.out.println()
     if(isTimeout) System.out.println("*** Analysis time out! (" + Shell.params.opt_Timeout + " sec)")
     if(!quiet) System.out.println("# edge recovering time: "+time)
-
+    
     if (Config.debugger)
       DebugConsoleDSparse.runFinished()
   }
@@ -60,8 +60,8 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
     }
   }
 
-  // val debug_fid = 100
-  // val debug_loc = LocSet(addrToLoc(3606,Recent))
+   val debug_fid = cfg.getGlobalFId
+   val debug_loc = LocSet(SinglePureLocalLoc) //LocSet(addrToLoc(3606,Recent))
   private def loop(): Unit = {
     while (!worklist.isEmpty) {
       if (!quiet)
@@ -233,12 +233,12 @@ class DSparseFixpoint(cfg: CFG, env: DSparseEnv, worklist: Worklist, inTable: Ta
             val oldS = readTable(cp_succ)
             val succ_set = ddg.getExcDUSet(cp._1, node)
             val outES2 = outES.restrict(succ_set)
-          /*
+/*
           if(cp._1._1 == debug_fid) {
             System.out.println("Propagates a excheap from "+cp +" -> "+node)
             System.out.println(DomainPrinter.printHeap(4, outES2.restrict(debug_loc)._1, cfg))
           }
-          */
+*/
             if (!(outES2 <= oldS)) {
               val newES = oldS + outES2
               worklist.add(cp._1, cp_succ, None, false)

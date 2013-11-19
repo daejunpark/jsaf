@@ -19,6 +19,7 @@ import kr.ac.kaist.jsaf.nodes_util.Coverage
 import kr.ac.kaist.jsaf.nodes.IRRoot
 import kr.ac.kaist.jsaf.Shell
 import edu.rice.cs.plt.tuple.{Option => JOption}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager
 
 ////////////////////////////////////////////////////////////////////////////////
 // Interpreter
@@ -73,6 +74,10 @@ object InterpreterMain {
     val irOpt: JOption[IRRoot] = Shell.fileToIR(fileNames, Shell.toOption(Shell.params.opt_OutFileName))
     if (irOpt.isSome) {
       val ir: IRRoot = irOpt.unwrap
+
+      // Initialize AddressManager
+      AddressManager.reset()
+
       /*
        * The following 2 lines are to print IR program for debug.
        * Check getE method in nodes_util/JSIRUnparser.scala to get unsimplified name.

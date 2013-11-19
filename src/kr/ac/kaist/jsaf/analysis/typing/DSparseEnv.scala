@@ -17,7 +17,6 @@ import scala.collection.immutable.HashSet
 
 class DSparseEnv(cfg: CFG) extends SparseEnv(cfg) {
   private var interDDG_ : DDGraph = null
-
   override def drawDDG(cg: Map[CFGInst, Set[FunctionId]], du: DUSet, quiet: Boolean): Unit = {
     if (!quiet)
       System.out.println("* Computes defuse graph")

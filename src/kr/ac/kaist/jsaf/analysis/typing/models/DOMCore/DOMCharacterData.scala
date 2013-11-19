@@ -17,22 +17,17 @@ import kr.ac.kaist.jsaf.analysis.cfg._
 import org.w3c.dom.Node
 import org.w3c.dom.CharacterData
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import scala.Some
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object DOMCharacterData extends DOM {
   private val name = "CharacterData"
 
   /* predefined locatoins */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor */
   private val prop_cons: List[(String, AbsProperty)] = List(
@@ -328,7 +323,7 @@ object DOMCharacterData extends DOM {
   }
 
   /* instance */
-  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr(), Recent))
+  override def getInstance(cfg: CFG): Option[Loc] = Some(newRecentLoc())
   /* list of properties in the instance object */
   override def getInsList(node: Node): List[(String, PropValue)] = node match {
     case c: CharacterData =>

@@ -9,7 +9,7 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.typing.domain._
+
 import scala.collection.immutable.HashSet
 import kr.ac.kaist.jsaf.analysis.typing.Helper
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}

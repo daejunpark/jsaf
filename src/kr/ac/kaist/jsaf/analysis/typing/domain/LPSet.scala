@@ -8,7 +8,9 @@
  ***************************************************************************** */
 
 package kr.ac.kaist.jsaf.analysis.typing.domain
+
 import scala.collection.immutable.HashMap
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 /**
  * Location Property Set

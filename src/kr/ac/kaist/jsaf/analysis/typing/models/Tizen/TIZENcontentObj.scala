@@ -9,22 +9,14 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import java.lang.InternalError
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
@@ -36,19 +28,19 @@ object TIZENcontentObj extends Tizen {
   private val name = "content"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_content
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_contentdir: Loc = newPreDefLoc("ContentDirectory", Old)
-  val loc_contentdirarr: Loc = newPreDefLoc("ContentDirectoryArr", Old)
-  val loc_content: Loc = newPreDefLoc("Content", Old)
-  val loc_contentarr: Loc = newPreDefLoc("ContentArr", Old)
-  val loc_strarr: Loc = newPreDefLoc("contentStrArr", Old)
-  val loc_uintarr: Loc = newPreDefLoc("contentUIntArr", Old)
-  val loc_vidcontent: Loc = newPreDefLoc("VideoContent", Old)
-  val loc_audcontentlyrics: Loc = newPreDefLoc("AudioContentLyrics", Old)
-  val loc_audcontent: Loc = newPreDefLoc("AudioContent", Old)
-  val loc_imgcontent: Loc = newPreDefLoc("ImageContent", Old)
-  val loc_geoloc: Loc = newPreDefLoc("geolocation", Old)
+  val loc_contentdir: Loc = newSystemLoc("ContentDirectory", Old)
+  val loc_contentdirarr: Loc = newSystemLoc("ContentDirectoryArr", Old)
+  val loc_content: Loc = newSystemLoc("Content", Old)
+  val loc_contentarr: Loc = newSystemLoc("ContentArr", Old)
+  val loc_strarr: Loc = newSystemLoc("contentStrArr", Old)
+  val loc_uintarr: Loc = newSystemLoc("contentUIntArr", Old)
+  val loc_vidcontent: Loc = newSystemLoc("VideoContent", Old)
+  val loc_audcontentlyrics: Loc = newSystemLoc("AudioContentLyrics", Old)
+  val loc_audcontent: Loc = newSystemLoc("AudioContent", Old)
+  val loc_imgcontent: Loc = newSystemLoc("ImageContent", Old)
+  val loc_geoloc: Loc = newSystemLoc("geolocation", Old)
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_contentdir, prop_contentdir_ins),
@@ -684,7 +676,7 @@ object TIZENcontentObj extends Tizen {
 object TIZENContent extends Tizen {
   private val name = "Content"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
@@ -708,7 +700,7 @@ object TIZENContent extends Tizen {
 object TIZENContentDirectory extends Tizen {
   private val name = "ContentDirectory"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
@@ -732,7 +724,7 @@ object TIZENContentDirectory extends Tizen {
 object TIZENVideoContent extends Tizen {
   private val name = "VideoContent"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   val loc_parent = TIZENContent.loc_proto
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
@@ -756,7 +748,7 @@ object TIZENVideoContent extends Tizen {
 object TIZENAudioContentLyrics extends Tizen {
   private val name = "AudioContentLyrics"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -779,7 +771,7 @@ object TIZENAudioContentLyrics extends Tizen {
 object TIZENAudioContent extends Tizen {
   private val name = "AudioContent"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   val loc_parent = TIZENContent.loc_proto
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
@@ -803,7 +795,7 @@ object TIZENAudioContent extends Tizen {
 object TIZENImageContent extends Tizen {
   private val name = "ImageContent"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   val loc_parent = TIZENContent.loc_proto
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)

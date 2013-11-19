@@ -20,14 +20,15 @@ import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.DOMElement
 import kr.ac.kaist.jsaf.analysis.cfg.CFG
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 // non-standard object
 object Screen extends DOM {
   private val name = "screen"
 
   /* predefined locations */
-  val loc_ins = newPredefLoc(name + "Ins")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_ins = newSystemRecentLoc(name + "Ins")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   
   /* prorotype */
   private val prop_proto: List[(String, AbsProperty)] = List(
@@ -83,6 +84,6 @@ object Screen extends DOM {
   // no function
 
   /* instance */
-  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  override def getInstance(cfg: CFG): Option[Loc] = Some(newRecentLoc())
   /* list of properties in the instance object */
 }

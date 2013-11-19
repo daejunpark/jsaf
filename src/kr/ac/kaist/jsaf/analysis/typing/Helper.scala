@@ -8,7 +8,7 @@
  ***************************************************************************** */
 
 package kr.ac.kaist.jsaf.analysis.typing
-import kr.ac.kaist.jsaf.analysis.cfg.{CFGId, GlobalVar, PureLocalVar, CapturedVar, CapturedCatchVar}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFGId, GlobalVar, PureLocalVar, CapturedVar, CapturedCatchVar, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.Config.DEBUG
 import kr.ac.kaist.jsaf.analysis.cfg.FunctionId
@@ -22,6 +22,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.OtherStrSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.NumStrSingle
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object Helper {
   def IsObject(h: Heap, l: Loc): AbsBool = {
@@ -1209,7 +1210,7 @@ object Helper {
   def NewRegExp(source: AbsString, g: AbsBool, i: AbsBool, m: AbsBool): Obj = {
     ObjEmpty.
       update("@class", PropValue(AbsString.alpha("RegExp"))).
-      update("@proto", PropValue(ObjectValue(Value(newPreDefLoc("RegExpProto", Recent)), BoolFalse, BoolFalse, BoolFalse))).
+      update("@proto", PropValue(ObjectValue(Value(newSystemLoc("RegExpProto", Recent)), BoolFalse, BoolFalse, BoolFalse))).
       update("@extensible", PropValue(BoolTrue)).
       update("source", PropValue(ObjectValue(Value(source), BoolFalse, BoolFalse, BoolFalse))).
       update("global", PropValue(ObjectValue(Value(g), BoolFalse, BoolFalse, BoolFalse))).
@@ -1257,5 +1258,48 @@ object Helper {
           case None => throw new InternalError("not a concrete case")
         }})
     }
+  }
+
+  def heapDiff(orig: Heap, diff: Heap, isPrint: Boolean): Set[(Loc, Option[String])] = {
+    val locs = orig.map.keySet ++ diff.map.keySet
+    locs.foldLeft(Set[(Loc, Option[String])]())((lpset, loc) => {
+      // check original heap for loc
+      orig.map.get(loc) match {
+        case Some(o_orig) =>
+          diff.map.get(loc) match {
+            case Some(o_diff) =>
+              val props = o_orig.getProps ++ o_diff.getProps
+              props.foldLeft(lpset)((lpset, prop) => {
+                val o_prop = o_orig(prop)
+                val d_prop = o_diff(prop)
+                if(!((o_prop._1 <= d_prop._1) && (d_prop._1 <= o_prop._1) && (o_prop._2 <= d_prop._2) && (d_prop._2 <= o_prop._2))) {
+                  if(isPrint) {
+                    println("\n===================================================================")
+                    println("* " + DomainPrinter.printLoc(loc) + "("+prop+") has different value")
+                    println("  orignal heap with location : " + DomainPrinter.printLoc(loc))
+                    println("     " +DomainPrinter.printLoc(loc)+"("+prop+") ObjValue ["+o_prop._1._1._2+","+o_prop._1._1._3+","+o_prop._1._1._4+"]-> "+ DomainPrinter.printValue(o_prop._1._1._1))
+                    println("  diff heap with location : " + DomainPrinter.printLoc(loc))
+                    println("     " +DomainPrinter.printLoc(loc)+"("+prop+") ObjValue ["+d_prop._1._1._2+","+d_prop._1._1._3+","+d_prop._1._1._4+"]-> "+ DomainPrinter.printValue(d_prop._1._1._1))
+                    println("===================================================================")
+                  }
+                  lpset + ((loc,Some(prop)))
+                } else lpset
+              })
+            // loc is removed loc... possible?
+            case None =>
+              if(isPrint) println("* Location " + DomainPrinter.printLoc(loc) + " does not exist in diff Heap")
+              lpset + ((loc, None))
+          }
+        // loc is newly added loc
+        case None =>
+          if(orig <= HeapBot) {
+            // ignore initial steps
+            lpset
+          } else {
+            if(isPrint) println("* Location " + DomainPrinter.printLoc(loc) + " does not exist in orig Heap")
+            lpset + ((loc,None))
+          }
+      }
+    })
   }
 }

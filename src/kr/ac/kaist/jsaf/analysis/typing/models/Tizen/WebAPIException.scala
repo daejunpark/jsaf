@@ -9,7 +9,6 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.typing.domain._
 
 abstract class WebAPIException {
   override def toString(): String = {

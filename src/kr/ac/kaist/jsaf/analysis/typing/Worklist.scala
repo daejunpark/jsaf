@@ -9,7 +9,7 @@
 
 package kr.ac.kaist.jsaf.analysis.typing
 
-import scala.collection.immutable.{ TreeMap, TreeSet, HashSet, HashMap }
+import scala.collection.immutable.{ TreeMap, TreeSet, HashSet, HashMap, Stack => IStack }
 import scala.collection.mutable.{ HashMap => MHashMap, HashSet => MHashSet, Stack => MStack }
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.lib.graph.DGraph
@@ -83,36 +83,38 @@ abstract class Worklist {
     var isWorkAdded = false
     callerCPSetOpt match {
       case Some(callerCPSet) =>
-        for(callerCPStack <- callerCPSet) {
-          cp match {
-            // Call -> Entry
-            case ((_, LEntry), _) =>
-              updateTable()
-              val newCallerCPStack = callerCPStack.clone()
-              newCallerCPStack.push(cp_pred)
-              add(cp, Some(MHashSet(newCallerCPStack)), increaseRefCount)
-              isWorkAdded = true
-            // Exit or ExitExc -> Aftercall
-            case _ =>
+        cp match {
+          // Call -> Entry
+          case ((_, LEntry), _) =>
+            val newCallerCPStackSet = new CPStackSet
+            for(callerCPStack <- callerCPSet) newCallerCPStackSet.add(callerCPStack.push(cp_pred))
+            updateTable()
+            add(cp, Some(newCallerCPStackSet), increaseRefCount)
+            isWorkAdded = true
+          // Exit or ExitExc -> Aftercall
+          case _ =>
+            var doesExist = false
+            val newCallerCPStackSet = new CPStackSet
+            for(callerCPStack <- callerCPSet) {
               val topCP = callerCPStack.top
               if(cp._1 == cfg.getAftercallFromCallMap.getOrElse(topCP._1, null) ||
-                cp._1 == cfg.getAftercatchFromCallMap.getOrElse(topCP._1, null)) {
-                updateTable()
-                if(callerCPStack.size <= 1) add(cp, None, increaseRefCount)
-                else {
-                  val newCallerCPStack = callerCPStack.clone()
-                  newCallerCPStack.pop()
-                  add(cp, Some(MHashSet(newCallerCPStack)), increaseRefCount)
-                }
-                isWorkAdded = true
+                 cp._1 == cfg.getAftercatchFromCallMap.getOrElse(topCP._1, null)) {
+                doesExist = true
+                if(callerCPStack.size > 1) newCallerCPStackSet.add(callerCPStack.pop)
               }
-          }
+            }
+            if(doesExist) {
+              updateTable()
+              if(newCallerCPStackSet.size == 0) add(cp, None, increaseRefCount)
+              else add(cp, Some(newCallerCPStackSet), increaseRefCount)
+              isWorkAdded = true
+            }
         }
       case None =>
         updateTable()
         cp match {
           // Call -> Entry
-          case ((_, LEntry), _) => add(cp, Some(MHashSet(MStack(cp_pred))), increaseRefCount)
+          case ((_, LEntry), _) => add(cp, Some(MHashSet(IStack(cp_pred))), increaseRefCount)
           // Exit or ExitExc -> Aftercall
           case _ => add(cp, None, increaseRefCount)
         }

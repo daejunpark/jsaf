@@ -16,6 +16,7 @@ src/kr/ac/kaist/jsaf/parser/IR.java
 src/kr/ac/kaist/jsaf/parser/JS.java
 src/kr/ac/kaist/jsaf/parser/RegExp.java
 src/kr/ac/kaist/jsaf/parser/WIDL.java
+src/kr/ac/kaist/jsaf/parser/Json.java
 src/kr/ac/kaist/jsaf/scala_src/nodes/
 third_party/deckard/src/lsh/bin/LSHMain
 third_party/deckard/src/lsh/bin/compareOutputs

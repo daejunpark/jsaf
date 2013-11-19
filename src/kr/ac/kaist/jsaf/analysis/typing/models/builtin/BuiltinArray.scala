@@ -19,7 +19,6 @@ import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
 import kr.ac.kaist.jsaf.analysis.typing.domain.NUIntSingle
 import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
-import kr.ac.kaist.jsaf.analysis.typing.InternalError
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsInternalFunc
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -27,11 +26,12 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFuncCallback
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object BuiltinArray extends ModelData {
 
-  val ConstLoc = newPreDefLoc("ArrayConst", Recent)
-  val ProtoLoc = newPreDefLoc("ArrayProto", Recent)
+  val ConstLoc = newSystemLoc("ArrayConst", Recent)
+  val ProtoLoc = newSystemLoc("ArrayProto", Recent)
 
   private val prop_const: List[(String, AbsProperty)] = List(
     ("@class",                   AbsConstValue(PropValue(AbsString.alpha("Function")))),

@@ -9,22 +9,12 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinDate
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
@@ -35,9 +25,9 @@ object TIZENnotificationObj extends Tizen {
   private val name = "notification"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_notification
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_noti: Loc = newPreDefLoc("Notification", Old)
+  val loc_noti: Loc = newSystemLoc("Notification", Old)
 
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
@@ -133,7 +123,7 @@ object TIZENnotificationObj extends Tizen {
 object TIZENNotification extends Tizen {
   private val name = "Notification"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)

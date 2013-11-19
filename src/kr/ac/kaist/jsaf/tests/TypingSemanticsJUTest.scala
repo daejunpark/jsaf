@@ -13,6 +13,7 @@ import junit.framework.TestSuite
 import kr.ac.kaist.jsaf.compiler.Predefined
 import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.ShellParameters
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager
 
 // class definition for eclipse JUnit runner 
 class TypingSemanticsJUTest
@@ -29,6 +30,9 @@ object TypingSemanticsJUTest {
   def main(args: String*) = junit.textui.TestRunner.run(suite)
 
   def suite(): Test = {
+    // Initialize AddressManager
+    AddressManager.reset()
+
     val suite = new TestSuite("Typing Semantics Test")
     val testcases = collectTestcase(TESTS_DIR)
     for (tc <- testcases) {

@@ -9,23 +9,21 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMCore
 
-import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
-import scala.Some
+import kr.ac.kaist.jsaf.analysis.cfg.CFG
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLDocument
 import org.w3c.dom.{DocumentFragment, Node}
-
 
 object DOMDocumentFragment extends DOM {
   private val name = "DocumentFragment"
 
   /* predefined locations */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor or object*/
   private val prop_cons: List[(String, AbsProperty)] = List(
@@ -75,7 +73,7 @@ object DOMDocumentFragment extends DOM {
   /* instance */
 
   /* instance */
-  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr(), Recent))
+  override def getInstance(cfg: CFG): Option[Loc] = Some(newRecentLoc())
   /* list of properties in the instance object */
   override def getInsList(node: Node): List[(String, PropValue)] = node match {
     case d: DocumentFragment =>

@@ -15,34 +15,35 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object BuiltinError extends ModelData {
   /* error object(constructor) */
-  val ErrConstLoc: Loc       = newPreDefLoc("ErrConst", Recent)
-  val EvalErrConstLoc: Loc   = newPreDefLoc("EvalErrConst", Recent)
-  val RangeErrConstLoc: Loc  = newPreDefLoc("RangeErrConst", Recent)
-  val RefErrConstLoc: Loc    = newPreDefLoc("RefErrConst", Recent)
-  val SyntaxErrConstLoc: Loc = newPreDefLoc("SyntaxErrConst", Recent)
-  val TypeErrConstLoc: Loc   = newPreDefLoc("TypeErrConst", Recent)
-  val URIErrConstLoc: Loc    = newPreDefLoc("URIErrConst", Recent)
+  val ErrConstLoc: Loc       = newSystemLoc("ErrConst", Recent)
+  val EvalErrConstLoc: Loc   = newSystemLoc("EvalErrConst", Recent)
+  val RangeErrConstLoc: Loc  = newSystemLoc("RangeErrConst", Recent)
+  val RefErrConstLoc: Loc    = newSystemLoc("RefErrConst", Recent)
+  val SyntaxErrConstLoc: Loc = newSystemLoc("SyntaxErrConst", Recent)
+  val TypeErrConstLoc: Loc   = newSystemLoc("TypeErrConst", Recent)
+  val URIErrConstLoc: Loc    = newSystemLoc("URIErrConst", Recent)
 
   /* error prototype object */
-  val ErrProtoLoc:Loc       = newPreDefLoc("ErrProto", Recent)
-  val EvalErrProtoLoc:Loc   = newPreDefLoc("EvalErrProto", Recent)
-  val RangeErrProtoLoc: Loc = newPreDefLoc("RangeErrProto", Recent)
-  val RefErrProtoLoc: Loc   = newPreDefLoc("RefErrProto", Recent)
-  val SyntaxErrProtoLoc: Loc= newPreDefLoc("SyntaxErrProto", Recent)
-  val TypeErrProtoLoc: Loc  = newPreDefLoc("TypeErrProto", Recent)
-  val URIErrProtoLoc: Loc   = newPreDefLoc("URIErrProto", Recent)
+  val ErrProtoLoc:Loc       = newSystemLoc("ErrProto", Recent)
+  val EvalErrProtoLoc:Loc   = newSystemLoc("EvalErrProto", Recent)
+  val RangeErrProtoLoc: Loc = newSystemLoc("RangeErrProto", Recent)
+  val RefErrProtoLoc: Loc   = newSystemLoc("RefErrProto", Recent)
+  val SyntaxErrProtoLoc: Loc= newSystemLoc("SyntaxErrProto", Recent)
+  val TypeErrProtoLoc: Loc  = newSystemLoc("TypeErrProto", Recent)
+  val URIErrProtoLoc: Loc   = newSystemLoc("URIErrProto", Recent)
 
   /* error instance */
-  val ErrLoc: Loc           = newPreDefLoc("Err", Old)
-  val EvalErrLoc: Loc       = newPreDefLoc("EvalErr", Old)
-  val RangeErrLoc: Loc      = newPreDefLoc("RangeErr", Old)
-  val RefErrLoc: Loc        = newPreDefLoc("RefErr", Old)
-  val SyntaxErrLoc: Loc     = newPreDefLoc("SyntaxErr", Old)
-  val TypeErrLoc: Loc       = newPreDefLoc("TypeErr", Old)
-  val URIErrLoc: Loc        = newPreDefLoc("URIErr", Old)
+  val ErrLoc: Loc           = newSystemLoc("Err", Old)
+  val EvalErrLoc: Loc       = newSystemLoc("EvalErr", Old)
+  val RangeErrLoc: Loc      = newSystemLoc("RangeErr", Old)
+  val RefErrLoc: Loc        = newSystemLoc("RefErr", Old)
+  val SyntaxErrLoc: Loc     = newSystemLoc("SyntaxErr", Old)
+  val TypeErrLoc: Loc       = newSystemLoc("TypeErr", Old)
+  val URIErrLoc: Loc        = newSystemLoc("URIErr", Old)
 
   private val prop_err_const: List[(String, AbsProperty)] = List(
     ("@class",                   AbsConstValue(PropValue(AbsString.alpha("Function")))),

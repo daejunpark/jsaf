@@ -9,6 +9,8 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.jquery
 
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolTrue=>T, BoolFalse=>F, _}
 import kr.ac.kaist.jsaf.analysis.typing.Helper
 import kr.ac.kaist.jsaf.analysis.typing.models.{JQueryModel, DOMHelper}

@@ -14,11 +14,7 @@ import java.nio.charset.Charset
 import java.util.{ArrayList, HashMap}
 import java.util.{List => JList}
 import kr.ac.kaist.jsaf.analysis.cfg.CFGBuilder
-import kr.ac.kaist.jsaf.analysis.typing.Config
-import kr.ac.kaist.jsaf.analysis.typing.InitHeap
-import kr.ac.kaist.jsaf.analysis.typing.Semantics
-import kr.ac.kaist.jsaf.analysis.typing.Typing
-import kr.ac.kaist.jsaf.analysis.typing.Worklist
+import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMBuilder
 import kr.ac.kaist.jsaf.bug_detector.{StateManager, BugDetector}
 import kr.ac.kaist.jsaf.compiler.Parser
@@ -35,6 +31,7 @@ import kr.ac.kaist.jsaf.widl.{WIDLToString, WIDLToDB, WIDLChecker}
 import edu.rice.cs.plt.tuple.{Option => JOption}
 import org.cyberneko.html.parsers.DOMParser
 import xtc.parser.{ParseError, SemanticValue}
+import kr.ac.kaist.jsaf.nodes_util.Coverage
 
 ////////////////////////////////////////////////////////////////////////////////
 // Web IDL
@@ -135,6 +132,8 @@ object WIDLMain {
     if (irOpt.isNone) return -2
     val ir: IRRoot = irOpt.unwrap
     val ast_n: Program = irErrors.third // Disambiguated and hoisted and with written
+    // Initialize AddressManager
+    AddressManager.reset()
     // CFG
     val builder = new CFGBuilder(ir)
     val cfg = builder.build

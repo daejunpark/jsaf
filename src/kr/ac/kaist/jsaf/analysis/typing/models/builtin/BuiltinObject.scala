@@ -9,7 +9,7 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.builtin
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
@@ -24,10 +24,11 @@ import kr.ac.kaist.jsaf.bug_detector.BugKind
 import kr.ac.kaist.jsaf.bug_detector.ToPropertyDescriptor
 import kr.ac.kaist.jsaf.bug_detector.ToPropertyDescriptors
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object BuiltinObject extends ModelData {
 
-  val ConstLoc = newPreDefLoc("ObjectConst", Recent)
+  val ConstLoc = newSystemLoc("ObjectConst", Recent)
   //val ProtoLoc = newPreDefLoc("ObjectProto", Recent)
 
   private val prop_const: List[(String, AbsProperty)] = List(

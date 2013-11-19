@@ -9,6 +9,9 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.domain
 
+import kr.ac.kaist.jsaf.analysis.cfg.InternalError
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
 case class Context(private val env: LocSet, private val thisBinding: LocSet, mayOld: AddrSet, mustOld: AddrSet) {
   /* tuple-like accessor */
   def _1: LocSet = throw new InternalError("Environment was moved from Context to PureLocal as property @env.")

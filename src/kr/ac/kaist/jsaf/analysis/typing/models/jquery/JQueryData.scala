@@ -9,6 +9,8 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.jquery
 
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
@@ -17,7 +19,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -26,8 +28,8 @@ import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 object JQueryData extends ModelData {
 
   private val jquery_expando = "jQuery00000000000000000000"
-  val CacheLoc = newPreDefLoc("jQueryCache", Recent)
-  val CacheDataLoc = newPreDefLoc("jQueryCacheData", Old)
+  val CacheLoc = newSystemLoc("jQueryCache", Recent)
+  val CacheDataLoc = newSystemLoc("jQueryCacheData", Old)
 
   private val prop_const: List[(String, AbsProperty)] = List(
     ("data",        AbsBuiltinFunc("jQuery.data", 4)),
@@ -69,11 +71,13 @@ object JQueryData extends ModelData {
 
   def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
-      ("jQuery.prototype.data" -> (
+      "jQuery.prototype.data" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           /* new addr */
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
           /* new loc */
           val l_ret = addrToLoc(addr1, Recent)
 
@@ -85,25 +89,25 @@ object JQueryData extends ModelData {
 
           // no arguements
           val (h_ret1, ctx_ret1, v_ret1) =
-          if (UndefTop <= v_key._1._1) {
-            val v_len = lset_this.foldLeft(ValueBot)((v,l) => v + Helper.Proto(h, l, AbsString.alpha("length")))
-            val (h_1, ctx_1, v_1) =
-              if (BoolTrue </ Helper.toBoolean(v_len)) {
-                val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
-                val h_2 = h_1.update(l_ret, h_1(CacheDataLoc))
-                (h_2, ctx_1, Value(l_ret))
-              }
-              else
-                (HeapBot, ContextBot, ValueBot)
-            val v_2 =
-              if (BoolFalse </ Helper.toBoolean(v_len))
-                Value(NullTop)
-              else
-                ValueBot
-            (h_1, ctx_1, v_1 + v_2)
-          }
-          else
-            (HeapBot, ContextBot, ValueBot)
+            if (UndefTop <= v_key._1._1) {
+              val v_len = lset_this.foldLeft(ValueBot)((v, l) => v + Helper.Proto(h, l, AbsString.alpha("length")))
+              val (h_1, ctx_1, v_1) =
+                if (BoolTrue </ Helper.toBoolean(v_len)) {
+                  val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+                  val h_2 = h_1.update(l_ret, h_1(CacheDataLoc))
+                  (h_2, ctx_1, Value(l_ret))
+                }
+                else
+                  (HeapBot, ContextBot, ValueBot)
+              val v_2 =
+                if (BoolFalse </ Helper.toBoolean(v_len))
+                  Value(NullTop)
+                else
+                  ValueBot
+              (h_1, ctx_1, v_1 + v_2)
+            }
+            else
+              (HeapBot, ContextBot, ValueBot)
 
           // 1st argument is object
           val (h_ret2, v_ret2) =
@@ -144,7 +148,7 @@ object JQueryData extends ModelData {
             ((Helper.ReturnStore(h_ret, v_ret), ctx_ret), (he, ctxe))
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
+        }),
       ("jQuery.prototype.removeData" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           // do nothing

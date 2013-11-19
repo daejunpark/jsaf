@@ -14,22 +14,11 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import org.w3c.dom.Node
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.domain.NUIntSingle
 import scala.Some
-import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.typing.domain.NUIntSingle
-import scala.Some
-import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object DOMNode extends DOM {
   private val name = "Node"
@@ -48,8 +37,8 @@ object DOMNode extends DOM {
   val NOTATION_NODE = 12
 
   /* predefined locatoins */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor or object*/
   private val prop_cons: List[(String, AbsProperty)] = List(
@@ -1313,7 +1302,7 @@ object DOMNode extends DOM {
   }
 
   /* instance */
-  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  override def getInstance(cfg: CFG): Option[Loc] = Some(newRecentLoc())
   
   /* list of properties in the instance object */
   override def getInsList(node: Node): List[(String, PropValue)] = {

@@ -10,7 +10,7 @@
 package kr.ac.kaist.jsaf.analysis.typing
 
 import scala.collection.immutable.HashSet
-import scala.collection.mutable.{HashMap => MHashMap}
+import scala.collection.mutable.{HashMap => MHashMap, HashSet => MHashSet, Stack => MStack}
 import scala.collection.mutable.{Map => MMap}
 
 import kr.ac.kaist.jsaf.analysis.asserts._
@@ -20,22 +20,26 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.bug_detector.Range15_4_5_1
 import kr.ac.kaist.jsaf.nodes_util.EJSOp
 import kr.ac.kaist.jsaf.nodes_util.IRFactory
-import kr.ac.kaist.jsaf.nodes_util.NodeFactory
-import kr.ac.kaist.jsaf.nodes_util.NodeRelation
-import kr.ac.kaist.jsaf.nodes_util.NodeUtil
-import kr.ac.kaist.jsaf.nodes.ASTNode
 import kr.ac.kaist.jsaf.nodes.IROp
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.analysis.typing.{PreSemanticsExpr => PSE}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolTrue => BTrue, BoolFalse => BFalse}
 import kr.ac.kaist.jsaf.analysis.typing.models.{DOMHelper, ModelManager}
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLTopElement
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+import kr.ac.kaist.jsaf.Shell
 
-class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
+class Semantics(cfg: CFG, worklist: Worklist, locclone: Boolean) {
   // Inter-procedural edge set.
   // These edges are added while processing call instruction.
   val ipSuccMap: MMap[ControlPoint, MMap[ControlPoint, (Context,Obj)]] = MHashMap()
+  val ipPredMap: MMap[ControlPoint, MHashSet[ControlPoint]] = MHashMap()
   def getIPSucc(cp: ControlPoint): Option[MMap[ControlPoint, (Context,Obj)]] = ipSuccMap.synchronized { ipSuccMap.get(cp) }
+  def getIPPred(cp: ControlPoint): Option[MHashSet[ControlPoint]] = ipPredMap.synchronized { ipPredMap.get(cp) }
+
+  // Heap bottoms
+  val heapBotMap: MMap[(ControlPoint, CFGInst), CPStackSet] = MHashMap()
+  def getHeapBotMap(cp: ControlPoint, inst: CFGInst): Option[CPStackSet] = heapBotMap.synchronized { heapBotMap.get((cp, inst)) }
 
   val dummyInfo = IRFactory.makeInfo(IRFactory.dummySpan("CFGSemantics"))
 
@@ -52,7 +56,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
   // for Address refinement
   private var ccCount = 0
   private var callContextMap: Map[CallContext, Int] = Map[CallContext, Int]()
-  private val maxProgramAddr = if (locclone) cfg.newProgramAddr() else 0
+  private val maxProgramAddr = if (locclone) newProgramAddr() else 0
   private val shift = if (locclone) (() => {
     var maxAddr = maxProgramAddr 
     var retShift = 0
@@ -370,6 +374,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
         }
         case CFGExprStmt(_, _, x, e) => {
           val (v,es) = SE.V(e, h, ctx)
+          locCountCheck(i, v)
           val (h_1, ctx_1) =
             if (v </ ValueBot) {
               (Helper.VarStore(h, x, v), ctx)
@@ -442,6 +447,7 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
             if (v_index <= ValueBot) (HeapBot, ContextBot, es_index)
             else {
               val (v_rhs, es_rhs) = SE.V(rhs, h, ctx)
+              locCountCheck(i, v_rhs)
               if (v_rhs <= ValueBot) (HeapBot, ContextBot, es_index ++ es_rhs)
               else {
                 // lset must not be empty because obj is coming through <>toObject.
@@ -779,7 +785,8 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
           val new_obj =
             h(SinglePureLocalLoc).
               update("@exception", PropValue(v)).
-              update("@exception_all", PropValue(v + v_old))
+              update("@exception_all", PropValue(v + v_old)).
+              update("@return", PropValue(Value(UndefTop)))
           val h_1 = h.update(SinglePureLocalLoc, new_obj)
 
           ((HeapBot, ContextBot), (h_1 + h_e, ctx + ctx_e))
@@ -999,6 +1006,10 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
         }
       }
       // System.out.println("out heap#####\n" + DomainPrinter.printHeap(4, s._1._1, cfg))
+
+      // Collect bottom heaps
+      if(Shell.params.opt_BottomDump && s._1._1 == HeapBot && !i.isInstanceOf[CFGAssert]) insertHeapBottom(cp, i, cps)
+
       s
     }
   }
@@ -1006,19 +1017,28 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
 
   // Adds inter-procedural call edge from call-node cp1 to entry-node cp2.
   // Edge label ctx records callee context, which is joined if the edge existed already.
-  def addCallEdge(cp1: ControlPoint, cp2: ControlPoint, ctx: Context, obj: Obj) = ipSuccMap.synchronized {
-    ipSuccMap.get(cp1) match {
-      case None =>
-        ipSuccMap.update(cp1, MHashMap((cp2, (ctx, obj))))
-      case Some(map2) =>
-        map2.synchronized {
-          map2.get(cp2) match {
-            case None =>
-              map2.update(cp2, (ctx, obj))
-            case Some((old_ctx, old_obj)) =>
-              map2.update(cp2, (old_ctx + ctx, old_obj + obj))
+  def addCallEdge(cp1: ControlPoint, cp2: ControlPoint, ctx: Context, obj: Obj) = {
+    ipSuccMap.synchronized {
+      ipSuccMap.get(cp1) match {
+        case None =>
+          ipSuccMap.update(cp1, MHashMap((cp2, (ctx, obj))))
+        case Some(map2) =>
+          map2.synchronized {
+            map2.get(cp2) match {
+              case None =>
+                map2.update(cp2, (ctx, obj))
+              case Some((old_ctx, old_obj)) =>
+                map2.update(cp2, (old_ctx + ctx, old_obj + obj))
+            }
           }
-        }
+      }
+    }
+
+    ipPredMap.synchronized {
+      ipPredMap.get(cp2) match {
+        case None => ipPredMap.update(cp2, MHashSet(cp1))
+        case Some(set) => set.synchronized { set.add(cp1) }
+      }
     }
   }
 
@@ -1029,47 +1049,52 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
     cps match {
       case Some(cps) =>
         val newCPSet = new CPStackSet
-        for(cpStack <- cps) {
-          val newCPStack = cpStack.clone()
-          newCPStack.push(cp3)
-          newCPSet.add(newCPStack)
-        }
+        for(cpStack <- cps) newCPSet.add(cpStack.push(cp3))
         addReturnEdge(cp1, cp2, ctx, obj, Some(newCPSet))
         //addReturnEdge(cp1, cp2, ctx, obj, None)
       case None => addReturnEdge(cp1, cp2, ctx, obj, None)
     }
   }
-  def addReturnEdge(cp1: ControlPoint, cp2: ControlPoint, ctx: Context, obj: Obj, cps: Option[CPStackSet] = None): Unit = ipSuccMap.synchronized {
-    ipSuccMap.get(cp1) match {
-      case None =>
-        ipSuccMap.update(cp1, MHashMap((cp2, (ctx, obj))))
-        worklist.add(cp1, cps, true)
-      case Some(map2) =>
-        map2.synchronized {
-          map2.get(cp2) match {
-            case None =>
-              map2.update(cp2, (ctx, obj))
-              worklist.add(cp1, cps, true)
-            case Some((old_ctx, old_obj)) =>
-              var changed = false
-              val new_ctx =
-                if (ctx <= old_ctx) old_ctx
-                else {
-                  changed = true
-                  old_ctx + ctx
-                }
-              val new_obj =
-                if (obj <= old_obj) old_obj
-                else {
-                  changed = true
-                  old_obj + obj
-                }
-              if (changed) {
-                map2.update(cp2, (new_ctx, new_obj))
+  def addReturnEdge(cp1: ControlPoint, cp2: ControlPoint, ctx: Context, obj: Obj, cps: Option[CPStackSet] = None): Unit = {
+    ipSuccMap.synchronized {
+      ipSuccMap.get(cp1) match {
+        case None =>
+          ipSuccMap.update(cp1, MHashMap((cp2, (ctx, obj))))
+          worklist.add(cp1, cps, true)
+        case Some(map2) =>
+          map2.synchronized {
+            map2.get(cp2) match {
+              case None =>
+                map2.update(cp2, (ctx, obj))
                 worklist.add(cp1, cps, true)
-              }
+              case Some((old_ctx, old_obj)) =>
+                var changed = false
+                val new_ctx =
+                  if (ctx <= old_ctx) old_ctx
+                  else {
+                    changed = true
+                    old_ctx + ctx
+                  }
+                val new_obj =
+                  if (obj <= old_obj) old_obj
+                  else {
+                    changed = true
+                    old_obj + obj
+                  }
+                if (changed) {
+                  map2.update(cp2, (new_ctx, new_obj))
+                  worklist.add(cp1, cps, true)
+                }
+            }
           }
-        }
+      }
+    }
+
+    ipPredMap.synchronized {
+      ipPredMap.get(cp2) match {
+        case None => ipPredMap.update(cp2, MHashSet(cp1))
+        case Some(set) => set.synchronized { set.add(cp1) }
+      }
     }
   }
 
@@ -2099,5 +2124,113 @@ class Semantics(cfg : CFG, worklist: Worklist, locclone: Boolean) {
     //System.out.println("out heap#####\n" + DomainPrinter.printHeap(4, s._1._1))
     s
 //  }
+  }
+
+  private def locCountCheck(i: CFGInst, v: Value): Unit = {
+    if(Shell.params.opt_MaxLocCount == 0) return
+    if(v.locset.size >= Shell.params.opt_MaxLocCount) {
+      throw new MaxLocCountError("[" + i.getInstId + "] " + i + " => " + DomainPrinter.printLocSet(v.locset))
+    }
+  }
+
+  def insertHeapBottom(cp: ControlPoint, i: CFGInst, cps: Option[CPStackSet]): Unit = {
+    val cpStackSet = cps match {
+      case Some(cps) =>
+        // use control-point stack (more precise way)
+        cps
+      case None =>
+        // use ip predecessor (alternative way)
+        var cps1: CPStackSet = new CPStackSet
+        var cps2: CPStackSet = null
+        var isChanged = false
+        val maxSize = 4
+        var depth = 0
+
+        cps1.add((new CPStack).push(cp))
+        do {
+          cps2 = cps1
+          cps1 = new CPStackSet
+          isChanged = false
+          depth+= 1
+          ipPredMap.synchronized {
+            for(cps <- cps2) {
+              ipPredMap.get(((cps.top._1._1, LEntry), cps.top._2)) match {
+                case Some(cs) =>
+                  for(c <- cs) if(depth > 1) cps1.add(cps.push(c)) else cps1.add((new CPStack).push(c))
+                  isChanged = true
+                case None => if(depth > 1) cps1.add(cps)
+              }
+            }
+          }
+        } while(depth == 1 || isChanged && cps1.size < maxSize)
+
+        cps1 = new CPStackSet
+        for(cps <- cps2) cps1.add(cps.reverse)
+
+        cps1
+    }
+    heapBotMap.synchronized {
+      heapBotMap.get((cp, i)) match {
+        case Some(prevCPStackSet) => prevCPStackSet++= cpStackSet
+        case None => heapBotMap.put((cp, i), cpStackSet)
+      }
+    }
+  }
+
+  def dumpHeapBottoms(): Unit = {
+    var indent = 0
+    def printStack(cp: ControlPoint, inst: CFGInst): Unit = {
+      // Instruction info
+      val source: String = if (inst == null) "" else {
+        val instSpanString = inst.getInfo match {
+          case Some(info) => "(" + info.getSpan.getFileNameOnly + ":" + info.getSpan.getBegin.getLine + ":" + info.getSpan.getBegin.column() + ")"
+          case None => ""
+        }
+        "[" + inst.getInstId + "] " + inst.toString() + " " + instSpanString
+      }
+
+      // Function info
+      /*val funcId = cp._1
+      val funcName = if (funcId == c.getCFG.getGlobalFId) "global function"
+      else {
+        var tempFuncName = c.getCFG.getFuncName(funcId)
+        val index = tempFuncName.lastIndexOf("@")
+        if (index != -1) tempFuncName = tempFuncName.substring(0, index)
+        "function " + tempFuncName
+      }
+      val funcSpan = c.getCFG.getFuncInfo(funcId).getSpan()
+      val funcSpanBegin = funcSpan.getBegin()
+      val funcSpanEnd = funcSpan.getEnd()*/
+
+      printf("  %d> ", indent); for(i <- 0 until indent) printf("  "); indent+= 1
+
+      printf("%s" + /*" in %s(%s:%d:%d~%d:%d)," +*/ " %s\n",
+        source,
+        //funcName, funcSpan.getFileNameOnly, funcSpanBegin.getLine, funcSpanBegin.column(), funcSpanEnd.getLine, funcSpanEnd.column(),
+        cp)
+    }
+
+    println("** Heap Bottom List **")
+    println("=========================================================================")
+    if((Shell.params.opt_ReturnStateOff || !Shell.params.opt_ReturnStateOn) && heapBotMap.size > 0)
+      println("'-return-state-on' option will show more precise results.")
+    for(kv <- heapBotMap) {
+      val ((cp, inst), cpStackSet) = kv
+      println("- HeapBot at " + cp)
+      if(cpStackSet.size == 0) {
+        // in global code
+        indent = 0
+        printStack(cp, inst)
+      }
+      else {
+        // in function codes
+        for(cpStack <- cpStackSet) {
+          indent = 0
+          printStack(cp, inst)
+          for(cp <- cpStack) printStack(cp, cfg.getLastInst(cp._1))
+        }
+      }
+    }
+    println("=========================================================================")
   }
 }

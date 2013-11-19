@@ -13,8 +13,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import scala.Some
-
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object DOMException extends DOM {
   private val name = "DOMException"
@@ -39,27 +38,27 @@ object DOMException extends DOM {
   val TYPE_MISMATCH_ERR = 17
 
   /* predefined locatoins */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* DOM error instance */
-  val DOMErrIndexSize             = newPreDefLoc("DOMErrIndexSize", Old)
-  val DOMErrDomstringSize         = newPreDefLoc("DOMErrDomstringSize", Old)
-  val DOMErrHierarchyRequest      = newPreDefLoc("DOMErrHierarchyRequest", Old)
-  val DOMErrWrongDocument         = newPreDefLoc("DOMErrWrongDocument", Old)
-  val DOMErrInvalidCharacter      = newPreDefLoc("DOMErrInvalidCharacter", Old)
-  val DOMErrNoDataAllowed         = newPreDefLoc("DOMErrNoDataAllowed", Old)
-  val DOMErrNoModificationAllowed = newPreDefLoc("DOMErrNoModificationAllowed", Old)
-  val DOMErrNotFound              = newPreDefLoc("DOMErrNotFound", Old)
-  val DOMErrNotSupported          = newPreDefLoc("DOMErrNotSupported", Old)
-  val DOMErrInuseAttribute        = newPreDefLoc("DOMErrInuseAttribute", Old)
-  val DOMErrInvalidState          = newPreDefLoc("DOMErrInvalidState", Old)
-  val DOMErrSyntax                = newPreDefLoc("DOMErrSyntax", Old)
-  val DOMErrInvalidModification   = newPreDefLoc("DOMErrInvalidModification", Old)
-  val DOMErrNamespace             = newPreDefLoc("DOMErrNamespace", Old)
-  val DOMErrInvalidAccess         = newPreDefLoc("DOMErrInvalidAccess", Old)
-  val DOMErrValidation            = newPreDefLoc("DOMErrValidation", Old)
-  val DOMErrTypeMismatch          = newPreDefLoc("DOMErrTypeMismatch", Old)
+  val DOMErrIndexSize             = newSystemLoc("DOMErrIndexSize", Old)
+  val DOMErrDomstringSize         = newSystemLoc("DOMErrDomstringSize", Old)
+  val DOMErrHierarchyRequest      = newSystemLoc("DOMErrHierarchyRequest", Old)
+  val DOMErrWrongDocument         = newSystemLoc("DOMErrWrongDocument", Old)
+  val DOMErrInvalidCharacter      = newSystemLoc("DOMErrInvalidCharacter", Old)
+  val DOMErrNoDataAllowed         = newSystemLoc("DOMErrNoDataAllowed", Old)
+  val DOMErrNoModificationAllowed = newSystemLoc("DOMErrNoModificationAllowed", Old)
+  val DOMErrNotFound              = newSystemLoc("DOMErrNotFound", Old)
+  val DOMErrNotSupported          = newSystemLoc("DOMErrNotSupported", Old)
+  val DOMErrInuseAttribute        = newSystemLoc("DOMErrInuseAttribute", Old)
+  val DOMErrInvalidState          = newSystemLoc("DOMErrInvalidState", Old)
+  val DOMErrSyntax                = newSystemLoc("DOMErrSyntax", Old)
+  val DOMErrInvalidModification   = newSystemLoc("DOMErrInvalidModification", Old)
+  val DOMErrNamespace             = newSystemLoc("DOMErrNamespace", Old)
+  val DOMErrInvalidAccess         = newSystemLoc("DOMErrInvalidAccess", Old)
+  val DOMErrValidation            = newSystemLoc("DOMErrValidation", Old)
+  val DOMErrTypeMismatch          = newSystemLoc("DOMErrTypeMismatch", Old)
 
   /* constructor or object*/
   private val prop_cons: List[(String, AbsProperty)] = List(

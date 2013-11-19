@@ -9,18 +9,17 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMObject
 
-import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.typing.Semantics
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
-import kr.ac.kaist.jsaf.analysis.typing.{ControlPoint, Helper, PreHelper}
+import kr.ac.kaist.jsaf.analysis.typing.{ControlPoint, Helper}
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 // Modeled based on Mozilla DOM Reference
 // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
@@ -28,8 +27,8 @@ object XMLHttpRequest extends DOM {
   private val name = "XMLHttpRequest"
 
   /* predefined locations */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor */
   private val prop_cons: List[(String, AbsProperty)] = List(

@@ -19,6 +19,7 @@ import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.cfg.CFGAsyncCall
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object JQueryModel {
   val aysnc_calls : List[String] = DOMModel.async_calls
@@ -97,7 +98,7 @@ class JQueryModel(cfg: CFG) extends Model(cfg) {
       /* event call */
       val event_call = cfg.newBlock(fid_global)
       cfg.addInst(event_call,
-        CFGAsyncCall(cfg.newInstId, dummy_info, "jQuery", ev, cfg.newProgramAddr, cfg.newProgramAddr, cfg.newProgramAddr))
+        CFGAsyncCall(cfg.newInstId, dummy_info, "jQuery", ev, newProgramAddr(), newProgramAddr(), newProgramAddr()))
       /* event after call */
       val event_after = cfg.newAfterCallBlock(fid_global, dummy_id)
       val event_catch = cfg.newAfterCatchBlock(fid_global)

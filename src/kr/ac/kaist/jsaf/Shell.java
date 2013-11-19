@@ -118,9 +118,6 @@ public final class Shell {
             case ShellParameters.CMD_CONCOLIC :
                 return_code = ConcolicMain.concolic();
                 break;
-            case ShellParameters.CMD_URL :
-                return_code = URLMain.url();
-                break;
             case ShellParameters.CMD_WITH :
                 return_code = WithMain.withRewriter();
                 break;
@@ -195,7 +192,6 @@ public final class Shell {
             " clone-detector\n" +
             " coverage somefile.js\n" +
             " concolic somefile.js\n" +
-            " url [-out file] someurl\n" +
             " with [-out file] somefile.js ...\n" +
             " module [-out file] somefile.js ...\n" +
             " junit sometest.test ...\n" +
@@ -205,11 +201,11 @@ public final class Shell {
             " interpret [-out file] [-time] [-mozilla] somefile.js ...\n" +
             " analyze [-verbose] [-test] [-memdump] [-exitdump] [-statdump] [-visual] [-checkResult]\n" +
             "         [-context-insensitive] [-context-1-callsite] [-context-1-object]\n" +
-            "         [-context-tajs] [-unsound]\n" +
+            "         [-context-tajs] [-unsound] [-jq] [-domprop]\n" +
             "         somefile.js\n" +
             " html [-verbose] [-test] [-memdump] [-exitdump] [-statdump] [-visual] [-checkResult]\n" +
             "      [-context-insensitive] [-context-1-callsite] [-context-1-object]\n" +
-            "      [-context-tajs] [-unsound]\n" +
+            "      [-context-tajs] [-unsound] [-jq] [-domprop]\n" +
             "      somefile.htm(l)\n" +
             " bug-detector somefile.js\n" +
             "\n" +
@@ -249,10 +245,6 @@ public final class Shell {
          "\n"+
          "jsaf concolic somefile.js\n"+
          "  Working on a very simple concolic testing...\n"+
-         "\n"+
-         "jsaf url [-out file] someurl\n"+
-         "  Extracts JavaScript source code from a url and writes it to a file, if any.\n"+
-         "  If -out file is given, the extracted source code will be written to the file.\n"+
          "\n"+
          "jsaf with [-out file] somefile.js ...\n"+
          "  Rewrites JavaScript source codes using the with statement to another one without using the with statement.\n"+
@@ -321,6 +313,7 @@ public final class Shell {
          "  If -context-tajs is specified, TAJS-style 1-object context-sensitivity will be used.\n"+
          "  If -unsound is specified, unsound semantics is used.\n"+
          "  If -jq is specified, analysis will be performed with jQuery APIs loaded at the initial heap.\n"+
+         "  If -domprop is specified, analysis will support the 'innerHTML' property updates of HTML elements.\n"+
          "\n"+
          "jsaf bug-detector somefile.js\n"+
          "  Reports possible bugs in JavaScript source files.\n"

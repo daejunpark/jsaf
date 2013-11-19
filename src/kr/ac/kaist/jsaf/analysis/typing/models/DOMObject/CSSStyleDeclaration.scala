@@ -20,7 +20,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 // Modeled based on W3C DOM Level 2 Style Specification
 // www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113/  
@@ -29,8 +29,8 @@ object CSSStyleDeclaration extends DOM {
   private val name = "CSSStyleDeclaration"
 
   /* predefined locations */
-  val loc_ins = newPredefLoc(name + "Ins")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_ins = newSystemRecentLoc(name + "Ins")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* instant object */
   private val prop_ins: List[(String, AbsProperty)] = List(
@@ -149,7 +149,7 @@ object CSSStyleDeclaration extends DOM {
   }
 
   /* instance */
-  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  override def getInstance(cfg: CFG): Option[Loc] = Some(newRecentLoc())
   def getInsList(): List[(String, PropValue)] = List(
     ("@class", PropValue(AbsString.alpha("Object"))),
     ("@proto", PropValue(ObjectValue(Value(loc_proto), F, F, F))),

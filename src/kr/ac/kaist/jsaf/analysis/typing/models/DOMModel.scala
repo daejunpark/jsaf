@@ -18,10 +18,11 @@ import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMEvent._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5._
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMSvg._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject._
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU, IRFactory}
 import kr.ac.kaist.jsaf.analysis.typing.models.jquery.JQueryHelper
-
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object DOMModel {
   val async_calls : List[String] = List("#LOAD", "#UNLOAD", "#KEYBOARD", "#MOUSE", "#OTHER", "#READY", "#MESSAGE", "#TIME")
@@ -63,6 +64,8 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
     XMLHttpRequest,
     // W3C CSSOM View Module
     ClientRect, ClientRectList,
+    // DOM SVG
+    SVGElement, SVGSVGElement,
     // non-standard
     Console, Screen, HTMLAllCollection
   )
@@ -141,7 +144,7 @@ class DOMModel(cfg: CFG) extends Model(cfg) {
       /* event call */
       val event_call = cfg.newBlock(fid_global)
       cfg.addInst(event_call,
-        CFGAsyncCall(cfg.newInstId, dummy_info, "DOM", ev, cfg.newProgramAddr, cfg.newProgramAddr, cfg.newProgramAddr))
+        CFGAsyncCall(cfg.newInstId, dummy_info, "DOM", ev, newProgramAddr(), newProgramAddr(), newProgramAddr()))
       /* event after call */
       val event_after = cfg.newAfterCallBlock(fid_global, dummy_id)
       val event_catch = cfg.newAfterCatchBlock(fid_global)

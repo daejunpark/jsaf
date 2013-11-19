@@ -95,12 +95,12 @@ class DOMBuilder(cfg: CFG, init: InitHeap, document: Node) {
     val s = System.nanoTime
     //val domModel = new DOMModel(cfg)
     // check start address of DOM Tree
-    cfg.setHtmlStartAddr
+    //cfg.setHtmlStartAddr
     // put DOM prototype and constructor objects in the initial heap
     val newheap = init.getInitHeap
     val h = initHtml(newheap) 
     // check end address of DOM Tree
-    cfg.setHtmlEndAddr
+    //cfg.setHtmlEndAddr
     if(!quiet) System.out.println("# Time for initial heap with DOM modeling(ms): "+(System.nanoTime - s) / 1000000.0)
     //builtinmodel.initHeap = Heap(m)
     init.setInitHeap(h)

@@ -9,19 +9,18 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.builtin
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
 import kr.ac.kaist.jsaf.bug_detector.JSONStringify
-import scala.collection.mutable.{Stack => MStack, LinkedList => MLinkedList}
-import scala.collection.immutable.HashSet
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object BuiltinJSON extends ModelData {
 
-  val ConstLoc = newPreDefLoc("JSONConst", Recent)
+  val ConstLoc = newSystemLoc("JSONConst", Recent)
 
   private val prop_const: List[(String, AbsProperty)] = List(
     ("@class",                   AbsConstValue(PropValue(AbsString.alpha("JSON")))),

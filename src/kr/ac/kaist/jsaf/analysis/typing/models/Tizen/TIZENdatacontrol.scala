@@ -9,26 +9,14 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import java.lang.InternalError
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
+
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -40,11 +28,11 @@ object TIZENdatacontrol extends Tizen {
   private val name = "datacontrol"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_datacontrol
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_rowdata: Loc = newPreDefLoc("RowData", Old)
-  val loc_rowdataarr: Loc = newPreDefLoc("RowDataarr", Old)
-  val loc_strarr: Loc = newPreDefLoc("datactrlStringArr", Old)
+  val loc_rowdata: Loc = newSystemLoc("RowData", Old)
+  val loc_rowdataarr: Loc = newSystemLoc("RowDataarr", Old)
+  val loc_strarr: Loc = newSystemLoc("datactrlStringArr", Old)
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_rowdata, prop_rowdata_ins), (loc_rowdataarr, prop_rowdataarr_ins),
@@ -144,7 +132,7 @@ object TIZENdatacontrol extends Tizen {
 object TIZENDataControlConsumerObject extends Tizen {
   private val name = "SQLDataControlConsumerObject"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
@@ -166,7 +154,7 @@ object TIZENDataControlConsumerObject extends Tizen {
 object TIZENSQLDataControlConsumer extends Tizen {
   private val name = "SQLDataControlConsumer"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   val loc_parent = TIZENDataControlConsumerObject.loc_proto
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
@@ -546,7 +534,7 @@ object TIZENSQLDataControlConsumer extends Tizen {
 object TIZENMappedDataControlConsumer extends Tizen {
   private val name = "MappedDataControlConsumer"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)

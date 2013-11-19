@@ -326,7 +326,7 @@ interface Node() extends HasAt;
                     /**
                      * LHS ::= new Lhs
                      */
-                    New(LHS lhs); // constructor??? args???
+                    New(LHS lhs);
                     /**
                      * LHS ::= Lhs ( (Expr,)* )
                      */

@@ -20,6 +20,7 @@ import kr.ac.kaist.jsaf.nodes_util.IRFactory
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil
 import kr.ac.kaist.jsaf.nodes_util.SourceLocRats
 import kr.ac.kaist.jsaf.nodes_util.Span
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 class VarManager(bugDetector: BugDetector) {
   ////////////////////////////////////////////////////////////////////////////////

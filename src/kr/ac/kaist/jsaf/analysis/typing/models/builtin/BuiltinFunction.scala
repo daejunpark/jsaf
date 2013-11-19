@@ -9,16 +9,17 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.builtin
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, LEntry, LExit, LExitExc}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, LEntry, LExit, LExitExc, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.{PreSemanticsExpr => PSE, AccessHelper=>AH}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object BuiltinFunction extends ModelData {
 
-  val ConstLoc = newPreDefLoc("FunctionConst", Recent)
+  val ConstLoc = newSystemLoc("FunctionConst", Recent)
   //val ProtoLoc = newPreDefLoc("FunctionProto", Recent)
 
   private val prop_const: List[(String, AbsProperty)] = List(

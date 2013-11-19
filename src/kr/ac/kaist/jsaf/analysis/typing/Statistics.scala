@@ -9,13 +9,12 @@
 
 package kr.ac.kaist.jsaf.analysis.typing
 
-import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import scala.collection.immutable.HashMap
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import java.text.Format
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinError
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 class Statistics(cfg: CFG, builtins:Map[FunctionId, String], inTable: Table, locclone: Boolean) {
   val sem = new Semantics(cfg, Worklist.computes(cfg), locclone)

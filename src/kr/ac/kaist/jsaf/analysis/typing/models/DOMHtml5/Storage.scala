@@ -20,6 +20,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 // Modeled based on WHATWG HTML Living Standard 
 // Section 11.2.1 The Storage Interface.
@@ -27,10 +28,10 @@ object Storage extends DOM {
   private val name = "Storage"
 
   /* predefined locations */
-  val loc_ins = newPredefLoc(name + "Ins")
+  val loc_ins = newSystemRecentLoc(name + "Ins")
   // for window.sessionStorage
-  val loc_ins2 = newPredefLoc(name + "Ins2")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_ins2 = newSystemRecentLoc(name + "Ins2")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* instant object */
   private val prop_ins: List[(String, AbsProperty)] = List(

@@ -41,6 +41,9 @@ object AnalyzeMain {
     val quiet = Shell.params.command == ShellParameters.CMD_BUG_DETECTOR
     val locclone = Shell.params.opt_LocClone
 
+    // Initialize AddressManager
+    AddressManager.reset()
+
     if (Shell.params.FileNames.length == 0) throw new UserError("Need a file to analyze")
     val fileName: String = Shell.params.FileNames(0)
     val fileNames = JavaConversions.seqAsJavaList(Shell.params.FileNames)
@@ -258,20 +261,20 @@ object AnalyzeMain {
         Shell.params.command == ShellParameters.CMD_HTML) {
       if (Shell.params.opt_Compare) {
         // compare mode
-        val preCFG = builder.build
-        //val preModel = new BuiltinModel(preCFG);
-        //preModel.initialize();
-        val pre_init = new InitHeap(preCFG)
-        pre_init.initialize
-
-        // Set the initial state with DOM objects
-        if (Config.domMode && jshtml != null) new DOMBuilder(preCFG, pre_init, jshtml.getDocument).initialize(false)
-
-        val preTyping: PreTyping = new PreTyping(preCFG, true, false)
-        preTyping.analyze(pre_init)
-        System.out.println("**PreAnalysis dump**")
-        preTyping.dump
-        typingInterface.setCompare(preTyping.getMergedState, preTyping.cfg)
+//        val preCFG = builder.build
+//        //val preModel = new BuiltinModel(preCFG);
+//        //preModel.initialize();
+//        val pre_init = new InitHeap(preCFG)
+//        pre_init.initialize
+//
+//        // Set the initial state with DOM objects
+//        if (Config.domMode && jshtml != null) new DOMBuilder(preCFG, pre_init, jshtml.getDocument).initialize(false)
+//
+//        val preTyping: PreTyping = new PreTyping(preCFG, true, false)
+//        preTyping.analyze(pre_init)
+//        System.out.println("**PreAnalysis dump**")
+//        preTyping.dump
+//        typingInterface.setCompare(preTyping.getMergedState, preTyping.cfg)
       }
       // Analyze
       typingInterface.analyze(init)
@@ -299,6 +302,9 @@ object AnalyzeMain {
       // Analyze
       typingInterface.analyze(init, duanalysis.result)
     }
+
+    // Turn off '-max-loc-count' option
+    Shell.params.opt_MaxLocCount = 0
 
     // Report a result
     if (!quiet) {
@@ -362,7 +368,7 @@ object AnalyzeMain {
       DotWriter.fgwrite(cfg, typingInterface.env, Shell.params.opt_FGFileName + ".dot", Shell.params.opt_FGFileName + ".svg", "dot", isGlobalSparse)
     }
     if (!quiet) System.out.println("Ok")
-
+    
     return_code
   }
 }

@@ -8,13 +8,14 @@
  ***************************************************************************** */
 
 package kr.ac.kaist.jsaf.analysis.visualization
+
 import kr.ac.kaist.jsaf.analysis.typing.Config
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json._
 import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.cfg.CFG
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object DomainPrinter {
   def printHeap(heap: Heap, cfg: CFG): JValue = {

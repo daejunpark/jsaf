@@ -1154,9 +1154,10 @@ H_2 = \chf{VarStoreE}(H_1,A,x,l_{new},\vtrue)
 
 % \SF{throw}\verb+(+e\verb+)+
 \I _{cp}\lbr \TT{throw}\TT{(}e\TT{)} \rbr(H,A)
-   = (H_1, A)\\
+   = (H_2, A)\\
 \quad\wherec{
-  H_1=\chf{RaiseException}(H,\V\lbr e\rbr(H,A))
+  H_1=\chf{RaiseException}(H,\V\lbr e\rbr(H,A)), \\
+  \land\ H_2=H_1[\varloc{temp}\mapsto H_1(\varloc{temp})[\varprop{return}\mapsto \SF{undefined}]]
 }\\
 \\
 
@@ -4021,6 +4022,10 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
 %}\\
 %\\
 
+\end{array}
+\]
+\[
+\begin{array}{ll}
 
 % e\verb+[+e\verb+]+ ~\verb+:=+~ e 
 \aI_{\acp}\lbr e_1\TT{[}e_2\TT{]}\TT{=}e_3 \rbr \left((\hat{H},\hat{C}),\hat{S}\right)
@@ -4094,7 +4099,8 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
     \end{array}\right.\\
   \land\ \hat{H}_{\emph{Arr}_{\emph{index3}}} = \left\{\begin{array}{ll}
       \ahf{PropStore}(\ahf{PropStore}(\hat{H}, \hat{l}, \hat{s}, \hat{v}), \hat{l}, \hat{``length"}, \ahf{ToUInt32}(\hat{s} \hat{+} \hat{1}))
-      & \ifc{\atrue \sqsubseteq (\hat{v}_{oldLen} \hat{\leq} \ahf{ToUInt32}(\hat{s})) \land \atrue \sqsubseteq \ahf{CanPut}(\hat{H}, \hat{l}, \hat{``length"})}\\
+      & \ifc{\atrue \sqsubseteq (\hat{v}_{oldLen} \hat{\leq} \ahf{ToUInt32}(\hat{s})) \\
+      \land \ \atrue \sqsubseteq \ahf{CanPut}(\hat{H}, \hat{l}, \hat{``length"})}\\
       \bot_{Heap} & \owc \\
     \end{array}\right.\\
 
@@ -4382,6 +4388,7 @@ re \in & \SF{RelExpr} & = & \SF{Expression} ~\rel ~ \SF{Expression} \\
   \land\ \hat{v}_{old} = \hat{H}(\avarloc{PureLocal}_R)(\varprop{exception\_all}).1.2 \\
   \land\ \hat{H}_1 = \hat{H}\left[\avarloc{PureLocal}_R\mapsto \hat{H}(\avarloc{PureLocal}_R)
     \left[\begin{array}{l}
+      \varprop{return}\mapsto \aundef_{Value}, \\
       \varprop{exception}\mapsto \hat{v}, \\
       \varprop{exception\_all}\mapsto \hat{v} \sqcup \hat{v}_{old}
     \end{array}\right]\right] \\

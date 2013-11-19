@@ -160,6 +160,47 @@ sealed abstract class AbsString extends AbsBase {
       }
     } 
   }
+
+  val whitespace = " \u0009\u000B\u000C\u0020\u00A0\uFEFF"
+  def isWhitespace(c: Char): Boolean = {
+    if (whitespace.indexOf(c) < 0)
+      Character.getType(c) == Character.SPACE_SEPARATOR
+    else
+      true
+  }
+  val lineterminator = "\u000A\u000D\u2028\u2029"
+  def isLineTerminator(c: Char): Boolean = {
+    lineterminator.indexOf(c) >= 0
+  }
+  def isWhitespaceOrLineterminator(c: Char): Boolean = isWhitespace(c) || isLineTerminator(c)
+  def trim(): AbsString = {
+    AbsString.concretize(this) match {
+      case Some(s) => {
+        var iS = -1
+        var b = true
+        (0 to s.length-1).foreach(i => {
+          if (b && isWhitespaceOrLineterminator(s.charAt(i))) {
+            iS = i + 1
+          } else {
+            b = false
+          }
+        })
+        val s_2 = if (iS > 0) s.substring(iS) else s
+        var iE = s_2.length
+        b = true
+        (0 to s_2.length-1).foreach(j => {
+          val i = s_2.length - 1 - j
+          if (b && isWhitespaceOrLineterminator(s_2.charAt(i))) {
+            iE = i
+          } else {
+            b = false
+          }
+        })
+        AbsString.alpha(s_2.substring(0, iE))
+      }
+      case None => this
+    }
+  }
   
   def concat(that: AbsString) = {
     (this, that) match {

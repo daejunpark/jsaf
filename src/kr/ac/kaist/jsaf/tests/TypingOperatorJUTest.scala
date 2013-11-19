@@ -13,7 +13,7 @@ import junit.framework.TestSuite
 import junit.framework.TestCase
 import junit.framework.Assert._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.analysis.typing.Operator
+import kr.ac.kaist.jsaf.analysis.typing.{AddressManager, Operator}
 import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.ShellParameters
 import kr.ac.kaist.jsaf.compiler.Predefined
@@ -790,7 +790,10 @@ object TypingOperatorJUTest {
       UnaNeg("!{true, false = {false, true}}", List(true, false), List(false, true), true)
       )
 
-  def suite(): Test = {    
+  def suite(): Test = {
+    // Initialize AddressManager
+    AddressManager.reset()
+
     val suite = new TestSuite("Typing Operator Test")
     val suiteJoin = new TestSuite("Join")
     val suiteBin = new TestSuite("Binary Operators")

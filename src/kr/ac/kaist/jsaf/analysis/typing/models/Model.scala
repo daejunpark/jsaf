@@ -15,7 +15,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolTrue => T, BoolFalse => F}
 import kr.ac.kaist.jsaf.nodes_util.IRFactory
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
-
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 abstract class Model(cfg: CFG) {
   def initialize(h: Heap): Heap
@@ -144,19 +144,19 @@ abstract class Model(cfg: CFG) {
     v match {
       case AbsBuiltinFunc(id, length) => {
         val fid = makeAPICFG(model, id)
-        val loc = newPredefLoc(id)
+        val loc = newSystemRecentLoc(id)
         val obj = Helper.NewFunctionObject(Some(fid), None, Value(NullTop), None, AbsNumber.alpha(length))
         (name, PropValue(ObjectValue(loc, T, F, T)), Some(loc, obj), Some(fid, id))
       }
       case AbsBuiltinFuncAftercall(id, length) => {
         val fid = makeAftercallAPICFG(model, id)
-        val loc = newPredefLoc(id)
+        val loc = newSystemRecentLoc(id)
         val obj = Helper.NewFunctionObject(Some(fid), None, Value(NullTop), None, AbsNumber.alpha(length))
         (name, PropValue(ObjectValue(loc, T, F, T)), Some(loc, obj), Some(fid, id))
       }
       case AbsBuiltinFuncCallback(id, length) => {
         val fid = makeCallbackLoopAPICFG(model, id)
-        val loc = newPredefLoc(id)
+        val loc = newSystemRecentLoc(id)
         val obj = Helper.NewFunctionObject(Some(fid), None, Value(NullTop), None, AbsNumber.alpha(length))
         (name, PropValue(ObjectValue(loc, T, F, T)), Some(loc, obj), Some(fid, id))
       }

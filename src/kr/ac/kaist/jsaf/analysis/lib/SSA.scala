@@ -13,6 +13,7 @@ import scala.collection.immutable.HashMap
 import scala.collection.immutable.HashSet
 import scala.collection.mutable.Stack
 import kr.ac.kaist.jsaf.analysis.cfg.CFG
+import kr.ac.kaist.jsaf.analysis.cfg.InternalError
 import kr.ac.kaist.jsaf.analysis.cfg.Node
 import kr.ac.kaist.jsaf.analysis.lib.graph.{DataDependencyGraph => DDGraph}
 import kr.ac.kaist.jsaf.analysis.lib.graph.DomTree
@@ -252,9 +253,7 @@ object SSA {
             hasAlready += (y -> iterCount)
             if (work(y) < iterCount) {
               work += (y -> iterCount)
-              // y is always KindI node for joinpoints
-              // which means KindO and KindOE nodes have defsite
-              w ++= HashSet((y._1, KindO), (y._1, KindOE))
+              w += y
             }
           }
         })

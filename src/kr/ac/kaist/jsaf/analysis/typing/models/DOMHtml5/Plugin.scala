@@ -25,6 +25,7 @@ import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 // Modeled based on WHATWG HTML Living Standard 
 // Section 7.5.1.5 Plugins.
@@ -32,10 +33,10 @@ object Plugin extends DOM {
   private val name = "Plugin"
 
   /* predefined locations */
-  val loc_ins = newPredefLoc(name + "Ins")
+  val loc_ins = newSystemRecentLoc(name + "Ins")
   // for window.navigator.mimeType.enabledPlugin
-  val loc_ins2 = newPredefLoc(name + "Ins2")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_ins2 = newSystemRecentLoc(name + "Ins2")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* prorotype */
   private val prop_proto: List[(String, AbsProperty)] = List(
@@ -90,7 +91,7 @@ object Plugin extends DOM {
   }
 
   /* instance */
-  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  override def getInstance(cfg: CFG): Option[Loc] = Some(newRecentLoc())
   /* list of properties in the instance object */
   def getInsList(length: Int): List[(String, PropValue)] = List(
     ("@class",  PropValue(AbsString.alpha("Object"))),

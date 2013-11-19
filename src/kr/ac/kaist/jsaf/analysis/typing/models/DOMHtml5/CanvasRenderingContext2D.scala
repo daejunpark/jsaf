@@ -9,7 +9,6 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5
 
-import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
@@ -20,6 +19,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 // Modeled based on HTML Canvas 2D Contex(W3C Candidate Recommendation 17 December 2012)
 // www.w3.org/TR/2dcontext2/  
@@ -27,8 +27,8 @@ object CanvasRenderingContext2D extends DOM {
   private val name = "CanvasRenderingContext2D"
 
   /* predefined locatoins */
-  val loc_cons = newPredefLoc(name + "Ins")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Ins")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
 
 

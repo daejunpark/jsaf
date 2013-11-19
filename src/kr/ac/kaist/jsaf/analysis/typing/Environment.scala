@@ -23,7 +23,7 @@ abstract class Environment(cfg: CFG) {
   // defuse set of the function
   protected var joinpointsMap: Map[FunctionId, Map[ENode, LocSet]] = HashMap()
   protected var intraDefuseMap: Map[FunctionId, Map[Node, (LocSet,LocSet)]] = HashMap()
-  protected def getCFG = cfg
+  def getCFG = cfg
   
   def drawDDG(cg: Map[CFGInst, Set[FunctionId]], du: DUSet): Unit = drawDDG(cg, du, false)
   def drawDDG(cg: Map[CFGInst, Set[FunctionId]], du: DUSet, quiet: Boolean): Unit

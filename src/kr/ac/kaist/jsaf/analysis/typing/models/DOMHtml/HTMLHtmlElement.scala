@@ -9,7 +9,6 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml
 
-import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
@@ -17,15 +16,14 @@ import org.w3c.dom.Node
 import org.w3c.dom.Element
 import kr.ac.kaist.jsaf.analysis.cfg.CFG
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import scala.Some
-
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object HTMLHtmlElement extends DOM {
   private val name = "HTMLHtmlElement"
 
   /* predefined locatoins */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor */
   private val prop_cons: List[(String, AbsProperty)] = List(
@@ -76,7 +74,7 @@ object HTMLHtmlElement extends DOM {
   // predifined location : only one 'HTMLHtmlElement" can be present in the heap 
   var loc_ins_status: Option[Loc] = None
   override def getInstance(cfg:CFG): Option[Loc] = {
-    val loc_ins=addrToLoc(cfg.newProgramAddr, Recent)
+    val loc_ins= newRecentLoc()
     loc_ins_status = Some(loc_ins)
     loc_ins_status
   }

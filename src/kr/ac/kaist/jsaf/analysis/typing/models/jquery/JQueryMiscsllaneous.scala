@@ -9,6 +9,8 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.jquery
 
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
@@ -16,7 +18,7 @@ import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper => AH, _}
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -232,8 +234,10 @@ object JQueryMiscsllaneous extends ModelData {
   private def toArray(h: Heap, ctx: Context, cfg: CFG):(Heap, Context, Value) = {
     //  this.toArray() == Array.protootype.slice.call( this )
     /* new addr */
-    val list_addr = getAddrList(h, cfg)
-    val addr1 = list_addr(0)
+    val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+    val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+    if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+    val addr1 = cfg.getAPIAddress(set_addr.head, 0)
     /* new loc */
     val l_arr = addrToLoc(addr1, Recent)
     val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
@@ -270,8 +274,10 @@ object JQueryMiscsllaneous extends ModelData {
   private def toArray_pre(h: Heap, ctx: Context, cfg: CFG, PureLocalLoc: Loc):(Heap, Context, Value) = {
     //  this.toArray() == Array.protootype.slice.call( this )
     /* new addr */
-    val list_addr = getAddrList_pre(h, cfg, PureLocalLoc)
-    val addr1 = list_addr(0)
+    val lset_env = h(PureLocalLoc)("@env")._1._2._2
+    val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+    if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+    val addr1 = cfg.getAPIAddress(set_addr.head, 0)
     /* new loc */
     val l_arr = addrToLoc(addr1, Recent)
     val (h_1, ctx_1) = PreHelper.Oldify(h, ctx, addr1)
@@ -308,8 +314,10 @@ object JQueryMiscsllaneous extends ModelData {
   private def toArray_def(h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr): LPSet = {
     //  this.toArray() == Array.protootype.slice.call( this )
     /* new addr */
-    val list_addr = getAddrList(h, cfg)
-    val addr1 = list_addr(0)
+    val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+    val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+    if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+    val addr1 = cfg.getAPIAddress(set_addr.head, 0)
     /* new loc */
     val l_arr = addrToLoc(addr1, Recent)
     val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
@@ -342,8 +350,10 @@ object JQueryMiscsllaneous extends ModelData {
   private def toArray_use(h: Heap, ctx: Context, cfg: CFG, fun: String, args: CFGExpr): LPSet = {
     //  this.toArray() == Array.protootype.slice.call( this )
     /* new addr */
-    val list_addr = getAddrList(h, cfg)
-    val addr1 = list_addr(0)
+    val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+    val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+    if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+    val addr1 = cfg.getAPIAddress(set_addr.head, 0)
     val LP1 = getAddrList_use()
     /* new loc */
     val l_arr = addrToLoc(addr1, Recent)

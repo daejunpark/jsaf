@@ -24,12 +24,13 @@ import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object HTMLAllCollection extends DOM {
   private val name = "HTMLAllCollection"
 
   /* predefined locatoins */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor */
   /* prorotype */
@@ -140,7 +141,7 @@ object HTMLAllCollection extends DOM {
   }
 
   /* instance */
-  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  override def getInstance(cfg: CFG): Option[Loc] = Some(newRecentLoc())
   /* list of properties in the instance object */
   def getInsList(length: Int): List[(String, PropValue)] = List(
     ("@class",  PropValue(AbsString.alpha("Object"))),

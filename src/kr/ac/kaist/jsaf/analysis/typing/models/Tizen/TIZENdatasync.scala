@@ -9,27 +9,15 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import java.lang.InternalError
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.builtin.{BuiltinDate, BuiltinArray}
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+
+import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
@@ -39,12 +27,12 @@ object TIZENdatasync extends Tizen {
   private val name = "datasync"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_datasync
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_syncinfo: Loc = newPreDefLoc("SyncInfo", Old)
-  val loc_syncservinfo: Loc = newPreDefLoc("SyncServiceInfo", Old)
-  val loc_syncservinfoarr: Loc = newPreDefLoc("SyncServiceInfoArr", Old)
-  val loc_syncstats: Loc = newPreDefLoc("SyncStatistics", Old)
+  val loc_syncinfo: Loc = newSystemLoc("SyncInfo", Old)
+  val loc_syncservinfo: Loc = newSystemLoc("SyncServiceInfo", Old)
+  val loc_syncservinfoarr: Loc = newSystemLoc("SyncServiceInfoArr", Old)
+  val loc_syncstats: Loc = newSystemLoc("SyncStatistics", Old)
 
   /* constructor or object*/
   private val prop_obj: List[(String, AbsProperty)] = List(
@@ -404,7 +392,7 @@ object TIZENdatasync extends Tizen {
 object TIZENSyncStatistics extends Tizen {
   private val name = "SyncStatistics"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   /* prototype */
   private val prop_proto: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("CallbackObject")))),

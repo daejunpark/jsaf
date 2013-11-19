@@ -104,6 +104,7 @@ Exception in thread "main" java.util.NoSuchElementException: key not found: 1449
   at kr.ac.kaist.jsaf.Shell.subMain(Shell.java:158)
   at kr.ac.kaist.jsaf.Shell.main(Shell.java:76)
   at kr.ac.kaist.jsaf.Shell.main(Shell.java:64)
+
 80, vube.com      
 Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String index out of range: 0
   at java.lang.String.charAt(String.java:686)
@@ -184,19 +185,15 @@ Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String ind
   at kr.ac.kaist.jsaf.Shell.main(Shell.java:76)
   at kr.ac.kaist.jsaf.Shell.main(Shell.java:64)
 
-
-* Non-terminating sites : Total 52 sites
+* Non-terminating sites : Total 44 sites
 1,facebook.com
-2,google.com
 3,youtube.com
 4,yahoo.com
-6,baidu.com
 8,live.com
 11,google.co.in
 12,twitter.com
 14,yahoo.co.jp
 15,linkedin.com
-16,bing.com
 18,yandex.ru
 19,vk.com
 22,ebay.com
@@ -205,11 +202,8 @@ Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String ind
 27,google.de
 28,hao123.com
 33,google.co.jp
-34,mail.ru
 35,google.co.uk
 36,google.com.br
-37,fc2.com
-38,microsoft.com
 41,conduit.com
 42,google.fr
 46,craigslist.org
@@ -219,7 +213,6 @@ Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String ind
 52,google.ru
 55,apple.com
 57,google.es
-58,imdb.com
 59,paypal.com
 65,google.com.mx
 67,bbc.co.uk
@@ -231,7 +224,6 @@ Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String ind
 84,google.com.tr
 85,google.com.au
 88,google.pl
-89,rakuten.co.jp
 90,about.com
 92,ebay.de
 93,cnn.com
@@ -239,7 +231,9 @@ Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String ind
 95,adobe.com
 99,livejasmin.com
 
-* Sites using 'eval' or 'Function' : Total 11 sites
+* Sites using 'eval' or 'Function' : Total 13 sites
+2, google.com : can be analyzed by eleminating eval function call. (string set domain & size(64) limitation)
+6, baidu.com(Function) : need to model the 'window.external' (home_f949edf5.js)
 9, qq.com 
 test_files/crystal-min.js
   Dense Iteration: 975(8)   next: (1054,LBlock(13697))
@@ -275,23 +269,29 @@ tests/html_tests/websitesource/49,sohu.com/test_files/sohuad2012v15.js
 44, babylon.com (-jq)
 69, 360.cn
 
-
-* Sites with abnormal analysis state : exit Heap Bottom - Total 3 sites 
+* Sites with abnormal analysis state : exit Heap Bottom - Total 8 sites
 20, ask.com(-jq) : JSAF is undefined (need the jQuery.map modeling)
 21, 163.com : regular expression error
-63, ifeng.com(-jq) :  no modeling of Date.getYear, jQuery.hasChildNodes/removeChild/appendChild
+28, hao123.com (-jq) : not yet checked (string set domain)
+34, mail.ru (-jq) : <>Global<>iteratorInit semantics bug at "for(var b in e)" (string set domain)
+38, microsoft.com (-jq) : TypeError at "var n = $("div[data-picture]: ...").last().get()[0];" in script.js (need the jQuery.last modeling)
+58, imdb.com (-jq) : need the iframe modeling. analysis is end after removing the inner jQuery(s)
+63, ifeng.com(-jq) : no modeling of Date.getYear, jQuery.hasChildNodes/removeChild/appendChild
+89, rakuten.co.jp (-jq) : HeapBot at jQuery.prototype.children
 
-* Etc : Total 1 site
-72, youku.com : Cannot find js
-
-* Web sites with normal analysis resuts : Total 7 sites
+* Sites with normal analysis resuts : Total 9 sites
 7, wikipedia.org
+16, bing.com : (string set domain)
 29, weibo.com (simple JavaScript code)
+37, fc2.com (-jq) : TypeError. need to model the HTMLSelectElement.prototype.options
 40, odnokiassniki.ru
 53, soso.com
 91, directrev.com (-jq)
 96, thepiratebay.xs (simple JavaScript code)
 100, ku6.com (simple JavaScript code)
+
+* Etc : Total 1 site
+72, youku.com : Cannot find js
 
 --- WebSite List  --
 1,facebook.com

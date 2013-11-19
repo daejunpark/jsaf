@@ -9,24 +9,13 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
@@ -37,19 +26,19 @@ object TIZENbluetooth extends Tizen {
   val name = "bluetooth"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_bluetooth
-  val loc_proto = newPredefLoc(name + "Proto")
-  val loc_devMajor = newPredefLoc(name + "DevMajor")
-  val loc_devMinor = newPredefLoc(name + "DevMinor")
-  val loc_devService = newPredefLoc(name + "DevService")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
+  val loc_devMajor = newSystemRecentLoc(name + "DevMajor")
+  val loc_devMinor = newSystemRecentLoc(name + "DevMinor")
+  val loc_devService = newSystemRecentLoc(name + "DevService")
 
-  val loc_btadapter: Loc = newPreDefLoc("BluetoothAdapterObj", Old)
-  val loc_btdevice: Loc = newPreDefLoc("BluetoothDevice", Old)
-  val loc_btdevicearr: Loc = newPreDefLoc("BluetoothDeviceArr", Old)
-  val loc_btclass: Loc = newPreDefLoc("BluetoothClass", Old)
-  val loc_btservhandler: Loc = newPreDefLoc("BluetoothServiceHandler", Old)
-  val loc_btsocket: Loc = newPreDefLoc("BluetoothSocket", Old)
-  val loc_strarr: Loc = newPreDefLoc("bluetoothStrArr", Old)
-  val loc_shortarr: Loc = newPreDefLoc("bluetoothShortArr", Old)
+  val loc_btadapter: Loc = newSystemLoc("BluetoothAdapterObj", Old)
+  val loc_btdevice: Loc = newSystemLoc("BluetoothDevice", Old)
+  val loc_btdevicearr: Loc = newSystemLoc("BluetoothDeviceArr", Old)
+  val loc_btclass: Loc = newSystemLoc("BluetoothClass", Old)
+  val loc_btservhandler: Loc = newSystemLoc("BluetoothServiceHandler", Old)
+  val loc_btsocket: Loc = newSystemLoc("BluetoothSocket", Old)
+  val loc_strarr: Loc = newSystemLoc("bluetoothStrArr", Old)
+  val loc_shortarr: Loc = newSystemLoc("bluetoothShortArr", Old)
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_btadapter, prop_btadapter_ins), (loc_btdevice, prop_btdevice_ins),
@@ -178,7 +167,7 @@ object TIZENBluetoothClassDeviceMajor extends Tizen {
   val name = "BluetoothClassDeviceMajor"
   /* predefined locations */
   val loc_obj = TIZENbluetooth.loc_devMajor
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   /* constructor or object*/
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
@@ -228,7 +217,7 @@ object TIZENBluetoothClassDeviceMinor extends Tizen {
   val name = "BluetoothClassDeviceMinor"
   /* predefined locations */
   val loc_obj = TIZENbluetooth.loc_devMinor
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   /* constructor or object*/
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),
@@ -339,7 +328,7 @@ object TIZENBluetoothClassDeviceService extends Tizen {
   val name = "BluetoothClassDeviceService"
   /* predefined locations */
   val loc_obj = TIZENbluetooth.loc_devService
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   /* constructor or object*/
   private val prop_obj: List[(String, AbsProperty)] = List(
     ("@class", AbsConstValue(PropValue(AbsString.alpha("Object")))),

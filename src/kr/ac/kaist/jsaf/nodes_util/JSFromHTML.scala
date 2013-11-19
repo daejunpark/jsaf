@@ -30,6 +30,7 @@ import org.w3c.dom.Document
 import org.w3c.dom.Node
 import org.w3c.dom.html.HTMLDocument
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHelper
+import org.xml.sax.InputSource
 
 class JSFromHTML(filename: String) extends Walker {
   val file = new File(filename)
@@ -40,8 +41,9 @@ class JSFromHTML(filename: String) extends Walker {
 
   // use of Neko HTML parser for the DOM tree
   val document = { val parser : DOMParser = new DOMParser
+                   val inputStream: InputStream = new FileInputStream(filename)
                    parser.setFeature("http://xml.org/sax/features/namespaces", false)
-                   parser.parse(filename)
+                   parser.parse(new InputSource(inputStream))
                    parser.getDocument }
   def getDocument(): Document = document
   

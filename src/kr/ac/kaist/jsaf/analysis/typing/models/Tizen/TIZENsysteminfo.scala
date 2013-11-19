@@ -9,29 +9,15 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import java.lang.InternalError
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -42,23 +28,23 @@ object TIZENsysteminfo extends Tizen {
   private val name = "systeminfo"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_systeminfo
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_sysinfodevcapa: Loc = newPreDefLoc("SystemInfoDeviceCapability", Old)
-  val loc_sysinfobattery: Loc = newPreDefLoc("SystemInfoBattery", Old)
-  val loc_sysinfocpu: Loc = newPreDefLoc("SystemInfoCpu", Old)
-  val loc_sysinfostorage: Loc = newPreDefLoc("SystemInfoStorage", Old)
-  val loc_sysinfostorunit: Loc = newPreDefLoc("SystemInfoStorageUnit", Old)
-  val loc_sysinfostorunitarr: Loc = newPreDefLoc("SystemInfoStorageUnitArr", Old)
-  val loc_sysinfodisplay: Loc = newPreDefLoc("SystemInfoDisplay", Old)
-  val loc_sysinfodevori: Loc = newPreDefLoc("SystemInfoDeviceOriendation", Old)
-  val loc_sysinfobuild: Loc = newPreDefLoc("SystemInfoBuild", Old)
-  val loc_sysinfolocale: Loc = newPreDefLoc("SystemInfoLocale", Old)
-  val loc_sysinfonetwork: Loc = newPreDefLoc("SystemInfoNetwork", Old)
-  val loc_sysinfowifinetwork: Loc = newPreDefLoc("SystemInfoWifiNetwork", Old)
-  val loc_sysinfocellnetwork: Loc = newPreDefLoc("SystemInfoCellularNetwork", Old)
-  val loc_sysinfosim: Loc = newPreDefLoc("SystemInfoSIM", Old)
-  val loc_sysinfoperipheral: Loc = newPreDefLoc("SystemInfoPeripheral", Old)
+  val loc_sysinfodevcapa: Loc = newSystemLoc("SystemInfoDeviceCapability", Old)
+  val loc_sysinfobattery: Loc = newSystemLoc("SystemInfoBattery", Old)
+  val loc_sysinfocpu: Loc = newSystemLoc("SystemInfoCpu", Old)
+  val loc_sysinfostorage: Loc = newSystemLoc("SystemInfoStorage", Old)
+  val loc_sysinfostorunit: Loc = newSystemLoc("SystemInfoStorageUnit", Old)
+  val loc_sysinfostorunitarr: Loc = newSystemLoc("SystemInfoStorageUnitArr", Old)
+  val loc_sysinfodisplay: Loc = newSystemLoc("SystemInfoDisplay", Old)
+  val loc_sysinfodevori: Loc = newSystemLoc("SystemInfoDeviceOriendation", Old)
+  val loc_sysinfobuild: Loc = newSystemLoc("SystemInfoBuild", Old)
+  val loc_sysinfolocale: Loc = newSystemLoc("SystemInfoLocale", Old)
+  val loc_sysinfonetwork: Loc = newSystemLoc("SystemInfoNetwork", Old)
+  val loc_sysinfowifinetwork: Loc = newSystemLoc("SystemInfoWifiNetwork", Old)
+  val loc_sysinfocellnetwork: Loc = newSystemLoc("SystemInfoCellularNetwork", Old)
+  val loc_sysinfosim: Loc = newSystemLoc("SystemInfoSIM", Old)
+  val loc_sysinfoperipheral: Loc = newSystemLoc("SystemInfoPeripheral", Old)
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_sysinfodevcapa, prop_sysinfodevcapa_ins), (loc_sysinfobattery, prop_sysinfobattery_ins),
@@ -561,7 +547,7 @@ object TIZENsysteminfo extends Tizen {
 object TIZENSystemInfoBattery extends Tizen {
   private val name = "SystemInfoBattery"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -584,7 +570,7 @@ object TIZENSystemInfoBattery extends Tizen {
 object TIZENSystemInfoCpu extends Tizen {
   private val name = "SystemInfoCpu"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -607,7 +593,7 @@ object TIZENSystemInfoCpu extends Tizen {
 object TIZENSystemInfoStorage extends Tizen {
   private val name = "SystemInfoStorage"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -630,7 +616,7 @@ object TIZENSystemInfoStorage extends Tizen {
 object TIZENSystemInfoStorageUnit extends Tizen {
   private val name = "SystemInfoStorageUnit"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -653,7 +639,7 @@ object TIZENSystemInfoStorageUnit extends Tizen {
 object TIZENSystemInfoDisplay extends Tizen {
   private val name = "SystemInfoDisplay"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -676,7 +662,7 @@ object TIZENSystemInfoDisplay extends Tizen {
 object TIZENSystemInfoDeviceOrientation extends Tizen {
   private val name = "SystemInfoDeviceOrientation"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -699,7 +685,7 @@ object TIZENSystemInfoDeviceOrientation extends Tizen {
 object TIZENSystemInfoBuild extends Tizen {
   private val name = "SystemInfoBuild"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -722,7 +708,7 @@ object TIZENSystemInfoBuild extends Tizen {
 object TIZENSystemInfoLocale extends Tizen {
   private val name = "SystemInfoLocale"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -745,7 +731,7 @@ object TIZENSystemInfoLocale extends Tizen {
 object TIZENSystemInfoNetwork extends Tizen {
   private val name = "SystemInfoNetwork"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -768,7 +754,7 @@ object TIZENSystemInfoNetwork extends Tizen {
 object TIZENSystemInfoWifiNetwork extends Tizen {
   private val name = "SystemInfoWifiNetwork"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -791,7 +777,7 @@ object TIZENSystemInfoWifiNetwork extends Tizen {
 object TIZENSystemInfoCellularNetwork extends Tizen {
   private val name = "SystemInfoCellularNetwork"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -814,7 +800,7 @@ object TIZENSystemInfoCellularNetwork extends Tizen {
 object TIZENSystemInfoSIM extends Tizen {
   private val name = "SystemInfoSIM"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )
@@ -837,7 +823,7 @@ object TIZENSystemInfoSIM extends Tizen {
 object TIZENSystemInfoPeripheral extends Tizen {
   private val name = "SystemInfoPeripheral"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
   )

@@ -17,11 +17,12 @@ import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
 import kr.ac.kaist.jsaf.bug_detector.Range15_9_5_43
 import scala.collection.immutable.HashSet
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object BuiltinDate extends ModelData {
 
-  val ConstLoc = newPreDefLoc("DateConst", Recent)
-  val ProtoLoc = newPreDefLoc("DateProto", Recent)
+  val ConstLoc = newSystemLoc("DateConst", Recent)
+  val ProtoLoc = newSystemLoc("DateProto", Recent)
 
   private val prop_const: List[(String, AbsProperty)] = List(
     ("@class",                   AbsConstValue(PropValue(AbsString.alpha("Function")))),

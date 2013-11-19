@@ -66,9 +66,12 @@ class Interpreter extends IRWalker {
     var SIRRoot(_, vds, fds, irs) = program
     if (IS.coverage.isDefined) {
       val coverage = IS.coverage.get
-      coverage.inum = 0
+      if (coverage.isFirst)
+        CE.initialize
+      //coverage.inum = 0
       SH.initialize(coverage.input, coverage)
-      val inputIR = SH.setupCall match { case Some(ir) => List(ir); case None => List() }
+
+      val inputIR = coverage.inputIR  match { case Some(ir) => List(ir); case None => List() }
       walkIRs(vds ++ fds ++ inputIR ++ irs.filterNot(_.isInstanceOf[IRNoOp]))
 
       SH.print
@@ -76,6 +79,7 @@ class Interpreter extends IRWalker {
       coverage.constraints = CE.constraint
       CE.print()
       coverage.setUnprocessing(coverage.target)
+      //coverage.inputIR = SH.setupCall
     }
     else 
       walkIRs(vds ++ fds ++ irs.filterNot(_.isInstanceOf[IRNoOp]))
@@ -882,15 +886,16 @@ class Interpreter extends IRWalker {
                 SH.executeAssignment(loc, arg2.get, arg1, c1, c2, env)
               case _ => SH.executeAssignment(loc, arg2.get, arg1, None, None, env)
             }
-          case "<>Concolic<>GetInput" =>
+          /*case "<>Concolic<>GetInput" =>
             var cov = IS.coverage.get
             cov.inum = cov.inum + 1
             IS.span = info.getSpan
             SH.getInput(arg1.asInstanceOf[IRId], arg2.get) match {
               case Some(v) => IH.putValue(arg1.asInstanceOf[IRId], PVal(IH.mkIRNum(v)), IS.strict)
               case None =>
-            }
+            }*/
           case "<>Concolic<>ExecuteCondition" => {
+            //if (isRelatedWithParam(arg1)) 
             val branchTaken = walkExpr(arg1) match
                              { case v: Val => Some(IH.toBoolean(v))
                                case _: JSError => None }
@@ -914,8 +919,8 @@ class Interpreter extends IRWalker {
               case _ => SH.executeCondition(arg1, None, None, None, arg2.get)
             }
           }
-          /*case "<>Concolic<>WalkVarStmt" =>
-            SH.walkVarStmt(arg1.asInstanceOf[IRId], arg2.get)*/
+          case "<>Concolic<>WalkVarStmt" =>
+            SH.walkVarStmt(arg1.asInstanceOf[IRId], arg2.get)
 
           case "<>Global<>toObject" => walkExpr(arg1) match {
             case v: Val => IH.toObject(v) match {
@@ -1001,7 +1006,7 @@ class Interpreter extends IRWalker {
       }
 
       case SIRCall(info, lhs: IRId, fun: IRId, thisB, args) =>
-        //if (IS.coverage.isDefined && SH.ignoreCall(lhs)) { println("Interpreter: "+fun.getUniqueName); return }
+        if (IS.coverage.isDefined && SH.ignoreCall(lhs)) { return }
         IS.span = info.getSpan
         val oldEnv = IS.env
         val oldTb = IS.tb

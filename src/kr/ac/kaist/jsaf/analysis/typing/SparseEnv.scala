@@ -22,7 +22,7 @@ class SparseEnv(cfg: CFG) extends Environment(cfg) {
   private var bypassesUpdated: HashSet[(ControlPoint, FunctionId)] = HashSet()
   private var bypassesExc: HashMap[ControlPoint, LocSet] = HashMap()
   private var bypassesExcUpdated: HashSet[(ControlPoint, FunctionId)] = HashSet()
-  private var bypassingMap: HashMap[Node, LocSet] = HashMap()
+  protected var bypassingMap: HashMap[Node, LocSet] = HashMap()
 
   // flow and data dependency graph for each (function, context)
   protected var flowGraphMap: HashMap[(FunctionId, CallContext), (FlowGraph, DDGraph)] = HashMap()
@@ -33,6 +33,7 @@ class SparseEnv(cfg: CFG) extends Environment(cfg) {
 
   // def set of the function
   protected var afdset: HashMap[FunctionId, LocSet] = HashMap()
+  protected var afuset: HashMap[FunctionId, LocSet] = HashMap()
   // inter-procedural Data Dependency Graph for computing worklist order.
   protected var interDDG: DGraph[Node] = null
 
@@ -199,6 +200,7 @@ class SparseEnv(cfg: CFG) extends Environment(cfg) {
             // get the def set of this function and callees
             val func_du = afdu(fid)
             val node_du = du(n)
+
             // useset = (defset_for_func ++ defset_of_succs_func) ++ useset_for_node + #PureLocal
             // defset = empty
             m + (n -> (LBot, func_du._1.toLSet ++ node_du._2.toLSet + SinglePureLocalLoc))
@@ -252,6 +254,7 @@ class SparseEnv(cfg: CFG) extends Environment(cfg) {
                   case None => LocSetBot
                 }
                 bypassingMap += (call_node -> (succs_du._1 ++ call_lset)) // sets which will be used by IP edges.
+                
                 (defset_2 ++ succs_du._1 + SinglePureLocalLoc + ContextLoc, useset_2 -- succs_du._1 - SinglePureLocalLoc - ContextLoc)
               } else {
                 (defset_2, useset_2)
@@ -526,9 +529,7 @@ class SparseEnv(cfg: CFG) extends Environment(cfg) {
         case Some(j) => j
       }
       // entry point might be a joinpoint
-      def phis(n:Node) = getLocSet(joinpoints, (n, KindI)) ++ entryPhis(n)
-      def entryPhis(n: Node):LocSet = if(n._2 == LEntry || n._2 == LExit || n._2 == LExitExc) getLocSet(afdset, n._1)
-      else LocSetBot
+      def phis(n:Node) = getLocSet(joinpoints, (n, KindI))
       def getDUSet(n:Node):(LocSet, LocSet) = {
         du.get(n) match {
           case None => (LocSetBot, LocSetBot)

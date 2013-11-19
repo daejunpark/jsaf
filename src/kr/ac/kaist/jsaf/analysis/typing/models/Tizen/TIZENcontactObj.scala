@@ -9,70 +9,46 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import java.lang.InternalError
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.builtin.{BuiltinDate, BuiltinArray}
+import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
 
 object TIZENcontactObj extends Tizen {
   private val name = "contact"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_contact
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_cont: Loc        = newPreDefLoc("Contact", Old)
-  val loc_contarr: Loc        = newPreDefLoc("ContactArr", Old)
-  val loc_contname: Loc        = newPreDefLoc("ContactName", Old)
-  val loc_contaddr: Loc        = newPreDefLoc("ContactAddress", Old)
-  val loc_contaddrarr: Loc        = newPreDefLoc("ContactAddressArr", Old)
-  val loc_contphonenum: Loc        = newPreDefLoc("ContactPhoneNumber", Old)
-  val loc_contphonenumarr: Loc        = newPreDefLoc("ContactPhoneNumberArr", Old)
-  val loc_contemailaddr: Loc        = newPreDefLoc("ContactEmailAddress", Old)
-  val loc_contemailaddrarr: Loc        = newPreDefLoc("ContactEmailAddressArr", Old)
-  val loc_contanniv: Loc        = newPreDefLoc("ContactAnniversary", Old)
-  val loc_contannivarr: Loc        = newPreDefLoc("ContactAnniversaryArr", Old)
-  val loc_contorgan: Loc        = newPreDefLoc("ContactOrganization", Old)
-  val loc_contorganarr: Loc        = newPreDefLoc("ContactOrganizationArr", Old)
-  val loc_contweb: Loc        = newPreDefLoc("ContactWebSite", Old)
-  val loc_contwebarr: Loc        = newPreDefLoc("ContactWebSiteArr", Old)
-  val loc_strarr: Loc              = newPreDefLoc("contactStrArr", Old)
-  val loc_person: Loc             = newPreDefLoc("Person", Old)
-  val loc_personarr: Loc             = newPreDefLoc("PersonArr", Old)
-  val loc_addrbook: Loc             = newPreDefLoc("AddressBook", Old)
-  val loc_addrbookarr: Loc             = newPreDefLoc("AddressBookArr", Old)
+  val loc_cont: Loc        = newSystemLoc("Contact", Old)
+  val loc_contarr: Loc        = newSystemLoc("ContactArr", Old)
+  val loc_contname: Loc        = newSystemLoc("ContactName", Old)
+  val loc_contaddr: Loc        = newSystemLoc("ContactAddress", Old)
+  val loc_contaddrarr: Loc        = newSystemLoc("ContactAddressArr", Old)
+  val loc_contphonenum: Loc        = newSystemLoc("ContactPhoneNumber", Old)
+  val loc_contphonenumarr: Loc        = newSystemLoc("ContactPhoneNumberArr", Old)
+  val loc_contemailaddr: Loc        = newSystemLoc("ContactEmailAddress", Old)
+  val loc_contemailaddrarr: Loc        = newSystemLoc("ContactEmailAddressArr", Old)
+  val loc_contanniv: Loc        = newSystemLoc("ContactAnniversary", Old)
+  val loc_contannivarr: Loc        = newSystemLoc("ContactAnniversaryArr", Old)
+  val loc_contorgan: Loc        = newSystemLoc("ContactOrganization", Old)
+  val loc_contorganarr: Loc        = newSystemLoc("ContactOrganizationArr", Old)
+  val loc_contweb: Loc        = newSystemLoc("ContactWebSite", Old)
+  val loc_contwebarr: Loc        = newSystemLoc("ContactWebSiteArr", Old)
+  val loc_strarr: Loc              = newSystemLoc("contactStrArr", Old)
+  val loc_person: Loc             = newSystemLoc("Person", Old)
+  val loc_personarr: Loc             = newSystemLoc("PersonArr", Old)
+  val loc_addrbook: Loc             = newSystemLoc("AddressBook", Old)
+  val loc_addrbookarr: Loc             = newSystemLoc("AddressBookArr", Old)
 
   /* constructor or object*/
   private val prop_obj: List[(String, AbsProperty)] = List(
@@ -785,7 +761,7 @@ object TIZENcontactObj extends Tizen {
 object TIZENAddressBook extends Tizen {
   private val name = "AddressBook"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
@@ -1436,7 +1412,7 @@ object TIZENAddressBook extends Tizen {
 object TIZENPerson extends Tizen {
   private val name = "Person"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)

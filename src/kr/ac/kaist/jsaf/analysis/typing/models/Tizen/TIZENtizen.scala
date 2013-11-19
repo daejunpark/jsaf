@@ -9,62 +9,59 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.CFGExpr
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinDate
 
 
 object TIZENtizen extends Tizen {
   private val name = "tizen"
   /* predefined property locations */
-  val loc_obj = newPredefLoc(name + "Obj")
-  val loc_proto = newPredefLoc(name + "Proto")
-  val loc_alarm = newPredefLoc(name + "alarm")
-  val loc_application = newPredefLoc(name + "application")
-  val loc_bluetooth = newPredefLoc(name + "bluetooth")
-  val loc_bookmark = newPredefLoc(name + "bookmark")
-  val loc_calendar = newPredefLoc(name + "calendar")
-  val loc_callhistory = newPredefLoc(name + "callhistory")
-  val loc_contact = newPredefLoc(name + "contact")
-  val loc_content = newPredefLoc(name + "content")
-  val loc_datacontrol = newPredefLoc(name + "datacontrol")
-  val loc_datasync = newPredefLoc(name + "datasync")
-  val loc_download = newPredefLoc(name + "download")
-  val loc_filesystem = newPredefLoc(name + "filesystem")
-  val loc_messageport = newPredefLoc(name + "messageport")
-  val loc_messaging = newPredefLoc(name + "messaging")
-  val loc_networkbearerselection = newPredefLoc(name + "networkbearerselection")
-  val loc_nfc = newPredefLoc(name + "nfc")
-  val loc_notification = newPredefLoc(name + "notification")
-  val loc_package = newPredefLoc(name + "package")
-  val loc_power = newPredefLoc(name + "power")
-  val loc_push = newPredefLoc(name + "push")
-  val loc_seService = newPredefLoc(name + "seService")
-  val loc_systeminfo = newPredefLoc(name + "systeminfo")
-  val loc_systemsetting = newPredefLoc(name + "systemsetting")
-  val loc_time = newPredefLoc(name + "time")
+  val loc_obj = newSystemRecentLoc(name + "Obj")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
+  val loc_alarm = newSystemRecentLoc(name + "alarm")
+  val loc_application = newSystemRecentLoc(name + "application")
+  val loc_bluetooth = newSystemRecentLoc(name + "bluetooth")
+  val loc_bookmark = newSystemRecentLoc(name + "bookmark")
+  val loc_calendar = newSystemRecentLoc(name + "calendar")
+  val loc_callhistory = newSystemRecentLoc(name + "callhistory")
+  val loc_contact = newSystemRecentLoc(name + "contact")
+  val loc_content = newSystemRecentLoc(name + "content")
+  val loc_datacontrol = newSystemRecentLoc(name + "datacontrol")
+  val loc_datasync = newSystemRecentLoc(name + "datasync")
+  val loc_download = newSystemRecentLoc(name + "download")
+  val loc_filesystem = newSystemRecentLoc(name + "filesystem")
+  val loc_messageport = newSystemRecentLoc(name + "messageport")
+  val loc_messaging = newSystemRecentLoc(name + "messaging")
+  val loc_networkbearerselection = newSystemRecentLoc(name + "networkbearerselection")
+  val loc_nfc = newSystemRecentLoc(name + "nfc")
+  val loc_notification = newSystemRecentLoc(name + "notification")
+  val loc_package = newSystemRecentLoc(name + "package")
+  val loc_power = newSystemRecentLoc(name + "power")
+  val loc_push = newSystemRecentLoc(name + "push")
+  val loc_seService = newSystemRecentLoc(name + "seService")
+  val loc_systeminfo = newSystemRecentLoc(name + "systeminfo")
+  val loc_systemsetting = newSystemRecentLoc(name + "systemsetting")
+  val loc_time = newSystemRecentLoc(name + "time")
 
   /* predefined error locations */
-  val loc_notFounderr: Loc = newPreDefLoc("NotFoundError", Old)
-  val loc_unknownerr: Loc = newPreDefLoc("UnknownError", Old)
-  val loc_invalidValueserr: Loc = newPreDefLoc("InvalidValuesError", Old)
-  val loc_IOerr: Loc = newPreDefLoc("IOError", Old)
-  val loc_serviceNotAvailableerr: Loc = newPreDefLoc("ServiceNotAvailableError", Old)
-  val loc_typemismatcherr: Loc = newPreDefLoc("TypeMismatchError", Old)
-  val loc_networkerr: Loc = newPreDefLoc("NetworkError", Old)
-  val loc_aborterr: Loc = newPreDefLoc("AbortError", Old)
-  val loc_securityerr: Loc = newPreDefLoc("SecurityError", Old)
-  val loc_notSupportederr: Loc = newPreDefLoc("NotSupportedError", Old)
+  val loc_notFounderr: Loc = newSystemLoc("NotFoundError", Old)
+  val loc_unknownerr: Loc = newSystemLoc("UnknownError", Old)
+  val loc_invalidValueserr: Loc = newSystemLoc("InvalidValuesError", Old)
+  val loc_IOerr: Loc = newSystemLoc("IOError", Old)
+  val loc_serviceNotAvailableerr: Loc = newSystemLoc("ServiceNotAvailableError", Old)
+  val loc_typemismatcherr: Loc = newSystemLoc("TypeMismatchError", Old)
+  val loc_networkerr: Loc = newSystemLoc("NetworkError", Old)
+  val loc_aborterr: Loc = newSystemLoc("AbortError", Old)
+  val loc_securityerr: Loc = newSystemLoc("SecurityError", Old)
+  val loc_notSupportederr: Loc = newSystemLoc("NotSupportedError", Old)
 
   /* predefined instance locations */
-  val loc_date: Loc = newPreDefLoc("DateObj", Old)
+  val loc_date: Loc = newSystemLoc("DateObj", Old)
 
   /* constructor or object*/
   private val prop_obj: List[(String, AbsProperty)] = List(

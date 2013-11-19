@@ -24,7 +24,6 @@ public class ShellParameters
     public static final int                        CMD_CLONE_DETECTOR = 3;
     public static final int                        CMD_COVERAGE = 4;
     public static final int                        CMD_CONCOLIC = 5;
-    public static final int                        CMD_URL = 6;
     public static final int                        CMD_WITH = 7;
     public static final int                        CMD_MODULE = 8;
     public static final int                        CMD_JUNIT = 9;
@@ -68,6 +67,7 @@ public class ShellParameters
     public boolean                                 opt_MemDump;
     public boolean                                 opt_ExitDump;
     public boolean                                 opt_StatDump;
+    public boolean                                 opt_BottomDump;
     public boolean                                 opt_Visual;
     public boolean                                 opt_CheckResult;
     public boolean                                 opt_NoAssert;
@@ -99,6 +99,7 @@ public class ShellParameters
     public boolean                                 opt_ReturnStateOn;
     public boolean                                 opt_ReturnStateOff;
     public int                                     opt_Timeout;
+    public int                                     opt_MaxLocCount;
     public boolean                                 opt_FunctionCoverage;
     public boolean                                 opt_debugger;
     public int                                     opt_unrollingCount;
@@ -144,6 +145,7 @@ public class ShellParameters
         opt_MemDump = false;
         opt_ExitDump = false;
         opt_StatDump = false;
+        opt_BottomDump = false;
         opt_Visual = false;
         opt_CheckResult = false;
         opt_NoAssert = false;
@@ -175,6 +177,7 @@ public class ShellParameters
         opt_ReturnStateOn = false;
         opt_ReturnStateOff = false;
         opt_Timeout = 0;
+        opt_MaxLocCount = 0;
         opt_FunctionCoverage = false;
         opt_debugger = false;
         opt_unrollingCount = 0;
@@ -254,11 +257,6 @@ public class ShellParameters
         {
             command = CMD_CONCOLIC;
         }
-        else if(cmd.compareTo("url") == 0)
-        {
-            command = CMD_URL;
-            feasibleOptions.add("-out");
-        }
         else if(cmd.compareTo("with") == 0)
         {
             command = CMD_WITH;
@@ -336,6 +334,7 @@ public class ShellParameters
             feasibleOptions.add("-memdump");
             feasibleOptions.add("-exitdump");
             feasibleOptions.add("-statdump");
+            feasibleOptions.add("-bottomdump");
             feasibleOptions.add("-visual");
             feasibleOptions.add("-checkResult");
             feasibleOptions.add("-no-assert");
@@ -362,6 +361,7 @@ public class ShellParameters
             feasibleOptions.add("-return-state-on");
             feasibleOptions.add("-return-state-off");
             feasibleOptions.add("-timeout");
+            feasibleOptions.add("-max-loc-count");
             feasibleOptions.add("-fcov");
             feasibleOptions.add("-worklist-order-default");
             feasibleOptions.add("-worklist-order-fifo");
@@ -447,6 +447,7 @@ public class ShellParameters
         String opt = args[index];
         if(opt.compareTo("-out") == 0 ||
            opt.compareTo("-timeout") == 0 ||
+           opt.compareTo("-max-loc-count") == 0 ||
            opt.compareTo("-unroll") == 0 ||
            opt.compareTo("-forin-unroll") == 0 ||
            opt.compareTo("-ddgout") == 0 ||
@@ -459,6 +460,7 @@ public class ShellParameters
             } else {
                 if(opt.compareTo("-out") == 0) opt_OutFileName = args[index + 1];
                 else if(opt.compareTo("-timeout") == 0) opt_Timeout = Integer.parseInt(args[index + 1]);
+                else if(opt.compareTo("-max-loc-count") == 0) opt_MaxLocCount = Integer.parseInt(args[index + 1]);
                 else if(opt.compareTo("-unroll") == 0) opt_unrollingCount = Integer.parseInt(args[index + 1]);
                 else if(opt.compareTo("-forin-unroll") == 0) opt_forinunrollingCount = Integer.parseInt(args[index + 1]);
                 else if(opt.compareTo("-ddgout") == 0) opt_DDGFileName = args[index + 1];
@@ -522,6 +524,7 @@ public class ShellParameters
         else if(opt.compareTo("-memdump") == 0) opt_MemDump = true;
         else if(opt.compareTo("-exitdump") == 0) opt_ExitDump = true;
         else if(opt.compareTo("-statdump") == 0) opt_StatDump = true;
+        else if(opt.compareTo("-bottomdump") == 0) opt_BottomDump = true;
         else if(opt.compareTo("-visual") == 0) opt_Visual = true;
         else if(opt.compareTo("-checkResult") == 0) opt_CheckResult = true;
         else if(opt.compareTo("-no-assert") == 0) opt_NoAssert = true;

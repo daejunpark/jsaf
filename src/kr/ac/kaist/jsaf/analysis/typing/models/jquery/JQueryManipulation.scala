@@ -9,6 +9,8 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.jquery
 
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
@@ -194,6 +196,12 @@ object JQueryManipulation extends ModelData {
                       hh
                 }
               })
+            // argument is HTMLString
+                  /*
+            else if lset_arg is HTMLString
+//HTML string to insert at the end of each element in the set of matched elements.
+//append:function(){return this.domManip(arguments,!0,function(a){this.nodeType===1&&this.appendChild(a)})},
+*/
             else
               HeapBot
 

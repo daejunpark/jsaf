@@ -14,20 +14,17 @@ import java.util.HashMap
 import scala.collection.JavaConversions
 import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.analysis.cfg.CFGBuilder
-import kr.ac.kaist.jsaf.analysis.typing.InitHeap
-import kr.ac.kaist.jsaf.analysis.typing.Semantics
-import kr.ac.kaist.jsaf.analysis.typing.Typing
-import kr.ac.kaist.jsaf.analysis.typing.Worklist
+import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.bug_detector.StateManager
 import kr.ac.kaist.jsaf.compiler.Parser
 import kr.ac.kaist.jsaf.concolic.{Z3, Instrumentor}
 import kr.ac.kaist.jsaf.exceptions.UserError
 import kr.ac.kaist.jsaf.interpreter.Interpreter
-import kr.ac.kaist.jsaf.nodes.{IRRoot, Program}
+import kr.ac.kaist.jsaf.nodes.{IRRoot, IRStmt, Program}
 import kr.ac.kaist.jsaf.nodes_util._
-import kr.ac.kaist.jsaf.nodes.IRRoot
 import kr.ac.kaist.jsaf.useful.Pair
 import edu.rice.cs.plt.tuple.{Option => JOption}
+import kr.ac.kaist.jsaf.nodes_util.Coverage
 
 ////////////////////////////////////////////////////////////////////////////////
 // Concolic Test
@@ -50,6 +47,9 @@ object ConcolicMain {
     val program2: Program = irErrors.third
     //val irOpt: JOption[IRRoot] = Shell.fileToIR(fileNames, JOption.none[String], JOption.some[Coverage](coverage)).first
     if (irOpt.isSome) {
+      // Initialize AddressManager
+      AddressManager.reset()
+
       var ir: IRRoot = irOpt.unwrap
       val builder = new CFGBuilder(ir)
       val cfg = builder.build
@@ -79,6 +79,10 @@ object ConcolicMain {
           System.out.println
           val result = z3.solve(coverage.getConstraints, coverage.inum)
           if (result.isSome) coverage.setInput(result.unwrap)
+          coverage.inputIR = coverage.setupCall match { 
+            case Some(ir) => Some(instrumentor.walk(ir, IRFactory.dummyIRId(coverage.target)).asInstanceOf[IRStmt]) 
+            case None => None
+          }
           interpreter.doit(ir, JOption.some[Coverage](coverage), true)
         } while (coverage.continue)
         coverage.removeTarget

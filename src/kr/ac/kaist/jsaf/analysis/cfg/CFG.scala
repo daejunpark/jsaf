@@ -12,8 +12,10 @@ package kr.ac.kaist.jsaf.analysis.cfg
 import scala.collection.immutable.HashMap
 import scala.collection.immutable.HashSet
 import kr.ac.kaist.jsaf.analysis.lib._
-import kr.ac.kaist.jsaf.analysis.typing.{Config, CallContext, DUSet, ControlPoint}
+import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
+import kr.ac.kaist.jsaf.analysis.typing.domain.State
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 
 // Node Label definition
@@ -71,7 +73,7 @@ class CFG {
     pureLocalMap.get(key) match {
       case Some(loc) => loc
       case None => {
-        val loc = newProgramLoc("PureLocal#" + key._1 + "#" + key._2)
+        val loc = newRecentLoc("PureLocal#" + key._1 + "#" + key._2)
         pureLocalMap += (key -> loc)
         loc
       }
@@ -85,7 +87,7 @@ class CFG {
     mergedPureLocalMap.get(fid) match {
       case Some(loc) => loc
       case None => {
-        val loc = newProgramLoc("PureLocal#" + fid)
+        val loc = newRecentLoc("PureLocal#" + fid)
         mergedPureLocalMap += (fid -> loc)
         loc
       }
@@ -274,47 +276,19 @@ class CFG {
    
   def getInstCount = instCount
 
-  /* address counter for user loation */
-  private var programAddrCount = 1
-
   var htmlStartAddr = -1
   var htmlEndAddr = -1
 
-  /* new address for builtin function */
-  private val addrPerCallSite =  // Function.prototype.apply uses 4 addresses
-                                 // DOMElement.setAttribute uses 5 addresses
-    if (Config.tizenMode) 8
-    else 5
-
-  private var apiAddrMap: Map[Address, List[Address]] = HashMap()
-  def getAPIAddress(addr: Address, index: Int): Address = apiAddrMap(addr)(index)
-  def getAPIAddress(addr: Address): List[Address] = apiAddrMap(addr)
-  def addAPIAddress(addr: Address) = {
-    val new_list_1 = (0 until addrPerCallSite).foldLeft[List[Int]](List())((list, i) =>
-      list :+ (programAddrCount + i)
-    )
-    apiAddrMap += (addr -> new_list_1)
-    programAddrCount = programAddrCount + addrPerCallSite
-
-    val new_list_2 = (0 until addrPerCallSite).foldLeft[List[Int]](List())((list, i) =>
-      list :+ (programAddrCount + i)
-    )
-    programAddrCount = programAddrCount + addrPerCallSite
-    val env_1 = new_list_1(1) // addr for @env
-    val env_2 = new_list_2(1) // addr for @env
-
-    apiAddrMap += (env_1 -> new_list_2)
-    apiAddrMap += (env_2 -> new_list_2)
-  }
+  def getAPIAddress(addr: Address, index: Int): Address = AddressManager.getAPIAddress(addr, 0, index)
 
   def getFuncCount = funcCount
-  def getAddrCount = programAddrCount
 
   def setHtmlStartAddr: Unit = {
-    htmlStartAddr = programAddrCount
-    setStoreStartAddr
+    throw new NotYetImplemented()
+//    htmlStartAddr = programAddrCount
+//    setStoreStartAddr
   }
-  def setHtmlEndAddr = htmlEndAddr = programAddrCount
+  def setHtmlEndAddr = htmlEndAddr = throw new NotYetImplemented()// programAddrCount
 
   def isHtmlAddr(addr: Address) = (htmlStartAddr <=  addr) && (addr < htmlEndAddr)
  
@@ -328,11 +302,13 @@ class CFG {
   private var storeAddrMap: Map[Int, (Int, List[Address])] = HashMap()
 
   def setStoreStartAddr: Unit = {
-    storeStartAddr = programAddrCount
-    programAddrCount += totalStoreAddr
+    throw new NotYetImplemented()
+//    storeStartAddr = programAddrCount
+//    programAddrCount += totalStoreAddr
   }
 
   def addStoreAddress(key: Int): Unit = {
+    throw new NotYetImplemented()
     // if all addresses have been already assigned
     if(storeAddrOffset >= maxStore){
       throw new InternalError("Not enough addresses assigned for CFGStore")
@@ -348,6 +324,7 @@ class CFG {
 
   // initialize the index of the mapped address
   def initStoreAddressIndex(key: Int): Unit = {
+    throw new NotYetImplemented()
     storeAddrMap.get(key) match {
       case Some(e) => 
         storeAddrMap += (key -> (0, e._2))
@@ -357,6 +334,7 @@ class CFG {
   }
 
   def getStoreAddress(key: Int, index: Int): Address = {
+    throw new NotYetImplemented()
     storeAddrMap.get(key) match {
       case Some(e) => 
         if(index >= addrPerStore)
@@ -370,16 +348,16 @@ class CFG {
     }
   }
 
-  def getStoreAddress(key: Int): Address = storeAddrMap.get(key) match {
-    case Some(e) => 
-      val addr = getStoreAddress(key, e._1)
-      storeAddrMap += (key -> (e._1+1, e._2))
-      addr
-    case None => 
-      addStoreAddress(key)
-      getStoreAddress(key)
-  }
-
+  def getStoreAddress(key: Int): Address = throw new NotYetImplemented()
+//    storeAddrMap.get(key) match {
+//    case Some(e) =>
+//      val addr = getStoreAddress(key, e._1)
+//      storeAddrMap += (key -> (e._1+1, e._2))
+//      addr
+//    case None =>
+//      addStoreAddress(key)
+//      getStoreAddress(key)
+//  }
 
   def setUserFuncCount(): Unit = userFuncCount = funcCount
   def getUserFuncCount = userFuncCount
@@ -541,19 +519,6 @@ class CFG {
     enclosingNodeMap = enclosingNodeMap + (inst.getInstId -> node)
   }
 
-  /* newProgramAddr : Unit -> Address */
-  def newProgramAddr(): Address = {
-    val addr = programAddrCount
-    programAddrCount += 1
-    addr
-  }
-  /* newProgramLoc : String -> Loc */
-  def newProgramLoc(name: String): Loc = {
-    val addr = programAddrCount
-    programAddrCount += 1
-    registerPredefLoc(addr, Recent, name)
-  }
-
   /* newInstId : Unit -> InstId */
   def newInstId(): InstId = {
     val iid = instCount
@@ -563,6 +528,22 @@ class CFG {
 
   def addFileNoOp(file: String, noop: CFGInst): Unit = {
     fileToNoOpMap += (file -> noop)
+  }
+
+  // Get the first instruction of node
+  def getFirstInst(node: Node): CFGInst = {
+    getCmd(node) match {
+      case Block(insts) if insts.size > 0 => insts.head
+      case _ => null
+    }
+  }
+
+  // Get the last instruction of node
+  def getLastInst(node: Node): CFGInst = {
+    getCmd(node) match {
+      case Block(insts) if insts.size > 0 => insts.last
+      case _ => null
+    }
   }
 
   def dump(): Unit = {
@@ -587,3 +568,4 @@ class CFG {
 }
 
 class InternalError(msg: String) extends RuntimeException(msg)
+class MaxLocCountError(msg: String = "") extends RuntimeException(msg)

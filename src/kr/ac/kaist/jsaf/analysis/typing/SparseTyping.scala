@@ -19,11 +19,10 @@ import kr.ac.kaist.jsaf.analysis.typing.models._
 import scala.util.parsing.json.JSONObject
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.bug_detector.BugInfo
-import kr.ac.kaist.jsaf.nodes_util.NodeFactory
-import kr.ac.kaist.jsaf.nodes_util.NodeRelation
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 class SparseTyping(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingInterface {
   val _env = new SparseEnv(_cfg)

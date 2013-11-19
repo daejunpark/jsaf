@@ -21,6 +21,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 // Modeled based on MicroSoft MSDN 
 // http://msdn.microsoft.com/en-us/library/windows/apps/hh696634.aspx
@@ -29,8 +30,8 @@ object Console extends DOM {
   private val name = "Console"
 
   /* predefined locatoins */
-  val loc_ins = newPredefLoc(name + "Ins")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_ins = newSystemRecentLoc(name + "Ins")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor */
   private val prop_cons: List[(String, AbsProperty)] = List(

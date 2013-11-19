@@ -11,7 +11,7 @@ package kr.ac.kaist.jsaf.analysis.typing
 
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolTrue => T, BoolFalse => F}
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, LEntry}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, LEntry, InternalError}
 import kr.ac.kaist.jsaf.{ShellParameters, Shell}
 import kr.ac.kaist.jsaf.compiler.Predefined
 import kr.ac.kaist.jsaf.analysis.typing.models.ModelManager
@@ -89,7 +89,7 @@ class InitHeap(cfg: CFG) {
 
     // check that all modeled variables are include in the list
     val globalOnly = global -- predef
-    if (globalOnly.size != 0) {
+    if (globalOnly.size != 0 && !Config.domMode) {
       System.out.println("The following names are defined in the initial heap of analyzer");
       System.out.println("but not in the list of predefined names:")
       System.out.print("    ")

@@ -13,7 +13,7 @@ import java.io.{BufferedWriter, FileWriter}
 import java.util.HashMap
 import scala.collection.JavaConversions
 import kr.ac.kaist.jsaf.analysis.cfg.{DotWriter, CFG, CFGBuilder}
-import kr.ac.kaist.jsaf.analysis.typing.{InitHeap, Config}
+import kr.ac.kaist.jsaf.analysis.typing.{AddressManager, InitHeap, Config}
 import kr.ac.kaist.jsaf.analysis.visualization.Visualization
 import kr.ac.kaist.jsaf.compiler.Parser
 import kr.ac.kaist.jsaf.exceptions.UserError
@@ -36,6 +36,9 @@ object CFGMain {
     if (Shell.params.FileNames.length == 0) throw new UserError("Need a file to build a control flow graph.")
     val fileNames = JavaConversions.seqAsJavaList(Shell.params.FileNames)
     val fileName: String = Shell.params.FileNames(0)
+
+    // Initialize AddressManager
+    AddressManager.reset()
 
     if (Shell.params.opt_Test) {
       Config.setTestMode(Shell.params.opt_Test)

@@ -49,6 +49,8 @@ class SemanticsTest(dir: String, tc: String, typing_mode: String) extends TestCa
     System.setOut(nullStream)
 
     try {
+      // Initialize AddressManager
+      AddressManager.reset()
       val typing = analyze(new File(dir, tc))
       SemanticsTest.checkResult(typing);
     } finally {

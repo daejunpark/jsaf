@@ -9,29 +9,15 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import java.lang.InternalError
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
@@ -42,20 +28,20 @@ object TIZENmessaging extends Tizen {
   private val name = "messaging"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_messaging
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_msgservice: Loc        = newPreDefLoc("MessageService", Old)
-  val loc_msgstorage: Loc        = newPreDefLoc("MessageStorage", Old)
-  val loc_msgbody: Loc        = newPreDefLoc("MessageBody", Old)
-  val loc_msgattach: Loc        = newPreDefLoc("MessageAttachment", Old)
-  val loc_msgattacharr: Loc        = newPreDefLoc("MessageAttachmentArr", Old)
-  val loc_msg: Loc        = newPreDefLoc("Message", Old)
-  val loc_msgarr: Loc        = newPreDefLoc("MessageArr", Old)
-  val loc_msgfolder: Loc        = newPreDefLoc("MessageFolder", Old)
-  val loc_msgfolderarr: Loc        = newPreDefLoc("MessageFolderArr", Old)
-  val loc_msgconv: Loc        = newPreDefLoc("MessageConversation", Old)
-  val loc_msgconvarr: Loc        = newPreDefLoc("MessageConversationArr", Old)
-  val loc_strarr: Loc        = newPreDefLoc("StringArr", Old)
+  val loc_msgservice: Loc        = newSystemLoc("MessageService", Old)
+  val loc_msgstorage: Loc        = newSystemLoc("MessageStorage", Old)
+  val loc_msgbody: Loc        = newSystemLoc("MessageBody", Old)
+  val loc_msgattach: Loc        = newSystemLoc("MessageAttachment", Old)
+  val loc_msgattacharr: Loc        = newSystemLoc("MessageAttachmentArr", Old)
+  val loc_msg: Loc        = newSystemLoc("Message", Old)
+  val loc_msgarr: Loc        = newSystemLoc("MessageArr", Old)
+  val loc_msgfolder: Loc        = newSystemLoc("MessageFolder", Old)
+  val loc_msgfolderarr: Loc        = newSystemLoc("MessageFolderArr", Old)
+  val loc_msgconv: Loc        = newSystemLoc("MessageConversation", Old)
+  val loc_msgconvarr: Loc        = newSystemLoc("MessageConversationArr", Old)
+  val loc_strarr: Loc        = newSystemLoc("StringArr", Old)
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_msgservice, prop_msgservice_ins), (loc_msgstorage, prop_msgstorage_ins),

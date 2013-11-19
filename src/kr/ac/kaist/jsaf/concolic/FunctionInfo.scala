@@ -21,13 +21,17 @@ import scala.collection.mutable.Map
 
 class FunctionInfo() {
   var isTarget: Boolean = false
-  var isCandidate: Boolean = true
+  var isCandidate: Boolean = false
   var isProcess: Boolean = false
   var params: Map[Int, List[String]] = Map[Int, List[String]]()
-  //var irId: IRId = null
-
-  def storeParam(p: Int, t: String) = params.put(p, params.get(p) match {case Some(types) => types:+t; case None => List(t)})
-  //def storeIR(ir: IRId) = irId = ir
+  var objects: Map[Int, List[String]] = Map[Int, List[String]]() 
+  
+  def isNewType(p: Int, t: String) = params.get(p) match { case Some(types) => !types.contains(t); case None => true }
+  def storeParameter(p: Int, t: String) = params.put(p, params.get(p) match { case Some(types) => types:+t; case None => List(t)})
+  def storeObjectProperties(p: Int, t: List[String]) = objects.put(p, t)
+  
+  // only set a function as candidate when it has parameters
+  def setCandidate() = isCandidate = true
   
   def targeting = isTarget = true
   def processing = isProcess = true

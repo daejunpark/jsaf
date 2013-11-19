@@ -9,14 +9,15 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing._
-import java.lang.InternalError
+
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -27,30 +28,30 @@ object TIZENcalendarObj extends Tizen {
   val name = "calendar"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_calendar
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
 
-  val loc_timedur: Loc       = newPreDefLoc("TimeDuration", Old)
-  val loc_simplecoordi: Loc  = newPreDefLoc("SimpleCoordinate", Old)
-  val loc_cal: Loc           = newPreDefLoc("Calendar", Old)
-  val loc_calarr: Loc        = newPreDefLoc("CalendarArr", Old)
-  val loc_calitem: Loc       = newPreDefLoc("CalendarItem", Old)
-  val loc_calitemarr: Loc    = newPreDefLoc("CalendarItemArr", Old)
-  val loc_caltask: Loc       = newPreDefLoc("CalendarTask", Old)
-  val loc_calevent: Loc       = newPreDefLoc("CalendarEvent", Old)
-  val loc_caleventarr: Loc       = newPreDefLoc("CalendarEventArr", Old)
-  val loc_calalarm: Loc      = newPreDefLoc("CalendarAlarm", Old)
-  val loc_calalarmarr: Loc      = newPreDefLoc("CalendarAlarmArr", Old)
-  val loc_calattend: Loc     = newPreDefLoc("CalendarAttendee", Old)
-  val loc_calattendarr: Loc     = newPreDefLoc("CalendarAttendeeArr", Old)
-  val loc_calrecur: Loc      = newPreDefLoc("CalendarRecurrenceRule", Old)
-  val loc_contref: Loc       = newPreDefLoc("ContactRef", Old)
-  val loc_caleventid: Loc    = newPreDefLoc("CalendarEventId", Old)
-  val loc_calitemidarr: Loc    = newPreDefLoc("CalendarItemIdArr", Old)
-  val loc_bydayvalarr: Loc   = newPreDefLoc("ByDayValueArr", Old)
-  val loc_shortarr: Loc      = newPreDefLoc("calShortArr", Old)
-  val loc_stringarr: Loc      = newPreDefLoc("calStringArr", Old)
-  val loc_tzdatearr: Loc     = newPreDefLoc("TZDateArr", Old)
+  val loc_timedur: Loc       = newSystemLoc("TimeDuration", Old)
+  val loc_simplecoordi: Loc  = newSystemLoc("SimpleCoordinate", Old)
+  val loc_cal: Loc           = newSystemLoc("Calendar", Old)
+  val loc_calarr: Loc        = newSystemLoc("CalendarArr", Old)
+  val loc_calitem: Loc       = newSystemLoc("CalendarItem", Old)
+  val loc_calitemarr: Loc    = newSystemLoc("CalendarItemArr", Old)
+  val loc_caltask: Loc       = newSystemLoc("CalendarTask", Old)
+  val loc_calevent: Loc       = newSystemLoc("CalendarEvent", Old)
+  val loc_caleventarr: Loc       = newSystemLoc("CalendarEventArr", Old)
+  val loc_calalarm: Loc      = newSystemLoc("CalendarAlarm", Old)
+  val loc_calalarmarr: Loc      = newSystemLoc("CalendarAlarmArr", Old)
+  val loc_calattend: Loc     = newSystemLoc("CalendarAttendee", Old)
+  val loc_calattendarr: Loc     = newSystemLoc("CalendarAttendeeArr", Old)
+  val loc_calrecur: Loc      = newSystemLoc("CalendarRecurrenceRule", Old)
+  val loc_contref: Loc       = newSystemLoc("ContactRef", Old)
+  val loc_caleventid: Loc    = newSystemLoc("CalendarEventId", Old)
+  val loc_calitemidarr: Loc    = newSystemLoc("CalendarItemIdArr", Old)
+  val loc_bydayvalarr: Loc   = newSystemLoc("ByDayValueArr", Old)
+  val loc_shortarr: Loc      = newSystemLoc("calShortArr", Old)
+  val loc_stringarr: Loc      = newSystemLoc("calStringArr", Old)
+  val loc_tzdatearr: Loc     = newSystemLoc("TZDateArr", Old)
 
   /* constructor or object*/
   private val prop_obj: List[(String, AbsProperty)] = List(

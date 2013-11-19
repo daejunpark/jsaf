@@ -11,22 +11,17 @@ package kr.ac.kaist.jsaf.analysis.typing
 
 import java.io.File
 import java.util.{List => JList}
-import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
+import scala.collection.mutable.{HashMap => MHashMap}
 import kr.ac.kaist.jsaf.analysis.cfg._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
-import scala.collection.immutable.HashSet
 import scala.collection.immutable.HashMap
-import kr.ac.kaist.jsaf.interpreter.InterpreterPredefine
-import kr.ac.kaist.jsaf.nodes.ASTNode
-import kr.ac.kaist.jsaf.nodes_util.NodeFactory
-import kr.ac.kaist.jsaf.nodes_util.NodeRelation
 import kr.ac.kaist.jsaf.nodes_util.NodeUtil
-import kr.ac.kaist.jsaf.nodes_util.IRFactory
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing.{SemanticsExpr => SE}
 import kr.ac.kaist.jsaf.bug_detector.BugInfo
 import kr.ac.kaist.jsaf.nodes_util.Span
 import kr.ac.kaist.jsaf.scala_src.useful.Lists._
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 class Typing(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingInterface {
   override def env: Environment = null
@@ -800,4 +795,3 @@ class Typing(_cfg: CFG, quiet: Boolean, locclone: Boolean) extends TypingInterfa
 }
 
 class NotYetImplemented extends RuntimeException
-class InternalError(msg: String) extends RuntimeException(msg)

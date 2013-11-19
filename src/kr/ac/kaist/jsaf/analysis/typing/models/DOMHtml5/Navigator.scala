@@ -20,6 +20,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 // Modeled based on WHATWG HTML Living Standard 
 // Section 7.5.1 The Navigator object.
@@ -27,8 +28,8 @@ object Navigator extends DOM {
   private val name = "Navigator"
 
   /* predefined locatoins */
-  val loc_ins = newPredefLoc(name + "Ins")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_ins = newSystemRecentLoc(name + "Ins")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* instant object */
   private val prop_ins: List[(String, AbsProperty)] = List(

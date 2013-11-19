@@ -9,7 +9,6 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml
 
-import scala.collection.mutable.{Map=>MMap, HashMap=>MHashMap}
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
@@ -17,18 +16,18 @@ import kr.ac.kaist.jsaf.analysis.typing.models._
 import org.w3c.dom.Node
 import org.w3c.dom.Element
 import kr.ac.kaist.jsaf.analysis.typing.Helper
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.{DOMElement, DOMNodeList, DOMNamedNodeMap}
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject.CSSStyleDeclaration
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object HTMLImageElement extends DOM {
   private val name = "HTMLImageElement"
 
   /* predefined locatoins */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor */
   private val prop_cons: List[(String, AbsProperty)] = List(
@@ -156,7 +155,7 @@ object HTMLImageElement extends DOM {
   // no function
      
   /* instance */
-  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  override def getInstance(cfg: CFG): Option[Loc] = Some(newRecentLoc())
   /* list of properties in the instance object */
   override def getInsList(node: Node): List[(String, PropValue)] = node match {
     case e: Element => 

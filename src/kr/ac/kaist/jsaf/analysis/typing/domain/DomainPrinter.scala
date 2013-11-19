@@ -12,6 +12,7 @@ package kr.ac.kaist.jsaf.analysis.typing.domain
 import kr.ac.kaist.jsaf.analysis.typing.Config
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLTopElement
 import kr.ac.kaist.jsaf.analysis.cfg.CFG
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object DomainPrinter {
   def printHeap(ind: Int, heap: Heap, cfg: CFG, verbose_lv: Int): String = {

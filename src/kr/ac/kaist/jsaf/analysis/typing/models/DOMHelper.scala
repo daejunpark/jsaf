@@ -16,21 +16,17 @@ import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml5._
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject._
-import kr.ac.kaist.jsaf.analysis.typing.{InternalError, Operator, Helper}
+import kr.ac.kaist.jsaf.analysis.typing.models.DOMSvg._
+import kr.ac.kaist.jsaf.analysis.typing.{Operator, Helper}
 import scala.Some
-import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
-import kr.ac.kaist.jsaf.analysis.typing.domain.Context
-import kr.ac.kaist.jsaf.analysis.typing.domain.OtherStrSingle
-import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
-import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
-import kr.ac.kaist.jsaf.analysis.typing.domain.NumStrSingle
 import kr.ac.kaist.jsaf.analysis.cfg.CFG
-import org.cyberneko.html.parsers._
 import org.apache.html.dom.HTMLDocumentImpl
 import org.xml.sax.InputSource
-import org.w3c.dom.{DOMException=>DE, Element, Node, Document, DocumentFragment}
+import org.w3c.dom.{Element, Node, Document, DocumentFragment}
 import org.w3c.dom.{Attr, DocumentType, Text, Comment, NodeList}
 import java.io._
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+import org.cyberneko.html.parsers._
 
 object DOMHelper {
   private val validHtmlTags: Set[String] = Set(
@@ -62,6 +58,34 @@ object DOMHelper {
   // check if a given tag name is a valid HTML tag name
   def isValidHtmlTag(tagname: String): Boolean = validHtmlTags.contains(tagname)
   
+  // Return a property list of an SVG element with the given tag name
+  def default_getInsListSVG(tagname: AbsString): List[(String, PropValue)] = tagname match {
+    case StrTop | OtherStr => SVGTopElement.default_getInsList    
+    case NumStr =>
+      SVGElement.default_getInsList:::List(
+        ("@class",  PropValue(AbsString.alpha("Object"))),
+        ("@proto",  PropValue(ObjectValue(SVGElement.getProto.get, F, F, F))),
+        ("@extensible",  PropValue(BoolTrue)))
+    case NumStrSingle(s) =>
+      SVGElement.default_getInsList:::List(
+        ("@class",  PropValue(AbsString.alpha("Object"))),
+        ("@proto",  PropValue(ObjectValue(SVGElement.getProto.get, F, F, F))),
+        ("@extensible",  PropValue(BoolTrue)))
+    case OtherStrSingle(s) =>
+      if(s=="svg"){
+        SVGSVGElement.default_getInsList
+      }
+      else {
+        SVGElement.default_getInsList:::List(
+          ("@class",  PropValue(AbsString.alpha("Object"))),
+          ("@proto",  PropValue(ObjectValue(SVGElement.getProto.get, F, F, F))),
+          ("@extensible",  PropValue(BoolTrue)))
+
+      }
+    case StrBot  =>
+      List()
+  }
+
   // Return a property list of an element with the given tag name
   def getInsList(tagname: String): List[(String, PropValue)] = tagname match {
     case "HTML" => HTMLHtmlElement.default_getInsList
@@ -1348,7 +1372,125 @@ object DOMHelper {
     h.update(loc_ins, obj_ins)
   }
 
-
+  // Initialize named properties in the 'window' object
+  // WHATWG HTML Living Standard - Section 6.2.4 Named access on the Window object
+  private def updateWindowNamedProps(h: Heap, ctx: Context, node: Node, cfg: CFG, ins_loc: Loc, addresskey: Int, init: Boolean) : (Heap, Context) = {
+    val nodeName = node.getNodeName
+    // 'name' attribute of 'a', 'applet', 'area', 'embed', 'form', 'frameset', 'img', and 'object' elements
+    val (h_1, ctx_1) = node match {
+      // Element node
+      case e: Element => 
+        // window object
+        val windowobj = h(DOMWindow.WindowLoc)
+        val name = e.getAttribute("name")
+        nodeName match {
+          // TODO: Named propertis for HTMLIFrameElement
+          case "A" | "APPLET" | "AREA" | "EMBED" | "FORM" | "FRAMESET" | "IMG" | "OBJECT" if name != ""  => 
+            val propval = windowobj(name)
+            // in case that the 'name' property does not exist
+            if(propval._2 </ AbsentBot) {
+               val new_windowobj = windowobj.update(AbsString.alpha(name), PropValue(ObjectValue(ins_loc, T, T, T)))
+               (h.update(DOMWindow.WindowLoc, new_windowobj), ctx)
+            }
+            // in case that the 'name' property already exists
+            else {
+               val loc_existing = propval._1._1._1._2
+               val (h1, ctx1, val_locset) = loc_existing.foldLeft((h, ctx, LocSetBot))((hcl, ll) => {
+                 val obj_existing = hcl._1(ll)
+                 val tagName = obj_existing("tagName")
+                 val len = obj_existing("length")
+                 // in case that the 'tagName' property exists: DOM element
+                 if(tagName._2 <= AbsentBot) {
+                   // HTMLCollection
+                   val (h_1, ctx_1, loc_collection) = if(init) (hcl._1, hcl._2, HTMLCollection.getInstance(cfg).get)
+                                            else cfgAddrToLoc(hcl._1, hcl._2, cfg.getStoreAddress(addresskey))
+                   val collection_proplist = HTMLCollection.getInsList(2) ::: 
+                     List(("0", PropValue(ObjectValue(ll, T, T, T))), ("1", PropValue(ObjectValue(ins_loc, T, T, T))))
+                   (addInstance(h_1, loc_collection, collection_proplist), ctx_1, hcl._3 + loc_collection)
+                 }
+                 // in case that the 'tagName' property does not exist and 'length' exists: HTMLCollection
+                 else if(len._2 <= AbsentBot) {
+                   val n_len = Operator.ToUInt32(len._1._1._1)
+                   n_len match {
+                   case UIntSingle(n) =>
+                     val new_collection = obj_existing.update(
+                       AbsString.alpha(n.toInt.toString), PropValue(ObjectValue(ins_loc, T, T, T))).update(
+                       AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(n+1), T, T, T)))
+                     (hcl._1.update(ll, new_collection), hcl._2, hcl._3 + ll)
+                   case NumTop | UInt =>
+                     val new_collection = obj_existing.update(NumStr, PropValue(ObjectValue(ins_loc, T, T, T)))
+                     (hcl._1.update(ll, new_collection), hcl._2, hcl._3 + ll)
+      
+                   case _ => (hcl._1, hcl._2, hcl._3)
+                   }
+                 }
+                 else (hcl._1, hcl._2, hcl._3)
+               })
+               val new_windowobj = windowobj.update(AbsString.alpha(name), PropValue(ObjectValue(Value(val_locset), T, T, T)))
+               (h1.update(DOMWindow.WindowLoc, new_windowobj), ctx1)
+            }
+          case _ => (h, ctx)
+      }
+      // Non-element node
+      case _ => (h, ctx)
+    }
+    // 'id' attribute of all HTML elements
+    node match {
+      // Element node
+      case e: Element => 
+        // window object
+        val windowobj = h_1(DOMWindow.WindowLoc)
+        val id = e.getAttribute("id")
+        if(id!=""){ 
+          val propval = windowobj(id)
+          // in case that the 'id' property does not exist
+          if(propval._2 </ AbsentBot) {
+             val new_windowobj = windowobj.update(AbsString.alpha(id), PropValue(ObjectValue(ins_loc, T, T, T)))
+             (h_1.update(DOMWindow.WindowLoc, new_windowobj), ctx)
+          }
+          // in case that the 'id' property already exists
+          else {
+             val loc_existing = propval._1._1._1._2
+             val (h1, ctx1, val_locset) = loc_existing.foldLeft((h_1, ctx, LocSetBot))((hcl, ll) => {
+               val obj_existing = hcl._1(ll)
+               val tagName = obj_existing("tagName")
+               val len = obj_existing("length")
+               // in case that the 'tagName' property exists: DOM element
+               if(tagName._2 <= AbsentBot) {
+                 // HTMLCollection
+                 val (h_1, ctx_1, loc_collection) = if(init) (hcl._1, hcl._2, HTMLCollection.getInstance(cfg).get)
+                                          else cfgAddrToLoc(hcl._1, hcl._2, cfg.getStoreAddress(addresskey))
+                 val collection_proplist = HTMLCollection.getInsList(2) ::: 
+                   List(("0", PropValue(ObjectValue(ll, T, T, T))), ("1", PropValue(ObjectValue(ins_loc, T, T, T))))
+                 (addInstance(h_1, loc_collection, collection_proplist), ctx_1, hcl._3 + loc_collection)
+               }
+               // in case that the 'tagName' property does not exist and 'length' exists: HTMLCollection
+               else if(len._2 <= AbsentBot) {
+                 val n_len = Operator.ToUInt32(len._1._1._1)
+                 n_len match {
+                 case UIntSingle(n) =>
+                   val new_collection = obj_existing.update(
+                     AbsString.alpha(n.toInt.toString), PropValue(ObjectValue(ins_loc, T, T, T))).update(
+                     AbsString.alpha("length"), PropValue(ObjectValue(AbsNumber.alpha(n+1), T, T, T)))
+                   (hcl._1.update(ll, new_collection), hcl._2, hcl._3 + ll)
+                 case NumTop | UInt =>
+                   val new_collection = obj_existing.update(NumStr, PropValue(ObjectValue(ins_loc, T, T, T)))
+                   (hcl._1.update(ll, new_collection), hcl._2, hcl._3 + ll)
+    
+                 case _ => (hcl._1, hcl._2, hcl._3)
+                 }
+               }
+               else (hcl._1, hcl._2, hcl._3)
+             })
+             val new_windowobj = windowobj.update(AbsString.alpha(id), PropValue(ObjectValue(Value(val_locset), T, T, T)))
+             (h1.update(DOMWindow.WindowLoc, new_windowobj), ctx1)
+           }
+         }
+         else (h_1, ctx_1)
+      // Non-element node
+      case _ => (h_1, ctx_1)
+    }
+  }
 
   // Initialize named properties in Document
   // WHATWG HTML Living Standard - Section 3.1.4 DOM tree accessors
@@ -2179,7 +2321,9 @@ object DOMHelper {
     val (h_3, ctx_3) = updateLookupTables(h_2.update(ins_loc, ins_obj_new), ctx_2, node, cfg, ins_loc, addresskey, init)
     // initialize named properties in Document
     val (h_4, ctx_4) = updateDocumentNamedProps(h_3, ctx_3, node, cfg, ins_loc, addresskey, init)
-    ((h_4, ctx_4), ins_loc)
+    // initialize named properties in Window
+    val (h_5, ctx_5) = updateWindowNamedProps(h_4, ctx_4, node, cfg, ins_loc, addresskey, init)
+    ((h_5, ctx_5), ins_loc)
   }
   
   

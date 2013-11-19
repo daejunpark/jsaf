@@ -9,21 +9,13 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
 import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
@@ -34,15 +26,15 @@ object TIZENnfc extends Tizen {
   private val name = "nfc"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_nfc
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_nfcadapter: Loc = newPreDefLoc("NFCAdapter", Old)
-  val loc_nfctag: Loc = newPreDefLoc("NFCTag", Old)
-  val loc_nfcpeer: Loc = newPreDefLoc("NFCPeer", Old)
-  val loc_ndefmsg: Loc = newPreDefLoc("NDEFMessage", Old)
-  val loc_ndefrecord: Loc = newPreDefLoc("NDEFRecord", Old)
-  val loc_ndefrecordarr: Loc = newPreDefLoc("NDEFRecordArr", Old)
-  val loc_bytearr: Loc = newPreDefLoc("ByteArr", Old)
+  val loc_nfcadapter: Loc = newSystemLoc("NFCAdapter", Old)
+  val loc_nfctag: Loc = newSystemLoc("NFCTag", Old)
+  val loc_nfcpeer: Loc = newSystemLoc("NFCPeer", Old)
+  val loc_ndefmsg: Loc = newSystemLoc("NDEFMessage", Old)
+  val loc_ndefrecord: Loc = newSystemLoc("NDEFRecord", Old)
+  val loc_ndefrecordarr: Loc = newSystemLoc("NDEFRecordArr", Old)
+  val loc_bytearr: Loc = newSystemLoc("ByteArr", Old)
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_nfcadapter, prop_nfcadapter_ins), (loc_nfctag, prop_nfctag_ins),

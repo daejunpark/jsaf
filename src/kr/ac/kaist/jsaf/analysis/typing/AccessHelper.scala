@@ -8,14 +8,10 @@
  ***************************************************************************** */
 
 package kr.ac.kaist.jsaf.analysis.typing
-import kr.ac.kaist.jsaf.analysis.cfg.{CFGId, GlobalVar, PureLocalVar, CapturedVar, CapturedCatchVar}
-import kr.ac.kaist.jsaf.analysis.typing.domain._
-import kr.ac.kaist.jsaf.analysis.typing.Config.DEBUG
-import kr.ac.kaist.jsaf.analysis.cfg.FunctionId
-import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolTrue => BT, BoolFalse => BF}
-import com.sun.org.apache.xpath.internal.operations.Equals
-import scala.collection.immutable.HashSet
 
+import kr.ac.kaist.jsaf.analysis.cfg.{CFGId, GlobalVar, PureLocalVar, CapturedVar, CapturedCatchVar, InternalError}
+import kr.ac.kaist.jsaf.analysis.typing.domain._
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object AccessHelper {
   var NewObject_def = Set("@class", "@proto", "@extensible", "@default_number", "@default_other")

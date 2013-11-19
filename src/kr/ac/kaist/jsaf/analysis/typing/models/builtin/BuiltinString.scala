@@ -10,7 +10,7 @@
 package kr.ac.kaist.jsaf.analysis.typing.models.builtin
 
 import scala.math.{min,max,floor, abs}
-import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
@@ -18,11 +18,12 @@ import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
 import scala.collection.immutable.HashSet
 import kr.ac.kaist.jsaf.utils.regexp.JSRegExpSolver
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object BuiltinString extends ModelData {
 
-  val ConstLoc = newPreDefLoc("StringConst", Recent)
-  val ProtoLoc = newPreDefLoc("StringProto", Recent)
+  val ConstLoc = newSystemLoc("StringConst", Recent)
+  val ProtoLoc = newSystemLoc("StringProto", Recent)
 
   private val prop_const: List[(String, AbsProperty)] = List(
     ("@class",                   AbsConstValue(PropValue(AbsString.alpha("Function")))),
@@ -614,53 +615,80 @@ object BuiltinString extends ModelData {
           val s_this = Helper.toString(Helper.toPrimitive(v_this))
 
           val v_arg = getArgValue(h, ctx, args, "0")
-          val lset_1 = v_arg._2.filter(l => AbsString.alpha("RegExp") <= h(l)("@class")._1._2._1._5)
-          val lset_2 = v_arg._2.filter(l => {
-            val s = h(l)("@class")._1._2._1._5
-            AbsString.alpha("RegExp") != s && s </ StrBot
-          })
-          if (!lset_1.isEmpty) {
-            if (!Config.quietMode)
-              System.err.println("* Warning: Semantics of the API function 'String.prototype.split(regexp)' are not defined.")
-          }
-
-          val s_separator = Helper.toString(Helper.toPrimitive(Value(v_arg._1, lset_2)))
           val v_limit = getArgValue(h, ctx, args, "1")
 
-          if (s_this <= StrBot || s_separator <= StrBot || v_limit <= ValueBot)
+          if (s_this <= StrBot || v_arg <= ValueBot || v_limit <= ValueBot) {
             ((HeapBot, ContextBot), (he, ctxe))
+          }
           else {
-            // allocate new location
-            val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
-            val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
-            if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
-            val addr_env = set_addr.head
-            val addr1 = cfg.getAPIAddress(addr_env, 0)
-            val l_r = addrToLoc(addr1, Recent)
-            val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+            val lset_1 = v_arg._2.filter(l => AbsString.alpha("RegExp") <= h(l)("@class")._1._2._1._5)
+            val lset_2 = v_arg._2.filter(l => {
+              val s = h(l)("@class")._1._2._1._5
+              AbsString.alpha("RegExp") != s && s </ StrBot
+            })
+            val s_separator = Helper.toString(Helper.toPrimitive(Value(v_arg._1, lset_2)))
 
-            // concretize string inputs
-            val cs_this_opt = AbsString.concretize(s_this)
-            val cs_separator_opt = AbsString.concretize(s_separator)
-            val limit_undefined = v_limit <= Value(UndefTop)
+            // String.prototype.split(string)
+            val (str_ns, str_es) = if(!(s_separator <= StrBot))
+            {
+              // allocate new location
+              val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+              val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+              if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+              val addr_env = set_addr.head
+              val addr1 = cfg.getAPIAddress(addr_env, 0)
+              val l_r = addrToLoc(addr1, Recent)
+              val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
 
-            // make output array
-            val o_array =
-              (cs_this_opt, cs_separator_opt, limit_undefined) match {
-                case (Some(cs_this), Some(cs_separator), true) =>
-                  val splitted = cs_this.split("\\Q" + cs_separator + "\\E")
-                  var obj_new = Helper.NewArrayObject(AbsNumber.alpha(splitted.length))
-                  for (i <- 0 until splitted.length) {
-                    val value = Value(AbsString.alpha(splitted(i)))
-                    obj_new = obj_new.update(i.toString, PropValue(ObjectValue(value, T, T, T)))
-                  }
-                  obj_new
-                case _ =>
-                  val obj_new = Helper.NewArrayObject(UInt)
-                  obj_new.update(NumStr, PropValue(ObjectValue(Value(StrTop), T, T, T)))
-              }
-            val h_2 = h_1.update(l_r, o_array)
-            ((Helper.ReturnStore(h_2, Value(l_r)), ctx_1), (he, ctxe))
+              // concretize string inputs
+              val cs_this_opt = AbsString.concretize(s_this)
+              val cs_separator_opt = AbsString.concretize(s_separator)
+              val limit_undefined = v_limit <= Value(UndefTop)
+
+              // make output array
+              val o_array =
+                (cs_this_opt, cs_separator_opt, limit_undefined) match {
+                  case (Some(cs_this), Some(cs_separator), true) =>
+                    val splitted = cs_this.split("\\Q" + cs_separator + "\\E")
+                    var obj_new = Helper.NewArrayObject(AbsNumber.alpha(splitted.length))
+                    for (i <- 0 until splitted.length) {
+                      val value = Value(AbsString.alpha(splitted(i)))
+                      obj_new = obj_new.update(i.toString, PropValue(ObjectValue(value, T, T, T)))
+                    }
+                    obj_new
+                  case _ =>
+                    val obj_new = Helper.NewArrayObject(UInt)
+                    obj_new.update(NumStr, PropValue(ObjectValue(Value(StrTop), T, T, T)))
+                }
+              val h_2 = h_1.update(l_r, o_array)
+              ((Helper.ReturnStore(h_2, Value(l_r)), ctx_1), (he, ctxe))
+            }
+            else ((HeapBot, ContextBot), (he, ctxe))
+
+            // String.prototype.split(regexp)
+            val (reg_ns, reg_es) = if (!lset_1.isEmpty)
+            {
+              if (!Config.quietMode)
+                System.err.println("* Warning: Semantics of the API function 'String.prototype.split(regexp)' are not defined.")
+
+              // allocate new location
+              val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+              val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+              if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+              val addr_env = set_addr.head
+              val addr1 = cfg.getAPIAddress(addr_env, 0)
+              val l_r = addrToLoc(addr1, Recent)
+              val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
+
+              // ArrayTop
+              val o_array = Helper.NewArrayObject(UInt)
+              o_array.update(NumStr, PropValue(ObjectValue(Value(StrTop), T, T, T)))
+              val h_2 = h_1.update(l_r, o_array)
+              ((Helper.ReturnStore(h_2, Value(l_r)), ctx_1), (he, ctxe))
+            }
+            else ((HeapBot, ContextBot), (he, ctxe))
+
+            ((str_ns._1 + reg_ns._1, str_ns._2 + reg_ns._2), (str_es._1 + reg_es._1, str_es._2 + reg_es._2))
           }
         }),
 
@@ -846,7 +874,7 @@ object BuiltinString extends ModelData {
           else
             ((HeapBot, ContextBot), (he, ctxe))
         })),
-      ("String.prototype.trim" -> (
+      "String.prototype.trim" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           // [[default Value]] ??
@@ -854,20 +882,13 @@ object BuiltinString extends ModelData {
           // TODO: v_this must be the result of [[DefaultValue]](string)
           val v_this = lset_prim.foldLeft(ValueBot)((_v, l) => _v + h(l)("@primitive")._1._2)
           val s_this = Helper.toString(Helper.toPrimitive(v_this))
-          val s = AbsString.concretize(s_this) match {
-            case Some(_s) => AbsString.alpha(_s.trim)
-            case None =>
-              if (s_this <= StrBot)
-                s_this
-              else
-                StrTop
-          }
+          val s = s_this.trim()
 
           if (s </ StrBot)
             ((Helper.ReturnStore(h, Value(s)), ctx), (he, ctxe))
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        }))
+        })
     )
   }
 

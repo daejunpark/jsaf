@@ -15,11 +15,12 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper=>AH}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object BuiltinBoolean extends ModelData {
 
-  val ConstLoc = newPreDefLoc("BooleanConst", Recent)
-  val ProtoLoc = newPreDefLoc("BooleanProto", Recent)
+  val ConstLoc = newSystemLoc("BooleanConst", Recent)
+  val ProtoLoc = newSystemLoc("BooleanProto", Recent)
 
   private val prop_const: List[(String, AbsProperty)] = List(
     ("@class",                   AbsConstValue(PropValue(AbsString.alpha("Function")))),

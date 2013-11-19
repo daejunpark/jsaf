@@ -9,7 +9,9 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.jquery
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
@@ -19,10 +21,10 @@ import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.{HTMLTopElement, HTMLDocu
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMCore.{DOMElement, DOMNodeList}
 
 object JQuery extends ModelData {
-  val ConstLoc = newPreDefLoc("jQueryConst", Recent)
-  val ProtoLoc = newPreDefLoc("jQueryProto", Recent)
-  val RootJQLoc = newPreDefLoc("jQueryRoot", Recent)
-  val EasingLoc = newPreDefLoc("jQueryEasing", Recent)
+  val ConstLoc = newSystemLoc("jQueryConst", Recent)
+  val ProtoLoc = newSystemLoc("jQueryProto", Recent)
+  val RootJQLoc = newSystemLoc("jQueryRoot", Recent)
+  val EasingLoc = newSystemLoc("jQueryEasing", Recent)
 
   private val prop_const: List[(String, AbsProperty)] = List(
     ("@class",               AbsConstValue(PropValue(AbsString.alpha("Function")))),
@@ -76,12 +78,14 @@ object JQuery extends ModelData {
 
   def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
-      ("jQuery" -> (
+      "jQuery" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
-          val addr2 = list_addr(1)
-          val addr3 = list_addr(2)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
+          val addr2 = cfg.getAPIAddress(set_addr.head, 1)
+          val addr3 = cfg.getAPIAddress(set_addr.head, 2)
 
           val (h_1, ctx_1) = Helper.Oldify(h, ctx, addr1)
           val (h_2, ctx_2) = Helper.Oldify(h_1, ctx_1, addr2)
@@ -102,7 +106,7 @@ object JQuery extends ModelData {
             ((Helper.ReturnStore(h_ret, v_ret), ctx_3), (he, ctxe))
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
+        }),
       ("jQuery.easing.linear" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val v_arg = getArgValue(h, ctx, args, "0")

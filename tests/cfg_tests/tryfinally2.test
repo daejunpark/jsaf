@@ -26,12 +26,12 @@ cfg_out_WCIequals=\
 \n\
 \n\
 (0,LBlock(25))\n\
-    [34] <>obj<>1 := <>Global<>toObject(print) @ #40\n\
+    [34] <>obj<>1 := <>Global<>toObject(print) @ #10\n\
     [35] <>temp<>2 := x\n\
-    [36] <>arguments<>3 := allocArg(1) @ #41\n\
+    [36] <>arguments<>3 := allocArg(1) @ #11\n\
     [37] <>arguments<>3["0"] := <>temp<>2\n\
     [38] <>fun<>4 := <>Global<>getBase(print)\n\
-    [39] call(<>obj<>1, <>fun<>4, <>arguments<>3) @ #42\n\
+    [39] call(<>obj<>1, <>fun<>4, <>arguments<>3) @ #12\n\
 \n\
 \n\
 (0,LBlock(24))\n\
@@ -54,12 +54,12 @@ cfg_out_WCIequals=\
 \n\
 \n\
 (0,LBlock(19))\n\
-    [25] <>obj<>1 := <>Global<>toObject(print) @ #27\n\
+    [25] <>obj<>1 := <>Global<>toObject(print) @ #7\n\
     [26] <>temp<>2 := x\n\
-    [27] <>arguments<>3 := allocArg(1) @ #28\n\
+    [27] <>arguments<>3 := allocArg(1) @ #8\n\
     [28] <>arguments<>3["0"] := <>temp<>2\n\
     [29] <>fun<>4 := <>Global<>getBase(print)\n\
-    [30] call(<>obj<>1, <>fun<>4, <>arguments<>3) @ #29\n\
+    [30] call(<>obj<>1, <>fun<>4, <>arguments<>3) @ #9\n\
 \n\
 \n\
 (0,LBlock(18))\n\
@@ -90,12 +90,12 @@ cfg_out_WCIequals=\
 \n\
 \n\
 (0,LBlock(11))\n\
-    [14] <>obj<>1 := <>Global<>toObject(print) @ #14\n\
+    [14] <>obj<>1 := <>Global<>toObject(print) @ #4\n\
     [15] <>temp<>2 := x\n\
-    [16] <>arguments<>3 := allocArg(1) @ #15\n\
+    [16] <>arguments<>3 := allocArg(1) @ #5\n\
     [17] <>arguments<>3["0"] := <>temp<>2\n\
     [18] <>fun<>4 := <>Global<>getBase(print)\n\
-    [19] call(<>obj<>1, <>fun<>4, <>arguments<>3) @ #16\n\
+    [19] call(<>obj<>1, <>fun<>4, <>arguments<>3) @ #6\n\
 \n\
 \n\
 (0,LBlock(10))\n\

@@ -25,6 +25,7 @@ import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 // Modeled based on WHATWG HTML Living Standard 
 // Section 7.5.1.5 Plugins.
@@ -32,8 +33,8 @@ object MimeTypeArray extends DOM {
   private val name = "MimeTypeArray"
 
   /* predefined locations */
-  val loc_ins = newPredefLoc(name + "Ins")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_ins = newSystemRecentLoc(name + "Ins")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* prorotype */
   private val prop_proto: List[(String, AbsProperty)] = List(
@@ -145,7 +146,7 @@ object MimeTypeArray extends DOM {
   }
 
   /* instance */
-  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  override def getInstance(cfg: CFG): Option[Loc] = Some(newRecentLoc())
   /* list of properties in the instance object */
   def getInsList(length: Int): List[(String, PropValue)] = List(
     ("@class",  PropValue(AbsString.alpha("Object"))),

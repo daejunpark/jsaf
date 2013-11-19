@@ -175,7 +175,7 @@ class SymbolicHelper(I: Interpreter) {
   }
   
   // when the function is targeted to test
-  def getInput(v: IRId, env: IRId):Option[Int] = {
+  /*def getInput(v: IRId, env: IRId):Option[Int] = {
     if (checkFocus(env) & !coverage.checkProcessing(env.getUniqueName)) {
       //TODO: find other ways to generate symbolic/input identifier
       symbolic_memory.put(v.getUniqueName, symbol+index)
@@ -196,21 +196,23 @@ class SymbolicHelper(I: Interpreter) {
       return Some(res)
     }
     return None
-  }
+  }*/
 
-  /*def walkVarStmt(id: IRId, env: IRId) = {
+  // Initialize the symbolic memorys
+  def walkVarStmt(id: IRId, env: IRId) = {
     if (checkFocus(env)) {
       symbolic_memory(id.getUniqueName) = symbol + index
+      val info = new Info(false, symbol + index, None, input_symbol + input_index, None)
+      report = report:+info
       index += 1
+      input_index += 1
     }
-  }*/
+  }
 
   def executeCondition(expr: IRExpr, branchTaken: Option[Boolean], c1: Option[String], c2: Option[String], env: IRId) = {
   //TODO: Don't need to be option type
   //TODO: need rewriter to modify the expressions syntatically accepted to the expressions supported by symbolic helper
-    println("executeCondition: start")
     if (checkFocus(env)) {
-      println("executeCondition: focus pass")
       expr match {
         case SIRBin(_, first, op, second) => op.getKind match {
           //TODO: find simple way to distinguish operation type 
@@ -267,34 +269,6 @@ class SymbolicHelper(I: Interpreter) {
     }
   }
 
-  // TODO: target environment setting
-  // TODO: function call setting
-  def setupCall():Option[IRStmt] = {
-    if (coverage.target == null) return None
-    for (k <- NodeRelation.ast2irMap.keySet) {
-      k match {
-        case SFunDecl(info, f@SFunctional(fds, vds, body, name, params), strict) =>
-          if (name.getText == coverage.target) {
-            val dummySpan = IF.dummySpan("forConcolic")
-            val dummyInfo = NF.makeSpanInfoComment(dummySpan)
-            val fun = new FunExpr(dummyInfo, f)
-            var args = List[Expr]()
-            var env = List[(String, IRId)]()
-            for (i <- 0 until params.length)
-              if (i < input.length)
-                args = args:+NF.makeIntLiteral(dummySpan, new BigInteger(input(i).toString)) 
-              else
-                args = args:+NF.makeIntLiteral(dummySpan, new BigInteger(random.nextInt(10).toString)) 
-            val funapp = new FunApp(dummyInfo, fun, args)
-            val res = IF.makeTId(funapp, dummySpan, NU.ignoreName)
-            
-            return Some(IRGenerator.funAppToIR(funapp, env, res))
-          }
-        case _ =>
-      }
-    }
-    return None
-  }
   def ignoreCall(f: IRId) = environments.get(f.getUniqueName) match { case Some(e) => !coverage.checkTarget(e.getUniqueName); case None => false }
 
   def checkFocus(f: IRId) = coverage.checkTarget(f.getUniqueName)
@@ -309,6 +283,7 @@ class SymbolicHelper(I: Interpreter) {
       return false
     }
   }
+
   def toStr(expr: IRExpr): String = expr match {
     case SIRBin(_, first, op, second) =>
       op.getText + toStr(expr)
@@ -324,7 +299,7 @@ class SymbolicHelper(I: Interpreter) {
   }
 
   def print() = {
-    System.out.println("Symbolic memory = " +  symbolic_memory.toString)
+    System.out.println("Symbolic memory = " + symbolic_memory)
     System.out.println("Symbolic report = " + report.map(_.expr))
     System.out.println("Input = " + input.toString)
   }

@@ -15,12 +15,15 @@ import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.debug.DebugConsole
 import kr.ac.kaist.jsaf.Shell
 import kr.ac.kaist.jsaf.scala_src.useful.WorkTrait
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, locclone: Boolean) {
   private val sem = new Semantics(cfg, worklist, locclone)
   def getSemantics = sem
   var count = 0
   val countRef = new AnyRef
+  var isLocCountExceeded = false
+  var locCountExceededMessage = ""
   var isTimeout = false
   var startTime: Long = 0
 
@@ -80,6 +83,10 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, loc
       Shell.workManager.deinitialize()
     }
 
+    if(isLocCountExceeded) {
+      System.out.println("*** Max location count(" + Shell.params.opt_MaxLocCount + ") is exceeded!")
+      System.out.println("  " + locCountExceededMessage)
+    }
     if(isTimeout) System.out.println("*** Analysis time out! (" + Shell.params.opt_Timeout + " sec)")
 
     if (Shell.params.opt_ExitDump) {
@@ -87,6 +94,8 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, loc
       System.out.println(DomainPrinter.printHeap(4, readTable(((cfg.getGlobalFId,LExit),CallContext.globalCallContext))._1, cfg))
       System.out.println("=========================================================================")
     }
+
+    if (Shell.params.opt_BottomDump) sem.dumpHeapBottoms()
   }
 
   class FixpointWork extends WorkTrait {
@@ -115,15 +124,25 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, loc
         cp = _cp; callerCPSetOpt = _callerCPSetOpt
       }
 
-      // Analysis timeout check
+      // Analysis termination check
+      if(isLocCountExceeded || isTimeout) return
       if(Shell.params.opt_Timeout > 0) {
-        if(isTimeout) return
         if((System.nanoTime() - startTime) / 1000000000 > Shell.params.opt_Timeout) {isTimeout = true; return}
       }
 
       // Read a state
       val inS = readTable(cp)
-      val (outS, outES) = sem.C(cp, cfg.getCmd(cp._1), inS, callerCPSetOpt) // TODO: Multi-thread safety check
+
+      // Execute
+      val (outS, outES) = try {
+        sem.C(cp, cfg.getCmd(cp._1), inS, callerCPSetOpt) // TODO: Multi-thread safety check
+      }
+      catch {
+        case e: MaxLocCountError =>
+          if(locCountExceededMessage == "") locCountExceededMessage = e.getMessage
+          isLocCountExceeded = true
+          return
+      }
 
       // Propagate normal output state (outS) along normal edges.
       val succs = cfg.getSucc_Lock(cp._1)
@@ -219,7 +238,7 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, loc
         case Some(s) if s == "Function" =>
           obj("@function")._1._3.foreach((fid) => {
             if (cfg.isUserFunction(fid)) {
-              val l_r = addrToLoc(cfg.newProgramAddr(), Recent)
+              val l_r = newRecentLoc()
               val ccset = globalCC.NewCallContext(cfg, fid, l_r, lset_this)
           ccset.foreach {case (cc_new, o_new) => {
               val o_arg = Obj(ObjMapBot.
@@ -229,7 +248,7 @@ class Fixpoint(cfg: CFG, worklist: Worklist, inTable: Table, quiet: Boolean, loc
               updated("@proto", (PropValue(ObjectValue(ObjProtoLoc, BoolFalse, BoolFalse, BoolFalse)), AbsentBot)).
               updated("@extensible", (PropValue(BoolTrue), AbsentBot)).
               updated("length", (PropValue(ObjectValue(UInt, BoolTrue, BoolFalse, BoolTrue)), AbsentBot)))
-              val l_arg = addrToLoc(cfg.newProgramAddr(), Recent)
+              val l_arg = newRecentLoc()
               val v_arg = Value(l_arg)
               val value = PropValue(ObjectValue(v_arg, BoolTrue, BoolFalse, BoolFalse))
               val o_new2 = o_new.update(cfg.getArgumentsName(fid), value).

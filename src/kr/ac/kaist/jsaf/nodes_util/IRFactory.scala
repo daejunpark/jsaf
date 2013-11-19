@@ -311,7 +311,7 @@ object IRFactory {
       else if(str1.equals("7")) seven
       else if(str1.equals("8")) eight
       else if(str1.equals("9")) nine
-      else new IRString(defaultInfo, str1)
+      else new IRString(makeSourceInfo(fromSource, ast), str1)
   }
 ////////////////////////////////////////////////////////////////////////////////////////
 

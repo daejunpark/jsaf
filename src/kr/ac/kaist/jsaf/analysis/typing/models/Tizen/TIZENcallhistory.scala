@@ -9,19 +9,15 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.Tizen
 
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
+
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T, _}
 import kr.ac.kaist.jsaf.analysis.typing.models._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing._
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import java.lang.InternalError
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import kr.ac.kaist.jsaf.analysis.typing.models.builtin.{BuiltinDate, BuiltinArray}
+
+import kr.ac.kaist.jsaf.analysis.typing.models.builtin.BuiltinArray
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -32,12 +28,12 @@ object TIZENcallhistory extends Tizen {
   private val name = "callhistory"
   /* predefined locations */
   val loc_obj = TIZENtizen.loc_callhistory
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
-  val loc_chentry: Loc = newPreDefLoc("CHEntry", Old)
-  val loc_chentryarr: Loc = newPreDefLoc("CHEntryArr", Old)
-  val loc_remoteparty: Loc = newPreDefLoc("RemoteParty", Old)
-  val loc_remotepartyarr: Loc = newPreDefLoc("RemotePartyArr", Old)
+  val loc_chentry: Loc = newSystemLoc("CHEntry", Old)
+  val loc_chentryarr: Loc = newSystemLoc("CHEntryArr", Old)
+  val loc_remoteparty: Loc = newSystemLoc("RemoteParty", Old)
+  val loc_remotepartyarr: Loc = newSystemLoc("RemotePartyArr", Old)
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_obj, prop_obj), (loc_proto, prop_proto), (loc_chentry, prop_chentry_ins),
@@ -478,7 +474,7 @@ object TIZENcallhistory extends Tizen {
 object TIZENCallHistoryEntry extends Tizen {
   private val name = "CallHistoryEntry"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)
@@ -508,7 +504,7 @@ object TIZENCallHistoryEntry extends Tizen {
 object TIZENRemoteParty extends Tizen {
   private val name = "RemoteParty"
   /* predefined locations */
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   override def getInitList(): List[(Loc, List[(String, AbsProperty)])] = List(
     (loc_proto, prop_proto)

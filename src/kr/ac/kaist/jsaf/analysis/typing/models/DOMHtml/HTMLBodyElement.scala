@@ -17,14 +17,15 @@ import org.w3c.dom.Node
 import org.w3c.dom.Element
 import kr.ac.kaist.jsaf.analysis.cfg.CFG
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
-import scala.Some
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
 
 object HTMLBodyElement extends DOM {
   private val name = "HTMLBodyElement"
 
   /* predefined locations */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor */
   private val prop_cons: List[(String, AbsProperty)] = List(
@@ -74,7 +75,7 @@ object HTMLBodyElement extends DOM {
  
   /* instance */
   // predefined location : only one 'HTMLBodyElement' element can be present in the heap
-  val loc_ins = newPredefLoc("HTMLBodyElement")
+  val loc_ins = newSystemRecentLoc("HTMLBodyElement")
   override def getInstance(cfg: CFG): Option[Loc] = Some(loc_ins)
   def getInstance(): Option[Loc] = Some(loc_ins)
   /* list of properties in the instance object */

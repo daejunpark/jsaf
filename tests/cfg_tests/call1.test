@@ -44,17 +44,17 @@ cfg_out_WCIequals=\
 \n\
 \n\
 (0,LBlock(0))\n\
-    [11] f := function (1) @ #16, #17\n\
-    [12] <>obj<>14 := <>Global<>toObject(f) @ #18\n\
+    [11] f := function (1) @ #6, #7\n\
+    [12] <>obj<>14 := <>Global<>toObject(f) @ #8\n\
     [13] <>temp<>15 := 1\n\
     [14] <>temp<>16 := 2\n\
     [15] <>temp<>17 := 3\n\
-    [16] <>arguments<>18 := allocArg(3) @ #19\n\
+    [16] <>arguments<>18 := allocArg(3) @ #9\n\
     [17] <>arguments<>18["0"] := <>temp<>15\n\
     [18] <>arguments<>18["1"] := <>temp<>16\n\
     [19] <>arguments<>18["2"] := <>temp<>17\n\
     [20] <>fun<>19 := <>Global<>getBase(f)\n\
-    [21] call(<>obj<>14, <>fun<>19, <>arguments<>18) @ #20\n\
+    [21] call(<>obj<>14, <>fun<>19, <>arguments<>18) @ #10\n\
 \n\
 \n\
 \n

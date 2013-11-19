@@ -15,16 +15,10 @@ import kr.ac.kaist.jsaf.analysis.typing.models.Tizen._
 import kr.ac.kaist.jsaf.nodes_util.{NodeUtil => NU, IRFactory}
 import kr.ac.kaist.jsaf.analysis.typing._
 import kr.ac.kaist.jsaf.analysis.cfg.CFGTempId
-import scala.Some
-import kr.ac.kaist.jsaf.analysis.cfg.CFGAsyncCall
-import kr.ac.kaist.jsaf.analysis.cfg.CFGTempId
-import scala.Some
-import kr.ac.kaist.jsaf.analysis.cfg.CFGAsyncCall
-import kr.ac.kaist.jsaf.analysis.cfg.CFGTempId
-import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.cfg.CFGAsyncCall
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object TizenModel {
   val async_calls : List[String] = List("#NOARGCB", "#STRCB", "#NUMCB", "#ERRCB", "#APPINFOCB", "#BTDEVCB", "#BTDEVARRCB", "#CALITEMARRCB",
@@ -121,7 +115,7 @@ class TizenModel(cfg: CFG) extends Model(cfg) {
       /* event call */
       val event_call = cfg.newBlock(fid_global)
       cfg.addInst(event_call,
-        CFGAsyncCall(cfg.newInstId, dummy_info, "Tizen", ev, cfg.newProgramAddr, cfg.newProgramAddr, cfg.newProgramAddr))
+        CFGAsyncCall(cfg.newInstId, dummy_info, "Tizen", ev, newProgramAddr(), newProgramAddr(), newProgramAddr()))
       /* event after call */
       val event_after = cfg.newAfterCallBlock(fid_global, dummy_id)
       val event_catch = cfg.newAfterCatchBlock(fid_global)

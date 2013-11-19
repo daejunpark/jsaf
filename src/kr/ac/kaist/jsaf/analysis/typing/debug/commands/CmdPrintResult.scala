@@ -10,10 +10,10 @@
 package kr.ac.kaist.jsaf.analysis.typing.debug.commands
 
 import kr.ac.kaist.jsaf.analysis.typing.debug.DebugConsole
-import kr.ac.kaist.jsaf.analysis.typing.domain.{DomainPrinter, parseLocName}
-import kr.ac.kaist.jsaf.analysis.cfg.Block
+import kr.ac.kaist.jsaf.analysis.typing.domain.DomainPrinter
 import kr.ac.kaist.jsaf.analysis.typing.Semantics
 import kr.ac.kaist.jsaf.Shell
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 class CmdPrintResult extends Command {
   override val name = "result"

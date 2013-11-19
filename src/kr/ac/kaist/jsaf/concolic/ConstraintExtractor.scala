@@ -36,7 +36,7 @@ class ConstraintExtractor(I: Interpreter) {
   case class Condition(node: Node, left: SymbolicTree, right: SymbolicTree) extends SymbolicTree
   
   // store where node locates in the symbolic execution tree 
-  var bitset = new BitSet()
+  /*var bitset = new BitSet()
   bitset.set(0)
   var tree:SymbolicTree = new Node(true, None, None, bitset )
   var unvisited = new Queue[Node]
@@ -44,6 +44,23 @@ class ConstraintExtractor(I: Interpreter) {
   var expanded = new BitSet()
   expanded.set(0)
   var constraint = List[ConstraintForm]()
+  */
+  var bitset: BitSet = null
+  var tree: SymbolicTree = null
+  var unvisited: Queue[Node] = null
+  // indicate expanded node in the symbolic execution tree
+  var expanded: BitSet = null 
+  var constraint: List[ConstraintForm] = null
+
+  def initialize() = {
+    bitset = new BitSet()
+    bitset.set(0)
+    tree = new Node(true, None, None, bitset)
+    unvisited = new Queue[Node]
+    expanded = new BitSet()
+    expanded.set(0)
+    constraint = List[ConstraintForm]()
+  }
   
   def extract(report: List[Info]) = {
     constraint = List[ConstraintForm]()

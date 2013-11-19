@@ -20,6 +20,7 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.nodes._
 import kr.ac.kaist.jsaf.scala_src.nodes._
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 class WIDLModel(cfg: CFG) extends Model(cfg) {
   val verbose = false
@@ -128,7 +129,7 @@ class WIDLModel(cfg: CFG) extends Model(cfg) {
   val globalProps =                             new PropMap
   val newLocPropsMap =                          new MHashMap[String, LocPropMap]
   def newObjectLocProps(locName: String, protoLoc: Loc = ObjProtoLoc): LocPropMap = {
-    val loc = newPreDefLoc(locName, Recent)
+    val loc = newSystemLoc(locName, Recent)
     val props = new PropMap
     props.put("@class", AbsConstValue(PropValue(AbsString.alpha("Object"))))
     props.put("@proto", AbsConstValue(PropValue(ObjectValue(Value(protoLoc), F, F, F))))
@@ -141,7 +142,7 @@ class WIDLModel(cfg: CFG) extends Model(cfg) {
   }
   def newFunctionLocProps(locName: String, argSize: Int): (LocPropMap, LocPropMap) = {
     val protoLocProps = newObjectLocProps(locName + ".prototype")
-    val loc = newPreDefLoc(locName, Recent)
+    val loc = newSystemLoc(locName, Recent)
     val props = new PropMap
     props.put("@class", AbsConstValue(PropValue(AbsString.alpha("Function"))))
     props.put("@proto", AbsConstValue(PropValue(ObjectValue(Value(FunctionProtoLoc), F, F, F))))
@@ -159,7 +160,7 @@ class WIDLModel(cfg: CFG) extends Model(cfg) {
     (locProps, protoLocProps)
   }
   def newArrayLocProps(locName: String, defaultNumber: Value): LocPropMap = {
-    val loc = newPreDefLoc(locName, Recent)
+    val loc = newSystemLoc(locName, Recent)
     val props = new PropMap
     props.put("@class", AbsConstValue(PropValue(AbsString.alpha("Array"))))
     props.put("@proto", AbsConstValue(PropValue(ObjectValue(Value(BuiltinArray.ProtoLoc), F, F, F))))
@@ -173,7 +174,7 @@ class WIDLModel(cfg: CFG) extends Model(cfg) {
     locProps
   }
   def newDateLocProps(locName: String): LocPropMap = {
-    val loc = newPreDefLoc(locName, Recent)
+    val loc = newSystemLoc(locName, Recent)
     val props = new PropMap
     props.put("@class", AbsConstValue(PropValue(AbsString.alpha("Date"))))
     props.put("@proto", AbsConstValue(PropValue(ObjectValue(Value(BuiltinDate.ProtoLoc), F, F, F))))
@@ -299,7 +300,7 @@ class WIDLModel(cfg: CFG) extends Model(cfg) {
     if(interfaceNode.getParent.isSome) {
       val parentName = interfaceNode.getParent.unwrap().getName
       if(!newLocPropsMap.contains(parentName)) createInterfaceFromName(-1, interfaceNode.getParent.unwrap().getName)
-      getPreDefLoc(parentName + ".prototype") match {
+      getRegisteredRecentLoc(parentName + ".prototype") match {
         case Some(parentProtoLoc) => locProps._2.put("@proto", AbsConstValue(PropValue(ObjectValue(Value(parentProtoLoc), F, F, F))))
         case None =>
           if (verbose)

@@ -17,12 +17,13 @@ import org.w3c.dom.Node
 import org.w3c.dom.Attr
 import kr.ac.kaist.jsaf.analysis.cfg.CFG
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLDocument
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object DOMAttr extends DOM {
   private val name = "Attr"
   /* predefined locatoins */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor or object*/
   private val prop_cons: List[(String, AbsProperty)] = List(
@@ -70,7 +71,7 @@ object DOMAttr extends DOM {
   // no function
 
   /* instance */
-  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr, Recent))
+  override def getInstance(cfg: CFG): Option[Loc] = Some(newRecentLoc())
 
   /* list of properties in the instance object */
   override def getInsList(node: Node): List[(String, PropValue)] = node match {

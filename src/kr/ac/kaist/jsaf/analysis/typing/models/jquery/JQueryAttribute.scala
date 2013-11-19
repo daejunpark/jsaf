@@ -9,6 +9,8 @@
 
 package kr.ac.kaist.jsaf.analysis.typing.models.jquery
 
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
+
 import kr.ac.kaist.jsaf.analysis.typing.domain._
 import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
@@ -16,7 +18,7 @@ import kr.ac.kaist.jsaf.analysis.typing.{AccessHelper => AH, _}
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
-import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFGExpr, CFG, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
@@ -43,14 +45,17 @@ object JQueryAttribute extends ModelData {
 
   def getSemanticMap(): Map[String, SemanticFun] = {
     Map(
-      ("jQuery.prototype.addClass" -> (
+      "jQuery.prototype.addClass" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           /* new addr */
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
-          val addr2 = list_addr(1)
-          val addr3 = list_addr(2)
-          val addr4 = list_addr(3)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
+          val addr2 = cfg.getAPIAddress(set_addr.head, 1)
+          val addr3 = cfg.getAPIAddress(set_addr.head, 2)
+          val addr4 = cfg.getAPIAddress(set_addr.head, 3)
+
           /* new loc */
           val l_attr = addrToLoc(addr1, Recent)
           val l_text = addrToLoc(addr2, Recent)
@@ -68,7 +73,7 @@ object JQueryAttribute extends ModelData {
           val s_arg = v_arg._1._5
 
           val (h_ret1, v_ret1) =
-            if(s_arg </ StrBot) {
+            if (s_arg </ StrBot) {
               val h3 = lset_this.foldLeft(h_4)((h1, l1) => {
                 val lset_elem = Helper.Proto(h1, l1, NumStr)._2
                 lset_elem.foldLeft(h1)((h2, l2) => {
@@ -102,7 +107,7 @@ object JQueryAttribute extends ModelData {
               (HeapBot, ValueBot)
 
           val (h_ret2, v_ret2) =
-            if(!v_arg._2.isEmpty)
+            if (!v_arg._2.isEmpty)
               (h_4, Value(lset_this))
             else
               (HeapBot, ValueBot)
@@ -113,16 +118,18 @@ object JQueryAttribute extends ModelData {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
-      ("jQuery.prototype.attr" -> (
+        }),
+      "jQuery.prototype.attr" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           /* new addr */
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
-          val addr2 = list_addr(1)
-          val addr3 = list_addr(2)
-          val addr4 = list_addr(3)
-          val addr5 = list_addr(4)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
+          val addr2 = cfg.getAPIAddress(set_addr.head, 1)
+          val addr3 = cfg.getAPIAddress(set_addr.head, 2)
+          val addr4 = cfg.getAPIAddress(set_addr.head, 3)
+          val addr5 = cfg.getAPIAddress(set_addr.head, 4)
           /* new loc */
           val l_attr = addrToLoc(addr1, Recent)
           val l_text = addrToLoc(addr2, Recent)
@@ -174,7 +181,7 @@ object JQueryAttribute extends ModelData {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
+        }),
       ("jQuery.prototype.hasClass" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           /* jQuery object */
@@ -306,14 +313,16 @@ object JQueryAttribute extends ModelData {
           else
             ((HeapBot, ContextBot), (he, ctxe))
         })),
-      ("jQuery.prototype.removeClass" -> (
+      "jQuery.prototype.removeClass" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           /* new addr */
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
-          val addr2 = list_addr(1)
-          val addr3 = list_addr(2)
-          val addr4 = list_addr(3)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
+          val addr2 = cfg.getAPIAddress(set_addr.head, 1)
+          val addr3 = cfg.getAPIAddress(set_addr.head, 2)
+          val addr4 = cfg.getAPIAddress(set_addr.head, 3)
           /* new loc */
           val l_attr = addrToLoc(addr1, Recent)
           val l_text = addrToLoc(addr2, Recent)
@@ -331,7 +340,7 @@ object JQueryAttribute extends ModelData {
           val s_arg = v_arg._1._5
 
           val (h_ret1, v_ret1) =
-            if(s_arg </ StrBot) {
+            if (s_arg </ StrBot) {
               val h3 = lset_this.foldLeft(h_4)((h1, l1) => {
                 val lset_elem = Helper.Proto(h1, l1, NumStr)._2
                 lset_elem.foldLeft(h1)((h2, l2) => {
@@ -374,7 +383,7 @@ object JQueryAttribute extends ModelData {
               (HeapBot, ValueBot)
 
           val (h_ret2, v_ret2) =
-            if(!v_arg._2.isEmpty)
+            if (!v_arg._2.isEmpty)
               (h_4, Value(lset_this))
             else
               (HeapBot, ValueBot)
@@ -385,7 +394,7 @@ object JQueryAttribute extends ModelData {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
+        }),
       ("jQuery.prototype.removeProp" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           /* jQuery object */
@@ -402,14 +411,16 @@ object JQueryAttribute extends ModelData {
           else
             ((HeapBot, ContextBot), (he, ctxe))
         })),
-      ("jQuery.prototype.toggleClass" -> (
+      "jQuery.prototype.toggleClass" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           /* new addr */
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
-          val addr2 = list_addr(1)
-          val addr3 = list_addr(2)
-          val addr4 = list_addr(3)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
+          val addr2 = cfg.getAPIAddress(set_addr.head, 1)
+          val addr3 = cfg.getAPIAddress(set_addr.head, 2)
+          val addr4 = cfg.getAPIAddress(set_addr.head, 3)
           /* new loc */
           val l_attr = addrToLoc(addr1, Recent)
           val l_text = addrToLoc(addr2, Recent)
@@ -427,7 +438,7 @@ object JQueryAttribute extends ModelData {
           val s_arg = v_arg._1._5
 
           val (h_ret1, v_ret1) =
-            if(s_arg </ StrBot) {
+            if (s_arg </ StrBot) {
               val h3 = lset_this.foldLeft(h_4)((h1, l1) => {
                 val lset_elem = Helper.Proto(h1, l1, NumStr)._2
                 lset_elem.foldLeft(h1)((h2, l2) => {
@@ -477,7 +488,7 @@ object JQueryAttribute extends ModelData {
               (HeapBot, ValueBot)
 
           val (h_ret2, v_ret2) =
-            if(!v_arg._2.isEmpty)
+            if (!v_arg._2.isEmpty)
               (h_4, Value(lset_this))
             else
               (HeapBot, ValueBot)
@@ -488,7 +499,7 @@ object JQueryAttribute extends ModelData {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
+        }),
         ("jQuery.prototype.val" -> (
           (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
             /* jQuery object */

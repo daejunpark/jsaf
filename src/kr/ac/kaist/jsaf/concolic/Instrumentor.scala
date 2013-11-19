@@ -69,35 +69,38 @@ class Instrumentor(program: IRRoot, coverage: Coverage) extends IRWalker {
     SIRSeq(info, List(storeEnvironment(info, v, env), 
         SIRInternalCall(info, dummyId,
                     IF.makeTId(info.getSpan, NU.freshConcolicName("ExecuteAssignment")), e, Some(v))))
-  def getInput(info: IRSpanInfo, v: IRStmt, env: IRId) =
+  /*def getInput(info: IRSpanInfo, v: IRStmt, env: IRId) =
     SIRInternalCall(info, dummyId,
-                    IF.makeTId(info.getSpan, NU.freshConcolicName("GetInput")), v.asInstanceOf[IRExprStmt].getLhs, Some(env))
+                    IF.makeTId(info.getSpan, NU.freshConcolicName("GetInput")), v.asInstanceOf[IRExprStmt].getLhs, Some(env))*/
   def executeCondition(info: IRSpanInfo, e: IRExpr, env: IRId) =
     SIRInternalCall(info, dummyId,
                     IF.makeTId(info.getSpan, NU.freshConcolicName("ExecuteCondition")), e, Some(env))
-  /*def walkVarStmt(info: IRSpanInfo, v: IRId, env: IRId) =
+  def walkVarStmt(info: IRSpanInfo, v: IRId, env: IRId) =
     SIRInternalCall(info, dummyId,
-                    IF.makeTId(info.getSpan, NU.freshConcolicName("WalkVarStmt")), v, Some(env))*/
+                    IF.makeTId(info.getSpan, NU.freshConcolicName("WalkVarStmt")), v, Some(env))
   def walkFunctional(info: IRSpanInfo, node: IRFunctional): IRFunctional = node match {
     case SIRFunctional(i, name, params, args, fds, vds, body) =>
       SIRFunctional(i, name, params,
         args.map(walk(_, name).asInstanceOf[IRStmt]),
         fds.map(walk(_, name).asInstanceOf[IRFunDecl]),
         vds,
-        args.map(getInput(info, _, name))++body.map(walk(_, name).asInstanceOf[IRStmt]))  
+        vds.filter(fromParam(_)).map(walkVarStmt(_, name))++body.map(walk(_, name).asInstanceOf[IRStmt]))  
         //body.map(walk(_, name).asInstanceOf[IRStmt]))  
   }
 
+  def fromParam(node: IRVarStmt) = node match {
+    case SIRVarStmt(info, lhs, fromparam) => fromparam
+  }
   /* var x
    * ==>
    * var x;
    * walkVarStmt(x);
    */
-  /*def walkVarStmt(node: IRVarStmt, env: IRId): IRStmt = node match {
+  def walkVarStmt(node: IRVarStmt, env: IRId):IRStmt = node match {
     case SIRVarStmt(info, lhs, fromparam) => walkVarStmt(info, lhs, env)
-  }*/
+  }
 
-  def walk(node: Any, env: IRId): Any = node match {
+  def walk(node: Any, env: IRId):Any = node match {
 
     /* begin
      * ==>
@@ -130,8 +133,8 @@ class Instrumentor(program: IRRoot, coverage: Coverage) extends IRWalker {
      *
      */
     case SIRCall(info, lhs, fun, thisB, args) =>
-      //SIRSeq(info, List(storeEnvironment(info, lhs, env), node.asInstanceOf[IRStmt]))
-      node
+      SIRSeq(info, List(storeEnvironment(info, lhs, env), node.asInstanceOf[IRStmt]))
+      //node
 
     /* x = function f (x, x) {s*}
      * ==>
@@ -182,6 +185,7 @@ class Instrumentor(program: IRRoot, coverage: Coverage) extends IRWalker {
      * else {SIRInternalCall(info, "<>Concolic<>Instrumentor", "<>Concolic<>ExecuteCondition", e, None) s?}
      */
     case SIRIf(info, expr, trueB, falseB) =>
+      //coverage.printCondition(expr)
       SIRSeq(info, List(executeCondition(info, expr, env), 
         SIRIf(info, expr, walk(trueB, env).asInstanceOf[IRStmt],
           falseB match { case Some(s) => Some(walk(s, env).asInstanceOf[IRStmt]); case None => None})))
@@ -210,6 +214,7 @@ class Instrumentor(program: IRRoot, coverage: Coverage) extends IRWalker {
      */
      //TODO: Report condition only once
     case SIRWhile(info, cond, body) =>
+      //coverage.printCondition(cond)
       SIRSeq(info, List(SIRWhile(info, cond, 
         SIRSeq(info, List(executeCondition(info, cond, env), walk(body, env).asInstanceOf[IRStmt]))),
         executeCondition(info, cond, env)))

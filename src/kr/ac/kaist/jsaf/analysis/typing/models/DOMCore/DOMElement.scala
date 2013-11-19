@@ -15,24 +15,24 @@ import kr.ac.kaist.jsaf.analysis.typing.domain.{BoolFalse => F, BoolTrue => T}
 import kr.ac.kaist.jsaf.analysis.typing.models._
 import org.w3c.dom.Node
 import org.w3c.dom.Element
-import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr}
+import kr.ac.kaist.jsaf.analysis.cfg.{CFG, CFGExpr, InternalError}
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMHtml.HTMLDocument
 import kr.ac.kaist.jsaf.analysis.typing.models.DOMObject.{ClientRect, ClientRectList}
 import kr.ac.kaist.jsaf.analysis.typing._
-import scala.Some
 import kr.ac.kaist.jsaf.analysis.typing.domain.UIntSingle
 import kr.ac.kaist.jsaf.analysis.typing.domain.Context
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsBuiltinFunc
 import kr.ac.kaist.jsaf.analysis.typing.domain.Obj
 import kr.ac.kaist.jsaf.analysis.typing.models.AbsConstValue
 import kr.ac.kaist.jsaf.analysis.typing.domain.Heap
+import kr.ac.kaist.jsaf.analysis.typing.AddressManager._
 
 object DOMElement extends DOM {
   private val name = "Element"
 
   /* predefined locatoins */
-  val loc_cons = newPredefLoc(name + "Cons")
-  val loc_proto = newPredefLoc(name + "Proto")
+  val loc_cons = newSystemRecentLoc(name + "Cons")
+  val loc_proto = newSystemRecentLoc(name + "Proto")
 
   /* constructor or object*/
   private val prop_cons: List[(String, AbsProperty)] = List(
@@ -241,10 +241,12 @@ object DOMElement extends DOM {
       //case "DOMElement.setIdAttribute" => ((h, ctx), (he, ctxe))
       //case "DOMElement.setIdAttributeNS" => ((h, ctx), (he, ctxe))
       //case "DOMElement.setIdAttributeNode" => ((h, ctx), (he, ctxe))
-      ("DOMElement.querySelector" -> (
+      "DOMElement.querySelector" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
 
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           /* arguments */
@@ -255,12 +257,12 @@ object DOMElement extends DOM {
             val l_result = addrToLoc(addr1, Recent)
             val lset_find = lset_this.foldLeft(LocSetBot)((ls, l) => ls ++ DOMHelper.querySelectorAll(h_1, l, s_selector))
             val (h_ret, v_ret) =
-              if(lset_find.isEmpty)
+              if (lset_find.isEmpty)
                 (h_1, Value(NullTop))
               else {
                 val o_result = Helper.NewObject(ObjProtoLoc)
-                  .update("0", PropValue(ObjectValue(Value(lset_find), T,T,T)))
-                  .update("length", PropValue(ObjectValue(AbsNumber.alpha(0), T,T,T)))
+                  .update("0", PropValue(ObjectValue(Value(lset_find), T, T, T)))
+                  .update("length", PropValue(ObjectValue(AbsNumber.alpha(0), T, T, T)))
                 val h_2 = h_1.update(l_result, o_result)
                 (h_2, Value(lset_find))
               }
@@ -268,11 +270,13 @@ object DOMElement extends DOM {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
-      ("DOMElement.querySelectorAll" -> (
+        }),
+      "DOMElement.querySelectorAll" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
-          val list_addr = getAddrList(h, cfg)
-          val addr1 = list_addr(0)
+          val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
+          val set_addr = lset_env.foldLeft[Set[Address]](Set())((a, l) => a + locToAddr(l))
+          if (set_addr.size > 1) throw new InternalError("API heap allocation: Size of env address is " + set_addr.size)
+          val addr1 = cfg.getAPIAddress(set_addr.head, 0)
 
           val lset_this = h(SinglePureLocalLoc)("@this")._1._2._2
           /* arguments */
@@ -283,12 +287,12 @@ object DOMElement extends DOM {
             val l_result = addrToLoc(addr1, Recent)
             val lset_find = lset_this.foldLeft(LocSetBot)((ls, l) => ls ++ DOMHelper.querySelectorAll(h_1, l, s_selector))
             val (h_ret, v_ret) =
-              if(lset_find.isEmpty)
+              if (lset_find.isEmpty)
                 (h_1, Value(NullTop))
               else {
                 val o_result = Helper.NewObject(ObjProtoLoc)
-                  .update(NumStr, PropValue(ObjectValue(Value(lset_find), T,T,T)))
-                  .update("length", PropValue(ObjectValue(Value(UInt), T,T,T)))
+                  .update(NumStr, PropValue(ObjectValue(Value(lset_find), T, T, T)))
+                  .update("length", PropValue(ObjectValue(Value(UInt), T, T, T)))
                 val h_2 = h_1.update(l_result, o_result)
                 (h_2, Value(lset_find))
               }
@@ -296,7 +300,7 @@ object DOMElement extends DOM {
           }
           else
             ((HeapBot, ContextBot), (he, ctxe))
-        })),
+        }),
       ("DOMElement.getElementsByClassName" -> (
         (sem: Semantics, h: Heap, ctx: Context, he: Heap, ctxe: Context, cp: ControlPoint, cfg: CFG, fun: String, args: CFGExpr) => {
           val lset_env = h(SinglePureLocalLoc)("@env")._1._2._2
@@ -880,7 +884,7 @@ object DOMElement extends DOM {
   }
 
   /* instance */
-  override def getInstance(cfg: CFG): Option[Loc] = Some(addrToLoc(cfg.newProgramAddr(), Recent))
+  override def getInstance(cfg: CFG): Option[Loc] = Some(newRecentLoc())
   /* list of properties in the instance object */
   override def getInsList(node: Node): List[(String, PropValue)] = node match {
     case e: Element =>
