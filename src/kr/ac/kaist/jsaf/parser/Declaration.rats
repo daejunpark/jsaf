@@ -23,14 +23,11 @@ import Spacing;
  * Program ::= w SourceElements? w EndOfFile
  */
 public Program File =
-     initParser a1:UseStrictDirectives? w a2:TopLevelSourceElements? closeParser
+     initParser a2:TopLevelSourceElements? closeParser
      { Span span = createSpan(yyStart,yyCount);
        if (a2 == null) a2 = Collections.<SourceElement>emptyList();
        HashMap<String, Span> map = new HashMap<String, Span>();
-       if (a1 == null)
            yyValue = NodeFactory.makeProgram(span, a2, false);
-       else
-           yyValue = NodeFactory.makeProgram(span, a2, true);
      };
 void initParser = w { initParser(); };
 void closeParser = w EndOfFile
@@ -287,19 +284,14 @@ public List<Id> Params =
  * FunctionBody ::= { w SourceElement* w }
  */
 public kr.ac.kaist.jsaf.useful.Pair<List<SourceElement>, Boolean> FunctionBody =
-     opencurly w a1:UseStrictDirectives? w closecurly
-     { if (a1 == null)
+     opencurly w closecurly
+     { 
          yyValue = new kr.ac.kaist.jsaf.useful.Pair<List<SourceElement>, Boolean>(Collections.<SourceElement>emptyList(),
                                                                                   Boolean.valueOf(false));
-       else
-         yyValue = new kr.ac.kaist.jsaf.useful.Pair<List<SourceElement>, Boolean>(Collections.<SourceElement>emptyList(),
-                                                                                  Boolean.valueOf(true));
      }
-   / opencurly w a1:UseStrictDirectives? w a2:SourceElements w closecurly
-     { if (a1 == null)
+   / opencurly w a2:SourceElements w closecurly
+     { 
           yyValue = new kr.ac.kaist.jsaf.useful.Pair<List<SourceElement>, Boolean>(a2, Boolean.valueOf(false));
-       else
-          yyValue = new kr.ac.kaist.jsaf.useful.Pair<List<SourceElement>, Boolean>(a2, Boolean.valueOf(true));
      };
 
 /*
