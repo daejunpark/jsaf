@@ -156,7 +156,10 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append("[")
-      elements.foreach(e => s.append(walk(e)).append(", "))
+      elements.foreach(_ match {
+        case Some(e) => s.append(walk(e)).append(", ")
+        case None => s.append("undefined").append(", ")
+      })
       s.append("]")
       s.toString
     case SArrayNumberExpr(info, elements) =>
