@@ -257,7 +257,7 @@ object JSAstToConcrete extends Walker {
     case SEmptyStmt(info) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
-      s.append(";")
+      s.append("undefined;")
       s.toString
     case SExprList(info, exprs) =>
       join(exprs, ", ", new StringBuilder(walk(info))).toString
