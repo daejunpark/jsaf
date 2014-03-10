@@ -272,7 +272,8 @@ object JSAstToConcrete extends Walker {
       s.append(walk(prop)).append(" : ").append(walk(expr))
       s.toString
     case SDoubleLiteral(info, text, num) =>
-      walk(info)+text
+    //walk(info)+text
+      walk(info) + num.toString()
     case SFor(info, init, cond, action, body) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -388,8 +389,10 @@ object JSAstToConcrete extends Walker {
       s.toString
     case SIntLiteral(info, intVal, radix) =>
       val str = radix match {
+        /*
         case 8 => "0" + intVal.toString(8)
         case 16 => "0x" + intVal.toString(16)
+        */
         case _ => intVal.toString
       }
       walk(info)+str
