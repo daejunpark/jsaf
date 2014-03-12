@@ -272,7 +272,7 @@ object JSAstToConcrete extends Walker {
       s.append(walk(prop)).append(" : ").append(walk(expr))
       s.toString
     case SDoubleLiteral(info, text, num) =>
-      walk(info)+text
+      walk(info)+text.replace('E','e');
     case SFor(info, init, cond, action, body) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
