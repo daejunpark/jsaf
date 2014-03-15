@@ -172,7 +172,7 @@ object JSAstToConcrete extends Walker {
       s.append(walk(lhs)).append(" ")
       s.append(walk(op)).append(" ")
       s.append(walk(right))
-      s.toStringP
+      s.toString /*P*/
     case SBlock(info, stmts, _) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -197,7 +197,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append(walk(obj)).append("[").append(walk(index)).append("]")
-      s.toStringP
+      s.toString /*P*/
     case SBreak(info, target) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -230,7 +230,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append(walk(cond)).append(" ? ").append(walk(trueBranch)).append(" : ").append(walk(falseBranch))
-      s.toStringP
+      s.toString /*P*/
     case SContinue(info, target) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -258,7 +258,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append(walk(obj)).append(".").append(walk(member))
-      s.toStringP
+      s.toString /*P*/
     case SEmptyStmt(info) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -334,7 +334,7 @@ object JSAstToConcrete extends Walker {
       s.append(walk(fun)).append("(")
       s.append(join(args, ", ", new StringBuilder("")))
       s.append(")")
-      s.toStringP
+      s.toString /*P*/
     case SFunDecl(info, SFunctional(fds, vds, body, name, params), _) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -354,7 +354,7 @@ object JSAstToConcrete extends Walker {
       s.append(") \n").append(getIndent).append("{\n")
       prFtn(s, fds, vds, toList(body.getBody))
       s.append("\n").append(getIndent).append("})")
-      s.toStringP
+      s.toString /*P*/
     case SGetProp(info, prop, SFunctional(fds, vds, body, _, _)) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -411,7 +411,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append("new ").append(walk(lhs))
-      s.toStringP
+      s.toString /*P*/
     case SNull(info) =>
       walk(info)+"null"
     case SObjectExpr(info, members) =>
@@ -431,7 +431,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append(walk(op)).append(" ").append(walk(right))
-      s.toStringP
+      s.toString /*P*/
     case SProgram(info, STopLevel(fds, vds, program)) =>
       val s: StringBuilder = new StringBuilder
       prFtn(s, fds, vds, NU.toStmts(program))
@@ -516,7 +516,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append(walk(lhs)).append(" ").append(walk(op))
-      s.toStringP
+      s.toString /*P*/
     case SVarDecl(info, name, expr, _) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
