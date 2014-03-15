@@ -128,7 +128,7 @@ object JSAstToConcrete extends Walker {
   }
 
   class StringBuilderHelper(s: StringBuilder) {
-    def toStringP() = inParentheses(s.toString)
+    def toStringP() = new StringBuilder("(").append(s.toString).append(")").toString
   }
   implicit def stringBuilderWrapper(s: StringBuilder) = new StringBuilderHelper(s)
 
