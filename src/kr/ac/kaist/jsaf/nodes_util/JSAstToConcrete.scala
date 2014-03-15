@@ -127,6 +127,11 @@ object JSAstToConcrete extends Walker {
     decreaseIndent
   }
 
+  class StringBuilderHelper(s: StringBuilder) {
+    def toStringP() = inParentheses(s.toString)
+  }
+  implicit def stringBuilderWrapper(s: StringBuilder) = new StringBuilderHelper(s)
+
   /* The rule of separators(indentation, semicolon and newline) in unparsing pattern matchings.
    * This rule is applied recursively
    * Principle: All case already has indentation at the front and newline at the end.
@@ -167,7 +172,7 @@ object JSAstToConcrete extends Walker {
       s.append(walk(lhs)).append(" ")
       s.append(walk(op)).append(" ")
       s.append(walk(right))
-      s.toString
+      s.toStringP
     case SBlock(info, stmts, _) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -192,7 +197,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append(walk(obj)).append("[").append(walk(index)).append("]")
-      s.toString
+      s.toStringP
     case SBreak(info, target) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -225,7 +230,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append(walk(cond)).append(" ? ").append(walk(trueBranch)).append(" : ").append(walk(falseBranch))
-      s.toString
+      s.toStringP
     case SContinue(info, target) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -253,7 +258,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append(walk(obj)).append(".").append(walk(member))
-      s.toString
+      s.toStringP
     case SEmptyStmt(info) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -329,7 +334,7 @@ object JSAstToConcrete extends Walker {
       s.append(walk(fun)).append("(")
       s.append(join(args, ", ", new StringBuilder("")))
       s.append(")")
-      s.toString
+      s.toStringP
     case SFunDecl(info, SFunctional(fds, vds, body, name, params), _) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -349,7 +354,7 @@ object JSAstToConcrete extends Walker {
       s.append(") \n").append(getIndent).append("{\n")
       prFtn(s, fds, vds, toList(body.getBody))
       s.append("\n").append(getIndent).append("})")
-      s.toString
+      s.toStringP
     case SGetProp(info, prop, SFunctional(fds, vds, body, _, _)) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
@@ -385,7 +390,7 @@ object JSAstToConcrete extends Walker {
       s.append(walk(left)).append(" ")
       s.append(walk(op)).append(" ")
       s.append(walk(right))
-      s.toString
+      s.toStringP
     case SIntLiteral(info, intVal, radix) =>
       val str = radix match {
         /*
@@ -406,7 +411,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append("new ").append(walk(lhs))
-      s.toString
+      s.toStringP
     case SNull(info) =>
       walk(info)+"null"
     case SObjectExpr(info, members) =>
@@ -426,7 +431,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append(walk(op)).append(" ").append(walk(right))
-      s.toString
+      s.toStringP
     case SProgram(info, STopLevel(fds, vds, program)) =>
       val s: StringBuilder = new StringBuilder
       prFtn(s, fds, vds, NU.toStmts(program))
@@ -511,7 +516,7 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       s.append(walk(lhs)).append(" ").append(walk(op))
-      s.toString
+      s.toStringP
     case SVarDecl(info, name, expr, _) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
