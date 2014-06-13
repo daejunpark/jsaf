@@ -383,16 +383,18 @@ object JSAstToConcrete extends Walker {
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
       var oneline: Boolean = isOneline(trueBranch)
-      s.append("if(").append(walk(cond)).append(")\n")
+      s.append("if(").append(walk(cond)).append(") {\n")
       if(oneline) increaseIndent
       s.append(getIndent).append(walk(trueBranch))
       if(oneline) decreaseIndent
+      s.append("}")
       if(falseBranch.isSome){
         oneline = isOneline(falseBranch)
-        s.append("\n").append(getIndent).append("else\n")
+        s.append("\n").append(getIndent).append("else {\n")
         if(oneline) increaseIndent
         s.append(getIndent).append(walk(falseBranch))
         if(oneline) decreaseIndent
+        s.append("}")
       }
       s.toString
     case SInfixOpApp(info, left, op, right) =>
