@@ -356,7 +356,7 @@ object NodeFactory {
     if (elmts.size > 1000)
       new ArrayNumberExpr(makeSpanInfoComment(span), elmts)
     else
-      makeArrayExpr(span, toJavaList(toList(elmts).map(e => some(makeDoubleLiteral(span, e.toString, e).asInstanceOf[Expr]))))
+      makeArrayExpr(span, toJavaList(toList(elmts).map(e => some(makeNumericLiteral(span, e.toString, e).asInstanceOf[Expr]))))
   }
 
   def makeArrayExpr(span: Span, elmts: JList[JOption[Expr]]) =
@@ -425,6 +425,11 @@ object NodeFactory {
       NU.log(writer, span, "Syntax Error: a numeral begins with 0.")
     JDouble.valueOf(beforeDot)
   }
+
+  def makeNumericLiteral(span: Span, str: String, doubleVal: Double) =
+    if (str.endsWith(".0"))
+      new IntLiteral(makeSpanInfoComment(span), new BigInteger(str.substring(0, str.length-2), 10), 10)
+    else new DoubleLiteral(makeSpanInfoComment(span), str, doubleVal)
 
   def makeIntLiteral(span: Span, intVal: BigInteger, radix: Int = 10) =
     new IntLiteral(makeSpanInfoComment(span), intVal, radix)
