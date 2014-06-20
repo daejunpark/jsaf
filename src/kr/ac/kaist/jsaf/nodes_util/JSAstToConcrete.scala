@@ -268,7 +268,13 @@ object JSAstToConcrete extends Walker {
     case SDot(info, obj, member) =>
       val s: StringBuilder = new StringBuilder
       s.append(walk(info))
-      s.append(walk(obj)).append(".").append(walk(member))
+      obj match {
+        case SDoubleLiteral(_,_,_) =>
+          s.append("(").append(walk(obj)).append(")")
+        case _ =>
+          s.append(walk(obj))
+      }
+      s.append(".").append(walk(member))
       s.toString /*P*/
     case SEmptyStmt(info) =>
       val s: StringBuilder = new StringBuilder
