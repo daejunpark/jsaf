@@ -257,7 +257,12 @@ public class Unprinter extends NodeReflection {
                 } else if (f.getType() == BigInteger.class) {
                     f.set(node, readBigInteger(l.name()));
                 } else if (f.getType() == Double.class) {
-                    f.set(node, readDouble(l.name()+"."+lexAfter(".")));
+                    String n = l.name();
+                    if (n.equals("Infinity")) {
+                        f.set(node, readDouble(n));
+                    } else {
+                        f.set(node, readDouble(n+"."+lexAfter(".")));
+                    }
                 } else if (Option.class.isAssignableFrom(f.getType())) {
                     f.set(node, readOption());
                 } else if (ASTSpanInfo.class.isAssignableFrom(f.getType())) {
