@@ -1,3 +1,17 @@
+NOTE:
+-----
+
+Forked from http://safe.kaist.ac.kr, this has been highly customized for KJS,
+an executable formal semantics of JavaScript, to normalize JavaScript programs.
+The original feature of SAFE framework, thus, may not work correctly.
+For the detail of the normalization, refer to:
+  https://github.com/daejunpark/jsaf-bin
+For KJS, an executable formal semantics of JavaScript, refer to:
+  https://github.com/kframework/javascript-semantics
+
+===============================================================================
+
+
 SAFE: Scalable Analysis Framework for ECMAScript Git Repository
 ---------------------------------------------------
 
