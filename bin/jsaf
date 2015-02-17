@@ -37,9 +37,9 @@ fi
 
 if [ -z "$JAVA_FLAGS" ] ; then
   if (uname | egrep Darwin > /dev/null) ; then
-    JAVA_FLAGS="-Xmx2048m -Xss32m -Dfile.encoding=utf8"
+    JAVA_FLAGS="-Xmx1024m -Xss32m -Dfile.encoding=utf8"
   else
-    JAVA_FLAGS="-Xmx2048m -Xss32m -Dfile.encoding=utf8 -Djava.library.path=${TP}/z3/Linux"
+    JAVA_FLAGS="-Xmx1024m -Xss32m -Dfile.encoding=utf8 -Djava.library.path=${TP}/z3/Linux"
   fi
 fi
 
